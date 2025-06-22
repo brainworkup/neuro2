@@ -5,3 +5,4 @@ data-raw/
 .Rbuildignore
 .vscode/
 inst/doc
+.specstory/.gitignore
