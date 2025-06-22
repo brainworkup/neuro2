@@ -45,7 +45,7 @@ ReportGenerator <- R6::R6Class(
       private$extensions_dir <- system.file(
         "quarto",
         "extensions",
-        "typst",
+        "neurotyp-adult-typst",
         package = "neuro2"
       )
       self$params <- params
@@ -160,11 +160,9 @@ ReportGenerator <- R6::R6Class(
       # Render master report
       quarto::quarto_render(
         input = master_path,
-        output_format = "typst",
+        output_format = "neurotyp-adult-typst",
         output_file = file.path(self$output_dir, output_file),
-        execute_params = self$params,
-        render_args = c("--extensions", private$extensions_dir)
-        # extensions = private$extensions_dir
+        execute_params = self$params
       )
       invisible(file.path(self$output_dir, output_file))
     },
@@ -172,25 +170,23 @@ ReportGenerator <- R6::R6Class(
     #' @description
     #' Render the final report using Quarto+Typst.
     #' @param output_file Filename for the rendered report (e.g., "report.pdf")
-
-    # New:
     render = function(output_file = "report.pdf") {
       out_path <- file.path(self$output_dir, output_file)
+
+      # Check if template exists
+      if (!file.exists(private$template_qmd)) {
+        stop("Template not found at: ", private$template_qmd)
+      }
+
+      # Use quarto_render with correct arguments
       quarto::quarto_render(
         input = private$template_qmd,
-        output_format = "typst",
-        output_file = out_path,
+        output_format = "neurotyp-adult-typst",
+        output_file = basename(output_file), # Just the filename
         execute_params = self$params,
-        render_args = c("--extensions", private$extensions_dir)
+        execute_dir = self$output_dir # Set working directory for output
       )
 
-      # quarto::quarto_render(
-      #   input = private$template_qmd,
-      #   output_file = out_path,
-      #   execute_params = self$params,
-      #   format = "typst",
-      #   extensions = private$extensions_dir
-      # )
       message("Report written to: ", out_path)
       invisible(out_path)
     }

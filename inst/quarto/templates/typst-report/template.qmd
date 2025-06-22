@@ -95,12 +95,12 @@ patient <- Sys.getenv("PATIENT")
 #| include: false
 
 path_data <- here::here("data")
-path_csv <- here::here("data-raw", "csv")
+path_csv <- here::here("inst", "extdata")
 NeurotypR::load_data(here::here(path_csv))
 neurocog <- readr::read_csv("data/neurocog.csv")
 neurobehav <- readr::read_csv("data/neurobehav.csv")
 neuropsych <- readr::read_csv("data/neuropsych.csv")
-validity <- readr::read_csv("data/validity.csv")
+# validity <- readr::read_csv("data/validity.csv")
 ```
 
 ```{=typst}
@@ -116,15 +116,17 @@ validity <- readr::read_csv("data/validity.csv")
 *DATE OF REPORT*: {{< var date_of_report >}} \
 ]
 ```
-
-{{< include sections/_02-01_iq.qmd >}}
-{{< include sections/_02-02_academics.qmd >}}
-
 {{< include sections/_00-00_tests.qmd >}}
+
+{{< include sections/_01-00_nse_adult.qmd >}}
+
+<!-- {{< include sections/_02-01_iq.qmd >}} -->
+
+<!-- {{< include sections/_02-02_academics.qmd >}} -->
+
 
 <!-- {{< pagebreak >}} -->
 
-{{< include sections/_01-00_nse_adult.qmd >}}
 
 <!-- {{< pagebreak >}} -->
 
@@ -132,7 +134,7 @@ validity <- readr::read_csv("data/validity.csv")
 
 # NEUROCOGNITIVE FINDINGS
 
-{{< include sections/_include_domains.qmd >}}
+<!-- {{< include sections/_include_domains.qmd >}} -->
 
 <!-- {{< pagebreak >}} -->
 
