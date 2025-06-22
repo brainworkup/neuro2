@@ -1,0 +1,6 @@
+.Rproj.user
+.history/
+scratch.R
+data-raw/
+.Rbuildignore
+.vscode/

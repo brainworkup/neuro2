@@ -1,0 +1,27 @@
+{{< include _02-01_iq.qmd >}}
+
+{{< include _02-02_academics.qmd >}}
+
+{{< include _02-03_verbal.qmd >}}
+
+{{< include _02-04_spatial.qmd >}}
+
+{{< include _02-05_memory.qmd >}}
+
+{{< include _02-06_executive.qmd >}}
+
+<!-- {{< include _02-07_motor.qmd >}} -->
+
+<!-- {{< include _02-08_social.qmd >}} -->
+
+{{< include _02-09_adhd_adult.qmd >}}
+
+<!-- {{< include _02-09_adhd_child.qmd >}} -->
+
+<!-- {{< include _02-10_emotion_adult.qmd >}} -->
+
+<!-- {{< include _02-10_emotion_child.qmd >}} -->
+
+<!-- {{< include _02-11_adaptive.qmd >}} -->
+
+<!-- {{< include _02-12_daily_living.qmd >}} -->

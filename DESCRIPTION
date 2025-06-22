@@ -1,0 +1,37 @@
+Type: Package
+Package: neuro2
+Title: Quarto + Typst Report Generator
+Version: 0.1.0
+Authors@R: 
+    person("Joey", "Trampush", , "you@example.com", role = c("aut", "cre"))
+Description: Build clinical neuropsychological reports via Quarto+Typst.
+License: MIT
+Imports:
+    dplyr,
+    fs,
+    ggplot2,
+    ggtext,
+    ggthemes,
+    glue,
+    gt,
+    gtExtras,
+    here,
+    highcharter,
+    janitor,
+    kableExtra,
+    purrr,
+    quarto (>= 1.4.0),
+    R6,
+    readr,
+    readxl,
+    stats,
+    stringr,
+    tibble,
+    tidyr,
+    tidyselect,
+    tools
+Encoding: UTF-8
+RoxygenNote: 7.3.2.9000
+Depends: 
+    R (>= 3.5)
+LazyData: true
