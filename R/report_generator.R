@@ -40,13 +40,13 @@ ReportGenerator <- R6::R6Class(
         "templates",
         "typst-report",
         "template.qmd",
-        package = "yourpkg"
+        package = "neuro2"
       )
       private$extensions_dir <- system.file(
         "quarto",
         "extensions",
         "typst",
-        package = "yourpkg"
+        package = "neuro2"
       )
       self$params <- params
       self$output_dir <- output_dir
@@ -160,10 +160,11 @@ ReportGenerator <- R6::R6Class(
       # Render master report
       quarto::quarto_render(
         input = master_path,
+        output_format = "typst",
         output_file = file.path(self$output_dir, output_file),
         execute_params = self$params,
-        format = "typst",
-        extensions = private$extensions_dir
+        render_args = c("--extensions", private$extensions_dir)
+        # extensions = private$extensions_dir
       )
       invisible(file.path(self$output_dir, output_file))
     },
@@ -171,15 +172,25 @@ ReportGenerator <- R6::R6Class(
     #' @description
     #' Render the final report using Quarto+Typst.
     #' @param output_file Filename for the rendered report (e.g., "report.pdf")
+
+    # New:
     render = function(output_file = "report.pdf") {
       out_path <- file.path(self$output_dir, output_file)
       quarto::quarto_render(
         input = private$template_qmd,
+        output_format = "typst",
         output_file = out_path,
         execute_params = self$params,
-        format = "typst",
-        extensions = private$extensions_dir
+        render_args = c("--extensions", private$extensions_dir)
       )
+
+      # quarto::quarto_render(
+      #   input = private$template_qmd,
+      #   output_file = out_path,
+      #   execute_params = self$params,
+      #   format = "typst",
+      #   extensions = private$extensions_dir
+      # )
       message("Report written to: ", out_path)
       invisible(out_path)
     }
