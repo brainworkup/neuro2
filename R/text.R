@@ -10,7 +10,13 @@
 #' @details This function uses regular expressions to extract text between specified patterns. It is useful for extracting structured text data, such as transcripts, from files.
 #' @rdname read_write_transcript_otterai
 #' @export
-read_write_transcript_otterai <- function(input, output, begin, end, eol = "\\n") {
+read_write_transcript_otterai <- function(
+  input,
+  output,
+  begin,
+  end,
+  eol = "\\n"
+) {
   # Read the entire file as a single string
   content <- readChar(input, file.info(input)$size)
 
@@ -126,10 +132,20 @@ glue_neuropsych_results <- function(df, filter, result, file) {
 #' @export
 concatenate_results <- function(df) {
   df$summary <- apply(df, 1, function(row) {
-    sw <- ifelse(row["range"] %in% c("Above Average", "High Average", "Exceptionally High"), "a relative strength",
-      ifelse(row["range"] %in% c("Below Average", "Low Average", "Exceptionally Low"), "a relative weakness", "an area of typical functioning")
+    sw <- ifelse(
+      row["range"] %in%
+        c("Above Average", "High Average", "Exceptionally High"),
+      "a relative strength",
+      ifelse(
+        row["range"] %in%
+          c("Below Average", "Low Average", "Exceptionally Low"),
+        "a relative weakness",
+        "an area of typical functioning"
+      )
     )
     percentile_as_percentage <- paste0(row["percentile"], "%")
-    glue("The patient's {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating performance as good as or better than {percentile_as_percentage} of same age peers from the general population. This estimate of {row['description']} is considered {sw}.")
+    glue(
+      "The patient's {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating performance as good as or better than {percentile_as_percentage} of same age peers from the general population. This estimate of {row['description']} is considered {sw}."
+    )
   })
 }

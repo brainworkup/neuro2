@@ -138,7 +138,8 @@ dotplot <- function(
 
   # Apply theme
   plot_object <- plot_object +
-    switch(theme,
+    switch(
+      theme,
       "fivethirtyeight" = ggthemes::theme_fivethirtyeight(),
       "minimal" = ggplot2::theme_minimal(),
       "classic" = ggplot2::theme_classic(),
@@ -608,7 +609,8 @@ dotplot2 <- function(
 
   # Apply theme
   plot_object <- plot_object +
-    switch(theme,
+    switch(
+      theme,
       "fivethirtyeight" = ggthemes::theme_fivethirtyeight(),
       "minimal" = ggplot2::theme_minimal(),
       "classic" = ggplot2::theme_classic(),

@@ -1,4 +1,4 @@
-﻿scale,raw_score,score,percentile,range,ci_95,test,test_name,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,absort,result
+scale,raw_score,score,percentile,range,ci_95,test,test_name,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,absort,result
 NAB Total Index,,94,34,Average,81 - 107,nabs,NAB-S,General Cognitive Ability,Neuropsychological Functioning,NAB Total Index,,,,standard_score,npsych_test,nabs_6,"A comprehensive measure of neuropsychological functioning (independent of general intelligence) in the domains of attentional and executive functioning, language, spatial processing, and memory fell in the Average range."
 NAB Attention Index,,103,58,Average,94 - 112,nabs,NAB-S,General Cognitive Ability,Neuropsychological Functioning,NAB Attention Index,Attention,,,standard_score,npsych_test,nabs_1,An overall screening measure of the examinee's attentional functioning was Average.
 Orientation,29,,50,Average,,nabs,NAB-S,Attention/Executive,Attention,Orientation,Attention,Verbal,Untimed,percentile,npsych_test,nabs_1,"Orientation to person, place, time, and situation was intact."

@@ -156,6 +156,7 @@ ReportGenerator <- R6::R6Class(
         file.path(self$output_dir, basename(section_files)),
         overwrite = TRUE
       )
+
       # Render master report
       quarto::quarto_render(
         input = master_path,

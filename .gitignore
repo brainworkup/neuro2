@@ -4,3 +4,4 @@ scratch.R
 data-raw/
 .Rbuildignore
 .vscode/
+inst/doc

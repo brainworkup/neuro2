@@ -32,29 +32,31 @@
 #' @rdname tbl_gt
 #' @export
 tbl_gt <-
-  function(data,
-           pheno = NULL,
-           table_name = NULL,
-           source_note = NULL,
-           names = NULL,
-           title = NULL,
-           tab_stubhead = NULL,
-           caption = NULL,
-           process_md = FALSE,
-           fn_scaled_score = NULL,
-           fn_standard_score = NULL,
-           fn_t_score = NULL,
-           fn_z_score = NULL,
-           fn_raw_score = NULL,
-           grp_scaled_score = NULL,
-           grp_standard_score = NULL,
-           grp_t_score = NULL,
-           grp_z_score = NULL,
-           grp_raw_score = NULL,
-           dynamic_grp = NULL,
-           vertical_padding = NULL,
-           multiline = TRUE,
-           ...) {
+  function(
+    data,
+    pheno = NULL,
+    table_name = NULL,
+    source_note = NULL,
+    names = NULL,
+    title = NULL,
+    tab_stubhead = NULL,
+    caption = NULL,
+    process_md = FALSE,
+    fn_scaled_score = NULL,
+    fn_standard_score = NULL,
+    fn_t_score = NULL,
+    fn_z_score = NULL,
+    fn_raw_score = NULL,
+    grp_scaled_score = NULL,
+    grp_standard_score = NULL,
+    grp_t_score = NULL,
+    grp_z_score = NULL,
+    grp_raw_score = NULL,
+    dynamic_grp = NULL,
+    vertical_padding = NULL,
+    multiline = TRUE,
+    ...
+  ) {
     # Create data counts
     data_counts <- data |>
       dplyr::select(test_name, scale, score, percentile, range) |>

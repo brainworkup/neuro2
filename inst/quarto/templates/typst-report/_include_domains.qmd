@@ -1,3 +1,7 @@
+{{< include sections/_02-01_iq.qmd >}}
+
+{{< include sections/_02-02_academics.qmd >}}
+
 {{< include _02-01_iq.qmd >}}
 
 {{< include _02-02_academics.qmd >}}

@@ -6,9 +6,14 @@ Authors@R:
     person("Joey", "Trampush", , "you@example.com", role = c("aut", "cre"))
 Description: Build clinical neuropsychological reports via Quarto+Typst.
 License: MIT
+Depends: 
+    R (>= 3.5)
 Imports:
+    cli,
     dplyr,
     fs,
+    future,
+    future.apply,
     ggplot2,
     ggtext,
     ggthemes,
@@ -19,6 +24,8 @@ Imports:
     highcharter,
     janitor,
     kableExtra,
+    memoise,
+    progress,
     purrr,
     quarto (>= 1.4.0),
     R6,
@@ -29,9 +36,8 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    tools
+    tools,
+    utils
 Encoding: UTF-8
-RoxygenNote: 7.3.2.9000
-Depends: 
-    R (>= 3.5)
 LazyData: true
+RoxygenNote: 7.3.2.9000
