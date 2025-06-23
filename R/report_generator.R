@@ -44,7 +44,7 @@ ReportGenerator <- R6::R6Class(
       )
       private$extensions_dir <- system.file(
         "quarto",
-        "extensions",
+        "_extensions",
         "neurotyp-adult-typst",
         package = "neuro2"
       )
@@ -120,7 +120,7 @@ ReportGenerator <- R6::R6Class(
     },
 
     #' @description
-    #' Assemble multiple section QMD files into a master document and render in one step.
+    #' Assemble multiple section QMD files into a master document and render in one st
     #' @param sections_dir Directory containing section .qmd files
     #' @param placeholder Placeholder tag in the master template to replace (e.g., "{{sections}}")
     #' @param output_file Name of the rendered report file (e.g., "report.pdf")
@@ -161,8 +161,9 @@ ReportGenerator <- R6::R6Class(
       quarto::quarto_render(
         input = master_path,
         output_format = "neurotyp-adult-typst",
-        output_file = file.path(self$output_dir, output_file),
-        execute_params = self$params
+        output_file = basename(output_file), # Only filename, no path
+        execute_params = self$params,
+        execute_dir = self$output_dir # Set output directory
       )
       invisible(file.path(self$output_dir, output_file))
     },

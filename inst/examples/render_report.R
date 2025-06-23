@@ -1,10 +1,13 @@
+# Set working directory to package root
+setwd(system.file(package = "neuro2"))
+
 library(neuro2)
 
 
 # 1. Create the generator
 gen <- ReportGenerator$new(
   params = list(patient = "Jane Doe", dob = "2010-04-15"),
-  output_dir = "reports"
+  output_dir = "reports2"
 )
 
 # 2. Point to the installed sections folder

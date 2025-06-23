@@ -166,7 +166,7 @@ Process raw transcript and save as cleaned Markdown.
 \if{html}{\out{<a id="method-ReportGenerator-render_sections"></a>}}
 \if{latex}{\out{\hypertarget{method-ReportGenerator-render_sections}{}}}
 \subsection{Method \code{render_sections()}}{
-Assemble multiple section QMD files into a master document and render in one step.
+Assemble multiple section QMD files into a master document and render in one st
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportGenerator$render_sections(
   sections_dir,

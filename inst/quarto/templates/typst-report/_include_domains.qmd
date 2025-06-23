@@ -1,24 +1,20 @@
 {{< include sections/_02-01_iq.qmd >}}
 
-{{< include sections/_02-02_academics.qmd >}}
+<!-- {{< include sections/_02-02_academics.qmd >}} -->
 
-{{< include _02-01_iq.qmd >}}
+{{< include sections/_02-03_verbal.qmd >}}
 
-{{< include _02-02_academics.qmd >}}
+{{< include sections/02-04_spatial.qmd >}}
 
-{{< include _02-03_verbal.qmd >}}
+{{< include sections/02-05_memory.qmd >}}
 
-{{< include _02-04_spatial.qmd >}}
-
-{{< include _02-05_memory.qmd >}}
-
-{{< include _02-06_executive.qmd >}}
+{{< include sections/02-06_executive.qmd >}}
 
 <!-- {{< include _02-07_motor.qmd >}} -->
 
 <!-- {{< include _02-08_social.qmd >}} -->
 
-{{< include _02-09_adhd_adult.qmd >}}
+<!-- {{< include _02-09_adhd_adult.qmd >}} -->
 
 <!-- {{< include _02-09_adhd_child.qmd >}} -->
 

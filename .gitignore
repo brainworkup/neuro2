@@ -6,3 +6,5 @@ data-raw/
 .vscode/
 inst/doc
 .specstory/.gitignore
+reports/
+reports*/
