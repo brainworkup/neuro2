@@ -3,6 +3,7 @@
 export("%||%")
 export(DotplotR6)
 export(DrilldownR6)
+export(NeuropsychResultsR6)
 export(ReportGenerator)
 export(TableGT)
 export(TableGT2)

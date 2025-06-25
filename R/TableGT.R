@@ -116,7 +116,7 @@ TableGT <- R6::R6Class(
       self$vertical_padding <- vertical_padding
       self$multiline <- multiline
     },
-    
+
     #' @description
     #' Construct and return the formatted `gt` table, with optional saving as PNG and PDF.
     #' This method processes the data, applies styling, adds footnotes, and saves the output if configured.
