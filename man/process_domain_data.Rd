@@ -12,7 +12,7 @@ process_domain_data(
   scale_source = NULL,
   test_filters = NULL,
   generate_reports = TRUE,
-  report_types = c("self_report"),
+  report_types = c("self"),
   generate_domain_files = FALSE
 )
 }
@@ -31,7 +31,7 @@ process_domain_data(
 
 \item{generate_reports}{Whether to generate text reports (default: TRUE).}
 
-\item{report_types}{Vector of report types to generate (default: c("self_report")).}
+\item{report_types}{Vector of report types to generate (default: c("self")).}
 
 \item{generate_domain_files}{Whether to generate domain QMD files (default: FALSE).}
 }

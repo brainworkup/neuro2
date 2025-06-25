@@ -1,0 +1,1328 @@
+---
+title: "Pluck Tables from WISC-5"
+params:
+  patient: Brooklyn
+  test: wisc5
+  test_name: WISC-5
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+  pages: [22, 23, 26, 29, 30]
+  table1:
+    label: "Subtest Score Summary"
+    value: [Similarities, Vocabulary, Block Design, Matrix Reasoning, Figure Weights, Digit Span, Picture Span, Coding, Symbol Search]
+    input: select
+    multiple: yes
+    choices:
+      Verbal Comprehension (VCI):
+        - Similarities
+        - Vocabulary
+        - Information
+        - Comprehension
+      Visual Spatial (VSI):
+        - Block Design
+        - Visual Puzzles
+      Fluid Reasoning (FRI):
+        - Matrix Reasoning
+        - Figure Weights
+        - Picture Concepts
+        - Arithmetic
+      Working Memory (WMI):
+        - Digit Span
+        - Picture Span
+        - Letter-Number Sequencing
+      Processing Speed (PSI):
+        - Coding
+        - Symbol Search
+        - Cancellation
+  table2:
+    label: "Composite Score Summary"
+    value: [Verbal Comprehension (VCI), Fluid Reasoning (FRI), Working Memory (WMI), Processing Speed (PSI), Full Scale IQ (FSIQ)]
+    input: select
+    multiple: yes
+    choices:
+      - Verbal Comprehension (VCI)
+      - Visual Spatial (VSI)
+      - Fluid Reasoning (FRI)
+      - Working Memory (WMI)
+      - Processing Speed (PSI)
+      - Full Scale IQ (FSIQ)
+  table3:
+    label: "Ancillary Composite Scores"
+    value: [General Ability (GAI), Cognitive Proficiency (CPI)]
+    input: select
+    multiple: yes
+    choices:
+      - Verbal (Expanded Crystallized) (VECI)
+      - Expanded Fluid (EFI)
+      - Quantitative Reasoning (QRI)
+      - Auditory Working Memory (AWMI)
+      - Nonverbal (NVI)
+      - General Ability (GAI)
+      - Cognitive Proficiency (CPI)
+      - Naming Speed (NSI)
+      - Symbol Translation (STI)
+      - Storage & Retrieval (SRI)
+  table4:
+    label: "Total Raw Score to Scaled Score Conversion"
+    value: [Block Design No Time Bonus, Digit Span Forward, Digit Span Backward, Digit Span Sequencing]
+    input: select
+    multiple: yes
+    choices:
+      - Block Design No Time Bonus
+      - Block Design Partial Score
+      - Digit Span Forward
+      - Digit Span Backward
+      - Digit Span Sequencing
+      - Cancellation Random
+      - Cancellation Structured
+  table5:
+    label: "Total Raw Score to Base Rate Conversion"
+    value: [Longest Digit Span Forward, Longest Digit Span Backward, Longest Digit Span Sequencing]
+    input: select
+    multiple: yes
+    choices:
+      - Longest Digit Span Forward
+      - Longest Digit Span Backward
+      - Longest Digit Span Sequencing
+      - Longest Picture Span Stimulus
+      - Longest Picture Span Response
+      - Longest Letter-Number Sequence
+      - Block Design Dimension Errors
+      - Block Design Rotation Errors
+      - Coding Rotation Errors
+      - Symbol Search Set Errors
+      - Symbol Search Rotation Errors
+      - Naming Speed Literacy Errors
+      - Naming Speed Quantity Errors
+  colnames1: [domain, scale, abbrev, raw_score, score, percentile, age_equiv, sem]
+  colnames2: [scale, abbrev, raw_score, score, percentile, ci_95, category, sem]
+  colnames3:
+    label: "Table 4 Column Names"
+    value: [scale, abbrev, raw_score, score]
+  colnames4:
+    label: "Table 5 Column Names"
+    value: [scale, abbrev, raw_score, base_rate]
+  keep1:
+    label: "Variables to Keep, Set 1"
+    value: [scale, raw_score, score, percentile, age_equiv]
+  keep2:
+    label: "Variables to Keep, Set 2"
+    value: [scale, raw_score, score, percentile, ci_95]
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+## Load libraries
+
+```{r setup, include = FALSE}
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = TRUE,
+  warning = FALSE,
+  error = TRUE
+)
+library(collapse)
+library(dplyr)
+library(hablar)
+library(here)
+library(knitr)
+library(magrittr)
+library(purrr)
+library(readr)
+library(rJava)
+library(rmarkdown)
+library(rmdformats)
+library(qs)
+library(shiny)
+library(snakecase)
+library(tabulapdf)
+library(tibble)
+library(tidyr)
+library(tidyverse)
+library(bwu)
+```
+
+## Parameters
+
+```{r}
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+pages <- params$pages
+# file <- file.path(file.choose())
+# file <- file.path(params$file)
+# qs::qsave(file, paste0(test, "_path.rds"))
+# file <- qs::qread(paste0(test, "_path.rds"))
+```
+
+## Extract Areas
+
+```{r}
+# This works well so far
+# areas_wisc5 <- tabulapdf::extract_areas(
+#   file = file,
+#   pages = pages
+# )
+# 
+# areas_wisc5 <- tabulapdf::locate_areas(
+#   file = file,
+#   pages = pages
+# )
+# areas <- areas_wisc5
+# Save the entire list to an R data file
+# qs::qsave(areas, file = "areas_wisc5.rds")
+areas <- qs::qread("~/Brooklyn/src/rmd/areas_wisc5.rds")
+```
+
+## Extract tables
+
+```{r}
+plucked_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  method = "stream",
+  output = "matrix",
+  guess = FALSE
+)
+```
+
+```{r}
+# Save the entire list to an R data file
+# qs::qsave(plucked_tables, file = "plucked_tables_wisc5.rds")
+plucked_tables <- qs::qread("plucked_tables_wisc5.rds")
+```
+
+## Function process_wisc_tables
+
+```{r}
+library(dplyr)
+library(purrr)
+
+process_wisc_tables <- function(plucked_tables) {
+  table_list <- purrr::map(plucked_tables, as_tibble) %>%
+    set_names(paste0("table", 1:length(plucked_tables))) # Rename tables
+
+  list2env(table_list, .GlobalEnv) # Assign to global environment
+}
+
+# Example Usage:
+process_wisc_tables(plucked_tables)
+
+# Loop over the list and write each matrix to a CSV file
+for (i in seq_along(plucked_tables)) {
+  write.csv(plucked_tables[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+}
+```
+
+# Table 1
+
+## Change scale names
+
+```{r}
+names(table1) <- params$colnames1
+table1 <- table1[3:18, 2:8]
+table1[1, 1] <- c("Similarities")
+table1[2, 1] <- c("Vocabulary")
+table1[3, 1] <- c("Information")
+table1[4, 1] <- c("Comprehension")
+table1[5, 1] <- c("Block Design")
+table1[6, 1] <- c("Visual Puzzles")
+table1[7, 1] <- c("Matrix Reasoning")
+table1[8, 1] <- c("Figure Weights")
+table1[9, 1] <- c("Picture Concepts")
+table1[10, 1] <- c("Arithmetic")
+table1[11, 1] <- c("Digit Span")
+table1[12, 1] <- c("Picture Span")
+table1[13, 1] <- c("Letter-Number Sequencing")
+table1[14, 1] <- c("Coding")
+table1[15, 1] <- c("Symbol Search")
+table1[16, 1] <- c("Cancellation")
+table1 <- table1 |> dplyr::select(all_of(params$keep1))
+```
+
+## Extract rows with data
+
+```{r}
+library(dplyr)
+
+# Function to replace "-" with NA and filter out rows with no real data
+filter_real_data <- function(table, key_columns) {
+  table <- table %>%
+    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) %>%
+    mutate(across(all_of(key_columns), as.numeric)) %>%
+    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
+
+  return(table)
+}
+
+# Assuming key_columns are those columns which must have data
+key_columns <- c("raw_score", "score", "percentile")
+
+# Extract and filter table1
+table1_all_rows <- as_tibble(table1) # Ensure table1 is a tibble
+table1 <- filter_real_data(table1_all_rows, key_columns)
+
+# Print the filtered table
+print(table1)
+
+```
+
+## Mutate/Ranges
+
+```{r}
+table1 <- bwu::gpluck_make_columns(
+  table1,
+  test = params$test,
+  test_name = params$test_name,
+  ci_95 = "",
+  range = "",
+  domain = "",
+  subdomain = "",
+  narrow = "",
+  pass = "Sequential",
+  verbal = "Verbal",
+  timed = "Untimed",
+  test_type = "npsych_test",
+  score_type = "scaled_score",
+  description = "",
+  result = ""
+)
+
+# Test score ranges
+table1 <- bwu::gpluck_make_score_ranges(
+  table = table1,
+  test_type = "npsych_test"
+)
+```
+
+## Domains/Subdomains
+
+```{r}
+# Domain
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    domain = dplyr::case_when(
+      scale == "Similarities" ~ "Verbal/Language",
+      scale == "Vocabulary" ~ "Verbal/Language",
+      scale == "Information" ~ "Verbal/Language",
+      scale == "Comprehension" ~ "Verbal/Language",
+      scale == "Block Design" ~ "Visual Perception/Construction",
+      scale == "Visual Puzzles" ~ "Visual Perception/Construction",
+      scale == "Matrix Reasoning" ~ "Visual Perception/Construction",
+      scale == "Figure Weights" ~ "Visual Perception/Construction",
+      scale == "Picture Concepts" ~ "Visual Perception/Construction",
+      scale == "Arithmetic" ~ "Attention/Executive",
+      scale == "Digit Span" ~ "Attention/Executive",
+      scale == "Picture Span" ~ "Attention/Executive",
+      scale == "Letter-Number Sequencing" ~ "Attention/Executive",
+      scale == "Coding" ~ "Attention/Executive",
+      scale == "Symbol Search" ~ "Attention/Executive",
+      scale == "Cancellation" ~ "Attention/Executive",
+      TRUE ~ as.character(domain)
+    )
+  )
+
+# Subdomain
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    subdomain = dplyr::case_when(
+      scale == "Similarities" ~ "Reasoning",
+      scale == "Vocabulary" ~ "Knowledge",
+      scale == "Information" ~ "Knowledge",
+      scale == "Comprehension" ~ "Reasoning",
+      scale == "Block Design" ~ "Construction",
+      scale == "Visual Puzzles" ~ "Visualization",
+      scale == "Matrix Reasoning" ~ "Reasoning",
+      scale == "Figure Weights" ~ "Reasoning",
+      scale == "Picture Concepts" ~ "Reasoning",
+      scale == "Arithmetic" ~ "Working Memory",
+      scale == "Digit Span" ~ "Working Memory",
+      scale == "Picture Span" ~ "Working Memory",
+      scale == "Letter-Number Sequencing" ~ "Working Memory",
+      scale == "Coding" ~ "Processing Speed",
+      scale == "Symbol Search" ~ "Processing Speed",
+      scale == "Cancellation" ~ "Attention",
+      TRUE ~ as.character(subdomain)
+    )
+  )
+
+# Narrow
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    narrow = dplyr::case_when(
+      scale == "Similarities" ~ "Word Reasoning",
+      scale == "Vocabulary" ~ "Word Knowledge",
+      scale == "Information" ~ "General World Knowledge",
+      scale == "Comprehension" ~ "Acquired Knowledge",
+      scale == "Block Design" ~ "Block Construction",
+      scale == "Visual Puzzles" ~ "Visualization",
+      scale == "Matrix Reasoning" ~ "Nonverbal Reasoning",
+      scale == "Figure Weights" ~ "Quantitiative Reasoning",
+      scale == "Picture Concepts" ~ "Nonverbal Reasoning",
+      scale == "Arithmetic" ~ "Verbal Working Memory",
+      scale == "Digit Span" ~ "Verbal Working Memory",
+      scale == "Picture Span" ~ "Nonverbal Working Memory",
+      scale == "Letter-Number Sequencing" ~ "Verbal Working Memory",
+      scale == "Coding" ~ "Cognitive Efficiency",
+      scale == "Symbol Search" ~ "Perceptual Speed",
+      scale == "Cancellation" ~ "Attentional Fluency",
+      TRUE ~ as.character(narrow)
+    )
+  )
+
+# PASS Model
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    pass = dplyr::case_when(
+      scale == "Block Design" ~ "Simultaneous",
+      scale == "Visual Puzzles" ~ "Simultaneous",
+      scale == "Matrix Reasoning" ~ "Simultaneous",
+      scale == "Figure Weights" ~ "Simultaneous",
+      scale == "Picture Concepts" ~ "Simultaneous",
+      scale == "Arithmetic" ~ "Attention",
+      scale == "Digit Span" ~ "Attention",
+      scale == "Picture Span" ~ "Attention",
+      scale == "Letter-Number Sequencing" ~ "Attention",
+      scale == "Cancellation" ~ "Attention",
+      scale == "Coding" ~ "Planning",
+      scale == "Symbol Search" ~ "Planning",
+      TRUE ~ as.character(pass)
+    )
+  )
+
+## Verbal vs Nonverbal
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    verbal = dplyr::case_when(
+      scale == "Block Design" ~ "Nonverbal",
+      scale == "Visual Puzzles" ~ "Nonverbal",
+      scale == "Matrix Reasoning" ~ "Nonverbal",
+      scale == "Figure Weights" ~ "Nonverbal",
+      scale == "Picture Concepts" ~ "Nonverbal",
+      scale == "Arithmetic" ~ "Verbal",
+      scale == "Digit Span" ~ "Verbal",
+      scale == "Picture Span" ~ "Nonverbal",
+      scale == "Letter-Number Sequencing" ~ "Verbal",
+      scale == "Cancellation" ~ "Nonverbal",
+      scale == "Coding" ~ "Nonverbal",
+      scale == "Symbol Search" ~ "Nonverbal",
+      TRUE ~ as.character(verbal)
+    )
+  )
+
+## Timed vs Untimed
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    timed = dplyr::case_when(
+      scale == "Block Design" ~ "Timed",
+      scale == "Visual Puzzles" ~ "Timed",
+      scale == "Matrix Reasoning" ~ "Untimed",
+      scale == "Figure Weights" ~ "Timed",
+      scale == "Picture Concepts" ~ "Untimed",
+      scale == "Arithmetic" ~ "Timed",
+      scale == "Digit Span" ~ "Untimed",
+      scale == "Picture Span" ~ "Untimed",
+      scale == "Letter-Number Sequencing" ~ "Untimed",
+      scale == "Cancellation" ~ "Timed",
+      scale == "Coding" ~ "Timed",
+      scale == "Symbol Search" ~ "Timed",
+      TRUE ~ as.character(timed)
+    )
+  )
+```
+
+## Scale descriptions
+
+```{r}
+table1 <-
+  table1 |>
+  dplyr::mutate(
+    description = dplyr::case_when(
+      scale ==
+        "Similarities" ~ "Verbal inductive reasoning",
+      scale ==
+        "Vocabulary" ~ "Word/lexical knowledge",
+      scale ==
+        "Information" ~ "Acquired knowledge/ability to acquire, retain, and retrieve general factual knowledge",
+      scale ==
+        "Comprehension" ~ "Practical knowledge and judgment of general principles and social situations",
+      scale ==
+        "Block Design" ~ "Understanding visual-spatial relationships to construct geometric designs from a model",
+      scale ==
+        "Visual Puzzles" ~ "Generate visual images in the mind's eye",
+      scale == "Matrix Reasoning" ~ "Inductive reasoning and nonverbal problem-solving",
+      scale == "Figure Weights" ~ "General sequential (deductive) reasoning and quantitative reasoning",
+      scale == "Picture Concepts" ~ "Reasoning and semantic matching",
+      scale == "Arithmetic" ~ "Solving math word problems in working memory",
+      scale == "Digit Span" ~ "Registering, maintaining, and manipulating auditory information",
+      scale == "Picture Span" ~ "Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory",
+      scale == "Letter-Number Sequencing" ~ "Maintenance and resequencing of progressively lengthier number and letter strings in working memory",
+      scale == "Coding" ~ "Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination",
+      scale == "Symbol Search" ~ "Visual-perceptual decision-making speed",
+      scale == "Cancellation" ~ "Selective visual attention, visual discrimination, and visual-perceptual processing",
+      TRUE ~ as.character(description)
+    )
+  )
+```
+
+## Glue results
+
+```{r}
+table1 <-
+  table1 %>%
+  dplyr::mutate(
+    result = glue::glue(
+      "{description} was {range}.\n"
+    )
+  )
+
+## Relocate variables
+table1 <- table1 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+
+table1 <- table1 |> dplyr::relocate(c(test, test_name), .before = scale)
+```
+
+# Table 2
+
+## Change scale names
+
+```{r}
+names(table2) <- params$colnames2
+table2 <- table2[4:9, ]
+table2[1, 1] <- c("Verbal Comprehension (VCI)")
+table2[2, 1] <- c("Visual Spatial (VSI)")
+table2[3, 1] <- c("Fluid Reasoning (FRI)")
+table2[4, 1] <- c("Working Memory (WMI)")
+table2[5, 1] <- c("Processing Speed (PSI)")
+table2[6, 1] <- c("Full Scale IQ (FSIQ)")
+table2 <- table2 |> dplyr::select(all_of(params$keep2))
+```
+
+## Extract rows with data
+
+```{r}
+library(dplyr)
+
+# Function to replace "-" with NA and filter out rows with no real data
+filter_real_data <- function(table, key_columns) {
+  table <- table %>%
+    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) %>%
+    mutate(across(all_of(key_columns), as.numeric)) %>%
+    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
+
+  return(table)
+}
+
+# Assuming key_columns are those columns which must have data
+key_columns <- c("raw_score", "score", "percentile")
+
+# Extract and filter table2
+table2_all_rows <- as_tibble(table2)
+table2 <- filter_real_data(table2_all_rows, key_columns)
+
+# Print the filtered table
+print(table2)
+```
+
+## Mutate columns
+
+```{r}
+table2 <- bwu::gpluck_make_columns(
+  table2,
+  test = params$test,
+  test_name = params$test_name,
+  ci_95 = "",
+  range = "",
+  domain = "General Cognitive Ability",
+  subdomain = "",
+  narrow = "",
+  pass = "Sequential",
+  verbal = "Verbal",
+  timed = "Untimed",
+  test_type = "npsych_test",
+  score_type = "standard_score",
+  description = "",
+  result = ""
+)
+
+# Test score ranges
+table2 <- bwu::gpluck_make_score_ranges(
+  table = table2,
+  test_type = "npsych_test"
+)
+```
+
+## Domains/Subdomains
+
+```{r}
+# Subdomain
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    subdomain = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ "Crystallized Knowledge",
+      scale == "Visual Spatial (VSI)" ~ "Visuospatial Processing",
+      scale == "Fluid Reasoning (FRI)" ~ "Fluid Reasoning",
+      scale == "Working Memory (WMI)" ~ "Working Memory",
+      scale == "Processing Speed (PSI)" ~ "Processing Speed",
+      scale == "Full Scale IQ (FSIQ)" ~ "General Intelligence",
+      TRUE ~ as.character(subdomain)
+    )
+  )
+
+# Narrow
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    narrow = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ "Crystallized Knowledge",
+      scale == "Visual Spatial (VSI)" ~ "Visuospatial Processing",
+      scale == "Fluid Reasoning (FRI)" ~ "Fluid Reasoning",
+      scale == "Working Memory (WMI)" ~ "Working Memory",
+      scale == "Processing Speed (PSI)" ~ "Processing Speed",
+      scale == "Full Scale IQ (FSIQ)" ~ "General Intelligence",
+      TRUE ~ as.character(narrow)
+    )
+  )
+
+## Verbal vs Nonverbal
+
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    verbal = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ "Verbal",
+      scale == "Visual Spatial (VSI)" ~ "Nonverbal",
+      scale == "Fluid Reasoning (FRI)" ~ "Nonverbal", # unless arithmetic too
+      scale == "Working Memory (WMI)" ~ "",
+      scale == "Processing Speed (PSI)" ~ "Nonverbal",
+      scale == "Full Scale IQ (FSIQ)" ~ "",
+      TRUE ~ as.character(verbal)
+    )
+  )
+
+## Timed vs Untimed
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    timed = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ "Untimed",
+      scale == "Visual Spatial (VSI)" ~ "Timed",
+      scale == "Fluid Reasoning (FRI)" ~ "",
+      scale == "Working Memory (WMI)" ~ "Untimed",
+      scale == "Processing Speed (PSI)" ~ "Timed",
+      scale == "Full Scale IQ (FSIQ)" ~ "",
+      TRUE ~ as.character(timed)
+    )
+  )
+```
+
+## Descriptions
+
+```{r}
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    description = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ "Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words)",
+      scale == "Visual Spatial (VSI)" ~ "Visual Spaital is not an independent factor",
+      scale == "Fluid Reasoning (FRI)" ~ "Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems)",
+      scale == "Working Memory (WMI)" ~ "Verbal and nonverbal working memory skills",
+      scale == "Processing Speed (PSI)" ~ "Processing speed, psychomotor speed, and cognitive efficiency",
+      scale == "Full Scale IQ (FSIQ)" ~ "General Intelligence (*g*)",
+      scale == "General Ability (GAI)" ~ "A subset of intellectual functioning with reduced influences of working memory and processing speed",
+      TRUE ~ as.character(description)
+    )
+  )
+```
+
+## Glue result
+
+```{r}
+table2 <-
+  table2 |>
+  dplyr::mutate(
+    result = dplyr::case_when(
+      scale == "Verbal Comprehension (VCI)" ~ glue::glue(
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
+      scale == "Visual Spatial (VSI" ~ glue::glue(
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
+      scale == "Fluid Reasoning (FRI)" ~ glue::glue(
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
+      scale == "Working Memory (WMI)" ~ glue::glue(
+        "{description} fell in the {range} range.\n"
+      ),
+      scale == "Processing Speed (PSI)" ~ glue::glue(
+        "{description} was {range}.\n"
+      ),
+      scale == "Full Scale IQ (FSIQ)" ~ glue::glue(
+        "{description} was {range} overall.\n"
+      ),
+      scale == "General Ability (GAI)" ~ glue::glue(
+        "{description} was {range} and ranked at the {percentile}th percentile, indicating performance as good as or better than {percentile}% of same-age peers from the general population.\n"
+      ),
+      TRUE ~ as.character(result)
+    )
+  )
+
+## Relocate variables
+table2 <- table2 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+
+table2 <- table2 |> dplyr::relocate(c(test, test_name), .before = scale)
+```
+
+# Table 3
+
+## Change scale names
+
+```{r}
+names(table3) <- params$colnames2
+
+table3 <- table3[c(6, 8:13), ]
+
+table3[1, 1] <- c("Verbal (Expanded Crystallized) (VECI)")
+table3[2, 1] <- c("Expanded Fluid (EFI)")
+table3[3, 1] <- c("Quantitative Reasoning (QRI)")
+table3[4, 1] <- c("Auditory Working Memory (AWMI)")
+table3[5, 1] <- c("Nonverbal (NVI)")
+table3[6, 1] <- c("General Ability (GAI)")
+table3[7, 1] <- c("Cognitive Proficiency (CPI)")
+# table3[1, 1] <- c("Naming Speed (NSI)")
+# table3[2, 1] <- c("Symbol Translation (STI)")
+# table3[3, 1] <- c("Storage & Retrieval (SRI)")
+
+table3 <- table3 |> dplyr::select(all_of(params$keep2))
+```
+
+## Extract rows with data
+
+```{r}
+# Extract and filter table3
+table3_all_rows <- as_tibble(table3)
+table3 <- filter_real_data(table3_all_rows, key_columns)
+
+# Print the filtered table
+print(table3)
+```
+
+## Mutate columns
+
+```{r}
+table3 <- bwu::gpluck_make_columns(
+  table3,
+  test = params$test,
+  test_name = params$test_name,
+  ci_95 = "",
+  range = "",
+  domain = "General Cognitive Ability",
+  subdomain = "",
+  narrow = "",
+  pass = "",
+  verbal = "",
+  timed = "",
+  test_type = "npsych_test",
+  score_type = "standard_score",
+  description = "",
+  result = ""
+)
+
+# Test score ranges
+table3 <- bwu::gpluck_make_score_ranges(
+  table = table3,
+  test_type = "npsych_test"
+)
+```
+
+## Domains/Subdomains
+
+```{r}
+table3 <-
+  table3 |>
+  mutate(
+    domain = case_when(
+      ## Ancillary
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "General Cognitive Ability",
+      scale == "Expanded Fluid (EFI)" ~ "General Cognitive Ability",
+      scale == "Quantitative Reasoning (QRI)" ~ "General Cognitive Ability",
+      scale == "Auditory Working Memory (AWMI)" ~ "Attention/Executive",
+      scale == "Nonverbal (NVI)" ~ "General Cognitive Ability",
+      scale == "General Ability (GAI)" ~ "General Cognitive Ability",
+      scale == "Cognitive Proficiency (CPI)" ~ "Attention/Executive",
+      ## Complementary
+      scale == "Naming Speed (NSI)" ~ "Verbal/Language",
+      scale == "Symbol Translation (STI)" ~ "Memory",
+      scale == "Storage & Retrieval (SRI)" ~ "Memory",
+      TRUE ~ as.character(domain)
+    )
+  )
+
+# Subdomain
+table3 <-
+  table3 |>
+  mutate(
+    subdomain = case_when(
+      scale == "General Ability (GAI)" ~ "General Intelligence",
+      scale == "Cognitive Proficiency (CPI)" ~ "Executive Functioning",
+      scale == "Auditory Working Memory (AWMI)" ~ "Working Memory",
+      scale == "Expanded Fluid (EFI)" ~ "Fluid Intelligence",
+      scale == "Nonverbal (NVI)" ~ "Fluid Intelligence",
+      scale == "Quantitative Reasoning (QRI)" ~ "Fluid Intelligence",
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Crystallized Intelligence",
+      scale == "Naming Speed (NSI)" ~ "Retrieval Fluency",
+      scale == "Symbol Translation (STI)" ~ "Learning Efficiency",
+      scale == "Storage & Retrieval (SRI)" ~ "Long-Term Storage and Retrieval",
+      TRUE ~ as.character(subdomain)
+    )
+  )
+
+# Narrow
+table3 <-
+  table3 |>
+  mutate(
+    narrow = case_when(
+      scale == "Auditory Working Memory (AWMI)" ~ "Verbal Working Memory",
+      scale == "Cognitive Proficiency (CPI)" ~ "Cognitive Efficiency",
+      scale == "Expanded Fluid (EFI)" ~ "Fluid Intelligence",
+      scale == "General Ability (GAI)" ~ "General Intelligence",
+      scale == "Nonverbal (NVI)" ~ "Fluid Intelligence",
+      scale == "Quantitative Reasoning (QRI)" ~ "Quantitative Reasoning",
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Crystallized Intelligence",
+      scale == "Naming Speed (NSI)" ~ "Naming Facility",
+      scale == "Storage & Retrieval (SRI)" ~ "Retrieval Fluency",
+      scale == "Symbol Translation (STI)" ~ "Learning Efficiency",
+      TRUE ~ as.character(narrow)
+    )
+  )
+
+# PASS Model
+table3 <-
+  table3 |>
+  mutate(
+    pass = case_when(
+      scale == "General Ability (GAI)" ~ "",
+      scale == "Cognitive Proficiency (CPI)" ~ "",
+      scale == "Nonverbal (NVI)" ~ "Simultaneous",
+      scale == "Auditory Working Memory (AWMI)" ~ "Sequential",
+      scale == "Expanded Fluid (EFI)" ~ "Simultaneous",
+      scale == "Quantitative Reasoning (QRI)" ~ "Simultaneous",
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Sequential",
+      scale == "Naming Speed (NSI)" ~ "Attention",
+      scale == "Storage & Retrieval (SRI)" ~ "Simultaneous",
+      scale == "Symbol Translation (STI)" ~ "Simultaneous",
+      TRUE ~ as.character(pass)
+    )
+  )
+
+## Verbal vs Nonverbal
+table3 <-
+  table3 |>
+  mutate(
+    verbal = case_when(
+      scale == "Auditory Working Memory (AWMI)" ~ "Verbal",
+      scale == "Cognitive Proficiency (CPI)" ~ "",
+      scale == "Expanded Fluid (EFI)" ~ "Nonverbal",
+      scale == "General Ability (GAI)" ~ "",
+      scale == "Nonverbal (NVI)" ~ "Nonverbal",
+      scale == "Quantitative Reasoning (QRI)" ~ "",
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Verbal",
+      scale == "Naming Speed (NSI)" ~ "Verbal",
+      scale == "Storage & Retrieval (SRI)" ~ "Verbal",
+      scale == "Symbol Translation (STI)" ~ "Nonverbal",
+      TRUE ~ as.character(verbal)
+    )
+  )
+
+## Timed vs Untimed
+table3 <-
+  table3 |>
+  mutate(
+    timed = case_when(
+      scale == "Auditory Working Memory (AWMI)" ~ "Untimed",
+      scale == "Cognitive Proficiency (CPI)" ~ "Timed",
+      scale == "Expanded Fluid (EFI)" ~ "Untimed",
+      scale == "General Ability (GAI)" ~ "Untimed",
+      scale == "Nonverbal (NVI)" ~ "Timed",
+      scale == "Quantitative Reasoning (QRI)" ~ "Timed",
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Untimed",
+      scale == "Naming Speed (NSI)" ~ "Timed",
+      scale == "Storage & Retrieval (SRI)" ~ "Timed",
+      scale == "Symbol Translation (STI)" ~ "Untimed",
+      TRUE ~ as.character(timed)
+    )
+  )
+```
+
+## Scale descriptions
+
+```{r}
+table3 <-
+  table3 |>
+  mutate(
+    description = case_when(
+      ## Ancillary
+      scale == "Verbal (Expanded Crystallized) (VECI)" ~ "Verbal concept formation, verbal reasoning, verbal comprehension and expression, acquired knowledge, and practical knowledge and judgment (expanded)",
+      scale == "Expanded Fluid (EFI)" ~ "The ability to use reasoning to identify and apply solutions to problems (expanded)",
+      scale == "Quantitative Reasoning (QRI)" ~ "Quantitative reasoning skills",
+      scale == "Auditory Working Memory (AWMI)" ~ "Auditory working memory processes supported by the phonological loop; ability to register, maintain, and manipulate verbally-presented information",
+      scale == "Nonverbal (NVI)" ~ "General intellectual functioning that minimizes expressive language demands",
+      scale == "General Ability (GAI)" ~ "A subset of intellectual functioning with reduced influences of working memory and processing speed",
+      scale == "Cognitive Proficiency (CPI)" ~ "An index of cognitive processing proficiency that reduces crystallzied knowledge, verbal reaoning, and fluid reasoning demands",
+      ## Complementary
+      scale == "Naming Speed (NSI)" ~ "Automaticity of naming",
+      scale == "Symbol Translation (STI)" ~ "An index of visual-verbal associative memory",
+      scale == "Storage & Retrieval (SRI)" ~ "The ability to accurately and efficiently store and retrieve auditory and visual information fromlong-term memory",
+      TRUE ~ as.character(description)
+    )
+  )
+
+# ranges
+table3 <-
+  table3 %>%
+  dplyr::mutate(
+    result = glue::glue(
+      "{description} was {range}.\n"
+    )
+  )
+
+## Relocate variables
+table3 <- table3 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+table3 <- table3 |> dplyr::relocate(c(test, test_name), .before = scale)
+```
+
+# Tables 4-5
+
+## Change scale names
+
+```{r}
+# Table 4
+names(table4) <- params$colnames3
+table4 <- table4[2:8, c(1,3:4)]
+table4[1, 1] <- c("Block Design No Time Bonus")
+table4[2, 1] <- c("Block Design Partial Score")
+table4[3, 1] <- c("Digit Span Forward")
+table4[4, 1] <- c("Digit Span Backward")
+table4[5, 1] <- c("Digit Span Sequencing")
+table4[6, 1] <- c("Cancellation Random")
+table4[7, 1] <- c("Cancellation Structured")
+
+# Table 5
+names(table5) <- params$colnames4
+table5 <- table5[2:14, c(1,3:4)]
+table5[1, 1] <- c("Longest Digit Span Forward")
+table5[2, 1] <- c("Longest Digit Span Backward")
+table5[3, 1] <- c("Longest Digit Span Sequence")
+table5[4, 1] <- c("Longest Picture Span Stimulus")
+table5[5, 1] <- c("Longest Picture Span Response")
+table5[6, 1] <- c("Longest Letter-Number Sequence")
+table5[7, 1] <- c("Block Design Dimension Errors")
+table5[8, 1] <- c("Block Design Rotation Errors")
+table5[9, 1] <- c("Coding Rotation Errors")
+table5[10, 1] <- c("Symbol Search Set Errors")
+table5[11, 1] <- c("Symbol Search Rotation Errors")
+table5[12, 1] <- c("Naming Speed Literacy Errors")
+table5[13, 1] <- c("Naming Speed Quantity Errors")
+```
+
+## Extract rows with data
+
+```{r}
+# Removed percentile
+key_columns <- c("raw_score", "score")
+# Extract and filter table4
+table4_all_rows <- as_tibble(table4)
+table4 <- filter_real_data(table4_all_rows, key_columns)
+# Print the filtered table
+print(table4)
+```
+
+```{r}
+# Removed percentile
+key_columns <- c("raw_score")
+# Extract and filter table5
+table5_all_rows <- as_tibble(table5)
+table5 <- filter_real_data(table5_all_rows, key_columns)
+# Print the filtered table
+print(table5)
+```
+
+## Mutate columns
+
+```{r}
+table4 <- bwu::gpluck_make_columns(
+  table4,
+  range = "",
+  ci_95 = "",
+  test = params$test,
+  test_name = params$test_name,
+  domain = "Attention/Executive",
+  subdomain = "Working Memory",
+  narrow = "",
+  pass = "Attention",
+  verbal = "Verbal",
+  timed = "Untimed",
+  test_type = "npsych_test",
+  score_type = "scaled_score",
+  description = "",
+  result = ""
+)
+
+table5 <- bwu::gpluck_make_columns(
+  table5,
+  range = "",
+  test = params$test,
+  test_name = params$test_name,
+  domain = "Attention/Executive",
+  subdomain = "",
+  narrow = "",
+  pass = "",
+  verbal = "",
+  timed = "",
+  test_type = "npsych_test",
+  score_type = "raw_score",
+  description = "",
+  result = ""
+)
+```
+
+## Compute percentile for table 4
+
+```{r}
+table4 <- bwu::gpluck_compute_percentile_range(
+  .x = table4,
+  .score = table4$score,
+  .score_type = "scaled_score"
+)
+```
+
+## Test score ranges
+
+```{r}
+table4 <- bwu::gpluck_make_score_ranges(
+  table = table4,
+  test_type = "npsych_test"
+)
+```
+
+```{r}
+library(dplyr)
+
+table4 <-
+  table4 |>
+  dplyr::mutate(
+    domain = dplyr::case_when(
+      ## Total Raw Score to Scaled Score Conversion
+      scale == "Block Design No Time Bonus" ~ "Visual Perception/Construction",
+      scale == "Block Design Partial Score" ~ "Visual Perception/Construction",
+      scale == "Digit Span Backward" ~ "Attention/Executive",
+      scale == "Digit Span Forward" ~ "Attention/Executive",
+      scale == "Digit Span Sequencing" ~ "Attention/Executive",
+      scale == "Cancellation Random" ~ "Attention/Executive",
+      scale == "Cancellation Structured" ~ "Attention/Executive",
+      TRUE ~ as.character(domain)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    domain = case_when(
+      ## Total Raw Score to Base Rate Conversion
+      scale == "Longest Digit Span Backward" ~ "Attention/Executive",
+      scale == "Longest Digit Span Forward" ~ "Attention/Executive",
+      scale == "Longest Digit Span Sequence" ~ "Attention/Executive",
+      scale == "Longest Picture Span Response" ~ "Attention/Executive",
+      scale == "Longest Picture Span Stimulus" ~ "Attention/Executive",
+      scale == "Longest Letter-Number Sequence" ~ "Attention/Executive",
+      scale == "Block Design Dimension Errors" ~ "Visual Perception/Construction",
+      scale == "Block Design Rotation Errors" ~ "Visual Perception/Construction",
+      scale == "Coding Rotation Errors" ~ "Attention/Executive",
+      scale == "Symbol Search Set Errors" ~ "Attention/Executive",
+      scale == "Symbol Search Rotation Errors" ~ "Attention/Executive",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal/Language",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal/Language",
+      TRUE ~ as.character(domain)
+    )
+  )
+
+table4 <-
+  table4 |>
+  mutate(
+    subdomain = case_when(
+      scale == "Block Design No Time Bonus" ~ "Construction",
+      scale == "Block Design Partial Score" ~ "Construction",
+      scale == "Digit Span Forward" ~ "Attention",
+      scale == "Digit Span Backward" ~ "Working Memory",
+      scale == "Digit Span Sequencing" ~ "Working Memory",
+      scale == "Cancellation Random" ~ "Processing Speed",
+      scale == "Cancellation Structured" ~ "Processing Speed",
+      TRUE ~ as.character(subdomain)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    subdomain = case_when(
+      scale == "Block Design Dimension Errors" ~ "Response Monitoring",
+      scale == "Block Design Rotation Errors" ~ "Response Monitoring",
+      scale == "Coding Rotation Errors" ~ "Response Monitoring",
+      scale == "Longest Digit Span Backward" ~ "Working Memory",
+      scale == "Longest Digit Span Forward" ~ "Attention Span",
+      scale == "Longest Digit Span Sequence" ~ "Working Memory",
+      scale == "Longest Letter-Number Sequence" ~ "Working Memory",
+      scale == "Longest Picture Span Response" ~ "Working Memory",
+      scale == "Longest Picture Span Stimulus" ~ "Working Memory",
+      scale == "Naming Speed Literacy Errors" ~ "Retrieval Fluency",
+      scale == "Naming Speed Quantity Errors" ~ "Retrieval Fluency",
+      scale == "Symbol Search Rotation Errors" ~ "Response Monitoring",
+      scale == "Symbol Search Set Errors" ~ "Response Monitoring",
+      TRUE ~ as.character(subdomain)
+    )
+  )
+
+## Narrow subdomain
+table4 <-
+  table4 |>
+  mutate(
+    narrow = case_when(
+      scale == "Block Design No Time Bonus" ~ "Construction (untimed)",
+      scale == "Block Design Partial Score" ~ "Construction (untimed)",
+      scale == "Digit Span Forward" ~ "Verbal Attention",
+      scale == "Digit Span Backward" ~ "Verbal Working Memory",
+      scale == "Digit Span Sequencing" ~ "Verbal Working Memory",
+      scale == "Cancellation Random" ~ "Processing Speed",
+      scale == "Cancellation Structured" ~ "Processing Speed",
+      TRUE ~ as.character(narrow)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    narrow = case_when(
+      scale == "Block Design Dimension Errors" ~ "Visuoconstruction",
+      scale == "Block Design Rotation Errors" ~ "Visuoconstruction",
+      scale == "Coding Rotation Errors" ~ "Nonverbal Processing Speed",
+      scale == "Longest Digit Span Forward" ~ "Verbal Attention",
+      scale == "Longest Digit Span Backward" ~ "Verbal Working Memory",
+      scale == "Longest Digit Span Sequence" ~ "Verbal Working Memory",
+      scale == "Longest Letter-Number Sequence" ~ "Verbal Working Memory",
+      scale == "Longest Picture Span Response" ~ "Nonverbal Working Memory",
+      scale == "Longest Picture Span Stimulus" ~ "Nonverbal Working Memory",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal Processing Speed",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal Processing Speed",
+      scale == "Symbol Search Rotation Errors" ~ "Nonverbal Processing Speed",
+      scale == "Symbol Search Set Errors" ~ "Nonverbal Processing Speed",
+      TRUE ~ as.character(narrow)
+    )
+  )
+
+# PASS Model
+table4 <-
+  table4 |>
+  mutate(
+    pass = case_when(
+      scale == "Block Design No Time Bonus" ~ "Simultaneous",
+      scale == "Block Design Partial Score" ~ "Simultaneous",
+      scale == "Cancellation Random" ~ "Attention",
+      scale == "Cancellation Structured" ~ "Attention",
+      scale == "Digit Span Forward" ~ "Attention",
+      scale == "Digit Span Backward" ~ "Sequential",
+      scale == "Digit Span Sequencing" ~ "Sequential",
+      TRUE ~ as.character(pass)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    pass = case_when(
+      scale == "Block Design Dimension Errors" ~ "Simultaneous",
+      scale == "Block Design Rotation Errors" ~ "Simultaneous",
+      scale == "Coding Rotation Errors" ~ "Attention",
+      scale == "Longest Digit Span Backward" ~ "Sequential",
+      scale == "Longest Digit Span Forward" ~ "Attention",
+      scale == "Longest Digit Span Sequence" ~ "Sequential",
+      scale == "Longest Letter-Number Sequence" ~ "Sequential",
+      scale == "Longest Picture Span Response" ~ "Attention",
+      scale == "Longest Picture Span Stimulus" ~ "Attention",
+      scale == "Naming Speed Literacy Errors" ~ "Sequential",
+      scale == "Naming Speed Quantity Errors" ~ "Sequential",
+      scale == "Symbol Search Rotation Errors" ~ "Attention",
+      scale == "Symbol Search Set Errors" ~ "Attention",
+      TRUE ~ as.character(pass)
+    )
+  )
+
+# Verbal/Nonverbal
+table4 <-
+  table4 |>
+  mutate(
+    verbal = case_when(
+      scale == "Block Design No Time Bonus" ~ "Nonverbal",
+      scale == "Block Design Partial Score" ~ "Nonverbal",
+      scale == "Cancellation Random" ~ "Nonverbal",
+      scale == "Cancellation Structured" ~ "Nonverbal",
+      scale == "Digit Span Backward" ~ "Verbal",
+      scale == "Digit Span Forward" ~ "Verbal",
+      scale == "Digit Span Sequencing" ~ "Verbal",
+      TRUE ~ as.character(verbal)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    verbal = case_when(
+      scale == "Block Design Dimension Errors" ~ "Nonverbal",
+      scale == "Block Design Rotation Errors" ~ "Nonverbal",
+      scale == "Coding Rotation Errors" ~ "Nonverbal",
+      scale == "Longest Digit Span Backward" ~ "Verbal",
+      scale == "Longest Digit Span Forward" ~ "Verbal",
+      scale == "Longest Digit Span Sequence" ~ "Verbal",
+      scale == "Longest Letter-Number Sequence" ~ "Verbal",
+      scale == "Longest Picture Span Response" ~ "Nonverbal",
+      scale == "Longest Picture Span Stimulus" ~ "Nonverbal",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal",
+      scale == "Symbol Search Rotation Errors" ~ "Nonverbal",
+      scale == "Symbol Search Set Errors" ~ "Nonverbal",
+      TRUE ~ as.character(verbal)
+    )
+  )
+
+# Timed vs untimed
+table4 <-
+  table4 |>
+  mutate(
+    timed = case_when(
+      scale == "Block Design No Time Bonus" ~ "Untimed",
+      scale == "Block Design Partial Score" ~ "Untimed",
+      scale == "Cancellation Random" ~ "Timed",
+      scale == "Cancellation Structured" ~ "Timed",
+      scale == "Digit Span Backward" ~ "Untimed",
+      scale == "Digit Span Forward" ~ "Untimed",
+      scale == "Digit Span Sequencing" ~ "Untimed",
+      TRUE ~ as.character(timed)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    timed = case_when(
+      scale == "Block Design Dimension Errors" ~ "Timed",
+      scale == "Block Design Rotation Errors" ~ "Timed",
+      scale == "Coding Rotation Errors" ~ "Timed",
+      scale == "Longest Digit Span Backward" ~ "Untimed",
+      scale == "Longest Digit Span Forward" ~ "Untimed",
+      scale == "Longest Digit Span Sequence" ~ "Untimed",
+      scale == "Longest Letter-Number Sequence" ~ "Untimed",
+      scale == "Longest Picture Span Response" ~ "Untimed",
+      scale == "Longest Picture Span Stimulus" ~ "Untimed",
+      scale == "Naming Speed Literacy Errors" ~ "Timed",
+      scale == "Naming Speed Quantity Errors" ~ "Timed",
+      scale == "Symbol Search Rotation Errors" ~ "Timed",
+      scale == "Symbol Search Set Errors" ~ "Timed",
+      TRUE ~ as.character(timed)
+    )
+  )
+```
+
+```{r}
+# Description
+table4 <-
+  table4 |>
+  mutate(
+    description = case_when(
+      scale == "Block Design No Time Bonus" ~ "Visuoconstruction and integration of blocks (untimed)",
+      scale == "Block Design Partial Score" ~ "Visuoconstruction and integration of blocks (total correct)",
+      scale == "Digit Span Backward" ~ "Recall of digits backward",
+      scale == "Digit Span Forward" ~ "Recall of digits forward",
+      scale == "Digit Span Sequencing" ~ "Recall of digits sequentially",
+      scale == "Cancellation Random" ~ "Unstructured selective visual attention",
+      scale == "Cancellation Structured" ~ "Structured selective visual attention",
+      TRUE ~ as.character(description)
+    )
+  )
+
+table5 <-
+  table5 |>
+  mutate(
+    description = case_when(
+      scale == "Block Design Dimension Errors" ~ "visuoconstruction and integration of blocks (dimension errors)",
+      scale == "Block Design Rotation Errors" ~ "visuoconstruction and integration of blocks (rotation errors)",
+      scale == "Longest Digit Span Forward" ~ "Auditory attention span",
+      scale == "Longest Digit Span Backward" ~ "Working memory span",
+      scale == "Longest Digit Span Sequence" ~ "Working memory span (sequencing)",
+      scale == "Longest Letter-Number Sequence" ~ "Recalling and reordering progressively longer series of digits and letters",
+      scale == "Symbol Search Rotation Errors" ~ "Processing speed, attention, and concentration (rotation errors)",
+      scale == "Symbol Search Set Errors" ~ "Processing speed, attention, and concentration (set errors)",
+      scale == "Naming Speed Literacy Errors" ~ "naming speed for objects/letters/numbers (errors)",
+      scale == "Naming Speed Quantity Errors" ~ "naming speed for quantities (errors)",
+      scale == "Longest Picture Span Response" ~ "Visual/nonverbal working memory and working memory capacity (response)",
+      scale == "Longest Picture Span Stimulus" ~ "Visual/nonverbal working memory and working memory capacity (stimulus)",
+      scale == "Coding Rotation Errors" ~ "Visual-motor processing speed (rotation errors)",
+      TRUE ~ as.character(description)
+    )
+  )  
+```
+
+## Glue result
+
+```{r}
+table4 <-
+    table4 |> 
+    tidytable::mutate(
+      result = glue::glue(
+        "{description} was {range}."
+      )
+    )
+
+table5 <-
+    table5 |> 
+    tidytable::mutate(
+      result = glue::glue(
+        "{description} was {range}."
+      )
+    )
+
+
+## Relocate variables
+table4 <- table4 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+table4 <- table4 |> dplyr::relocate(c(test, test_name), .before = scale)
+
+table5 <- table5 |> dplyr::relocate(c(raw_score), .after = scale)
+table5 <- table5 |> dplyr::relocate(c(test, test_name), .before = scale)
+```
+
+# Combine tables
+
+```{r}
+wisc5 <- collapse::rowbind(table2, table3, table1, table4, table5, fill = TRUE)
+```
+
+## Write out final csv
+
+```{r}
+readr::write_csv(wisc5, here::here("data", "csv", "wisc5.csv"))
+```

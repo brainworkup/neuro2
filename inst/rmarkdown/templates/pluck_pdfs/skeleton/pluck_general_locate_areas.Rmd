@@ -1,0 +1,477 @@
+---
+title: |
+  <center> Neurocognitive Data </center>
+  <center> Any Test </center>
+date: "`r Sys.Date()`"
+params:
+  patient: Biggie
+  test:
+    label: "Test"
+    value: test
+    input: select
+    multiple: no
+    choices:
+      - wais4
+      - wais5
+      - wrat5
+  test_name:
+    label: "Test Name"
+    value: test_name
+    input: select
+    multiple: no
+    choices:
+      - WAIS-IV
+      - WAIS-5
+      - WRAT-5
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+  # pages: [5, 5]
+  variables:
+    label: "Variable Names"
+    value: [scale, raw_score, score, ci_95, percentile]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - ci_95
+      - percentile
+      - category
+      - domain
+      - abbrev
+      - base_rate
+      - z_score
+      - sem
+      - ref_group_ss
+  extract_columns: [1,2,3,4,5]
+  extract_columns_label:
+    label: "Columns to keep"
+    value: [scale, raw_score, score, ci_95, percentile]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - ci_95
+      - percentile
+  test_type:
+    label: "Test Type"
+    value: "npsych_test"
+    input: radio
+    choices:
+      - npsych_test
+      - rating_scale
+      - validity_indicator
+  score_type:
+    label: "Score type"
+    value: "standard_score"
+    input: radio
+    choices:
+      - standard_score
+      - t_score
+      - scaled_score
+      - raw_score
+      - base_rate
+      - z_score
+  compute_percentile: FALSE
+  compute_ci95: FALSE
+  subtests: FALSE
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+## Load libraries
+
+```{r setup, include = FALSE}
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = TRUE,
+  warning = FALSE,
+  error = TRUE
+)
+library(here)
+library(knitr)
+library(magrittr)
+library(readr)
+library(rmarkdown)
+library(rmdformats)
+library(shiny)
+library(snakecase)
+library(tabulapdf)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(vroom)
+library(glue)
+library(rlang)
+library(bwu)
+```
+
+## Parameters
+
+NOTE: moved to params.R ...
+can use those
+
+```{r eval = FALSE}
+source("params.R")
+patient <- (params$patient)
+test <- (params$test)
+test_name <- (params$test_name)
+pages <- (params$pages)
+# file <- file.path(file.choose())
+file <- file.path(params$file)
+saveRDS(file, paste0(test, ".rds")) # eventually update to data directory
+# file <- readRDS(paste0(test, ".rds"))
+```
+
+## Locate areas
+
+```{r eval = FALSE}
+# file <- file.path(file.choose())
+areas <- tabulapdf::locate_areas(
+  file = file,
+  pages = pages
+)
+```
+
+```{r}
+# Saves areas as text files in df or list
+# Convert the list to a data frame
+areas_df <- do.call(rbind, lapply(areas, function(x) as.data.frame(t(x))))
+
+# Write the data frame to a text file
+write.table(areas_df,
+  file = paste0("areas_", test, ".txt"),
+  sep = "\t",
+  row.names = FALSE,
+  col.names = TRUE,
+  quote = FALSE
+)
+
+# Save the list structure to a text file
+dput(areas, file = "areas_test.txt")
+
+# Read the list back into R
+areas_test <- dget("areas_test.txt")
+```
+
+## Locate areas
+
+```{r areas-known, eval = FALSE}
+# if known
+if (params$version == "full") {
+  area <- list(
+    index = c(133, 50, 196, 560),
+    vci = c(303, 50, 338, 560),
+    pri = c(388, 50, 421, 560),
+    wmi = c(473, 50, 507, 560),
+    psi = c(560, 50, 576, 560),
+    bd = c(411, 50, 431, 560),
+    ds = c(491, 50, 510, 560)
+  )
+} else if (params$version == "brief") {
+  area <- list(
+    vci = c(168, 50, 189, 560),
+    pri = c(238, 50, 260, 560),
+    wmi = c(308, 50, 329, 560),
+    psi = c(376, 50, 402, 560)
+  )
+}
+# with FSIQ
+# index = c(132, 50, 227, 560),
+# vci = c(364, 50, 398, 560),
+# pri = c(450, 50, 484, 560),
+# wmi = c(535, 50, 570, 560),
+# psi = c(620, 50, 656, 560),
+# bd = c(355, 50, 375, 560),
+# ds = c(436, 50, 533, 560)
+```
+
+## Extract tables
+
+Extract tables from the PDF file using `tabulapdf`
+
+```{r eval = F}
+plucked_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  guess = NULL,
+  method = "decide",
+  output = "matrix"
+)
+
+# Save the list of data frames to a file
+saveRDS(plucked_tables, file = "plucked_tables.rds")
+```
+
+```{r}
+# Load the list of data frames from the file
+plucked_tables <- readRDS("plucked_tables.rds")
+
+# Verify that the list is loaded correctly
+str(plucked_tables)
+```
+
+## Extract areas with `tabulapdf`
+
+NOTE: Do this in R first in `params.R` file, not here
+
+```{r eval = FALSE}
+# file <- file.path("data", "pdf", paste0(test, ".pdf"))
+# file <- file.path(file.choose(""))
+
+extracted_areas <- tabulapdf::extract_areas(
+  file = file,
+  pages = pages,
+  method = "decide",
+  output = "matrix",
+  copy = TRUE
+)
+```
+
+```{r}
+# Check the extracted areas
+str(extracted_areas)
+
+# Save the entire list to an R data file
+save(extracted_areas, file = paste0(test, ".RData"))
+
+saveRDS(extracted_areas, paste0(test, ".rds")) # eventually update to data directory
+```
+
+```{r}
+# To read the extracted areas back in
+extracted_areas <- readRDS(paste0(test, ".rds"))
+```
+
+## Functions
+
+### Function to merge subtests
+
+```{r eval = params$subtests}
+# Loop over the list and write each matrix to a CSV file
+for (i in seq_along(extracted_areas)) {
+  write.csv(extracted_areas[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+}
+
+# Function to merge subtests
+merge_subtests <- function(test, suffix = "csv") {
+  # Get the list of files matching the prefix and suffix
+  files <- dir(pattern = paste0(test, "_[0-9]+\\.", suffix))
+
+  # If no files are found, return an empty data frame
+  if (length(files) == 0) {
+    return(data.frame())
+  }
+
+  # Read in the first file
+  df <- readr::read_csv(files[1])
+
+  # Read in and bind the remaining files
+  for (file in files[-1]) {
+    temp_df <- readr::read_csv(file)
+    df <- dplyr::bind_rows(df, temp_df)
+  }
+
+  # Return the merged data frame
+  return(df)
+}
+
+df <- merge_subtests(test)
+```
+
+### Function to extract columns by position
+
+```{r}
+# Function to extract columns by position
+extract_columns_by_position <- function(df, positions) {
+  df[, positions]
+}
+```
+
+```{r}
+# To save the filtered data.frame separately
+filtered_df <- extract_columns_by_position(df, params$extract_columns)
+
+# To overwrite the original data.frame
+df <- extract_columns_by_position(df, params$extract_columns)
+
+# Rename the variables
+colnames(df) <- params$variables
+
+# Step 1: Replace "-" with NA in the entire dataframe
+df[df == "-"] <- NA
+
+# Step 2 (Optional): Convert 'score' and 'percentile' to numeric
+df <- df |>
+  mutate(
+    score = as.numeric(score),
+    percentile = as.numeric(percentile)
+  )
+
+# Step 3: Remove rows where 'score' or 'percentile' are missing
+df <- df |>
+  filter(!is.na(score) & !is.na(percentile))
+```
+
+### Function to convert specified columns to integer, double, and factor types
+
+```{r}
+# Function to convert specified columns to integer, double, and factor types
+convert_columns <- function(df, to_integer, to_double, to_factor) {
+  df <- df %>%
+    mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) %>%
+    mutate(across(all_of(to_double), as.double, .names = "{.col}")) %>%
+    mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
+  return(df)
+}
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score")
+to_double <- c("percentile")
+to_factor <- c("category")
+
+# Use the function to convert the columns
+df <- convert_columns(df, to_integer, to_double, to_factor = NULL)
+```
+
+### Function to handle percentile conversion
+
+```{r percentile, eval = params$compute_percentile}
+# Function to handle percentile conversion
+convert_percentile <- function(df, column_name) {
+  column_sym <- rlang::sym(column_name)
+
+  df <- df %>%
+    mutate(original_percentile = .data[[column_name]]) %>% # Store original percentile values
+    mutate(temp_column = as.numeric(ifelse(
+      grepl("^>", .data[[column_name]]),
+      as.numeric(sub("^>", "", .data[[column_name]])) + 0.1,
+      ifelse(grepl("^<", .data[[column_name]]), 0.9, .data[[column_name]])
+    ))) %>%
+    mutate(!!column_sym := temp_column) %>%
+    select(-temp_column)
+  return(df)
+}
+
+# Apply the convert_percentile function to the percentile column
+df <- convert_percentile(df, "percentile")
+```
+
+## Function to calculate 95% CI if needed
+
+```{r eval = params$compute_ci95}
+# Assuming df is your data.frame and calc_ci_95 is your function
+for (i in seq_len(nrow(df))) {
+  ci_values <- bwu::calc_ci_95(
+    ability_score = df$score[i],
+    mean = 10, # change to 50, 0, 100, etc.
+    standard_deviation = 3, # change to 10, 1, 15, etc.
+    reliability = .90
+  )
+  df$true_score[i] <- ci_values["true_score"]
+  df$ci_lo[i] <- ci_values["lower_ci_95"]
+  df$ci_hi[i] <- ci_values["upper_ci_95"]
+  df$ci_95[i] <- paste0(ci_values["lower_ci_95"], " - ", ci_values["upper_ci_95"])
+}
+
+df <- df |>
+  dplyr::select(-c(true_score, ci_lo, ci_hi)) |>
+  dplyr::relocate(ci_95, .after = score)
+```
+
+## Match with lookup table
+
+```{r eval = TRUE}
+# Load the lookup table
+lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- bwu::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r ranges, eval = TRUE}
+df_mutated <- df_mutated |>
+  dplyr::mutate(range = NULL) |>
+  bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
+  dplyr::relocate(c(range), .after = percentile)
+```
+
+## Glue results for each scale
+
+```{r results, eval = TRUE}
+df <- df_mutated |>
+  dplyr::mutate(
+    result = ifelse(
+      percentile == 1,
+      glue::glue("{description} fell within the {range} and ranked at the {percentile}st percentile, indicating performance as good as or better than {percentile}% of same-age peers from the general population.\n"),
+      ifelse(
+        percentile == 2,
+        glue::glue("{description} fell within the {range} and ranked at the {percentile}nd percentile, indicating performance as good as or better than {percentile}% of same-age peers from the general population.\n"),
+        ifelse(
+          percentile == 3,
+          glue::glue("{description} fell within the {range} and ranked at the {percentile}rd percentile, indicating performance as good as or better than {percentile}% of same-age peers from the general population.\n"),
+          glue::glue("{description} fell within the {range} and ranked at the {percentile}th percentile, indicating performance as good as or better than {percentile}% of same-age peers from the general population.\n")
+        )
+      )
+    )
+  ) |>
+  dplyr::select(-description) |>
+  dplyr::relocate(absort, .after = result)
+```
+
+## Write out final csv
+
+```{r write}
+readr::write_excel_csv(df, here::here("data", "csv", paste0(test, ".csv")), col_names = TRUE)
+```
+
+## Write to "g2.csv" file
+
+```{r g2, eval = TRUE}
+has_headers <- function(file_path) {
+  if (!file.exists(file_path)) {
+    return(FALSE) # File doesn't exist, headers are needed
+  }
+  # Check if the file has at least one line (header)
+  return(length(readLines(file_path, n = 1)) > 0)
+}
+
+csv_file <- df
+g <- "g2"
+file_path <- here::here("data", paste0(g, ".csv"))
+
+readr::write_excel_csv(
+  csv_file,
+  file_path,
+  append = TRUE,
+  col_names = !has_headers(file_path),
+  quote = "all"
+)
+```
+
+THE END!!

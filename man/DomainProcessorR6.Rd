@@ -181,13 +181,13 @@ A vector of scale names.
 \subsection{Method \code{filter_by_test()}}{
 Filter data by test names for specific report types.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_test(report_type = "self_report")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_test(report_type = "self")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{report_type}}{Type of report to filter for ("self_report", "observer", "performance").}
+\item{\code{report_type}}{Type of report to filter for ("self", "observer", "performance").}
 }
 \if{html}{\out{</div>}}
 }
@@ -201,16 +201,13 @@ A filtered data frame.
 \subsection{Method \code{generate_report()}}{
 Generate text reports for different report types.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_report(
-  report_type = "self_report",
-  output_file = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_report(report_type = "self", output_file = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{report_type}}{Type of report to generate ("self_report", "observer", "performance").}
+\item{\code{report_type}}{Type of report to generate ("self", "observer", "performance").}
 
 \item{\code{output_file}}{Output file path for the report.}
 }
@@ -290,7 +287,7 @@ Generate domain text QMD file.
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd(
   domain_name = NULL,
   output_file = NULL,
-  report_type = "self_report"
+  report_type = "self"
 )}\if{html}{\out{</div>}}
 }
 
@@ -301,7 +298,7 @@ Generate domain text QMD file.
 
 \item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
 
-\item{\code{report_type}}{Type of report to generate (default: "self_report").}
+\item{\code{report_type}}{Type of report to generate (default: "self").}
 }
 \if{html}{\out{</div>}}
 }
@@ -317,7 +314,7 @@ Run the complete processing pipeline.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$process(
   generate_reports = TRUE,
-  report_types = c("self_report"),
+  report_types = c("self"),
   generate_domain_files = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -327,7 +324,7 @@ Run the complete processing pipeline.
 \describe{
 \item{\code{generate_reports}}{Whether to generate text reports (default: TRUE).}
 
-\item{\code{report_types}}{Vector of report types to generate (default: c("self_report")).}
+\item{\code{report_types}}{Vector of report types to generate (default: c("self")).}
 
 \item{\code{generate_domain_files}}{Whether to generate domain QMD files (default: FALSE).}
 }

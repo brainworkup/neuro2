@@ -1,0 +1,503 @@
+---
+title: "Plant Validity Indicators"
+params:
+  patient:
+    label: "Patient First Name:"
+    value: "{{< var patient >}}"
+    input: text
+  test_name:
+    label: "Full Name of Test/Test Battery:"
+    value: ""
+    input: radio
+    choices:
+      Performance Validity:
+        - ACS Word Choice
+        - Reliable Digit Span
+        - CVLT-3
+        - PAI
+        - TOMM
+        - DCT
+      Symptom Validity:
+        - CAARS Self-Report
+        - CAARS Observer-Report
+        - CEFI Self-Report
+        - CEFI Observer-Report
+  test:
+    label: "Test/Measure File Name:"
+    value: ""
+    input: radio
+    choices:
+      - caars_sr
+      - caars_or
+      - cefi_sr
+      - cefi_or
+      - word_choice
+      - rds
+      - cvlt3_brief
+      - pai
+      - tomm
+      - dct
+  scale:
+    label: "Scale/Subtest:"
+    value: Select Scale
+    input: select
+    choices:
+      ACS:
+        - ACS Word Choice
+        - Word Choice Correct
+        - Reliable Digit Span
+      CVLT3:
+        - CVLT-3 Forced-Choice Recognition Hits
+      DCT:
+        - E-Score
+      TOMM:
+        - TOMM Trial 1
+        - TOMM Trial 2
+      ADHD:
+        - Inconsistency Index
+        - CAARS-SR Inconsistency Index
+        - CAARS-OR Inconsistency Index
+      Executive Functioning:
+        - Consistency Index
+        - Negative Impression
+        - Consistency Index
+        - Negative Impression
+        - CEFI-SR Consistency Index
+        - CEFI-SR Negative Impression
+        - CEFI-OR Consistency Index
+        - CEFI-OR Negative Impression
+      PAI Validity Scales:
+        - Inconsistency Index
+        - Infrequency Index
+        - Negative Impression Management
+        - Positive Impression Management
+        - Malingering Index
+        - Rogers Discriminant Function
+        - Negative Distortion Scale
+        - Hong Malingering Index
+        - Multiscale Feigning Index
+        - Malingered Pain-Related Disability Discriminant Function
+        - Defensiveness Index
+        - Cashel Discriminant Function
+        - Positive Distortion Scale
+        - Hong Defensiveness Index
+        - Back Random Responding
+        - Hong Randomness Index
+  raw_score:
+    label: "Raw score:"
+    value: 10
+    input: numeric
+  score:
+    label: "Standardized score:"
+    value: 50
+    input: numeric
+  score_type:
+    label: "Type of Test Score:"
+    value: raw_score
+    input: radio
+    choices:
+      - raw_score
+      - z_score
+      - scaled_score
+      - t_score
+      - standard_score
+      - beta_coefficient
+  domain:
+    label: "Domain:"
+    value: Select domain
+    input: radio
+    choices:
+      - Performance Validity
+      - Symptom Validity
+  subdomain:
+    label: "Subdomain:"
+    value: "NULL"
+    input: select
+    choices:
+      Performance Validity:
+        - Cognitive Effort
+      Symptom Validity:
+        - Response Inconsistency
+        - Negative Impression
+        - Positive Impression
+  narrow:
+    label: "Narrow subdomain:"
+    value: Select domain
+    input: select
+    choices:
+      ADHD/EF:
+        - CAARS-OR Inconsistency Index
+        - CAARS-SR Inconsistency Index
+        - CEFI-OR Consistency Index
+        - CEFI-OR Negative Impression
+        - CEFI-SR Consistency Index
+        - CEFI-SR Negative Impression
+      Cognitive Performance:
+        - Word Choice Correct
+        - Reliable Digit Span
+        - CVLT-3 Forced-Choice Recognition Hits
+        - Dot Counting E-Score
+      Personality Assessment:
+        - Inconsistency Index
+        - Infrequency Index
+        - Negative Impression Management
+        - Positive Impression Management
+        - Malingering Index
+        - Rogers Discriminant Function
+        - Negative Distortion Scale
+        - Hong Malingering Index
+        - Multiscale Feigning Index
+        - Malingered Pain-Related Disability Discriminant Function
+        - Defensiveness Index
+        - Cashel Discriminant Function
+        - Positive Distortion Scale
+        - Hong Defensiveness Index
+        - Back Random Responding
+        - Hong Randomness Index
+  verbal:
+    label: "Verbal or Nonverbal Test:"
+    value: ""
+    input: radio
+    choices:
+      - Verbal
+      - Nonverbal
+  timed:
+    label: "Timed or Untimed Test:"
+    value: ""
+    input: radio
+    choices:
+      - Timed
+      - Untimed
+  mean:
+    label: "Mean:"
+    value: 50
+    input: radio
+    choices: [0, 10, 50, 100]
+  stdev:
+    label: "Standard Deviation:"
+    value: 10
+    input: radio
+    choices: [1, 3, 10, 15]
+  reliability:
+    label: "Reliability:"
+    value: 0.81
+    input: slider
+    min: 0
+    max: 1
+    step: 0.01
+  test_type:
+    label: "Test Type:"
+    value: validity_indicator
+    input: radio
+    choices:
+      - npsych_test
+      - rating_scale
+      - validity_indicator
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+## Setup
+
+```{r setup, include = FALSE}
+Sys.setenv(
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = TRUE
+)
+library(bwu)
+library(here)
+library(knitr)
+library(magrittr)
+library(readr)
+library(rmarkdown)
+library(shiny)
+library(snakecase)
+library(glue)
+library(table.glue)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(tidyverse)
+```
+
+## Patient
+
+```{r patient}
+patient <- params$patient
+```
+
+## Make data frame
+
+```{r make-df}
+data <- data.frame(
+  test = (params$test),
+  test_name = (params$test_name),
+  test_type = (params$test_type),
+  scale = (params$scale),
+  raw_score = as.numeric(params$raw_score),
+  score = as.numeric(params$score),
+  percentile = NA,
+  true_score = NA,
+  ci_95 = NA,
+  ci_lo = NA,
+  ci_hi = NA,
+  range = NA,
+  range_lower = NA,
+  range_upper = NA,
+  score_type = (params$score_type),
+  domain = (params$domain),
+  subdomain = (params$subdomain),
+  narrow = (params$narrow),
+  pass = (params$pass),
+  verbal = (params$verbal),
+  timed = (params$timed),
+  absort =
+    paste0(
+      tolower(params$test),
+      "_", tolower(params$scale),
+      "_", seq_len(1)
+    ),
+  description = NA,
+  result = NA
+)
+```
+
+## Function for scale description
+
+```{r fx-desc}
+#' Function for scale description
+#'
+#' @param data Data table
+#' @param scale Name of scale
+#' @param description Description of subtest
+#' @importFrom dplyr mutate case_when
+#' @return Data table with description column
+#' @export
+scale_description <- function(data, scale, description) {
+  dplyr::mutate(
+    data,
+    description = dplyr::case_when(
+    scale == "ACS Word Choice" ~ "Forced-choice recognition",
+    scale == "Word Choice Correct" ~ "Forced-choice recognition",
+    scale == "Reliable Digit Span" ~ "Forced-choice recognition",
+    scale == "CVLT-3 Forced-Choice Recognition Hits" ~ "Forced-choice recognition",
+    scale == "E-Score" ~ "Forced-choice recognition",
+    scale == "TOMM Trial 1" ~ "Forced-choice recognition",
+    scale == "TOMM Trial 2" ~ "Forced-choice recognition",
+    scale == "Inconsistency Index" ~ "consistency of responses",
+    scale == "CAARS-SR Inconsistency Index" ~ "consistency of responses",
+    scale == "CAARS-OR Inconsistency Index" ~ "consistency of responses",
+    scale == "Consistency Index" ~ "consistency of responses",
+    scale == "Negative Impression" ~ "faking bad",
+    scale == "CEFI-SR Consistency Index" ~ "consistency of responses",
+    scale == "CEFI-SR Negative Impression" ~ "Faking bad",
+    scale == "CEFI-OR Consistency Index" ~ "Consistency of responses",
+    scale == "CEFI-OR Negative Impression" ~ "Faking bad",
+    scale == "Inconsistency Index" ~ "consistency of responses",
+    scale == "Infrequency Index" ~ "Infrequent responses",
+    scale == "Negative Impression Management" ~ "Faking bad",
+    scale == "Positive Impression Management" ~ "Faking good",
+    scale == "Malingering Index" ~ "faking bad",
+    scale == "Rogers Discriminant Function" ~ "faking bad",
+    scale == "Negative Distortion Scale" ~ "faking bad",
+    scale == "Hong Malingering Index" ~ "faking bad",
+    scale == "Multiscale Feigning Index" ~ "faking bad",
+    scale == "Malingered Pain-Related Disability Discriminant Function" ~ "faking bad",
+    scale == "Defensiveness Index" ~ "Defensiveness",
+    scale == "Cashel Discriminant Function" ~ "Faking bad",
+    scale == "Positive Distortion Scale" ~ "Faking goood",
+    scale == "Hong Defensiveness Index" ~ "Defensiveness",
+    scale == "Back Random Responding" ~ "Back random responding",
+    scale == "Hong Randomness Index" ~ "Random responding",
+      TRUE ~ as.character(description)
+    )
+  )
+}
+```
+
+## Create scale description
+
+```{r compute-desc}
+data <- scale_description(data, scale = params$scale, description = "description")
+```
+
+## Function for z/percentile/range
+
+```{r fx-zpr}
+library(dplyr)
+compute_percentile_range <- function(
+    data,
+    score,
+    score_type,
+    percentile,
+    range_type) {
+  # Define score parameters based on score_type
+  score_params <- switch(score_type,
+    "z_score" = list(mean = 0, sd = 1),
+    "scaled_score" = list(mean = 10, sd = 3),
+    "t_score" = list(mean = 50, sd = 10),
+    "standard_score" = list(mean = 100, sd = 15)
+  )
+
+  if (is.null(score_params)) {
+    stop("Invalid score type")
+  }
+
+  # Calculate z, percentile, and range
+  data <- data %>%
+    mutate(z = (score - score_params$mean) / score_params$sd) |>
+    mutate(percentile = round(stats::pnorm(z) * 100, 1)) |>
+    mutate(percentile = case_when(
+      percentile < 1 ~ ceiling(percentile),
+      percentile > 99 ~ floor(percentile),
+      TRUE ~ round(percentile)
+    )) |>
+    mutate(range = case_when(
+      percentile >= 98 ~ "Exceptionally High",
+      percentile %in% 91:97 ~ "Above Average",
+      percentile %in% 75:90 ~ "High Average",
+      percentile %in% 25:74 ~ "Average",
+      percentile %in% 9:24 ~ "Low Average",
+      percentile %in% 2:8 ~ "Below Average",
+      percentile < 2 ~ "Exceptionally Low",
+      TRUE ~ as.character(range_type)
+    ))
+
+  return(data)
+}
+```
+
+## Calculate z, percentile, range
+
+```{r compute}
+data <- compute_percentile_range(
+  data = data, # Replace with your actual data frame
+  score = as.numeric(params$score),
+  score_type = params$score_type,
+  percentile = "percentile",
+  range_type = "range"
+)
+```
+
+## Function to glue results variable together
+
+```{r fx-result}
+library(dplyr)
+library(purrr)
+library(glue)
+library(rlang)
+
+compute_result <- function(data, scale, description, range, result) {
+  # Simplify the dictionary
+  phrase_dict <- c(
+    "ACS Word Choice" = "fell within",
+    "Word Choice Correct" = "fell within",
+    "Reliable Digit Span" = "fell within",
+    "CVLT-3 Forced-Choice Recognition Hits" = "fell within",
+    "E-Score" = "fell within",
+    "TOMM Trial 1" = "fell within",
+    "TOMM Trial 2" = "fell within",
+    "Inconsistency Index" = "fell within",
+    "CAARS-SR Inconsistency Index" = "fell within",
+    "CAARS-OR Inconsistency Index" = "fell within",
+    "Consistency Index" = "fell within",
+    "Negative Impression" = "fell within",
+    "CEFI-SR Consistency Index" = "fell within",
+    "CEFI-SR Negative Impression" = "fell within",
+    "CEFI-OR Consistency Index" = "fell within",
+    "CEFI-OR Negative Impression" = "fell within",
+    "Inconsistency Index" = "fell within",
+    "Infrequency Index" = "fell within",
+    "Negative Impression Management" = "fell within",
+    "Positive Impression Management" = "fell within",
+    "Malingering Index" = "fell within",
+    "Rogers Discriminant Function" = "fell within",
+    "Negative Distortion Scale" = "fell within",
+    "Hong Malingering Index" = "fell within",
+    "Multiscale Feigning Index" = "fell within",
+    "Malingered Pain-Related Disability Discriminant Function" = "fell within",
+    "Defensiveness Index" = "fell within",
+    "Cashel Discriminant Function" = "fell within",
+    "Positive Distortion Scale" = "fell within",
+    "Hong Defensiveness Index" = "fell within",
+    "Back Random Responding" = "fell within",
+    "Hong Randomness Index" = "fell within"
+  )
+
+  # Update the data using the dictionary
+  data <-
+    data |>
+    mutate(result = case_when(
+      scale %in% names(phrase_dict) ~ {
+        phrase <- phrase_dict[[scale]]
+        glue::glue("{description} {phrase} {range} range.\n")
+      },
+      TRUE ~ result
+    ))
+
+  return(data)
+}
+```
+
+```{r compute-result}
+data <- compute_result(
+  data = data,
+  scale = "scale",
+  description = "description",
+  range = "range",
+  result = "result"
+)
+```
+
+## Compute CI 95%
+
+```{r ci95}
+scale_score <- as.numeric(params$score)
+scale_mean <- as.numeric(params$mean)
+scale_sd <- as.numeric(params$stdev)
+scale_rel <- as.numeric(params$reliability)
+
+ci_values <- bwu::calc_ci_95(
+  ability_score = scale_score,
+  mean = scale_mean,
+  standard_deviation = scale_sd,
+  reliability = scale_rel
+)
+
+data$true_score <- ci_values["true_score"]
+data$ci_lo <- ci_values["lower_ci_95"]
+data$ci_hi <- ci_values["upper_ci_95"]
+data$ci_95 <- paste0(data$ci_lo, " - ", data$ci_hi)
+```
+
+## Write out CSV and XLSX
+
+```{r writeout-scale}
+table <- data
+test <- table$test
+scale <- snakecase::to_snake_case(table$scale)
+tidytable::fwrite(
+  table,
+  here::here(patient, "pre_csv", paste0(test, "_", scale, ".csv")),
+  append = FALSE
+)
+```
+
+```{r writeout-test}
+table <- data
+test <- table$test
+file_path <- here::here(patient, "csv", paste0(test, ".csv"))
+tidytable::fwrite(
+  table,
+  file_path,
+  append = TRUE
+)
+```

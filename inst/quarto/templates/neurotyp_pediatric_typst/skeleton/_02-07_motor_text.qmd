@@ -1,0 +1,16 @@
+<<PROMPT>>
+
+## Area: Sensorimotor Functions (Gross Motor and Fine Motor)
+
+Summarize and interpret these neuropsychological test scores related to the area denoted above. For scores that are Below { range }, give a brief example of how this could impact the patient's daily functioning. Organize your summary and interpretation in order from scores that are Exceptionally High/Above { range } to Exceptionally Low/Below { range } to delineate relative strengths and weaknesses, respectively. Finally, recommended additional support that the patient should receive in areas in which scores fall Below { range } to Exceptionally Low.
+
+<<EXAMPLE>>
+
+All scores in this area were { range }.
+Fine motor speed and dexterity were { range } bilaterally.
+No evidence of atypical lateralization of fine nor gross motor skills.
+No evidence of dyspraxia.
+Graphomotor speed and accuracy (i.e., graphomotor control) was intact.
+Gross motor functioning including balance and gait appeared intact on observation.
+
+<<END>>

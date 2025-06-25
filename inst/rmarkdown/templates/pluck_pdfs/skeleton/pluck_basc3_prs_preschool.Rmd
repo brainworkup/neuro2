@@ -1,0 +1,382 @@
+---
+title: "Pluck Tables BASC-3 PRS Preschool"
+params:
+  patient: "{{< var patient >}}"
+  test:
+    label: "BASC-3:"
+    value: [basc3_prs_preschool]
+    input: select
+    multiple: no
+    choices:
+      - basc3_prs_preschool
+      - basc3_trs_preschool
+  test_name:
+    label: "Test Name:"
+    value: ["BASC-3 PRS Preschool"]
+    input: select
+    multiple: no
+    choices:
+      - "BASC-3 PRS Preschool"
+      - "BASC-3 TRS Preschool"
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+  pages: [4, 4]
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+# BASC-3 PRS Preschool
+
+## Setup
+
+```{r setup, include = FALSE}
+library(dplyr)
+library(fs)
+library(hablar)
+library(glue)
+library(here)
+library(knitr)
+library(magrittr)
+library(miniUI)
+library(readr)
+library(rJava)
+library(rmarkdown)
+library(rmdformats)
+library(shiny)
+library(tabulapdf)
+library(tidyr)
+library(vroom)
+library(tibble)
+library(stringr)
+library(bwu)
+# Set JAVA environment
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+# Set knitr options
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = TRUE
+)
+```
+
+## Patient
+
+```{r patient}
+patient <- params$patient
+```
+
+## Test
+
+Name of neuropsych test or rating scale.
+
+```{r test}
+test <- params$test
+test_name <- params$test_name
+```
+
+## Pages
+
+```{r pages}
+pages <- params$pages
+```
+
+## Load PDF file and save as file.path
+
+```{r file}
+# file <- file.path(file.choose())
+file <- params$file
+```
+
+## Extract Areas with tabulapdf
+
+```{r eval = FALSE}
+library(tabulapdf)
+
+file <- file.path("/Users/joey/reports/Biggie/pdf/BASC-3-PRS-Report-with-Intervention-Recommendations_57306339_1714773274018.pdf")
+
+# f <- file.path(file.choose(""))
+
+# using extract areas for now
+extracted_areas <- tabulapdf::extract_areas(
+  file = f,
+  pages = c(4, 4),
+  method = "stream",
+  output = "matrix",
+  resolution = 96L,
+  copy = FALSE
+)
+```
+
+```{r loopdf, eval = F}
+# Loop over the list and write each matrix to a CSV file
+# make sure "data" works next time
+for (i in seq_along(extracted_areas)) {
+  write.csv(extracted_areas[[i]], file = here::here("data", paste0(test, "_", i, ".csv")), row.names = FALSE)
+}
+
+# Save the entire list to an R data file
+save(extracted_areas, file = "basc3_prs_tables.RData")
+qs::qsave(extracted_areas, "basc3_prs_tables.rds")
+```
+
+```{r}
+# Load the entire list from an R data file
+load("basc3_prs_tables.RData")
+qs::qread("basc3_prs_tables.rds")
+```
+
+## Locate areas
+
+```{r eval = FALSE}
+# locate areas
+areas <- tabulapdf::locate_areas(
+  file = f,
+  pages = c(4, 4),
+  resolution = 96L,
+)
+```
+
+```{r areas}
+# basc3_prs_preschool areas
+areas <- list(
+  table1 = c(17, 90, 226, 521),
+  table2 = c(375, 35, 530, 574)
+)
+```
+
+## Extract tables
+
+```{r extract}
+plucked_tables <- bwu::gpluck_extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  guess = NULL,
+  method = "lattice",
+  output = "matrix"
+)
+```
+
+# CLINICAL AND ADAPTIVE SCORE TABLE
+
+## Pluck and tidy tables
+
+```{r pluck, eval = T}
+# Use this because it imports as a tibble
+table1 <- vroom::vroom(paste0(test, "_1.csv"))
+table2 <- vroom::vroom(paste0(test, "_2.csv"))
+
+# Rename columns
+vars_tbl1 <- c("scale", "raw_score", "score", "percentile", "ci_95")
+# vars_tbl1 <- params[["names_df1"]]
+colnames(table1) <- vars_tbl1
+
+vars_tbl2 <- c("scale", "raw_score", "score", "percentile", "ci_95", "diff", "pvalue", "base_rate")
+# vars_tbl2 <- params[["names_df2"]]
+colnames(table2) <- vars_tbl2
+
+## Merge tables
+df <- bind_rows(table1, table2)
+```
+
+## Merge with lookup table
+
+```{r}
+# Read the lookup table
+lookup_basc3_prs <- vroom::vroom("/Users/joey/Dropbox/neuropsych_lookup_table.csv")
+
+# Add test column
+df$test <- test 
+df <- df |> dplyr::relocate(c(test), .before = scale)
+
+df$patient <- patient 
+df <- df |> dplyr::relocate(c(patient), .before = test)
+
+# Merge the tables
+df <- df |> dplyr::left_join(lookup_basc3_prs, by = c("test", "scale"))
+```
+
+## Mutate columns
+
+```{r mutate, eval = T}
+df <- df |> bwu::gpluck_make_columns(
+  range = ""
+)
+```
+
+## Test score ranges
+
+```{r range, eval = T}
+df <- bwu::gpluck_make_score_ranges(
+  table = df,
+  test_type = "basc3"
+  )
+```
+
+# Glue Results v2
+
+```{r}
+
+concatenate_results <- function(result) {
+  df$result <- apply(df, 1, function(row) {
+    sw <- ifelse(row["range"] %in% c("At-Risk"), "a moderate concern",
+           ifelse(row["range"] %in% c("Clinically Significant"), "a clinically-significant concern",
+           ifelse(row["range"] %in% c("Average"), "an area of typical functioning",
+           ifelse(row["range"] %in% c("Normative Strength"), "a relative strength",
+           "undefined")))) # Handle cases that do not match any specified category
+    
+    percentile_as_percentage <- paste0(row["percentile"], "%")
+    glue("{row['patient']}'s {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating difficulties at a rate higher than approximately {percentile_as_percentage} of same-age peers from the general population. {row['patient']}'s parent reports {row['patient']} engages in {row['description']}, which is interpreted to be {sw}.")
+  })
+  return(df$result)
+}
+
+concatenate_results <- function(result) {
+  df$result <- apply(df, 1, function(row) {
+    sw <- ifelse(row["range"] %in% c("At-Risk", "High Average", "Exceptionally High"), "a relative concern",
+      ifelse(row["range"] %in% c("Below Average", "Low Average", "Exceptionally Low"), "a relative strength", "an area of typical functioning")
+    )
+    percentile_as_percentage <- paste0(row["percentile"], "%")
+    glue("{row['patient']}'s {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating difficulties at a rate higher than approximately {percentile_as_percentage} of same-age peers from the general population. {row['patient']}'s parent reports {row['patient']} engages in {row['description']}, which is interpreted to be {sw}.")
+  })
+  return(df$result)
+}
+# add glued results to df
+df$result <- concatenate_results(result)
+```
+
+## Relocate variables
+
+```{r, eval = T}
+df <- df |> 
+  relocate(c(raw_score, score, ci_95, percentile, range), .after = scale) |> 
+  relocate(c(description, result), .after = absort)
+```
+
+# Export csv file
+
+```{r write-out}
+readr::write_excel_csv(df, here::here("csv", paste0(test, ".csv")), col_names = TRUE, na = "")
+
+if (any(is.na(df$scale))) {
+  stop("STOP!!! NA value found in percentile column. Please fill in missing values.")
+}
+```
+
+# Extract text from PDF
+
+```{r text}
+# save file as path
+file <- fs::fs_path(file)
+
+# BASC-3 PRS Child
+if (params$test == "basc3_prs_child") {
+  
+  ## extract text
+  get_text <- function(file) {
+    txt <- pdftools::pdf_text(file) |>
+      stringr::str_split("\n") |>
+      unlist()
+  }
+  basc3_prs_txt <- pdftools::pdf_text(file) |>
+    stringr::str_split("\n") |>
+    unlist()
+  basc3_prs_txt
+  
+  # Replace long spaces with a col break symbol
+  basc3_prs_squished <-
+    stringr::str_replace_all(basc3_prs_txt, "\\s{2,}", "- ") |>
+    stringr::str_remove_all(",")
+  basc3_prs_squished
+  
+  # save as markdown
+  readr::write_lines(
+    basc3_prs_squished, 
+    here::here("basc3_prs_text.md"), 
+    sep = "\n")
+  # save as quarto
+  readr::write_lines(
+    basc3_prs_squished, 
+    here::here("basc3_prs_text.qmd"), 
+    sep = "\n")
+  # save as text
+  readr::write_lines(basc3_prs_squished, 
+                     here::here("basc3_prs_text.txt"), 
+                     sep = "\n"
+  )
+  
+# BASC-3 SRP Preschool
+} else if (params$test == "basc3_prs_preschool") {
+  
+  ## extract text
+  get_text <- function(file) {
+    txt <- pdftools::pdf_text(file) |>
+      stringr::str_split("\n") |>
+      unlist()
+  }
+  basc3_prs_preschool_txt <- pdftools::pdf_text(file) |>
+    stringr::str_split("\n") |>
+    unlist()
+  basc3_prs_preschool_txt
+  
+  # Replace long spaces with a col break symbol
+  basc3_prs_preschool_squished <-
+    stringr::str_replace_all(basc3_prs_preschool_txt, "\\s{2,}", "- ") |>
+    stringr::str_remove_all(",")
+  basc3_prs_preschool_squished
+  
+  ## squished text
+  # save as markdown
+  readr::write_lines(basc3_prs_preschool_squished, 
+                     here::here("basc3_prs_preschool_squished.md"),
+                     sep = "\n"
+  )
+  # save as quarto
+  readr::write_lines(basc3_prs_preschool_squished, 
+                     here::here("basc3_prs_preschool_squished.qmd"),
+                     sep = "\n"
+  )
+  # save as text
+  readr::write_lines(basc3_prs_preschool_squished, 
+                     here::here("basc3_prs_preschool_squished.txt"), 
+                     sep = "\n"
+  )
+  
+  ## raw/untouched text
+  # save as markdown
+  readr::write_lines(basc3_prs_preschool_txt, 
+                     here::here("basc3_prs_preschool_txt.md"),
+                     sep = "\n"
+  )
+  # squished save as quarto
+  readr::write_lines(basc3_prs_preschool_txt, 
+                     here::here("basc3_prs_preschool_txt.qmd"),
+                     sep = "\n"
+  )
+  # squished save as text
+  readr::write_lines(basc3_prs_preschool_txt, 
+                     here::here("basc3_prs_preschool_txt.txt"), 
+                     sep = "\n"
+  )
+
+}
+```
+
+```{r}
+md_table <- knitr::kable(data.frame(text = text_squished))
+
+readr::write_lines(
+  md_table, 
+  here::here("basc3_prs_preschool_md_table.md"), 
+  sep = "\n"
+)
+```

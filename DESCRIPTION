@@ -25,6 +25,7 @@ Imports:
     highcharter,
     janitor,
     kableExtra,
+    knitr,
     memoise,
     NeurotypR,
     progress,
@@ -39,7 +40,9 @@ Imports:
     tidyr,
     tidyselect,
     tools,
-    utils
+    utils,
+    xfun,
+    yaml
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2.9000
