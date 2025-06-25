@@ -57,6 +57,11 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-get_scales}{\code{DomainProcessorR6$get_scales()}}
 \item \href{#method-DomainProcessorR6-filter_by_test}{\code{DomainProcessorR6$filter_by_test()}}
 \item \href{#method-DomainProcessorR6-generate_report}{\code{DomainProcessorR6$generate_report()}}
+\item \href{#method-DomainProcessorR6-get_domain_number}{\code{DomainProcessorR6$get_domain_number()}}
+\item \href{#method-DomainProcessorR6-get_default_scales}{\code{DomainProcessorR6$get_default_scales()}}
+\item \href{#method-DomainProcessorR6-get_default_plot_titles}{\code{DomainProcessorR6$get_default_plot_titles()}}
+\item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
 }
@@ -216,6 +221,95 @@ Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_domain_number"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_domain_number}{}}}
+\subsection{Method \code{get_domain_number()}}{
+Generate the domain number from phenotype for file naming.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_domain_number()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A two-digit string representing the domain number.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_default_scales"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_default_scales}{}}}
+\subsection{Method \code{get_default_scales()}}{
+Get default scales for domain.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_default_scales()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A vector of scale names appropriate for the domain.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_default_plot_titles"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_default_plot_titles}{}}}
+\subsection{Method \code{get_default_plot_titles()}}{
+Get default plot titles for domain.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_default_plot_titles()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A string containing the default title for domain plots.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
+\subsection{Method \code{generate_domain_qmd()}}{
+Generate domain QMD file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(domain_name = NULL, output_file = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd}{}}}
+\subsection{Method \code{generate_domain_text_qmd()}}{
+Generate domain text QMD file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd(
+  domain_name = NULL,
+  output_file = NULL,
+  report_type = "self_report"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
+
+\item{\code{report_type}}{Type of report to generate (default: "self_report").}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-process}{}}}
 \subsection{Method \code{process()}}{
@@ -223,7 +317,8 @@ Run the complete processing pipeline.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$process(
   generate_reports = TRUE,
-  report_types = c("self_report")
+  report_types = c("self_report"),
+  generate_domain_files = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -233,6 +328,8 @@ Run the complete processing pipeline.
 \item{\code{generate_reports}}{Whether to generate text reports (default: TRUE).}
 
 \item{\code{report_types}}{Vector of report types to generate (default: c("self_report")).}
+
+\item{\code{generate_domain_files}}{Whether to generate domain QMD files (default: FALSE).}
 }
 \if{html}{\out{</div>}}
 }

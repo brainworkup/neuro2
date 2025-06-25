@@ -268,14 +268,230 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Generate the domain number from phenotype for file naming.
+    #'
+    #' @return A two-digit string representing the domain number.
+    get_domain_number = function() {
+      domain_numbers <- c(
+        iq = "01",
+        academics = "02",
+        verbal = "03",
+        spatial = "04",
+        memory = "05",
+        executive = "06",
+        motor = "07",
+        social = "08",
+        adhd = "09",
+        emotion = "10",
+        adaptive = "11",
+        daily_living = "12"
+      )
+
+      num <- domain_numbers[tolower(self$pheno)]
+      if (is.na(num) || is.null(num)) "99" else num
+    },
+
+    #' @description
+    #' Get default scales for domain.
+    #'
+    #' @return A vector of scale names appropriate for the domain.
+    get_default_scales = function() {
+      # This would normally call a registry
+      # For now, return the scales from get_scales()
+      self$get_scales()
+    },
+
+    #' @description
+    #' Get default plot titles for domain.
+    #'
+    #' @return A string containing the default title for domain plots.
+    get_default_plot_titles = function() {
+      titles <- list(
+        iq = "Intellectual and cognitive abilities represent an individual's capacity to think, reason, and solve problems.",
+        memory = "Memory functions are crucial for learning, daily functioning, and cognitive processing.",
+        executive = "Attentional and executive functions underlie most domains of cognitive performance.",
+        verbal = "Verbal and language functioning refers to the ability to access and apply acquired word knowledge.",
+        spatial = "Visuospatial abilities involve perceiving, analyzing, and mentally manipulating visual information.",
+        academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
+        motor = "Motor functions involve the planning and execution of voluntary movements.",
+        social = "Social cognition encompasses the mental processes involved in perceiving, interpreting, and responding to social information."
+      )
+
+      # Use %||% operator for NULL handling
+      result <- titles[[tolower(self$pheno)]]
+      if (is.null(result)) {
+        return(paste(
+          "This section presents results from the",
+          self$domains[1],
+          "domain assessment."
+        ))
+      } else {
+        return(result)
+      }
+    },
+
+    #' @description
+    #' Generate domain QMD file.
+    #'
+    #' @param domain_name Name of the domain.
+    #' @param output_file Output file path (default: NULL, will generate based on domain).
+    #' @return The path to the generated file.
+    generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
+      # Use the first domain if domain_name not provided
+      if (is.null(domain_name)) {
+        domain_name <- self$domains[1]
+      }
+
+      # Get the domain number for file naming
+      domain_num <- self$get_domain_number()
+
+      # If no output file specified, create default name with proper domain number
+      if (is.null(output_file)) {
+        output_file <- paste0(
+          "_02-",
+          domain_num,
+          "_",
+          tolower(self$pheno),
+          ".qmd"
+        )
+      }
+
+      # Process data for this domain if not already processed
+      if (is.null(self$data)) {
+        self$load_data()
+        self$filter_by_domain()
+        self$select_columns()
+      }
+
+      # Generate QMD content
+      qmd_content <- paste0(
+        "## ",
+        domain_name,
+        " {#sec-",
+        tolower(self$pheno),
+        "}\n\n",
+        "{{< include _02-",
+        domain_num,
+        "_",
+        tolower(self$pheno),
+        "_text.qmd >}}\n\n",
+        "```{r}\n",
+        "#| label: setup-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n\n",
+        "# Filter by domain\n",
+        "domains <- c(\"",
+        domain_name,
+        "\")\n\n",
+        "# Target phenotype\n",
+        "pheno <- \"",
+        tolower(self$pheno),
+        "\"\n\n",
+        "# Read the CSV file into a data frame\n",
+        tolower(self$pheno),
+        " <- readr::read_csv(\"",
+        self$input_file,
+        "\")\n",
+        "```\n\n"
+        # ... additional content based on template
+      )
+
+      # Write to file
+      cat(qmd_content, file = output_file)
+
+      # Also generate the text file
+      self$generate_domain_text_qmd(domain_name)
+
+      return(output_file)
+    },
+
+    #' @description
+    #' Generate domain text QMD file.
+    #'
+    #' @param domain_name Name of the domain.
+    #' @param output_file Output file path (default: NULL, will generate based on domain).
+    #' @param report_type Type of report to generate (default: "self_report").
+    #' @return The path to the generated file.
+    generate_domain_text_qmd = function(
+      domain_name = NULL,
+      output_file = NULL,
+      report_type = "self_report"
+    ) {
+      # Use the first domain if domain_name not provided
+      if (is.null(domain_name)) {
+        domain_name <- self$domains[1]
+      }
+
+      # Get the domain number for file naming
+      domain_num <- self$get_domain_number()
+
+      # If no output file specified, create default name with proper domain number
+      if (is.null(output_file)) {
+        if (report_type == "self_report") {
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_text.qmd"
+          )
+        } else {
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_text_",
+            report_type,
+            ".qmd"
+          )
+        }
+      }
+
+      # Process data for this domain if not already processed
+      if (is.null(self$data)) {
+        self$load_data()
+        self$filter_by_domain()
+        self$select_columns()
+      }
+
+      # Filter data for this domain to create text summary
+      filtered_data <- self$filter_by_test(report_type = report_type)
+
+      # If there's no data after filtering, create a placeholder
+      if (is.null(filtered_data) || nrow(filtered_data) == 0) {
+        cat(
+          "<summary>\n\nNo data available for ",
+          domain_name,
+          ".\n\n</summary>",
+          file = output_file
+        )
+        return(output_file)
+      }
+
+      # Use NeuropsychResultsR6 to generate text
+      results_processor <- NeuropsychResultsR6$new(
+        data = filtered_data,
+        file = output_file
+      )
+
+      results_processor$process()
+
+      return(output_file)
+    },
+
+    #' @description
     #' Run the complete processing pipeline.
     #'
     #' @param generate_reports Whether to generate text reports (default: TRUE).
     #' @param report_types Vector of report types to generate (default: c("self_report")).
+    #' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
     #' @return Invisibly returns self for method chaining.
     process = function(
       generate_reports = TRUE,
-      report_types = c("self_report")
+      report_types = c("self_report"),
+      generate_domain_files = FALSE
     ) {
       # Run the complete pipeline
       self$load_data()
@@ -293,6 +509,11 @@ DomainProcessorR6 <- R6::R6Class(
             self$generate_report(report_type)
           }
         }
+      }
+
+      # Generate domain files if requested
+      if (generate_domain_files) {
+        self$generate_domain_qmd()
       }
 
       invisible(self)
@@ -313,6 +534,7 @@ DomainProcessorR6 <- R6::R6Class(
 #' @param test_filters List of test filters for different report types (default: NULL).
 #' @param generate_reports Whether to generate text reports (default: TRUE).
 #' @param report_types Vector of report types to generate (default: c("self_report")).
+#' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
 #'
 #' @return Invisibly returns the processed data.
 #' @export
@@ -325,7 +547,8 @@ process_domain_data <- function(
   scale_source = NULL,
   test_filters = NULL,
   generate_reports = TRUE,
-  report_types = c("self_report")
+  report_types = c("self_report"),
+  generate_domain_files = FALSE
 ) {
   # Create a DomainProcessorR6 object and run the processing pipeline
   processor <- DomainProcessorR6$new(
@@ -339,7 +562,8 @@ process_domain_data <- function(
 
   processor$process(
     generate_reports = generate_reports,
-    report_types = report_types
+    report_types = report_types,
+    generate_domain_files = generate_domain_files
   )
 
   invisible(processor$data)
