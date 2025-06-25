@@ -49,19 +49,7 @@ csl: bib/apa.csl
 
 ## Cognitive Data
 
-```{r setup, include=FALSE}
-# Load the neuro2 package that contains our R6 classes
-library(neuro2)
 
-# Create the report generator for a specific patient
-report_generator <- IQReportGeneratorR6$new(
-  patient_name = "Biggie", # Using patient name from YAML header
-  input_file = "data/neurocog.csv"
-)
-
-# Generate all report components in one step
-report_generator$generate_report()
-```
 
 # The document will be rendered using the generated components
 

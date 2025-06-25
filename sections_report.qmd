@@ -1,0 +1,168 @@
+---
+title: NEUROCOGNITIVE EXAMINATION
+patient: Biggie
+name: Smalls, Biggie
+doe: 2024-09-08
+date_of_report: 2025-01-20
+format:
+  neurotyp-adult-typst:
+    keep-typ: true
+    keep-md: true
+    papersize: "a4"
+    fontsize: 11pt
+    bodyfont: "Source Serif 4"
+    sansfont: "Source Sans 3"
+    number-sections: false
+    number-offset: 1
+    shift-heading-level-by: 0
+    fig-width: 6
+    fig-height: 4
+    fig-format: svg
+
+execute:
+  warning: false
+  echo: false
+  message: false
+  freeze: auto
+  cache: true
+  engine: knitr
+  tools:
+    r: "/usr/local/bin/R"
+
+editor:
+  markdown:
+    wrap: sentence
+    canonical: true
+fig-width: 6
+fig-asp: 0.618
+out-width: 70%
+fig-align: center
+fig-format: svg
+fig-dpi: 270
+df-print: kable
+reference-location: document
+bibliography:
+  - bib/refs.bib
+citeproc: true
+csl: bib/apa.csl
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+# Suppress xfun::attr() deprecation warnings
+options(warn = -1)
+
+packages <- c(
+  "dplyr",
+  "glue",
+  "gt",
+  "here",
+  "janitor",
+  "knitr",
+  "purrr",
+  "quarto",
+  "readr",
+  "readxl",
+  "rmarkdown",
+  "snakecase",
+  "stringr",
+  "tidytable",
+  "vroom",
+  "xfun",
+  "bwu",
+  "NeurotypR"
+)
+
+# Function to load packages one by one
+load_packages <- function(packages) {
+  for (pkg in packages) {
+    if (!require(pkg, character.only = TRUE)) {
+      install.packages(pkg)
+      library(pkg, character.only = TRUE)
+    }
+    message(paste("Loaded package:", pkg))
+  }
+}
+
+# Call the function to load packages
+load_packages(packages)
+
+# Apply xfun::attr() deprecation fix after loading xfun
+if (requireNamespace("xfun", quietly = TRUE)) {
+  # Check if attr function exists and patch it
+  if (exists("attr", envir = asNamespace("xfun"))) {
+    tryCatch(
+      {
+        # Temporarily unlock the binding
+        unlockBinding("attr", asNamespace("xfun"))
+        # Replace with attr2
+        assign("attr", xfun::attr2, envir = asNamespace("xfun"))
+        # Lock it back
+        lockBinding("attr", asNamespace("xfun"))
+        message("Applied xfun::attr() deprecation fix")
+      },
+      error = function(e) {
+        message(
+          "Could not patch xfun::attr(), continuing with warnings suppressed"
+        )
+      }
+    )
+  }
+}
+
+# Set knitr options
+knitr::opts_knit$set(
+  width = 80,
+  digits = 2,
+  warnPartialMatchArgs = FALSE,
+  crop = knitr::hook_pdfcrop,
+  optipng = knitr::hook_optipng
+)
+
+# Keep warnings suppressed for the rest of the document
+options(warn = -1)
+
+# Set environment variables with default values
+Sys.setenv(PATIENT = "Biggie")
+patient <- Sys.getenv("PATIENT")
+```
+
+```{r}
+#| label: data-load
+#| include: false
+
+path_data <- here::here("data")
+path_csv <- here::here("inst", "extdata")
+NeurotypR::load_data(here::here(path_csv))
+neurocog <- readr::read_csv("data/neurocog.csv")
+neurobehav <- readr::read_csv("data/neurobehav.csv")
+neuropsych <- readr::read_csv("data/neuropsych.csv")
+```
+
+```{=typst}
+#let name = [Smalls, Biggie]
+#let doe = [2025-01-20]
+#let patient = [Biggie]
+// #v(2em, weak: true)
+// #show block: set par(leading: 0.65em)
+#block[
+*PATIENT NAME:* #name \
+*DATE OF BIRTH:* 1977-01-01, Age 36 \
+*DATES OF EXAM:* 2024-09-08, 2024-09-11, and 2024-09-15 \
+*DATE OF REPORT*: 2025-01-20 \
+]
+```
+
+{{< include sections/_00-00_tests.qmd >}}
+
+{{< include sections/_01-00_nse_adult.qmd >}}
+
+{{< include sections/_03-00_sirf.qmd >}}
+
+{{< include sections/_03-02_signature.qmd >}}
+
+# NEUROCOGNITIVE FINDINGS
+

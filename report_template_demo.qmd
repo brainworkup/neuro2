@@ -1,0 +1,101 @@
+---
+title: "ReportTemplateR6 Demo"
+format: html
+---
+
+```{r setup, include=FALSE}
+library(neuro2)
+```
+
+## Using ReportTemplateR6 to Generate Reports
+
+This document demonstrates how to use the new `ReportTemplateR6` class to generate neuropsychological reports.
+
+### Basic Usage
+
+```{r}
+# Create a report template generator
+report_generator <- ReportTemplateR6$new(
+  variables = "inst/quarto/templates/typst-report/_variables.yml",
+  template_dir = "inst/quarto/templates/typst-report",
+  output_dir = "."
+)
+
+# Generate the template file
+report_generator$generate_template(output_file = "generated_report.qmd")
+```
+
+### Customizing Variables
+
+```{r}
+# Create a report template with custom variables
+custom_report <- ReportTemplateR6$new(
+  template_dir = "inst/quarto/templates/typst-report",
+  output_dir = "."
+)
+
+# Set custom variables
+custom_report$set_variable("patient", "John Doe")
+custom_report$set_variable("first_name", "John")
+custom_report$set_variable("last_name", "Doe")
+custom_report$set_variable("dob", "1985-06-15")
+custom_report$set_variable("age", 40)
+custom_report$set_variable("doe", "2025-06-01")
+custom_report$set_variable("date_of_report", "2025-06-10")
+
+# Generate the template with custom variables
+custom_report$generate_template(output_file = "custom_report.qmd")
+```
+
+### Customizing Sections
+
+```{r}
+# Create a report with only specific sections
+sections_report <- ReportTemplateR6$new(
+  variables = "inst/quarto/templates/typst-report/_variables.yml",
+  template_dir = "inst/quarto/templates/typst-report",
+  output_dir = ".",
+  sections = c(
+    "_00-00_tests.qmd",
+    "_01-00_nse_adult.qmd",
+    "_03-00_sirf.qmd",
+    "_03-02_signature.qmd"
+  )
+)
+
+# Generate the template with custom sections
+sections_report$generate_template(output_file = "sections_report.qmd")
+```
+
+### Using the Function Wrapper
+
+```{r}
+# Generate a report using the function wrapper
+generate_neuropsych_report(
+  variables = "inst/quarto/templates/typst-report/_variables.yml",
+  output_file = "wrapper_report.qmd",
+  render = FALSE # Set to TRUE to render the report
+)
+```
+
+## Benefits of the R6 Approach
+
+1. **Programmatic Control**: The R6 class approach gives you programmatic control over report generation, allowing you to customize reports based on patient data or other variables.
+
+2. **Separation of Concerns**: The template logic is separated from the content, making it easier to maintain and update.
+
+3. **Reusability**: You can create multiple report templates with different configurations without duplicating code.
+
+4. **Extensibility**: The R6 class can be extended with additional methods for specific report types or customizations.
+
+5. **Integration**: The R6 class can be integrated with other R6 classes in your package, such as the `IQReportGeneratorR6` or `DomainProcessorR6` classes.
+
+## Next Steps
+
+To extend this approach:
+
+1. Create domain-specific report generators (e.g., `ADHDReportGeneratorR6`, `MemoryReportGeneratorR6`)
+2. Add methods for generating specific sections dynamically
+3. Implement data processing within the report generator
+4. Add validation for variables and sections
+5. Create a UI for configuring and generating reports

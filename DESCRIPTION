@@ -9,6 +9,7 @@ License: MIT
 Depends: 
     R (>= 3.5)
 Imports:
+    bwu,
     cli,
     dplyr,
     fs,
@@ -25,6 +26,7 @@ Imports:
     janitor,
     kableExtra,
     memoise,
+    NeurotypR,
     progress,
     purrr,
     quarto (>= 1.4.0),

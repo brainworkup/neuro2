@@ -10,3 +10,10 @@ reports/
 reports*/
 
 /.quarto/
+gen_report_R6_cache/
+.gitignore
+report_template_demo_files/
+*.svg
+*.pdf
+*.html
+.history/
