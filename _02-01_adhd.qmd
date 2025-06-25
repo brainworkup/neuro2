@@ -1,0 +1,4 @@
+## ADHD {#sec-adhd}
+
+{{< include _02-01_adhd_text.qmd >}}
+

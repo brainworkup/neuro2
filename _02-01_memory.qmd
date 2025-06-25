@@ -1,0 +1,4 @@
+## Memory {#sec-memory}
+
+{{< include _02-01_memory_text.qmd >}}
+
