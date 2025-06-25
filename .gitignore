@@ -8,3 +8,5 @@ inst/doc
 .specstory/.gitignore
 reports/
 reports*/
+
+/.quarto/
