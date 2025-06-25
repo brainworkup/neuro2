@@ -3,7 +3,6 @@ project:
   title: "NeurotypR"
   execute-dir: project
   render:
-    - "!quarto/"
     - template.qmd
 
 format:

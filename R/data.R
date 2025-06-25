@@ -1,22 +1,3 @@
-#' CAARS-2 Self-Report Subtest Scores
-#'
-#' A sample data set extracted from a CAARS-2 PDF report (self-report version)
-#' with the tabulapdf package. Each row is one subtest score.
-#'
-#' @format A data frame with \code{n} rows and the following columns:
-#' \describe{
-#'   \item{scale}{\code{character} Subtest name (e.g. \"Inattention\")}
-#'   \item{raw_score}{\code{numeric} Raw score on the subtest}
-#'   \item{t_score}{\code{numeric} T-score (mean = 50, SD = 10)}
-#'   \item{percentile}{\code{numeric} Percentile rank}
-#'   \item{date_administered}{\code{Date} Date of testing}
-#' }
-#' @source Clinical CAARS-2 report, extracted via tabulapdf
-#' @examples
-#' head(caars2_self)
-"caars2_self"
-
-
 #' CVLT-3 Brief Form Trial Data
 #'
 #' A sample dataset of trial-by-trial recall scores from a CVLT-3 Brief.
@@ -64,9 +45,9 @@
 #' head(nabs)
 "nabs"
 
-#' WAIS-5 Index Scores
+#' WAIS-5
 #'
-#' A sample dataset of index scores from the Wechsler Adult Intelligence Scale, Fifth Edition (WAIS-5).
+#' A sample dataset of scores from the Wechsler Adult Intelligence Scale, Fifth Edition (WAIS-5).
 #'
 #' @format A data frame with \code{n} rows and the following columns:
 #' \describe{
@@ -91,38 +72,9 @@
 #' }
 #' @source Clinical WAIS-5 report, extracted via tabulapdf
 #' @examples
-#' head(wais5_index)
-"wais5_index"
+#' head(wais5)
+"wais5"
 
-#' WAIS-5 Subtest Scores
-#'
-#' A sample dataset of subtest scores from the Wechsler Adult Intelligence Scale, Fifth Edition (WAIS-5).
-#'
-#' @format A data frame with \code{n} rows and the following columns:
-#' \describe{
-#'   \item{test}{\code{character} Test name (e.g., "WAIS-5")}
-#'   \item{test_name}{\code{character} Specific name of the subtest}
-#'   \item{scale}{\code{character} Subtest name}
-#'   \item{raw_score}{\code{numeric} Raw score on the subtest}
-#'   \item{score}{\code{numeric} Standard score}
-#'   \item{ci_95}{\code{character} 95\% confidence interval for the score}
-#'   \item{percentile}{\code{numeric} Percentile rank}
-#'   \item{range}{\code{character} Qualitative description of the score range}
-#'   \item{domain}{\code{character} Broad domain of the subtest}
-#'   \item{subdomain}{\code{character} Subdomain within the broad domain}
-#'   \item{narrow}{\code{character} Narrow ability measured by the subtest}
-#'   \item{pass}{\code{character} Processing attribute (e.g., "Sequential")}
-#'   \item{verbal}{\code{character} Verbal/nonverbal classification}
-#'   \item{timed}{\code{character} Timed/untimed classification}
-#'   \item{test_type}{\code{character} Type of test}
-#'   \item{score_type}{\code{character} Type of score reported}
-#'   \item{result}{\code{character} Textual description of the result}
-#'   \item{absort}{\code{character} Unique identifier for the row}
-#' }
-#' @source Clinical WAIS-5 report, extracted via tabulapdf
-#' @examples
-#' head(wais5_subtest)
-"wais5_subtest"
 
 #' WIAT-4 Subtest Scores
 #'

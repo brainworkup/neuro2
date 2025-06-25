@@ -166,7 +166,7 @@ Process raw transcript and save as cleaned Markdown.
 \if{html}{\out{<a id="method-ReportGenerator-render_sections"></a>}}
 \if{latex}{\out{\hypertarget{method-ReportGenerator-render_sections}{}}}
 \subsection{Method \code{render_sections()}}{
-Assemble multiple section QMD files into a master document and render in one st
+Assemble multiple section QMD files into a master document and render in HTML
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportGenerator$render_sections(
   sections_dir,
@@ -182,7 +182,7 @@ Assemble multiple section QMD files into a master document and render in one st
 
 \item{\code{placeholder}}{Placeholder tag in the master template to replace (e.g., "{{sections}}")}
 
-\item{\code{output_file}}{Name of the rendered report file (e.g., "report.pdf")}
+\item{\code{output_file}}{Name of the rendered report file (e.g., "report.html")}
 }
 \if{html}{\out{</div>}}
 }
@@ -191,7 +191,7 @@ Assemble multiple section QMD files into a master document and render in one st
 \if{html}{\out{<a id="method-ReportGenerator-render"></a>}}
 \if{latex}{\out{\hypertarget{method-ReportGenerator-render}{}}}
 \subsection{Method \code{render()}}{
-Render the final report using Quarto+Typst.
+Render the final report using Quarto's built-in HTML format.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportGenerator$render(output_file = "report.pdf")}\if{html}{\out{</div>}}
 }
@@ -199,7 +199,7 @@ Render the final report using Quarto+Typst.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{output_file}}{Filename for the rendered report (e.g., "report.pdf")}
+\item{\code{output_file}}{Filename for the rendered report (e.g., "report.html")}
 }
 \if{html}{\out{</div>}}
 }

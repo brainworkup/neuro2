@@ -35,18 +35,14 @@ ReportGenerator <- R6::R6Class(
     #' @param params Named list of execute parameters for the Quarto template
     #' @param output_dir Directory to save outputs (defaults to working directory)
     initialize = function(params = list(), output_dir = getwd()) {
-      private$template_qmd <- system.file(
+      # Use template path
+      private$template_qmd <- file.path(
+        getwd(),
+        "inst",
         "quarto",
-        "templates",
-        "typst-report",
-        "template.qmd",
-        package = "neuro2"
-      )
-      private$extensions_dir <- system.file(
-        "quarto",
-        "_extensions",
-        "neurotyp-adult-typst",
-        package = "neuro2"
+        "_templates",
+        "brainworkup"
+        # "template.qmd"
       )
       self$params <- params
       self$output_dir <- output_dir
@@ -63,8 +59,7 @@ ReportGenerator <- R6::R6Class(
           caars2_self,
           cvlt3_brief,
           nabs,
-          wais5_index,
-          wais5_subtest,
+          wais5,
           wiat4
         )
       } else {
@@ -94,7 +89,7 @@ ReportGenerator <- R6::R6Class(
     #' Generate and save GT tables to the output directory.
     #' @param ... Additional arguments passed to table functions
     generate_tables = function(...) {
-      tbl1 <- tbl_kbl(self$data)
+      tbl1 <- tbl_gt(self$data)
       gt::gtsave(tbl1, file.path(self$output_dir, "domain_table.png"))
       invisible(self)
     },
@@ -120,10 +115,10 @@ ReportGenerator <- R6::R6Class(
     },
 
     #' @description
-    #' Assemble multiple section QMD files into a master document and render in one st
+    #' Assemble multiple section QMD files into a master document and render in HTML
     #' @param sections_dir Directory containing section .qmd files
     #' @param placeholder Placeholder tag in the master template to replace (e.g., "{{sections}}")
-    #' @param output_file Name of the rendered report file (e.g., "report.pdf")
+    #' @param output_file Name of the rendered report file (e.g., "report.html")
     render_sections = function(
       sections_dir,
       placeholder = "{{sections}}",
@@ -160,7 +155,7 @@ ReportGenerator <- R6::R6Class(
       # Render master report
       quarto::quarto_render(
         input = master_path,
-        output_format = "neurotyp-adult-typst",
+        output_format = "typst",
         output_file = basename(output_file), # Only filename, no path
         execute_params = self$params,
         execute_dir = self$output_dir # Set output directory
@@ -169,8 +164,8 @@ ReportGenerator <- R6::R6Class(
     },
 
     #' @description
-    #' Render the final report using Quarto+Typst.
-    #' @param output_file Filename for the rendered report (e.g., "report.pdf")
+    #' Render the final report using Quarto's built-in HTML format.
+    #' @param output_file Filename for the rendered report (e.g., "report.html")
     render = function(output_file = "report.pdf") {
       out_path <- file.path(self$output_dir, output_file)
 
@@ -179,13 +174,13 @@ ReportGenerator <- R6::R6Class(
         stop("Template not found at: ", private$template_qmd)
       }
 
-      # Use quarto_render with correct arguments
+      # Use quarto_render with PDF format
       quarto::quarto_render(
         input = private$template_qmd,
-        output_format = "neurotyp-adult-typst",
-        output_file = basename(output_file), # Just the filename
+        output_format = "pdf",
+        output_file = output_file,
         execute_params = self$params,
-        execute_dir = self$output_dir # Set working directory for output
+        execute_dir = self$output_dir
       )
 
       message("Report written to: ", out_path)
