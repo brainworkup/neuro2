@@ -1,39 +1,3 @@
-#' @title Extract and Save NSE Transcript from Otter.ai
-#' @description This function extracts the text between given beginning and ending patterns from a file and saves the transcript to another file.
-#' @importFrom stringr str_match_all str_squish
-#' @param input A character string specifying the path to the input file.
-#' @param output A character string specifying the path to the output file where the extracted transcript will be saved.
-#' @param begin A character string specifying the pattern that marks the beginning of the transcript in the input file.
-#' @param end A character string specifying the pattern that marks the end of the transcript in the input file.
-#' @param eol A character string specifying the line ending to be used in the output file, default is '\\n'.
-#' @return NULL, as this function is primarily used for its side effect of writing a file.
-#' @details This function uses regular expressions to extract text between specified patterns. It is useful for extracting structured text data, such as transcripts, from files.
-#' @rdname read_write_transcript_otterai
-#' @export
-read_write_transcript_otterai <- function(
-  input,
-  output,
-  begin,
-  end,
-  eol = "\\n"
-) {
-  # Read the entire file as a single string
-  content <- readChar(input, file.info(input)$size)
-
-  # Extract the text between the patterns
-  transcript <- stringr::str_match_all(
-    content,
-    paste0("(?s)", begin, "(.*?)(?=", end, ")")
-  )[[1]][, 2] |>
-    stringr::str_squish()
-
-  # Add line breaks to separate paragraphs (optional)
-  transcript <- paste(transcript, eol = "\n\n")
-
-  # Write the formatted text to a markdown file
-  return(writeLines(transcript, output))
-}
-
 # Function to save extracted text as a markdown file
 #' @title Save Speech-to-Text As Markdown
 #' @description This function saves the extracted text from a speech-to-text as markdown.
@@ -67,12 +31,7 @@ cat_neuropsych_results <- function(data, file, ...) {
     dplyr::distinct(.keep_all = FALSE)
 
   # Convert the data to text and append to the file
-  cat(
-    paste0(sorted_data$result),
-    file = file,
-    sep = "\n",
-    append = TRUE
-  )
+  cat(paste0(sorted_data$result), file = file, sep = "\n", append = TRUE)
 }
 
 
@@ -92,16 +51,14 @@ cat_neuropsych_results <- function(data, file, ...) {
 glue_neuropsych_results <- function(df, filter, result, file) {
   # Create a new dataframe that only includes the
   # rows that match the filter
-  df_filtered <-
-    df |>
+  df_filtered <- df |>
     dplyr::filter(scale %in% filter) |>
     dplyr::arrange(dplyr::desc(percentile)) |>
     dplyr::distinct(.keep_all = FALSE)
 
   # Use the glue package to concatenate all of the
   # columns in the dataframe into a single string
-  df_glued <-
-    df_filtered |>
+  df_glued <- df_filtered |>
     glue::glue_data() |>
     purrr::modify(purrr::as_mapper(~ paste0(.x)))
 

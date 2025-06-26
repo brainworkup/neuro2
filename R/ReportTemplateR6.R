@@ -49,14 +49,12 @@ ReportTemplateR6 <- R6::R6Class(
     #' @param packages List of R packages required for the report (default: NULL, will use defaults).
     #'
     #' @return A new ReportTemplateR6 object
-    initialize = function(
-      variables = NULL,
-      template_dir = "inst/quarto/templates/typst-report",
-      output_dir = ".",
-      sections = NULL,
-      data_paths = NULL,
-      packages = NULL
-    ) {
+    initialize = function(variables = NULL,
+                          template_dir = "inst/quarto/templates/typst-report",
+                          output_dir = ".",
+                          sections = NULL,
+                          data_paths = NULL,
+                          packages = NULL) {
       self$template_dir <- template_dir
       self$output_dir <- output_dir
 
@@ -464,11 +462,9 @@ ReportTemplateR6 <- R6::R6Class(
     #' @param output_format Output format (default: "neurotyp-adult-typst").
     #' @param output_file Output file path (default: NULL, will use Quarto default).
     #' @return Invisibly returns self for method chaining.
-    render_report = function(
-      input_file,
-      output_format = "neurotyp-adult-typst",
-      output_file = NULL
-    ) {
+    render_report = function(input_file,
+                             output_format = "neurotyp-adult-typst",
+                             output_file = NULL) {
       if (!file.exists(input_file)) {
         stop("Input file not found: ", input_file)
       }

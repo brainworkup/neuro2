@@ -15,14 +15,14 @@ This class handles data loading, processing, visualization, and report generatio
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new IQReportGeneratorR6 object with configuration parameters.}
-  \item{load_data}{Load data from the specified input file.}
-  \item{process_data}{Process and filter the data.}
-  \item{generate_tables}{Generate tables for the report.}
-  \item{generate_figures}{Generate figures for the report.}
-  \item{generate_summary}{Generate or load the text summary.}
-  \item{generate_report}{Generate the complete report.}
-  \item{render_document}{Render the Quarto document with the generated components.}
+\item{initialize}{Initialize a new IQReportGeneratorR6 object with configuration parameters.}
+\item{load_data}{Load data from the specified input file.}
+\item{process_data}{Process and filter the data.}
+\item{generate_tables}{Generate tables for the report.}
+\item{generate_figures}{Generate figures for the report.}
+\item{generate_summary}{Generate or load the text summary.}
+\item{generate_report}{Generate the complete report.}
+\item{render_document}{Render the Quarto document with the generated components.}
 }
 }
 

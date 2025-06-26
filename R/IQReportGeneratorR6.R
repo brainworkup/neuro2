@@ -55,13 +55,11 @@ IQReportGeneratorR6 <- R6::R6Class(
     #' @param pheno Target phenotype identifier (default: "iq").
     #'
     #' @return A new IQReportGeneratorR6 object
-    initialize = function(
-      patient_name,
-      input_file = "data/neurocog.csv",
-      output_dir = "data",
-      domains = "General Cognitive Ability",
-      pheno = "iq"
-    ) {
+    initialize = function(patient_name,
+                          input_file = "data/neurocog.csv",
+                          output_dir = "data",
+                          domains = "General Cognitive Ability",
+                          pheno = "iq") {
       self$patient_name <- patient_name
       self$input_file <- input_file
       self$output_dir <- output_dir
@@ -205,7 +203,7 @@ IQReportGeneratorR6 <- R6::R6Class(
 
       # Define footnotes
       source_note <- gt::md(
-        "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+        "Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]"
       )
 
       # Define the groups for the table
@@ -346,10 +344,8 @@ IQReportGeneratorR6 <- R6::R6Class(
     #' @param output_file Output file path for the rendered document.
     #' @param template_file Template file to use (default: "_02-01_iq_template.qmd").
     #' @return Invisibly returns self for method chaining.
-    render_document = function(
-      output_file = "_02-01_iq.qmd",
-      template_file = NULL
-    ) {
+    render_document = function(output_file = "_02-01_iq.qmd",
+                               template_file = NULL) {
       # If template file is not provided, create a default template
       if (is.null(template_file)) {
         template_content <- paste0(

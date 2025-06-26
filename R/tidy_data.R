@@ -2,6 +2,7 @@
 #' @description Efficiently calculates mean and standard deviation of z-scores for specified grouping variables
 #' @importFrom dplyr group_by mutate ungroup across all_of
 #' @importFrom stats sd
+#' @importFrom rlang :=
 #' @param data A dataframe containing z-scores
 #' @param group_vars Character vector of column names to group by
 #' @return Dataframe with added z-score statistics columns

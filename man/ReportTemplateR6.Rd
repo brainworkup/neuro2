@@ -15,15 +15,15 @@ This class handles template variables, section inclusion, and report generation.
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new ReportTemplateR6 object with configuration parameters.}
-  \item{load_variables}{Load variables from a YAML file or list.}
-  \item{set_variable}{Set a specific variable value.}
-  \item{get_variable}{Get a specific variable value.}
-  \item{set_sections}{Set the sections to include in the report.}
-  \item{add_section}{Add a section to the report.}
-  \item{remove_section}{Remove a section from the report.}
-  \item{generate_template}{Generate the Quarto template file.}
-  \item{render_report}{Render the report using Quarto.}
+\item{initialize}{Initialize a new ReportTemplateR6 object with configuration parameters.}
+\item{load_variables}{Load variables from a YAML file or list.}
+\item{set_variable}{Set a specific variable value.}
+\item{get_variable}{Get a specific variable value.}
+\item{set_sections}{Set the sections to include in the report.}
+\item{add_section}{Add a section to the report.}
+\item{remove_section}{Remove a section from the report.}
+\item{generate_template}{Generate the Quarto template file.}
+\item{render_report}{Render the report using Quarto.}
 }
 }
 

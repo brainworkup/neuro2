@@ -38,16 +38,14 @@ DrilldownR6 <- R6::R6Class(
     #' @param theme The highcharter theme to use.
     #'
     #' @return A new DrilldownR6 object
-    initialize = function(
-      data,
-      patient,
-      neuro_domain = c(
-        "Neuropsychological Test Scores",
-        "Behavioral Rating Scales",
-        "Effort/Validity Test Scores"
-      ),
-      theme
-    ) {
+    initialize = function(data,
+                          patient,
+                          neuro_domain = c(
+                            "Neuropsychological Test Scores",
+                            "Behavioral Rating Scales",
+                            "Effort/Validity Test Scores"
+                          ),
+                          theme) {
       # Check if required packages are installed
       if (!requireNamespace("dplyr", quietly = TRUE)) {
         stop("Package 'dplyr' must be installed to use this function.")

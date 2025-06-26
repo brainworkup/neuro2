@@ -15,8 +15,8 @@ This is an R6 implementation of the drilldown function with identical functional
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new DrilldownR6 object with configuration and data.}
-  \item{create_plot}{Generate the interactive highcharter drilldown plot based on the object's configuration.}
+\item{initialize}{Initialize a new DrilldownR6 object with configuration and data.}
+\item{create_plot}{Generate the interactive highcharter drilldown plot based on the object's configuration.}
 }
 }
 

@@ -15,11 +15,11 @@ This class coordinates utilities, template management, domain processing, and re
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize the report system with configuration.}
-  \item{setup_environment}{Set up the environment for report generation.}
-  \item{prepare_data}{Prepare data files for report generation.}
-  \item{generate_domain_files}{Generate domain-specific QMD files.}
-  \item{generate_report}{Generate the complete report.}
+\item{initialize}{Initialize the report system with configuration.}
+\item{setup_environment}{Set up the environment for report generation.}
+\item{prepare_data}{Prepare data files for report generation.}
+\item{generate_domain_files}{Generate domain-specific QMD files.}
+\item{generate_report}{Generate the complete report.}
 }
 }
 

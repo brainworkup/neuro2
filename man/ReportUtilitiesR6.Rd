@@ -16,7 +16,7 @@ used independently.
 }
 \section{Configuration}{
 
-The `config` field is a list that can contain various configuration options for
+The \code{config} field is a list that can contain various configuration options for
 the utilities. These options can be set during initialization and accessed by
 the various methods.
 }
@@ -93,7 +93,7 @@ Initialize a new ReportUtilitiesR6 object
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `ReportUtilitiesR6` object
+A new \code{ReportUtilitiesR6} object
 }
 }
 \if{html}{\out{<hr>}}

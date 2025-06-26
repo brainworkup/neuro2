@@ -9,14 +9,14 @@ TableGT2 R6 Class
 TableGT2 R6 Class
 }
 \details{
-An R6 class to create and save formatted `gt` tables for neurocognitive domain data.
+An R6 class to create and save formatted \code{gt} tables for neurocognitive domain data.
 An updated version of the TableGT class with enhanced functionality.
 }
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new TableGT2 object with configuration and data.}
-  \item{build_table}{Construct and return the formatted `gt` table, with optional saving as PNG and PDF. This method processes the data, applies styling, adds footnotes, and saves the output if configured.}
+\item{initialize}{Initialize a new TableGT2 object with configuration and data.}
+\item{build_table}{Construct and return the formatted \code{gt} table, with optional saving as PNG and PDF. This method processes the data, applies styling, adds footnotes, and saves the output if configured.}
 }
 }
 
@@ -169,14 +169,14 @@ A new TableGT2 object
 \if{html}{\out{<a id="method-TableGT2-build_table"></a>}}
 \if{latex}{\out{\hypertarget{method-TableGT2-build_table}{}}}
 \subsection{Method \code{build_table()}}{
-Construct and return the formatted `gt` table, with optional saving as PNG and PDF.
+Construct and return the formatted \code{gt} table, with optional saving as PNG and PDF.
 This method processes the data, applies styling, adds footnotes, and saves the output if configured.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TableGT2$build_table()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-A formatted `gt` table object
+A formatted \code{gt} table object
 }
 }
 \if{html}{\out{<hr>}}

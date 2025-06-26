@@ -16,17 +16,17 @@ construction by allowing selective inclusion of sections based on assessment nee
 
 The class categorizes template files into sections:
 \itemize{
-  \item Tests (_00*): Test descriptions and administration details
-  \item NSE (Neurobehavioral Status Exam) (_01*): Clinical interview and behavioral observations
-  \item Domains (_02*): Cognitive domain assessments (memory, attention, etc.)
-  \item Conclusions (_03*): Summary, diagnostic impressions, and recommendations
+\item Tests (_00*): Test descriptions and administration details
+\item NSE (Neurobehavioral Status Exam) (_01*): Clinical interview and behavioral observations
+\item Domains (_02*): Cognitive domain assessments (memory, attention, etc.)
+\item Conclusions (_03*): Summary, diagnostic impressions, and recommendations
 }
 }
 \examples{
 # Example 1: Initialize and list available sections
 template_mgr <- TemplateContentManagerR6$new()
 sections <- template_mgr$get_available_sections()
-print(sections$domains)  # List available domain templates
+print(sections$domains) # List available domain templates
 
 # Example 2: Retrieve content from a specific template file
 template_mgr <- TemplateContentManagerR6$new(
@@ -78,7 +78,7 @@ Initialize a new TemplateContentManagerR6 object
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `TemplateContentManagerR6` object
+A new \code{TemplateContentManagerR6} object
 }
 }
 \if{html}{\out{<hr>}}
@@ -119,7 +119,7 @@ Retrieve the content of a specific template file
 }
 \subsection{Returns}{
 Character vector containing the lines of the file if found, NULL otherwise
-  with a warning
+with a warning
 }
 }
 \if{html}{\out{<hr>}}
@@ -135,16 +135,16 @@ Get a categorized list of available template sections
 This method organizes the available template files into four categories based on
 their filename prefixes:
 \itemize{
-  \item tests: Files starting with "_00" (test descriptions)
-  \item nse: Files starting with "_01" (neurobehavioral status exam)
-  \item domains: Files starting with "_02" (cognitive domains)
-  \item conclusions: Files starting with "_03" (conclusions and recommendations)
+\item tests: Files starting with "_00" (test descriptions)
+\item nse: Files starting with "_01" (neurobehavioral status exam)
+\item domains: Files starting with "_02" (cognitive domains)
+\item conclusions: Files starting with "_03" (conclusions and recommendations)
 }
 }
 
 \subsection{Returns}{
 A list with four named elements (tests, nse, domains, conclusions),
-  each containing character vectors of filenames
+each containing character vectors of filenames
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,5 +1,0 @@
-patient_id,test,test_name,scale,score,percentile,range,domain,subdomain,narrow,test_type
-EXAMPLE001,WAIS-5,Wechsler Adult Intelligence Scale-Fifth Edition,Verbal Comprehension Index,110,75,High Average,General Cognitive Ability,General Intelligence,Crystallized Intelligence,npsych_test
-EXAMPLE001,WAIS-5,Wechsler Adult Intelligence Scale-Fifth Edition,Perceptual Reasoning Index,105,63,Average,General Cognitive Ability,General Intelligence,Fluid Intelligence,npsych_test
-EXAMPLE001,WAIS-5,Wechsler Adult Intelligence Scale-Fifth Edition,Working Memory Index,95,37,Average,General Cognitive Ability,General Intelligence,Short-Term Memory,npsych_test
-EXAMPLE001,WAIS-5,Wechsler Adult Intelligence Scale-Fifth Edition,Processing Speed Index,100,50,Average,General Cognitive Ability,General Intelligence,Processing Speed,npsych_test

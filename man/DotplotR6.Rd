@@ -15,8 +15,8 @@ This is an R6 implementation of the dotplot function with identical functionalit
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new DotplotR6 object with configuration and data.}
-  \item{create_plot}{Generate the dotplot based on the object's configuration.}
+\item{initialize}{Initialize a new DotplotR6 object with configuration and data.}
+\item{create_plot}{Generate the dotplot based on the object's configuration.}
 }
 }
 
@@ -132,7 +132,7 @@ Generate the dotplot based on the object's configuration.
 
 \subsection{Returns}{
 If return_plot is TRUE, returns an object of class 'ggplot' representing the dotplot.
-  Otherwise returns invisible(NULL).
+Otherwise returns invisible(NULL).
 }
 }
 \if{html}{\out{<hr>}}

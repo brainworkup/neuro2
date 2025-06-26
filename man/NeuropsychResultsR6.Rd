@@ -15,8 +15,8 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
-  \item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
+\item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
+\item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
 }
 }
 

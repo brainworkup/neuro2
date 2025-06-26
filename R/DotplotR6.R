@@ -70,21 +70,19 @@ DotplotR6 <- R6::R6Class(
     #' @param ... Additional arguments (ignored).
     #'
     #' @return A new DotplotR6 object
-    initialize = function(
-      data,
-      x,
-      y,
-      linewidth = 0.5,
-      fill = x,
-      shape = 21,
-      point_size = 6,
-      line_color = "black",
-      colors = NULL,
-      theme = "fivethirtyeight",
-      return_plot = TRUE,
-      filename = NULL,
-      ...
-    ) {
+    initialize = function(data,
+                          x,
+                          y,
+                          linewidth = 0.5,
+                          fill = x,
+                          shape = 21,
+                          point_size = 6,
+                          line_color = "black",
+                          colors = NULL,
+                          theme = "fivethirtyeight",
+                          return_plot = TRUE,
+                          filename = NULL,
+                          ...) {
       self$data <- data
       self$x <- x
       self$y <- y
@@ -164,8 +162,7 @@ DotplotR6 <- R6::R6Class(
 
       # Apply theme
       plot_object <- plot_object +
-        switch(
-          self$theme,
+        switch(self$theme,
           "fivethirtyeight" = ggthemes::theme_fivethirtyeight(),
           "minimal" = ggplot2::theme_minimal(),
           "classic" = ggplot2::theme_classic(),

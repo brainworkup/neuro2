@@ -15,15 +15,15 @@ This class handles loading data, filtering by domain, processing, and outputting
 \section{Methods}{
 
 \describe{
-  \item{initialize}{Initialize a new DomainProcessorR6 object with configuration parameters.}
-  \item{load_data}{Load data from the specified input file.}
-  \item{filter_by_domain}{Filter data to include only the specified domains.}
-  \item{select_columns}{Select relevant columns from the data.}
-  \item{save_data}{Save the processed data to a CSV file.}
-  \item{get_scales}{Get scale names for the specified phenotype.}
-  \item{filter_by_test}{Filter data by test names for specific report types.}
-  \item{generate_report}{Generate text reports for different report types.}
-  \item{process}{Run the complete processing pipeline.}
+\item{initialize}{Initialize a new DomainProcessorR6 object with configuration parameters.}
+\item{load_data}{Load data from the specified input file.}
+\item{filter_by_domain}{Filter data to include only the specified domains.}
+\item{select_columns}{Select relevant columns from the data.}
+\item{save_data}{Save the processed data to a CSV file.}
+\item{get_scales}{Get scale names for the specified phenotype.}
+\item{filter_by_test}{Filter data by test names for specific report types.}
+\item{generate_report}{Generate text reports for different report types.}
+\item{process}{Run the complete processing pipeline.}
 }
 }
 

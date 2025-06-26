@@ -3,13 +3,15 @@ Package: neuro2
 Title: Quarto + Typst Report Generator
 Version: 0.2.0
 Authors@R:
-    person("Joey", "Trampush", , "you@example.com", role = c("aut", "cre"))
-Description: Build clinical neuropsychological reports via Quarto+Typst.
-License: MIT
+    person("Joey", "Trampush", , "joey.trampush@brainworkup.org", role = c("aut", "cre"))
+Author: Joey Trampush [aut, cre]
+Maintainer: Joey Trampush <joey.trampush@brainworkup.org>
+Description: Provides Quarto .qmd and Typst .typ templates for
+    neuropsychological evaluation data processing and report generation.
+License: MIT + file LICENSE
 Depends:
     R (>= 3.5)
 Imports:
-    NeurotypR,
     cli,
     dplyr,
     fs,
@@ -34,6 +36,7 @@ Imports:
     R6,
     readr,
     readxl,
+    rlang,
     stats,
     stringr,
     tibble,
@@ -43,6 +46,14 @@ Imports:
     utils,
     xfun,
     yaml
+Suggests:
+    testthat (>= 3.0.0)
+VignetteBuilder:
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2.9000
+SystemRequirements: CMake (>= 3.10)

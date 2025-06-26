@@ -85,22 +85,20 @@ TableGT <- R6::R6Class(
     #' @param multiline Logical; whether to use multiline footnotes (default TRUE).
     #'
     #' @return A new TableGT object
-    initialize = function(
-      data,
-      pheno = NULL,
-      table_name = NULL,
-      source_note = NULL,
-      names = NULL,
-      title = NULL,
-      tab_stubhead = NULL,
-      caption = NULL,
-      process_md = FALSE,
-      fn_list = list(),
-      grp_list = list(),
-      dynamic_grp = NULL,
-      vertical_padding = NULL,
-      multiline = TRUE
-    ) {
+    initialize = function(data,
+                          pheno = NULL,
+                          table_name = NULL,
+                          source_note = NULL,
+                          names = NULL,
+                          title = NULL,
+                          tab_stubhead = NULL,
+                          caption = NULL,
+                          process_md = FALSE,
+                          fn_list = list(),
+                          grp_list = list(),
+                          dynamic_grp = NULL,
+                          vertical_padding = NULL,
+                          multiline = TRUE) {
       self$data <- data
       self$pheno <- pheno
       self$table_name <- table_name
@@ -298,31 +296,29 @@ TableGT2 <- R6::R6Class(
     #' @param ... Additional arguments (ignored).
     #'
     #' @return A new TableGT2 object
-    initialize = function(
-      data,
-      pheno = NULL,
-      table_name = NULL,
-      source_note = NULL,
-      names = NULL,
-      title = NULL,
-      tab_stubhead = NULL,
-      caption = NULL,
-      process_md = FALSE,
-      fn_scaled_score = NULL,
-      fn_standard_score = NULL,
-      fn_t_score = NULL,
-      fn_z_score = NULL,
-      fn_raw_score = NULL,
-      grp_scaled_score = NULL,
-      grp_standard_score = NULL,
-      grp_t_score = NULL,
-      grp_z_score = NULL,
-      grp_raw_score = NULL,
-      dynamic_grp = NULL,
-      vertical_padding = NULL,
-      multiline = TRUE,
-      ...
-    ) {
+    initialize = function(data,
+                          pheno = NULL,
+                          table_name = NULL,
+                          source_note = NULL,
+                          names = NULL,
+                          title = NULL,
+                          tab_stubhead = NULL,
+                          caption = NULL,
+                          process_md = FALSE,
+                          fn_scaled_score = NULL,
+                          fn_standard_score = NULL,
+                          fn_t_score = NULL,
+                          fn_z_score = NULL,
+                          fn_raw_score = NULL,
+                          grp_scaled_score = NULL,
+                          grp_standard_score = NULL,
+                          grp_t_score = NULL,
+                          grp_z_score = NULL,
+                          grp_raw_score = NULL,
+                          dynamic_grp = NULL,
+                          vertical_padding = NULL,
+                          multiline = TRUE,
+                          ...) {
       self$data <- data
       self$pheno <- pheno
       self$table_name <- table_name

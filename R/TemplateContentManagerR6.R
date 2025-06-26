@@ -23,7 +23,7 @@
 #' # Example 1: Initialize and list available sections
 #' template_mgr <- TemplateContentManagerR6$new()
 #' sections <- template_mgr$get_available_sections()
-#' print(sections$domains)  # List available domain templates
+#' print(sections$domains) # List available domain templates
 #'
 #' # Example 2: Retrieve content from a specific template file
 #' template_mgr <- TemplateContentManagerR6$new(
