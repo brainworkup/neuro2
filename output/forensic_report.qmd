@@ -28,10 +28,6 @@ fig-format: svg
 fig-dpi: 270
 df-print: kable
 reference-location: document
-bibliography:
-  - inst/extdata/bib/refs.bib
-citeproc: true
-csl: inst/extdata/_extensions/neurotyp-forensic/resources/apa.csl
 ---
 
 ```{r}

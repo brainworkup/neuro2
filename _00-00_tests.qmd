@@ -1,0 +1,20 @@
+
+# TESTS ADMINISTERED
+
+```{r}
+#| label: tests-list
+#| echo: false
+
+# Generate list of tests administered
+neurocog <- read_csv(here("data/neurocog.csv"))
+neurobehav <- read_csv(here("data/neurobehav.csv"))
+
+tests <- unique(c(
+  neurocog$test_name,
+  neurobehav$test_name
+))
+
+# Format as bullet list
+cat(paste("•", tests, collapse = "
+"))
+```

@@ -922,3 +922,399 @@ Corey's score on Irritability
 (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
 Corey's score on Grandiosity
 (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.
+Corey's score on Anxiety
+(reflecting a generalized impairment associated with anxiety) was Exceptionally High.
+Corey's score on Physiological (A)
+(high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Exceptionally High.
+Corey's score on Depression
+(person feels hopeless, discouraged and useless) was Exceptionally High.
+Corey's score on Cognitive (D)
+(a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Exceptionally High.
+Corey's score on Affective (D)
+(elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Exceptionally High.
+Corey's score on Physiological (D)
+(elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Exceptionally High.
+Corey's score on Activity Level
+(this activity level renders the person confused and difficult to understand) was Exceptionally High.
+Corey's score on Thought Disorder
+(suggest problems in concentration and decision-making) was Exceptionally High.
+Corey's score on Cognitive (A)
+(elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Exceptionally High.
+Corey's score on Affective (A)
+(high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Above Average.
+Corey's score on Suicidal Ideation
+(scores are typically of an individual who is seen in clinical settings) was Above Average.
+Corey's score on Phobias
+(indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Above Average.
+Corey's score on Schizophrenia
+(associated with an active schizophrenic episode) was Above Average.
+Corey's score on Anxiety-Related Disorders
+(reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Above Average.
+Corey's score on Traumatic Stress
+(trauma (single or multiple) is the overriding focus of the person's life) was High Average.
+Corey's score on Somatization
+(high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was High Average.
+Corey's score on Resentment
+(increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Average.
+Corey's score on Somatic Complaints
+(degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Average.
+Corey's score on Obsessive-Compulsive
+(scores marked rigidity and significant ruminative concerns) was Average.
+Corey's score on Health Concerns
+(elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Average.
+Corey's score on Psychotic Experiences
+(person may strike others as peculiar and eccentric) was Average.
+Corey's score on Conversion
+(moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Average.
+Corey's score on Social Detachment
+(reflects a person who neither desires nor enjoys the meaning to personal relationships) was Average.
+Corey's score on Physical Aggression
+(suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Corey's score on Hypervigilance
+(suggest a person who is pragmatic and skeptical in relationships) was Average.
+Corey's score on Paranoia
+(individuals are likely to be overtly suspicious and hostile) was Average.
+Corey's score on Mania
+(scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Corey's score on Aggression
+(scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Corey's score on Persecution
+(suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Low Average.
+Corey's score on Aggressive Attitude
+(suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Low Average.
+Corey's score on Verbal Aggression
+(reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Low Average.
+Corey's score on Irritability
+(person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Corey's score on Grandiosity
+(person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was Below Average.

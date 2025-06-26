@@ -6,13 +6,13 @@
 \usage{
 generate_neuropsych_report(
   variables = NULL,
-  template_dir = "inst/quarto/templates/typst-report",
+  template_dir = "inst/extdata/_extensions",
   output_dir = ".",
   sections = NULL,
   data_paths = NULL,
   output_file = "report_template.qmd",
   render = TRUE,
-  output_format = "neurotyp-adult-typst"
+  output_format = "pdf"
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ generate_neuropsych_report(
 
 \item{render}{Whether to render the report after generating the template (default: TRUE).}
 
-\item{output_format}{Output format for rendering (default: "neurotyp-adult-typst").}
+\item{output_format}{Output format for rendering (default: "pdf").}
 }
 \value{
 Invisibly returns the ReportTemplateR6 object.

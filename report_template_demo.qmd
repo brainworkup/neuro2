@@ -16,7 +16,7 @@ This document demonstrates how to use the new `ReportTemplateR6` class to genera
 ```{r}
 # Create a report template generator
 report_generator <- ReportTemplateR6$new(
-  variables = "inst/quarto/templates/typst-report/_variables.yml",
+  variables = "inst/extdata/_extensions/neurotyp-adult/_variables.yml",
   template_dir = "inst/quarto/templates/typst-report",
   output_dir = "."
 )

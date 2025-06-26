@@ -67,7 +67,7 @@ Initialize a new ReportTemplateR6 object with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$new(
   variables = NULL,
-  template_dir = "inst/quarto/templates/typst-report",
+  template_dir = "inst/extdata/_extensions",
   output_dir = ".",
   sections = NULL,
   data_paths = NULL,
@@ -248,7 +248,7 @@ Render the report using Quarto.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$render_report(
   input_file,
-  output_format = "neurotyp-adult-typst",
+  output_format = "pdf",
   output_file = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -258,7 +258,7 @@ Render the report using Quarto.
 \describe{
 \item{\code{input_file}}{Input Quarto file path.}
 
-\item{\code{output_format}}{Output format (default: "neurotyp-adult-typst").}
+\item{\code{output_format}}{Output format (default: "pdf").}
 
 \item{\code{output_file}}{Output file path (default: NULL, will use Quarto default).}
 }

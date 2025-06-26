@@ -1,9 +1,9 @@
-## General Cognitive Ability {#sec-iq}
+## Daily Living {#sec-daily_living}
 
-{{< include _02-01_iq_text.qmd >}}
+{{< include _02-07_daily_living_text.qmd >}}
 
 ```{r}
-#| label: setup-iq
+#| label: setup-daily_living
 #| include: false
 
 # Load required libraries
@@ -19,17 +19,17 @@ neurocog <- read_csv(here("data/neurocog.csv"))
 neurobehav <- read_csv(here("data/neurobehav.csv"))
 
 # Filter by domain
-domain_name <- "General Cognitive Ability"
-pheno <- "iq"
+domain_name <- "Daily Living"
+pheno <- "daily_living"
 
 # Filter data for this domain
 domain_data <- neurocog %>%
   filter(domain == domain_name | 
-         scale %in% c("Full Scale (FSIQ)", "General Ability (GAI)", "Verbal Comprehension (VCI)", "Fluid Reasoning (FRI)", "Processing Speed (PSI)", "Working Memory (WMI)", "NAB Total Index", "Test of Premorbid Functioning"))
+         scale %in% c("NAB Daily Living", "Driving Scenes", "Bill Payment", "Daily Living Memory", "Medication Instructions", "Map Reading", "Judgment"))
 ```
 
 ```{r}
-#| label: table-iq
+#| label: table-daily_living
 #| echo: false
 
 # Create table
@@ -47,9 +47,9 @@ if (nrow(domain_data) > 0) {
 ```
 
 ```{r}
-#| label: figure-iq
+#| label: figure-daily_living
 #| echo: false
-#| fig-cap: "General Cognitive Ability subdomain scores"
+#| fig-cap: "Daily Living subdomain scores"
 
 # Create dotplot figure
 if (nrow(domain_data) > 0 && "z_mean_subdomain" %in% colnames(domain_data)) {

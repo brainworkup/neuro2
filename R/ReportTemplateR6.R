@@ -271,10 +271,6 @@ ReportTemplateR6 <- R6::R6Class(
         "fig-dpi: 270\n",
         "df-print: kable\n",
         "reference-location: document\n",
-        "bibliography:\n",
-        "  - inst/extdata/bib/refs.bib\n",
-        "citeproc: true\n",
-        "csl: apa.csl\n",
         "---\n\n"
       )
 
