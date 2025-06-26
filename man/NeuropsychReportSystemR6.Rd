@@ -58,7 +58,7 @@ Initialize a new NeuropsychReportSystemR6 object with configuration.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$new(
   config = list(),
-  template_dir = "inst/quarto/templates/typst-report",
+  template_dir = "inst/extdata/_extensions",
   output_dir = "output"
 )}\if{html}{\out{</div>}}
 }

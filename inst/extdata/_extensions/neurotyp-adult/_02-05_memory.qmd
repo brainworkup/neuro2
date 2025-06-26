@@ -18,7 +18,7 @@ pheno <- "memory"
 #| include: false
 
 # Read the CSV file into a data frame
-memory <- readr::read_csv("data/neurocog.csv")
+memory <- readr::read_csv("data-raw/neurocog.csv")
 
 # Filter the data frame based on certain conditions
 # Keep only the rows where 'domain' equals 'domains' and 'z_mean_domain' is not NA

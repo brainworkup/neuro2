@@ -6,7 +6,7 @@
 \usage{
 generate_iq_report(
   patient_name,
-  input_file = "data/neurocog.csv",
+  input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
   pheno = "iq",

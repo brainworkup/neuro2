@@ -1,0 +1,64 @@
+# NEUROBEHAVIORAL STATUS EXAMINATION
+
+## IDENTIFYING INFORMATION
+
+Biggie is a 44-year-old, right-handed, English-speaking male who was referred for a comprehensive neuropsychological evaluation by Dr. Referral Source. The evaluation was conducted over three sessions on [dates of evaluation]. The purpose of the assessment was to evaluate his current neurocognitive functioning in the context of a forensic evaluation.
+
+## REASON FOR REFERRAL
+
+Biggie was referred for a comprehensive neuropsychological assessment to evaluate his current cognitive functioning, assess for the presence of any neurocognitive deficits, and determine how these findings may impact his forensic case. Specific referral questions include:
+
+1. What is Biggie's current level of neurocognitive functioning?
+2. Are there any neurocognitive deficits present that may have impacted his behavior or decision-making capacity?
+3. How might these findings inform treatment recommendations and legal proceedings?
+
+## BACKGROUND INFORMATION
+
+The background information was obtained through clinical interview with Biggie, review of available records, and collateral information provided by [collateral sources].
+
+### Medical History
+
+Biggie reported [brief medical history including any neurological conditions, head injuries, loss of consciousness, seizures, chronic medical conditions, surgeries, current medications].
+
+### Psychiatric History
+
+Biggie reported [brief psychiatric history including any diagnoses, hospitalizations, outpatient treatment, history of suicidal ideation or attempts, substance use history].
+
+### Educational and Occupational History
+
+Biggie completed [educational history]. His occupational history includes [occupational history].
+
+### Legal History
+
+Biggie reported [brief legal history relevant to the current case].
+
+### Current Symptoms
+
+Biggie reported [current cognitive, emotional, behavioral symptoms].
+
+## ASSESSMENT PROCEDURES
+
+The following assessment procedures were administered as part of this evaluation:
+
+### Clinical Interview and Behavioral Observations
+- Comprehensive clinical interview
+- Behavioral observations during testing
+
+### Neurocognitive Measures
+- Wechsler Adult Intelligence Scale-Fifth Edition (WAIS-5)
+- Test of Premorbid Functioning (TOPF)
+- Neuropsychological Assessment Battery (NAB)
+- California Verbal Learning Test-3 Brief (CVLT3-Brief)
+- Rey-Osterrieth Complex Figure Test (ROCFT)
+- Delis-Kaplan Executive Function System (D-KEFS)
+- EXAMINER Executive Function Battery
+- Wechsler Individual Achievement Test-Fourth Edition (WIAT-4)
+
+### Self-Report and Observer-Rated Measures
+- Personality Assessment Inventory (PAI)
+- Conners Adult ADHD Rating Scales-2 (CAARS-2) Self and Observer Forms
+- Comprehensive Executive Function Inventory (CEFI) Self and Observer Forms
+
+### Validity Measures
+- PAI Validity Scales
+- Embedded performance validity measures

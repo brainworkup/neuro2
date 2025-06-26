@@ -73,7 +73,7 @@ Initialize a new IQReportGeneratorR6 object with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IQReportGeneratorR6$new(
   patient_name,
-  input_file = "data/neurocog.csv",
+  input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
   pheno = "iq"

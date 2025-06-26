@@ -97,10 +97,10 @@ patient <- Sys.getenv("PATIENT")
 path_data <- here::here("data")
 path_csv <- here::here("inst", "extdata")
 NeurotypR::load_data(here::here(path_csv))
-neurocog <- readr::read_csv("data/neurocog.csv")
-neurobehav <- readr::read_csv("data/neurobehav.csv")
-neuropsych <- readr::read_csv("data/neuropsych.csv")
-# validity <- readr::read_csv("data/validity.csv")
+neurocog <- readr::read_csv("data-raw/neurocog.csv")
+neurobehav <- readr::read_csv("data-raw/neurobehav.csv")
+neuropsych <- readr::read_csv("data-raw/neuropsych.csv")
+# validity <- readr::read_csv("data-raw/validity.csv")
 ```
 
 ```{=typst}

@@ -7,9 +7,10 @@
 generate_neuropsych_report_system(
   patient_name,
   domains = c("General Cognitive Ability", "ADHD", "Memory", "Executive Functions"),
-  data_files = list(neurocog = "data/neurocog.csv", neurobehav = "data/neurobehav.csv",
-    neuropsych = "data/neuropsych.csv", validity = "data/validity.csv"),
-  template_dir = "inst/quarto/templates/typst-report",
+  data_files = list(neurocog = "data-raw/neurocog.csv", neurobehav =
+    "data-raw/neurobehav.csv", neuropsych = "data-raw/neuropsych.csv", validity =
+    "data-raw/validity.csv"),
+  template_dir = "inst/extdata/_extensions/brainworkup",
   output_dir = "output",
   template_file = "template.qmd",
   output_file = "neuropsych_report.pdf",

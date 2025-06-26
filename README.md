@@ -1,163 +1,99 @@
-# NeurotypR: Neuropsychological Report Generation System
+# neuro2: Neuropsychological Report Generation Workflow
 
-NeurotypR is an R package designed to streamline the creation of neuropsychological evaluation reports. It provides tools for data import, processing, visualization, and report generation using Quarto and Typst templates.
+This repository contains a test workflow for generating neuropsychological reports using R and Quarto. The workflow demonstrates how to process neuropsychological test data, generate domain-specific files, and compile a complete report using a forensic template.
 
-## Features
+## Overview
 
-- Data import from multiple CSV files
-- Statistical analysis and z-score calculations
-- Automated table and plot generation
-- Modular report generation with interchangeable templates
-- Support for both HTML and Typst output formats
+The neuro2 package provides a comprehensive framework for processing neuropsychological assessment data and generating professional reports. It uses R6 classes to implement an object-oriented approach to data processing and report generation.
 
-## Installation
+### Patient Information for Test Workflow
 
-```r
-# Install from GitHub
-devtools::install_github("neuro2/NeurotypR")
-```
-
-## Workflow Overview
-
-1. **Data Import**: Load neuropsychological test data from CSV files
-2. **Data Processing**: Filter, transform, and calculate statistics
-3. **Visualization**: Generate standardized plots and tables
-4. **Report Assembly**: Combine processed data with template sections
-5. **Rendering**: Produce final reports in HTML or Typst formats
-
-## Key Components
-
-### 1. ReportGenerator Class
-
-The core R6 class that orchestrates the entire workflow:
-
-```r
-gen <- ReportGenerator$new(
-  params = list(patient = "John Doe", dob = "1980-01-01"),
-  output_dir = "reports"
-)
-```
-
-### 2. Data Processing
-
-- `load_data()`: Import and combine CSV files
-- `filter_data()`: Subset by domains or scales
-- `calculate_stats()`: Compute z-scores and other statistics
-
-### 3. Visualization
-
-- `generate_tables()`: Create standardized tables (GT/Kable)
-- `generate_plots()`: Generate dotplots and other visualizations
-
-### 4. Report Generation
-
-Two main approaches:
-
-1. **Single Template Rendering**:
-```r
-gen$render(output_file = "report.html")
-```
-
-2. **Modular Section Assembly**:
-```r
-gen$render_sections(
-  sections_dir = "sections",
-  output_file = "modular_report.html"
-)
-```
-
-## Template System
-
-NeurotypR uses a flexible template system with interchangeable components:
-
-### Template Types
-
-1. **Adult Neuropsychological** (`_01-00_nse_adult.qmd`)
-2. **Forensic** (`_01-00_nse_forensic.qmd`)
-3. **Pediatric** (`_01-00_nse_pediatric.qmd`)
-
-### Template Structure
-
-```
-inst/quarto/templates/
-├── typst-report/          # Typst template
-│   ├── template.qmd       # Master template
-│   ├── _quarto.yml        # Quarto config
-│   └── sections/          # Modular sections
-└── html-report/           # HTML template
-    └── template.qmd
-```
-
-### Using Templates
-
-1. **Static Files**: Store in `inst/quarto/templates/[format]/`
-2. **Dynamic Sections**: Generate QMD files based on test battery
-
-## File Management
-
-- **Static Files**: Store in `inst/extdata/` for package data
-- **Dynamic Files**: Generated at runtime in the output directory
-
-## Example Usage
-
-```r
-library(NeurotypR)
-
-# Initialize with patient parameters
-gen <- ReportGenerator$new(
-  params = list(
-    patient = "Jane Doe",
-    dob = "1990-05-15",
-    author = "Clinician Name"
-  ),
-  output_dir = "reports"
-)
-
-# Load and process data
-gen$
-  load_data()$
-  filter_data(domains = c("Memory", "Attention"))$
-  calculate_stats(group_vars = c("domain", "scale"))
-
-# Generate outputs
-gen$
-  generate_tables()$
-  generate_plots()$
-  render(output_file = "jane_doe_report.html")
-```
+The test workflow uses the following patient information:
+- **Name**: Biggie
+- **Age**: 44
+- **Sex**: Male
+- **Template**: Forensic
 
 ## Directory Structure
 
-```
-neuro2/
-├── R/                  # R source code
-│   ├── report_generator.R  # Main class
-│   ├── data.R          # Data processing
-│   ├── plots.R         # Visualization
-│   └── tables.R        # Table generation
-├── inst/
-│   ├── examples/       # Usage examples
-│   ├── extdata/        # Sample data
-│   └── quarto/         # Report templates
-├── man/                # Documentation
-└── reports/            # Output directory
-```
+- `data-raw/`: Contains raw CSV files from neuropsychological assessments
+- `data/`: Processed data files and domain-specific output
+- `output/`: Generated reports
+- `R/`: R6 classes that implement the report generation system
+- `inst/extdata/_extensions/`: Quarto templates for different report types
 
-## Customization
+## Workflow Steps
 
-To create a new template:
+The workflow consists of the following steps:
 
-1. Copy an existing template directory
-2. Modify the `template.qmd` and section files
-3. Update the `_quarto.yml` configuration
-4. Reference the new template path in your code
+1. **Data Import and Processing**
+   - Import individual CSV files from `data-raw/`
+   - Process and standardize the data
+   - Generate `neurocog.csv` and `neurobehav.csv` datasets
 
-## Troubleshooting
+2. **Domain File Generation**
+   - Create domain-specific QMD files (e.g., `_02-01_iq.qmd`, `_02-05_memory.qmd`)
+   - Generate text summaries for each domain
+   - Create tables and figures for visualization
 
-- **Template Not Found**: Verify the path in `private$template_qmd`
-- **Missing Sections**: Ensure all included QMD files exist
-- **Parameter Errors**: Check that all required params are provided
+3. **Report Rendering**
+   - Compile all domain files into a complete report
+   - Render the report using Quarto
+   - Generate the final PDF
 
-## License
+## R6 Classes in neuro2
 
-MIT License - See [LICENSE](LICENSE) for details.
+The workflow uses several R6 classes defined in the package:
+
+- `ReportTemplateR6`: Manages the Quarto template system for neuropsychological reports
+- `NeuropsychResultsR6`: Processes and formats results text
+- `DomainProcessorR6`: Processes domain-specific data
+- `IQReportGeneratorR6`: Specialized processor for IQ data
+- `NeuropsychReportSystemR6`: Orchestrates the entire report generation system
+
+## Usage
+
+To run the test workflow:
+
+1. First run the setup script to ensure all dependencies are installed:
+   ```R
+   source("setup_environment.R")
+   ```
+
+2. Check that the R6 classes are properly loaded:
+   ```R
+   source("check_package.R")
+   ```
+
+3. Run the workflow script:
+   ```R
+   source("run_test_workflow.R")
+   ```
+
+4. Check the `output/` directory for the generated report (`Biggie_Neuropsych_Report.pdf`).
+
+## Creating a New Patient Report
+
+To create a report for a new patient:
+
+1. Create a new directory for the patient
+2. Copy the template files and scripts from this repository
+3. Modify the patient information in `test_workflow.R`
+4. Place the patient's CSV files in the `data-raw/` directory
+5. Edit the text files (e.g., `_02-01_iq_text.qmd`) to customize the clinical interpretation
+6. Run the workflow
+
+## Requirements
+
+- R 4.0.0 or higher
+- Quarto 1.0.0 or higher
+- Required R packages: R6, dplyr, readr, purrr, stringr, tidyr, here, quarto
+
+## Future Development
+
+This package is designed to be used as a GitHub template, allowing you to quickly create a new repository for each patient with the necessary structure and files. Future enhancements will include:
+
+- Additional templates for different report types
+- More domain processors for specialized assessments
+- Enhanced visualization options
+- Integration with electronic health record systems

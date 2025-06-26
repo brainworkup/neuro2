@@ -142,7 +142,7 @@ NeurotypR::dotplot(
 #| fig-format: svg
 
 # Read the data and filter out "Cognitive Proficiency" scale
-data <- readr::read_csv("data/neurocog.csv") |>
+data <- readr::read_csv("data-raw/neurocog.csv") |>
   dplyr::filter(scale != "Cognitive Proficiency")
 
 # Calculate M,SD

@@ -18,7 +18,7 @@ pheno <- "verbal"
 #| include: false
 
 # Read the CSV file into a data frame
-verbal <- readr::read_csv("data/neurocog.csv")
+verbal <- readr::read_csv("data-raw/neurocog.csv")
 
 # Filter the data frame to keep only rows where 'domain' equals 'domains'
 verbal <- verbal |> dplyr::filter(domain %in% domains)
