@@ -135,7 +135,7 @@ ReportTemplateR6 <- R6::R6Class(
           "tidytable",
           "vroom",
           "xfun",
-          "bwu",
+          "NeurotypR",
           "NeurotypR"
         )
       } else {
@@ -479,10 +479,7 @@ ReportTemplateR6 <- R6::R6Class(
       }
 
       # Render the report
-      args <- list(
-        input = input_file,
-        output_format = output_format
-      )
+      args <- list(input = input_file, output_format = output_format)
 
       if (!is.null(output_file)) {
         args$output_file <- output_file

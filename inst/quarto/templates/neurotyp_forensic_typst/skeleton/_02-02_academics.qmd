@@ -79,7 +79,7 @@ readr::write_excel_csv(
 #| include: false
 #| eval: true
 
-# Read the data using the read_data function from the bwu library
+# Read the data using the read_data function from the NeurotypR library
 # The phenotype is specified by the 'pheno' variable
 data <- academics
 
@@ -152,10 +152,10 @@ scales <- c(
   "Written Language Composite"
 )
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
-data_academics <- bwu::filter_data(data, domain = domains, scale = scales)
+data_academics <- NeurotypR::filter_data(data, domain = domains, scale = scales)
 ```
 
 ```{r}
@@ -164,7 +164,7 @@ data_academics <- bwu::filter_data(data, domain = domains, scale = scales)
 #| include: false
 
 # export text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_academics,
   file = "_02-02_academics_text.qmd"
 )
@@ -186,7 +186,7 @@ multiline <- TRUE
 
 # footnotes
 fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
 )
 
 # Define the groups for the table
@@ -194,7 +194,7 @@ grp_academics <- list(
   standard_score = c("KTEA-3", "WIAT-4", "WRAT-5")
 )
 
-# Create the table using the NeurotypR::tbl_gt2 function from the bwu library
+# Create the table using the NeurotypR::tbl_gt2 function from the NeurotypR library
 # source("table_gt.R")
 NeurotypR::tbl_gt2(
   data = data_academics,

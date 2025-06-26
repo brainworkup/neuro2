@@ -115,7 +115,7 @@ library(dplyr)
 library(vroom)
 library(glue)
 library(rlang)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -375,7 +375,7 @@ df <- convert_percentile(df, "percentile")
 ```{r eval = params$compute_ci95}
 # Assuming df is your data.frame and calc_ci_95 is your function
 for (i in seq_len(nrow(df))) {
-  ci_values <- bwu::calc_ci_95(
+  ci_values <- NeurotypR::calc_ci_95(
     ability_score = df$score[i],
     mean = 10, # change to 50, 0, 100, etc.
     standard_deviation = 3, # change to 10, 1, 15, etc.
@@ -404,7 +404,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- bwu::gpluck_make_columns(
+df_mutated <- NeurotypR::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -417,7 +417,7 @@ df_mutated <- bwu::gpluck_make_columns(
 ```{r ranges, eval = TRUE}
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
+  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 

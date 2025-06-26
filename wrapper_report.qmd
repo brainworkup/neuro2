@@ -72,7 +72,7 @@ packages <- c(
   "tidytable",
   "vroom",
   "xfun",
-  "bwu",
+  "NeurotypR",
   "NeurotypR"
 )
 
@@ -173,4 +173,3 @@ neuropsych <- readr::read_csv("data/neuropsych.csv")
 {{< include sections/_03-03_appendix.qmd >}}
 
 # NEUROCOGNITIVE FINDINGS
-

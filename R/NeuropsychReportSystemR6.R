@@ -81,18 +81,15 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         output_dir = output_dir
       )
       self$content_manager <- structure(
-        list(
-          template_dir = template_dir,
-          get_content = function(file_name) {
-            file_path <- file.path(template_dir, file_name)
-            if (file.exists(file_path)) {
-              return(readLines(file_path, warn = FALSE))
-            } else {
-              warning("Content file not found: ", file_name)
-              return(NULL)
-            }
+        list(template_dir = template_dir, get_content = function(file_name) {
+          file_path <- file.path(template_dir, file_name)
+          if (file.exists(file_path)) {
+            return(readLines(file_path, warn = FALSE))
+          } else {
+            warning("Content file not found: ", file_name)
+            return(NULL)
           }
-        ),
+        }),
         class = "TemplateContentManagerR6"
       ) # Placeholder
 
@@ -129,7 +126,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "rmarkdown",
         "stringr",
         "tidyr",
-        "bwu",
+        "NeurotypR",
         "NeurotypR"
       )
 
@@ -379,10 +376,7 @@ generate_neuropsych_report_system <- function(
   )
 
   # Run the workflow
-  report_system$run_workflow(
-    setup = setup,
-    prepare_data = prepare_data
-  )
+  report_system$run_workflow(setup = setup, prepare_data = prepare_data)
 
   invisible(report_system)
 }

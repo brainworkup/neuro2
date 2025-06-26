@@ -49,7 +49,7 @@ library(shiny)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
-library(bwu)
+library(NeurotypR)
 library(rmdformats)
 # Set JAVA environment
 Sys.setenv(
@@ -119,7 +119,7 @@ areas <- list(
 ```
 
 ```{r locate-areas-pdf}
-# areas <- bwu::gpluck_locate_areas(
+# areas <- NeurotypR::gpluck_locate_areas(
 #   file = pdf_file,
 #   pages = pages
 # )
@@ -136,7 +136,7 @@ areas <- list(
 # Extract tables
 
 ```{r extract}
-plucked_tables <- bwu::gpluck_extract_tables(
+plucked_tables <- NeurotypR::gpluck_extract_tables(
   file = pdf_file,
   pages = pages,
   area = areas,
@@ -199,7 +199,7 @@ if (params$test == "brown_efa_parent") {
 ## Format Tables
 
 ```{r}
-df <- bwu::gpluck_make_columns(
+df <- NeurotypR::gpluck_make_columns(
   data = df,
   test = params$test,
   test_name = params$test_name,
@@ -229,7 +229,7 @@ df <-
 ## Test score ranges
 
 ```{r test-score-ranges}
-df <- bwu::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
+df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
 ```
 
 ## Narrow subdomains

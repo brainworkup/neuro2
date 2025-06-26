@@ -33,7 +33,7 @@ library(shiny)
 library(tabulizer)
 library(tibble)
 library(tidyr)
-library(bwu)
+library(NeurotypR)
 library(rmdformats)
 # Set JAVA environment
 Sys.setenv(
@@ -100,7 +100,7 @@ areas <- list(
 ```
 
 ```{r locate-areas}
-# areas <- bwu::gpluck_locate_areas(
+# areas <- NeurotypR::gpluck_locate_areas(
 #   file = pdf_file,
 #   pages = pages
 # )
@@ -117,7 +117,7 @@ readr::write_rds(areas, here::here(patient, "pre_csv", "areas_basc3_prs.rds"))
 ## Extract tables
 
 ```{r extract}
-plucked_tables <- bwu::gpluck_extract_tables(
+plucked_tables <- NeurotypR::gpluck_extract_tables(
   file = pdf_file,
   pages = pages,
   area = areas,
@@ -164,7 +164,7 @@ table2 <- table2 |> dplyr::select(all_of(keep))
 # Mutate columns
 
 ```{r mutate1}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   data = table1,
   test = params$test,
   test_name = params$test_name,
@@ -184,7 +184,7 @@ table1 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate2}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   data = table2,
   test = params$test,
   test_name = params$test_name,
@@ -246,8 +246,8 @@ table2 <-
 ## Test score ranges
 
 ```{r test-score-ranges}
-table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "rating_scale")
-table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "rating_scale")
+table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "rating_scale")
+table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "rating_scale")
 ```
 
 ### Narrow subdomains

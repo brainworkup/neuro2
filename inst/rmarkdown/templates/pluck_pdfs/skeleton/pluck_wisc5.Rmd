@@ -148,7 +148,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(tidyverse)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -172,7 +172,7 @@ pages <- params$pages
 #   file = file,
 #   pages = pages
 # )
-# 
+#
 # areas_wisc5 <- tabulapdf::locate_areas(
 #   file = file,
 #   pages = pages
@@ -280,7 +280,7 @@ print(table1)
 ## Mutate/Ranges
 
 ```{r}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   test = params$test,
   test_name = params$test_name,
@@ -299,7 +299,7 @@ table1 <- bwu::gpluck_make_columns(
 )
 
 # Test score ranges
-table1 <- bwu::gpluck_make_score_ranges(
+table1 <- NeurotypR::gpluck_make_score_ranges(
   table = table1,
   test_type = "npsych_test"
 )
@@ -543,7 +543,7 @@ print(table2)
 ## Mutate columns
 
 ```{r}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   test = params$test,
   test_name = params$test_name,
@@ -562,7 +562,7 @@ table2 <- bwu::gpluck_make_columns(
 )
 
 # Test score ranges
-table2 <- bwu::gpluck_make_score_ranges(
+table2 <- NeurotypR::gpluck_make_score_ranges(
   table = table2,
   test_type = "npsych_test"
 )
@@ -727,7 +727,7 @@ print(table3)
 ## Mutate columns
 
 ```{r}
-table3 <- bwu::gpluck_make_columns(
+table3 <- NeurotypR::gpluck_make_columns(
   table3,
   test = params$test,
   test_name = params$test_name,
@@ -746,7 +746,7 @@ table3 <- bwu::gpluck_make_columns(
 )
 
 # Test score ranges
-table3 <- bwu::gpluck_make_score_ranges(
+table3 <- NeurotypR::gpluck_make_score_ranges(
   table = table3,
   test_type = "npsych_test"
 )
@@ -967,7 +967,7 @@ print(table5)
 ## Mutate columns
 
 ```{r}
-table4 <- bwu::gpluck_make_columns(
+table4 <- NeurotypR::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -985,7 +985,7 @@ table4 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table5 <- bwu::gpluck_make_columns(
+table5 <- NeurotypR::gpluck_make_columns(
   table5,
   range = "",
   test = params$test,
@@ -1006,7 +1006,7 @@ table5 <- bwu::gpluck_make_columns(
 ## Compute percentile for table 4
 
 ```{r}
-table4 <- bwu::gpluck_compute_percentile_range(
+table4 <- NeurotypR::gpluck_compute_percentile_range(
   .x = table4,
   .score = table4$score,
   .score_type = "scaled_score"
@@ -1016,7 +1016,7 @@ table4 <- bwu::gpluck_compute_percentile_range(
 ## Test score ranges
 
 ```{r}
-table4 <- bwu::gpluck_make_score_ranges(
+table4 <- NeurotypR::gpluck_make_score_ranges(
   table = table4,
   test_type = "npsych_test"
 )
@@ -1284,14 +1284,14 @@ table5 <-
       scale == "Coding Rotation Errors" ~ "Visual-motor processing speed (rotation errors)",
       TRUE ~ as.character(description)
     )
-  )  
+  )
 ```
 
 ## Glue result
 
 ```{r}
 table4 <-
-    table4 |> 
+    table4 |>
     tidytable::mutate(
       result = glue::glue(
         "{description} was {range}."
@@ -1299,7 +1299,7 @@ table4 <-
     )
 
 table5 <-
-    table5 |> 
+    table5 |>
     tidytable::mutate(
       result = glue::glue(
         "{description} was {range}."

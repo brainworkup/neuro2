@@ -1,4 +1,0 @@
-## General Cognitive Ability {#sec-general_cognitive_ability}
-
-{{< include _02-01_general_cognitive_ability_text.qmd >}}
-

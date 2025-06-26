@@ -33,7 +33,7 @@ library(shiny)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
-library(bwu)
+library(NeurotypR)
 library(rmdformats)
 # Set JAVA environment
 Sys.setenv(
@@ -101,7 +101,7 @@ areas <- list(
 ```
 
 ```{r locate-areas}
-# areas <- bwu::gpluck_locate_areas(
+# areas <- NeurotypR::gpluck_locate_areas(
 #   file = pdf_file,
 #   pages = pages
 # )
@@ -118,7 +118,7 @@ readr::write_rds(areas, here::here(patient, "pre_csv", "areas_basc3_srp.rds"))
 ## Extract tables
 
 ```{r extract}
-plucked_tables <- bwu::gpluck_extract_tables(
+plucked_tables <- NeurotypR::gpluck_extract_tables(
   file = pdf_file,
   pages = pages,
   area = areas,
@@ -165,7 +165,7 @@ table2 <- table2 |> dplyr::select(all_of(keep))
 # Mutate columns
 
 ```{r mutate1}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   data = table1,
   test = params$test,
   test_name = params$test_name,
@@ -185,7 +185,7 @@ table1 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate2}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   data = table2,
   test = params$test,
   test_name = params$test_name,
@@ -207,8 +207,8 @@ table2 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r test-score-ranges}
-table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "rating_scale")
-table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "rating_scale")
+table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "rating_scale")
+table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "rating_scale")
 ```
 
 ## Subdomains
@@ -344,7 +344,7 @@ df <- bind_rows(table1, table2)
 ## Glue results
 
 ```{r result}
-df <- df |> 
+df <- df |>
   rowwise() |>
   mutate(result = glue::glue("{patient}'s self-reported {description} was {range}.\n"))
 ```
@@ -357,8 +357,8 @@ df <- df |>
 test <- params$test
 readr::write_csv(
   df,
-  here::here(patient, "csv", paste0(test, ".csv")), 
-  col_names = TRUE, 
+  here::here(patient, "csv", paste0(test, ".csv")),
+  col_names = TRUE,
   na = ""
   )
 ```
@@ -371,7 +371,7 @@ file <- fs::fs_path(params$file)
 
 # BASC-3 SRP Child
 if (params$test == "basc3_srp_child") {
-  
+
   ## extract text
   get_text <- function(file) {
     txt <- pdftools::pdf_text(file) |>
@@ -391,17 +391,17 @@ if (params$test == "basc3_srp_child") {
 
   # save as markdown
   readr::write_lines(
-    basc3_srp_squished, 
-    here::here(patient, "basc3_srp_text.md"), 
+    basc3_srp_squished,
+    here::here(patient, "basc3_srp_text.md"),
     sep = "\n")
   # save as quarto
   readr::write_lines(
-    basc3_srp_squished, 
-    here::here(patient, "basc3_srp_text.qmd"), 
+    basc3_srp_squished,
+    here::here(patient, "basc3_srp_text.qmd"),
     sep = "\n")
   # save as text
-  readr::write_lines(basc3_srp_squished, 
-    here::here(patient, "basc3_srp_text.txt"), 
+  readr::write_lines(basc3_srp_squished,
+    here::here(patient, "basc3_srp_text.txt"),
     sep = "\n"
     )
 
@@ -424,20 +424,20 @@ if (params$test == "basc3_srp_child") {
     stringr::str_replace_all(basc3_srp_adolescent_txt, "\\s{2,}", "- ") |>
     stringr::str_remove_all(",")
   basc3_srp_adolescent_squished
-  
+
   # save as markdown
-  readr::write_lines(basc3_srp_adolescent_squished, 
+  readr::write_lines(basc3_srp_adolescent_squished,
     here::here(patient, "basc3_srp_adolescent_text.md"),
     sep = "\n"
     )
   # save as quarto
-  readr::write_lines(basc3_srp_adolescent_squished, 
+  readr::write_lines(basc3_srp_adolescent_squished,
     here::here(patient, "basc3_srp_adolescent_text.qmd"),
     sep = "\n"
     )
   # save as text
-  readr::write_lines(basc3_srp_adolescent_squished, 
-    here::here(patient, "basc3_srp_adolescent_text.txt"), 
+  readr::write_lines(basc3_srp_adolescent_squished,
+    here::here(patient, "basc3_srp_adolescent_text.txt"),
     sep = "\n"
     )
 }
@@ -511,21 +511,21 @@ library(tibble)
 parse_extracted_text <- function(text) {
   # Split text by lines
   lines <- unlist(strsplit(text, split = "\n"))
-  
+
   # Filter lines containing scores
   score_lines <- lines[str_detect(lines, "-")]
-  
+
   # Extract names, raw values, and T scores using regex
   names <- str_extract(score_lines, ".*(?=\\s*-\\s*)")
   values <- str_extract_all(score_lines, "(?<=-\\s*)[^-]*")
-  
+
   # Convert to data.frame
   df <- tibble(
     Name = names,
     RawValue = sapply(values, function(x) x[1]),
     TScore = sapply(values, function(x) x[2])
   )
-  
+
   return(df)
 }
 
@@ -558,21 +558,21 @@ library(tibble)
 parse_extracted_text <- function(text) {
   # Split text by lines
   lines <- unlist(strsplit(text, split = "\n"))
-  
+
   # Filter lines containing scores
   score_lines <- lines[str_detect(lines, "-")]
-  
+
   # Split by hyphen and trim whitespace
   split_values <- str_split(score_lines, "-")
   trimmed_values <- lapply(split_values, str_trim)
-  
+
   # Convert to data.frame
   df <- tibble(
     Name = sapply(trimmed_values, `[[`, 1),
     RawValue = sapply(trimmed_values, `[[`, 2),
     TScore = sapply(trimmed_values, `[[`, 3)
   )
-  
+
   return(df)
 }
 

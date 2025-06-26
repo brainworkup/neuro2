@@ -157,11 +157,11 @@ scales <- c(
   "Withdrawal"
 )
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
 data_emotion <-
-  bwu::filter_data(
+  NeurotypR::filter_data(
     data,
     domain = domains,
     scale = scales
@@ -182,7 +182,7 @@ data_emotion_self <-
   dplyr::distinct(.keep_all = FALSE)
 
 # Flatten the text
-bwu::cat_neuropsych_results(data = data_emotion_self, file = "_02-10_emotion_child_text_self.qmd")
+NeurotypR::cat_neuropsych_results(data = data_emotion_self, file = "_02-10_emotion_child_text_self.qmd")
 ```
 
 ```{r}
@@ -199,7 +199,7 @@ data_emotion_parent <-
   dplyr::distinct(.keep_all = FALSE)
 
 # Flatten the text
-bwu::cat_neuropsych_results(data = data_emotion_parent, file = "_02-09_emotion_child_text_parent.qmd")
+NeurotypR::cat_neuropsych_results(data = data_emotion_parent, file = "_02-09_emotion_child_text_parent.qmd")
 ```
 
 ```{r}
@@ -216,7 +216,7 @@ data_emotion_teacher <-
   dplyr::distinct(.keep_all = FALSE)
 
 # Flatten the text
-bwu::cat_neuropsych_results(data = data_emotion_teacher, file = "_02-09_emotion_child_text_teacher.qmd")
+NeurotypR::cat_neuropsych_results(data = data_emotion_teacher, file = "_02-09_emotion_child_text_teacher.qmd")
 ```
 
 ```{r}
@@ -233,12 +233,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Personal Adjustment scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # define the groupings for the table
 grp_emotion <- list(
@@ -256,7 +256,7 @@ data_emotion_self <-
   dplyr::distinct(.keep_all = FALSE)
 
 # make `gt` table
-bwu::tbl_gt(
+NeurotypR::tbl_gt(
   data = data_emotion_self,
   pheno = pheno,
   table_name = table_name,
@@ -283,12 +283,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Adaptive Skills scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 grp_emotion <- list(
   t_score = c("BASC-3 SRP Adolescent", "BASC-3 TRS Adolescent", "BASC-3 PRS Adolescent", "PAI", "MMPI-3", "BASC-3 PRS", "BASC-3 PRS")
@@ -312,7 +312,7 @@ data_emotion_parent <-
 pheno <- "emotion_parent"
 
 # make `gt` table
-bwu::tbl_gt(
+NeurotypR::tbl_gt(
   data = data_emotion_parent,
   pheno = pheno,
   table_name = table_name,
@@ -339,12 +339,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Personal Adjustment scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # define the groupings for the table
 grp_emotion <- list(
@@ -370,7 +370,7 @@ data_emotion_teacher <-
   dplyr::distinct(.keep_all = FALSE)
 
 # make `gt` table
-bwu::tbl_gt(
+NeurotypR::tbl_gt(
   data = data_emotion_teacher,
   pheno = pheno,
   table_name = table_name,
@@ -394,7 +394,7 @@ df_child <-
   dplyr::filter(data) |>
   dplyr::filter(test == "basc3_srp_child" | test == "basc3_srp_adolescent" | test == "basc3_srp_college" | test == "pai_adolescent")
 
-# `bwu` dotplot arguments
+# `NeurotypR` dotplot arguments
 colors <- NULL
 return_plot <- Sys.getenv("RETURN_PLOT")
 filename <- "fig_emotion_child.svg"
@@ -407,7 +407,7 @@ y <- df_child$subdomain
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_child,
   x = x,
   y = y,
@@ -447,7 +447,7 @@ options(warn = 1) # Set warn to 1 to make warnings not halt execution
 pheno <- "emotion_parent"
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_parent,
   x = x,
   y = y,
@@ -485,7 +485,7 @@ y <- df_teacher$subdomain
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_teacher,
   x = x,
   y = y,
@@ -514,7 +514,7 @@ y <- df_child$scale
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_child,
   x = x,
   y = y,
@@ -543,7 +543,7 @@ y <- df_parent$scale
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_parent,
   x = x,
   y = y,
@@ -572,7 +572,7 @@ filename <- "fig_emotion_teacher_scale.svg"
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = df_teacher,
   x = x,
   y = y,

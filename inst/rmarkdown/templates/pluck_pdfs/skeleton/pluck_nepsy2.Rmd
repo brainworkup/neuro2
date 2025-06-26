@@ -36,7 +36,7 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(bwu)
+library(NeurotypR)
 # Set JAVA environment
 options(java.parameters = "-Xmx16000m")
 Sys.setenv(JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home")
@@ -145,18 +145,18 @@ df <- nepsy2
 # Add test column
 df <- df |> dplyr::relocate(c(test, test_name), .before = scale)
 
-df$patient <- patient 
+df$patient <- patient
 df <- df |> dplyr::relocate(c(patient), .before = test)
 ```
 
 ```{r mutate, eval = T}
-df <- df |> bwu::gpluck_make_columns(ci_95 = "", range = "")
+df <- df |> NeurotypR::gpluck_make_columns(ci_95 = "", range = "")
 ```
 
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 ```
 
 # Glue Results v2
@@ -171,7 +171,7 @@ concatenate_results <- function(result) {
            ifelse(row["range"] %in% c("Average", "Low Average", "High Average"), "an area of typical functioning",
            ifelse(row["range"] %in% c("Above Average", "Exceptionally High"), "a relative neurocognitive strength",
            "undefined")))) # Handle cases that do not match any specified category
-    
+
     percentile_as_percentage <- paste0(row["percentile"], "%")
     glue("{row['patient']}'s {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating performance as good as or better than {percentile_as_percentage} of same age peers from the general population. This estimate of {row['description']} is considered {sw}.")
   })
@@ -185,8 +185,8 @@ df$result <- concatenate_results(result)
 ## Relocate variables
 
 ```{r, eval = T}
-df <- df |> 
-  relocate(c(raw_score, score, ci_95, percentile, range), .after = scale) |> 
+df <- df |>
+  relocate(c(raw_score, score, ci_95, percentile, range), .after = scale) |>
   relocate(c(description, result), .after = absort)
 ```
 

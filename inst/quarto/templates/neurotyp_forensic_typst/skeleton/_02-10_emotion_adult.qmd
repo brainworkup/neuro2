@@ -163,10 +163,10 @@ scales <- c(
   "Withdrawal"
 )
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
-data_emotion <- bwu::filter_data(
+data_emotion <- NeurotypR::filter_data(
   data = emotion,
   domain = domains,
   scale = scales
@@ -180,7 +180,7 @@ data_emotion <- bwu::filter_data(
 #| eval: true
 
 # Flatten the text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_emotion,
   file = "_02-10_emotion_adult_text.qmd"
 )
@@ -201,7 +201,7 @@ multiline <- TRUE
 
 # Source/footnote
 source_note <- gt::md(
-  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+  "PAI _T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 Higher scores reflect reduced functioning."
 )
@@ -256,7 +256,7 @@ data_emotion <- data_emotion |>
 
 # Source/footnote
 source_note <- gt::md(
-  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+  "PAI _T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 Higher scores reflect reduced functioning."
 )

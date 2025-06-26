@@ -83,9 +83,9 @@ scales <- c(
 )
 
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 data_daily_living <-
-  bwu::filter_data(
+  NeurotypR::filter_data(
     data = daily_living,
     domain = domains,
     scale = scales
@@ -98,7 +98,7 @@ data_daily_living <-
 #| include: false
 
 # export text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_daily_living,
   file = "_02-12_daily_living_text.qmd"
 )
@@ -146,9 +146,9 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
-source_note <- gt::md("_T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+source_note <- gt::md("_T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # Define the groups for the table
 grp_daily_living <- list(
@@ -156,7 +156,7 @@ grp_daily_living <- list(
 )
 
 # make `gt` table
-bwu::tbl_gt(
+NeurotypR::tbl_gt(
   data = data_daily_living_tbl,
   pheno = pheno,
   table_name = table_name,
@@ -187,7 +187,7 @@ y <- data_daily_living$subdomain
 options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
-bwu::dotplot(
+NeurotypR::dotplot(
   data = data_daily_living,
   x = x,
   y = y,
@@ -218,7 +218,7 @@ options(warn = 0) # Reset to default behavior
           ),
         figure([#image(file_fig)],
           caption: figure.caption(position: bottom, [
-            _Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence. 
+            _Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence.
             ]),
           placement: none,
           kind: "image",

@@ -58,7 +58,7 @@ library(fs)
 library(magrittr)
 library(hablar)
 library(googledrive)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Patient
@@ -355,31 +355,31 @@ process_and_save_rbans_data <- function(rbans_raw,
                                         output_file_path) {
   library(dplyr)
   library(stringr)
-  
+
   # Join the data into one dataframe by the test name
   df <- left_join(rbans_raw, rbans_score, by = "scale") |>
     mutate(percentile = as.numeric(""), range = as.character("")) |>
     left_join(rbans_time, by = "scale")
-  
+
   # Update specific percentile values
   df$percentile[df$scale == "RBANS Update Form A Line Orientation"] <- 20
   df$percentile[df$scale == "RBANS Update Form A Picture Naming"] <- 20
   df$percentile[df$scale == "RBANS Update Form A List Recall"] <- 70
   df$percentile[df$scale == "RBANS Update Form A List Recognition"] <- 50
-  
+
   # Recalculate percentiles based on score
   df <- df |>
     mutate(z = ifelse(!is.na(score), (score - 10) / 3, NA)) |>
     mutate(percentile = ifelse(is.na(percentile), trunc(pnorm(z) * 100), percentile)) |>
     select(-z)
-  
+
   # Merge with composite scores
   df <- bind_rows(df, rbans_composite) |>
     relocate(completion_time_seconds, .after = ci_95_upper)
-  
-  # Test score ranges (assuming bwu::gpluck_make_score_ranges is a predefined function)
-  df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
-  
+
+  # Test score ranges (assuming NeurotypR::gpluck_make_score_ranges is a predefined function)
+  df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+
   # Remove prefix from scale names
   df <- df |>
     mutate(scale = str_remove(scale, test_name_prefix))
@@ -392,7 +392,7 @@ process_and_save_rbans_data <- function(rbans_raw,
     "Delayed Memory Index (DRI)" = "Delayed Memory Index",
     "Total Scale (TOT)" = "RBANS Total Index"
   )
-  
+
   df$scale <- map_chr(df$scale, ~ if_else(.x %in% names(scales_to_rename), scales_to_rename[.x], .x))
 
   # Write the combined data to a CSV file
@@ -400,11 +400,11 @@ process_and_save_rbans_data <- function(rbans_raw,
 }
 
 df <- process_and_save_rbans_data(
-  rbans_raw = rbans_raw, 
+  rbans_raw = rbans_raw,
   rbans_score = rbans_score,
   rbans_time = rbans_time,
-  rbans_composite = rbans_composite, 
-  test_name_prefix = test_name_prefix, 
+  rbans_composite = rbans_composite,
+  test_name_prefix = test_name_prefix,
   output_file_path = output_file_path
   )
 
@@ -419,7 +419,7 @@ write_csv(df, output_file_path)
 
 rbans <- df
 
-rbans <- bwu::gpluck_make_columns(
+rbans <- NeurotypR::gpluck_make_columns(
   data = rbans,
   test = params$test,
   test_name = params$test_name,
@@ -441,7 +441,7 @@ rbans <- bwu::gpluck_make_columns(
 
 ```{r domain}
 rbans <-
-  rbans |> 
+  rbans |>
   dplyr::mutate(
     domain = dplyr::case_when(
       scale == "RBANS Total Index" ~ "General Cognitive Ability",

@@ -136,8 +136,7 @@ IQReportGeneratorR6 <- R6::R6Class(
     #' @return Invisibly returns self for method chaining.
     process_data = function() {
       # Filter by domain
-      self$data <- self$data |>
-        dplyr::filter(domain %in% self$domains)
+      self$data <- self$data |> dplyr::filter(domain %in% self$domains)
 
       # Select specific columns from the data frame
       self$data <- self$data |>
@@ -182,7 +181,7 @@ IQReportGeneratorR6 <- R6::R6Class(
       )
 
       # Filter the data using the scales list
-      self$filtered_data <- bwu::filter_data(
+      self$filtered_data <- NeurotypR::filter_data(
         data = self$data,
         domain = self$domains,
         scale = self$scales
@@ -206,7 +205,7 @@ IQReportGeneratorR6 <- R6::R6Class(
 
       # Define footnotes
       source_note <- gt::md(
-        "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
       )
 
       # Define the groups for the table

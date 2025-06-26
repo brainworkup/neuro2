@@ -177,7 +177,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(tidyverse)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Patient
@@ -246,29 +246,29 @@ library(readr)
 
 process_table <- function(table_path, colnames, keep, table_value) {
   table <- readr::read_csv(table_path)
-  
+
   # Rename columns
   names(table) <- colnames
-  
+
   # Convert columns to double
   to_double <- c("raw_score", "score", "percentile")
   table[to_double] <- lapply(table[to_double], as.numeric)
-  
+
   # Ensure table_value is compatible with the number of rows in table
   if (length(table_value) != 1 && length(table_value) != nrow(table)) {
     stop("table_value must be a single value or a vector with length equal to the number of rows in the table.")
   }
-  
+
   # Assign value to first column
   if (length(table_value) == 1) {
     table[, 1] <- table_value
   } else {
     table[, 1] <- table_value
   }
-  
+
   # Select specified columns
   table <- table |> dplyr::select(all_of(keep))
-  
+
   return(table)
 }
 
@@ -295,10 +295,10 @@ print(plucked_tables_wisc5)
 ```{r}
 process_table <- function(table_path, colnames, keep, table_value) {
   table <- readr::read_csv(table_path)
-  
+
   # Rename columns
   names(table) <- colnames
-  
+
   # Ensure table_value is compatible and numeric
   stopifnot(
       length(table_value) == 1 || length(table_value) == nrow(table),
@@ -307,14 +307,14 @@ process_table <- function(table_path, colnames, keep, table_value) {
 
   # Assign value to first column
   table[, 1] <- table_value
-  
+
   # Convert columns to double
   to_double <- c("raw_score", "score", "percentile")
   table[to_double] <- lapply(table[to_double], as.numeric)
-  
+
   # Select specified columns
   table <- table |> dplyr::select(all_of(keep))
-  
+
   return(table)
 }
 
@@ -397,7 +397,7 @@ print(table1)
 ## Mutate columns
 
 ```{r}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   range = "",
   ci_95 = "",
@@ -416,7 +416,7 @@ table1 <- bwu::gpluck_make_columns(
 )
 
 # Test score ranges
-table1 <- bwu::gpluck_make_score_ranges(
+table1 <- NeurotypR::gpluck_make_score_ranges(
   table = table1,
   test_type = "npsych_test")
 ```
@@ -511,7 +511,7 @@ table2 <- filter_real_data(table2_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -533,7 +533,7 @@ table2 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -632,7 +632,7 @@ table3 <- filter_real_data(table3_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table3 <- bwu::gpluck_make_columns(
+table3 <- NeurotypR::gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -654,7 +654,7 @@ table3 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table3 <- bwu::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -715,7 +715,7 @@ table3 <-
       scale == "Matrix Reasoning" ~ "Inductive reasoning and nonverbal problem-solving",
       scale == "Figure Weights" ~ "General sequential (deductive) reasoning and quantitative reasoning", # TODO:
       scale == "Picture Concepts" ~ "Reasoning and semantic matching",
-     scale == "Arithmetic" ~ "Solving math word problems in working memory",  
+     scale == "Arithmetic" ~ "Solving math word problems in working memory",
       TRUE ~ as.character(description)
     )
   )
@@ -759,7 +759,7 @@ table4 <- filter_real_data(table4_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table4 <- bwu::gpluck_make_columns(
+table4 <- NeurotypR::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -781,7 +781,7 @@ table4 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table4 <- bwu::gpluck_make_score_ranges(
+table4 <- NeurotypR::gpluck_make_score_ranges(
   table = table4,
   test_type = "npsych_test"
   )
@@ -900,7 +900,7 @@ table5 <- filter_real_data(table5_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table5 <- bwu::gpluck_make_columns(
+table5 <- NeurotypR::gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -922,7 +922,7 @@ table5 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table5 <- bwu::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -1008,20 +1008,20 @@ table5 <- table5 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 ```{r}
 process_table <- function(table_path, colnames, keep, table_value) {
   table <- readr::read_csv(table_path)
-  
+
   # Rename columns
   names(table) <- colnames
-  
+
   # Convert columns to double
   to_double <- c("raw_score", "score", "percentile")
   table[to_double] <- lapply(table[to_double], as.numeric)
-  
+
   # Assign value to first column
   table[, 1] <- table_value
-  
+
   # Select specified columns
   table <- table |> dplyr::select(all_of(keep))
-  
+
   return(table)
 }
 
@@ -1122,7 +1122,7 @@ table6 <- table6 %>%
 
 table6 <- table6 |> dplyr::select(all_of(params$keep2))
 
-table6 <- bwu::gpluck_make_columns(
+table6 <- NeurotypR::gpluck_make_columns(
   table6,
   range = "",
   test = params$test,
@@ -1143,7 +1143,7 @@ table6 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table6 <- bwu::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Subdomain

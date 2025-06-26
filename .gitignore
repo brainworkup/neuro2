@@ -17,3 +17,14 @@ report_template_demo_files/
 *.pdf
 *.html
 .history/
+
+# google drive
+Icon
+/Icon/
+.github/Icon
+*Icon*
+Icon?
+.tmp.driveupload/
+template_files/Icon
+template_files/Icon?
+template_files/Icon

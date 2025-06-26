@@ -146,7 +146,7 @@ library(snakecase)
 library(tabulapdf)
 library(tidyverse)
 library(xfun)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Test
@@ -310,7 +310,7 @@ print(table2)
 ## Make columns
 
 ```{r mutate1}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   range = "",
   test = "ktea3",
@@ -327,7 +327,7 @@ table1 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   range = "",
   test = "ktea3",
@@ -349,8 +349,8 @@ table2 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
-table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Domains for language tests

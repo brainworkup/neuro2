@@ -38,7 +38,7 @@ params:
     input: slider
     min: 0
     max: 1
-    step: 0.01  
+    step: 0.01
 output:
   rmdformats::robobook:
     highlight: kate
@@ -76,7 +76,7 @@ library(fs)
 library(magrittr)
 library(hablar)
 library(googledrive)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Patient
@@ -119,45 +119,45 @@ pluck_dkefs_cwi <- function(input_file_path,
     # locale = locale(encoding = "UTF-16LE"),
     skip = 1
   )
-  
+
   # Rename the columns
   names(df) <- c("Subtest",
                  "Raw score",
                  "Scaled score",
                  "Percentile rank",
                  "95% CI")
-  
+
   # Remove the fifth column
   df <- df |> select(Subtest, `Raw score`, `Scaled score`, `Percentile rank`)
-  
+
   # Find the start of the "CWI" section
   start_line <- which(df == "D-KEFS Color-Word Interference Test") + 1
-  
+
   # Find the stop of the "CWI" section
   stop_line <- which(df == "Inhibition/Switching Total Errors")
-  
+
   # Read from the "CWI" section
   df_cwi <- df |>
     dplyr::slice(start_line:stop_line)
-  
+
   # Keep only rows with the specified prefix in the first column
   # df_raw <- df_raw |> filter(str_starts(Subtest, test_name_prefix))
-  
+
   # Your new names stored in a character vector (ensure it matches the number of columns in `df`)
   vars <- c("scale", "raw_score", "score", "percentile")
-  
+
   # Use `set_names()` to rename the columns
   df_cwi <- df_cwi |> set_names(vars)
   df_cwi$scale <- as.character(df_cwi$scale)
   df_cwi$raw_score <- as.numeric(df_cwi$raw_score)
   df_cwi$score <- as.numeric(df_cwi$score)
   df_cwi$percentile <- as.numeric(df_cwi$percentile)
-  
+
   # Write the combined data to a CSV file
   write_excel_csv(df_cwi, output_file_path, na = "")
-  
+
   return(df_cwi)
-  
+
 }
 
 df_cwi <- pluck_dkefs_cwi(input_file_path, output_file_path = output_file_path, test_name_prefix)
@@ -169,12 +169,12 @@ df_cwi <- pluck_dkefs_cwi(input_file_path, output_file_path = output_file_path, 
 
 ```{r percentile, eval = TRUE}
 #TODO: Add percentile calculation ONLY if NA
-df_cwi <- df_cwi |> 
+df_cwi <- df_cwi |>
   dplyr::mutate(z = (score - 10) / 3) |>
   dplyr::mutate(percentile = ifelse(is.na(percentile), trunc(pnorm(z) * 100), percentile)) |>
   dplyr::select(-z)
 
-# df_cwi <- df_cwi |> 
+# df_cwi <- df_cwi |>
 #   dplyr::mutate(z = (score - 10) / 3) |>
 #   dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
 #   dplyr::select(-z)
@@ -188,7 +188,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- bwu::calc_ci_95(
+ci_values <- NeurotypR::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,
@@ -205,7 +205,7 @@ data$ci_95 <- paste0(data$ci_lo, " - ", data$ci_hi)
 
 dkefs <- df_cwi
 
-dkefs <- bwu::gpluck_make_columns(
+dkefs <- NeurotypR::gpluck_make_columns(
   data = dkefs,
   test = params$test,
   test_name = params$test_name,
@@ -227,7 +227,7 @@ dkefs <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges}
-dkefs <- bwu::gpluck_make_score_ranges(
+dkefs <- NeurotypR::gpluck_make_score_ranges(
   table = dkefs,
   test_type = "npsych_test"
 )
@@ -237,7 +237,7 @@ dkefs <- bwu::gpluck_make_score_ranges(
 
 ```{r domain}
 dkefs <-
-  dkefs |> 
+  dkefs |>
   dplyr::mutate(
     domain = dplyr::case_when(
       scale == "Color Naming" ~ "Verbal/Language",

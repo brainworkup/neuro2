@@ -22,7 +22,7 @@ packages <- c(
   "tidytable",
   "vroom",
   "xfun",
-  "bwu",
+  "NeurotypR",
   "NeurotypR"
 )
 

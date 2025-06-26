@@ -2,14 +2,14 @@ Type: Package
 Package: neuro2
 Title: Quarto + Typst Report Generator
 Version: 0.2.0
-Authors@R: 
+Authors@R:
     person("Joey", "Trampush", , "you@example.com", role = c("aut", "cre"))
 Description: Build clinical neuropsychological reports via Quarto+Typst.
 License: MIT
-Depends: 
+Depends:
     R (>= 3.5)
 Imports:
-    bwu,
+    NeurotypR,
     cli,
     dplyr,
     fs,

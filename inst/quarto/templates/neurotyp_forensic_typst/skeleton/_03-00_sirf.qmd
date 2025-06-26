@@ -52,7 +52,7 @@ g <-
     subdomain = scale,
     test_type = "npsych_test"
   ) |>
-  bwu::gpluck_make_score_ranges(range = "", test_type = "npsych_test") |>
+  NeurotypR::gpluck_make_score_ranges(range = "", test_type = "npsych_test") |>
   dplyr::select(
     scale,
     score,
@@ -122,7 +122,7 @@ colors <- NULL
 return_plot <- TRUE
 filename <- "fig_g.svg"
 
-bwu::dotplot(
+NeurotypR::dotplot(
   data = g,
   x = x,
   y = y,
