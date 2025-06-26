@@ -27,7 +27,7 @@
 #'
 #' # Example 2: Retrieve content from a specific template file
 #' template_mgr <- TemplateContentManagerR6$new(
-#'   template_dir = "inst/quarto/templates/typst-report"
+#'   template_dir = "inst/extdata/_extensions/neurotyp-adult"
 #' )
 #' iq_content <- template_mgr$get_content("_02-01_iq.qmd")
 #' if (!is.null(iq_content)) {
