@@ -138,38 +138,58 @@ IQReportGeneratorR6 <- R6::R6Class(
       # Filter by domain
       self$data <- self$data |> dplyr::filter(domain %in% self$domains)
 
-      # Select specific columns from the data frame
-      self$data <- self$data |>
-        dplyr::select(
-          test,
-          test_name,
-          scale,
-          raw_score,
-          score,
-          ci_95,
-          percentile,
-          range,
-          domain,
-          subdomain,
-          narrow,
-          pass,
-          verbal,
-          timed,
-          result,
-          z,
-          z_mean_domain,
-          z_sd_domain,
-          z_mean_subdomain,
-          z_sd_subdomain,
-          z_mean_narrow,
-          z_sd_narrow,
-          z_mean_pass,
-          z_sd_pass,
-          z_mean_verbal,
-          z_sd_verbal,
-          z_mean_timed,
-          z_sd_timed
-        )
+      # Get available columns from the data
+      available_cols <- colnames(self$data)
+      message(
+        "Available columns in data: ",
+        paste(available_cols, collapse = ", ")
+      )
+
+      # Define the columns we want to select if they exist
+      desired_cols <- c(
+        "test",
+        "test_name",
+        "scale",
+        "raw_score",
+        "score",
+        "ci_95",
+        "percentile",
+        "range",
+        "domain",
+        "subdomain",
+        "narrow",
+        "pass",
+        "verbal",
+        "timed",
+        "result"
+      )
+
+      # Add z-score columns if they exist
+      z_cols <- c(
+        "z_mean_domain",
+        "z_sd_domain",
+        "z_mean_subdomain",
+        "z_sd_subdomain",
+        "z_mean_narrow",
+        "z_sd_narrow",
+        "z_mean_pass",
+        "z_sd_pass",
+        "z_mean_verbal",
+        "z_sd_verbal",
+        "z_mean_timed",
+        "z_sd_timed"
+      )
+
+      # Check which columns actually exist in the data
+      existing_cols <- desired_cols[desired_cols %in% available_cols]
+      existing_z_cols <- z_cols[z_cols %in% available_cols]
+
+      # Combine all existing columns
+      select_cols <- c(existing_cols, existing_z_cols)
+
+      # Select only the columns that exist
+      message("Selecting columns: ", paste(select_cols, collapse = ", "))
+      self$data <- self$data |> dplyr::select(dplyr::all_of(select_cols))
 
       # Write the resulting data frame to a CSV file
       readr::write_excel_csv(
@@ -180,8 +200,40 @@ IQReportGeneratorR6 <- R6::R6Class(
         append = FALSE
       )
 
-      # Filter the data using the scales list
-      self$filtered_data <- NeurotypR::filter_data(
+      # Custom implementation to replace NeurotypR::filter_data
+      filter_data <- function(data, domain, scale) {
+        if (is.null(data)) {
+          message("Data is NULL. Cannot filter.")
+          return(NULL)
+        }
+
+        # Filter by domain if provided
+        if (!is.null(domain)) {
+          if ("domain" %in% colnames(data)) {
+            data <- data[data$domain %in% domain, ]
+          } else {
+            message(
+              "Column 'domain' not found in data. Skipping domain filtering."
+            )
+          }
+        }
+
+        # Filter by scale if provided
+        if (!is.null(scale)) {
+          if ("scale" %in% colnames(data)) {
+            data <- data[data$scale %in% scale, ]
+          } else {
+            message(
+              "Column 'scale' not found in data. Skipping scale filtering."
+            )
+          }
+        }
+
+        return(data)
+      }
+
+      # Filter the data using our custom filter_data function
+      self$filtered_data <- filter_data(
         data = self$data,
         domain = self$domains,
         scale = self$scales
@@ -228,12 +280,67 @@ IQReportGeneratorR6 <- R6::R6Class(
         )
       )
 
-      # Create the table using the NeurotypR::tbl_gt function
-      NeurotypR::tbl_gt(
+      # Custom implementation to replace NeurotypR::tbl_gt
+      create_table <- function(
+        data,
+        pheno,
+        table_name,
+        source_note,
+        dynamic_grp,
+        multiline = TRUE
+      ) {
+        # Check if gt package is available
+        if (!requireNamespace("gt", quietly = TRUE)) {
+          message(
+            "gt package is required for table creation. Please install it."
+          )
+          return(NULL)
+        }
+
+        # Check if data is valid
+        if (is.null(data) || nrow(data) == 0) {
+          message("No data available for table creation.")
+          return(NULL)
+        }
+
+        message("Creating table with ", nrow(data), " rows")
+
+        # Create a basic gt table
+        table <- gt::gt(data)
+
+        # Add title
+        if (!is.null(table_name)) {
+          table <- gt::tab_header(table, title = paste0(pheno, " Scores"))
+        }
+
+        # Add source note
+        if (!is.null(source_note)) {
+          table <- gt::tab_source_note(table, source_note)
+        }
+
+        # Save the table as an image
+        table_file <- paste0("data/table_", pheno, ".png")
+        message("Saving table to ", table_file)
+
+        # Try to save the table
+        tryCatch(
+          {
+            gt::gtsave(table, filename = table_file, expand = 10)
+            message("Table saved successfully")
+          },
+          error = function(e) {
+            message("Error saving table: ", e$message)
+          }
+        )
+
+        return(table)
+      }
+
+      # Create the table using our custom function
+      create_table(
         data = table_data,
         pheno = self$pheno,
         table_name = table_name,
-        vertical_padding = vertical_padding,
         source_note = source_note,
         dynamic_grp = grp_iq,
         multiline = multiline
@@ -247,33 +354,156 @@ IQReportGeneratorR6 <- R6::R6Class(
     #'
     #' @return Invisibly returns self for method chaining.
     generate_figures = function() {
-      # Generate subdomain figure
-      x_subdomain <- self$filtered_data$z_mean_subdomain
-      y_subdomain <- self$filtered_data$subdomain
-
-      NeurotypR::dotplot2(
-        data = self$filtered_data,
-        x = x_subdomain,
-        y = y_subdomain,
+      # Custom implementation of dotplot2 function
+      create_dotplot <- function(
+        data,
+        x,
+        y,
         colors = NULL,
-        return_plot = TRUE,
-        filename = self$output_files$subdomain_figure,
+        filename = NULL,
         na.rm = TRUE
-      )
+      ) {
+        # Check if ggplot2 is available
+        if (!requireNamespace("ggplot2", quietly = TRUE)) {
+          message(
+            "ggplot2 package is required for plotting. Please install it."
+          )
+          return(NULL)
+        }
 
-      # Generate narrow figure
-      x_narrow <- self$filtered_data$z_mean_narrow
-      y_narrow <- self$filtered_data$narrow
+        # Remove NA values if requested
+        if (na.rm) {
+          valid_indices <- !is.na(x) & !is.na(y)
+          x <- x[valid_indices]
+          y <- y[valid_indices]
+          if (!is.null(data)) {
+            data <- data[valid_indices, ]
+          }
+        }
 
-      NeurotypR::dotplot2(
-        data = self$filtered_data,
-        x = x_narrow,
-        y = y_narrow,
-        colors = NULL,
-        return_plot = TRUE,
-        filename = self$output_files$narrow_figure,
-        na.rm = TRUE
-      )
+        # Create a data frame for plotting
+        plot_data <- data.frame(x = x, y = y)
+
+        # Create the plot
+        plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y = y)) +
+          ggplot2::geom_point(size = 3) +
+          ggplot2::geom_vline(
+            xintercept = 0,
+            linetype = "dashed",
+            color = "gray50"
+          ) +
+          ggplot2::geom_vline(
+            xintercept = c(-1, 1),
+            linetype = "dotted",
+            color = "gray70"
+          ) +
+          ggplot2::scale_x_continuous(
+            limits = c(-3, 3),
+            breaks = seq(-3, 3, 1)
+          ) +
+          ggplot2::theme_minimal() +
+          ggplot2::labs(x = "Z-Score", y = "")
+
+        # Save the plot if filename is provided
+        if (!is.null(filename)) {
+          ggplot2::ggsave(filename, plot, width = 6, height = 4)
+        }
+
+        return(plot)
+      }
+
+      # Check if required columns exist for subdomain figure
+      message("Checking for required columns for figures...")
+
+      # Create subdomain figure if columns exist
+      if (
+        "z_mean_subdomain" %in%
+          colnames(self$filtered_data) &&
+          "subdomain" %in% colnames(self$filtered_data)
+      ) {
+        message("Creating subdomain figure...")
+        x_subdomain <- self$filtered_data$z_mean_subdomain
+        y_subdomain <- self$filtered_data$subdomain
+
+        subdomain_plot <- create_dotplot(
+          data = self$filtered_data,
+          x = x_subdomain,
+          y = y_subdomain,
+          filename = self$output_files$subdomain_figure,
+          na.rm = TRUE
+        )
+      } else {
+        message("⚠️ Skipping subdomain figure - required columns not found")
+        # Create a simple placeholder figure
+        if (requireNamespace("ggplot2", quietly = TRUE)) {
+          plot_data <- data.frame(
+            x = c(-3, -2, -1, 0, 1, 2, 3),
+            y = rep("No Data Available", 7)
+          )
+          plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y = y)) +
+            ggplot2::geom_text(
+              x = 0,
+              y = "No Data Available",
+              label = "No subdomain data available",
+              size = 5
+            ) +
+            ggplot2::theme_minimal() +
+            ggplot2::labs(x = "Z-Score", y = "")
+
+          ggplot2::ggsave(
+            self$output_files$subdomain_figure,
+            plot,
+            width = 6,
+            height = 4
+          )
+          message("✓ Created placeholder subdomain figure")
+        }
+      }
+
+      # Create narrow figure if columns exist
+      if (
+        "z_mean_narrow" %in%
+          colnames(self$filtered_data) &&
+          "narrow" %in% colnames(self$filtered_data)
+      ) {
+        message("Creating narrow figure...")
+        x_narrow <- self$filtered_data$z_mean_narrow
+        y_narrow <- self$filtered_data$narrow
+
+        narrow_plot <- create_dotplot(
+          data = self$filtered_data,
+          x = x_narrow,
+          y = y_narrow,
+          filename = self$output_files$narrow_figure,
+          na.rm = TRUE
+        )
+      } else {
+        message("⚠️ Skipping narrow figure - required columns not found")
+        # Create a simple placeholder figure
+        if (requireNamespace("ggplot2", quietly = TRUE)) {
+          plot_data <- data.frame(
+            x = c(-3, -2, -1, 0, 1, 2, 3),
+            y = rep("No Data Available", 7)
+          )
+          plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y = y)) +
+            ggplot2::geom_text(
+              x = 0,
+              y = "No Data Available",
+              label = "No narrow data available",
+              size = 5
+            ) +
+            ggplot2::theme_minimal() +
+            ggplot2::labs(x = "Z-Score", y = "")
+
+          ggplot2::ggsave(
+            self$output_files$narrow_figure,
+            plot,
+            width = 6,
+            height = 4
+          )
+          message("✓ Created placeholder narrow figure")
+        }
+      }
 
       invisible(self)
     },

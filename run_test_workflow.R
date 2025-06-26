@@ -12,6 +12,9 @@ source("R/NeuropsychReportSystemR6.R")
 source("R/IQReportGeneratorR6.R")
 source("R/DomainProcessorR6.R")
 
+# Load utility functions (replacements for NeurotypR functions)
+source("R/utility_functions.R")
+
 # Source the test workflow script
 source("test_workflow.R")
 

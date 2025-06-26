@@ -1,0 +1,18 @@
+## Verbal {#sec-verbal}
+
+{{< include _02-03_verbal_text.qmd >}}
+
+```{r}
+#| label: setup-verbal
+#| include: false
+
+# Filter by domain
+domains <- c("Verbal")
+
+# Target phenotype
+pheno <- "verbal"
+
+# Read the CSV file into a data frame
+verbal <- readr::read_csv("data-raw/neurocog.csv")
+```
+

@@ -1,0 +1,15 @@
+<summary>
+
+Biggie's overall intellectual functioning was assessed using the Wechsler Adult Intelligence Scale-Fifth Edition (WAIS-5). His Full Scale IQ (FSIQ) was in the Average range (Standard Score = 105, 63rd percentile), indicating average overall intellectual abilities compared to same-age peers. This score represents an integration of his performance across verbal, nonverbal, and working memory domains.
+
+Analysis of Biggie's index scores revealed a General Ability Index (GAI) in the Average range (Standard Score = 107, 68th percentile), which provides an estimate of general intellectual ability that is less influenced by working memory and processing speed. His Verbal Comprehension Index (VCI) was in the Average range (Standard Score = 108, 70th percentile), indicating average verbal reasoning, verbal concept formation, and acquired knowledge. His Perceptual Reasoning Index (PRI) was also in the Average range (Standard Score = 104, 61st percentile), reflecting average nonverbal reasoning, visual-spatial processing, and fluid intelligence.
+
+Biggie's Working Memory Index (WMI) was in the Average range (Standard Score = 102, 55th percentile), indicating average abilities in attention, concentration, and mental manipulation of information. His Processing Speed Index (PSI) was in the Low Average range (Standard Score = 92, 30th percentile), suggesting somewhat reduced efficiency in processing simple visual information quickly and accurately.
+
+The Test of Premorbid Functioning (TOPF) was administered to estimate Biggie's premorbid intellectual functioning. His performance on this measure yielded a standard score of 110 (75th percentile), which is in the High Average range. Comparison of his current FSIQ (105) with his estimated premorbid functioning (110) suggests a slight decline of 5 points, which is not statistically significant and falls within normal variability.
+
+The Neuropsychological Assessment Battery (NAB) was also administered to provide a comprehensive assessment of neurocognitive functioning. Biggie's NAB Total Index score was in the Average range (Standard Score = 103, 58th percentile), consistent with his WAIS-5 FSIQ. Analysis of NAB domain scores revealed Average functioning across Attention (Standard Score = 100, 50th percentile), Language (Standard Score = 105, 63rd percentile), Memory (Standard Score = 102, 55th percentile), Spatial (Standard Score = 104, 61st percentile), and Executive Functions (Standard Score = 101, 53rd percentile).
+
+Overall, Biggie demonstrates average intellectual and neurocognitive abilities across most domains, with a relative weakness in processing speed. His pattern of scores is generally consistent with his educational and occupational history, and there is no evidence of significant decline from estimated premorbid functioning.
+
+</summary>

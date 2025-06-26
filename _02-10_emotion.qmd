@@ -1,0 +1,18 @@
+## Psychiatric Disorders {#sec-emotion}
+
+{{< include _02-10_emotion_text.qmd >}}
+
+```{r}
+#| label: setup-emotion
+#| include: false
+
+# Filter by domain
+domains <- c("Psychiatric Disorders")
+
+# Target phenotype
+pheno <- "emotion"
+
+# Read the CSV file into a data frame
+emotion <- readr::read_csv("data-raw/neurobehav.csv")
+```
+

@@ -51,7 +51,7 @@ ReportTemplateR6 <- R6::R6Class(
     #' @return A new ReportTemplateR6 object
     initialize = function(
       variables = NULL,
-      template_dir = "inst/quarto/templates/typst-report",
+      template_dir = "inst/extdata/_extensions",
       output_dir = ".",
       sections = NULL,
       data_paths = NULL,
@@ -109,8 +109,8 @@ ReportTemplateR6 <- R6::R6Class(
       if (is.null(data_paths)) {
         self$data_paths <- list(
           neurocog = "data-raw/neurocog.csv",
-          neurobehav = "data-raw/neurobehav.csv",
-          neuropsych = "data-raw/neuropsych.csv"
+          neurobehav = "data-raw/neurobehav.csv"
+          # neuropsych.csv doesn't exist in our project
         )
       } else {
         self$data_paths <- data_paths
@@ -247,20 +247,7 @@ ReportTemplateR6 <- R6::R6Class(
         "date_of_report: ",
         self$variables$date_of_report,
         "\n",
-        "format:\n",
-        "  neurotyp-adult-typst:\n",
-        "    keep-typ: true\n",
-        "    keep-md: true\n",
-        "    papersize: \"a4\"\n",
-        "    fontsize: 11pt\n",
-        "    bodyfont: \"Source Serif 4\"\n",
-        "    sansfont: \"Source Sans 3\"\n",
-        "    number-sections: false\n",
-        "    number-offset: 1\n",
-        "    shift-heading-level-by: 0\n",
-        "    fig-width: 6\n",
-        "    fig-height: 4\n",
-        "    fig-format: svg\n",
+        "format: pdf\n",
         "\n",
         "execute:\n",
         "  warning: false\n",
@@ -285,9 +272,9 @@ ReportTemplateR6 <- R6::R6Class(
         "df-print: kable\n",
         "reference-location: document\n",
         "bibliography:\n",
-        "  - bib/refs.bib\n",
+        "  - inst/extdata/bib/refs.bib\n",
         "citeproc: true\n",
-        "csl: bib/apa.csl\n",
+        "csl: apa.csl\n",
         "---\n\n"
       )
 
@@ -364,15 +351,14 @@ ReportTemplateR6 <- R6::R6Class(
         "```\n\n"
       )
 
-      # Create the data load chunk
+      # Create the data load chunk - using direct file loading instead of NeurotypR
       data_load_chunk <- paste0(
         "```{r}\n",
         "#| label: data-load\n",
         "#| include: false\n",
         "\n",
         "path_data <- here::here(\"data\")\n",
-        "path_csv <- here::here(\"inst\", \"extdata\")\n",
-        "NeurotypR::load_data(here::here(path_csv))\n"
+        "# Use here::here to ensure correct paths regardless of working directory\n"
       )
 
       # Add data loading for each data path
@@ -380,9 +366,9 @@ ReportTemplateR6 <- R6::R6Class(
         data_load_chunk <- paste0(
           data_load_chunk,
           name,
-          " <- readr::read_csv(\"",
+          " <- readr::read_csv(here::here(\"",
           self$data_paths[[name]],
-          "\")\n"
+          "\"))\n"
         )
       }
 
@@ -461,12 +447,12 @@ ReportTemplateR6 <- R6::R6Class(
     #' Render the report using Quarto.
     #'
     #' @param input_file Input Quarto file path.
-    #' @param output_format Output format (default: "neurotyp-adult-typst").
+    #' @param output_format Output format (default: "pdf").
     #' @param output_file Output file path (default: NULL, will use Quarto default).
     #' @return Invisibly returns self for method chaining.
     render_report = function(
       input_file,
-      output_format = "neurotyp-adult-typst",
+      output_format = "pdf",
       output_file = NULL
     ) {
       if (!file.exists(input_file)) {
@@ -504,20 +490,20 @@ ReportTemplateR6 <- R6::R6Class(
 #' @param data_paths List of paths to data files (default: NULL).
 #' @param output_file Output file path for the generated template (default: "report_template.qmd").
 #' @param render Whether to render the report after generating the template (default: TRUE).
-#' @param output_format Output format for rendering (default: "neurotyp-adult-typst").
+#' @param output_format Output format for rendering (default: "pdf").
 #'
 #' @return Invisibly returns the ReportTemplateR6 object.
 #' @export
 #' @rdname generate_neuropsych_report
 generate_neuropsych_report <- function(
   variables = NULL,
-  template_dir = "inst/quarto/templates/typst-report",
+  template_dir = "inst/extdata/_extensions",
   output_dir = ".",
   sections = NULL,
   data_paths = NULL,
   output_file = "report_template.qmd",
   render = TRUE,
-  output_format = "neurotyp-adult-typst"
+  output_format = "pdf"
 ) {
   # Create a ReportTemplateR6 object
   report_generator <- ReportTemplateR6$new(

@@ -1,0 +1,18 @@
+## Spatial {#sec-spatial}
+
+{{< include _02-04_spatial_text.qmd >}}
+
+```{r}
+#| label: setup-spatial
+#| include: false
+
+# Filter by domain
+domains <- c("Spatial")
+
+# Target phenotype
+pheno <- "spatial"
+
+# Read the CSV file into a data frame
+spatial <- readr::read_csv("data-raw/neurocog.csv")
+```
+

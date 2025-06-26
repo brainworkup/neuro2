@@ -1,0 +1,18 @@
+## Memory {#sec-memory}
+
+{{< include _02-05_memory_text.qmd >}}
+
+```{r}
+#| label: setup-memory
+#| include: false
+
+# Filter by domain
+domains <- c("Memory")
+
+# Target phenotype
+pheno <- "memory"
+
+# Read the CSV file into a data frame
+memory <- readr::read_csv("data-raw/neurocog.csv")
+```
+

@@ -1,4 +1,4 @@
-# Script to check if R6 classes are properly loaded
+# Script to check if R6 classes and utility functions are properly loaded
 # Run this script to verify class availability and functionality
 
 # Load required R6 library
@@ -30,6 +30,23 @@ for (file in r6_files) {
   )
 }
 
+# Load utility functions
+message("\nLoading utility functions...")
+utility_file <- "R/utility_functions.R"
+if (file.exists(utility_file)) {
+  tryCatch(
+    {
+      source(utility_file)
+      message("✓ Loaded utility_functions.R")
+    },
+    error = function(e) {
+      message("✗ Error loading utility_functions.R: ", e$message)
+    }
+  )
+} else {
+  message("✗ utility_functions.R file not found")
+}
+
 # Check if the R6 classes are available
 check_class <- function(class_name) {
   result <- tryCatch(
@@ -51,6 +68,19 @@ check_class <- function(class_name) {
   return(result)
 }
 
+# Check if utility functions are available
+check_function <- function(function_name) {
+  result <- exists(function_name, mode = "function")
+
+  if (result) {
+    message(paste0("✓ Function '", function_name, "' is available"))
+  } else {
+    message(paste0("✗ Function '", function_name, "' is NOT available"))
+  }
+
+  return(result)
+}
+
 # Check key R6 classes used in the workflow
 classes_to_check <- c(
   "ReportTemplateR6",
@@ -60,27 +90,53 @@ classes_to_check <- c(
   "NeuropsychReportSystemR6"
 )
 
-all_available <- TRUE
+all_classes_available <- TRUE
 for (class_name in classes_to_check) {
   if (!check_class(class_name)) {
-    all_available <- FALSE
+    all_classes_available <- FALSE
+  }
+}
+
+# Check utility functions
+message("\nChecking utility functions...")
+functions_to_check <- c("filter_data", "dotplot2", "tbl_gt")
+
+all_functions_available <- TRUE
+for (function_name in functions_to_check) {
+  if (!check_function(function_name)) {
+    all_functions_available <- FALSE
   }
 }
 
 # Provide guidance based on results
-if (!all_available) {
-  message("\n⚠️ Some required classes are not available.")
+if (!all_classes_available) {
+  message("\n⚠️ Some required R6 classes are not available.")
   message("This suggests that either:")
-  message("1. The NeurotypR package is not installed correctly")
-  message("2. The R6 classes are not properly exported from the package")
+  message("1. The R6 class files are not in the expected location")
+  message("2. There are errors in the R6 class definitions")
   message("3. The classes have different names than expected")
   message("\nYou may need to:")
-  message("- Reinstall the package")
-  message("- Check the package documentation for correct class names")
-  message("- Ensure the package exports these classes")
+  message("- Check that all R6 class files are in the R/ directory")
+  message("- Fix any errors in the R6 class definitions")
 } else {
+  message("\n✓ All required R6 classes are available.")
+}
+
+if (!all_functions_available) {
+  message("\n⚠️ Some utility functions are not available.")
+  message("This suggests that either:")
+  message("1. The utility_functions.R file is not being sourced correctly")
+  message("2. There are errors in the utility function definitions")
+  message("\nYou may need to:")
+  message("- Check that utility_functions.R is in the R/ directory")
+  message("- Fix any errors in the utility function definitions")
+} else {
+  message("\n✓ All utility functions are available.")
+}
+
+if (all_classes_available && all_functions_available) {
   message(
-    "\n✓ All required classes are available. The workflow should work correctly."
+    "\n✓ All required components are available. The workflow should work correctly."
   )
 }
 
@@ -93,6 +149,29 @@ tryCatch(
   },
   error = function(e) {
     message("✗ Error creating instance:")
+    message(e$message)
+  }
+)
+
+# Try to use one of the utility functions
+message("\nTrying to use filter_data function...")
+tryCatch(
+  {
+    test_data <- data.frame(
+      domain = c("General Cognitive Ability", "Memory", "Executive"),
+      scale = c("FSIQ", "Memory Index", "Executive Index"),
+      score = c(100, 95, 105)
+    )
+
+    result <- filter_data(test_data, domain = "Memory")
+    if (nrow(result) == 1) {
+      message("✓ Successfully used filter_data function")
+    } else {
+      message("✗ filter_data function did not work as expected")
+    }
+  },
+  error = function(e) {
+    message("✗ Error using filter_data function:")
     message(e$message)
   }
 )

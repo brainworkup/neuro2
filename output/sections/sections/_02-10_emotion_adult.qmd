@@ -1,0 +1,3 @@
+## emotion_adult
+
+Placeholder content for _02-10_emotion_adult.qmd

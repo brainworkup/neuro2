@@ -1,0 +1,3 @@
+## executive
+
+Placeholder content for _02-06_executive.qmd

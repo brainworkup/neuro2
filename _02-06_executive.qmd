@@ -1,0 +1,18 @@
+## Attention/Executive {#sec-executive}
+
+{{< include _02-06_executive_text.qmd >}}
+
+```{r}
+#| label: setup-executive
+#| include: false
+
+# Filter by domain
+domains <- c("Attention/Executive")
+
+# Target phenotype
+pheno <- "executive"
+
+# Read the CSV file into a data frame
+executive <- readr::read_csv("data-raw/neurocog.csv")
+```
+

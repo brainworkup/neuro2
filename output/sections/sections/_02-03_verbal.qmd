@@ -1,0 +1,3 @@
+## verbal
+
+Placeholder content for _02-03_verbal.qmd

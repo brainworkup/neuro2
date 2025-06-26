@@ -1,4 +1,4 @@
-name: pluck
+name: drilldown
 description: >
-   A description of the template
+  Drilldown plots for feedback
 create_dir: FALSE

@@ -1,5 +1,4 @@
----
-name: Neuropsychological Report Template
-description: Template for writing neuropsychological reports
-create_dir: false
----
+name: pluck_pdfs
+description: >
+  Pluck tables from PDF files
+create_dir: FALSE
