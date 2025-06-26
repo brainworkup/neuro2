@@ -49,7 +49,7 @@ tryCatch({
 # Brief pause
 Sys.sleep(1)
 
-# STEP 2: Create Domain QMD Files  
+# STEP 2: Create Domain QMD Files
 message("📝 STEP 2: Creating domain QMD files...")
 message(strrep("-", 40))
 
