@@ -116,36 +116,26 @@ neuropsych <- readr::read_csv("data-raw/neuropsych.csv")
 *DATE OF REPORT*: {{< var date_of_report >}} \
 ]
 ```
-{{< include sections/_00-00_tests.qmd >}}
+{{< include _00-00_tests.qmd >}}
 
-{{< include sections/_01-00_nse_adult.qmd >}}
+{{< include _01-00_nse_adult.qmd >}}
 
-<!-- {{< include sections/_02-01_iq.qmd >}} -->
-
-<!-- {{< include sections/_02-02_academics.qmd >}} -->
-
-
-<!-- {{< pagebreak >}} -->
-
-
-<!-- {{< pagebreak >}} -->
-
-{{< include sections/_02-00_behav_obs.qmd >}}
+{{< include _02-00_behav_obs.qmd >}}
 
 # NEUROCOGNITIVE FINDINGS
 
-<!-- {{< include sections/_include_domains.qmd >}} -->
+{{< include _include_domains.qmd >}}
 
 <!-- {{< pagebreak >}} -->
 
-{{< include sections/_03-00_sirf.qmd >}}
+{{< include _03-00_sirf.qmd >}}
 
-{{< include sections/_03-00_sirf_text.qmd >}}
+{{< include _03-00_sirf_text.qmd >}}
 
-{{< include sections/_03-01_recommendations.qmd >}}
+{{< include _03-01_recommendations.qmd >}}
 
-{{< include sections/_03-02_signature.qmd >}}
+{{< include _03-02_signature.qmd >}}
 
 <!-- {{< pagebreak >}} -->
 
-{{< include sections/_03-03_appendix.qmd >}}
+{{< include _03-03_appendix.qmd >}}

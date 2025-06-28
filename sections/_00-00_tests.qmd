@@ -1,0 +1,24 @@
+
+# TESTS ADMINISTERED
+
+```{r}
+#| label: tests-list
+#| echo: false
+
+# Load data to get test names
+neurocog <- readr::read_csv("data/neurocog.csv")
+neurobehav <- readr::read_csv("data/neurobehav.csv")
+
+# Get unique test names
+tests_cog <- unique(neurocog$test_name)
+tests_beh <- unique(neurobehav$test_name)
+
+# Combine and format
+all_tests <- unique(c(tests_cog, tests_beh))
+all_tests <- all_tests[!is.na(all_tests)]
+
+# Print as bullet list
+cat(paste("•", all_tests), sep = "
+")
+```
+

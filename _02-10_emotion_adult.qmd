@@ -1,0 +1,338 @@
+## Emotional/Behavioral/Personality {#sec-emotion}
+
+{{< include _02-10_emotion_adult_text.qmd >}}
+
+```{r}
+#| label: setup-emotion
+#| include: false
+
+# domain
+domains <- c(
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems"
+  # "Behavioral/Emotional/Social",
+  # "Emotional/Behavioral/Personality"
+)
+
+# phenotype
+pheno <- "emotion"
+```
+
+```{r}
+#| label: export-emotion
+#| include: false
+#| eval: true
+
+# Read the CSV file into a data frame
+emotion <- readr::read_csv("neurobehav.csv")
+
+# Filter the data frame based on certain conditions
+# Keep only the rows where 'domain' equals 'domains' and 'z_mean_domain' is not NA
+emotion <- emotion |>
+  dplyr::filter(domain %in% domains)
+
+# Select specific columns from the data frame
+emotion <- emotion |>
+  dplyr::select(
+    test,
+    test_name,
+    scale,
+    raw_score,
+    score,
+    ci_95,
+    percentile,
+    range,
+    domain,
+    subdomain,
+    narrow,
+    pass,
+    verbal,
+    timed,
+    result,
+    z,
+    z_mean_domain,
+    z_sd_domain,
+    z_mean_subdomain,
+    z_sd_subdomain,
+    z_mean_narrow,
+    z_sd_narrow
+  )
+
+# Write the 'emotion' data frame to a CSV file
+# The file name is derived from the 'pheno' variable
+readr::write_excel_csv(
+  emotion,
+  here::here("data", paste0(pheno, ".csv")),
+  na = "",
+  col_names = TRUE,
+  append = FALSE
+)
+```
+
+```{r}
+#| label: data-emotion
+#| include: false
+
+scales <- c(
+  "Activity Level",
+  "Affective (A)",
+  "Affective (D)",
+  "Affective Instability",
+  "Aggression",
+  "Aggressive Attitude",
+  "ALC Estimated Score",
+  "Alcohol Problems",
+  "Antisocial Behaviors",
+  "Antisocial Features",
+  "Anxiety-Related Disorders",
+  "Anxiety",
+  "Borderline Features",
+  "Cognitive (A)",
+  "Cognitive (D)",
+  "Conversion",
+  "Depression",
+  "Dominance",
+  "DRG Estimated Score",
+  "Drug Problems",
+  "Egocentricity",
+  "Grandiosity",
+  "Health Concerns",
+  "Hypervigilance",
+  "Identity Problems",
+  "Irritability",
+  "Mania",
+  "Negative Relationships",
+  "Nonsupport",
+  "Obsessive-Compulsive",
+  "Paranoia",
+  "Persecution",
+  "Phobias",
+  "Physical Aggression",
+  "Physiological (A)",
+  "Physiological (D)",
+  "Psychotic Experiences",
+  "Resentment",
+  "Schizophrenia",
+  "Self-Harm",
+  "Social Detachment",
+  "Somatic Complaints",
+  "Somatization",
+  "Stimulus-Seeking",
+  "Stress",
+  "Suicidal Ideation",
+  "Thought Disorder",
+  "Traumatic Stress",
+  "Treatment Rejection",
+  "Verbal Aggression",
+  "Warmth",
+  "BAI Total Score",
+  "BDI-2 Total Score",
+  "Activities of Daily Living",
+  "Adaptability",
+  "Adaptive Skills",
+  "Aggression",
+  "Anxiety",
+  "Attention Problems",
+  "Attitude to School",
+  "Attitude to Teachers",
+  "Atypicality",
+  "Behavioral Symptoms Index",
+  "Conduct Problems",
+  "Depression",
+  "Emotional Symptoms Index",
+  "Externalizing Problems",
+  "Functional Communication",
+  "Hyperactivity",
+  "Inattention/Hyperactivity",
+  "Internalizing Problems",
+  "Interpersonal Relations",
+  "Leadership",
+  "Locus of Control",
+  "Personal Adjustment",
+  "Relations with Parents",
+  "School Problems",
+  "Self-Esteem",
+  "Self-Reliance",
+  "Sensation Seeking",
+  "Sense of Inadequacy",
+  "Social Skills",
+  "Social Stress",
+  "Somatization",
+  "Withdrawal"
+)
+
+# Filter the data using the filter_data function from the bwu library
+# The domain is specified by the 'domains' variable
+# The scale is specified by the 'scales' variable
+data_emotion <- bwu::filter_data(
+  data = emotion,
+  domain = domains,
+  scale = scales
+)
+```
+
+```{r}
+#| label: text-emotion
+#| cache: true
+#| include: false
+#| eval: true
+
+# Flatten the text
+bwu::cat_neuropsych_results(
+  data = data_emotion,
+  file = "_02-10_emotion_adult_text.qmd"
+)
+```
+
+```{r}
+#| label: qtbl-emotion
+#| dev: tikz
+#| fig-process: pdf2png
+#| eval: true
+#| include: false
+options(tikzDefaultEngine = "xetex")
+
+# table arguments
+table_name <- "table_emotion"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Source/footnote
+source_note <- gt::md(
+  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+
+Higher scores reflect reduced functioning."
+)
+
+
+# groupings
+grp_emotion <- list(
+  t_score = c("PAI", "MMPI-3")
+)
+
+data_emotion <-
+  dplyr::filter(
+    data_emotion,
+    domain %in%
+      c(
+        "Psychiatric Disorders",
+        "Personality Disorders",
+        "Psychosocial Problems",
+        "Substance Use"
+        # "Behavioral/Emotional/Social",
+        # "Emotional/Behavioral/Personality"
+      )
+  ) |>
+  dplyr::arrange(factor(test_name, levels = c("PAI", "MMPI-3")), subdomain)
+
+# Define the specific order of scales
+scale_order <- c(
+  "Somatic Complaints",
+  "Anxiety",
+  "Anxiety-Related Disorders",
+  "Depression",
+  "Mania",
+  "Paranoia",
+  "Social Detachment",
+  "Schizophrenia",
+  "Borderline Features",
+  "Antisocial Features",
+  "Alcohol Problems",
+  "Drug Problems",
+  "Stress",
+  "Nonsupport"
+)
+
+# Filter and arrange the data in the specified order
+data_emotion <- data_emotion |>
+  dplyr::filter(scale %in% scale_order) |>
+  dplyr::mutate(scale = factor(scale, levels = scale_order)) |>
+  dplyr::arrange(scale)
+
+# View the arranged data
+# print(data_emotion)
+
+# Source/footnote
+source_note <- gt::md(
+  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+
+Higher scores reflect reduced functioning."
+)
+
+# make `gt` table
+NeurotypR::tbl_gt2(
+  data = data_emotion,
+  pheno = pheno,
+  table_name = table_name,
+  source_note = source_note,
+  vertical_padding = vertical_padding,
+  multiline = multiline
+)
+```
+
+```{r}
+#| label: fig-emotion
+#| fig-cap: "Mood/Self-Report"
+#| include: false
+#| fig-height: 6
+#| out-height: 100%
+
+colors <- NULL
+return_plot <- TRUE
+filename <- "fig_emotion.svg"
+
+# arguments
+x <- data_emotion$z_mean_subdomain
+y <- data_emotion$subdomain
+
+# Make dotplot
+NeurotypR::dotplot2(
+  colors = colors,
+  data = data_emotion,
+  filename = filename,
+  na.rm = TRUE,
+  return_plot = return_plot,
+  x = x,
+  y = y
+)
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+    grid(
+      columns: (50%, 50%),
+      gutter: 8pt,
+        figure([#image(file_qtbl)],
+          caption: figure.caption(position: top, [#title]),
+          kind: "qtbl",
+          supplement: [*Table*],
+          ),
+        figure([#image(file_fig, width: auto)],
+          caption: figure.caption(
+            position: bottom,
+            [
+              Emotional, behavioral, and personality scores collapsed across broad domains of functioning.
+              ]),
+          placement: none,
+          kind: "image",
+          supplement: [*Figure*],
+          gap: 0.5em,
+        ),
+      )
+  }
+```
+
+```{=typst}
+#let title = "Personality Assessment Scores"
+#let file_qtbl = "table_emotion.png"
+#let file_fig = "fig_emotion.svg"
+#domain(
+  title: [#title],
+  file_qtbl,
+  file_fig
+  )
+```

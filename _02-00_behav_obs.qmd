@@ -1,15 +1,17 @@
-# BEHAVIORAL OBSERVATIONS
 
-Biggie arrived on time for all testing sessions. He was appropriately dressed and well-groomed. He was alert and oriented to person, place, time, and situation. His gait was steady, and he did not require any assistance with mobility. He maintained good eye contact throughout the evaluation and demonstrated appropriate social skills and rapport.
+## Behavioral Observations
 
-Biggie's speech was fluent, clear, and of normal rate, rhythm, and volume. His thought processes were logical, coherent, and goal-directed. There was no evidence of hallucinations, delusions, or other thought disturbances during the evaluation. His affect was appropriate to the content of discussion, and he displayed a full range of emotional expression.
+{{< var patient >}} presented as alert and oriented to person, place, time, and situation. {{< var he_she_cap >}} was appropriately dressed and groomed, and appeared {{< var his_her >}} stated age of {{< var age >}} years. {{< var he_she_cap >}} was cooperative throughout the evaluation and appeared to put forth adequate effort on all tasks.
 
-Regarding test-taking behavior, Biggie demonstrated good attention and concentration throughout the evaluation. He was able to maintain focus on lengthy and complex tasks with minimal redirection. His effort and motivation appeared consistently good across all testing sessions. He approached challenging tasks with persistence and did not give up easily. He responded well to encouragement when tasks became difficult.
+### Mental Status
 
-Biggie's comprehension of test instructions was good, and he rarely required repetition or clarification. His working style was methodical and careful, with appropriate attention to detail. He demonstrated appropriate frustration tolerance when faced with challenging tasks. There were no notable behavioral observations that would suggest invalidation of the test results.
+- **Attention/Orientation**: Fully oriented ×4 (person, place, time, situation)
+- **Appearance**: Well-groomed, appropriately dressed
+- **Behavior/Attitude**: Cooperative, engaged, appropriate eye contact
+- **Speech/Language**: Fluent, normal rate and prosody
+- **Mood/Affect**: Euthymic mood with congruent affect
+- **Thought Process**: Linear, goal-directed
+- **Thought Content**: No evidence of delusions or hallucinations
+- **Insight/Judgment**: Fair to good
+- **Effort/Validity**: Adequate effort demonstrated on embedded validity measures
 
-The current test results are considered to be a valid representation of Biggie's
-current neurocognitive functioning. Multiple embedded and standalone performance
-validity measures were administered throughout the evaluation, all of which were
-within normal limits, suggesting adequate effort and engagement throughout
-testing.

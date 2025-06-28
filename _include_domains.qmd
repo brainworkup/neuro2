@@ -1,10 +1,56 @@
-{{< include sections/_02-01_iq.qmd >}}
+{{< include _02-00_behav_obs.qmd >}}
 
-{{< include sections/_02-03_verbal.qmd >}}
+{{< include _02-01_general_cognitive_ability.qmd >}}
 
-{{< include sections/_02-04_spatial.qmd >}}
+{{< include _02-01_iq.qmd >}}
 
-{{< include sections/_02-05_memory.qmd >}}
+{{< include _02-01_memory.qmd >}}
 
-{{< include sections/_02-06_executive.qmd >}}
+{{< include _02-02_verbal.qmd >}}
+
+{{< include _02-03_spatial.qmd >}}
+
+{{< include _02-03_verbal.qmd >}}
+
+{{< include _02-04_memory.qmd >}}
+
+{{< include _02-04_spatial.qmd >}}
+
+{{< include _02-05_executive.qmd >}}
+
+{{< include _02-05_memory.qmd >}}
+
+{{< include _02-06_executive.qmd >}}
+
+{{< include _02-06_motor.qmd >}}
+
+{{< include _02-07_daily_living.qmd >}}
+
+{{< include _02-09_adhd_adult_text_observer.qmd >}}
+
+{{< include _02-09_adhd_adult_text_self.qmd >}}
+
+{{< include _02-09_adhd.qmd >}}
+
+{{< include _02-09_emotion_adult_text_observer.qmd >}}
+
+{{< include _02-09_emotion_adult_text_self.qmd >}}
+
+{{< include _02-09_executive_adult_text_observer.qmd >}}
+
+{{< include _02-09_executive_adult_text_self.qmd >}}
+
+{{< include _02-09_memory_adult_text_observer.qmd >}}
+
+{{< include _02-09_memory_adult_text_self.qmd >}}
+
+{{< include _02-09_spatial_adult_text_observer.qmd >}}
+
+{{< include _02-09_spatial_adult_text_self.qmd >}}
+
+{{< include _02-09_verbal_adult_text_observer.qmd >}}
+
+{{< include _02-09_verbal_adult_text_self.qmd >}}
+
+{{< include _02-10_emotion.qmd >}}
 

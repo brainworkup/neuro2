@@ -1,14 +1,15 @@
 
 # RECOMMENDATIONS
 
-## Clinical Recommendations
+Based on the results of this evaluation, the following recommendations are offered:
 
-[Specific recommendations based on test findings]
+1. **Medical Follow-up**: [Specific medical recommendations]
 
-## Educational/Vocational Recommendations
+2. **Cognitive Interventions**: [Specific cognitive recommendations]
 
-[As appropriate based on referral question]
+3. **Academic/Occupational**: [Specific academic or work recommendations]
 
-## Follow-up Recommendations
+4. **Psychosocial Support**: [Specific support recommendations]
 
-[Timeline and nature of recommended follow-up]
+5. **Re-evaluation**: Consider repeat neuropsychological evaluation in [timeframe] to monitor progress.
+

@@ -1,0 +1,14 @@
+
+# SUMMARY/IMPRESSION
+
+{{< var patient >}} is a {{< var age >}}-year-old {{< var sex >}} who was referred for neuropsychological evaluation. Overall, the current evaluation revealed:
+
+## Cognitive Strengths
+- [To be completed based on test results]
+
+## Cognitive Weaknesses
+- [To be completed based on test results]
+
+## Diagnostic Impressions
+- [To be completed based on clinical judgment]
+

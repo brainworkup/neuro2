@@ -1,4 +1,4 @@
-## Verbal {#sec-verbal}
+## Verbal/Language {#sec-verbal}
 
 {{< include _02-03_verbal_text.qmd >}}
 
@@ -6,13 +6,360 @@
 #| label: setup-verbal
 #| include: false
 
-# Filter by domain
-domains <- c("Verbal")
+# domain
+domains <- c("Verbal/Language")
 
-# Target phenotype
+# phenotype
 pheno <- "verbal"
-
-# Read the CSV file into a data frame
-verbal <- readr::read_csv("data-raw/neurocog.csv")
 ```
 
+```{r}
+#| label: export-verbal
+#| include: false
+
+# Read the CSV file into a data frame
+verbal <- readr::read_csv("data/neurocog.csv")
+
+# Filter the data frame to keep only rows where 'domain' equals 'domains'
+verbal <- verbal |> dplyr::filter(domain %in% domains)
+
+verbal <- verbal |>
+  dplyr::select(
+    test,
+    test_name,
+    scale,
+    raw_score,
+    score,
+    ci_95,
+    percentile,
+    range,
+    domain,
+    subdomain,
+    narrow,
+    pass,
+    verbal,
+    timed,
+    result,
+    z,
+    z_mean_domain,
+    z_sd_domain,
+    z_mean_subdomain,
+    z_sd_subdomain,
+    z_mean_narrow,
+    z_sd_narrow,
+    z_mean_pass,
+    z_sd_pass,
+    z_mean_verbal,
+    z_sd_verbal,
+    z_mean_timed,
+    z_sd_timed
+  )
+
+# Write the resulting data frame to a new CSV file
+# The file name is created by concatenating the 'pheno' variable and ".csv"
+# NA values are replaced with an empty string in the output file
+# Column names are included in the output file
+# If the file already exists, it is overwritten (not appended)
+readr::write_excel_csv(
+  verbal,
+  here::here("data", paste0(pheno, ".csv")),
+  na = "",
+  col_names = TRUE,
+  append = FALSE
+)
+```
+
+```{r}
+#| label: data-verbal
+#| include: false
+
+scales <- c(
+  "Academic Language Readiness Index",
+  "Auditory Comprehension Colors",
+  "Auditory Comprehension Colors/Shapes/Numbers",
+  "Auditory Comprehension Shapes",
+  "Auditory Comprehension",
+  "Basic Concepts",
+  "Bill Payment",
+  "Body Part Identification",
+  "Body Part Naming",
+  "Category Fluency",
+  "Comprehension of Instructions",
+  "Comprehension",
+  "Core Language Score",
+  "D-KEFS Color Naming",
+  "D-KEFS Word Reading",
+  "Descriptive Pragmatics Profile",
+  "Early Literacy Index",
+  "Expressive Language Index",
+  "Expressive Vocabulary",
+  "Following Directions",
+  "Information",
+  "Language Content Index",
+  "Language Domain",
+  "Language Index",
+  "Language Structure Index",
+  "Letter Fluency",
+  "NAB Language Index",
+  "Naming Phonemic Cuing",
+  "Naming Semantic Cuing",
+  "Naming vs Identification",
+  "Naming",
+  "Oral Production",
+  "Oromotor Sequences",
+  "Phonological Awareness",
+  "Picture Naming",
+  "Preliteracy Rating Scale",
+  "Reading Comprehension",
+  "Recalling Sentences",
+  "Receptive Language Index",
+  "Receptive Vocabulary",
+  "Semantic Fluency",
+  "Sentence Comprehension",
+  "Similarities",
+  "Speeded Naming Correct",
+  "Speeded Naming Errors",
+  "Speeded Naming Time",
+  "Speeded Naming",
+  "Vocabulary",
+  "Word Classes",
+  "Word Generation Initial Letter",
+  "Word Generation Semantic",
+  "Semantic vs. Initial Letter",
+  "Word Generation",
+  "Word Structure",
+  "Writing",
+  "Word Generation-Semantic",
+  "Word Generation-Initial Letter",
+  "Semantic vs. Initial Letter Contrast",
+  "Language Index (LAN)",
+  "Oral Production",
+  "Auditory Comprehension",
+  "Auditory Comprehension Colors",
+  "Auditory Comprehension Shapes",
+  "Auditory Comprehension Colors/Shapes/Numbers",
+  "Auditory Comprehension Pointing",
+  "Auditory Comprehension Yes/No",
+  "Auditory Comprehension Paper Folding",
+  "Naming",
+  "Naming Semantic Cuing",
+  "Naming Phonemic Cuing",
+  "Reading Comprehension",
+  "Reading Comprehension Words",
+  "Reading Comprehension Sentences",
+  "Writing",
+  "Writing Legibility",
+  "Writing Spelling",
+  "Writing Syntax",
+  "Writing Conveyance",
+  "Bill Payment",
+  "Language Index (LAN)"
+  # "Attention Index (ATT)",
+  # "Spatial Index (SPT)",
+  # "Memory Index (MEM)",
+  # "Executive Functions Index (EXE)",
+)
+
+# Filter the data using the filter_data function from the bwu library
+data_verbal <-
+  NeurotypR::filter_data(
+    data = verbal,
+    domain = domains,
+    scale = scales
+  )
+```
+
+```{r}
+#| label: text-verbal
+#| cache: true
+#| include: false
+
+# export text
+bwu::cat_neuropsych_results(data = data_verbal, file = "_02-03_verbal_text.qmd")
+```
+
+
+```{r}
+#| label: qtbl-verbal
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+#| eval: true
+
+# Set the default engine for tikz to "xetex"
+options(tikzDefaultEngine = "xetex")
+
+data_verbal_tbl <- dplyr::filter(data_verbal, !is.na(percentile))
+
+# args
+table_name <- "table_verbal"
+vertical_padding <- 0
+multiline <- TRUE
+
+# footnotes
+fn_standard_score <- gt::md(
+  "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+)
+fn_scaled_score <- gt::md(
+  "Scaled score:  Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+)
+fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+
+fn_z_score <- gt::md(
+  "Score = z-score (Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰])"
+)
+
+source_note <- gt::md("_T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+
+# Define the groups for the table
+grp_verbal <- list(
+  scaled_score = c(
+    # "WAIS-IV",
+    # "WISC-5",
+    # "NEPSY-2",
+    # "D-KEFS",
+    # "WPPSI-IV",
+    # "CELF-5",
+    # "RBANS",
+    "WAIS-5"
+  ),
+  standard_score = c(
+    # "WPPSI-IV",
+    "NAB-S"
+    # "CELF-5",
+    # "RBANS",
+    # "NAB"
+  ),
+  t_score = c(
+    "NAB-S",
+    "NIH EXAMINER"
+    # "WASI-2",
+    # "NAB"
+  )
+)
+
+# make `gt` table
+NeurotypR::tbl_gt2(
+  data = data_verbal_tbl,
+  pheno = pheno,
+  table_name = table_name,
+  # source_note = source_note,
+  fn_scaled_score = fn_scaled_score,
+  fn_standard_score = fn_standard_score,
+  fn_t_score = fn_t_score,
+  grp_scaled_score = grp_verbal[["scaled_score"]],
+  grp_standard_score = grp_verbal[["standard_score"]],
+  grp_t_score = grp_verbal[["t_score"]],
+  dynamic_grp = grp_verbal,
+  vertical_padding = vertical_padding,
+  multiline = multiline
+)
+```
+
+
+```{r}
+#| label: fig-verbal-subdomain
+#| include: false
+#| fig-cap: "Verbal and language functioning refers to the ability to access and apply acquired word knowledge, to verbalize meaningful concepts, to understand complex multistep instructions, to think about verbal information, and to express oneself using words."
+
+# Arguments
+# colors <- bwu::tokyo
+colors <- NULL
+return_plot <- TRUE
+filename <- "fig_verbal_subdomain.svg"
+
+# variables to plot
+x <- data_verbal$z_mean_subdomain
+y <- data_verbal$subdomain
+
+# Make dotplot
+NeurotypR::dotplot2(
+  data = data_verbal,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename,
+  na.rm = TRUE
+)
+```
+
+```{r}
+#| label: fig-verbal-narrow
+#| include: false
+#| fig-cap: "Verbal and language functioning refers to the ability to access and apply acquired word knowledge, to verbalize meaningful concepts, to understand complex multistep instructions, to think about verbal information, and to express oneself using words."
+
+# Arguments
+colors <- NULL
+return_plot <- TRUE
+filename <- "fig_verbal_narrow.svg"
+
+# variables to plot
+x <- data_verbal$z_mean_narrow
+y <- data_verbal$narrow
+
+# Suppress warnings from being converted to errors
+options(warn = 1) # Set warn to 1 to make warnings not halt execution
+
+# Make dotplot
+NeurotypR::dotplot2(
+  data = data_verbal,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename,
+  na.rm = TRUE
+)
+
+# Reset warning options to default if needed
+options(warn = 0) # Reset to default behavior
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+    grid(
+      columns: (50%, 50%),
+      gutter: 8pt,
+        figure([#image(file_qtbl)],
+          caption: figure.caption(position: top, [#title]),
+          kind: "qtbl",
+          supplement: [*Table*],
+          ),
+        figure([#image(file_fig)],
+          caption: figure.caption(position: bottom, [
+            Verbal and language functioning refers to the ability to access and apply acquired word knowledge, to verbalize meaningful concepts, to understand complex multistep instructions, to think about verbal information, and to express oneself using words.
+            ]),
+          placement: none,
+          kind: "image",
+          supplement: [*Figure*],
+          gap: 0.5em,
+          ),
+        )
+    }
+```
+
+```{=typst}
+#let title = "Verbal/Language"
+#let file_qtbl = "table_verbal.png"
+#let file_fig = "fig_verbal_subdomain.svg"
+#domain(
+  title: [#title Scores],
+  file_qtbl,
+  file_fig
+)
+```
+
+<!-- ```{=typst}
+#let title = "Verbal/Language"
+#let file_qtbl = "table_verbal.png"
+#let file_fig = "fig_verbal_narrow.svg"
+#domain(
+  title: [#title Scores],
+  file_qtbl,
+  file_fig
+)
+``` -->
