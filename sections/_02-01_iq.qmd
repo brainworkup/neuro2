@@ -1,0 +1,67 @@
+## General Cognitive Ability {#sec--02-01-iq}
+
+{{< include _02-01_iq_text.qmd >}}
+
+```{r}
+#| label: setup--02-01-iq
+#| include: false
+
+# Domain-specific data
+domains <- c("General Cognitive Ability")
+pheno <- "iq"
+```
+
+```{r}
+#| label: data--02-01-iq
+#| include: false
+
+# Filter data
+data <- NeurotypR::filter_data(
+  data = neurocog,
+  domain = domains
+)
+
+# Filter by scales
+scales <- c("Full Scale (FSIQ)", "General Ability (GAI)", "Verbal Comprehension (VCI)", "Fluid Reasoning (FRI)", "Processing Speed (PSI)", "Working Memory (WMI)")
+data_scales <- NeurotypR::filter_data(
+  data = data,
+  scale = scales
+)
+```
+
+```{r}
+#| label: table--02-01-iq
+#| tbl-cap: "General Cognitive Ability Test Scores"
+
+# Create table
+NeurotypR::tbl_gt(
+  data = data_scales,
+  pheno = pheno,
+  table_name = paste0("table_", pheno),
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15",
+  dynamic_grp = pheno
+)
+```
+
+```{r}
+#| label: fig--02-01-iq-subdomain
+#| fig-cap: "General Cognitive Ability subdomain scores"
+#| fig-height: 4
+#| fig-width: 6
+
+# Create subdomain plot
+data_subdomain <- data |>
+  dplyr::group_by(subdomain) |>
+  dplyr::summarise(
+    z_mean_subdomain = mean(z_mean_subdomain, na.rm = TRUE)
+  ) |>
+  dplyr::filter(!is.na(z_mean_subdomain))
+
+NeurotypR::dotplot(
+  data = data_subdomain,
+  x = data_subdomain$z_mean_subdomain,
+  y = data_subdomain$subdomain,
+  filename = paste0("fig_", pheno, "_subdomain.svg")
+)
+```
+

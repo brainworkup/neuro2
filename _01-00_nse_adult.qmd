@@ -1,0 +1,20 @@
+
+# NEUROBEHAVIORAL STATUS EXAM
+
+## Reason for Referral
+
+{{< var mr_mrs >}} {{< var last_name >}}, a {{< var age >}}-year-old {{< var handedness >}}-handed {{< var sex >}}, was referred for comprehensive neuropsychological evaluation in the context of [forensic proceedings]. The evaluation was requested to assess cognitive functioning and determine any neurocognitive factors relevant to the current legal matter.
+
+## Background Information
+
+[To be completed based on clinical interview and records review]
+
+## Mental Status/Behavioral Observations
+
+• **Orientation**: Alert and oriented to person, place, time, and situation
+• **Appearance**: Appropriately groomed and dressed
+• **Behavior**: Cooperative and engaged throughout testing
+• **Speech**: Fluent with normal rate and prosody
+• **Mood/Affect**: Euthymic with appropriate range
+• **Effort**: Adequate effort demonstrated on validity measures
+

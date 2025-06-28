@@ -1,0 +1,67 @@
+## Verbal/Language {#sec--02-03-verbal}
+
+{{< include _02-03_verbal_text.qmd >}}
+
+```{r}
+#| label: setup--02-03-verbal
+#| include: false
+
+# Domain-specific data
+domains <- c("Verbal/Language")
+pheno <- "verbal"
+```
+
+```{r}
+#| label: data--02-03-verbal
+#| include: false
+
+# Filter data
+data <- NeurotypR::filter_data(
+  data = neurocog,
+  domain = domains
+)
+
+# Filter by scales
+scales <- c("Language Index (LAN)", "Oral Production", "Auditory Comprehension", "Naming", "Writing")
+data_scales <- NeurotypR::filter_data(
+  data = data,
+  scale = scales
+)
+```
+
+```{r}
+#| label: table--02-03-verbal
+#| tbl-cap: "Verbal/Language Test Scores"
+
+# Create table
+NeurotypR::tbl_gt(
+  data = data_scales,
+  pheno = pheno,
+  table_name = paste0("table_", pheno),
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15",
+  dynamic_grp = pheno
+)
+```
+
+```{r}
+#| label: fig--02-03-verbal-subdomain
+#| fig-cap: "Verbal/Language subdomain scores"
+#| fig-height: 4
+#| fig-width: 6
+
+# Create subdomain plot
+data_subdomain <- data |>
+  dplyr::group_by(subdomain) |>
+  dplyr::summarise(
+    z_mean_subdomain = mean(z_mean_subdomain, na.rm = TRUE)
+  ) |>
+  dplyr::filter(!is.na(z_mean_subdomain))
+
+NeurotypR::dotplot(
+  data = data_subdomain,
+  x = data_subdomain$z_mean_subdomain,
+  y = data_subdomain$subdomain,
+  filename = paste0("fig_", pheno, "_subdomain.svg")
+)
+```
+

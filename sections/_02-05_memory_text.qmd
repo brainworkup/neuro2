@@ -1,0 +1,6 @@
+<summary>
+
+Testing of memory revealed overall average
+performance (mean percentile = 55).
+
+</summary>

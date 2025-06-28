@@ -24,7 +24,7 @@ pheno <- "executive"
 
 # Filter data for this domain
 domain_data <- neurocog %>%
-  filter(domain == domain_name | 
+  filter(domain == domain_name |
          scale %in% c("Attention Index (ATT)", "Executive Functions Index (EXE)", "NAB Attention Index", "NAB Executive Functions Index", "Digits Forward", "Digits Backward", "Coding", "Symbol Search", "Mazes", "Categories", "Word Generation"))
 ```
 
@@ -41,7 +41,7 @@ if (nrow(domain_data) > 0) {
     title = paste0(domain_name, " Test Scores"),
     source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
   )
-  
+
   table_obj$build_table()
 }
 ```
@@ -57,7 +57,7 @@ if (nrow(domain_data) > 0 && "z_mean_subdomain" %in% colnames(domain_data)) {
     group_by(subdomain) %>%
     summarise(z_mean = mean(z_mean_subdomain, na.rm = TRUE)) %>%
     filter(!is.na(z_mean))
-  
+
   if (nrow(subdomain_data) > 0) {
     dotplot_obj <- DotplotR6$new(
       data = subdomain_data,
@@ -65,7 +65,7 @@ if (nrow(domain_data) > 0 && "z_mean_subdomain" %in% colnames(domain_data)) {
       y = "subdomain",
       filename = paste0("fig_", pheno, "_subdomain.svg")
     )
-    
+
     dotplot_obj$create_plot()
   }
 }

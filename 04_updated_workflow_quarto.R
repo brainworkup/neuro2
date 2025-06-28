@@ -16,7 +16,6 @@ update_variables_yaml <- function(
   sex = "male",
   template_type = "forensic"
 ) {
-
   # Read existing variables
   variables <- yaml::read_yaml("_variables.yml")
 
@@ -32,7 +31,7 @@ update_variables_yaml <- function(
   variables$dob <- format(Sys.Date() - (age * 365.25), "%Y-%m-%d")
 
   # Update dates
-  variables$doe <- format(Sys.Date() - 30, "%Y-%m-%d")  # 30 days ago
+  variables$doe <- format(Sys.Date() - 30, "%Y-%m-%d") # 30 days ago
   variables$doe2 <- format(Sys.Date() - 27, "%Y-%m-%d") # 27 days ago
   variables$doe3 <- format(Sys.Date() - 24, "%Y-%m-%d") # 24 days ago
   variables$date_of_report <- format(Sys.Date(), "%Y-%m-%d")
@@ -63,7 +62,6 @@ update_variables_yaml <- function(
 
 # STEP 2: Create/Update Domain Files in sections/ Directory
 create_domain_sections <- function() {
-
   # Create sections directory if it doesn't exist
   dir.create("sections", showWarnings = FALSE)
 
@@ -92,8 +90,7 @@ create_domain_sections <- function() {
     file_base <- domain_files[[domain_name]]
 
     # Filter data for this domain
-    domain_data <- neurocog %>%
-      filter(domain == domain_name)
+    domain_data <- neurocog |> filter(domain == domain_name)
 
     if (nrow(domain_data) > 0) {
       # Create the main domain QMD file
@@ -107,80 +104,103 @@ create_domain_sections <- function() {
   }
 }
 
-# Function to create domain QMD file
+# Function to create domain QMD file - FIXED VERSION
 create_domain_qmd_file <- function(data, domain_name, file_base) {
-
   # Define domain-specific scales based on file_base
   scales <- get_domain_scales(file_base)
 
-  qmd_content <- glue('
-## {domain_name} {{#sec-{gsub("_", "-", file_base)}}}
+  # Create section ID
+  section_id <- gsub("_", "-", file_base)
 
-{{{{< include {file_base}_text.qmd >}}}}
+  # Build scales string
+  if (length(scales) > 0) {
+    scales_str <- paste0('"', scales, '"', collapse = ", ")
+  } else {
+    scales_str <- ""
+  }
 
-```{{r}}
-#| label: setup-{gsub("_", "-", file_base)}
-#| include: false
-
-# Domain-specific data
-domains <- c("{domain_name}")
-pheno <- "{gsub("^_02-\\\\d+_", "", file_base)}"
-```
-
-```{{r}}
-#| label: data-{gsub("_", "-", file_base)}
-#| include: false
-
-# Filter data
-data <- NeurotypR::filter_data(
-  data = neurocog,
-  domain = domains
-)
-
-# Filter by scales
-scales <- c({paste0(\'"\', scales, \'"\', collapse = ", ")})
-data_scales <- NeurotypR::filter_data(
-  data = data,
-  scale = scales
-)
-```
-
-```{{r}}
-#| label: table-{gsub("_", "-", file_base)}
-#| tbl-cap: "{domain_name} Test Scores"
-
-# Create table
-NeurotypR::tbl_gt(
-  data = data_scales,
-  pheno = pheno,
-  table_name = paste0("table_", pheno),
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15",
-  dynamic_grp = pheno
-)
-```
-
-```{{r}}
-#| label: fig-{gsub("_", "-", file_base)}-subdomain
-#| fig-cap: "{domain_name} subdomain scores"
-#| fig-height: 4
-#| fig-width: 6
-
-# Create subdomain plot
-data_subdomain <- data %>%
-  dplyr::group_by(subdomain) %>%
-  dplyr::summarise(
-    z_mean_subdomain = mean(z_mean_subdomain, na.rm = TRUE)
-  ) %>%
-  dplyr::filter(!is.na(z_mean_subdomain))
-
-NeurotypR::dotplot(
-  data = data_subdomain,
-  x = data_subdomain$z_mean_subdomain,
-  y = data_subdomain$subdomain,
-  filename = paste0("fig_", pheno, "_subdomain.svg")
-)
-```
-', .open = "{{", .close = "}}")
+  # Build the content using paste to avoid glue parsing issues
+  qmd_content <- paste0(
+    "## ",
+    domain_name,
+    " {#sec-",
+    section_id,
+    "}\n\n",
+    "{{< include ",
+    file_base,
+    "_text.qmd >}}\n\n",
+    "```{r}\n",
+    "#| label: setup-",
+    section_id,
+    "\n",
+    "#| include: false\n\n",
+    "# Domain-specific data\n",
+    'domains <- c("',
+    domain_name,
+    '")\n',
+    'pheno <- "',
+    gsub("^_02-\\d+_", "", file_base),
+    '"\n',
+    "```\n\n",
+    "```{r}\n",
+    "#| label: data-",
+    section_id,
+    "\n",
+    "#| include: false\n\n",
+    "# Filter data\n",
+    "data <- NeurotypR::filter_data(\n",
+    "  data = neurocog,\n",
+    "  domain = domains\n",
+    ")\n\n",
+    "# Filter by scales\n",
+    "scales <- c(",
+    scales_str,
+    ")\n",
+    "data_scales <- NeurotypR::filter_data(\n",
+    "  data = data,\n",
+    "  scale = scales\n",
+    ")\n",
+    "```\n\n",
+    "```{r}\n",
+    "#| label: table-",
+    section_id,
+    "\n",
+    '#| tbl-cap: "',
+    domain_name,
+    ' Test Scores"\n\n',
+    "# Create table\n",
+    "NeurotypR::tbl_gt(\n",
+    "  data = data_scales,\n",
+    "  pheno = pheno,\n",
+    '  table_name = paste0("table_", pheno),\n',
+    '  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15",\n',
+    "  dynamic_grp = pheno\n",
+    ")\n",
+    "```\n\n",
+    "```{r}\n",
+    "#| label: fig-",
+    section_id,
+    "-subdomain\n",
+    '#| fig-cap: "',
+    domain_name,
+    ' subdomain scores"\n',
+    "#| fig-height: 4\n",
+    "#| fig-width: 6\n\n",
+    "# Create subdomain plot\n",
+    "data_subdomain <- data |>\n",
+    "  dplyr::group_by(subdomain) |>\n",
+    "  dplyr::summarise(\n",
+    "    z_mean_subdomain = mean(z_mean_subdomain, na.rm = TRUE)\n",
+    "  ) |>\n",
+    "  dplyr::filter(!is.na(z_mean_subdomain))\n\n",
+    "NeurotypR::dotplot(\n",
+    "  data = data_subdomain,\n",
+    "  x = data_subdomain$z_mean_subdomain,\n",
+    "  y = data_subdomain$subdomain,\n",
+    '  filename = paste0("fig_", pheno, "_subdomain.svg")\n',
+    ")\n",
+    "```\n"
+  )
 
   # Write to sections directory
   writeLines(qmd_content, file.path("sections", paste0(file_base, ".qmd")))
@@ -189,7 +209,6 @@ NeurotypR::dotplot(
 
 # Function to create domain text summary file
 create_domain_text_file <- function(data, domain_name, file_base) {
-
   # Use the same summary generation logic from before
   mean_percentile <- mean(data$percentile, na.rm = TRUE)
 
@@ -203,14 +222,16 @@ create_domain_text_file <- function(data, domain_name, file_base) {
     TRUE ~ "Exceptionally Low"
   )
 
-  summary_text <- glue("
+  summary_text <- glue(
+    "
 <summary>
 
 Testing of {tolower(domain_name)} revealed overall {tolower(overall_range)}
 performance (mean percentile = {round(mean_percentile)}).
 
 </summary>
-")
+"
+  )
 
   # Write to sections directory
   writeLines(
@@ -223,25 +244,37 @@ performance (mean percentile = {round(mean_percentile)}).
 get_domain_scales <- function(file_base) {
   scale_mapping <- list(
     "_02-01_iq" = c(
-      "Full Scale (FSIQ)", "General Ability (GAI)",
-      "Verbal Comprehension (VCI)", "Fluid Reasoning (FRI)",
-      "Processing Speed (PSI)", "Working Memory (WMI)"
+      "Full Scale (FSIQ)",
+      "General Ability (GAI)",
+      "Verbal Comprehension (VCI)",
+      "Fluid Reasoning (FRI)",
+      "Processing Speed (PSI)",
+      "Working Memory (WMI)"
     ),
     "_02-03_verbal" = c(
-      "Language Index (LAN)", "Oral Production",
-      "Auditory Comprehension", "Naming", "Writing"
+      "Language Index (LAN)",
+      "Oral Production",
+      "Auditory Comprehension",
+      "Naming",
+      "Writing"
     ),
     "_02-04_spatial" = c(
-      "Spatial Index (SPT)", "Visual Discrimination",
-      "Design Construction", "Block Design"
+      "Spatial Index (SPT)",
+      "Visual Discrimination",
+      "Design Construction",
+      "Block Design"
     ),
     "_02-05_memory" = c(
-      "Memory Index (MEM)", "List Learning",
-      "Story Learning", "Figure Learning"
+      "Memory Index (MEM)",
+      "List Learning",
+      "Story Learning",
+      "Figure Learning"
     ),
     "_02-06_executive" = c(
-      "Attention Index (ATT)", "Executive Functions Index (EXE)",
-      "Digits Forward", "Digits Backward"
+      "Attention Index (ATT)",
+      "Executive Functions Index (EXE)",
+      "Digits Forward",
+      "Digits Backward"
     )
   )
 
@@ -249,8 +282,8 @@ get_domain_scales <- function(file_base) {
 }
 
 # STEP 3: Update the _include_domains.qmd file
+# STEP 3: Update the _include_domains.qmd file
 update_include_domains <- function() {
-
   # Check which domain files exist
   section_files <- list.files(
     "sections",
@@ -262,11 +295,7 @@ update_include_domains <- function() {
   section_files <- section_files[!grepl("_text\\.qmd$", section_files)]
 
   # Create include statements
-  includes <- paste0(
-    "{{< include sections/",
-    section_files,
-    " >}}\n"
-  )
+  includes <- paste0("{{< include sections/", section_files, " >}}\n")
 
   # Write to _include_domains.qmd
   writeLines(includes, "_include_domains.qmd")
@@ -276,7 +305,6 @@ update_include_domains <- function() {
 
 # STEP 4: Update other required sections
 update_required_sections <- function(template_type = "forensic") {
-
   # Update tests administered
   tests_content <- '
 # TESTS ADMINISTERED
@@ -349,7 +377,6 @@ render_neuropsych_report <- function(
   format = "neurotyp-adult-typst",
   output_file = NULL
 ) {
-
   # Check template.qmd exists
   if (!file.exists("template.qmd")) {
     stop("template.qmd not found!")
@@ -376,7 +403,6 @@ run_integrated_workflow <- function(
   sex = "male",
   template_type = "forensic"
 ) {
-
   message("\n", strrep("=", 60))
   message("NEUROPSYCHOLOGICAL REPORT GENERATION")
   message("Using Existing Quarto/Typst Templates")
@@ -418,7 +444,6 @@ run_integrated_workflow <- function(
 
   message("\n✅ Workflow complete!")
 }
-
 
 
 # Run the workflow
