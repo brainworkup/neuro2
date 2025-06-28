@@ -26,39 +26,24 @@ pheno <- "emotion"
 #| eval: true
 
 # Read the CSV file into a data frame
-emotion <- readr::read_csv("neurobehav.csv")
+emotion <- readr::read_csv(here::here("data", "neurobehav.csv"))
 
 # Filter the data frame based on certain conditions
-# Keep only the rows where 'domain' equals 'domains' and 'z_mean_domain' is not NA
+# Keep only the rows where 'domain' equals 'domains'
 emotion <- emotion |>
   dplyr::filter(domain %in% domains)
 
-# Select specific columns from the data frame
+# Use dplyr::select with any_of to handle columns that might not exist
+available_cols <- c(
+  "test", "test_name", "scale", "raw_score", "score", "ci_95",
+  "percentile", "range", "domain", "subdomain", "narrow",
+  "pass", "verbal", "timed", "result", "z",
+  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
+  "z_mean_narrow", "z_sd_narrow"
+)
+
 emotion <- emotion |>
-  dplyr::select(
-    test,
-    test_name,
-    scale,
-    raw_score,
-    score,
-    ci_95,
-    percentile,
-    range,
-    domain,
-    subdomain,
-    narrow,
-    pass,
-    verbal,
-    timed,
-    result,
-    z,
-    z_mean_domain,
-    z_sd_domain,
-    z_mean_subdomain,
-    z_sd_subdomain,
-    z_mean_narrow,
-    z_sd_narrow
-  )
+  dplyr::select(dplyr::any_of(available_cols))
 
 # Write the 'emotion' data frame to a CSV file
 # The file name is derived from the 'pheno' variable
@@ -262,7 +247,7 @@ Higher scores reflect reduced functioning."
 )
 
 # make `gt` table
-NeurotypR::tbl_gt2(
+NeurotypR::tbl_gt(
   data = data_emotion,
   pheno = pheno,
   table_name = table_name,

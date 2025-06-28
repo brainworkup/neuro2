@@ -17,9 +17,9 @@ format:
     number-offset: 1
     shift-heading-level-by: 0
     citeproc: true
-    csl: inst/resources/bib/apa.csl
+    csl: inst/extdata/_extensions/neurotyp-adult/resources/apa.csl
     reference-location: document
-    bibliography: inst/resources/bib/refs.bib
+    bibliography: inst/extdata/_extensions/neurotyp-adult/resources/refs.bib
     fig-width: 6
     fig-height: 4
     fig-format: svg

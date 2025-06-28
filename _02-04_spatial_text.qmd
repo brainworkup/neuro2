@@ -1,5 +1,5 @@
 <summary>
 
-
+Testing of visual perception/construction revealed overall average performance (mean percentile = 50).
 
 </summary>

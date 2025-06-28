@@ -17,40 +17,24 @@ pheno <- "adhd"
 #| eval: true
 
 # Read the CSV file into a data frame
-adhd <- readr::read_csv("neurobehav.csv")
+adhd <- readr::read_csv(here::here("data", "neurobehav.csv"))
 
 # Filter the data frame based on certain conditions
-# Keep only the rows where 'domain' equals 'domains' and 'z_mean_domain' is not NA
+# Keep only the rows where 'domain' equals 'domains'
 adhd <- adhd |>
   dplyr::filter(domain %in% domains)
 
-# Select specific columns from the data frame
+# Use dplyr::select with any_of to handle columns that might not exist
+available_cols <- c(
+  "test", "test_name", "scale", "raw_score", "score", "ci_95",
+  "percentile", "range", "domain", "subdomain", "narrow",
+  "pass", "verbal", "timed", "result", "z",
+  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
+  "z_mean_narrow", "z_sd_narrow"
+)
+
 adhd <- adhd |>
-  dplyr::select(
-    test,
-    test_name,
-    scale,
-    raw_score,
-    score,
-    ci_95,
-    percentile,
-    range,
-    domain,
-    subdomain,
-    narrow,
-    pass,
-    verbal,
-    timed,
-    # description,
-    result,
-    z,
-    z_mean_domain,
-    z_sd_domain,
-    z_mean_subdomain,
-    z_sd_subdomain,
-    z_mean_narrow,
-    z_sd_narrow
-  )
+  dplyr::select(dplyr::any_of(available_cols))
 
 # Write the 'adhd' data frame to a CSV file
 # The file name is derived from the 'pheno' variable
@@ -245,16 +229,12 @@ grp_self <- list(
 )
 
 # make `gt` table
-NeurotypR::tbl_gt2(
+NeurotypR::tbl_gt(
   data = data_adhd_self,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
   source_note = source_note,
-  # fn_standard_score = fn_standard_score,
-  # fn_t_score = fn_t_score,
-  # grp_standard_score = grp_self[["standard_score"]],
-  # grp_t_score = grp_self[["t_score"]],
   dynamic_grp = grp_self,
   multiline = multiline
 )
@@ -405,15 +385,11 @@ grp_observer <- list(
 )
 
 # make `gt` table
-NeurotypR::tbl_gt2(
+NeurotypR::tbl_gt(
   data = data_adhd_observer,
   pheno = pheno,
   table_name = table_name,
-  # source_note = source_note,
-  fn_standard_score = fn_standard_score,
-  fn_t_score = fn_t_score,
-  grp_standard_score = grp_observer[["standard_score"]],
-  grp_t_score = grp_observer[["t_score"]],
+  source_note = fn_standard_score,  # Using standard score footnote as source note
   dynamic_grp = grp_observer,
   vertical_padding = vertical_padding,
   multiline = multiline

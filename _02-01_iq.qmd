@@ -25,37 +25,18 @@ iq <- iq |>
   dplyr::filter(domain %in% domains)
 
 # Select specific columns from the data frame
+# Use dplyr::select with any_of to handle columns that might not exist
+available_cols <- c(
+  "test", "test_name", "scale", "raw_score", "score", "ci_95",
+  "percentile", "range", "domain", "subdomain", "narrow",
+  "pass", "verbal", "timed", "result", "z",
+  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
+  "z_mean_narrow", "z_sd_narrow", "z_mean_pass", "z_sd_pass",
+  "z_mean_verbal", "z_sd_verbal", "z_mean_timed", "z_sd_timed"
+)
+
 iq <- iq |>
-  dplyr::select(
-    test,
-    test_name,
-    scale,
-    raw_score,
-    score,
-    ci_95,
-    percentile,
-    range,
-    domain,
-    subdomain,
-    narrow,
-    pass,
-    verbal,
-    timed,
-    result,
-    z,
-    z_mean_domain,
-    z_sd_domain,
-    z_mean_subdomain,
-    z_sd_subdomain,
-    z_mean_narrow,
-    z_sd_narrow,
-    z_mean_pass,
-    z_sd_pass,
-    z_mean_verbal,
-    z_sd_verbal,
-    z_mean_timed,
-    z_sd_timed
-  )
+  dplyr::select(dplyr::any_of(available_cols))
 
 # Write the resulting data frame to a new CSV file
 readr::write_excel_csv(
@@ -219,7 +200,7 @@ grp_iq <- list(
   )
 )
 
-# Create the table using the NeurotypR::tbl_gt2 function from the bwu library
+# Create the table using the NeurotypR::tbl_gt function
 NeurotypR::tbl_gt(
   data = data_iq,
   pheno = pheno,

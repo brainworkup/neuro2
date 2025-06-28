@@ -13,7 +13,7 @@ domains <- c("Academic Skills")
 pheno <- "academics"
 
 # Read the CSV file into a data frame
-academics <- readr::read_csv("neurocog.csv")
+academics <- readr::read_csv(here::here("data", "neurocog.csv"))
 ```
 
 ```{r}
@@ -26,39 +26,18 @@ academics <-
   academics |>
   dplyr::filter(domain %in% domains)
 
-# Select specific columns from the data frame
+# Use dplyr::select with any_of to handle columns that might not exist
+available_cols <- c(
+  "test", "test_name", "scale", "raw_score", "score", "ci_95",
+  "percentile", "range", "domain", "subdomain", "narrow",
+  "pass", "verbal", "timed", "result", "z",
+  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
+  "z_mean_narrow", "z_sd_narrow", "z_mean_pass", "z_sd_pass",
+  "z_mean_verbal", "z_sd_verbal", "z_mean_timed", "z_sd_timed"
+)
+
 academics <- academics |>
-  dplyr::select(
-    test,
-    test_name,
-    scale,
-    raw_score,
-    # age_equiv,
-    score,
-    ci_95,
-    percentile,
-    range,
-    domain,
-    subdomain,
-    narrow,
-    pass,
-    verbal,
-    timed,
-    result,
-    z,
-    z_mean_domain,
-    z_sd_domain,
-    z_mean_subdomain,
-    z_sd_subdomain,
-    z_mean_narrow,
-    z_sd_narrow,
-    z_mean_pass,
-    z_sd_pass,
-    z_mean_verbal,
-    z_sd_verbal,
-    z_mean_timed,
-    z_sd_timed
-  )
+  dplyr::select(dplyr::any_of(available_cols))
 
 # Write the resulting data frame to a new CSV file
 # The file name is created by concatenating the 'pheno' variable and ".csv"
@@ -194,15 +173,12 @@ grp_academics <- list(
   standard_score = c("KTEA-3", "WIAT-4", "WRAT-5")
 )
 
-# Create the table using the NeurotypR::tbl_gt2 function from the bwu library
-# source("table_gt.R")
-NeurotypR::tbl_gt2(
+# Create the table using NeurotypR::tbl_gt
+NeurotypR::tbl_gt(
   data = data_academics,
   pheno = pheno,
   table_name = table_name,
-  fn_standard_score = fn_standard_score,
-  grp_standard_score = grp_academics[["standard_score"]],
-  dynamic_grp = grp_academics,
+  source_note = fn_standard_score, # Use standard score as source note
   vertical_padding = vertical_padding,
   multiline = multiline
 )

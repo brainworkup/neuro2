@@ -2,7 +2,6 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
-doe: {{< var doe >}}
 date_of_report: last-modified
 ---
 
@@ -72,6 +71,21 @@ if (requireNamespace("xfun", quietly = TRUE)) {
   }
 }
 
+# Source the TableGT.R file for custom table functions
+if (file.exists("R/TableGT.R")) {
+  source("R/TableGT.R")
+  message("Loaded custom TableGT functions")
+
+  # Create a global wrapper function for tbl_gt2 if it doesn't exist in NeurotypR namespace
+  if (!exists("tbl_gt2", where = asNamespace("NeurotypR"))) {
+    message("Creating global tbl_gt2 wrapper function")
+    # This makes the tbl_gt2 function available globally
+    assign("tbl_gt2", tbl_gt2, envir = .GlobalEnv)
+  }
+} else {
+  warning("R/TableGT.R not found - table functions may be unavailable")
+}
+
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -95,12 +109,23 @@ patient <- Sys.getenv("PATIENT")
 #| include: false
 
 path_data <- here::here("data")
-path_csv <- here::here("inst", "extdata")
-NeurotypR::load_data(here::here(path_csv))
-neurocog <- readr::read_csv("data-raw/neurocog.csv")
-neurobehav <- readr::read_csv("data-raw/neurobehav.csv")
-neuropsych <- readr::read_csv("data-raw/neuropsych.csv")
-# validity <- readr::read_csv("data-raw/validity.csv")
+# Load data directly from the data directory instead of inst/extdata
+neurocog <- readr::read_csv(file.path(path_data, "neurocog.csv"))
+neurobehav <- readr::read_csv(file.path(path_data, "neurobehav.csv"))
+neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
+  readr::read_csv(file.path(path_data, "neuropsych.csv"))
+} else {
+  # Create an empty data frame with expected structure if file doesn't exist
+  data.frame(
+    patient_id = character(),
+    test_name = character(),
+    scale = character(),
+    score = numeric(),
+    percentile = numeric(),
+    classification = character(),
+    stringsAsFactors = FALSE
+  )
+}
 ```
 
 ```{=typst}
