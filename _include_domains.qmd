@@ -1,5 +1,7 @@
 {{< include _02-01_iq.qmd >}}
 
+{{< include _02-02_academics.qmd >}}
+
 {{< include _02-03_verbal.qmd >}}
 
 {{< include _02-04_spatial.qmd >}}

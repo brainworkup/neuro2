@@ -112,6 +112,7 @@ path_data <- here::here("data")
 # Load data directly from the data directory instead of inst/extdata
 neurocog <- readr::read_csv(file.path(path_data, "neurocog.csv"))
 neurobehav <- readr::read_csv(file.path(path_data, "neurobehav.csv"))
+validity <- readr::read_csv(file.path(path_data, "validity.csv"))
 neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
   readr::read_csv(file.path(path_data, "neuropsych.csv"))
 } else {

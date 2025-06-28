@@ -1,3 +1,0 @@
-## memory
-
-Placeholder content for _02-05_memory.qmd

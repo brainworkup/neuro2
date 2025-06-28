@@ -1,3 +1,0 @@
-## spatial
-
-Placeholder content for _02-04_spatial.qmd

@@ -1,3 +1,0 @@
-## appendix
-
-Placeholder content for _03-03_appendix.qmd

@@ -310,7 +310,6 @@ NeurotypR::dotplot2(
       )
   }
 ```
-
 ```{=typst}
 #let title = "Personality Assessment Scores"
 #let file_qtbl = "table_emotion.png"

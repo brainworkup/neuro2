@@ -1,3 +1,0 @@
-## signature
-
-Placeholder content for _03-02_signature.qmd

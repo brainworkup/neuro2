@@ -469,6 +469,7 @@ NeurotypR::dotplot2(
 
 <!-- {{< include _02-09_adhd_adult_text_observer.qmd >}} -->
 
+````{=html}
 <!-- ```{=typst}
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
@@ -499,11 +500,13 @@ NeurotypR::dotplot2(
   )
 }
 ``` -->
+````
 
-
+````{=html}
 <!-- ```{=typst}
 #let title = "ADHD Observer Ratings"
 #let file_qtbl = "table_adhd_observer.png"
 #let file_fig = "fig_adhd_observer.svg"
 #domain(title: [#title], file_qtbl, file_fig)
 ``` -->
+````

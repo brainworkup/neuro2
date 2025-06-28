@@ -141,7 +141,13 @@ DomainProcessorR6 <- R6::R6Class(
           z_mean_subdomain,
           z_sd_subdomain,
           z_mean_narrow,
-          z_sd_narrow
+          z_sd_narrow,
+          z_mean_pass,
+          z_sd_pass,
+          z_mean_verbal,
+          z_sd_verbal,
+          z_mean_timed,
+          z_sd_timed
         )
       invisible(self)
     },
