@@ -103,7 +103,7 @@ scales <- c(
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
 data_spatial <-
-  bwu::filter_data(
+  filter_data(
     data = spatial,
     domain = domains,
     scale = scales
@@ -116,7 +116,7 @@ data_spatial <-
 #| include: false
 
 # export text
-bwu::cat_neuropsych_results(
+cat_neuropsych_results(
   data = data_spatial,
   file = "_02-04_spatial_text.qmd"
 )
@@ -176,7 +176,7 @@ grp_spatial <- list(
 )
 
 # Create the table using NeurotypR::tbl_gt
-NeurotypR::tbl_gt(
+tbl_gt(
   data = data_spatial,
   pheno = pheno,
   table_name = table_name,
@@ -207,7 +207,7 @@ colors <- NULL
 return_plot <- TRUE
 
 # Make dotplot
-NeurotypR::dotplot2(
+dotplot(
   data = data_spatial,
   x = x,
   y = y,

@@ -14,6 +14,7 @@ gen_report_R6_cache/
 .gitignore
 report_template_demo_files/
 *.svg
+*.png
 *.pdf
 *.html
 .history/
@@ -28,3 +29,5 @@ Icon?
 template_files/Icon
 template_files/Icon?
 template_files/Icon
+template_cache/
+template_files/

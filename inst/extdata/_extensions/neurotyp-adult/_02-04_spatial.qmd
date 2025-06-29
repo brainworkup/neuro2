@@ -18,42 +18,23 @@ pheno <- "spatial"
 #| include: false
 
 # Read the CSV file into a data frame
-spatial <- readr::read_csv("neurocog.csv")
+spatial <- readr::read_csv(here::here("data", "neurocog.csv"))
 
 # Filter the data frame to keep only rows where 'domain' equals 'domains'
 spatial <- spatial |> dplyr::filter(domain %in% domains)
 
+# Use dplyr::select with any_of to handle columns that might not exist
+available_cols <- c(
+  "test", "test_name", "scale", "raw_score", "score", "ci_95",
+  "percentile", "range", "domain", "subdomain", "narrow",
+  "pass", "verbal", "timed", "result", "z",
+  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
+  "z_mean_narrow", "z_sd_narrow", "z_mean_pass", "z_sd_pass",
+  "z_mean_verbal", "z_sd_verbal", "z_mean_timed", "z_sd_timed"
+)
+
 spatial <- spatial |>
-  dplyr::select(
-    test,
-    test_name,
-    scale,
-    raw_score,
-    score,
-    ci_95,
-    percentile,
-    range,
-    domain,
-    subdomain,
-    narrow,
-    pass,
-    verbal,
-    timed,
-    result,
-    z,
-    z_mean_domain,
-    z_sd_domain,
-    z_mean_subdomain,
-    z_sd_subdomain,
-    z_mean_narrow,
-    z_sd_narrow,
-    z_mean_pass,
-    z_sd_pass,
-    z_mean_verbal,
-    z_sd_verbal,
-    z_mean_timed,
-    z_sd_timed
-  )
+  dplyr::select(dplyr::any_of(available_cols))
 
 # Write the resulting data frame to a new CSV file
 # The file name is created by concatenating the 'pheno' variable and ".csv"
@@ -118,11 +99,11 @@ scales <- c(
   "Map Reading"
 )
 
-# Filter the data using the filter_data function from the NeurotypR library
+# Filter the data using the filter_data function from the bwu library
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
 data_spatial <-
-  NeurotypR::filter_data(
+  filter_data(
     data = spatial,
     domain = domains,
     scale = scales
@@ -135,7 +116,7 @@ data_spatial <-
 #| include: false
 
 # export text
-NeurotypR::cat_neuropsych_results(
+cat_neuropsych_results(
   data = data_spatial,
   file = "_02-04_spatial_text.qmd"
 )
@@ -194,19 +175,12 @@ grp_spatial <- list(
   )
 )
 
-# make `gt` table
-NeurotypR::tbl_gt2(
+# Create the table using NeurotypR::tbl_gt
+tbl_gt(
   data = data_spatial,
   pheno = pheno,
   table_name = table_name,
-  # source_note = source_note,
-  fn_scaled_score = fn_scaled_score,
-  fn_standard_score = fn_standard_score,
-  fn_t_score = fn_t_score,
-  grp_scaled_score = grp_spatial[["scaled_score"]],
-  grp_standard_score = grp_spatial[["standard_score"]],
-  grp_t_score = grp_spatial[["t_score"]],
-  dynamic_grp = grp_spatial,
+  source_note = fn_standard_score, # Use standard score as source note
   vertical_padding = vertical_padding,
   multiline = multiline
 )
@@ -233,7 +207,7 @@ colors <- NULL
 return_plot <- TRUE
 
 # Make dotplot
-NeurotypR::dotplot2(
+dotplot(
   data = data_spatial,
   x = x,
   y = y,
