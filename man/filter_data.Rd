@@ -5,8 +5,6 @@
 \title{Filters Data by Domain and Scale}
 \usage{
 filter_data(data, domain = NULL, scale = NULL)
-
-filter_data(data, domain = NULL, scale = NULL)
 }
 \arguments{
 \item{data}{Data frame to filter}
@@ -14,10 +12,6 @@ filter_data(data, domain = NULL, scale = NULL)
 \item{domain}{Domain(s) to filter by}
 
 \item{scale}{Scale(s) to filter by}
-
-\item{domains}{Character vector of domain names to filter by}
-
-\item{scales}{Character vector of scale names to filter by}
 }
 \value{
 Returns a filtered data frame

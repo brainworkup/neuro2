@@ -30,44 +30,44 @@ generate_domain_summary <- function(domain_data, domain_name) {
   )
 
   # Find strengths and weaknesses
-  strengths <- domain_data %>%
-    filter(percentile >= 75) %>%
+  strengths <- domain_data |>
+    filter(percentile >= 75) |>
     arrange(desc(percentile))
 
-  weaknesses <- domain_data %>%
-    filter(percentile < 25) %>%
-    arrange(percentile)
+  weaknesses <- domain_data |> filter(percentile < 25) |> arrange(percentile)
 
   # Generate summary text
-  summary_text <- glue("
+  summary_text <- glue(
+    "
 <summary>
 
 Testing of {tolower(domain_name)} revealed overall {tolower(overall_range)}
 performance (mean percentile = {round(mean_percentile)}).
-")
+"
+  )
 
   if (nrow(strengths) > 0) {
-    summary_text <- paste0(summary_text,
+    summary_text <- paste0(
+      summary_text,
       "Areas of relative strength included ",
-      paste(strengths$scale[1:min(3, nrow(strengths))],
-            collapse = ", "),
-      ". ")
+      paste(strengths$scale[1:min(3, nrow(strengths))], collapse = ", "),
+      ". "
+    )
   }
 
   if (nrow(weaknesses) > 0) {
-    summary_text <- paste0(summary_text,
+    summary_text <- paste0(
+      summary_text,
       "Areas of relative weakness included ",
-      paste(weaknesses$scale[1:min(3, nrow(weaknesses))],
-            collapse = ", "),
-      ". ")
+      paste(weaknesses$scale[1:min(3, nrow(weaknesses))], collapse = ", "),
+      ". "
+    )
   }
 
   # Add functional interpretation
   summary_text <- paste0(
     summary_text,
-    generate_functional_interpretation(
-      domain_name, overall_range, weaknesses
-    )
+    generate_functional_interpretation(domain_name, overall_range, weaknesses)
   )
 
   summary_text <- paste0(summary_text, "\n\n</summary>")
@@ -76,9 +76,7 @@ performance (mean percentile = {round(mean_percentile)}).
 }
 
 # Function to generate functional interpretation
-generate_functional_interpretation <- function(
-  domain, range, weaknesses
-) {
+generate_functional_interpretation <- function(domain, range, weaknesses) {
   interpretations <- list(
     "General Cognitive Ability" = list(
       "Below Average" = paste0(
@@ -172,8 +170,11 @@ generate_functional_interpretation <- function(
   )
 
   # Get appropriate interpretation
-  if (domain %in% names(interpretations) &&
-      range %in% names(interpretations[[domain]])) {
+  if (
+    domain %in%
+      names(interpretations) &&
+      range %in% names(interpretations[[domain]])
+  ) {
     return(interpretations[[domain]][[range]])
   }
 
@@ -197,9 +198,11 @@ domains <- list(
 
 for (domain_info in domains) {
   # Filter data for this domain
-  domain_data <- neurocog %>%
-    filter(domain == domain_info$name |
-           grepl(domain_info$name, domain, ignore.case = TRUE))
+  domain_data <- neurocog |>
+    filter(
+      domain == domain_info$name |
+        grepl(domain_info$name, domain, ignore.case = TRUE)
+    )
 
   # Generate summary text
   summary_text <- generate_domain_summary(domain_data, domain_info$name)
@@ -219,15 +222,16 @@ generate_overall_summary <- function() {
   mean_percentile <- mean(all_data$percentile, na.rm = TRUE)
 
   # Identify key findings
-  significant_weaknesses <- all_data %>%
-    filter(percentile < 5) %>%
+  significant_weaknesses <- all_data |>
+    filter(percentile < 5) |>
     select(test_name, scale, percentile)
 
-  significant_strengths <- all_data %>%
-    filter(percentile > 95) %>%
+  significant_strengths <- all_data |>
+    filter(percentile > 95) |>
     select(test_name, scale, percentile)
 
-  summary_text <- glue('
+  summary_text <- glue(
+    '
 <summary>
 
 ## Overall Evaluation Interpretation
@@ -243,7 +247,8 @@ multiple domains. Overall test results revealed a pattern of {ifelse(
     "adequate cognitive functioning"
   )
 )} with a mean performance at the {round(mean_percentile)}th percentile.
-')
+'
+  )
 
   if (nrow(significant_strengths) > 0) {
     summary_text <- paste0(
@@ -278,7 +283,9 @@ multiple domains. Overall test results revealed a pattern of {ifelse(
   }
 
   # Add diagnostic impression placeholder
-  summary_text <- paste0(summary_text, '
+  summary_text <- paste0(
+    summary_text,
+    '
 
 ## Diagnostic Impression
 
@@ -289,7 +296,8 @@ considerations are relevant:
 • [Consider cognitive, emotional, and behavioral factors]
 • [Include relevant DSM-5-TR or ICD-11 codes]
 
-</summary>')
+</summary>'
+  )
 
   return(summary_text)
 }
@@ -299,7 +307,8 @@ summary_text <- generate_overall_summary()
 cat(summary_text, file = "_03-00_summary_text.qmd")
 
 # Update summary file to include the text
-cat('
+cat(
+  '
 # SUMMARY/IMPRESSION
 
 {{< include _03-00_summary_text.qmd >}}
@@ -316,12 +325,12 @@ source("DotplotR6.R")
 neurocog <- read_csv("data/neurocog.csv")
 
 # Aggregate by domain
-domain_summary <- neurocog %>%
-  group_by(domain) %>%
+domain_summary <- neurocog |>
+  group_by(domain) |>
   summarise(
     mean_z = mean(z, na.rm = TRUE),
     mean_percentile = mean(percentile, na.rm = TRUE)
-  ) %>%
+  ) |>
   filter(!is.na(mean_z))
 
 if (nrow(domain_summary) > 0) {
@@ -335,6 +344,8 @@ if (nrow(domain_summary) > 0) {
   dotplot_obj$create_plot()
 }
 ```
-', file = "_03-00_summary.qmd")
+',
+  file = "_03-00_summary.qmd"
+)
 
 message("\n✅ All domain summaries generated successfully!")

@@ -173,11 +173,11 @@ multiline <- TRUE
 
 # footnotes
 fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
 )
 
 source_note <- gt::md(
-  "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
 )
 
 # Define the groups for the table

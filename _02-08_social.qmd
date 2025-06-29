@@ -163,10 +163,10 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # footnotes
-fn_standard_score <- gt::md("Index score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]")
-fn_scaled_score <- gt::md("Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]")
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
-fn_z_score <- gt::md("z-score: Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰]")
+fn_standard_score <- gt::md("Index score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]")
+fn_scaled_score <- gt::md("Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
+fn_z_score <- gt::md("z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]")
 fn_raw_score <- gt::md("Raw score: Range = 0-4")
 
 # Groupings
@@ -231,7 +231,7 @@ data_social <- data_social |> dplyr::select(c(test_name, scale, raw_score, score
 #         scale = md("**Scale**"),
 #         raw_score = md("**Raw Score**"),
 #         score = md("**Score**"),
-#         percentile = md("**‰ Rank**"),
+#         percentile = md("**\u2030 Rank**"),
 #         range = md("**Range**")
 #       ) |>
 #       tab_header(title = title) |>
@@ -358,7 +358,7 @@ options(warn = 0) # Reset to default behavior
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.5em)
   set text(..font)
-  pad(top: 0.5em)[]  
+  pad(top: 0.5em)[]
     grid(
       columns: (50%, 50%),
       gutter: 8pt,

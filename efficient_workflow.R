@@ -118,8 +118,8 @@ generate_domain_texts <- function() {
     }
 
     # Filter data for this domain
-    domain_data <- neurocog %>%
-      filter(domain == domain_name) %>%
+    domain_data <- neurocog |>
+      filter(domain == domain_name) |>
       filter(!is.na(percentile))
 
     # If no data, keep existing content

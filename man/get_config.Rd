@@ -6,16 +6,16 @@
 \usage{
 get_config()
 }
-\arguments{
-\item{key}{Configuration key to retrieve}
-
-\item{default}{Default value if key is not found}
-}
-\value{
-Configuration value or default
-}
 \description{
 Retrieves configuration settings for the package.
 This function provides a centralized way to access configuration options.
+The returned object is an environment with a get() method that takes the following arguments:
+\itemize{
+  \item key: Configuration key to retrieve
+  \item default: Default value if key is not found
+}
+}
+\value{
+Configuration value or default
 }
 \keyword{internal}

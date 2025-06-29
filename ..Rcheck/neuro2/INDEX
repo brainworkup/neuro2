@@ -1,0 +1,61 @@
+DomainProcessorR6       DomainProcessorR6 Class
+DotplotR6               DotplotR6 Class
+DrilldownR6             DrilldownR6 Class
+IQReportGeneratorR6     IQReportGeneratorR6 Class
+NeuropsychReportSystemR6
+                        NeuropsychReportSystemR6 Class
+NeuropsychResultsR6     NeuropsychResultsR6 Class
+ReportTemplateR6        ReportTemplateR6 Class
+ReportUtilitiesR6       Report Utilities for Neuropsychological
+                        Assessment
+TableGT                 TableGT R6 Class
+TableGT2                TableGT2 R6 Class for NeurotypR-Style Tables
+TemplateContentManagerR6
+                        Template Content Manager for Neuropsychological
+                        Reports
+batch_process           Batch Process with Error Collection
+cache_function          Cached Function Execution
+cat_neuropsych_results
+                        Concatenate and Flatten Neuropsych Results by
+                        Scale (Function Wrapper)
+concatenate_results     Concatenate Results
+create_neurotyp_table   Create NeurotypR-Style Table (Function Wrapper)
+create_temp_dir         Create Temporary Directory with Cleanup
+dotplot                 Create Dotplot for Neurocognitive Domains,
+                        Version 2 (Function Wrapper)
+dotplot2                Create a dot plot
+dots                    Dot Counting Task from NIH EXAMINER A dataset
+                        containing dot counting task data. The
+                        variables are as follows: raw age percentile n
+                        m md sd normValue
+drilldown               Drilldown on Neuropsych Domains (Function
+                        Wrapper)
+filter_data             Filters Data by Domain and Scale
+generate_iq_report      Generate IQ/Cognitive Ability Report (Function
+                        Wrapper)
+generate_neuropsych_report
+                        Generate Neuropsychological Report (Function
+                        Wrapper)
+generate_neuropsych_report_system
+                        Generate Complete Neuropsychological Report
+                        (Function Wrapper)
+glue_neuropsych_results
+                        Extract and glue neuropsych text
+load_data               Read/Load Neuropsych Eval CSV Files
+neurocog                neurocog dataset
+parallel_map            Parallel Processing Helper
+pegboard_dom            pegboard_dom dataset
+process_domain_data     Process Neuropsychological Domain Data
+                        (Function Wrapper)
+read_multiple_csv       Read Multiple CSV Files
+retry_with_backoff      Retry Function Execution
+safe_path               Create Safe File Path
+safe_read_csv           Safe CSV Reading with Error Handling
+safe_select             Safe Column Selection
+save_as_markdown        Save Speech-to-Text As Markdown
+tbl_gt                  Create a GT table
+tbl_gt2                 tbl_gt2 - Alias for NeurotypR compatibility
+time_it                 Time Function Execution
+validate_data_structure
+                        Validate Data Frame Structure
+with_progress           Progress Bar Wrapper

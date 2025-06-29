@@ -15,12 +15,12 @@ source("DotplotR6.R")
 neurocog <- read_csv("data/neurocog.csv")
 
 # Aggregate by domain
-domain_summary <- neurocog %>%
-  group_by(domain) %>%
+domain_summary <- neurocog |>
+  group_by(domain) |>
   summarise(
     mean_z = mean(z, na.rm = TRUE),
     mean_percentile = mean(percentile, na.rm = TRUE)
-  ) %>%
+  ) |>
   filter(!is.na(mean_z))
 
 if (nrow(domain_summary) > 0) {

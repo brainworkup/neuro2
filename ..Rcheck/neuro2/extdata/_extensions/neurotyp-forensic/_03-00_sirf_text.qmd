@@ -1,0 +1,31 @@
+## Overall Evaluation Interpretation
+
+Neuropsychological evaluation revealed a pattern of cognitive strengths and weaknesses characterized by below-average overall neuropsychological functioning. Notable strengths emerged in visuoperceptual processing and visuoconstructional abilities, where performance reached the high average range for focused spatial tasks. The patient demonstrated average capabilities in basic judgment, decision-making, and orientation to person, place, time, and situation.
+
+## Diagnostic Impression
+
+- 294.11 (F02.81) Major Neurocognitive Disorder Due to Another Medical Condition, Moderate, With behavioral disturbance
+- 8A68.4 Generalized tonic-clonic seizure
+- V61.10 (Z63.0) Relational Problems
+
+## Mental Health Diversion: Contextual Analysis and Interpretation
+
+_1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?_
+
+Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5.
+
+_2. Were any mental disorders a motivating, causal, or contributing factor to the defendant’s involvement in the commission of the offense?_
+
+Yes, causal.
+
+_3. If any mental disorders were significant factors in the commission of the offense, would the defendant’s symptoms of those mental disorders respond to treatment?_
+
+Yes. The defendant's symptoms related to cognitive impairment and mood problems would respond well to treatment.
+
+_4. Does the defendant agree to comply with treatment as a condition of diversion?_
+
+Yes, the defendant agreed to comply with treatment as a condition of diversion.
+
+_5. Would the defendant pose an unreasonable risk of danger to public safety (under the meaning of California Penal Code 1001.36), if treated in the community?_
+
+The defendant would not pose "an unreasonable risk of danger to public safety" under the meaning of California Penal Code 1001.36, if treated in the community.

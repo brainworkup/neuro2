@@ -1,0 +1,10 @@
+title: Neurotyp-Forensic Neuropsychological Report Template for Typst in Quarto
+author: Joey Trampush
+version: 0.1.0
+quarto-required: ">=1.4.0"
+contributes:
+  formats:
+    typst:
+      template-partials:
+        - typst-template.typ
+        - typst-show.typ

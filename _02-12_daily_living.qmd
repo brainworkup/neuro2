@@ -146,9 +146,9 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
-source_note <- gt::md("_T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+source_note <- gt::md("_T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # Define the groups for the table
 grp_daily_living <- list(
@@ -218,7 +218,7 @@ options(warn = 0) # Reset to default behavior
           ),
         figure([#image(file_fig)],
           caption: figure.caption(position: bottom, [
-            _Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence. 
+            _Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence.
             ]),
           placement: none,
           kind: "image",

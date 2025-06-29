@@ -233,12 +233,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Personal Adjustment scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # define the groupings for the table
 grp_emotion <- list(
@@ -283,12 +283,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Adaptive Skills scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 grp_emotion <- list(
   t_score = c("BASC-3 SRP Adolescent", "BASC-3 TRS Adolescent", "BASC-3 PRS Adolescent", "PAI", "MMPI-3", "BASC-3 PRS", "BASC-3 PRS")
@@ -339,12 +339,12 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # source note
-source_note <- gt::md("_T_-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+source_note <- gt::md("_T_-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 _Note_: Personal Adjustment scores are reversed.")
 
 # footnotes
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
 
 # define the groupings for the table
 grp_emotion <- list(

@@ -30,7 +30,7 @@ packages <- c(
   "tidytable",
   "vroom",
   "xfun",
-  "NeurotypR",
+  "bwu",
   "NeurotypR"
 )
 
@@ -76,11 +76,16 @@ if (file.exists("R/TableGT.R")) {
   source("R/TableGT.R")
   message("Loaded custom TableGT functions")
 
-  # Create a global wrapper function for tbl_gt2 if it doesn't exist in NeurotypR namespace
-  if (!exists("tbl_gt2", where = asNamespace("NeurotypR"))) {
-    message("Creating global tbl_gt2 wrapper function")
-    # This makes the tbl_gt2 function available globally
+  # Make tbl_gt2 available globally for compatibility
+  if (exists("tbl_gt2") && is.function(tbl_gt2)) {
     assign("tbl_gt2", tbl_gt2, envir = .GlobalEnv)
+    message("Made tbl_gt2 function available globally")
+  }
+
+  # Also make TableGT2 available globally if needed
+  if (exists("TableGT2") && R6::is.R6Class(TableGT2)) {
+    assign("TableGT2", TableGT2, envir = .GlobalEnv)
+    message("Made TableGT2 class available globally")
   }
 } else {
   warning("R/TableGT.R not found - table functions may be unavailable")

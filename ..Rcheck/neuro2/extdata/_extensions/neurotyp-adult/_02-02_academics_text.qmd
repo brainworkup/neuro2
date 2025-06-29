@@ -1,0 +1,6 @@
+<<PROMPT>>
+
+## Area: Academic Skills
+
+
+<<END>>

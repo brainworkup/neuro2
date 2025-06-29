@@ -22,7 +22,7 @@ read_and_standardize <- function(file_path, test_type) {
   }
 
   # Standardize column names
-  data <- data %>% janitor::clean_names()
+  data <- data |> janitor::clean_names()
 
   return(data)
 }
@@ -89,7 +89,7 @@ neurocog <- bind_rows(neurocog_list, .id = "source_test")
 neurobehav <- bind_rows(neurobehav_list, .id = "source_test")
 
 # Add patient information
-neurocog <- neurocog %>%
+neurocog <- neurocog |>
   dplyr::mutate(
     patient_name = patient_name,
     patient_age = patient_age,
@@ -97,7 +97,7 @@ neurocog <- neurocog %>%
     date_tested = Sys.Date()
   )
 
-neurobehav <- neurobehav %>%
+neurobehav <- neurobehav |>
   dplyr::mutate(
     patient_name = patient_name,
     patient_age = patient_age,
@@ -118,7 +118,7 @@ compute_domain_scores <- function(data) {
 
   # Add z-score calculation if not present
   if (!"z" %in% colnames(data)) {
-    data <- data %>%
+    data <- data |>
       dplyr::mutate(
         z = case_when(
           !is.na(percentile) ~ qnorm(percentile / 100),
@@ -132,67 +132,67 @@ compute_domain_scores <- function(data) {
 
   # Compute domain means if domain column exists
   if ("domain" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(domain) %>%
+    data <- data |>
+      dplyr::group_by(domain) |>
       dplyr::mutate(
         z_mean_domain = mean(z, na.rm = TRUE),
         z_sd_domain = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
   # Compute subdomain means if subdomain column exists
   if ("subdomain" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(subdomain) %>%
+    data <- data |>
+      dplyr::group_by(subdomain) |>
       dplyr::mutate(
         z_mean_subdomain = mean(z, na.rm = TRUE),
         z_sd_subdomain = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
   # Compute narrow means if narrow column exists
   if ("narrow" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(narrow) %>%
+    data <- data |>
+      dplyr::group_by(narrow) |>
       dplyr::mutate(
         z_mean_narrow = mean(z, na.rm = TRUE),
         z_sd_narrow = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
   # Compute pass means if pass column exists
   if ("pass" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(pass) %>%
+    data <- data |>
+      dplyr::group_by(pass) |>
       dplyr::mutate(
         z_mean_pass = mean(z, na.rm = TRUE),
         z_sd_pass = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
   # Compute verbal means if verbal column exists
   if ("verbal" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(verbal) %>%
+    data <- data |>
+      dplyr::group_by(verbal) |>
       dplyr::mutate(
         z_mean_verbal = mean(z, na.rm = TRUE),
         z_sd_verbal = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
   # Compute timed means if timed column exists
   if ("timed" %in% colnames(data)) {
-    data <- data %>%
-      dplyr::group_by(timed) %>%
+    data <- data |>
+      dplyr::group_by(timed) |>
       dplyr::mutate(
         z_mean_timed = mean(z, na.rm = TRUE),
         z_sd_timed = sd(z, na.rm = TRUE)
-      ) %>%
+      ) |>
       ungroup()
   }
 
@@ -213,8 +213,8 @@ message(paste("Neurobehav records:", nrow(neurobehav)))
 
 # Create a combined neuropsych dataset for some analyses
 neuropsych <- bind_rows(
-  neurocog %>% dplyr::mutate(data_type = "cognitive"),
-  neurobehav %>% dplyr::mutate(data_type = "behavioral")
+  neurocog |> dplyr::mutate(data_type = "cognitive"),
+  neurobehav |> dplyr::mutate(data_type = "behavioral")
 )
 
 write_csv(neuropsych, "data/neuropsych.csv")

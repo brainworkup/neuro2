@@ -1,0 +1,282 @@
+## Visual Perception/Construction {#sec-spatial}
+
+{{< include _02-04_spatial_text.qmd >}}
+
+```{r}
+#| label: setup-spatial
+#| include: false
+
+# domain
+domains <- c("Visual Perception/Construction")
+
+# phenotype
+pheno <- "spatial"
+```
+
+```{r}
+#| label: export-spatial
+#| include: false
+
+# Read the CSV file into a data frame
+spatial <- readr::read_csv("neurocog.csv")
+
+# Filter the data frame to keep only rows where 'domain' equals 'domains'
+spatial <- spatial |> dplyr::filter(domain %in% domains)
+
+spatial <- spatial |>
+  dplyr::select(
+    test,
+    test_name,
+    scale,
+    raw_score,
+    score,
+    ci_95,
+    percentile,
+    range,
+    domain,
+    subdomain,
+    narrow,
+    pass,
+    verbal,
+    timed,
+    result,
+    z,
+    z_mean_domain,
+    z_sd_domain,
+    z_mean_subdomain,
+    z_sd_subdomain,
+    z_mean_narrow,
+    z_sd_narrow,
+    z_mean_pass,
+    z_sd_pass,
+    z_mean_verbal,
+    z_sd_verbal,
+    z_mean_timed,
+    z_sd_timed
+  )
+
+# Write the resulting data frame to a new CSV file
+# The file name is created by concatenating the 'pheno' variable and ".csv"
+# NA values are replaced with an empty string in the output file
+# Column names are included in the output file
+# If the file already exists, it is overwritten (not appended)
+readr::write_excel_csv(
+  spatial,
+  here::here("data", paste0(pheno, ".csv")),
+  na = "",
+  col_names = TRUE,
+  append = FALSE
+)
+```
+
+```{r}
+#| label: data-spatial
+#| include: false
+
+scales <- c(
+  "Arrows",
+  "Bicycle Drawing",
+  "Block Design No Time Bonus",
+  "Block Design Partial Score",
+  "Block Design",
+  "Clock Drawing",
+  "Clocks",
+  "Design Construction",
+  "Design Copying General",
+  "Design Copying Motor",
+  "Design Copying Process",
+  "Design Copying",
+  "Figure Copy",
+  "Figure Drawing Copy",
+  "Figure Weights",
+  "Figure Weights (Double-Time)",
+  "Geometric Puzzles",
+  "Line Orientation",
+  "Map Reading",
+  "Matrix Reasoning",
+  "NAB Spatial Index",
+  "Object Assembly",
+  "Picture Concepts",
+  "ROCF Copy",
+  "ROCFT Copy",
+  "Spatial Domain",
+  "Visual Discrimination",
+  "Visual Puzzles",
+  "Visuospatial/Constructional Index",
+  "Spatial Index (SPT)",
+  "Visual Discrimination",
+  "Design Construction",
+  "Figure Drawing Copy",
+  "Figure Drawing Copy Organization",
+  "Figure Drawing Copy Fragmentation",
+  "Figure Drawing Copy Planning",
+  "Figure Drawing Immediate Recall",
+  "Figure Drawing Immediate Recall Organization",
+  "Figure Drawing Immediate Recall Fragmentation",
+  "Figure Drawing Immediate Recall Planning",
+  "Figure Drawing Percent Retention",
+  "Map Reading"
+)
+
+# Filter the data using the filter_data function from the NeurotypR library
+# The domain is specified by the 'domains' variable
+# The scale is specified by the 'scales' variable
+data_spatial <-
+  NeurotypR::filter_data(
+    data = spatial,
+    domain = domains,
+    scale = scales
+  )
+```
+
+```{r}
+#| label: text-spatial
+#| cache: true
+#| include: false
+
+# export text
+NeurotypR::cat_neuropsych_results(
+  data = data_spatial,
+  file = "_02-04_spatial_text.qmd"
+)
+```
+
+
+```{r}
+#| label: qtbl-spatial
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+
+# Set the default engine for tikz to "xetex"
+options(tikzDefaultEngine = "xetex")
+
+# args
+table_name <- "table_spatial"
+vertical_padding <- 0
+multiline <- TRUE
+
+# footnotes
+fn_standard_score <- gt::md(
+  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+)
+fn_scaled_score <- gt::md(
+  "Scaled score:  Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+)
+fn_t_score <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
+fn_z_score <- gt::md(
+  "Score = z-score (Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030])"
+)
+
+source_note <- gt::md("_T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
+
+
+# grouping
+grp_spatial <- list(
+  scaled_score = c(
+    # "WAIS-IV",
+    # "WISC-5",
+    # "NEPSY-2",
+    # "WPPSI-IV",
+    # "WISC-V",
+    "WAIS-5"
+  ),
+  standard_score = c(
+    # "WPPSI-IV",
+    "NAB-S"
+    # "NAB"
+  ),
+  t_score = c(
+    # "Rey Complex Figure",
+    # "WASI-2",
+    "NAB-S"
+    # "NAB"
+  )
+)
+
+# make `gt` table
+NeurotypR::tbl_gt2(
+  data = data_spatial,
+  pheno = pheno,
+  table_name = table_name,
+  # source_note = source_note,
+  fn_scaled_score = fn_scaled_score,
+  fn_standard_score = fn_standard_score,
+  fn_t_score = fn_t_score,
+  grp_scaled_score = grp_spatial[["scaled_score"]],
+  grp_standard_score = grp_spatial[["standard_score"]],
+  grp_t_score = grp_spatial[["t_score"]],
+  dynamic_grp = grp_spatial,
+  vertical_padding = vertical_padding,
+  multiline = multiline
+)
+```
+
+
+```{r}
+#| label: fig-spatial
+#| include: false
+#| fig-cap: "Perception, construction, and visuospatial processing refer to abilities such as mentally visualizing how objects should look from different angles, visualizing how to put objects together so that they fit correctly, and being able to accurately and efficiently copy and/or reproduce visual-spatial information onto paper."
+
+# filename for plot
+filename <- "fig_spatial.svg"
+
+# x and y axis variables
+x <- data_spatial$z_mean_subdomain
+y <- data_spatial$subdomain
+
+# x <- data_spatial$z_mean_narrow
+# y <- data_spatial$narrow
+
+# plot args
+colors <- NULL
+return_plot <- TRUE
+
+# Make dotplot
+NeurotypR::dotplot2(
+  data = data_spatial,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename,
+  na.rm = TRUE
+)
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+    grid(
+      columns: (50%, 50%),
+      gutter: 8pt,
+        figure([#image(file_qtbl)],
+          caption: figure.caption(position: top, [#title]),
+          kind: "qtbl",
+          supplement: [*Table*],
+          ),
+        figure([#image(file_fig)],
+          caption: figure.caption(position: bottom, [
+            Perception, construction, and visuospatial processing refer to abilities such as mentally visualizing how objects should look from different angles, visualizing how to put objects together so that they fit correctly, and being able to accurately and efficiently copy and/or reproduce visual-spatial information onto paper.
+            ]),
+          placement: none,
+          kind: "image",
+          supplement: [*Figure*],
+          gap: 0.5em,
+          ),
+        )
+    }
+```
+
+```{=typst}
+#let title = "Visual Perception/Construction"
+#let file_qtbl = "table_spatial.png"
+#let file_fig = "fig_spatial.svg"
+#domain(
+  title: [#title Scores],
+  file_qtbl,
+  file_fig
+)
+```

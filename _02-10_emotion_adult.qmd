@@ -186,7 +186,7 @@ multiline <- TRUE
 
 # Source/footnote
 source_note <- gt::md(
-  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+  "PAI _T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 Higher scores reflect reduced functioning."
 )
@@ -241,7 +241,7 @@ data_emotion <- data_emotion |>
 
 # Source/footnote
 source_note <- gt::md(
-  "PAI _T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰].
+  "PAI _T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
 
 Higher scores reflect reduced functioning."
 )

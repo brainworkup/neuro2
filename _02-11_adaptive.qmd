@@ -117,8 +117,8 @@ vertical_padding <- 0
 multiline <- TRUE
 
 # Define the source note
-fn_scaled_score <- gt::md("Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]")
-fn_standard_score <- gt::md("Index score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]")
+fn_scaled_score <- gt::md("Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]")
+fn_standard_score <- gt::md("Index score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]")
 
 # Define the groups for the table
 grp_adaptive <- list(

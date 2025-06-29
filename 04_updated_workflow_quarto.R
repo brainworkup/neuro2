@@ -170,7 +170,7 @@ create_domain_qmd_file <- function(data, domain_name, file_base) {
     "  data = data_scales,\n",
     "  pheno = pheno,\n",
     '  table_name = paste0("table_", pheno),\n',
-    '  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15",\n',
+    '  source_note = "Standard score: Mean = 100 [50th\u2030], SD ± 15",\n',
     "  dynamic_grp = pheno\n",
     ")\n",
     "```\n\n",

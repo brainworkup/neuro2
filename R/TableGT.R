@@ -129,7 +129,7 @@ TableGT <- R6::R6Class(
           test_name = gt::md("**Test**"),
           scale = gt::md("**Scale**"),
           score = gt::md("**Score**"),
-          percentile = gt::md("**\u2030 Rank**"),
+          percentile = gt::md("**\\u2030 Rank**"),
           range = gt::md("**Range**")
         ) |>
         gt::tab_header(title = self$title) |>
@@ -254,8 +254,8 @@ TableGT2 <- R6::R6Class(
 
     build_table = function() {
       # Prepare data
-      data_counts <- self$data %>%
-        dplyr::select(test_name, scale, score, percentile, range) %>%
+      data_counts <- self$data |>
+        dplyr::select(test_name, scale, score, percentile, range) |>
         dplyr::mutate(
           score = ifelse(is.na(score) | score == 0, NA_integer_, score),
           percentile = ifelse(
@@ -271,27 +271,27 @@ TableGT2 <- R6::R6Class(
       footnote_mapping <- self$create_footnote_mapping(data_counts)
 
       # Create base table
-      table <- data_counts %>%
+      table <- data_counts |>
         gt::gt(
           rowname_col = "scale",
           groupname_col = "test_name",
           process_md = FALSE,
           rownames_to_stub = TRUE,
           id = paste0("table_", self$pheno)
-        ) %>%
+        ) |>
         gt::cols_label(
           score = gt::md("**SCORE**"),
-          percentile = gt::md("**% RANK**"),
+          percentile = gt::md("**\\u2030 RANK**"),
           range = gt::md("**RANGE**")
-        ) %>%
-        gt::sub_missing(missing_text = "--") %>%
-        gt::tab_stub_indent(rows = everything(), indent = 2) %>%
-        gt::cols_align(align = "center", columns = c(score, percentile)) %>%
+        ) |>
+        gt::sub_missing(missing_text = "--") |>
+        gt::tab_stub_indent(rows = everything(), indent = 2) |>
+        gt::cols_align(align = "center", columns = c(score, percentile)) |>
         gt::cols_align(align = "left", columns = range)
 
       # Add title if provided
       if (!is.null(self$title)) {
-        table <- table %>% gt::tab_header(title = self$title)
+        table <- table |> gt::tab_header(title = self$title)
       }
 
       # Add footnotes with superscript numbers
@@ -301,17 +301,17 @@ TableGT2 <- R6::R6Class(
         footnote_text <- footnote_mapping[[test_name]]
 
         # Add superscript number to group name and footnote
-        table <- table %>%
+        table <- table |>
           gt::tab_style(
             style = gt::cell_text(transform = "uppercase", weight = "bold"),
             locations = gt::cells_row_groups(groups = test_name)
-          ) %>%
+          ) |>
           gt::text_transform(
             locations = gt::cells_row_groups(groups = test_name),
             fn = function(x) {
               paste0(x, gt::html(paste0("<sup>", footnote_counter, "</sup>")))
             }
-          ) %>%
+          ) |>
           gt::tab_footnote(
             footnote = gt::html(paste0(
               "<sup>",
@@ -326,15 +326,15 @@ TableGT2 <- R6::R6Class(
       }
 
       # Apply styling to match original NeurotypR format
-      table <- table %>%
+      table <- table |>
         gt::tab_style(
           style = gt::cell_text(size = "small"),
           locations = gt::cells_source_notes()
-        ) %>%
+        ) |>
         gt::tab_style(
           style = gt::cell_text(weight = "bold", transform = "uppercase"),
           locations = gt::cells_row_groups()
-        ) %>%
+        ) |>
         gt::tab_style(
           style = gt::cell_borders(
             sides = "bottom",
@@ -342,8 +342,8 @@ TableGT2 <- R6::R6Class(
             weight = gt::px(1)
           ),
           locations = gt::cells_row_groups()
-        ) %>%
-        gtExtras::gt_theme_538() %>%
+        ) |>
+        gtExtras::gt_theme_538() |>
         gt::tab_options(
           row_group.font.weight = "bold",
           footnotes.multiline = self$multiline,
@@ -355,7 +355,7 @@ TableGT2 <- R6::R6Class(
           row_group.border.bottom.style = "solid",
           row_group.border.bottom.width = gt::px(1),
           row_group.border.bottom.color = "gray"
-        ) %>%
+        ) |>
         gt::opt_vertical_padding(scale = self$vertical_padding)
 
       # Save table files
@@ -381,11 +381,11 @@ TableGT2 <- R6::R6Class(
         ) {
           footnote_mapping[[
             test_name
-          ]] <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+          ]] <- "Scaled score: Mean = 10 [50th\\u2030], SD \\u00B1 3 [16th\\u2030, 84th\\u2030]"
         } else if (grepl("NAB|CELF|ABAS", test_name, ignore.case = TRUE)) {
           footnote_mapping[[
             test_name
-          ]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          ]] <- "Standard score: Mean = 100 [50th\\u2030], SD \\u00B1 15 [16th\\u2030, 84th\\u2030]"
         } else if (
           grepl(
             "NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT",
@@ -395,12 +395,12 @@ TableGT2 <- R6::R6Class(
         ) {
           footnote_mapping[[
             test_name
-          ]] <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+          ]] <- "T-score: Mean = 50 [50th\\u2030], SD \\u00B1 10 [16th\\u2030, 84th\\u2030]"
         } else {
           # Default to standard score for unknown tests
           footnote_mapping[[
             test_name
-          ]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          ]] <- "Standard score: Mean = 100 [50th\\u2030], SD \\u00B1 15 [16th\\u2030, 84th\\u2030]"
         }
       }
 
@@ -444,4 +444,44 @@ create_neurotyp_table <- function(
   )
 
   return(table_obj$build_table())
+}
+
+#' tbl_gt2 - Alias for NeurotypR compatibility
+#'
+#' This function provides compatibility with NeurotypR::tbl_gt2 calls
+#'
+#' @param data A data frame with columns test_name, scale, score, percentile, range
+#' @param pheno Phenotype identifier string for file naming (default "table")
+#' @param table_name Name for saved table files (optional, defaults to pheno)
+#' @param title Optional table title
+#' @param source_note Optional source note
+#' @param vertical_padding Numeric scale for vertical padding (default 0)
+#' @param multiline Logical for multiline footnotes (default TRUE)
+#'
+#' @return A formatted gt table object
+#' @export
+tbl_gt2 <- function(
+  data,
+  pheno = "table",
+  table_name = NULL,
+  title = NULL,
+  source_note = NULL,
+  vertical_padding = 0,
+  multiline = TRUE
+) {
+  # Use pheno as table_name if not specified
+  if (is.null(table_name)) {
+    table_name <- pheno
+  }
+
+  # Call the create_neurotyp_table function
+  return(create_neurotyp_table(
+    data = data,
+    pheno = pheno,
+    table_name = table_name,
+    title = title,
+    source_note = source_note,
+    vertical_padding = vertical_padding,
+    multiline = multiline
+  ))
 }

@@ -257,7 +257,7 @@ IQReportGeneratorR6 <- R6::R6Class(
 
       # Define footnotes
       source_note <- gt::md(
-        "Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]"
+        "Standard score: Mean = 100 [50th\\u2030], SD \\u00B1 15 [16th\\u2030, 84th\\u2030]"
       )
 
       # Define the groups for the table
@@ -433,7 +433,7 @@ IQReportGeneratorR6 <- R6::R6Class(
           na.rm = TRUE
         )
       } else {
-        message("⚠️ Skipping subdomain figure - required columns not found")
+        message("Warning: Skipping subdomain figure - required columns not found")
         # Create a simple placeholder figure
         if (requireNamespace("ggplot2", quietly = TRUE)) {
           plot_data <- data.frame(
@@ -456,7 +456,7 @@ IQReportGeneratorR6 <- R6::R6Class(
             width = 6,
             height = 4
           )
-          message("✓ Created placeholder subdomain figure")
+          message("* Created placeholder subdomain figure")
         }
       }
 
@@ -478,7 +478,7 @@ IQReportGeneratorR6 <- R6::R6Class(
           na.rm = TRUE
         )
       } else {
-        message("⚠️ Skipping narrow figure - required columns not found")
+        message("Warning: Skipping narrow figure - required columns not found")
         # Create a simple placeholder figure
         if (requireNamespace("ggplot2", quietly = TRUE)) {
           plot_data <- data.frame(
@@ -501,7 +501,7 @@ IQReportGeneratorR6 <- R6::R6Class(
             width = 6,
             height = 4
           )
-          message("✓ Created placeholder narrow figure")
+          message("* Created placeholder narrow figure")
         }
       }
 

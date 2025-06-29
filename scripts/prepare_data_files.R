@@ -64,7 +64,7 @@ if (length(csv_data) == 0) {
 all_data <- dplyr::bind_rows(csv_data)
 
 # Create neuropsych.csv - all test data
-neuropsych <- all_data %>%
+neuropsych <- all_data |>
   dplyr::mutate(
     # Ensure all required columns exist
     test = if ("test" %in% names(.)) test else NA_character_,
@@ -83,7 +83,7 @@ neuropsych <- all_data %>%
   )
 
 # Create neurocog.csv - cognitive tests
-neurocog <- neuropsych %>%
+neurocog <- neuropsych |>
   dplyr::filter(
     !is.na(test_type) &
       (test_type == "npsych_test" |
@@ -92,7 +92,7 @@ neurocog <- neuropsych %>%
           tolower(domain),
           ignore.case = TRUE
         ))
-  ) %>%
+  ) |>
   # Calculate z-scores if percentile is available but z is not
   dplyr::mutate(
     z = ifelse(
@@ -100,7 +100,7 @@ neurocog <- neuropsych %>%
       qnorm(percentile / 100),
       z
     )
-  ) %>%
+  ) |>
   # Force character columns to be character
   dplyr::mutate(
     domain = as.character(domain),
@@ -112,52 +112,52 @@ neurocog <- neuropsych %>%
   )
 
 # Calculate domain, subdomain, and narrow means and SDs
-neurocog <- neurocog %>%
+neurocog <- neurocog |>
   # domain
-  dplyr::group_by(domain) %>%
+  dplyr::group_by(domain) |>
   dplyr::mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
     z_sd_domain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # subdomain
-  dplyr::group_by(subdomain) %>%
+  dplyr::group_by(subdomain) |>
   dplyr::mutate(
     z_mean_subdomain = mean(z, na.rm = TRUE),
     z_sd_subdomain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # narrow
-  dplyr::group_by(narrow) %>%
+  dplyr::group_by(narrow) |>
   dplyr::mutate(
     z_mean_narrow = mean(z, na.rm = TRUE),
     z_sd_narrow = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # pass
-  dplyr::group_by(pass) %>%
+  dplyr::group_by(pass) |>
   dplyr::mutate(
     z_mean_pass = mean(z, na.rm = TRUE),
     z_sd_pass = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # verbal
-  dplyr::group_by(verbal) %>%
+  dplyr::group_by(verbal) |>
   dplyr::mutate(
     z_mean_verbal = mean(z, na.rm = TRUE),
     z_sd_verbal = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # timed
-  dplyr::group_by(timed) %>%
+  dplyr::group_by(timed) |>
   dplyr::mutate(
     z_mean_timed = mean(z, na.rm = TRUE),
     z_sd_timed = sd(z, na.rm = TRUE)
-  ) %>%
+  ) |>
   dplyr::ungroup()
 
 # Create neurobehav.csv - behavioral/rating scales
-neurobehav <- neuropsych %>%
+neurobehav <- neuropsych |>
   dplyr::filter(
     !is.na(test_type) &
       (test_type == "rating_scale" |
@@ -166,7 +166,7 @@ neurobehav <- neuropsych %>%
           tolower(domain),
           ignore.case = TRUE
         ))
-  ) %>%
+  ) |>
   # Calculate z-scores if percentile is available but z is not
   dplyr::mutate(
     z = ifelse(
@@ -174,7 +174,7 @@ neurobehav <- neuropsych %>%
       qnorm(percentile / 100),
       z
     )
-  ) %>%
+  ) |>
   # Force character columns to be character
   dplyr::mutate(
     domain = as.character(domain),
@@ -186,31 +186,31 @@ neurobehav <- neuropsych %>%
   )
 
 # Calculate domain, subdomain, and narrow means and SDs for neurobehav
-neurobehav <- neurobehav %>%
+neurobehav <- neurobehav |>
   # domain
-  dplyr::group_by(domain) %>%
+  dplyr::group_by(domain) |>
   dplyr::mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
     z_sd_domain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # subdomain
-  dplyr::group_by(subdomain) %>%
+  dplyr::group_by(subdomain) |>
   dplyr::mutate(
     z_mean_subdomain = mean(z, na.rm = TRUE),
     z_sd_subdomain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # narrow
-  dplyr::group_by(narrow) %>%
+  dplyr::group_by(narrow) |>
   dplyr::mutate(
     z_mean_narrow = mean(z, na.rm = TRUE),
     z_sd_narrow = sd(z, na.rm = TRUE)
-  ) %>%
+  ) |>
   dplyr::ungroup()
 
 # Create validity.csv - validity measures
-validity <- neuropsych %>%
+validity <- neuropsych |>
   dplyr::filter(
     !is.na(test_type) &
       (test_type %in%
@@ -225,7 +225,7 @@ validity <- neuropsych %>%
           tolower(scale),
           ignore.case = TRUE
         ))
-  ) %>%
+  ) |>
   # Calculate z-scores if percentile is available but z is not
   dplyr::mutate(
     z = ifelse(
@@ -233,7 +233,7 @@ validity <- neuropsych %>%
       qnorm(percentile / 100),
       z
     )
-  ) %>%
+  ) |>
   # Force character columns to be character
   dplyr::mutate(
     domain = as.character(domain),
@@ -242,27 +242,27 @@ validity <- neuropsych %>%
     pass = as.character(pass),
     verbal = as.character(verbal),
     timed = as.character(timed)
-  ) %>%
+  ) |>
   # domain
-  dplyr::group_by(domain) %>%
+  dplyr::group_by(domain) |>
   dplyr::mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
     z_sd_domain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # subdomain
-  dplyr::group_by(subdomain) %>%
+  dplyr::group_by(subdomain) |>
   dplyr::mutate(
     z_mean_subdomain = mean(z, na.rm = TRUE),
     z_sd_subdomain = sd(z, na.rm = TRUE)
-  ) %>%
-  dplyr::ungroup() %>%
+  ) |>
+  dplyr::ungroup() |>
   # narrow
-  dplyr::group_by(narrow) %>%
+  dplyr::group_by(narrow) |>
   dplyr::mutate(
     z_mean_narrow = mean(z, na.rm = TRUE),
     z_sd_narrow = sd(z, na.rm = TRUE)
-  ) %>%
+  ) |>
   dplyr::ungroup()
 
 # Write the files to the execute directory

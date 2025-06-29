@@ -1,0 +1,551 @@
+## Attention/Executive {#sec-executive}
+
+{{< include _02-06_executive_text.qmd >}}
+
+```{r}
+#| label: setup-executive
+#| include: false
+
+# domain
+domains <- c("Attention/Executive")
+
+# Target phenotype
+pheno <- "executive"
+```
+
+```{r}
+#| label: export-executive
+#| include: false
+
+# Read the CSV file into a data frame
+executive <- readr::read_csv("neurocog.csv")
+
+# Filter the data frame based on certain conditions
+# Keep only the rows where 'domain' equals 'domains' and 'z_mean_domain' is not NA
+executive <- executive |>
+  dplyr::filter(domain %in% domains)
+
+# Select specific columns from the data frame
+executive <- executive |>
+  dplyr::select(
+    scale,
+    test,
+    test_name,
+    raw_score,
+    score,
+    ci_95,
+    percentile,
+    range,
+    domain,
+    subdomain,
+    narrow,
+    pass,
+    verbal,
+    timed,
+    result,
+    z,
+    z_mean_domain,
+    z_sd_domain,
+    z_mean_subdomain,
+    z_sd_subdomain,
+    z_mean_narrow,
+    z_sd_narrow,
+    z_mean_pass,
+    z_sd_pass,
+    z_mean_verbal,
+    z_sd_verbal,
+    z_mean_timed,
+    z_sd_timed
+  )
+
+# Write the 'executive' data frame to a CSV file
+readr::write_excel_csv(
+  executive,
+  here::here("data", paste0(pheno, ".csv")),
+  na = "",
+  col_names = TRUE,
+  append = FALSE
+)
+```
+
+```{r}
+#| label: data-executive
+#| include: false
+
+scales <- c(
+  "Animal Coding",
+  "Arithmetic",
+  "Attention Domain",
+  "Attention Index (ATT)",
+  "Attention Index",
+  "Auditory Working Memory (AWMI)",
+  "Bug Search",
+  "Cancellation Random",
+  "Cancellation Structured",
+  "Cancellation",
+  "Categories",
+  "Category Fluency",
+  "Clock Drawing",
+  "Coding",
+  "Cognitive Proficiency (CPI)",
+  "Comprehension",
+  "CVLT-3 Total Intrusions",
+  "CVLT-3 Total Repetitions",
+  "D-KEFS Color Naming",
+  "D-KEFS Inhibition Total Errors",
+  "D-KEFS Inhibition",
+  "D-KEFS Switching Total Errors",
+  "D-KEFS Switching",
+  "D-KEFS Word Reading",
+  "Color Naming",
+  "Inhibition Total Errors",
+  "Inhibition",
+  "Switching Total Errors",
+  "Switching",
+  "Word Reading",
+  "Digit Span Backward",
+  "Digit Span Forward",
+  "Digit Span Sequencing",
+  "Digit Span",
+  "Digits Backward Longest Span",
+  "Digits Backward",
+  "Digits Forward Longest Span",
+  "Digits Forward",
+  "Dots",
+  "Driving Scenes",
+  "Executive Functions Domain",
+  "Executive Index",
+  "Executive Functions Index (EXE)",
+  "Judgment",
+  "Letter Fluency",
+  "Letter-Number Sequencing",
+  "List Memory Intrusions",
+  "List Memory Repetitions",
+  "Longest Digit Span Backward",
+  "Longest Digit Span Forward",
+  "Longest Digit Span Sequence",
+  "Longest Letter-Number Sequence",
+  "Mazes",
+  "NAB Attention Index",
+  "NAB Executive Functions Index",
+  "Executive Functions Index (EXE)",
+  "Numbers & Letters Part A Efficiency",
+  "Numbers & Letters Part A Errors",
+  "Numbers & Letters Part A Speed",
+  "Numbers & Letters Part B Efficiency",
+  "Numbers & Letters Part C Efficiency",
+  "Numbers & Letters Part D Disruption",
+  "Numbers & Letters Part D Efficiency",
+  "Orientation to Place",
+  "Orientation to Self",
+  "Orientation to Situation",
+  "Orientation to Time",
+  "Orientation",
+  "Picture Memory",
+  "Picture Span",
+  "Processing Speed (PSI)",
+  "Processing Speed",
+  "Psychomotor Speed",
+  "RBANS Coding",
+  "RBANS Digit Span",
+  "ROCFT Copy",
+  "Sentence Repetition",
+  "Similarities",
+  "Spatial Addition",
+  "Spatial Span",
+  "Statue-Body Movement",
+  "Statue-Eye Opening",
+  "Statue-Vocalization",
+  "Statue",
+  "Symbol Search",
+  "Symbol Span",
+  "TMT, Part A",
+  "TMT, Part B",
+  "Total Deviation Score",
+  "Unstructured Task",
+  "Word Generation Perseverations",
+  "Word Generation",
+  "Working Memory (WMI)",
+  "Working Memory",
+  "Zoo Locations",
+  "Writing Legibility",
+  "Writing Spelling",
+  "Writing Syntax",
+  "Writing Conveyance",
+  "List Learning Semantic Clusters",
+  "List Learning Perseverations",
+  "List Learning Intrusions",
+  "Figure Drawing Copy Organization",
+  "Figure Drawing Copy Fragmentation",
+  "Figure Drawing Copy Planning",
+  "Figure Drawing Immediate Recall Organization",
+  "Figure Drawing Immediate Recall Fragmentation",
+  "Figure Drawing Immediate Recall Planning"
+)
+
+# Filter the data using the filter_data function from the `NeurotypR` library
+data_executive <- NeurotypR::filter_data(
+  data = executive,
+  domain = domains,
+  scale = scales
+)
+```
+
+```{r}
+#| label: text-executive
+#| cache: true
+#| include: false
+
+# Generate the text for the executive domain
+NeurotypR::cat_neuropsych_results(
+  data = data_executive,
+  file = "_02-06_executive_text.qmd"
+)
+```
+
+```{r}
+#| label: qtbl-executive
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+
+# Set the default engine for tikz to "xetex"
+options(tikzDefaultEngine = "xetex")
+
+# more filtering for tables
+data_executive_tbl <-
+  data_executive |>
+  dplyr::filter(
+    scale %in%
+      c(
+        "Animal Coding",
+        "Arithmetic",
+        "Attention Domain",
+        "Attention Index (ATT)",
+        "Attention Index",
+        "Auditory Working Memory (AWMI)",
+        "Bug Search",
+        "Cancellation Random",
+        "Cancellation Structured",
+        "Cancellation",
+        "Categories",
+        "Category Fluency",
+        "Clock Drawing",
+        "Coding",
+        "Cognitive Proficiency (CPI)",
+        "Comprehension",
+        # "CVLT-3 Total Intrusions",
+        # "CVLT-3 Total Repetitions",
+        "D-KEFS Color Naming",
+        "D-KEFS Inhibition Total Errors",
+        "D-KEFS Inhibition",
+        "D-KEFS Switching Total Errors",
+        "D-KEFS Switching",
+        "D-KEFS Word Reading",
+        "Color Naming",
+        "Inhibition Total Errors",
+        "Inhibition",
+        "Switching Total Errors",
+        "Switching",
+        "Word Reading",
+        "Digit Span Backward",
+        "Digit Span Forward",
+        "Digit Span Sequencing",
+        "Digit Span",
+        "Digits Backward Longest Span",
+        "Digits Backward",
+        "Digits Forward Longest Span",
+        "Digits Forward",
+        "Dots",
+        "Driving Scenes",
+        "Executive Functions Domain",
+        "Executive Index",
+        "Executive Functions Index (EXE)",
+        "Judgment",
+        "Letter Fluency",
+        "Letter-Number Sequencing",
+        "List Memory Intrusions",
+        "List Memory Repetitions",
+        "Longest Digit Span Backward",
+        "Longest Digit Span Forward",
+        "Longest Digit Span Sequence",
+        "Longest Letter-Number Sequence",
+        "Mazes",
+        "NAB Attention Index",
+        "NAB Executive Functions Index",
+        "Executive Functions Index (EXE)",
+        "Numbers & Letters Part A Efficiency",
+        # "Numbers & Letters Part A Errors",
+        # "Numbers & Letters Part A Speed",
+        "Numbers & Letters Part B Efficiency",
+        "Numbers & Letters Part C Efficiency",
+        "Numbers & Letters Part D Disruption",
+        "Numbers & Letters Part D Efficiency",
+        "Orientation to Place",
+        "Orientation to Self",
+        "Orientation to Situation",
+        "Orientation to Time",
+        "Orientation",
+        "Picture Memory",
+        "Picture Span",
+        "Processing Speed (PSI)",
+        "Processing Speed",
+        "Psychomotor Speed",
+        "RBANS Coding",
+        "RBANS Digit Span",
+        "ROCFT Copy",
+        "Sentence Repetition",
+        "Similarities",
+        "Spatial Addition",
+        "Spatial Span",
+        "Statue-Body Movement",
+        "Statue-Eye Opening",
+        "Statue-Vocalization",
+        "Statue",
+        "Symbol Search",
+        "Symbol Span",
+        "TMT, Part A",
+        "TMT, Part B",
+        "Total Deviation Score",
+        "Unstructured Task",
+        # "Word Generation Perseverations",
+        "Word Generation",
+        "Working Memory (WMI)",
+        "Working Memory",
+        "Zoo Locations",
+        "Writing Legibility",
+        "Writing Spelling",
+        "Writing Syntax",
+        "Writing Conveyance",
+        "List Learning Semantic Clusters",
+        "List Learning Perseverations",
+        "List Learning Intrusions",
+        "Figure Drawing Copy Organization",
+        "Figure Drawing Copy Fragmentation",
+        "Figure Drawing Copy Planning",
+        "Figure Drawing Immediate Recall Organization",
+        "Figure Drawing Immediate Recall Fragmentation",
+        "Figure Drawing Immediate Recall Planning"
+      )
+  )
+
+# table arguments
+table_name <- "table_executive"
+vertical_padding <- 0
+multiline <- TRUE
+
+# footnotes
+fn_scaled_score <- gt::md(
+  "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+)
+
+fn_standard_score <- gt::md(
+  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+)
+
+fn_t_score <- gt::md("T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
+
+fn_z_score <- gt::md("z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]")
+
+source_note <- gt::md("_T_ score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]")
+
+# groupings - get unique test names that actually exist in the data
+existing_test_names <- unique(data_executive_tbl$test_name)
+existing_test_names <- existing_test_names[!is.na(existing_test_names)]
+
+# Define all possible groupings
+all_grp_executive <- list(
+  scaled_score = c(
+    "D-KEFS Color-Word Interference",
+    "NEPSY-2",
+    "RBANS",
+    "WAIS-5",
+    "WAIS-IV",
+    "WISC-V",
+    "WPPSI-IV"
+  ),
+  standard_score = c(
+    "NAB-S",
+    "NAB",
+    "RBANS",
+    "WAIS-5",
+    "WAIS-IV",
+    "WISC-V",
+    "WPPSI-IV"
+  ),
+  t_score = c(
+    "NAB-S",
+    "NAB",
+    "NIH EXAMINER",
+    "Trail Making Test"
+  )
+)
+
+# Filter groupings to only include test names that exist in the data
+grp_executive <- list(
+  scaled_score = intersect(
+    all_grp_executive[["scaled_score"]],
+    existing_test_names
+  ),
+  standard_score = intersect(
+    all_grp_executive[["standard_score"]],
+    existing_test_names
+  ),
+  t_score = intersect(all_grp_executive[["t_score"]], existing_test_names)
+)
+
+# Only create table if we have data
+if (nrow(data_executive_tbl) > 0) {
+  # make `gt` table
+  NeurotypR::tbl_gt2(
+    data = data_executive_tbl,
+    pheno = pheno,
+    table_name = table_name,
+    # source_note = source_note,
+    fn_scaled_score = if (length(grp_executive[["scaled_score"]]) > 0) {
+      fn_scaled_score
+    } else {
+      NULL
+    },
+    fn_standard_score = if (length(grp_executive[["standard_score"]]) > 0) {
+      fn_standard_score
+    } else {
+      NULL
+    },
+    fn_t_score = if (length(grp_executive[["t_score"]]) > 0) {
+      fn_t_score
+    } else {
+      NULL
+    },
+    grp_scaled_score = if (length(grp_executive[["scaled_score"]]) > 0) {
+      grp_executive[["scaled_score"]]
+    } else {
+      NULL
+    },
+    grp_standard_score = if (length(grp_executive[["standard_score"]]) > 0) {
+      grp_executive[["standard_score"]]
+    } else {
+      NULL
+    },
+    grp_t_score = if (length(grp_executive[["t_score"]]) > 0) {
+      grp_executive[["t_score"]]
+    } else {
+      NULL
+    },
+    dynamic_grp = grp_executive,
+    vertical_padding = vertical_padding,
+    multiline = multiline
+  )
+} else {
+  # Create empty placeholder if no data
+  message("No executive function data available for table creation")
+}
+```
+
+```{r}
+#| label: fig-executive-subdomain
+#| include: false
+#| fig-cap: "Attention and executive functions are essential for successful cognitive functioning, enabling us to perform everyday tasks, handle academic challenges, solve problems, manage our emotions, and interact effectively with others and our environment."
+
+exclude_scales <- c(
+  "Attention Index (ATT)",
+  "Executive Functions Index (EXE)",
+  "Attention Index",
+  "Executive Index"
+)
+
+data_executive <- data_executive |>
+  dplyr::filter(!scale %in% exclude_scales)
+
+# dotplot arguments
+filename <- "fig_executive_subdomain.svg"
+colors <- NULL
+return_plot <- TRUE
+
+# dotplot variables to plot (x, y)
+x <- data_executive$z_mean_subdomain
+y <- data_executive$subdomain
+
+NeurotypR::dotplot2(
+  data = data_executive,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename,
+  na.rm = TRUE
+)
+```
+
+```{r}
+#| label: fig-executive-narrow
+#| include: false
+#| fig-cap: ""
+
+# dotplot arguments
+filename <- "fig_executive_narrow.svg"
+colors <- NULL
+return_plot <- TRUE
+
+# dotplot variables to plot (x, y)
+x <- data_executive$z_mean_narrow
+y <- data_executive$narrow
+
+NeurotypR::dotplot2(
+  data = data_executive,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename,
+  na.rm = TRUE
+)
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+    grid(
+      columns: (50%, 50%),
+      gutter: 8pt,
+        figure([#image(file_qtbl)],
+          caption: figure.caption(position: top, [#title]),
+          kind: "qtbl",
+          supplement: [Table],
+          ),
+        figure([#image(file_fig, width: auto)],
+          caption: figure.caption(position: bottom, [
+            Attentional and executive functions underlie most, if not all, domains of cognitive performance. These are behaviors and skills that allow individuals to successfully carry-out instrumental and social activities, academic work, engage with others effectively, problem solve, and successfully interact with the environment to get needs met.
+            ]),
+          placement: none,
+          kind: "image",
+          supplement: [Figure],
+          gap: 0.5em,
+        ),
+      )
+  }
+```
+
+<!-- ```{=typst}
+#let title = "Attention/Executive"
+#let file_qtbl = "table_executive.png"
+#let file_fig = "fig_executive_subdomain.svg"
+#domain(
+  title: [#title Scores],
+  file_qtbl,
+  file_fig
+  )
+``` -->
+
+```{=typst}
+#let title = "Attention/Executive"
+#let file_qtbl = "table_executive.png"
+#let file_fig = "fig_executive_narrow.svg"
+#domain(
+  title: [#title Scores],
+  file_qtbl,
+  file_fig
+  )
+```

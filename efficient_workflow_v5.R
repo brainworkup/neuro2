@@ -29,28 +29,37 @@ if (file.exists("01_import_process_data.R")) {
 
   for (csv_file in csv_files) {
     if (file.exists(csv_file)) {
-      tryCatch({
-        # Read the CSV file
-        temp_data <- readr::read_csv(csv_file, show_col_types = FALSE)
+      tryCatch(
+        {
+          # Read the CSV file
+          temp_data <- readr::read_csv(csv_file, show_col_types = FALSE)
 
-        # Check if domain column exists and contains validity data
-        if ("domain" %in% colnames(temp_data)) {
-          validity_rows <- temp_data %>%
-            filter(
-              domain %in% c("Performance Validity", "Symptom Validity") |
-              grepl("validity", domain, ignore.case = TRUE)
-            )
+          # Check if domain column exists and contains validity data
+          if ("domain" %in% colnames(temp_data)) {
+            validity_rows <- temp_data |>
+              filter(
+                domain %in%
+                  c("Performance Validity", "Symptom Validity") |
+                  grepl("validity", domain, ignore.case = TRUE)
+              )
 
-          if (nrow(validity_rows) > 0) {
-            # Add source file info
-            validity_rows$source_file <- basename(csv_file)
-            validity_data[[basename(csv_file)]] <- validity_rows
-            message(paste("📋 Found", nrow(validity_rows), "validity measures in", basename(csv_file)))
+            if (nrow(validity_rows) > 0) {
+              # Add source file info
+              validity_rows$source_file <- basename(csv_file)
+              validity_data[[basename(csv_file)]] <- validity_rows
+              message(paste(
+                "📋 Found",
+                nrow(validity_rows),
+                "validity measures in",
+                basename(csv_file)
+              ))
+            }
           }
+        },
+        error = function(e) {
+          message(paste("⚠️ Could not read", basename(csv_file), ":", e$message))
         }
-      }, error = function(e) {
-        message(paste("⚠️ Could not read", basename(csv_file), ":", e$message))
-      })
+      )
     }
   }
 
@@ -59,11 +68,10 @@ if (file.exists("01_import_process_data.R")) {
     validity <- bind_rows(validity_data, .id = "source_test")
 
     # Standardize column names
-    validity <- validity %>%
-      janitor::clean_names()
+    validity <- validity |> janitor::clean_names()
 
     # Add patient information
-    validity <- validity %>%
+    validity <- validity |>
       mutate(
         patient_name = patient_name,
         patient_age = patient_age,
@@ -78,7 +86,11 @@ if (file.exists("01_import_process_data.R")) {
 
     # Save validity data
     readr::write_csv(validity, "data/validity.csv")
-    message(paste("✅ Created validity.csv with", nrow(validity), "validity measures"))
+    message(paste(
+      "✅ Created validity.csv with",
+      nrow(validity),
+      "validity measures"
+    ))
   } else {
     message("⚠️ No validity data found in CSV files")
     # Create empty validity file so template doesn't break
@@ -101,52 +113,43 @@ if (file.exists("01_import_process_data.R")) {
 
     # Add missing z_mean computations for pass, verbal, timed
     if ("pass" %in% colnames(neurocog)) {
-      neurocog <- neurocog %>%
-        group_by(pass) %>%
+      neurocog <- neurocog |>
+        group_by(pass) |>
         mutate(
           z_mean_pass = mean(z, na.rm = TRUE),
           z_sd_pass = sd(z, na.rm = TRUE)
-        ) %>%
+        ) |>
         ungroup()
     } else {
       # Add empty columns if pass doesn't exist
-      neurocog <- neurocog %>%
-        mutate(
-          z_mean_pass = NA_real_,
-          z_sd_pass = NA_real_
-        )
+      neurocog <- neurocog |>
+        mutate(z_mean_pass = NA_real_, z_sd_pass = NA_real_)
     }
 
     if ("verbal" %in% colnames(neurocog)) {
-      neurocog <- neurocog %>%
-        group_by(verbal) %>%
+      neurocog <- neurocog |>
+        group_by(verbal) |>
         mutate(
           z_mean_verbal = mean(z, na.rm = TRUE),
           z_sd_verbal = sd(z, na.rm = TRUE)
-        ) %>%
+        ) |>
         ungroup()
     } else {
-      neurocog <- neurocog %>%
-        mutate(
-          z_mean_verbal = NA_real_,
-          z_sd_verbal = NA_real_
-        )
+      neurocog <- neurocog |>
+        mutate(z_mean_verbal = NA_real_, z_sd_verbal = NA_real_)
     }
 
     if ("timed" %in% colnames(neurocog)) {
-      neurocog <- neurocog %>%
-        group_by(timed) %>%
+      neurocog <- neurocog |>
+        group_by(timed) |>
         mutate(
           z_mean_timed = mean(z, na.rm = TRUE),
           z_sd_timed = sd(z, na.rm = TRUE)
-        ) %>%
+        ) |>
         ungroup()
     } else {
-      neurocog <- neurocog %>%
-        mutate(
-          z_mean_timed = NA_real_,
-          z_sd_timed = NA_real_
-        )
+      neurocog <- neurocog |>
+        mutate(z_mean_timed = NA_real_, z_sd_timed = NA_real_)
     }
 
     # Save the fixed data
@@ -159,7 +162,14 @@ if (file.exists("01_import_process_data.R")) {
     neurobehav <- readr::read_csv("data/neurobehav.csv", show_col_types = FALSE)
 
     # Add missing columns if they don't exist
-    missing_cols <- c("z_mean_pass", "z_sd_pass", "z_mean_verbal", "z_sd_verbal", "z_mean_timed", "z_sd_timed")
+    missing_cols <- c(
+      "z_mean_pass",
+      "z_sd_pass",
+      "z_mean_verbal",
+      "z_sd_verbal",
+      "z_mean_timed",
+      "z_sd_timed"
+    )
     for (col in missing_cols) {
       if (!col %in% colnames(neurobehav)) {
         neurobehav[[col]] <- NA_real_
@@ -236,7 +246,9 @@ message("\n📑 Step 3: Generating domain text summaries...")
 
 generate_domain_texts <- function() {
   # Load processed data
-  if (!file.exists("data/neurocog.csv") || !file.exists("data/neurobehav.csv")) {
+  if (
+    !file.exists("data/neurocog.csv") || !file.exists("data/neurobehav.csv")
+  ) {
     stop("❌ Processed data files not found!")
   }
 
@@ -274,8 +286,8 @@ generate_domain_texts <- function() {
     }
 
     # Filter data for this domain
-    domain_data <- neurocog %>%
-      filter(domain == domain_name) %>%
+    domain_data <- neurocog |>
+      filter(domain == domain_name) |>
       filter(!is.na(percentile))
 
     # If no data, keep existing content
@@ -296,13 +308,15 @@ generate_domain_texts <- function() {
     )
 
     # Create summary text
-    summary_text <- glue("
+    summary_text <- glue(
+      "
 <summary>
 
 Testing of {tolower(domain_name)} revealed overall {overall_range} performance (mean percentile = {round(mean_percentile)}).
 
 </summary>
-")
+"
+    )
 
     # Write to existing text file
     writeLines(summary_text, text_file)
@@ -326,13 +340,16 @@ if (!file.exists("_quarto.yml")) {
 }
 
 # Render using Quarto
-tryCatch({
-  quarto::quarto_render("template.qmd")
-  message("✅ Report rendered successfully!")
-}, error = function(e) {
-  message("❌ Render failed:", e$message)
-  message("🔧 Try running: quarto render template.qmd")
-})
+tryCatch(
+  {
+    quarto::quarto_render("template.qmd")
+    message("✅ Report rendered successfully!")
+  },
+  error = function(e) {
+    message("❌ Render failed:", e$message)
+    message("🔧 Try running: quarto render template.qmd")
+  }
+)
 
 
 # Summary -----------------------------------------------------------------

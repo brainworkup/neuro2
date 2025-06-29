@@ -9,68 +9,98 @@ forensic_domains <- list(
   iq = list(
     name = "General Cognitive Ability",
     scales = c(
-      "Full Scale (FSIQ)", "General Ability (GAI)",
-      "Verbal Comprehension (VCI)", "Fluid Reasoning (FRI)",
-      "Processing Speed (PSI)", "Working Memory (WMI)",
-      "NAB Total Index", "Test of Premorbid Functioning"
+      "Full Scale (FSIQ)",
+      "General Ability (GAI)",
+      "Verbal Comprehension (VCI)",
+      "Fluid Reasoning (FRI)",
+      "Processing Speed (PSI)",
+      "Working Memory (WMI)",
+      "NAB Total Index",
+      "Test of Premorbid Functioning"
     )
   ),
   verbal = list(
     name = "Verbal/Language",
     scales = c(
-      "Language Index (LAN)", "NAB Language Index",
-      "Oral Production", "Auditory Comprehension",
-      "Naming", "Reading Comprehension", "Writing",
-      "Vocabulary", "Similarities"
+      "Language Index (LAN)",
+      "NAB Language Index",
+      "Oral Production",
+      "Auditory Comprehension",
+      "Naming",
+      "Reading Comprehension",
+      "Writing",
+      "Vocabulary",
+      "Similarities"
     )
   ),
   spatial = list(
     name = "Visual Perception/Construction",
     scales = c(
-      "Spatial Index (SPT)", "NAB Spatial Index",
-      "Visual Discrimination", "Design Construction",
-      "Figure Drawing Copy", "Block Design",
-      "Matrix Reasoning", "Figure Weights"
+      "Spatial Index (SPT)",
+      "NAB Spatial Index",
+      "Visual Discrimination",
+      "Design Construction",
+      "Figure Drawing Copy",
+      "Block Design",
+      "Matrix Reasoning",
+      "Figure Weights"
     )
   ),
   memory = list(
     name = "Memory",
     scales = c(
-      "Memory Index (MEM)", "NAB Memory Index",
-      "List Learning", "Story Learning", "Figure Learning",
-      "Immediate Recall", "Delayed Recall",
+      "Memory Index (MEM)",
+      "NAB Memory Index",
+      "List Learning",
+      "Story Learning",
+      "Figure Learning",
+      "Immediate Recall",
+      "Delayed Recall",
       "Recognition Memory"
     )
   ),
   executive = list(
     name = "Attention/Executive",
     scales = c(
-      "Attention Index (ATT)", "Executive Functions Index (EXE)",
-      "NAB Attention Index", "NAB Executive Functions Index",
-      "Digits Forward", "Digits Backward", "Coding",
-      "Symbol Search", "Mazes", "Categories", "Word Generation"
+      "Attention Index (ATT)",
+      "Executive Functions Index (EXE)",
+      "NAB Attention Index",
+      "NAB Executive Functions Index",
+      "Digits Forward",
+      "Digits Backward",
+      "Coding",
+      "Symbol Search",
+      "Mazes",
+      "Categories",
+      "Word Generation"
     )
   ),
   motor = list(
     name = "Motor",
     scales = c(
-      "Grooved Pegboard", "Dominant Hand Time",
+      "Grooved Pegboard",
+      "Dominant Hand Time",
       "Nondominant Hand Time"
     )
   ),
   daily_living = list(
     name = "Daily Living",
     scales = c(
-      "NAB Daily Living", "Driving Scenes", "Bill Payment",
-      "Daily Living Memory", "Medication Instructions",
-      "Map Reading", "Judgment"
+      "NAB Daily Living",
+      "Driving Scenes",
+      "Bill Payment",
+      "Daily Living Memory",
+      "Medication Instructions",
+      "Map Reading",
+      "Judgment"
     )
   )
 )
 
 # Template for domain QMD files
 create_domain_qmd <- function(domain_key, domain_info, domain_num) {
-  qmd_content <- glue('
+  qmd_content <- glue(
+    '
 ## {domain_info$name} {{#sec-{domain_key}}}
 
 {{{{< include _02-{sprintf("%02d", domain_num)}_{domain_key}_text.qmd >}}}}
@@ -96,7 +126,7 @@ domain_name <- "{domain_info$name}"
 pheno <- "{domain_key}"
 
 # Filter data for this domain
-domain_data <- neurocog %>%
+domain_data <- neurocog |>
   filter(domain == domain_name |
          scale %in% c({paste0(\'"\', domain_info$scales, \'"\', collapse = ", ")}))
 ```
@@ -112,7 +142,7 @@ if (nrow(domain_data) > 0) {{
     pheno = pheno,
     table_name = paste0("table_", pheno),
     title = paste0(domain_name, " Test Scores"),
-    source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+    source_note = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
   )
 
   table_obj$build_table()
@@ -126,9 +156,9 @@ if (nrow(domain_data) > 0) {{
 
 # Create dotplot figure
 if (nrow(domain_data) > 0 && "z_mean_subdomain" %in% colnames(domain_data)) {{
-  subdomain_data <- domain_data %>%
-    group_by(subdomain) %>%
-    summarise(z_mean = mean(z_mean_subdomain, na.rm = TRUE)) %>%
+  subdomain_data <- domain_data |>
+    group_by(subdomain) |>
+    summarise(z_mean = mean(z_mean_subdomain, na.rm = TRUE)) |>
     filter(!is.na(z_mean))
 
   if (nrow(subdomain_data) > 0) {{
@@ -143,14 +173,17 @@ if (nrow(domain_data) > 0 && "z_mean_subdomain" %in% colnames(domain_data)) {{
   }}
 }}
 ```
-')
+'
+  )
 
   # Write QMD file
   qmd_filename <- glue("_02-{sprintf('%02d', domain_num)}_{domain_key}.qmd")
   cat(qmd_content, file = qmd_filename)
 
   # Create empty text file for results
-  text_filename <- glue("_02-{sprintf('%02d', domain_num)}_{domain_key}_text.qmd")
+  text_filename <- glue(
+    "_02-{sprintf('%02d', domain_num)}_{domain_key}_text.qmd"
+  )
   cat("<summary>\n\nResults pending...\n\n</summary>", file = text_filename)
 
   message(glue("✓ Created {qmd_filename} and {text_filename}"))
@@ -166,7 +199,8 @@ for (domain_key in names(forensic_domains)) {
 # Create additional required files
 
 # 1. Tests Administered
-cat('
+cat(
+  '
 # TESTS ADMINISTERED
 
 ```{r}
@@ -185,10 +219,13 @@ tests <- unique(c(
 # Format as bullet list
 cat(paste("•", tests, collapse = "\n"))
 ```
-', file = "_00-00_tests.qmd")
+',
+  file = "_00-00_tests.qmd"
+)
 
 # 2. Neurobehavioral Status Exam
-cat('
+cat(
+  '
 # NEUROBEHAVIORAL STATUS EXAM
 
 ## Reason for Referral
@@ -215,10 +252,13 @@ Biggie, a 44-year-old right-handed male, was referred for neuropsychological ass
 • **Sensory/Motor**: [To be completed]
 • **Cognitive Process**: [To be completed]
 • **Effort/Validity**: [To be completed]
-', file = "_01-00_nse.qmd")
+',
+  file = "_01-00_nse.qmd"
+)
 
 # 3. Summary/Impression
-cat('
+cat(
+  '
 # SUMMARY/IMPRESSION
 
 ## Overall Evaluation Interpretation
@@ -228,10 +268,13 @@ cat('
 ## Diagnostic Impression
 
 [Diagnostic conclusions based on test results]
-', file = "_03-00_summary.qmd")
+',
+  file = "_03-00_summary.qmd"
+)
 
 # 4. Recommendations
-cat('
+cat(
+  '
 # RECOMMENDATIONS
 
 ## Clinical Recommendations
@@ -245,6 +288,8 @@ cat('
 ## Follow-up Recommendations
 
 [Timeline and nature of recommended follow-up]
-', file = "_03-01_recommendations.qmd")
+',
+  file = "_03-01_recommendations.qmd"
+)
 
 message("\n✅ All domain QMD files created successfully!")

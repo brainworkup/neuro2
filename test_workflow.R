@@ -76,7 +76,7 @@ neurobehav_tests <- c(
 
 # Create neurocog and neurobehav datasets with z-score calculations
 # First, convert percentiles to z-scores
-raw_data <- raw_data %>%
+raw_data <- raw_data |>
   mutate(
     z = ifelse(!is.na(percentile), qnorm(percentile / 100), NA_real_),
     domain = as.character(domain),
@@ -88,78 +88,78 @@ raw_data <- raw_data %>%
   )
 
 # Create neurocog dataset with aggregated z-scores
-neurocog_data <- raw_data %>%
-  filter(test %in% neurocog_tests) %>%
+neurocog_data <- raw_data |>
+  filter(test %in% neurocog_tests) |>
   # Add test_type for consistency with user's workflow
-  mutate(test_type = "npsych_test") %>%
+  mutate(test_type = "npsych_test") |>
   # domain
-  group_by(domain) %>%
+  group_by(domain) |>
   mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
     z_sd_domain = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # subdomain
-  group_by(subdomain) %>%
+  group_by(subdomain) |>
   mutate(
     z_mean_subdomain = mean(z, na.rm = TRUE),
     z_sd_subdomain = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # narrow
-  group_by(narrow) %>%
+  group_by(narrow) |>
   mutate(
     z_mean_narrow = mean(z, na.rm = TRUE),
     z_sd_narrow = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # pass
-  group_by(pass) %>%
+  group_by(pass) |>
   mutate(
     z_mean_pass = mean(z, na.rm = TRUE),
     z_sd_pass = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # verbal
-  group_by(verbal) %>%
+  group_by(verbal) |>
   mutate(
     z_mean_verbal = mean(z, na.rm = TRUE),
     z_sd_verbal = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # timed
-  group_by(timed) %>%
+  group_by(timed) |>
   mutate(
     z_mean_timed = mean(z, na.rm = TRUE),
     z_sd_timed = sd(z, na.rm = TRUE)
-  ) %>%
+  ) |>
   ungroup()
 
 # Create neurobehav dataset with aggregated z-scores
-neurobehav_data <- raw_data %>%
-  filter(test %in% neurobehav_tests) %>%
+neurobehav_data <- raw_data |>
+  filter(test %in% neurobehav_tests) |>
   # Add test_type for consistency with user's workflow
-  mutate(test_type = "rating_scale") %>%
+  mutate(test_type = "rating_scale") |>
   # domain
-  group_by(domain) %>%
+  group_by(domain) |>
   mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
     z_sd_domain = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # subdomain
-  group_by(subdomain) %>%
+  group_by(subdomain) |>
   mutate(
     z_mean_subdomain = mean(z, na.rm = TRUE),
     z_sd_subdomain = sd(z, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
+  ) |>
+  ungroup() |>
   # narrow
-  group_by(narrow) %>%
+  group_by(narrow) |>
   mutate(
     z_mean_narrow = mean(z, na.rm = TRUE),
     z_sd_narrow = sd(z, na.rm = TRUE)
-  ) %>%
+  ) |>
   ungroup()
 
 # Save the processed datasets
