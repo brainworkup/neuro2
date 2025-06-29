@@ -386,7 +386,7 @@ grp_memory <- list(
 # Only create table if we have data
 if (nrow(data_memory_tbl) > 0) {
   # make `gt` table
-  NeurotypR::tbl_gt2(
+  TableGT2.R(
     data = data_memory_tbl,
     pheno = pheno,
     table_name = table_name,

@@ -1,7 +1,5 @@
 #' @title TableGT R6 Class
 #' @description An R6 class to create and save formatted `gt` tables for neurocognitive domain data.
-#' @docType class
-#' @format An R6 class object.
 #'
 #' @field data A data frame with columns such as test_name, scale, score, percentile, and range.
 #' @field pheno Phenotype identifier string.
@@ -28,16 +26,6 @@
 #'   }
 #' }
 #'
-#' @importFrom R6 R6Class
-#' @importFrom dplyr select mutate across if_else
-#' @importFrom tidyr replace_na
-#' @importFrom gt gt cols_label tab_stub_indent tab_header sub_missing tab_options
-#'   cols_align tab_source_note gtsave tab_style tab_stubhead tab_caption
-#'   tab_spanner cell_text cells_source_notes md tab_footnote opt_vertical_padding
-#'   cells_row_groups
-#' @importFrom gtExtras gt_theme_538
-#' @importFrom glue glue glue_collapse
-#' @export
 #' @param data A data frame to use in table generation.
 #' @param pheno A string specifying the phenotype identifier.
 #' @param table_name File-safe name for saving the table.
@@ -52,6 +40,17 @@
 #' @param dynamic_grp Named list of valid score types per group.
 #' @param vertical_padding Numeric scale to control padding.
 #' @param multiline Logical; whether to use multiline footnotes.
+#'
+#' @importFrom R6 R6Class
+#' @importFrom dplyr select mutate across if_else
+#' @importFrom tidyr replace_na
+#' @importFrom gt gt cols_label tab_stub_indent tab_header sub_missing tab_options
+#'   cols_align tab_source_note gtsave tab_style tab_stubhead tab_caption
+#'   tab_spanner cell_text cells_source_notes md tab_footnote opt_vertical_padding
+#'   cells_row_groups
+#' @importFrom gtExtras gt_theme_538
+#' @importFrom glue glue glue_collapse
+#' @export
 TableGT <- R6::R6Class(
   classname = "TableGT",
   public = list(
@@ -184,8 +183,6 @@ TableGT <- R6::R6Class(
 #' @title TableGT2 R6 Class for NeurotypR-Style Tables
 #' @description An enhanced R6 class to create formatted `gt` tables that match the original NeurotypR::tbl_gt2 formatting exactly.
 #' This class automatically detects score types and applies appropriate footnotes with numbered references.
-#' @docType class
-#' @format An R6 class object.
 #'
 #' @field data A data frame with columns test_name, scale, score, percentile, and range.
 #' @field pheno Phenotype identifier string used for file naming.
@@ -208,6 +205,14 @@ TableGT <- R6::R6Class(
 #'   }
 #' }
 #'
+#' @param data A data frame to use in table generation.
+#' @param pheno A string specifying the phenotype identifier.
+#' @param table_name File-safe name for saving the table.
+#' @param title Table title.
+#' @param source_note Optional source note for the table.
+#' @param vertical_padding Numeric scale for vertical padding in the table.
+#' @param multiline Logical; whether footnotes should wrap onto multiple lines.
+#'
 #' @importFrom R6 R6Class
 #' @importFrom dplyr select mutate
 #' @importFrom gt gt cols_label tab_stub_indent tab_header sub_missing tab_options
@@ -216,13 +221,6 @@ TableGT <- R6::R6Class(
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue
 #' @export
-#' @param data A data frame to use in table generation.
-#' @param pheno A string specifying the phenotype identifier.
-#' @param table_name File-safe name for saving the table.
-#' @param title Table title.
-#' @param source_note Optional source note for the table.
-#' @param vertical_padding Numeric scale for vertical padding in the table.
-#' @param multiline Logical; whether footnotes should wrap onto multiple lines.
 TableGT2 <- R6::R6Class(
   classname = "TableGT2",
   public = list(

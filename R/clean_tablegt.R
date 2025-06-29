@@ -1,7 +1,6 @@
-#' @title TableGT R6 Class
-#' @description An R6 class to create and save formatted `gt` tables for neurocognitive domain data.
-#' @docType class
-#' @format An R6 class object.
+#' TableGT R6 Class
+#'
+#' An R6 class to create and save formatted `gt` tables for neurocognitive domain data.
 #'
 #' @field data A data frame with columns such as test_name, scale, score, percentile, and range.
 #' @field pheno Phenotype identifier string.
@@ -20,12 +19,8 @@
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{\code{initialize(data, pheno = NULL, table_name = NULL, source_note = NULL, names = NULL, title = NULL, tab_stubhead = NULL, caption = NULL, process_md = FALSE, fn_list = list(), grp_list = list(), dynamic_grp = NULL, vertical_padding = NULL, multiline = TRUE)}}{
-#'     Initialize a new TableGT object with configuration and data.
-#'   }
-#'   \item{\code{build_table()}}{
-#'     Construct and return the formatted gt table, with optional saving as PNG and PDF.
-#'   }
+#'   \item{initialize}{Initialize a new TableGT object with configuration and data.}
+#'   \item{build_table}{Construct and return the formatted `gt` table, with optional saving as PNG and PDF.}
 #' }
 #'
 #' @importFrom R6 R6Class
@@ -38,20 +33,6 @@
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue glue_collapse
 #' @export
-#' @param data A data frame to use in table generation.
-#' @param pheno A string specifying the phenotype identifier.
-#' @param table_name File-safe name for saving the table.
-#' @param source_note A footnote to be added as a source note.
-#' @param names Optional renamed column headers.
-#' @param title Table title.
-#' @param tab_stubhead Label for the stubhead.
-#' @param caption Optional caption text.
-#' @param process_md Logical. Whether to parse markdown syntax in labels or values.
-#' @param fn_list Named list of score type footnotes.
-#' @param grp_list Named list of score type row groups.
-#' @param dynamic_grp Named list of valid score types per group.
-#' @param vertical_padding Numeric scale to control padding.
-#' @param multiline Logical; whether to use multiline footnotes.
 TableGT <- R6::R6Class(
   classname = "TableGT",
   public = list(
@@ -70,22 +51,39 @@ TableGT <- R6::R6Class(
     vertical_padding = NULL,
     multiline = TRUE,
 
-    initialize = function(
-      data,
-      pheno = NULL,
-      table_name = NULL,
-      source_note = NULL,
-      names = NULL,
-      title = NULL,
-      tab_stubhead = NULL,
-      caption = NULL,
-      process_md = FALSE,
-      fn_list = list(),
-      grp_list = list(),
-      dynamic_grp = NULL,
-      vertical_padding = NULL,
-      multiline = TRUE
-    ) {
+    #' @description
+    #' Initialize a new TableGT object with configuration and data.
+    #'
+    #' @param data A data frame to use in table generation.
+    #' @param pheno A string specifying the phenotype identifier.
+    #' @param table_name File-safe name for saving the table.
+    #' @param source_note A footnote to be added as a source note.
+    #' @param names Optional renamed column headers.
+    #' @param title Table title.
+    #' @param tab_stubhead Label for the stubhead.
+    #' @param caption Optional caption text.
+    #' @param process_md Logical. Whether to parse markdown syntax in labels or values.
+    #' @param fn_list Named list of score type footnotes.
+    #' @param grp_list Named list of score type row groups.
+    #' @param dynamic_grp Named list of valid score types per group.
+    #' @param vertical_padding Numeric scale to control padding.
+    #' @param multiline Logical; whether to use multiline footnotes.
+    #'
+    #' @return A new TableGT object
+    initialize = function(data,
+                          pheno = NULL,
+                          table_name = NULL,
+                          source_note = NULL,
+                          names = NULL,
+                          title = NULL,
+                          tab_stubhead = NULL,
+                          caption = NULL,
+                          process_md = FALSE,
+                          fn_list = list(),
+                          grp_list = list(),
+                          dynamic_grp = NULL,
+                          vertical_padding = NULL,
+                          multiline = TRUE) {
       self$data <- data
       self$pheno <- pheno
       self$table_name <- table_name
@@ -102,6 +100,10 @@ TableGT <- R6::R6Class(
       self$multiline <- multiline
     },
 
+    #' @description
+    #' Construct and return the formatted `gt` table, with optional saving as PNG and PDF.
+    #'
+    #' @return A formatted `gt` table object
     build_table = function() {
       data_counts <- self$data |>
         dplyr::select(test_name, scale, score, percentile, range) |>
@@ -181,11 +183,10 @@ TableGT <- R6::R6Class(
   )
 )
 
-#' @title TableGT2 R6 Class for NeurotypR-Style Tables
-#' @description An enhanced R6 class to create formatted `gt` tables that match the original NeurotypR::tbl_gt2 formatting exactly.
+#' TableGT2 R6 Class for NeurotypR-Style Tables
+#'
+#' An enhanced R6 class to create formatted `gt` tables that match the original NeurotypR::tbl_gt2 formatting exactly.
 #' This class automatically detects score types and applies appropriate footnotes with numbered references.
-#' @docType class
-#' @format An R6 class object.
 #'
 #' @field data A data frame with columns test_name, scale, score, percentile, and range.
 #' @field pheno Phenotype identifier string used for file naming.
@@ -197,15 +198,9 @@ TableGT <- R6::R6Class(
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{\code{initialize(data, pheno, table_name, title = NULL, source_note = NULL, vertical_padding = 0, multiline = TRUE)}}{
-#'     Initialize a new TableGT2 object with configuration and data.
-#'   }
-#'   \item{\code{build_table()}}{
-#'     Construct and return the formatted gt table with automatic score type detection and footnotes.
-#'   }
-#'   \item{\code{create_footnote_mapping(data)}}{
-#'     Create footnote mapping based on test names using standard neuropsychological test conventions.
-#'   }
+#'   \item{initialize(data, pheno, table_name, title, source_note, vertical_padding, multiline)}{Initialize a new TableGT2 object}
+#'   \item{build_table()}{Construct and return the formatted gt table with automatic footnotes}
+#'   \item{create_footnote_mapping(data)}{Internal method to create footnote mappings based on test names}
 #' }
 #'
 #' @importFrom R6 R6Class
@@ -216,13 +211,6 @@ TableGT <- R6::R6Class(
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue
 #' @export
-#' @param data A data frame to use in table generation.
-#' @param pheno A string specifying the phenotype identifier.
-#' @param table_name File-safe name for saving the table.
-#' @param title Table title.
-#' @param source_note Optional source note for the table.
-#' @param vertical_padding Numeric scale for vertical padding in the table.
-#' @param multiline Logical; whether footnotes should wrap onto multiple lines.
 TableGT2 <- R6::R6Class(
   classname = "TableGT2",
   public = list(
@@ -234,15 +222,19 @@ TableGT2 <- R6::R6Class(
     vertical_padding = 0,
     multiline = TRUE,
 
-    initialize = function(
-      data,
-      pheno,
-      table_name,
-      title = NULL,
-      source_note = NULL,
-      vertical_padding = 0,
-      multiline = TRUE
-    ) {
+    #' @description
+    #' Initialize a new TableGT2 object with configuration and data.
+    #'
+    #' @param data A data frame with required columns: test_name, scale, score, percentile, range
+    #' @param pheno Phenotype identifier string for file naming
+    #' @param table_name Name for saved table files
+    #' @param title Optional table title
+    #' @param source_note Optional source note
+    #' @param vertical_padding Numeric scale for vertical padding (default 0)
+    #' @param multiline Logical for multiline footnotes (default TRUE)
+    #'
+    #' @return A new TableGT2 object
+    initialize = function(data, pheno, table_name, title = NULL, source_note = NULL, vertical_padding = 0, multiline = TRUE) {
       self$data <- data
       self$pheno <- pheno
       self$table_name <- table_name
@@ -252,17 +244,17 @@ TableGT2 <- R6::R6Class(
       self$multiline <- multiline
     },
 
+    #' @description
+    #' Construct and return the formatted gt table with automatic score type detection and footnotes.
+    #'
+    #' @return A formatted gt table object
     build_table = function() {
       # Prepare data
       data_counts <- self$data %>%
         dplyr::select(test_name, scale, score, percentile, range) %>%
         dplyr::mutate(
           score = ifelse(is.na(score) | score == 0, NA_integer_, score),
-          percentile = ifelse(
-            is.na(percentile) | percentile == 0,
-            NA_real_,
-            percentile
-          ),
+          percentile = ifelse(is.na(percentile) | percentile == 0, NA_real_, percentile),
           test_name = as.character(test_name),
           scale = as.character(scale)
         )
@@ -286,12 +278,19 @@ TableGT2 <- R6::R6Class(
         ) %>%
         gt::sub_missing(missing_text = "--") %>%
         gt::tab_stub_indent(rows = everything(), indent = 2) %>%
-        gt::cols_align(align = "center", columns = c(score, percentile)) %>%
-        gt::cols_align(align = "left", columns = range)
+        gt::cols_align(
+          align = "center",
+          columns = c(score, percentile)
+        ) %>%
+        gt::cols_align(
+          align = "left",
+          columns = range
+        )
 
       # Add title if provided
       if (!is.null(self$title)) {
-        table <- table %>% gt::tab_header(title = self$title)
+        table <- table %>%
+          gt::tab_header(title = self$title)
       }
 
       # Add footnotes with superscript numbers
@@ -313,12 +312,7 @@ TableGT2 <- R6::R6Class(
             }
           ) %>%
           gt::tab_footnote(
-            footnote = gt::html(paste0(
-              "<sup>",
-              footnote_counter,
-              "</sup>",
-              footnote_text
-            )),
+            footnote = gt::html(paste0("<sup>", footnote_counter, "</sup>", footnote_text)),
             locations = gt::cells_row_groups(groups = test_name)
           )
 
@@ -365,6 +359,12 @@ TableGT2 <- R6::R6Class(
       return(table)
     },
 
+    #' @description
+    #' Create footnote mapping based on test names using standard neuropsychological test conventions.
+    #'
+    #' @param data Data frame containing test_name column
+    #'
+    #' @return Named list mapping test names to appropriate footnote text
     create_footnote_mapping = function(data) {
       # Get unique test names
       test_names <- unique(data$test_name)
@@ -372,35 +372,15 @@ TableGT2 <- R6::R6Class(
 
       for (test_name in test_names) {
         # Determine score type based on test name patterns
-        if (
-          grepl(
-            "WAIS|WISC|WPPSI|NEPSY|D-KEFS|RBANS",
-            test_name,
-            ignore.case = TRUE
-          )
-        ) {
-          footnote_mapping[[
-            test_name
-          ]] <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+        if (grepl("WAIS|WISC|WPPSI|NEPSY|D-KEFS|RBANS", test_name, ignore.case = TRUE)) {
+          footnote_mapping[[test_name]] <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
         } else if (grepl("NAB|CELF|ABAS", test_name, ignore.case = TRUE)) {
-          footnote_mapping[[
-            test_name
-          ]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
-        } else if (
-          grepl(
-            "NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT",
-            test_name,
-            ignore.case = TRUE
-          )
-        ) {
-          footnote_mapping[[
-            test_name
-          ]] <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+          footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        } else if (grepl("NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT", test_name, ignore.case = TRUE)) {
+          footnote_mapping[[test_name]] <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
         } else {
           # Default to standard score for unknown tests
-          footnote_mapping[[
-            test_name
-          ]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
         }
       }
 
@@ -423,15 +403,8 @@ TableGT2 <- R6::R6Class(
 #'
 #' @return A formatted gt table object
 #' @export
-create_neurotyp_table <- function(
-  data,
-  pheno,
-  table_name,
-  title = NULL,
-  source_note = NULL,
-  vertical_padding = 0,
-  multiline = TRUE
-) {
+create_neurotyp_table <- function(data, pheno, table_name, title = NULL, source_note = NULL, vertical_padding = 0, multiline = TRUE) {
+
   # Create and use TableGT2 object
   table_obj <- TableGT2$new(
     data = data,
