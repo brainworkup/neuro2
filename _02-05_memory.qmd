@@ -383,10 +383,13 @@ grp_memory <- list(
   t_score = intersect(all_grp_memory[["t_score"]], existing_test_names)
 )
 
+# Source the table functions
+source("R/TableGT.R")
+
 # Only create table if we have data
 if (nrow(data_memory_tbl) > 0) {
   # make `gt` table using the tbl_gt2 function
-  tbl_gt2(
+  tbl_gt(
     data = data_memory_tbl,
     pheno = pheno,
     table_name = table_name,
@@ -476,7 +479,7 @@ NeurotypR::dotplot2(
       )
   }
 ```
-
+````{=html}
 <!-- ```{=typst}
 #let title = "Memory"
 #let file_qtbl = "table_memory.png"
@@ -487,6 +490,7 @@ NeurotypR::dotplot2(
   file_fig
   )
 ``` -->
+````
 
 ```{=typst}
 #let title = "Memory"
