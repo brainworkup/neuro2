@@ -178,7 +178,6 @@ data_verbal <-
 bwu::cat_neuropsych_results(data = data_verbal, file = "_02-03_verbal_text.qmd")
 ```
 
-
 ```{r}
 #| label: qtbl-verbal
 #| dev: tikz
@@ -196,66 +195,39 @@ table_name <- "table_verbal"
 vertical_padding <- 0
 multiline <- TRUE
 
-# footnotes
-fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
-)
-fn_scaled_score <- gt::md(
-  "Scaled score:  Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
-)
-fn_t_score <- gt::md("T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
-
-fn_z_score <- gt::md(
-  "Score = z-score (Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰])"
-)
-
-source_note <- gt::md("_T_ score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]")
-
-# Define the groups for the table
-grp_verbal <- list(
-  scaled_score = c(
-    # "WAIS-IV",
-    # "WISC-5",
-    # "NEPSY-2",
-    # "D-KEFS",
-    # "WPPSI-IV",
-    # "CELF-5",
-    # "RBANS",
-    "WAIS-5"
-  ),
-  standard_score = c(
-    # "WPPSI-IV",
-    "NAB-S"
-    # "CELF-5",
-    # "RBANS",
-    # "NAB"
-  ),
-  t_score = c(
-    "NAB-S",
-    "NIH EXAMINER"
-    # "WASI-2",
-    # "NAB"
+# Source the TableGT.R file
+if (file.exists("TableGT.R")) {
+  source("TableGT.R")
+  
+  # Create table using TableGT2 R6 class
+  table_obj <- TableGT2$new(
+    data = data_verbal_tbl,
+    pheno = pheno,
+    table_name = table_name,
+    title = "Verbal/Language Test Scores",
+    source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
   )
-)
-
-# make `gt` table
-NeurotypR::tbl_gt2(
-  data = data_verbal_tbl,
-  pheno = pheno,
-  table_name = table_name,
-  # source_note = source_note,
-  fn_scaled_score = fn_scaled_score,
-  fn_standard_score = fn_standard_score,
-  fn_t_score = fn_t_score,
-  grp_scaled_score = grp_verbal[["scaled_score"]],
-  grp_standard_score = grp_verbal[["standard_score"]],
-  grp_t_score = grp_verbal[["t_score"]],
-  dynamic_grp = grp_verbal,
-  vertical_padding = vertical_padding,
-  multiline = multiline
-)
+  
+  table_obj$build_table()
+  
+} else {
+  # Fallback to basic gt table if TableGT.R not found
+  library(gt)
+  
+  data_verbal_tbl %>%
+    dplyr::select(test_name, scale, score, percentile, range) %>%
+    gt::gt(rowname_col = "scale", groupname_col = "test_name") %>%
+    gt::tab_header(title = "Verbal/Language Test Scores") %>%
+    gt::cols_label(
+      scale = "Scale",
+      score = "Score", 
+      percentile = "%ile",
+      range = "Range"
+    ) %>%
+    gt::tab_source_note("Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]") %>%
+    gt::gtsave(paste0(table_name, ".png"))
+}
 ```
-
 
 ```{r}
 #| label: fig-verbal-subdomain
@@ -263,7 +235,6 @@ NeurotypR::tbl_gt2(
 #| fig-cap: "Verbal and language functioning refers to the ability to access and apply acquired word knowledge, to verbalize meaningful concepts, to understand complex multistep instructions, to think about verbal information, and to express oneself using words."
 
 # Arguments
-# colors <- bwu::tokyo
 colors <- NULL
 return_plot <- TRUE
 filename <- "fig_verbal_subdomain.svg"
@@ -271,6 +242,9 @@ filename <- "fig_verbal_subdomain.svg"
 # variables to plot
 x <- data_verbal$z_mean_subdomain
 y <- data_verbal$subdomain
+
+# Suppress warnings from being converted to errors
+options(warn = 1) # Set warn to 1 to make warnings not halt execution
 
 # Make dotplot
 NeurotypR::dotplot2(
@@ -282,6 +256,9 @@ NeurotypR::dotplot2(
   filename = filename,
   na.rm = TRUE
 )
+
+# Reset warning options to default if needed
+options(warn = 0) # Reset to default behavior
 ```
 
 ```{r}
@@ -341,7 +318,6 @@ options(warn = 0) # Reset to default behavior
         )
     }
 ```
-
 ```{=typst}
 #let title = "Verbal/Language"
 #let file_qtbl = "table_verbal.png"
@@ -352,8 +328,7 @@ options(warn = 0) # Reset to default behavior
   file_fig
 )
 ```
-
-<!-- ```{=typst}
+```{=typst}
 #let title = "Verbal/Language"
 #let file_qtbl = "table_verbal.png"
 #let file_fig = "fig_verbal_narrow.svg"
@@ -362,4 +337,4 @@ options(warn = 0) # Reset to default behavior
   file_qtbl,
   file_fig
 )
-``` -->
+```

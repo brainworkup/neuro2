@@ -622,3 +622,271 @@ tbl_gt2 <- function(
 
   return(table_obj$build_table())
 }
+
+
+# TableGT.R - Updated to match NeurotypR::tbl_gt2 formatting exactly
+
+library(gt)
+library(gtExtras)
+library(dplyr)
+library(glue)
+
+TableGT2 <- R6::R6Class(
+  "TableGT2",
+  public = list(
+    data = NULL,
+    pheno = NULL,
+    table_name = NULL,
+    title = NULL,
+    source_note = NULL,
+    vertical_padding = 0,
+    multiline = TRUE,
+
+    initialize = function(data, pheno, table_name, title = NULL, source_note = NULL, vertical_padding = 0, multiline = TRUE) {
+      self$data <- data
+      self$pheno <- pheno
+      self$table_name <- table_name
+      self$title <- title
+      self$source_note <- source_note
+      self$vertical_padding <- vertical_padding
+      self$multiline <- multiline
+    },
+
+    build_table = function() {
+      # Prepare data
+      data_counts <- self$data %>%
+        dplyr::select(test_name, scale, score, percentile, range) %>%
+        dplyr::mutate(
+          score = ifelse(is.na(score) | score == 0, NA_integer_, score),
+          percentile = ifelse(is.na(percentile) | percentile == 0, NA_real_, percentile),
+          test_name = as.character(test_name),
+          scale = as.character(scale)
+        )
+
+      # Determine score types and create footnotes
+      footnote_mapping <- self$create_footnote_mapping(data_counts)
+
+      # Create base table
+      table <- data_counts %>%
+        gt::gt(
+          rowname_col = "scale",
+          groupname_col = "test_name",
+          process_md = FALSE,
+          rownames_to_stub = TRUE,
+          id = paste0("table_", self$pheno)
+        ) %>%
+        gt::cols_label(
+          score = gt::md("**SCORE**"),
+          percentile = gt::md("**% RANK**"),
+          range = gt::md("**RANGE**")
+        ) %>%
+        gt::sub_missing(missing_text = "--") %>%
+        gt::tab_stub_indent(rows = everything(), indent = 2) %>%
+        gt::cols_align(
+          align = "center",
+          columns = c(score, percentile)
+        ) %>%
+        gt::cols_align(
+          align = "left",
+          columns = range
+        )
+
+      # Add title if provided
+      if (!is.null(self$title)) {
+        table <- table %>%
+          gt::tab_header(title = self$title)
+      }
+
+      # Add footnotes with superscript numbers
+      footnote_counter <- 1
+
+      for (test_name in names(footnote_mapping)) {
+        footnote_text <- footnote_mapping[[test_name]]
+
+        # Add superscript number to group name
+        table <- table %>%
+          gt::tab_style(
+            style = gt::cell_text(transform = "uppercase", weight = "bold"),
+            locations = gt::cells_row_groups(groups = test_name)
+          ) %>%
+          gt::text_transform(
+            locations = gt::cells_row_groups(groups = test_name),
+            fn = function(x) {
+              paste0(x, gt::html(paste0("<sup>", footnote_counter, "</sup>")))
+            }
+          )
+
+        # Add numbered footnote
+        table <- table %>%
+          gt::tab_footnote(
+            footnote = gt::html(paste0("<sup>", footnote_counter, "</sup>", footnote_text)),
+            locations = gt::cells_row_groups(groups = test_name)
+          )
+
+        footnote_counter <- footnote_counter + 1
+      }
+
+      # Apply styling to match original
+      table <- table %>%
+        gt::tab_style(
+          style = gt::cell_text(size = "small"),
+          locations = gt::cells_source_notes()
+        ) %>%
+        gt::tab_style(
+          style = gt::cell_text(weight = "bold", transform = "uppercase"),
+          locations = gt::cells_row_groups()
+        ) %>%
+        gt::tab_style(
+          style = gt::cell_borders(
+            sides = "bottom",
+            color = "gray",
+            weight = gt::px(1)
+          ),
+          locations = gt::cells_row_groups()
+        ) %>%
+        gtExtras::gt_theme_538() %>%
+        gt::tab_options(
+          row_group.font.weight = "bold",
+          footnotes.multiline = self$multiline,
+          footnotes.font.size = "small",
+          table.font.size = "small",
+          row_group.border.top.style = "solid",
+          row_group.border.top.width = gt::px(2),
+          row_group.border.top.color = "black",
+          row_group.border.bottom.style = "solid",
+          row_group.border.bottom.width = gt::px(1),
+          row_group.border.bottom.color = "gray"
+        ) %>%
+        gt::opt_vertical_padding(scale = self$vertical_padding)
+
+      # Save table
+      gt::gtsave(table, glue::glue("{self$table_name}.pdf"))
+      gt::gtsave(table, glue::glue("{self$table_name}.png"))
+
+      return(table)
+    },
+
+    create_footnote_mapping = function(data) {
+      # Get unique test names
+      test_names <- unique(data$test_name)
+      footnote_mapping <- list()
+
+      for (test_name in test_names) {
+        # Determine score type based on test name
+        if (grepl("WAIS|WISC|WPPSI|NEPSY|D-KEFS|RBANS", test_name, ignore.case = TRUE)) {
+          footnote_mapping[[test_name]] <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+        } else if (grepl("NAB|CELF|ABAS", test_name, ignore.case = TRUE)) {
+          footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        } else if (grepl("NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT", test_name, ignore.case = TRUE)) {
+          footnote_mapping[[test_name]] <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+        } else {
+          # Default to standard score
+          footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        }
+      }
+
+      return(footnote_mapping)
+    }
+  )
+)
+
+# Alternative function-based approach (if R6 doesn't work)
+create_neurotyp_table <- function(data, pheno, table_name, title = NULL, source_note = NULL, vertical_padding = 0, multiline = TRUE) {
+
+  # Prepare data
+  data_counts <- data %>%
+    dplyr::select(test_name, scale, score, percentile, range) %>%
+    dplyr::mutate(
+      score = ifelse(is.na(score) | score == 0, NA_integer_, score),
+      percentile = ifelse(is.na(percentile) | percentile == 0, NA_real_, percentile),
+      test_name = as.character(test_name),
+      scale = as.character(scale)
+    )
+
+  # Create footnote mapping
+  test_names <- unique(data_counts$test_name)
+  footnote_mapping <- list()
+
+  for (test_name in test_names) {
+    if (grepl("WAIS|WISC|WPPSI|NEPSY|D-KEFS|RBANS", test_name, ignore.case = TRUE)) {
+      footnote_mapping[[test_name]] <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+    } else if (grepl("NAB|CELF|ABAS", test_name, ignore.case = TRUE)) {
+      footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+    } else if (grepl("NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT", test_name, ignore.case = TRUE)) {
+      footnote_mapping[[test_name]] <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+    } else {
+      footnote_mapping[[test_name]] <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+    }
+  }
+
+  # Create base table
+  table <- data_counts %>%
+    gt::gt(
+      rowname_col = "scale",
+      groupname_col = "test_name",
+      process_md = FALSE,
+      rownames_to_stub = TRUE,
+      id = paste0("table_", pheno)
+    ) %>%
+    gt::cols_label(
+      score = gt::md("**SCORE**"),
+      percentile = gt::md("**% RANK**"),
+      range = gt::md("**RANGE**")
+    ) %>%
+    gt::sub_missing(missing_text = "--") %>%
+    gt::tab_stub_indent(rows = everything(), indent = 2) %>%
+    gt::cols_align(align = "center", columns = c(score, percentile)) %>%
+    gt::cols_align(align = "left", columns = range)
+
+  # Add title
+  if (!is.null(title)) {
+    table <- table %>% gt::tab_header(title = title)
+  }
+
+  # Add footnotes with superscript numbers
+  footnote_counter <- 1
+
+  for (test_name in names(footnote_mapping)) {
+    footnote_text <- footnote_mapping[[test_name]]
+
+    # Add superscript number to group name
+    table <- table %>%
+      gt::text_transform(
+        locations = gt::cells_row_groups(groups = test_name),
+        fn = function(x) {
+          paste0(x, gt::html(paste0("<sup>", footnote_counter, "</sup>")))
+        }
+      ) %>%
+      gt::tab_footnote(
+        footnote = gt::html(paste0("<sup>", footnote_counter, "</sup>", footnote_text)),
+        locations = gt::cells_row_groups(groups = test_name)
+      )
+
+    footnote_counter <- footnote_counter + 1
+  }
+
+  # Apply styling
+  table <- table %>%
+    gt::tab_style(
+      style = gt::cell_text(weight = "bold", transform = "uppercase"),
+      locations = gt::cells_row_groups()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(sides = "bottom", color = "gray", weight = gt::px(1)),
+      locations = gt::cells_row_groups()
+    ) %>%
+    gtExtras::gt_theme_538() %>%
+    gt::tab_options(
+      row_group.font.weight = "bold",
+      footnotes.multiline = multiline,
+      footnotes.font.size = "small",
+      table.font.size = "small"
+    ) %>%
+    gt::opt_vertical_padding(scale = vertical_padding)
+
+  # Save table
+  gt::gtsave(table, glue::glue("{table_name}.pdf"))
+  gt::gtsave(table, glue::glue("{table_name}.png"))
+
+  return(table)
+}
