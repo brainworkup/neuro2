@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables BASC-3 PRS Preschool"
 params:
-  patient: "{{< var patient >}}"
+  patient: Biggie
   test:
     label: "BASC-3:"
     value: [basc3_prs_preschool]
@@ -51,11 +51,11 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(NeurotypR)
+library(bwu)
 # Set JAVA environment
 Sys.setenv(
   JAVA_HOME =
-    "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home"
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 # Set knitr options
@@ -125,7 +125,7 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 save(extracted_areas, file = "basc3_prs_tables.RData")
-qs::qsave(extracted_areas, "basc3_prs_tables.rds")
+qs2::qd_save(extracted_areas, "basc3_prs_tables.rds")
 ```
 
 ```{r}
@@ -156,7 +156,7 @@ areas <- list(
 ## Extract tables
 
 ```{r extract}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- bwu::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = areas,
@@ -172,8 +172,8 @@ plucked_tables <- NeurotypR::gpluck_extract_tables(
 
 ```{r pluck, eval = T}
 # Use this because it imports as a tibble
-table1 <- vroom::vroom(paste0(test, "_1.csv"))
-table2 <- vroom::vroom(paste0(test, "_2.csv"))
+table1 <- readr::read_csv(paste0(test, "_1.csv"))
+table2 <- readr::read_csv(paste0(test, "_2.csv"))
 
 # Rename columns
 vars_tbl1 <- c("scale", "raw_score", "score", "percentile", "ci_95")
@@ -192,7 +192,7 @@ df <- bind_rows(table1, table2)
 
 ```{r}
 # Read the lookup table
-lookup_basc3_prs <- vroom::vroom("/Users/joey/Dropbox/neuropsych_lookup_table.csv")
+lookup_basc3_prs <- readr::read_csv("/Users/joey/Dropbox/neuropsych_lookup_table.csv")
 
 # Add test column
 df$test <- test
@@ -208,7 +208,7 @@ df <- df |> dplyr::left_join(lookup_basc3_prs, by = c("test", "scale"))
 ## Mutate columns
 
 ```{r mutate, eval = T}
-df <- df |> NeurotypR::gpluck_make_columns(
+df <- df |> bwu::gpluck_make_columns(
   range = ""
 )
 ```
@@ -216,7 +216,7 @@ df <- df |> NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(
+df <- bwu::gpluck_make_score_ranges(
   table = df,
   test_type = "basc3"
   )

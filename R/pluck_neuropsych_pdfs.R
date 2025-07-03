@@ -1,3 +1,300 @@
+#' Extract and Process WISC-V Test Data from PDF
+#'
+#' This function extracts and processes WISC-V (Wechsler Intelligence Scale for Children, 5th Edition)
+#' test data from PDF files. It handles three types of test data: index scores, subtest scores, and
+#' process scores. The function extracts raw data from specified PDF pages, processes and cleans the data,
+#' calculates additional metrics (confidence intervals, percentiles), and generates interpretive text.
+#'
+#' @param patient Character string specifying the patient identifier or name
+#' @param test_type Character string specifying the type of test data to extract.
+#'   Must be one of: "index", "subtest", or "process"
+#' @param file_path Character string specifying the path to the PDF file. If NULL,
+#'   a file chooser dialog will be opened to select the file
+#' @param pages_index Numeric vector specifying the page numbers to extract for index data.
+#'   Required when test_type = "index"
+#' @param pages_subtest Numeric vector specifying the page numbers to extract for subtest data.
+#'   Required when test_type = "subtest"
+#' @param pages_process Numeric vector specifying the page numbers to extract for process data.
+#'   Required when test_type = "process"
+#'
+#' @return A data frame containing the processed WISC-V test results with the following columns:
+#'   \describe{
+#'     \item{test}{Test identifier ("wisc5")}
+#'     \item{test_name}{Full test name}
+#'     \item{scale}{Name of the test scale or subtest}
+#'     \item{raw_score}{Raw score obtained}
+#'     \item{score}{Standard score (index) or scaled score (subtest/process)}
+#'     \item{ci_95}{95% confidence interval}
+#'     \item{percentile}{Percentile rank}
+#'     \item{range}{Descriptive performance range}
+#'     \item{result}{Interpretive text describing the results}
+#'     \item{absort}{Sorting variable for report organization}
+#'   }
+#'
+#' @details
+#' The function handles three distinct types of WISC-V data:
+#' \itemize{
+#'   \item{\strong{Index scores}: Composite scores with standard score metric
+#'     (mean=100, SD=15)}
+#'   \item{\strong{Subtest scores}: Individual subtest scores with scaled score metric (mean=10, SD=3)}
+#'   \item{\strong{Process scores}: Process-based scores with scaled score metric (mean=10, SD=3)}
+#' }
+#'
+#' For subtest and process scores, the function automatically calculates 95% confidence intervals
+#' using a reliability coefficient of 0.90. Process scores also have percentiles calculated
+#' based on the normal distribution.
+#'
+#' The function integrates with a neuropsychological lookup table to add descriptive information
+#' and generates interpretive text for each score. Results are automatically saved to CSV files
+#' in the "data/csv" directory.
+#'
+#' @importFrom tabulapdf extract_areas
+#' @importFrom dplyr mutate filter distinct left_join relocate select across all_of case_when
+#' @importFrom tidyr unite
+#' @importFrom stringr str_remove_all
+#' @importFrom glue glue
+#' @importFrom readr read_csv write_excel_csv
+#' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
+#'
+#' @examples
+#' \dontrun{
+#' # Extract WISC-V index scores
+#' index_data <- extract_wisc5_data(
+#'   patient = "Patient001",
+#'   test_type = "index",
+#'   file_path = "path/to/wisc5_report.pdf",
+#'   pages_index = c(32, 35)
+#' )
+#'
+#' # Extract subtest scores with custom page numbers
+#' subtest_data <- extract_wisc5_data(
+#'   patient = "Patient001",
+#'   test_type = "subtest",
+#'   pages_subtest = c(30, 31)
+#' )
+#'
+#' # Extract process scores (will prompt for file selection)
+#' process_data <- extract_wisc5_data(
+#'   patient = "Patient001",
+#'   test_type = "process",
+#'   pages_process = c(38)
+#' )
+#' }
+#'
+#' @export
+extract_wisc5_data <- function(
+  patient,
+  test_type,
+  file_path = NULL,
+  pages_index = NULL,
+  pages_subtest = NULL,
+  pages_process = NULL
+) {
+  # Validate test type
+  valid_types <- c("index", "subtest", "process")
+  if (!test_type %in% valid_types) {
+    stop("Invalid test_type. Use 'index', 'subtest', or 'process'")
+  }
+
+  # Validate that required page numbers are provided
+  if (test_type == "index" && is.null(pages_index)) {
+    stop("pages_index must be provided when test_type = 'index'")
+  }
+  if (test_type == "subtest" && is.null(pages_subtest)) {
+    stop("pages_subtest must be provided when test_type = 'subtest'")
+  }
+  if (test_type == "process" && is.null(pages_process)) {
+    stop("pages_process must be provided when test_type = 'process'")
+  }
+
+  # Set parameters based on test type and use dynamic page numbers
+  params <- switch(
+    test_type,
+    "index" = list(
+      test = "wisc5_index",
+      pages = pages_index,
+      extract_columns = c(1, 3, 4, 5, 6),
+      variables = c("scale", "raw_score", "score", "percentile", "ci_95"),
+      score_type = "standard_score",
+      combine_pages = TRUE,
+      preprocess = "index"
+    ),
+    "subtest" = list(
+      test = "wisc5_subtest",
+      pages = pages_subtest,
+      extract_columns = c(2, 4, 5, 6),
+      variables = c("scale", "raw_score", "score", "percentile"),
+      score_type = "scaled_score",
+      combine_pages = FALSE,
+      preprocess = "subtest"
+    ),
+    "process" = list(
+      test = "wisc5_process",
+      pages = pages_process,
+      extract_columns = c(1, 3, 4),
+      variables = c("scale", "raw_score", "score"),
+      score_type = "scaled_score",
+      combine_pages = FALSE,
+      preprocess = "process"
+    )
+  )
+
+  # Select PDF if not provided
+  if (is.null(file_path)) {
+    file_path <- file.choose()
+    saveRDS(file_path, paste0(params$test, "_path.rds"))
+  }
+
+  # Extract data from PDF
+  extracted_areas <- tabulapdf::extract_areas(
+    file = file_path,
+    pages = params$pages,
+    method = "decide",
+    output = "matrix",
+    copy = TRUE
+  )
+
+  # Save extracted areas
+  saveRDS(extracted_areas, paste0(params$test, "_extracted_areas.rds"))
+
+  # Combine pages if needed
+  if (params$combine_pages && length(extracted_areas) > 1) {
+    df <- do.call(rbind, lapply(extracted_areas, as.data.frame))
+  } else {
+    df <- as.data.frame(extracted_areas[[1]])
+  }
+
+  # Preprocessing
+  if (ncol(df) >= 2) {
+    df[, 2] <- gsub("\\*", "", df[, 2])
+  }
+
+  if (params$preprocess == "index") {
+    df <- df |>
+      dplyr::mutate(col2_paren = paste0("(", df[[2]], ")")) |>
+      tidyr::unite("scale", 1, col2_paren, sep = " ", remove = TRUE)
+  } else if (params$preprocess %in% c("subtest", "process")) {
+    df <- df |> dplyr::mutate(V2 = stringr::str_remove_all(V2, "\\(|\\)"))
+  }
+
+  # Column extraction and renaming
+  df <- df[, params$extract_columns, drop = FALSE]
+  colnames(df) <- params$variables
+
+  # Data cleaning
+  df[df == "-"] <- NA
+  df <- df |> dplyr::mutate(across(where(is.character), ~ dplyr::na_if(., "")))
+
+  # Numeric conversions
+  num_cols <- intersect(c("raw_score", "score", "percentile"), colnames(df))
+  df <- df |> dplyr::mutate(across(all_of(num_cols), as.numeric))
+
+  # Additional processing for specific test types
+  if (params$preprocess %in% c("subtest", "process")) {
+    # CI Calculation
+    ci_params <- list(
+      mean = ifelse(params$score_type == "scaled_score", 10, 100),
+      sd = ifelse(params$score_type == "scaled_score", 3, 15),
+      reliability = 0.90
+    )
+
+    for (i in seq_len(nrow(df))) {
+      ci_values <- NeurotypR::calc_ci_95(
+        ability_score = df$score[i],
+        mean = ci_params$mean,
+        standard_deviation = ci_params$sd,
+        reliability = ci_params$reliability
+      )
+      df$ci_95[i] <- paste(
+        ci_values["lower_ci_95"],
+        ci_values["upper_ci_95"],
+        sep = "-"
+      )
+    }
+
+    # Percentile calculation for process scores
+    if (params$preprocess == "process") {
+      df$percentile <- round(
+        pnorm((df$score - ci_params$mean) / ci_params$sd) * 100
+      )
+    }
+
+    # Column reorganization
+    df <- df |> dplyr::relocate(ci_95, .after = score)
+  }
+
+  # Lookup table integration
+  lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
+
+  df_merged <- df |>
+    dplyr::mutate(test = "wisc5") |>
+    dplyr::left_join(lookup_table, by = c("test", "scale")) |>
+    dplyr::relocate(c(test, test_name), .before = scale) |>
+    NeurotypR::gpluck_make_columns()
+
+  # Initialize range column with empty strings to avoid recycling issues
+  df_merged <- df_merged |> dplyr::mutate(range = "")
+
+  # Apply score ranges - using the test_type parameter only
+  df_merged <- df_merged |>
+    NeurotypR::gpluck_make_score_ranges(test_type = "npsych_test") |>
+    dplyr::relocate(range, .after = percentile)
+
+  # Generate descriptive text
+  df_merged <- df_merged |>
+    dplyr::mutate(
+      result = dplyr::case_when(
+        percentile == 1 ~
+          glue::glue(
+            "{description} fell within the {range} and ranked at the {percentile}st percentile."
+          ),
+        percentile == 2 ~
+          glue::glue(
+            "{description} fell within the {range} and ranked at the {percentile}nd percentile."
+          ),
+        percentile == 3 ~
+          glue::glue(
+            "{description} fell within the {range} and ranked at the {percentile}rd percentile."
+          ),
+        TRUE ~
+          glue::glue(
+            "{description} fell within the {range} and ranked at the {percentile}th percentile."
+          )
+      ),
+      result = paste0(
+        result,
+        " This indicates performance as good as or better than ",
+        percentile,
+        "% of same-age peers from the general population.\n"
+      )
+    ) |>
+    dplyr::select(-description) |>
+    dplyr::relocate(absort, .after = result)
+
+  # Filter out rows with missing or incomplete data
+  df_merged <- df_merged |>
+    dplyr::filter(
+      !is.na(scale) & scale != "" & !grepl("^\\s*$", scale), # Remove empty or whitespace-only scales
+      !is.na(score), # Remove rows with missing scores
+      !is.na(percentile), # Remove rows with missing percentiles
+      (!is.na(test_name) & test_name != "") | (test == "wisc5" & !is.na(scale)) # Keep rows with test name or valid WISC-5 scales
+    )
+
+  # Save results
+  output_dir <- "data/csv"
+  if (!dir.exists(output_dir)) {
+    dir.create(output_dir, recursive = TRUE)
+  }
+
+  readr::write_excel_csv(
+    df_merged,
+    file.path(output_dir, paste0(params$test, ".csv"))
+  )
+
+  return(df_merged)
+}
+
+
 #' Process WAIS-5 test data from PDF
 #'
 #' This function extracts and processes WAIS-5 test data from PDF files,
@@ -25,7 +322,9 @@ process_wais5_data <- function(
     test <- "wais5_subtest"
     test_name <- "WAIS-5"
     # Use provided pages parameter or default to 10 if NULL
-    if (is.null(pages)) pages <- c(10)
+    if (is.null(pages)) {
+      pages <- c(10)
+    }
     extract_columns <- c(2, 4, 5, 6)
     variables <- c("scale", "raw_score", "score", "percentile")
     score_type <- "scaled_score"
@@ -33,7 +332,9 @@ process_wais5_data <- function(
     test <- "wais5_index"
     test_name <- "WAIS-5"
     # Use provided pages parameter or default to 12 if NULL
-    if (is.null(pages)) pages <- c(12)
+    if (is.null(pages)) {
+      pages <- c(12)
+    }
     extract_columns <- c(1, 3, 4, 5, 6)
     variables <- c("scale", "raw_score", "score", "percentile", "ci_95")
     score_type <- "standard_score"

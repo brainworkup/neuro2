@@ -25,7 +25,7 @@ params:
       - "KTEA-3"
       - "NEPSY-2"
       - "WMS-IV"
-      - Cognitive Estimation Test
+      - "Cognitive Estimation Test"
       - "Raven's 2"
   test:
     label: "Test/Measure File Name:"
@@ -305,7 +305,7 @@ params:
     choices: [1, 3, 10, 15]
   reliability:
     label: "Reliability:"
-    value: 0.81
+    value: 0.90
     input: slider
     min: 0
     max: 1
@@ -318,6 +318,7 @@ params:
       - npsych_test
       - rating_scale
       - validity_indicator
+      - symptom_validity
 output:
   rmdformats::robobook:
     highlight: kate
@@ -328,36 +329,25 @@ output:
 ```{r setup, include = FALSE}
 # Set JAVA environment
 Sys.setenv(
-  JAVA_HOME =
-    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
-options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
   echo = TRUE,
   message = TRUE,
   warning = TRUE,
-  error = TRUE,
-  include = FALSE
+  error = FALSE
 )
-library(dplyr)
-library(fs)
-library(glue)
-library(hablar)
+library(googledrive)
 library(here)
-library(knitr)
-library(magrittr)
-library(miniUI)
 library(pdftools)
-library(rJava)
-library(rmarkdown)
-library(rmdformats)
 library(shiny)
-library(snakecase)
 library(tabulapdf)
-library(tidyverse)
-library(xfun)
-library(yaml)
+library(tidyr)
+library(glue)
+library(dplyr)
+library(readr)
+library(bwu)
 library(NeurotypR)
 ```
 
@@ -369,11 +359,10 @@ test <- params$test
 test_name <- params$test_name
 ```
 
-
 ## Make data frame
 
 ```{r make-df}
-data <- tibble::as_tibble(
+data <- data.frame(
   test = (params$test),
   test_name = (params$test_name),
   test_type = (params$test_type),
@@ -453,6 +442,8 @@ scale_description <- function(data, scale, description) {
         scale == "Unstructured Task" ~ "Strategic planning and organization aptitude to formulate an action in advance of performance or intended performance on which examinees need to plan ahead, avoid items that are strategically poor choices, and be cognizant of when a particular booklet offers diminishing returns",
         scale == "Letter Fluency" ~ "Letter/phonemic word fluency",
         scale == "Category Fluency" ~ "Categorical/semantic word fluency",
+        scale == "Word Generation-Initial Letter" ~ "Letter/phonemic word fluency",
+        scale == "Word Generation-Semantic" ~ "Categorical/semantic word fluency",
         scale == "Deviation Score" ~ "Abstract reasoning (hypothesis generation and concept formation)",
         scale == "Nonsense Word Decoding" ~ "Phonic decoding skills as assessed by reading aloud a list of pseudowords",
         scale == "Decoding Fluency" ~ "Phonic decoding fluency",
@@ -559,6 +550,8 @@ glue_result <- function(data, scale, description, range, result) {
     "Unstructured Task" = "fell within the",
     "Letter Fluency" = "fell within the",
     "Category Fluency" = "fell within the",
+    "Word Generation-Initial Letter" = "fell within the",
+    "Word Generation-Semantic" = "fell within the",
     "D-KEFS Color Naming" = "was performed within the",
     "D-KEFS Word Reading" = "fell within the",
     "D-KEFS Inhibition" = "fell within the",
@@ -635,7 +628,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- NeurotypR::calc_ci_95(
+ci_values <- bwu::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,

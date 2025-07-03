@@ -946,6 +946,6 @@ nepsy2 <- data.frame(
 
 # Merge with lookup table -------------------------------------------------
 
-# lookup <- vroom::vroom("/Users/joey/Dropbox/neuropsych_lookup_table_combined.csv", delim = ",")
+# lookup <- readr::read_csv("/Users/joey/Dropbox/neuropsych_lookup_table_combined.csv", delim = ",")
 
-vroom::vroom_write(nepsy2, "data/nepsy2_lookup.csv", delim = ",")
+readr::read_csv_write(nepsy2, "data/nepsy2_lookup.csv", delim = ",")

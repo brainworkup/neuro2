@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from KTEA-3"
 params:
-  patient: "{{< var patient >}}"
+  patient: Biggie
   test:
     label: "Test"
     value: ktea3
@@ -18,11 +18,13 @@ params:
     multiple: no
     choices:
       - "KTEA-3"
+      - "KTEA-3 Form A"
+      - "KTEA-3 Form B"
   file:
     label: "No file selected"
     value: file
     input: file
-  pages: [32, 33]
+  pages: [2, 3]
   table1:
     label: "Table 1: Core Composite Score Summary"
     value: []
@@ -30,71 +32,74 @@ params:
     multiple: yes
     choices:
       ACADEMIC SKILLS:
-        - Academic Skills Battery (ASB)
+        - Academic Skills Battery (ASB) Composite
+        - Math Concepts & Applications
+        - Letter & Word Recognition
+        - Written Expression
+        - Math Computation
+        - Spelling
+        - Reading Comprehension
       READING:
         - Reading Composite
-        - Letter & Word Recognition
-        - Reading Comprehension
+        - Letter & Word Recognition2
+        - Reading Comprehension2
       MATH:
         - Math Composite
-        - Math Concepts & Applications
-        - Math Computation
+        - Math Concepts & Applications2
+        - Math Computation2
       WRITING:
         - Written Language Composite
-        - Written Expression
-        - Spelling
+        - Written Expression2
+        - Spelling2
   table2:
     label: "Table 2: Supplemental Composite Score Summary"
     value: ""
     input: select
     multiple: yes
     choices:
-      Sound-Symbol Composite: #todo
-      - Basic Reading
-      - Pseudoword Decoding
-      - Phonemic Proficiency
-      - Word Reading
-      DECODING:
-      - Decoding
-      - Pseudoword Decoding
-      - Word Reading2
-      READING FLUENCY:
-      - Reading Fluency
-      - Oral Reading Fluency
-      - Orthographic Fluency
-      - Decoding Fluency
-      PHONOLOGICAL PROCESSING:
+      - Sound-Symbol Composite
       - Phonological Processing
-      - Pseudoword Decoding
-      - Phonemic Proficiency
-      ORTHOGRAPHIC PROCESSING:
-      - Orthographic Processing
-      - Orthographic Fluency2
-      - Spelling
-      DYSLEXIA INDEX:
-      - Dyslexia Index
-      - Word Reading3
-      - Pseudoword Decoding4
-      - Orthographic Fluency3
-      OTHER:
-      - Orthographic Processing Extended
-      - Orthographic Choice
-      - Math Fluency
-      - Math Fluency-Addition
-      - Math Fluency-Subtraction
-      - Math Fluency-Multiplication
-      - Oral Language
+      - Nonsense Word Decoding
+      - Decoding Composite
+      - Letter & Word Recognition3
+      - Nonsense Word Decoding2
+      - Reading Fluency Composite
+      - Silent Reading Fluency
+      - Word Recognition Fluency
+      - Decoding Fluency
+      - Reading Understanding Composite
+      - Reading Comprehension3
+      - Reading Vocabulary
+      - Oral Language Composite
+      - Associational Fluency
       - Listening Comprehension
       - Oral Expression
+      - Oral Fluency Composite
+      - Associational Fluency2
+      - Object Naming Facility
+      - Comprehension Composite
+      - Reading Comprehension4
+      - Listening Comprehension2
+      - Expression Composite
+      - Written Expression3
+      - Oral Expression2
+      - Orthographic Processing Composite
+      - Spelling3
+      - Letter Naming Facility
+      - Word Recognition Fluency2
+      - Academic Fluency Composite
+      - Writing Fluency
+      - Math Fluency
+      - Decoding Fluency2
   colnames:
     label: "Column Names"
-    value: [scale, raw_score, ssss, score, ci_95, percentile, category, age_equiv, gsv]
+    value: [scale, raw_score, sum_subtests, score, ci_95, percentile, category, age_equiv, gsv]
     input: select
     multiple: yes
     choices:
       - scale
       - raw_score
-      - ssss
+      - sum_subtests
       - score
       - ci_95
       - percentile
@@ -104,39 +109,34 @@ params:
       - gsv
   keep:
     label: "Variables to Keep"
-    value: [scale, raw_score, score, percentile, ci_95, age_equiv]
+    value: [scale, raw_score, score, ci_95, percentile, age_equiv]
     input: select
     multiple: yes
     choices:
       - scale
       - raw_score
       - score
-      - percentile
       - ci_95
+      - percentile
       - age_equiv
 ---
 
-# KTEA-3
-
-## Load libraries
+## Setup
 
 ```{r setup, include=FALSE}
-# Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home")
-# options(java.parameters = "-Xmx16000m")
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
-  echo = FALSE,
+  echo = TRUE,
   message = FALSE,
-  warning = FALSE,
+  warning = TRUE,
   error = TRUE
 )
-library(fs)
 library(glue)
-library(hablar)
 library(here)
 library(knitr)
 library(magrittr)
-library(miniUI)
 library(pdftools)
 library(rJava)
 library(rmarkdown)
@@ -145,44 +145,28 @@ library(shiny)
 library(snakecase)
 library(tabulapdf)
 library(tidyverse)
-library(xfun)
+library(bwu)
 library(NeurotypR)
 ```
 
-## Test
-
-```{r test}
-test <- "ktea3"
-test_name <- "KTEA-3"
-```
-
-## Patient initials
-
-```{r patient}
-patient <- "Biggie"
-```
-
-## Pages
-
-```{r pages}
-pages <- c(32, 33)
-# pages <- params$pages
-```
-
-## File upload/attach PDF
+## Parameters
 
 ```{r}
-file <- file.path(file.choose())
-# saveRDS(file, "ktea3.rds")
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+pages <- params$pages
+file <- file.path(params$file)
+saveRDS(file, "ktea3.rds")
 # file <- readRDS("ktea3.rds")
-# file <- file.path(params$file)
+# file <- file.path(file.choose())
 ```
 
-## UseThis - updated July 2024
+## UseThis - updated March 2025
 
 ```{r}
 # This works well so far
-plucked_tables_ktea3 <- tabulapdf::extract_tables(
+extracted_tables_ktea3 <- tabulapdf::extract_tables(
   file = file,
   pages = pages,
   output = "matrix",
@@ -192,10 +176,10 @@ plucked_tables_ktea3 <- tabulapdf::extract_tables(
 
 
 # Save the entire list to an R data file
-save(plucked_tables_ktea3, file = "plucked_tables_ktea3.RData")
+save(extracted_tables_ktea3, file = "extracted_tables_ktea3.RData")
 
 # Load the entire list from an R data file
-load("plucked_tables_ktea3.RData")
+load("extracted_tables_ktea3.RData")
 ```
 
 ### Function process_ktea3_tables as individual data.frames
@@ -205,31 +189,29 @@ library(dplyr)
 library(purrr)
 
 process_ktea3_tables <- function(ktea3_data) {
-  table_list <- purrr::map(ktea3_data, as_tibble) |>
+  table_list <- purrr::map(ktea3_data, as.data.frame) |>
     set_names(paste0("table", 1:length(ktea3_data))) # Rename tables
 
   list2env(table_list, .GlobalEnv) # Assign to global environment
 }
 
 # Example Usage:
-process_ktea3_tables(plucked_tables_ktea3)
+process_ktea3_tables(extracted_tables_ktea3)
 
 # Loop over the list and write each matrix to a CSV file
-for (i in seq_along(plucked_tables_ktea3)) {
-  write.csv(plucked_tables_ktea3[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+for (i in seq_along(extracted_tables_ktea3)) {
+  write.csv(extracted_tables_ktea3[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
 }
-
 ```
 
 # Table 1
 
 ```{r}
-library(tibble)
-table1 <- as.tibble(table1)
+table1 <- data.frame(table1)
 table1 <- table1 |> slice(-1:-6)
 table1[1, 1] <- c("Academic Skills Battery (ASB) Composite")
 # names(table1) <- params$colnames
-names(table1) <- c("scale", "raw_score", "ssss", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
+names(table1) <- c("scale", "raw_score", "sum_subtests", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
 df <- table1
 ```
 
@@ -257,10 +239,10 @@ table1 <- convert_columns(df)
 # Table 2
 
 ```{r}
-table2 <- as.tibble(table2)
+table2 <- data.frame(table2)
 table2 <- table2 |> slice(-1:-5)
 # names(table1) <- params$colnames
-names(table2) <- c("scale", "raw_score", "ssss", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
+names(table2) <- c("scale", "raw_score", "sum_subtests", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
 df <- table2
 # usage (assuming you have a dataframe named 'df')
 table2 <- convert_columns(df)
@@ -283,9 +265,9 @@ library(dplyr)
 
 # Function to replace "-" with NA and filter out rows with no real data
 filter_real_data <- function(table, key_columns) {
-  table <- table |>
-    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) |>
-    mutate(across(all_of(key_columns), as.numeric)) |>
+  table <- table %>%
+    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) %>%
+    mutate(across(all_of(key_columns), as.numeric)) %>%
     filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
 
   return(table)
@@ -304,13 +286,12 @@ table2 <- filter_real_data(table2_all_rows, key_columns)
 # Print the filtered table
 print(table1)
 print(table2)
-
 ```
 
 ## Make columns
 
 ```{r mutate1}
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- bwu::gpluck_make_columns(
   table1,
   range = "",
   test = "ktea3",
@@ -327,7 +308,7 @@ table1 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- bwu::gpluck_make_columns(
   table2,
   range = "",
   test = "ktea3",
@@ -345,12 +326,11 @@ table2 <- NeurotypR::gpluck_make_columns(
 )
 ```
 
-
 ## Test score ranges
 
 ```{r range}
-table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
-table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Domains for language tests

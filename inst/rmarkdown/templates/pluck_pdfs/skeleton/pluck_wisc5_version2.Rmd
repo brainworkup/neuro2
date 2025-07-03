@@ -1,12 +1,14 @@
 ---
 title: "Pluck Tables from WISC-5"
 params:
-  patient: "{{< var patient >}}"
+  patient: Biggie
   test:
     label: "Test"
     value: [wisc5]
     input: select
     multiple: no
+    choices:
+      - wisc5
   test_name:
     label: "Test Name"
     value: [WISC-V]
@@ -19,37 +21,56 @@ params:
     label: "No file selected"
     value: file
     input: file
-  pages: [22,23,26,29,30]
+  pages: [30, 30, 30, 30, 30, 31, 34, 37, 38]
   table1:
-    label: "Subtest Score Summary"
-    value: [Similarities, Block Design, Matrix Reasoning, Letter-Number Sequencing, Coding]
+    label: "Verbal Comprehension (VCI)"
+    value: [Similarities]
     input: select
     multiple: yes
     choices:
-      Verbal Comprehension (VCI):
-        - Similarities
-        - Vocabulary
-        - Information
-        - Comprehension
-      Visual Spatial (VSI):
-        - Block Design
-        - Visual Puzzles
-      Fluid Reasoning (FRI):
-        - Matrix Reasoning
-        - Figure Weights
-        - Picture Concepts
-        - Arithmetic
-      Working Memory (WMI):
-        - Digit Span
-        - Picture Span
-        - Letter-Number Sequencing
-      Processing Speed (PSI):
-        - Coding
-        - Symbol Search
-        - Cancellation
+      - Similarities
+      - Vocabulary
+      - Information
+      - Comprehension
   table2:
+    label: "Visual Spatial (VSI)"
+    value: [Block Design]
+    input: select
+    multiple: yes
+    choices:
+      - Block Design
+      - Visual Puzzles
+  table3:
+    label: "Fluid Reasoning (FRI)"
+    value: [Matrix Reasoning]
+    input: select
+    multiple: yes
+    choices:
+      - Matrix Reasoning
+      - Figure Weights
+      - Picture Concepts
+      - Arithmetic
+  table4:
+    label: "Working Memory (WMI)"
+    value: [Letter-Number Sequencing]
+    input: select
+    multiple: yes
+    choices:
+      - Digit Span
+      - Picture Span
+      - Letter-Number Sequencing
+  table5:
+    label: "Processing Speed (PSI)"
+    value: [Coding]
+    input: select
+    multiple: yes
+    choices:
+      - Coding
+      - Symbol Search
+      - Cancellation
+  table6:
     label: "Composite Score Summary"
-    value: [Verbal Comprehension (VCI), Fluid Reasoning (FRI), Working Memory (WMI), Processing Speed (PSI)]
+    value: ""
     input: select
     multiple: yes
     choices:
@@ -59,7 +80,7 @@ params:
       - Working Memory (WMI)
       - Processing Speed (PSI)
       - Full Scale IQ (FSIQ)
-  table3:
+  table7:
     label: "Ancillary compoiste scores"
     value: "General Ability (GAI)"
     input: select
@@ -67,17 +88,14 @@ params:
     choices:
       - Verbal (Expanded Crystallized) (VECI)
       - Expanded Fluid (EFI)
-      - Quantitative Reasoning (QRI)
+      - Quantative Reasoning (QRI)
       - Auditory Working Memory (AWMI)
       - Nonverbal (NVI)
       - General Ability (GAI)
       - Cognitive Proficiency (CPI)
-      - Naming Speed
-      - Symbol Translation
-      - Storage & Retrieval
-  table4:
-    label: "Total Raw Score to Scaled Score Conversion"
-    value: [Block Design No Time Bonus]
+  table8:
+    label: "PROCESS ANALYSIS"
+    value: ["Block Design No Time Bonus"]
     input: select
     multiple: yes
     choices:
@@ -88,42 +106,73 @@ params:
       - Digit Span Sequencing
       - Cancellation Random
       - Cancellation Structured
-      - Longest Digit Span Forward
-      - Longest Digit Span Backward
-      - Longest Digit Span Sequence
-      - Longest Letter-Number Sequence
-  table5:
-    label: "Total Raw Score to Base Rate Conversion"
-    value: ""
+  table9:
+    label: "PROCESS ANALYSIS (CONTINUED)"
+    value: ["Longest Digit Span Forward"]
     input: select
     multiple: yes
     choices:
       - Longest Digit Span Forward
       - Longest Digit Span Backward
-      - Longest Digit Span Sequencing
+      - Longest Digit Span Sequence
       - Longest Picture Span Stimulus
       - Longest Picture Span Response
       - Longest Letter-Number Sequence
+      - Block Design Dimension Errors
+      - Block Design Rotation Errors
+      - Coding Rotation Errors
+      - Symbol Search Set Errors
+      - Symbol Search Rotation Errors
+      - Naming Speed Literacy Errors
+      - Naming Speed Quantity Errors
   colnames1:
-    label: "Tables 1 Column Names"
+    label: "Tables 1-5 Column Names"
     value: [domain, scale, abbrev, raw_score, score, percentile, age_equiv, sem]
     input: select
     multiple: yes
+    choices:
+      - domain
+      - scale
+      - abbrev
+      - raw_score
+      - score
+      - percentile
+      - age_equiv
+      - sem
   colnames2:
-    label: "Tables 2-3 Column Names"
+    label: "Tables 6-7 Column Names"
     value: [scale, abbrev, raw_score, score, percentile, ci_95, category, sem]
     input: select
     multiple: yes
+    choices:
+      - scale
+      - abbrev
+      - raw_score
+      - score
+      - percentile
+      - ci_95
+      - category
+      - sem
   colnames3:
-    label: "Table 4 Column Names"
+    label: "Table 8 Column Names"
     value: [scale, abbrev, raw_score, score]
     input: select
     multiple: yes
+    choices:
+      - scale
+      - abbrev
+      - raw_score
+      - score
   colnames4:
-    label: "Table 5 Column Names"
+    label: "Table 9 Column Names"
     value: [scale, abbrev, raw_score, base_rate]
     input: select
     multiple: yes
+    choices:
+      - scale
+      - abbrev
+      - raw_score
+      - base_rate
   keep1:
     label: "Variables to Keep, Set 1"
     value: [scale, raw_score, score, percentile]
@@ -135,11 +184,42 @@ params:
       - score
       - percentile
       - age_equiv
+      - sem
   keep2:
     label: "Variables to Keep, Set 2"
     value: [scale, raw_score, score, percentile, ci_95]
     input: select
     multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - percentile
+      - ci_95
+      - category
+      - sem
+# Domains to evaluate or not
+  eval_iq:
+    label: "General Cognitive Ability"
+    value: TRUE
+  eval_vci:
+    label: "Verbal/Language"
+    value: TRUE
+  eval_pri:
+    label: "Visual Perception/Construction"
+    value: TRUE
+  eval_wmi:
+    label: "Working Memory"
+    value: TRUE
+  eval_psi:
+    label: "Processing Speed"
+    value: TRUE
+  eval_bd:
+    label: "Block Design No Time Bonus"
+    value: FALSE
+  eval_span:
+    label: "Longest Span Subtests"
+    value: FALSE
   match:
     label: "Subset/Match Rows"
     input: checkbox
@@ -149,11 +229,11 @@ output:
     highlight: kate
 ---
 
-# WISC-5
-
 ## Load libraries
 
 ```{r setup, include = FALSE}
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
   echo = TRUE,
@@ -177,7 +257,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(tidyverse)
-library(NeurotypR)
+library(bwu)
 ```
 
 ## Patient
@@ -191,15 +271,15 @@ patient <- params$patient
 ```{r test}
 test <- params$test
 test_name <- params$test_name
+version <- params$version
 ```
 
 ## Upload/attach PDF
 
 ```{r choose}
-file <- file.choose()
-saveRDS(file, "wisc5.rds")
-input_file_path <- readRDS("wisc5.rds")
-# input_file_path <- file.path(params$file)
+file <- params$file
+# file <- file.choose()
+saveRDS(file, "file_path.rds")
 ```
 
 ## Pages
@@ -228,176 +308,179 @@ for (i in seq_along(plucked_tables_wisc5)) {
 
 # Save the entire list to an R data file
 save(plucked_tables_wisc5, file = "plucked_tables_wisc5.RData")
-```
 
-```{r}
 # Load the entire list from an R data file
 load("plucked_tables_wisc5.RData")
 ```
 
-# WISC-5 Subtest Scores (Tables 1)
-
-## Pluck and tidy tables
-
 ```{r}
-library(dplyr)
-library(purrr)
-library(readr)
+# Define the replacements vector
+replacements <- c(
+  "Similarities", "Vocabulary", "Information", "Comprehension",
+  "Block Design", "Visual Puzzles", "Matrix Reasoning", "Figure Weights",
+  "Picture Concepts", "Arithmetic", "Digit Span", "Picture Span",
+  "Letter-Number Sequencing", "Coding", "Symbol Search", "Cancellation",
+  "Verbal Comprehension (VCI)", "Visual Spatial (VSI)", "Fluid Reasoning (FRI)",
+  "Working Memory (WMI)", "Processing Speed (PSI)", "Full Scale IQ (FSIQ)", "General Ability (GAI)"
+)
 
-process_table <- function(table_path, colnames, keep, table_value) {
-  table <- readr::read_csv(table_path)
-
-  # Rename columns
-  names(table) <- colnames
-
-  # Convert columns to double
-  to_double <- c("raw_score", "score", "percentile")
-  table[to_double] <- lapply(table[to_double], as.numeric)
-
-  # Ensure table_value is compatible with the number of rows in table
-  if (length(table_value) != 1 && length(table_value) != nrow(table)) {
-    stop("table_value must be a single value or a vector with length equal to the number of rows in the table.")
-  }
-
-  # Assign value to first column
-  if (length(table_value) == 1) {
-    table[, 1] <- table_value
-  } else {
-    table[, 1] <- table_value
-  }
-
-  # Select specified columns
-  table <- table |> dplyr::select(all_of(keep))
-
-  return(table)
+# Define the replacement function
+replace_scale_names <- function(df, replacements) {
+  scale_column <- ifelse("scale" %in% names(df), "scale", "abbrev")
+  df[[scale_column]] <- sapply(df[[scale_column]], function(x) {
+    for (replacement in replacements) {
+      x <- gsub(pattern = paste0("\\(", replacement, "\\)"), replacement, x)
+    }
+    return(x)
+  })
+  return(df)
 }
 
-# Paths to your CSV files
-table_paths <- paste0("wisc5_", 1:5, ".csv")
+# Sample list of data frames
+plucked_tables_wisc5 <- list(
+  data.frame(domain = c("Verbal", "Comprehension", "", ""), scale = c("Similarities", "Vocabulary", "(Information)", "(Comprehension)"), stringsAsFactors = FALSE),
+  data.frame(domain = c("Visual Spatial", ""), scale = c("Block Design", "Visual Puzzles"), stringsAsFactors = FALSE),
+  data.frame(domain = c("Fluid Reasoning", "", "", ""), scale = c("Matrix Reasoning", "Figure Weights", "(Picture Concepts)", "(Arithmetic)"), stringsAsFactors = FALSE),
+  data.frame(domain = c("Working Memory", "", ""), scale = c("Digit Span", "Picture Span", "(Letter-Number Seq.)"), stringsAsFactors = FALSE),
+  data.frame(domain = c("Processing Speed", "", ""), scale = c("Coding", "Symbol Search", "(Cancellation)"), stringsAsFactors = FALSE),
+  data.frame(scale = c("Verbal Comprehension", "Visual Spatial", "Fluid Reasoning", "Working Memory", "Processing Speed", "Full Scale IQ"), abbrev = c("VCI", "VSI", "FRI", "WMI", "PSI", "FSIQ"), stringsAsFactors = FALSE),
+  data.frame(scale = c("General Ability"), abbrev = c("GAI"), stringsAsFactors = FALSE)
+)
 
-# Extract parameters from the rmarkdown params
-colnames <- params$colnames1
-keep <- params$keep1
-table_value <- params$table1
+# Apply the replacement function to each data frame in the list
+plucked_tables_wisc5 <- lapply(plucked_tables_wisc5, replace_scale_names, replacements = replacements)
 
-# If table_value needs to be a vector, make sure it's a list of vectors
-if (!is.list(table_value)) {
-  table_value <- rep(list(table_value), length(table_paths))
-}
-
-# Process all tables using purrr::map2
-plucked_tables_wisc5 <- purrr::map2(table_paths, table_value, ~ process_table(.x, colnames, keep, .y))
-
-# Print the processed tables
-print(plucked_tables_wisc5)
-```
-
-```{r}
-process_table <- function(table_path, colnames, keep, table_value) {
-  table <- readr::read_csv(table_path)
-
-  # Rename columns
-  names(table) <- colnames
-
-  # Ensure table_value is compatible and numeric
-  stopifnot(
-      length(table_value) == 1 || length(table_value) == nrow(table),
-      is.numeric(table_value)
-  )
-
-  # Assign value to first column
-  table[, 1] <- table_value
-
-  # Convert columns to double
-  to_double <- c("raw_score", "score", "percentile")
-  table[to_double] <- lapply(table[to_double], as.numeric)
-
-  # Select specified columns
-  table <- table |> dplyr::select(all_of(keep))
-
-  return(table)
-}
-
-# ... rest of the code (table_paths, parameter extraction, map2) ...
-# Paths to your CSV files
-table_paths <- paste0("wisc5_", 1:5, ".csv")
-
-# Extract parameters from the rmarkdown params
-colnames <- params$colnames1
-keep <- params$keep1
-table_value <- params$table1
-
-# If table_value needs to be a vector, make sure it's a list of vectors
-if (!is.list(table_value)) {
-  table_value <- rep(list(table_value), length(table_paths))
-}
-
-# Process all tables using purrr::map2
-plucked_tables_wisc5 <- purrr::map2(table_paths, table_value, ~ process_table(.x, colnames, keep, .y))
-
-# Print the processed tables
+# Print the modified list of data frames
 print(plucked_tables_wisc5)
 ```
 
 ## Change scale names
 
 ```{r}
-table1 <- as.tibble(plucked_tables_wisc5[[1]])
+table1[1, 1] <- c("Similarities")
+table1[2, 1] <- c("Vocabulary")
+table1[3, 1] <- c("Information")
+table1[4, 1] <- c("Comprehension")
+table1[5, 1] <- c("Block Design")
+table1[6, 1] <- c("Visual Puzzles")
+table1[7, 1] <- c("Matrix Reasoning")
+table1[8, 1] <- c("Figure Weights")
+table1[9, 1] <- c("Picture Concepts")
+table1[10, 1] <- c("Arithmetic")
+table1[11, 1] <- c("Digit Span")
+table1[12, 1] <- c("Picture Span")
+table1[13, 1] <- c("Letter-Number Sequencing")
+table1[14, 1] <- c("Coding")
+table1[15, 1] <- c("Symbol Search")
+table1[16, 1] <- c("Cancellation")
 
-names(table1) <- c("domain", "scale", "abbrev", "raw_score", "score", "percentile", "age_equiv", "sem")
+table2[1, 1] <- c("Verbal Comprehension (VCI)")
+table2[2, 1] <- c("Visual Spatial (VSI)")
+table2[3, 1] <- c("Fluid Reasoning (FRI)")
+table2[4, 1] <- c("Working Memory (WMI)")
+table2[5, 1] <- c("Processing Speed (PSI)")
+table2[6, 1] <- c("Full Scale IQ (FSIQ)")
 
-table1[1, 2] <- c("Similarities")
-table1[2, 2] <- c("Vocabulary")
-table1[3, 2] <- c("Information")
-table1[4, 2] <- c("Comprehension")
-table1[5, 2] <- c("Block Design")
-table1[6, 2] <- c("Visual Puzzles")
-table1[7, 2] <- c("Matrix Reasoning")
-table1[8, 2] <- c("Figure Weights")
-table1[9, 2] <- c("Picture Concepts")
-table1[10, 2] <- c("Arithmetic")
-table1[11, 2] <- c("Digit Span")
-table1[12, 2] <- c("Picture Span")
-table1[13, 2] <- c("Letter-Number Sequencing")
-table1[14, 2] <- c("Coding")
-table1[15, 2] <- c("Symbol Search")
-table1[16, 2] <- c("Cancellation")
+table3[1, 1] <- c("Verbal (Expanded Crystallized) (VECI)")
+table3[2, 1] <- c("Expanded Fluid (EFI)")
+table3[3, 1] <- c("Quantitative Reasoning (QRI)")
+table3[4, 1] <- c("Auditory Working Memory (AWMI)")
+table3[5, 1] <- c("Nonverbal (NVI)")
+table3[6, 1] <- c("General Ability (GAI)")
+table3[7, 1] <- c("Cognitive Proficiency (CPI)")
+# table3[1, 1] <- c("Naming Speed (NSI)")
+# table3[2, 1] <- c("Symbol Translation (STI)")
+# table3[3, 1] <- c("Storage & Retrieval (SRI)")
 
+table4[1, 1] <- c("Block Design No Time Bonus")
+table4[2, 1] <- c("Block Design Partial Score")
+table4[3, 1] <- c("Digit Span Forward")
+table4[4, 1] <- c("Digit Span Backward")
+table4[5, 1] <- c("Digit Span Sequencing")
+table4[6, 1] <- c("Cancellation Random")
+table4[7, 1] <- c("Cancellation Structured")
 
-table1 <- table1 |> dplyr::select(all_of(params$keep1))
+# table4[1, 1] <- c("Naming Speed Literacy")
+# table4[2, 1] <- c("Naming Speed Quantity")
+# table4[3, 1] <- c("Immediate Symbol Translation")
+# table4[4, 1] <- c("Delayed Symbol Translation")
+# table4[5, 1] <- c("Recognition Symbol Translation")
+
+table5[1, 1] <- c("Longest Digit Span Forward")
+table5[2, 1] <- c("Longest Digit Span Backward")
+table5[3, 1] <- c("Longest Digit Span Sequence")
+table5[4, 1] <- c("Longest Picture Span Stimulus")
+table5[5, 1] <- c("Longest Picture Span Response")
+table5[6, 1] <- c("Longest Letter-Number Sequence")
+table5[7, 1] <- c("Block Design Dimension Errors")
+table5[8, 1] <- c("Block Design Rotation Errors")
+table5[9, 1] <- c("Coding Rotation Errors")
+table5[10, 1] <- c("Symbol Search Set Errors")
+table5[11, 1] <- c("Symbol Search Rotation Errors")
+table5[12, 1] <- c("Naming Speed Literacy Errors")
+table5[13, 1] <- c("Naming Speed Quantity Errors")
 ```
 
-## Extract rows with data
+# WISC-5 Subtest Scores (Tables 1-5)
+
+## Pluck and tidy tables
 
 ```{r}
-library(dplyr)
+process_table <- function(table_path, colnames, keep, table_value) {
+  table <- readr::read_csv(table_path)
 
-# Function to replace "-" with NA and filter out rows with no real data
-filter_real_data <- function(table, key_columns) {
-  table <- table |>
-    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) |>
-    mutate(across(all_of(key_columns), as.numeric)) |>
-    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
+  # Rename columns
+  names(table) <- colnames
+
+  # Convert columns to double
+  to_double <- c("raw_score", "score", "percentile")
+  table[to_double] <- lapply(table[to_double], as.numeric)
+
+  # Assign value to first column
+  table[, 1] <- table_value
+
+  # Select specified columns
+  table <- table |> dplyr::select(all_of(keep))
 
   return(table)
+}
+
+# Paths to your CSV files
+table_paths <- paste0("wisc5_", 1:7, ".csv")
+
+# Extract parameters from the rmarkdown params
+colnames <- params$colnames1
+keep <- params$keep1
+table_value <- params$table
+
+# Process all tables using purrr::map
+# plucked_tables_wisc5 now contains the processed tables
+plucked_tables_wisc5 <- map(table_paths, ~ process_table(.x, colnames, keep, table_value))
+```
+
+# VCI (Table 1)
+
+## extract rows with data
+
+```{r}
+# Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
+filter_real_data <- function(table, key_columns) {
+  table %>%
+    filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
 # Assuming key_columns are those columns which must have data
 key_columns <- c("raw_score", "score", "percentile")
 
 # Extract and filter table1
-table1_all_rows <- as_tibble(table1) # Ensure table1 is a tibble
+table1_all_rows <- plucked_tables_wisc5[[1]]
 table1 <- filter_real_data(table1_all_rows, key_columns)
-
-# Print the filtered table
-print(table1)
-
 ```
 
 ## Mutate columns
 
 ```{r}
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- gpluck_make_columns(
   table1,
   range = "",
   ci_95 = "",
@@ -416,14 +499,15 @@ table1 <- NeurotypR::gpluck_make_columns(
 )
 
 # Test score ranges
-table1 <- NeurotypR::gpluck_make_score_ranges(
+table1 <- bwu::gpluck_make_score_ranges(
   table = table1,
-  test_type = "npsych_test")
+  test_type = "npsych_test"
+)
 ```
 
 ## Subdomains
 
-```{r subdomain1, eval = params$eval_vci}
+```{r, eval = params$eval_vci}
 table1 <-
   table1 |>
   dplyr::mutate(
@@ -477,7 +561,7 @@ table1 <-
 
 ```{r}
 table1 <-
-  table1 |>
+  table1 %>%
   dplyr::mutate(
     result = glue::glue(
       "{description} was {range}.\n"
@@ -496,7 +580,7 @@ table1 <- table1 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 ```{r}
 # Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
 filter_real_data <- function(table, key_columns) {
-  table |>
+  table %>%
     filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
@@ -511,7 +595,7 @@ table2 <- filter_real_data(table2_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -533,7 +617,7 @@ table2 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -598,7 +682,7 @@ table2 <-
 
 ```{r}
 table2 <-
-  table2 |>
+  table2 %>%
   dplyr::mutate(
     result = glue::glue(
       "{description} was {range}.\n"
@@ -617,7 +701,7 @@ table2 <- table2 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 ```{r}
 # Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
 filter_real_data <- function(table, key_columns) {
-  table |>
+  table %>%
     filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
@@ -632,7 +716,7 @@ table3 <- filter_real_data(table3_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table3 <- NeurotypR::gpluck_make_columns(
+table3 <- gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -654,7 +738,7 @@ table3 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table3 <- bwu::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -715,7 +799,7 @@ table3 <-
       scale == "Matrix Reasoning" ~ "Inductive reasoning and nonverbal problem-solving",
       scale == "Figure Weights" ~ "General sequential (deductive) reasoning and quantitative reasoning", # TODO:
       scale == "Picture Concepts" ~ "Reasoning and semantic matching",
-     scale == "Arithmetic" ~ "Solving math word problems in working memory",
+      scale == "Arithmetic" ~ "Solving math word problems in working memory",
       TRUE ~ as.character(description)
     )
   )
@@ -725,7 +809,7 @@ table3 <-
 
 ```{r}
 table3 <-
-  table3 |>
+  table3 %>%
   dplyr::mutate(
     result = glue::glue(
       "{description} was {range}.\n"
@@ -744,7 +828,7 @@ table3 <- table3 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 ```{r}
 # Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
 filter_real_data <- function(table, key_columns) {
-  table |>
+  table %>%
     filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
@@ -759,7 +843,7 @@ table4 <- filter_real_data(table4_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table4 <- NeurotypR::gpluck_make_columns(
+table4 <- gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -781,10 +865,10 @@ table4 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table4 <- NeurotypR::gpluck_make_score_ranges(
+table4 <- bwu::gpluck_make_score_ranges(
   table = table4,
   test_type = "npsych_test"
-  )
+)
 ```
 
 ## Subdomains
@@ -804,7 +888,7 @@ table4 <-
 
 ## Narrow subdomains
 
-```{r narrow4, eval = params$eval_wmi}
+```{r, eval = params$eval_wmi}
 table4 <-
   table4 |>
   dplyr::mutate(
@@ -866,7 +950,7 @@ table4 <-
 
 ```{r}
 table4 <-
-  table4 |>
+  table4 %>%
   dplyr::mutate(
     result = glue::glue(
       "{description} was {range}.\n"
@@ -885,7 +969,7 @@ table4 <- table4 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 ```{r}
 # Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
 filter_real_data <- function(table, key_columns) {
-  table |>
+  table %>%
     filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
@@ -900,7 +984,7 @@ table5 <- filter_real_data(table5_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table5 <- NeurotypR::gpluck_make_columns(
+table5 <- gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -922,7 +1006,7 @@ table5 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table5 <- bwu::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -989,7 +1073,7 @@ table5 <-
 
 ```{r}
 table5 <-
-  table5 |>
+  table5 %>%
   dplyr::mutate(
     result = glue::glue(
       "{description} was {range}.\n"
@@ -1038,65 +1122,9 @@ plucked_tables_wisc5 <- map(table_paths, ~ process_table(.x, colnames, keep, tab
 ```
 
 ```{r}
-table2[1, 1] <- c("Verbal Comprehension (VCI)")
-table2[2, 1] <- c("Visual Spatial (VSI)")
-table2[3, 1] <- c("Fluid Reasoning (FRI)")
-table2[4, 1] <- c("Working Memory (WMI)")
-table2[5, 1] <- c("Processing Speed (PSI)")
-table2[6, 1] <- c("Full Scale IQ (FSIQ)")
-```
-
-```{r}
-table3[1, 1] <- c("Verbal (Expanded Crystallized) (VECI)")
-table3[2, 1] <- c("Expanded Fluid (EFI)")
-table3[3, 1] <- c("Quantitative Reasoning (QRI)")
-table3[4, 1] <- c("Auditory Working Memory (AWMI)")
-table3[5, 1] <- c("Nonverbal (NVI)")
-table3[6, 1] <- c("General Ability (GAI)")
-table3[7, 1] <- c("Cognitive Proficiency (CPI)")
-# table3[1, 1] <- c("Naming Speed (NSI)")
-# table3[2, 1] <- c("Symbol Translation (STI)")
-# table3[3, 1] <- c("Storage & Retrieval (SRI)")
-```
-
-```{r}
-table4[1, 1] <- c("Block Design No Time Bonus")
-table4[2, 1] <- c("Block Design Partial Score")
-table4[3, 1] <- c("Digit Span Forward")
-table4[4, 1] <- c("Digit Span Backward")
-table4[5, 1] <- c("Digit Span Sequencing")
-table4[6, 1] <- c("Cancellation Random")
-table4[7, 1] <- c("Cancellation Structured")
-```
-
-```{r eval=F}
-# table4[1, 1] <- c("Naming Speed Literacy")
-# table4[2, 1] <- c("Naming Speed Quantity")
-# table4[3, 1] <- c("Immediate Symbol Translation")
-# table4[4, 1] <- c("Delayed Symbol Translation")
-# table4[5, 1] <- c("Recognition Symbol Translation")
-```
-
-```{r eval=T}
-table5[1, 1] <- c("Longest Digit Span Forward")
-table5[2, 1] <- c("Longest Digit Span Backward")
-table5[3, 1] <- c("Longest Digit Span Sequence")
-table5[4, 1] <- c("Longest Picture Span Stimulus")
-table5[5, 1] <- c("Longest Picture Span Response")
-table5[6, 1] <- c("Longest Letter-Number Sequence")
-table5[7, 1] <- c("Block Design Dimension Errors")
-table5[8, 1] <- c("Block Design Rotation Errors")
-table5[9, 1] <- c("Coding Rotation Errors")
-table5[10, 1] <- c("Symbol Search Set Errors")
-table5[11, 1] <- c("Symbol Search Rotation Errors")
-table5[12, 1] <- c("Naming Speed Literacy Errors")
-table5[13, 1] <- c("Naming Speed Quantity Errors")
-```
-
-```{r}
 # Function to filter out rows with no real data (assumes real data rows have non-NA and non-empty values in key columns)
 filter_real_data <- function(table, key_columns) {
-  table |>
+  table %>%
     filter(rowSums(is.na(select(., all_of(key_columns))) | select(., all_of(key_columns)) == "") < length(key_columns))
 }
 
@@ -1115,14 +1143,14 @@ table6 <- readr::read_csv("wisc5_6.csv")
 names(table6) <- params$colnames2
 
 # Use unite to concatenate the first two columns and add parentheses around the abbrev data
-table6 <- table6 |>
-  unite("scale", scale, abbrev, sep = " (", remove = TRUE) |>
-  mutate(scale = paste0(scale, ")")) |>
+table6 <- table6 %>%
+  unite("scale", scale, abbrev, sep = " (", remove = TRUE) %>%
+  mutate(scale = paste0(scale, ")")) %>%
   relocate(scale, .before = raw_score)
 
 table6 <- table6 |> dplyr::select(all_of(params$keep2))
 
-table6 <- NeurotypR::gpluck_make_columns(
+table6 <- gpluck_make_columns(
   table6,
   range = "",
   test = params$test,
@@ -1143,7 +1171,7 @@ table6 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table6 <- bwu::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Subdomain
@@ -1248,17 +1276,17 @@ table6 <-
         "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
       ),
       scale == "Visual Spatial (VSI" ~ glue::glue(
-          "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
-        ),
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
       scale == "Fluid Reasoning (FRI)" ~ glue::glue(
-          "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
-        ),
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
       scale == "Working Memory (WMI)" ~ glue::glue(
-          "{description} fell in the {range} range.\n"
-        ),
+        "{description} fell in the {range} range.\n"
+      ),
       scale == "Processing Speed (PSI)" ~ glue::glue(
-          "{description} was {range}.\n"
-        ),
+        "{description} was {range}.\n"
+      ),
       scale == "Full Scale IQ (FSIQ)" ~ glue::glue(
         "{description} was {range} overall.\n"
       ),
@@ -1279,7 +1307,7 @@ table6 <- table6 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 # Combine tables
 
 ```{r}
-wisc5 <- rbind(table6,table1,table2,table3,table4,table5)
+wisc5 <- rbind(table6, table1, table2, table3, table4, table5)
 ```
 
 ## Write out final csv
@@ -1288,11 +1316,11 @@ wisc5 <- rbind(table6,table1,table2,table3,table4,table5)
 readr::write_csv(wisc5, here::here("data", "csv", "wisc5.csv"))
 ```
 
-# NOTE: TODO: add 3 other tables 7/1/24
+**TODO: add 3 other tables 7/1/24**
 
 ## Domain
 
-```{r domains-table1}
+```{r}
 table1 <-
   table1 |>
   mutate(
@@ -1318,7 +1346,7 @@ table1 <-
   )
 ```
 
-```{r domains-table2}
+```{r}
 table2 <-
   table2 |>
   mutate(
@@ -1334,7 +1362,7 @@ table2 <-
   )
 ```
 
-```{r domains-table3}
+```{r}
 table3 <-
   table3 |>
   mutate(
@@ -1356,9 +1384,9 @@ table3 <-
   )
 ```
 
-```{r domains-table4}
-table4 <-
-  table4 |>
+```{r}
+table8 <-
+  table8 |>
   mutate(
     domain = case_when(
       ## Total Raw Score to Scaled Score Conversion
@@ -1374,7 +1402,7 @@ table4 <-
   )
 ```
 
-```{r domains-table4}
+```{r eval=F}
 # table4 <-
 #   table4 |>
 #   mutate(
@@ -1391,34 +1419,32 @@ table4 <-
 ```
 
 ```{r domains-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     domain = case_when(
-#       ## Total Raw Score to Base Rate Conversion
-#       scale == "Longest Digit Span Backward" ~ "Attention/Executive",
-#       scale == "Longest Digit Span Forward" ~ "Attention/Executive",
-#       scale == "Longest Digit Span Sequence" ~ "Attention/Executive",
-#       scale == "Longest Picture Span Response" ~ "Attention/Executive",
-#       scale == "Longest Picture Span Stimulus" ~ "Attention/Executive",
-#       scale == "Longest Letter-Number Sequence" ~ "Attention/Executive",
-#       scale == "Block Design Dimension Errors" ~ "Visual Perception/Construction",
-#       scale == "Block Design Rotation Errors" ~ "Visual Perception/Construction",
-#       scale == "Coding Rotation Errors" ~ "Attention/Executive",
-#       scale == "Symbol Search Set Errors" ~ "Attention/Executive",
-#       scale == "Symbol Search Rotation Errors" ~ "Attention/Executive",
-#       scale == "Naming Speed Literacy Errors" ~ "Verbal/Language",
-#       scale == "Naming Speed Quantity Errors" ~ "Verbal/Language",
-#       TRUE ~ as.character(domain)
-#     )
-#   )
+table6 <-
+  table6 |>
+  mutate(
+    domain = case_when(
+      ## Total Raw Score to Base Rate Conversion
+      scale == "Longest Digit Span Backward" ~ "Attention/Executive",
+      scale == "Longest Digit Span Forward" ~ "Attention/Executive",
+      scale == "Longest Digit Span Sequence" ~ "Attention/Executive",
+      scale == "Longest Picture Span Response" ~ "Attention/Executive",
+      scale == "Longest Picture Span Stimulus" ~ "Attention/Executive",
+      scale == "Longest Letter-Number Sequence" ~ "Attention/Executive",
+      scale == "Block Design Dimension Errors" ~ "Visual Perception/Construction",
+      scale == "Block Design Rotation Errors" ~ "Visual Perception/Construction",
+      scale == "Coding Rotation Errors" ~ "Attention/Executive",
+      scale == "Symbol Search Set Errors" ~ "Attention/Executive",
+      scale == "Symbol Search Rotation Errors" ~ "Attention/Executive",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal/Language",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal/Language",
+      TRUE ~ as.character(domain)
+    )
+  )
 ```
 
-## Subdomain
+## Subdomains
 
-As necessary.
-
-```{r subdomains-table1}
+```{r}
 table1 <-
   table1 |>
   mutate(
@@ -1444,7 +1470,7 @@ table1 <-
   )
 ```
 
-```{r subdomains-table2}
+```{r}
 table2 <-
   table2 |>
   mutate(
@@ -1480,7 +1506,7 @@ table3 <-
   )
 ```
 
-```{r subdomains-table4}
+```{r}
 table4 <-
   table4 |>
   mutate(
@@ -1497,7 +1523,7 @@ table4 <-
   )
 ```
 
-```{r subdomains-table4}
+```{r eval=F}
 # table4 <-
 #   table4 |>
 #   mutate(
@@ -1513,27 +1539,27 @@ table4 <-
 #   )
 ```
 
-```{r subdomains-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     subdomain = case_when(
-#       scale == "Block Design Dimension Errors" ~ "Fluid Reasoning",
-#       scale == "Block Design Rotation Errors" ~ "Fluid Reasoning",
-#       scale == "Coding Rotation Errors" ~ "Processing Speed",
-#       scale == "Longest Digit Span Backward" ~ "Working Memory",
-#       scale == "Longest Digit Span Forward" ~ "Attention",
-#       scale == "Longest Digit Span Sequence" ~ "Working Memory",
-#       scale == "Longest Letter-Number Sequence" ~ "Working Memory",
-#       scale == "Longest Picture Span Response" ~ "Working Memory",
-#       scale == "Longest Picture Span Stimulus" ~ "Working Memory",
-#       scale == "Naming Speed Literacy Errors" ~ "Processing Speed",
-#       scale == "Naming Speed Quantity Errors" ~ "Processing Speed",
-#       scale == "Symbol Search Rotation Errors" ~ "Processing Speed",
-#       scale == "Symbol Search Set Errors" ~ "Processing Speed",
-#       TRUE ~ as.character(subdomain)
-#     )
-#   )
+```{r}
+table6 <-
+  table6 |>
+  mutate(
+    subdomain = case_when(
+      scale == "Block Design Dimension Errors" ~ "Fluid Reasoning",
+      scale == "Block Design Rotation Errors" ~ "Fluid Reasoning",
+      scale == "Coding Rotation Errors" ~ "Processing Speed",
+      scale == "Longest Digit Span Backward" ~ "Working Memory",
+      scale == "Longest Digit Span Forward" ~ "Attention",
+      scale == "Longest Digit Span Sequence" ~ "Working Memory",
+      scale == "Longest Letter-Number Sequence" ~ "Working Memory",
+      scale == "Longest Picture Span Response" ~ "Working Memory",
+      scale == "Longest Picture Span Stimulus" ~ "Working Memory",
+      scale == "Naming Speed Literacy Errors" ~ "Processing Speed",
+      scale == "Naming Speed Quantity Errors" ~ "Processing Speed",
+      scale == "Symbol Search Rotation Errors" ~ "Processing Speed",
+      scale == "Symbol Search Set Errors" ~ "Processing Speed",
+      TRUE ~ as.character(subdomain)
+    )
+  )
 ```
 
 ## Narrow subdomain
@@ -1619,7 +1645,7 @@ table4 <-
   )
 ```
 
-```{r narrow-table4}
+```{r eval=F}
 # table4 <-
 #   table4 |>
 #   mutate(
@@ -1636,31 +1662,29 @@ table4 <-
 ```
 
 ```{r narrow-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     narrow = case_when(
-#       scale == "Block Design Dimension Errors" ~ "Visuoconstruction",
-#       scale == "Block Design Rotation Errors" ~ "Visuoconstruction",
-#       scale == "Coding Rotation Errors" ~ "Nonverbal Processing Speed",
-#       scale == "Longest Digit Span Backward" ~ "Verbal Working Memory",
-#       scale == "Longest Digit Span Forward" ~ "Verbal Attention",
-#       scale == "Longest Digit Span Sequence" ~ "Verbal Working Memory",
-#       scale == "Longest Letter-Number Sequence" ~ "Verbal Working Memory",
-#       scale == "Longest Picture Span Response" ~ "Nonverbal Working Memory",
-#       scale == "Longest Picture Span Stimulus" ~ "Nonverbal Working Memory",
-#       scale == "Naming Speed Literacy Errors" ~ "Verbal Processing Speed",
-#       scale == "Naming Speed Quantity Errors" ~ "Verbal Processing Speed",
-#       scale == "Symbol Search Rotation Errors" ~ "Nonverbal Processing Speed",
-#       scale == "Symbol Search Set Errors" ~ "Nonverbal Processing Speed",
-#       TRUE ~ as.character(narrow)
-#     )
-#   )
+table6 <-
+  table6 |>
+  mutate(
+    narrow = case_when(
+      scale == "Block Design Dimension Errors" ~ "Visuoconstruction",
+      scale == "Block Design Rotation Errors" ~ "Visuoconstruction",
+      scale == "Coding Rotation Errors" ~ "Nonverbal Processing Speed",
+      scale == "Longest Digit Span Backward" ~ "Verbal Working Memory",
+      scale == "Longest Digit Span Forward" ~ "Verbal Attention",
+      scale == "Longest Digit Span Sequence" ~ "Verbal Working Memory",
+      scale == "Longest Letter-Number Sequence" ~ "Verbal Working Memory",
+      scale == "Longest Picture Span Response" ~ "Nonverbal Working Memory",
+      scale == "Longest Picture Span Stimulus" ~ "Nonverbal Working Memory",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal Processing Speed",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal Processing Speed",
+      scale == "Symbol Search Rotation Errors" ~ "Nonverbal Processing Speed",
+      scale == "Symbol Search Set Errors" ~ "Nonverbal Processing Speed",
+      TRUE ~ as.character(narrow)
+    )
+  )
 ```
 
 ## PASS model
-
-As necessary.
 
 ```{r pass-table1}
 table1 <-
@@ -1741,42 +1765,27 @@ table4 <-
   )
 ```
 
-```{r pass-table6}
-# table5 <-
-#   table5 |>
-#   mutate(
-#     pass = case_when(
-#       scale == "Naming Speed Literacy" ~ "Successive",
-#       scale == "Naming Speed Quantity" ~ "Successive",
-#       scale == "Immediate Symbol Translation" ~ "Simultaneous",
-#       scale == "Delayed Symbol Translation" ~ "Simultaneous",
-#       scale == "Recognition Symbol Translation" ~ "Simultaneous",
-#       TRUE ~ as.character(pass)
-#     )
-#   )
-```
-
-```{r pass-table5}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     pass = case_when(
-#       scale == "Block Design Dimension Errors" ~ "Simultaneous",
-#       scale == "Block Design Rotation Errors" ~ "Simultaneous",
-#       scale == "Coding Rotation Errors" ~ "Planning",
-#       scale == "Longest Digit Span Backward" ~ "Successive",
-#       scale == "Longest Digit Span Forward" ~ "Successive",
-#       scale == "Longest Digit Span Sequence" ~ "Successive",
-#       scale == "Longest Letter-Number Sequence" ~ "Successive",
-#       scale == "Longest Picture Span Response" ~ "Successive",
-#       scale == "Longest Picture Span Stimulus" ~ "Successive",
-#       scale == "Naming Speed Literacy Errors" ~ "Successive",
-#       scale == "Naming Speed Quantity Errors" ~ "Successive",
-#       scale == "Symbol Search Rotation Errors" ~ "Attention",
-#       scale == "Symbol Search Set Errors" ~ "Attention",
-#       TRUE ~ as.character(pass)
-#     )
-#   )
+```{r}
+table6 <-
+  table6 |>
+  mutate(
+    pass = case_when(
+      scale == "Block Design Dimension Errors" ~ "Simultaneous",
+      scale == "Block Design Rotation Errors" ~ "Simultaneous",
+      scale == "Coding Rotation Errors" ~ "Planning",
+      scale == "Longest Digit Span Backward" ~ "Successive",
+      scale == "Longest Digit Span Forward" ~ "Successive",
+      scale == "Longest Digit Span Sequence" ~ "Successive",
+      scale == "Longest Letter-Number Sequence" ~ "Successive",
+      scale == "Longest Picture Span Response" ~ "Successive",
+      scale == "Longest Picture Span Stimulus" ~ "Successive",
+      scale == "Naming Speed Literacy Errors" ~ "Successive",
+      scale == "Naming Speed Quantity Errors" ~ "Successive",
+      scale == "Symbol Search Rotation Errors" ~ "Attention",
+      scale == "Symbol Search Set Errors" ~ "Attention",
+      TRUE ~ as.character(pass)
+    )
+  )
 ```
 
 ## Verbal vs Nonverbal
@@ -1862,42 +1871,27 @@ table4 <-
   )
 ```
 
-```{r verbal-table4}
-# table4 <-
-#   table4 |>
-#   mutate(
-#     verbal = case_when(
-#       scale == "Naming Speed Literacy" ~ "Verbal",
-#       scale == "Naming Speed Quantity" ~ "Verbal",
-#       scale == "Immediate Symbol Translation" ~ "Nonverbal",
-#       scale == "Delayed Symbol Translation" ~ "Nonverbal",
-#       scale == "Recognition Symbol Translation" ~ "Nonverbal",
-#       TRUE ~ as.character(verbal)
-#     )
-#   )
-```
-
 ```{r verbal-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     verbal = case_when(
-#       scale == "Block Design Dimension Errors" ~ "Nonverbal",
-#       scale == "Block Design Rotation Errors" ~ "Nonverbal",
-#       scale == "Coding Rotation Errors" ~ "Nonverbal",
-#       scale == "Longest Digit Span Backward" ~ "Verbal",
-#       scale == "Longest Digit Span Forward" ~ "Verbal",
-#       scale == "Longest Digit Span Sequence" ~ "Verbal",
-#       scale == "Longest Letter-Number Sequence" ~ "Verbal",
-#       scale == "Longest Picture Span Response" ~ "Nonverbal",
-#       scale == "Longest Picture Span Stimulus" ~ "Nonverbal",
-#       scale == "Naming Speed Literacy Errors" ~ "Verbal",
-#       scale == "Naming Speed Quantity Errors" ~ "Verbal",
-#       scale == "Symbol Search Rotation Errors" ~ "Nonverbal",
-#       scale == "Symbol Search Set Errors" ~ "Nonverbal",
-#       TRUE ~ as.character(verbal)
-#     )
-#   )
+table6 <-
+  table6 |>
+  mutate(
+    verbal = case_when(
+      scale == "Block Design Dimension Errors" ~ "Nonverbal",
+      scale == "Block Design Rotation Errors" ~ "Nonverbal",
+      scale == "Coding Rotation Errors" ~ "Nonverbal",
+      scale == "Longest Digit Span Backward" ~ "Verbal",
+      scale == "Longest Digit Span Forward" ~ "Verbal",
+      scale == "Longest Digit Span Sequence" ~ "Verbal",
+      scale == "Longest Letter-Number Sequence" ~ "Verbal",
+      scale == "Longest Picture Span Response" ~ "Nonverbal",
+      scale == "Longest Picture Span Stimulus" ~ "Nonverbal",
+      scale == "Naming Speed Literacy Errors" ~ "Verbal",
+      scale == "Naming Speed Quantity Errors" ~ "Verbal",
+      scale == "Symbol Search Rotation Errors" ~ "Nonverbal",
+      scale == "Symbol Search Set Errors" ~ "Nonverbal",
+      TRUE ~ as.character(verbal)
+    )
+  )
 ```
 
 ## Timed vs Untimed
@@ -1983,47 +1977,30 @@ table4 <-
   )
 ```
 
-```{r timed-table4}
-# table4 <-
-#   table4 |>
-#   mutate(
-#     timed = case_when(
-#       scale == "Naming Speed Literacy" ~ "Timed",
-#       scale == "Naming Speed Quantity" ~ "Timed",
-#       scale == "Immediate Symbol Translation" ~ "Untimed",
-#       scale == "Delayed Symbol Translation" ~ "Untimed",
-#       scale == "Recognition Symbol Translation" ~ "Untimed",
-#       Timed ~ as.character(timed)
-#     )
-#   )
-```
-
 ```{r timed-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     timed = case_when(
-#       scale == "Block Design Dimension Errors" ~ "Timed",
-#       scale == "Block Design Rotation Errors" ~ "Timed",
-#       scale == "Coding Rotation Errors" ~ "Timed",
-#       scale == "Longest Digit Span Backward" ~ "Untimed",
-#       scale == "Longest Digit Span Forward" ~ "Untimed",
-#       scale == "Longest Digit Span Sequence" ~ "Untimed",
-#       scale == "Longest Letter-Number Sequence" ~ "Untimed",
-#       scale == "Longest Picture Span Response" ~ "Untimed",
-#       scale == "Longest Picture Span Stimulus" ~ "Untimed",
-#       scale == "Naming Speed Literacy Errors" ~ "Timed",
-#       scale == "Naming Speed Quantity Errors" ~ "Timed",
-#       scale == "Symbol Search Rotation Errors" ~ "Timed",
-#       scale == "Symbol Search Set Errors" ~ "Timed",
-#       TRUE ~ as.character(timed)
-#     )
-#   )
+table6 <-
+  table6 |>
+  mutate(
+    timed = case_when(
+      scale == "Block Design Dimension Errors" ~ "Timed",
+      scale == "Block Design Rotation Errors" ~ "Timed",
+      scale == "Coding Rotation Errors" ~ "Timed",
+      scale == "Longest Digit Span Backward" ~ "Untimed",
+      scale == "Longest Digit Span Forward" ~ "Untimed",
+      scale == "Longest Digit Span Sequence" ~ "Untimed",
+      scale == "Longest Letter-Number Sequence" ~ "Untimed",
+      scale == "Longest Picture Span Response" ~ "Untimed",
+      scale == "Longest Picture Span Stimulus" ~ "Untimed",
+      scale == "Naming Speed Literacy Errors" ~ "Timed",
+      scale == "Naming Speed Quantity Errors" ~ "Timed",
+      scale == "Symbol Search Rotation Errors" ~ "Timed",
+      scale == "Symbol Search Set Errors" ~ "Timed",
+      TRUE ~ as.character(timed)
+    )
+  )
 ```
 
-## Description of test
-
-As necessary.
+## Descriptions
 
 ```{r description-table1}
 table1 <-
@@ -2106,43 +2083,27 @@ table4 <-
   )
 ```
 
-```{r description-table4}
-# table4 <-
-#   table4 |>
-#   mutate(
-#     description = case_when(
-#       ## Complimentary
-#       scale == "Naming Speed Literacy" ~ "naming speed for objects/letters/numbers",
-#       scale == "Naming Speed Quantity" ~ "naming speed for quantities",
-#       scale == "Immediate Symbol Translation" ~ "visual-verbal associative memory learning",
-#       scale == "Delayed Symbol Translation" ~ "visual-verbal associative memory recall",
-#       scale == "Recognition Symbol Translation" ~ "visual-verbal associative memory recognition",
-#       TRUE ~ as.character(description)
-#     )
-#   )
-```
-
 ```{r description-table6}
-# table6 <-
-#   table6 |>
-#   mutate(
-#     description = case_when(
-#       scale == "Block Design Dimension Errors" ~ "visuoconstruction and integration of blocks (dimension errors)",
-#       scale == "Block Design Rotation Errors" ~ "visuoconstruction and integration of blocks (rotation errors)",
-#       scale == "Longest Digit Span Backward" ~ "recall of digits forward and backward",
-#       scale == "Longest Digit Span Forward" ~ "recall of digits forward and backward",
-#       scale == "Longest Digit Span Sequence" ~ "recall of digits forward and backward",
-#       scale == "Longest Letter-Number Sequence" ~ "recalling and reordering progressively longer series of digits and letters",
-#       scale == "Symbol Search Rotation Errors" ~ "processing speed, attention, and concentration (rotation errors)",
-#       scale == "Symbol Search Set Errors" ~ "processing speed, attention, and concentration (set errors)",
-#       scale == "Naming Speed Literacy Errors" ~ "naming speed for objects/letters/numbers (errors)",
-#       scale == "Naming Speed Quantity Errors" ~ "naming speed for quantities (errors)",
-#       scale == "Longest Picture Span Response" ~ "visual/nonverbal working memory and working memory capacity (response)",
-#       scale == "Longest Picture Span Stimulus" ~ "visual/nonverbal working memory and working memory capacity (stimulus)",
-#       scale == "Coding Rotation Errors" ~ "visual-motor processing speed (rotation errors)",
-#       TRUE ~ as.character(description)
-#     )
-#   )
+table6 <-
+  table6 |>
+  mutate(
+    description = case_when(
+      scale == "Block Design Dimension Errors" ~ "visuoconstruction and integration of blocks (dimension errors)",
+      scale == "Block Design Rotation Errors" ~ "visuoconstruction and integration of blocks (rotation errors)",
+      scale == "Longest Digit Span Backward" ~ "recall of digits forward and backward",
+      scale == "Longest Digit Span Forward" ~ "recall of digits forward and backward",
+      scale == "Longest Digit Span Sequence" ~ "recall of digits forward and backward",
+      scale == "Longest Letter-Number Sequence" ~ "recalling and reordering progressively longer series of digits and letters",
+      scale == "Symbol Search Rotation Errors" ~ "processing speed, attention, and concentration (rotation errors)",
+      scale == "Symbol Search Set Errors" ~ "processing speed, attention, and concentration (set errors)",
+      scale == "Naming Speed Literacy Errors" ~ "naming speed for objects/letters/numbers (errors)",
+      scale == "Naming Speed Quantity Errors" ~ "naming speed for quantities (errors)",
+      scale == "Longest Picture Span Response" ~ "visual/nonverbal working memory and working memory capacity (response)",
+      scale == "Longest Picture Span Stimulus" ~ "visual/nonverbal working memory and working memory capacity (stimulus)",
+      scale == "Coding Rotation Errors" ~ "visual-motor processing speed (rotation errors)",
+      TRUE ~ as.character(description)
+    )
+  )
 ```
 
 # Finalize and save

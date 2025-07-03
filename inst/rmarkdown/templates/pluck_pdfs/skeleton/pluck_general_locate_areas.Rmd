@@ -14,6 +14,10 @@ params:
       - wais4
       - wais5
       - wrat5
+      - nab
+      - brown_efa_self
+      - brown_efa_parent
+      - brown_efa_teacher
   test_name:
     label: "Test Name"
     value: test_name
@@ -23,11 +27,15 @@ params:
       - WAIS-IV
       - WAIS-5
       - WRAT-5
+      - NAB
+      - Brown EF/A Self-Report
+      - Brown EF/A Parent Ratings
+      - Brown EF/A Teacher Ratings
   file:
     label: "No file selected"
     value: file
     input: file
-  # pages: [5, 5]
+  pages: [5,5]
   variables:
     label: "Variable Names"
     value: [scale, raw_score, score, ci_95, percentile]
@@ -58,6 +66,7 @@ params:
       - score
       - ci_95
       - percentile
+      - description
   test_type:
     label: "Test Type"
     value: "npsych_test"
@@ -65,7 +74,8 @@ params:
     choices:
       - npsych_test
       - rating_scale
-      - validity_indicator
+      - performance_validity
+      - symptom_validity
   score_type:
     label: "Score type"
     value: "standard_score"
@@ -90,7 +100,7 @@ output:
 ```{r setup, include = FALSE}
 Sys.setenv(
   JAVA_HOME =
-    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
@@ -100,10 +110,13 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
+library(dplyr)
+library(glue)
 library(here)
 library(knitr)
 library(magrittr)
 library(readr)
+library(rlang)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
@@ -111,11 +124,9 @@ library(snakecase)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
-library(dplyr)
 library(vroom)
-library(glue)
-library(rlang)
 library(NeurotypR)
+library(bwu)
 ```
 
 ## Parameters
@@ -138,7 +149,6 @@ saveRDS(file, paste0(test, ".rds")) # eventually update to data directory
 ## Locate areas
 
 ```{r eval = FALSE}
-# file <- file.path(file.choose())
 areas <- tabulapdf::locate_areas(
   file = file,
   pages = pages
@@ -203,7 +213,7 @@ if (params$version == "full") {
 Extract tables from the PDF file using `tabulapdf`
 
 ```{r eval = F}
-plucked_tables <- tabulapdf::extract_tables(
+extracted_tables <- tabulapdf::extract_tables(
   file = file,
   pages = pages,
   area = areas,
@@ -213,15 +223,15 @@ plucked_tables <- tabulapdf::extract_tables(
 )
 
 # Save the list of data frames to a file
-saveRDS(plucked_tables, file = "plucked_tables.rds")
+saveRDS(extracted_tables, file = "extracted_tables.rds")
 ```
 
 ```{r}
 # Load the list of data frames from the file
-plucked_tables <- readRDS("plucked_tables.rds")
+extracted_tables <- readRDS("extracted_tables.rds")
 
 # Verify that the list is loaded correctly
-str(plucked_tables)
+str(extracted_tables)
 ```
 
 ## Extract areas with `tabulapdf`
@@ -375,7 +385,7 @@ df <- convert_percentile(df, "percentile")
 ```{r eval = params$compute_ci95}
 # Assuming df is your data.frame and calc_ci_95 is your function
 for (i in seq_len(nrow(df))) {
-  ci_values <- NeurotypR::calc_ci_95(
+  ci_values <- bwu::calc_ci_95(
     ability_score = df$score[i],
     mean = 10, # change to 50, 0, 100, etc.
     standard_deviation = 3, # change to 10, 1, 15, etc.
@@ -404,7 +414,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- bwu::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -417,7 +427,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 ```{r ranges, eval = TRUE}
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
+  bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 
@@ -474,4 +484,4 @@ readr::write_excel_csv(
 )
 ```
 
-THE END!!
+**THE END!!**

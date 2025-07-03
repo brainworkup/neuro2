@@ -69,7 +69,7 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(yaml)
-library(NeurotypR)
+library(bwu)
 library(NeurotypR)
 ```
 
@@ -338,7 +338,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- bwu::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -351,7 +351,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 ```{r ranges, eval = TRUE}
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale") |>
+  bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale") |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 

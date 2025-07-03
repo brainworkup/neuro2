@@ -1,7 +1,7 @@
 ---
 title: "Merge NEPSY-2 scores with lookup table"
 params:
-  patient: "{{< var patient >}}"
+  patient: Biggie
   test: nepsy2
   test_name: "NEPSY-2"
   version: "NEPSY-2 Ages 2-3"
@@ -36,10 +36,10 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(NeurotypR)
+library(bwu)
 # Set JAVA environment
 options(java.parameters = "-Xmx16000m")
-Sys.setenv(JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home")
+Sys.setenv(JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
 # Set knitr options
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
@@ -84,7 +84,7 @@ file <- params$file
 library(tabulapdf)
 ## from basc3prs, not nepsy
 
-nepsy2 <- vroom::vroom("/Users/joey/reports/Biggie/data/nepsy2_scores.csv")
+nepsy2 <- readr::read_csv("/Users/joey/reports/Biggie/data/nepsy2_scores.csv")
 
 # f <- file.path(file.choose(""))
 
@@ -108,7 +108,7 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 save(extracted_areas, file = "nepsy2_tables.RData")
-qs::qsave(extracted_areas, "nepsy2_tables.rds")
+qs2::qd_save(extracted_areas, "nepsy2_tables.rds")
 ```
 
 ```{r}
@@ -150,13 +150,13 @@ df <- df |> dplyr::relocate(c(patient), .before = test)
 ```
 
 ```{r mutate, eval = T}
-df <- df |> NeurotypR::gpluck_make_columns(ci_95 = "", range = "")
+df <- df |> bwu::gpluck_make_columns(ci_95 = "", range = "")
 ```
 
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 ```
 
 # Glue Results v2

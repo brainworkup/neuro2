@@ -3,7 +3,7 @@ title: "Plant Validity Indicators"
 params:
   patient:
     label: "Patient First Name:"
-    value: "{{< var patient >}}"
+    value: Biggie
     input: text
   test_name:
     label: "Full Name of Test/Test Battery:"
@@ -202,7 +202,7 @@ output:
 
 ```{r setup, include = FALSE}
 Sys.setenv(
-  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
@@ -212,7 +212,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
+library(bwu)
 library(here)
 library(knitr)
 library(magrittr)
@@ -465,7 +465,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- NeurotypR::calc_ci_95(
+ci_values <- bwu::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,

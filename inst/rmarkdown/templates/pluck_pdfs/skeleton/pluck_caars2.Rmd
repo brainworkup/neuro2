@@ -34,7 +34,7 @@ output:
 
 ```{r setup, include=FALSE}
 Sys.setenv(
-  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
@@ -55,7 +55,7 @@ library(shiny)
 library(snakecase)
 library(tabulapdf)
 library(tidyverse)
-library(NeurotypR)
+library(bwu)
 ```
 
 ## Parameters
@@ -94,7 +94,7 @@ if (params$test == "caars2_or") {
 ## Extract tables
 
 ```{r}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- bwu::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -265,7 +265,7 @@ combined_df <- combined_df[1:9, ]
 ```{r}
 table <- combined_df
 
-table <- NeurotypR::gpluck_make_columns(
+table <- bwu::gpluck_make_columns(
   table,
   test = params$test,
   test_name = params$test_name,
@@ -297,7 +297,7 @@ table <- table |>
 ## Ranges
 
 ```{r ranges}
-table <- NeurotypR::gpluck_make_score_ranges(
+table <- bwu::gpluck_make_score_ranges(
   table = table,
   test_type = "rating_scale"
 )

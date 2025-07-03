@@ -1,0 +1,364 @@
+---
+title: "Pluck Tables from WIAT-4"
+params:
+  patient: Biggie
+  test:
+    label: "Test"
+    value: wiat4
+    input: select
+    multiple: no
+    choices:
+      - wiat4
+      - wiat3
+  test_name:
+    label: "Test Name"
+    value: "WIAT-4"
+    input: select
+    multiple: no
+    choices:
+      - "WIAT-4"
+      - "WIAT-III"
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+  pages: [12,13]
+  table1:
+    label: "Table 1: Core Composite Score Summary"
+    value: ["Total Achievement","Word Reading","Reading Comprehension","Spelling","Essay Composition","Math Problem Solving","Numerical Operations","Reading","Written Expression", "Sentence Composition","Mathematics"]
+    input: select
+    multiple: yes
+    choices:
+      TOTAL ACHIEVEMENT:
+      - Total Achievement
+      - Word Reading
+      - Reading Comprehension
+      - Spelling
+      - Essay Composition
+      - Math Problem Solving
+      - Numerical Operations
+      READING:
+      - Reading
+      - Word Reading
+      - Reading Comprehension
+      WRITING:
+      - Written Expression
+      - Spelling
+      - Sentence Composition
+      - Essay Composition
+      MATH:
+      - Mathematics
+      - Math Problem Solving
+      - Numerical Operations
+  table2:
+    label: "Table 2: Supplemental Composite Score Summary"
+    value: [Reading Fluency, Oral Reading Fluency, Orthographic Fluency, Decoding Fluency, "Math Fluency", "Math Fluency-Addition", "Math Fluency-Subtraction", "Math Fluency-Multiplication"]
+    input: select
+    multiple: yes
+    choices:
+      BASIC READING:
+      - Basic Reading
+      - Pseudoword Decoding
+      - Phonemic Proficiency
+      - Word Reading
+      DECODING:
+      - Decoding
+      - Pseudoword Decoding
+      - Word Reading
+      READING FLUENCY:
+      - Reading Fluency
+      - Oral Reading Fluency
+      - Orthographic Fluency
+      - Decoding Fluency
+      MATH:
+      - "Math Fluency"
+      - "Math Fluency-Addition"
+      - "Math Fluency-Subtraction"
+      - "Math Fluency-Multiplication"
+      PHONOLOGICAL PROCESSING:
+      - Phonological Processing
+      - Pseudoword Decoding
+      - Phonemic Proficiency
+      ORTHOGRAPHIC PROCESSING:
+      - Orthographic Processing
+      - Orthographic Fluency
+      - Spelling
+      DYSLEXIA INDEX:
+      - Dyslexia Index
+      - Word Reading
+      - Pseudoword Decoding
+      - Orthographic Fluency
+      OTHER:
+      - Orthographic Processing Extended
+      - Orthographic Choice
+      - Oral Language
+      - Listening Comprehension
+      - Oral Expression
+  colnames:
+    label: "Column Names"
+    value: [scale, raw_score, score, ci_95, percentile, category, age_equiv, grade_equiv, gsv]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - ci_95
+      - percentile
+      - category
+      - age_equiv
+      - grade_equiv
+      - gsv
+  keep:
+    label: "Variables to Keep"
+    value: [scale, raw_score, score, percentile, ci_95]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - percentile
+      - ci_95
+---
+
+## Load libraries
+
+```{r setup, include=FALSE}
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = TRUE
+)
+library(dplyr)
+library(hablar)
+library(here)
+library(knitr)
+library(magrittr)
+library(miniUI)
+library(readr)
+library(rJava)
+library(rmarkdown)
+library(shiny)
+library(tabulapdf)
+library(tidytable)
+library(tibble)
+library(tidyr)
+library(vroom)
+library(bwu)
+```
+
+## Parameters
+
+```{r}
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+file <- file.path(file.choose())
+file <- params$file
+pages <- params$pages
+```
+
+## Locate areas
+
+```{r areas-known}
+# top left bottom right
+areas <- list(
+  c(142, 32, 383, 580),
+  c(142, 32, 429, 580)
+)
+```
+
+```{r areas-get, eval=FALSE}
+# if unknown
+# patient <- "Biggie"
+# file <- file.choose()
+located_areas <- bwu::gpluck_locate_areas(
+  file = file,
+  pages = c(12, 13)
+)
+```
+
+## Extract tables
+
+```{r extract-table-pdf}
+extracted_tables <- bwu::gpluck_extract_tables(
+  file = file,
+  pages = c(12, 13),
+  method = "decide",
+  area = areas,
+  guess = NULL,
+  output = "matrix" # data.frame
+)
+
+plucked_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = c(12, 13),
+  method = "decide", # decide
+  area = areas,
+  guess = NULL,
+  output = "matrix" # data.frame
+)
+
+######
+######## text works
+plucked_text <- pdftools::pdf_text(file)
+```
+
+# Table 1
+
+## Pluck and tidy tables
+
+```{r pluck1}
+table1 <- tibble::as_tibble(plucked_tables[[1]])
+names(table1) <- params$colnames
+
+df <- table1
+
+# Step 1: Replace "-" with NA in the entire dataframe
+df[df == "-"] <- NA
+
+# Step 2 (Optional): Convert 'raw score' 'score' and 'percentile' to numeric
+df <- df |>
+  dplyr::mutate(
+    raw_score = as.numeric(raw_score),
+    score = as.numeric(score),
+    percentile = as.numeric(percentile)
+  )
+
+# Step 3: Remove rows where 'score' or 'percentile' are missing
+df <- df |>
+  filter(!is.na(score) & !is.na(percentile))
+
+# Step 4: Remove duplicate rows
+df <- df |> dplyr::distinct(.keep_all = TRUE)
+
+# Step 5: Add scale
+df$scale <- params$table1
+```
+
+# Table 2
+
+## Pluck and tidy tables
+
+```{r pluck2}
+table2 <- tibble::as_tibble(plucked_tables[[2]])
+names(table2) <- params$colnames
+
+df2 <- table2
+
+# Step 1: Replace "-" with NA in the entire dataframe
+df2[df2 == "-"] <- NA
+
+# Step 2 (Optional): Convert 'raw score' 'score' and 'percentile' to numeric
+df2 <- df2 |>
+  dplyr::mutate(
+    raw_score = as.numeric(raw_score),
+    score = as.numeric(score),
+    percentile = as.numeric(percentile)
+  )
+
+# Step 3: Remove rows where 'score' or 'percentile' are missing
+df2 <- df2 |>
+  filter(!is.na(score) & !is.na(percentile))
+
+# Step 4: Remove duplicate rows
+df2 <- df2 |> dplyr::distinct(.keep_all = TRUE)
+
+wiat4 <- dplyr::bind_rows(df, df2)
+
+# Step 4: Remove duplicate rows
+wiat4 <- wiat4 |> dplyr::distinct(.keep_all = TRUE)
+
+# Step 5: Add scale
+# df2$scale <- params$table2
+```
+
+## Select variables to keep
+
+```{r select}
+df <- wiat4 |> dplyr::select(all_of(params$keep))
+```
+
+# Lookup Table Match
+
+```{r}
+# Load the lookup table
+lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- bwu::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r range}
+df <- bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test")
+```
+
+## Glue results
+
+```{r glue-result}
+df <-
+  df %>%
+  tidytable::mutate(
+    result = glue::glue(
+      "{description} was {range}."
+    )
+  )
+```
+
+## Relocate variables
+
+```{r relocate}
+wiat4 <- df |>
+  dplyr::relocate(c(test, test_name), .before = scale) |>
+  dplyr::relocate(c(ci_95), .after = score) |>
+  dplyr::relocate(c(range), .after = percentile) |>
+  dplyr::relocate(c(absort), .after = result) |>
+  dplyr::select(-description)
+```
+
+## Write out final csv
+
+```{r write-csv}
+readr::write_csv(wiat4, here::here("data", "csv", "wiat4.csv"), col_names = TRUE, na = "")
+```
+
+## Write to "g2.csv" file
+
+```{r}
+has_headers <- function(file_path) {
+  if (!file.exists(file_path)) {
+    return(FALSE) # File doesn't exist, headers are needed
+  }
+  # Check if the file has at least one line (header)
+  return(length(readLines(file_path, n = 1)) > 0)
+}
+
+csv_file <- wiat4
+g <- "g2"
+file_path <- here::here("data", paste0(g, ".csv"))
+
+readr::write_excel_csv(
+  csv_file,
+  file_path,
+  append = TRUE,
+  col_names = !has_headers(file_path),
+  quote = "all"
+)
+```

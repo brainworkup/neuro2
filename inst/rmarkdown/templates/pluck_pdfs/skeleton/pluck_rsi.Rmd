@@ -1,11 +1,12 @@
 ---
-title: "Import CSV file from PAI"
+title: "Import CSV file from the Rating Scale of Impairment RSI"
 params:
+  table:
   patient: Biggie
-  test: pai
-  test_name: PAI
+  test: rsi
+  test_name: "Rating Scale of Impairment"
   file:
-    label: "Upload the PAI PDF file"
+    label: "Upload the PDF file"
     value: file
     input: file
 output:
@@ -16,97 +17,84 @@ output:
 ## Setup
 
 ```{r setup, include = FALSE}
-Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home")
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
-  echo = TRUE,
-  message = TRUE,
+  echo = FALSE,
+  message = FALSE,
   warning = FALSE,
   error = TRUE
 )
-library(dplyr)
-library(fs)
-library(glue)
+library(bwu)
+library(hablar)
 library(here)
-library(knitr)
 library(magrittr)
-library(pdftools)
 library(readr)
-library(rlang)
+library(rJava)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
-library(snakecase)
-library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(vroom)
-library(xfun)
-library(yaml)
-library(bwu)
+library(tidytable)
+library(pdftools)
 ```
 
-## Export PAI CSV file from PARiConnect
+## Patient
+
+```{r patient}
+patient <- params$patient
+```
+
+## Test
+
+```{r test}
+test <- params$test
+```
+
+## Test Name
+
+```{r testname}
+test_name <- params$test_name
+```
+
+## Upload/attach PDF
+
+```{r file}
+# file <- file.choose()
+file <- params$file
+```
+
+## Export CSV file from PARiConnect
 
 Need to export csv file from PARiConnect before processing.
 "Export Client Data" tab, then click "Univ of Southern Cali" then "PAI".
 Specify date range to exclude entire database.
 
-## Parameters
-
-```{r}
-file_path <- here::here("data", "pdf", "pai.pdf")
-read_content <- readLines(file_path)
-```
-
-```{r}
-patient <- params$patient
-test <- params$test
-test_name <- params$test_name
-# file <- file.path(file.choose())
-file <- file.path(params$file)
-saveRDS(file, "pai.rds")
-# file <- readRDS("pai.rds")
-```
-
-## Import PAI CSV file from PARiConnect
-
-```{r}
-plucked_tables <-
-  readr::read_csv(
-    here::here("data", "pariconnectexportPAI.csv")
-  )
-```
-
-## PAI Clinical and validity scales
+## Clinical and validity scales
 
 ### Subset and rename columns
 
-```{r}
-pai <- plucked_tables |>
+```{r subset, eval=FALSE}
+df_clinical <- plucked_table |>
+  tidytable::select(
+    SOM_T:AGG_P_T, ALC_Est, DRG_Est) |>
   tidyr::gather() |>
-  dplyr::rename(scale = key, score = value)
+  tidytable::rename(scale = key, score = value)
 
-df_clinical <- plucked_tables |>
-  dplyr::select(
-    SOM_T:AGG_P_T, ALC_Est, DRG_Est
-  ) |>
-  tidyr::gather() |>
-  dplyr::rename(scale = key, score = value)
-
-df_validity <- plucked_tables |>
-  dplyr::select(
+df_validity <- plucked_table |>
+  tidytable::select(
     ICN_T:PIM_T,
-    MAL_T:HRI_T
-  ) |>
+    MAL_T:HRI_T) |>
   tidyr::gather() |>
-  dplyr::rename(scale = key, score = value)
+  tidytable::rename(scale = key, score = value)
 
-df_inatt <- plucked_tables |>
-  dplyr::select(IINATTN_T) |>
+df_inatt <- plucked_table |>
+  tidytable::select(IINATTN_T) |>
   tidyr::gather() |>
-  dplyr::rename(scale = key, score = value)
+  tidytable::rename(scale = key, score = value)
 
 adhd_items <- c(
   "R13",
@@ -135,39 +123,34 @@ adhd_items <- c(
   "R325"
 )
 
-df_adhd <- plucked_tables |>
-  dplyr::select(adhd_items) |>
+df_adhd <- plucked_table |>
+  tidytable::select(adhd_items) |>
   tidyr::gather() |>
-  dplyr::rename(scale = key, score = value)
+  tidytable::rename(scale = key, score = value)
 ```
 
 ### Convert T scores to z scores to percentiles
 
-```{r}
-pai <- pai |>
-  dplyr::mutate(z = (score - 50) / 10) |>
-  dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
-  dplyr::select(scale, score, percentile)
-
+```{r t2z2p, eval=FALSE}
 df_clinical <- df_clinical |>
-  dplyr::mutate(z = (score - 50) / 10) |>
-  dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
-  dplyr::select(scale, score, percentile)
+  tidytable::mutate(z = (score - 50) / 10) |>
+  tidytable::mutate(percentile = trunc(pnorm(z) * 100)) |>
+  tidytable::select(scale, score, percentile)
 
 df_validity <- df_validity |>
-  dplyr::mutate(z = (score - 50) / 10) |>
-  dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
-  dplyr::select(scale, score, percentile)
+  tidytable::mutate(z = (score - 50) / 10) |>
+  tidytable::mutate(percentile = trunc(pnorm(z) * 100)) |>
+  tidytable::select(scale, score, percentile)
 
 df_inatt <- df_inatt |>
-  dplyr::mutate(z = (score - 50) / 10) |>
-  dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
-  dplyr::select(scale, score, percentile)
+  tidytable::mutate(z = (score - 50) / 10) |>
+  tidytable::mutate(percentile = trunc(pnorm(z) * 100)) |>
+  tidytable::select(scale, score, percentile)
 ```
 
 ## Change scale names
 
-```{r names}
+```{r names, eval=FALSE}
 # Clinical Scales
 df_clinical[1, 1] <- c("Somatic Complaints")
 df_clinical[2, 1] <- c("Anxiety")
@@ -252,8 +235,8 @@ df_inatt[1, 1] <- c("Inattention (INATTN) Index")
 
 ### Filter, group, select
 
-```{r filter}
-df_clinical <- df_clinical |> dplyr::slice(
+```{r filter, eval=FALSE}
+df_clinical <- df_clinical |> tidytable::slice(
   c(
     1, 19:21,
     2, 22:24,
@@ -273,35 +256,10 @@ df_clinical <- df_clinical |> dplyr::slice(
 
 ## Add/mutate columns
 
-```{r mutate}
-# TODO: Probably delete pai df
-pai <-
-  bwu::gpluck_make_columns(
-    data = pai,
-    raw_score = "",
-    range = "",
-    ci_95 = "",
-    test = params$test,
-    test_name = params$test_name,
-    domain = "",
-    subdomain = "",
-    narrow = "",
-    pass = "",
-    verbal = "",
-    timed = "",
-    test_type = "rating_scale",
-    score_type = "t_score",
-    absort = paste0(
-      tolower(test), "_", tolower(scale), "_", seq_len(nrow(pai))
-    ),
-    description = "",
-    result = ""
-  )
-
-
+```{r mutate, eval=FALSE}
 df_clinical <-
   bwu::gpluck_make_columns(
-    data = df_clinical,
+    table = df_clinical,
     raw_score = "",
     range = "",
     ci_95 = "",
@@ -321,10 +279,12 @@ df_clinical <-
     description = "",
     result = ""
   )
+```
 
+```{r, eval=FALSE}
 df_validity <-
   bwu::gpluck_make_columns(
-    data = df_validity,
+    table = df_validity,
     raw_score = "",
     range = "",
     ci_95 = "",
@@ -344,10 +304,12 @@ df_validity <-
     description = "",
     result = ""
   )
+```
 
+```{r, eval=FALSE}
 df_inatt <-
   bwu::gpluck_make_columns(
-    data = df_inatt,
+    table = df_inatt,
     raw_score = "",
     range = "",
     ci_95 = "",
@@ -371,7 +333,7 @@ df_inatt <-
 
 ## Rating Scale score ranges
 
-```{r ranges}
+```{r ranges, eval=FALSE}
 df_clinical <- bwu::gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
@@ -388,11 +350,11 @@ df_inatt <- bwu::gpluck_make_score_ranges(
 
 ## Domains
 
-```{r}
+```{r domains, eval=FALSE}
 df_clinical <-
   df_clinical |>
-  dplyr::mutate(
-    domain = dplyr::case_when(
+  tidytable::mutate(
+    domain = tidytable::case_when(
       scale == "Somatic Complaints" ~ "Psychiatric Disorders",
       scale == "Conversion" ~ "Psychiatric Disorders",
       scale == "Somatization" ~ "Psychiatric Disorders",
@@ -451,11 +413,11 @@ df_clinical <-
 
 ## Subdomains
 
-```{r subdomain}
+```{r subdomain, eval=FALSE}
 df_clinical <-
   df_clinical |>
-  dplyr::mutate(
-    subdomain = dplyr::case_when(
+  tidytable::mutate(
+    subdomain = tidytable::case_when(
       scale == "Somatic Complaints" ~ "Somatic Symptom Disorder",
       scale == "Conversion" ~ "Somatic Symptom Disorder",
       scale == "Somatization" ~ "Somatic Symptom Disorder",
@@ -512,13 +474,13 @@ df_clinical <-
   )
 ```
 
-## Validity
+## testing
 
-```{r}
+```{r, eval=FALSE}
 df_validity <-
   df_validity |>
-  dplyr::mutate(
-    subdomain = dplyr::case_when(
+  tidytable::mutate(
+    subdomain = tidytable::case_when(
       scale == "Inconsistency" ~ "Response Inconsistency",
       scale == "Infrequency" ~ "Negative Impression",
       scale == "Negative Impression Management" ~ "Negative Impression",
@@ -543,13 +505,13 @@ df_validity <-
   )
 ```
 
-## Narrow
+## Narrow subdomains
 
-```{r narrow}
+```{r narrow, eval=FALSE}
 df_clinical <-
   df_clinical |>
-  dplyr::mutate(
-    narrow = dplyr::case_when(
+  tidytable::mutate(
+    narrow = tidytable::case_when(
       scale == "Somatic Complaints" ~ "Somatic Symptom Disorder",
       scale == "Conversion" ~ "Somatic Symptom Disorder",
       scale == "Somatization" ~ "Somatic Symptom Disorder",
@@ -606,11 +568,11 @@ df_clinical <-
   )
 ```
 
-```{r}
+```{r, eval=FALSE}
 df_validity <-
   df_validity |>
-  dplyr::mutate(
-    narrow = dplyr::case_when(
+  tidytable::mutate(
+    narrow = tidytable::case_when(
       scale == "Inconsistency" ~ paste0(scale),
       scale == "Infrequency" ~ paste0(scale),
       scale == "Negative Impression Management" ~ paste0(scale),
@@ -637,11 +599,11 @@ df_validity <-
 
 ### Scale descriptions
 
-```{r description}
+```{r description, eval=FALSE}
 df_clinical <-
   df_clinical |>
-  dplyr::mutate(
-    description = dplyr::case_when(
+  tidytable::mutate(
+    description = tidytable::case_when(
       scale == "Somatic Complaints" ~ "degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms",
       scale == "Conversion" ~ "moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism",
       scale == "Somatization" ~ "high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction",
@@ -698,8 +660,8 @@ df_clinical <-
 # TODO:
 df_validity <-
   df_validity |>
-  dplyr::mutate(
-    description = dplyr::case_when(
+  tidytable::mutate(
+    description = tidytable::case_when(
       scale == "Inconsistency" ~ paste0(scale),
       scale == "Infrequency" ~ paste0(scale),
       scale == "Negative Impression Management" ~ paste0(scale),
@@ -726,109 +688,92 @@ df_validity <-
 
 ## Slice
 
-```{r slice}
+```{r slice, eval=FALSE}
 slice_clinical <- c(1:51)
-df_clinical <-
-  df_clinical |>
-  dplyr::slice(slice_clinical)
+df_clinical <- df_clinical |> tidytable::slice(slice_clinical)
 ```
 
 ## Glue results
 
-```{r result}
+```{r result, eval=FALSE}
 df_clinical <-
   df_clinical |>
-  dplyr::mutate(result = glue::glue("{patient}'s score on {.data$scale} ({.data$description}) was {.data$range}."))
-
+  tidytable::mutate(result = glue::glue("{patient}'s score on {scale}
+  ({description}) was {range}."))
 df_validity <-
   df_validity |>
-  dplyr::mutate(result = glue::glue("{patient}'s score on {.data$scale} ({.data$description}) was {.data$range}."))
-
+  tidytable::mutate(result = glue::glue("{patient}'s score on {scale}
+  ({description}) was {range}."))
 df_inatt <-
   df_inatt |>
-  dplyr::mutate(result = glue::glue("{patient}'s score on {.data$scale} ({.data$description}) was {.data$range}."))
+  tidytable::mutate(result = glue::glue("{patient}'s score on {scale} ({description}) was {range}."))
 ```
 
-## Finalize and save
+# Finalize and save
 
-### relocate variables
+## relocate variables
 
-```{r}
-# df <-
-#   pai |>
-#   dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
-
+```{r relocate, eval=FALSE}
 df <-
   df_clinical |>
-  dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
+  tidytable::relocate(c(raw_score, score, percentile, range, ci_95), .before = test)
 
 df_validity <-
   df_validity |>
-  dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
+  tidytable::relocate(c(raw_score, score, percentile, range, ci_95), .before = test)
 
 df_intatt <-
   df_inatt |>
-  dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
+  tidytable::relocate(c(raw_score, score, percentile, range, ci_95), .before = test)
 ```
 
 ## Write out final csv
 
-```{r writeout}
-readr::write_csv(
-  pai,
-  here::here("data", "pai.csv"),
-  col_names = TRUE,
-  na = ""
-)
-
+```{r writeout, eval=FALSE}
 readr::write_csv(
   df_clinical,
-  here::here("data", "csv", "pai_clinical.csv"),
+  here::here(patient, "csv", "pai_clinical.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_csv(
   df_validity,
-  here::here("data", "csv", "pai_validity.csv"),
+  here::here(patient, "csv", "pai_validity.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_csv(
   df_inatt,
-  here::here("data", "csv", "pai_inatt.csv"),
+  here::here(patient, "csv", "pai_inatt.csv"),
   col_names = TRUE,
   na = ""
 )
 ```
 
-## Text: extract, squish, save
-
-Replace long spaces with a col break symbol.
-Save text to markdown, quarto, and typst formats.
+## Pluck Text
 
 ```{r text}
-library(pdftools)
-library(stringr)
-
-# save file as path
 file <- fs::as_fs_path(params$file)
 
+## extract text
 get_text <- function(file) {
   txt <- pdftools::pdf_text(file) |>
     stringr::str_split("\n") |>
     unlist()
 }
-pai_text <- get_text(file)
+rsi_txt <- pdftools::pdf_text(file) |>
+  stringr::str_split("\n") |>
+  unlist()
+rsi_txt
 
-pai_text_squished <-
-  stringr::str_replace_all(pai_text, "\\s{2,}", "- ") |>
+# Replace long spaces with a col break symbol
+rsi_txt_squished <-
+  stringr::str_replace_all(rsi_txt, "\\s{2,}", "- ") |>
   stringr::str_remove_all(",")
-pai_text_squished
+rsi_txt_squished
 
-# save
-readr::write_lines(pai_text_squished, here::here("pai_text_squished.md"), sep = "\n")
-readr::write_lines(pai_text_squished, here::here("pai_text_squished.txt"), sep = "\n")
-readr::write_lines(pai_text_squished, here::here("pai_text_squished.typ"), sep = "\n")
+readr::write_lines(rsi_txt_squished, here::here(patient, "rsi_text.md"), sep = "\n")
+readr::write_lines(rsi_txt_squished, here::here(patient, "rsi_text.qmd"), sep = "\n")
 ```

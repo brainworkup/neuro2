@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from WIAT-4"
 params:
-  patient: "{{< var patient >}}"
+  patient: Biggie
   test:
     label: "Test"
     value: wiat4
@@ -128,7 +128,7 @@ params:
 ## Load libraries
 
 ```{r setup, include=FALSE}
-Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home")
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
@@ -137,7 +137,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
+library(bwu)
 library(dplyr)
 library(hablar)
 library(here)
@@ -149,7 +149,6 @@ library(rJava)
 library(rmarkdown)
 library(shiny)
 library(tabulapdf)
-library(tabulapdfjars)
 library(tibble)
 library(tidyr)
 library(vroom)
@@ -208,7 +207,7 @@ area <- list(
 # if unknown
 # patient <- "Aria"
 # file <- file.choose()
-# area <- NeurotypR::gpluck_locate_areas(
+# area <- bwu::gpluck_locate_areas(
 #   file = file,
 #   pages = c(9, 10)
 # )
@@ -241,7 +240,7 @@ plucked_tables <- tabulapdf::extract_text(
   pages = c(12, 13)
 )
 
-plucked_table <- NeurotypR::gpluck_extract_table(
+plucked_table <- bwu::gpluck_extract_table(
   file = file,
   pages = c(12, 13),
   method = "lattice" # decide
@@ -456,7 +455,7 @@ table <- dplyr::distinct(table, .keep_all = FALSE)
 ```{r mutate}
 table <- wiat4
 
-table <- NeurotypR::gpluck_make_columns(
+table <- bwu::gpluck_make_columns(
   table,
   range = "",
   test = params$test,
@@ -477,7 +476,7 @@ table <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-table <- NeurotypR::gpluck_make_score_ranges(table = table, test_type = "npsych_test")
+table <- bwu::gpluck_make_score_ranges(table = table, test_type = "npsych_test")
 ```
 
 ## Subdomain

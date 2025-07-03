@@ -12,7 +12,7 @@ params:
       - wais5
   test_name:
     label: "Test Name"
-    value: [WAIS-IV]
+    value: "WAIS-IV"
     input: select
     multiple: no
     choices:
@@ -210,7 +210,7 @@ output:
 ```{r setup, include = FALSE}
 Sys.setenv(
   JAVA_HOME =
-    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
@@ -233,7 +233,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(dplyr)
-library(NeurotypR)
+library(bwu)
 ```
 
 ## Parameters
@@ -245,13 +245,6 @@ test_name <- (params$test_name)
 pages <- (params$pages)
 # file <- file.path(file.choose())
 file <- file.path(params$file)
-if (params$test == "conners4_self") {
-  saveRDS(file, "conners4_self.rds")
-} else if (params$test == "conners4_parent") {
-  saveRDS(file, "conners4_parent.rds")
-} else if (params$test == "conners4_teacher") {
-  saveRDS(file, "conners4_teacher.rds")
-}
 ```
 
 
@@ -342,7 +335,7 @@ if (params$version == "full") {
 ## Extract tables
 
 ```{r extract-tables, eval = FALSE}
-plucked_tables_wais4 <- NeurotypR::gpluck_extract_table(
+plucked_tables_wais4 <- bwu::gpluck_extract_table(
   file = file,
   pages = pages,
   area = area,
@@ -388,7 +381,7 @@ table1 <- table1 |> dplyr::select(all_of(params$keep1))
 ```{r mutate1, eval = params$eval_iq}
 test <- params$test
 test_name <- params$test_name
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- bwu::gpluck_make_columns(
   table1,
   range = "",
   test = test,
@@ -409,7 +402,7 @@ table1 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range1, eval = params$eval_iq}
-table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
 ```
 
 ## Domains
@@ -652,7 +645,7 @@ for (i in 2:5) {
 ## Mutate columns
 
 ```{r mutate2, eval = params$eval_vci}
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- bwu::gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -674,7 +667,7 @@ table2 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges2, eval = params$eval_vci}
-table2 <- NeurotypR::gpluck_make_score_ranges(
+table2 <- bwu::gpluck_make_score_ranges(
   table = table2,
   test_type = "npsych_test"
 )
@@ -772,7 +765,7 @@ table3 <- table3 |> dplyr::select(all_of(params$keep2))
 ## Mutate columns
 
 ```{r mutate3, eval = params$eval_pri}
-table3 <- NeurotypR::gpluck_make_columns(
+table3 <- bwu::gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -794,7 +787,7 @@ table3 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges3, eval = params$eval_pri}
-table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table3 <- bwu::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -904,7 +897,7 @@ table4 <- table4 |> dplyr::select(all_of(params$keep2))
 ## Mutate columns
 
 ```{r mutate4, eval = params$eval_wmi}
-table4 <- NeurotypR::gpluck_make_columns(
+table4 <- bwu::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -926,7 +919,7 @@ table4 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges4, eval = params$eval_wmi}
-table4 <- NeurotypR::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
+table4 <- bwu::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -1043,7 +1036,7 @@ table5 <- table5 |> dplyr::select(all_of(params$keep2))
 ## Mutate columns
 
 ```{r mutate5, eval = params$eval_wmi}
-table5 <- NeurotypR::gpluck_make_columns(
+table5 <- bwu::gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -1065,7 +1058,7 @@ table5 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges5, eval = params$eval_wmi}
-table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table5 <- bwu::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -1166,7 +1159,7 @@ table6 <- table6 |> dplyr::select(all_of(params$keep2))
 ## Mutate columns
 
 ```{r mutate6, eval = params$eval_bd}
-table6 <- NeurotypR::gpluck_make_columns(
+table6 <- bwu::gpluck_make_columns(
   table6,
   range = "",
   ci_95 = "",
@@ -1188,7 +1181,7 @@ table6 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges6, eval = params$eval_bd}
-table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table6 <- bwu::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Scale descriptions
@@ -1245,7 +1238,7 @@ table7 <- table7 |> dplyr::select(all_of(params$keep2))
 ## Mutate columns
 
 ```{r mutate7, eval = params$eval_span}
-table7 <- NeurotypR::gpluck_make_columns(
+table7 <- bwu::gpluck_make_columns(
   table7,
   range = "",
   ci_95 = "",
@@ -1267,7 +1260,7 @@ table7 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges7, eval = params$eval_span}
-table7 <- NeurotypR::gpluck_make_score_ranges(table = table7, test_type = "npsych_test")
+table7 <- bwu::gpluck_make_score_ranges(table = table7, test_type = "npsych_test")
 ```
 
 ## Narrow subdomains

@@ -7,27 +7,40 @@ params:
   patient: Biggie
   test:
     label: "Test"
-    value: test
+    value: "wrat5"
     input: select
     multiple: no
     choices:
       - wais4
       - wais5
+      - wisc5
+      - wms4
       - wrat5
+      - nab
+      - brown_efa_self
+      - brown_efa_parent
+      - brown_efa_teacher
   test_name:
     label: "Test Name"
-    value: test_name
+    value: "WRAT-5"
     input: select
     multiple: no
     choices:
       - WAIS-IV
       - WAIS-5
+      - WISC-V
+      - WMS-IV
       - WRAT-5
+      - NAB
+      - Brown EF/A Self-Report
+      - Brown EF/A Parent Ratings
+      - Brown EF/A Teacher Ratings
   file:
     label: "No file selected"
     value: file
     input: file
-  # pages: [5, 5]
+  pages: [2,3,6]
+  extract_columns: [2,4,5,6]
   variables:
     label: "Variable Names"
     value: [scale, raw_score, score, ci_95, percentile]
@@ -46,7 +59,10 @@ params:
       - z_score
       - sem
       - ref_group_ss
-  extract_columns: [1,2,3,4,5]
+      - grade_equiv
+      - age_equiv
+      - nce
+      - gsv
   extract_columns_label:
     label: "Columns to keep"
     value: [scale, raw_score, score, ci_95, percentile]
@@ -58,6 +74,20 @@ params:
       - score
       - ci_95
       - percentile
+      - category
+      - description
+      - base_rate
+  score_type:
+    label: "Score type"
+    value: standard_score
+    input: radio
+    choices:
+      - standard_score
+      - t_score
+      - scaled_score
+      - z_score
+      - raw_score
+      - base_rate
   test_type:
     label: "Test Type"
     value: "npsych_test"
@@ -65,20 +95,11 @@ params:
     choices:
       - npsych_test
       - rating_scale
-      - validity_indicator
-  score_type:
-    label: "Score type"
-    value: "standard_score"
-    input: radio
-    choices:
-      - standard_score
-      - t_score
-      - scaled_score
-      - raw_score
-      - base_rate
-      - z_score
+      - performance_validity
+      - symptom_validity
   compute_percentile: FALSE
   compute_ci95: FALSE
+  # do subtests need to be merged?
   subtests: FALSE
 output:
   rmdformats::robobook:
@@ -90,7 +111,7 @@ output:
 ```{r setup, include = FALSE}
 Sys.setenv(
   JAVA_HOME =
-    "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
 )
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
@@ -100,10 +121,18 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
+library(collapse)
+library(dplyr)
+library(glue)
+library(hablar)
 library(here)
 library(knitr)
 library(magrittr)
+library(purrr)
+library(qs)
 library(readr)
+library(rJava)
+library(rlang)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
@@ -111,28 +140,33 @@ library(snakecase)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
-library(dplyr)
 library(vroom)
-library(glue)
-library(rlang)
 library(NeurotypR)
+library(bwu)
 ```
 
 ## Parameters
 
-NOTE: moved to params.R ...
+NOTE: moved to `params.R` file ...
 can use those
 
 ```{r eval = FALSE}
-source("params.R")
-patient <- (params$patient)
-test <- (params$test)
-test_name <- (params$test_name)
-pages <- (params$pages)
+# source("params.R")
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
 # file <- file.path(file.choose())
 file <- file.path(params$file)
-saveRDS(file, paste0(test, ".rds")) # eventually update to data directory
-# file <- readRDS(paste0(test, ".rds"))
+pages <- (params$pages)
+score_type <- params$score_type
+extract_columns <- params$extract_columns
+variables <- params$variables
+
+qs2::qd_save(file, paste0(test, "_path.rds"))
+# file <- qs::qread(paste0(test, "_path.rds"))
+
+# saveRDS(file, paste0("file_pdf", test, ".rds")) # eventually update to data directory
+# f <- readRDS(paste0("file_pdf", test, ".rds"))
 ```
 
 ## Extract areas with `tabulapdf`
@@ -143,6 +177,17 @@ NOTE: Do this in R first in `params.R` file, not here
 # file <- file.path("data", "pdf", paste0(test, ".pdf"))
 # file <- file.path(file.choose(""))
 
+params <-
+  list(
+    patient = patient,
+    test = test,
+    test_name = test_name,
+    file = file,
+    pages = pages,
+    extract_columns = extract_columns,
+    score_type = score_type
+  )
+
 extracted_areas <- tabulapdf::extract_areas(
   file = file,
   pages = pages,
@@ -152,31 +197,31 @@ extracted_areas <- tabulapdf::extract_areas(
 )
 ```
 
-```{r}
-# Check the extracted areas
-str(extracted_areas)
-
-# Save the entire list to an R data file
-save(extracted_areas, file = paste0(test, ".RData"))
-
-saveRDS(extracted_areas, paste0(test, ".rds")) # eventually update to data directory
-```
-
-```{r}
-# To read the extracted areas back in
-extracted_areas <- readRDS(paste0(test, ".rds"))
-```
-
-## Functions
-
-### Function to merge subtests
-
-```{r eval = params$subtests}
+```{r eval=FALSE}
 # Loop over the list and write each matrix to a CSV file
 for (i in seq_along(extracted_areas)) {
   write.csv(extracted_areas[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
 }
 
+# Save the entire list to an R data file
+# save(extracted_areas, file = paste0(test, "_extracted_areas.RData"))
+saveRDS(extracted_areas, paste0(test, "_extracted_areas.rds"))
+
+# Check the extracted areas
+str(extracted_areas)
+
+# To read the extracted areas back in
+# extracted_areas <- readRDS(paste0(test, "_extracted_areas.rds"))
+
+# To merge the extracted areas into a single data frame
+df <- data.frame(extracted_areas)
+```
+
+# Functions
+
+## Function to merge subtests
+
+```{r eval = params$subtests}
 # Function to merge subtests
 merge_subtests <- function(test, suffix = "csv") {
   # Get the list of files matching the prefix and suffix
@@ -203,31 +248,37 @@ merge_subtests <- function(test, suffix = "csv") {
 df <- merge_subtests(test)
 ```
 
-### Function to extract columns by position
+## Function to extract columns by position
 
 ```{r}
+library(dplyr)
+
+extract_columns <- extract_columns
+
 # Function to extract columns by position
 extract_columns_by_position <- function(df, positions) {
   df[, positions]
 }
-```
 
-```{r}
 # To save the filtered data.frame separately
-filtered_df <- extract_columns_by_position(df, params$extract_columns)
+# filtered_df <- extract_columns_by_position(df, params$extract_columns)
+filtered_df <- extract_columns_by_position(df, extract_columns)
 
 # To overwrite the original data.frame
-df <- extract_columns_by_position(df, params$extract_columns)
+# df <- extract_columns_by_position(df, params$extract_columns)
+df <- extract_columns_by_position(df, extract_columns)
 
 # Rename the variables
-colnames(df) <- params$variables
+# colnames(df) <- params$variables
+colnames(df) <- variables
 
 # Step 1: Replace "-" with NA in the entire dataframe
 df[df == "-"] <- NA
 
-# Step 2 (Optional): Convert 'score' and 'percentile' to numeric
+# Step 2 (Optional): Convert 'raw score' 'score' and 'percentile' to numeric
 df <- df |>
   mutate(
+    raw_score = as.numeric(raw_score),
     score = as.numeric(score),
     percentile = as.numeric(percentile)
   )
@@ -237,56 +288,12 @@ df <- df |>
   filter(!is.na(score) & !is.na(percentile))
 ```
 
-### Function to convert specified columns to integer, double, and factor types
-
-```{r}
-# Function to convert specified columns to integer, double, and factor types
-convert_columns <- function(df, to_integer, to_double, to_factor) {
-  df <- df |>
-    mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
-    mutate(across(all_of(to_double), as.double, .names = "{.col}")) |>
-    mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
-  return(df)
-}
-
-# Specify the columns to be converted
-to_integer <- c("raw_score", "score")
-to_double <- c("percentile")
-to_factor <- c("category")
-
-# Use the function to convert the columns
-df <- convert_columns(df, to_integer, to_double, to_factor = NULL)
-```
-
-### Function to handle percentile conversion
-
-```{r percentile, eval = params$compute_percentile}
-# Function to handle percentile conversion
-convert_percentile <- function(df, column_name) {
-  column_sym <- rlang::sym(column_name)
-
-  df <- df |>
-    mutate(original_percentile = .data[[column_name]]) |> # Store original percentile values
-    mutate(temp_column = as.numeric(ifelse(
-      grepl("^>", .data[[column_name]]),
-      as.numeric(sub("^>", "", .data[[column_name]])) + 0.1,
-      ifelse(grepl("^<", .data[[column_name]]), 0.9, .data[[column_name]])
-    ))) |>
-    mutate(!!column_sym := temp_column) |>
-    select(-temp_column)
-  return(df)
-}
-
-# Apply the convert_percentile function to the percentile column
-df <- convert_percentile(df, "percentile")
-```
-
-## Function to calculate 95% CI if needed
+### Function to calculate 95% CI if needed
 
 ```{r eval = params$compute_ci95}
 # Assuming df is your data.frame and calc_ci_95 is your function
 for (i in seq_len(nrow(df))) {
-  ci_values <- NeurotypR::calc_ci_95(
+  ci_values <- bwu::calc_ci_95(
     ability_score = df$score[i],
     mean = 10, # change to 50, 0, 100, etc.
     standard_deviation = 3, # change to 10, 1, 15, etc.
@@ -303,7 +310,7 @@ df <- df |>
   dplyr::relocate(ci_95, .after = score)
 ```
 
-## Match with lookup table
+# Lookup Table Match
 
 ```{r eval = TRUE}
 # Load the lookup table
@@ -315,12 +322,14 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- bwu::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
   absort = NULL
 )
+
+rm(df_merged)
 ```
 
 ## Test score ranges
@@ -328,7 +337,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 ```{r ranges, eval = TRUE}
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
+  bwu::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 
@@ -358,6 +367,7 @@ df <- df_mutated |>
 ## Write out final csv
 
 ```{r write}
+test <- "wisc5_1"
 readr::write_excel_csv(df, here::here("data", "csv", paste0(test, ".csv")), col_names = TRUE)
 ```
 
@@ -385,4 +395,4 @@ readr::write_excel_csv(
 )
 ```
 
-THE END!!
+**THE END!!**
