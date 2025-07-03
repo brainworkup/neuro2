@@ -1,0 +1,16 @@
+﻿test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,result,absort
+caars2_self,CAARS-2 Self,ADHD Hyperactive/Impulsive Symptoms,10,56,50-62,81,High Average,ADHD,Hyperactive/Impulsive,Hyperactive/Impulsive (Self),,,,t_score,rating_scale,"- Self-reported ADHD Hyperactive/Impulsive Symptoms (i.e., behave in a manner consistent with the DSM-5 Hyperactive-Impulsive Presentation of ADHD) was High Average.
+",caars2_self_7
+caars2_self,CAARS-2 Self,ADHD Inattentive Symptoms ,16,66,61-71,94,Above Average,ADHD,Inattention,Inattention (Self),,,,t_score,rating_scale,"- Self-reported ADHD Inattentive Symptoms (i.e., behave in a manner consistent with the DSM-5 Inattentive Presentation of ADHD) was Above Average.
+",caars2_self_6
+caars2_self,CAARS-2 Self,CAARS-2 ADHD Index,19,,,88,High Average,ADHD,ADHD Index,ADHD Index (Self),,,,t_score,rating_scale,"- Self-reported CAARS 2-ADHD Index (i.e., a composite indicator for identifying individuals 'at-risk' for ADHD) indicated a probability of 88% of having adult ADHD.
+",caars2_self_9
+caars2_self,CAARS-2 Self,Emotional Dysregulation,11,59,53-65,87,High Average,ADHD,Externalizing,Externalizing (Self),,,,t_score,rating_scale,#NAME?,caars2_self_4
+caars2_self,CAARS-2 Self,Hyperactivity,6,49,43-55,57,Average,ADHD,Hyperactivity,Hyperactivity (Self),,,,t_score,rating_scale,#NAME?,caars2_self_2
+caars2_self,CAARS-2 Self,Impulsivity,18,66,60-72,95,Above Average,ADHD,Impulsivity,Impulsivity (Self),,,,t_score,rating_scale,#NAME?,caars2_self_3
+caars2_self,CAARS-2 Self,Inattention/Executive Dysfunction,45,68,65-71,94,Above Average,ADHD,Inattention,Inattention (Self),,,,t_score,rating_scale,"- Self-reported Inattention/Executive Dysfunction (i.e., trouble concentrating, difficulty planning or completing tasks, forgetfulness, absent-mindedness, being disorganized) was Above Average.
+",caars2_self_1
+caars2_self,CAARS-2 Self,Negative Self-Concept,19,80,74-86,99,Exceptionally High,ADHD,Internalizing,Internalizing (Self),,,,t_score,rating_scale,"- Self-reported Negative Self-Concept (i.e., poor social relationships, low self-esteem and self confidence) was Exceptionally High.
+",caars2_self_5
+caars2_self,CAARS-2 Self,Total ADHD Symptoms,26,62,56-68,92,Above Average,ADHD,Combined ADHD,Combined ADHD (Self),,,,t_score,rating_scale,"- Self-reported Total ADHD Symptoms (i.e., behave in a manner consistent with the DSM-5 diagnostic criteria for Combined Presentation of ADHD) was Above Average.
+",caars2_self_8

@@ -1,0 +1,16 @@
+﻿test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,result,absort
+caars2_observer,CAARS-2 Observer,ADHD Hyperactive/Impulsive Symptoms,7,52,47-57,71,Average,ADHD,Hyperactive/Impulsive,Hyperactive/Impulsive (Observer),,,,t_score,rating_scale,"- Observer-reported ADHD Hyperactive/Impulsive Symptoms (i.e., behave in a manner consistent with the DSM-5 Hyperactive-Impulsive Presentation of ADHD) was Average.
+",caars2_or_7
+caars2_observer,CAARS-2 Observer,ADHD Inattentive Symptoms ,3,46,42-50,48,Average,ADHD,Inattention,Inattention (Observer),,,,t_score,rating_scale,"- Observer-reported ADHD Inattentive Symptoms (i.e., behave in a manner consistent with the DSM-5 Inattentive Presentation of ADHD) was Average.
+",caars2_or_6
+caars2_observer,CAARS-2 Observer,CAARS-2 ADHD Index,11,,,13,WNL,ADHD,ADHD Index,ADHD Index (Observer),,,,t_score,rating_scale,"- Observer-reported CAARS 2-ADHD Index (i.e., a composite indicator for identifying individuals 'at-risk' for ADHD) indicated a probability of 13% of having adult ADHD.
+",caars2_or_9
+caars2_observer,CAARS-2 Observer,Emotional Dysregulation,11,59,55-63,79,High Average,ADHD,Externalizing,Externalizing (Observer),,,,t_score,rating_scale,#NAME?,caars2_or_4
+caars2_observer,CAARS-2 Observer,Hyperactivity,4,47,42-52,54,Average,ADHD,Hyperactivity,Hyperactivity (Observer),,,,t_score,rating_scale,#NAME?,caars2_or_2
+caars2_observer,CAARS-2 Observer,Impulsivity,11,55,50-60,75,High Average,ADHD,Impulsivity,Impulsivity (Observer),,,,t_score,rating_scale,#NAME?,caars2_or_3
+caars2_observer,CAARS-2 Observer,Inattention/Executive Dysfunction,10,45,42-48,48,Average,ADHD,Inattention,Inattention (Observer),,,,t_score,rating_scale,"- Observer-reported Inattention/Executive Dysfunction (i.e., trouble concentrating, difficulty planning or completing tasks, forgetfulness, absent-mindedness, being disorganized) was Average.
+",caars2_or_1
+caars2_observer,CAARS-2 Observer,Negative Self-Concept,15,75,68-82,97,Above Average,ADHD,Internalizing,Internalizing (Observer),,,,t_score,rating_scale,"- Observer-reported Negative Self-Concept (i.e., poor social relationships, low self-esteem and self confidence) was Above Average.
+",caars2_or_5
+caars2_observer,CAARS-2 Observer,Total ADHD Symptoms,10,49,44-54,58,Average,ADHD,Combined ADHD,Combined ADHD (Observer),,,,t_score,rating_scale,"- Observer-reported Total ADHD Symptoms (i.e., behave in a manner consistent with the DSM-5 diagnostic criteria for Combined Presentation of ADHD) was Average.
+",caars2_or_8
