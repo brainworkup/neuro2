@@ -94,6 +94,8 @@ ReportTemplateR6 <- R6::R6Class(
         self$sections <- list(
           "_00-00_tests.qmd",
           "_01-00_nse_adult.qmd",
+          "_01-00_nse_forensic.qmd",
+          "_01-00_nse_pediatric.qmd",
           "_02-00_behav_obs.qmd",
           "_03-00_sirf.qmd",
           "_03-00_sirf_text.qmd",
@@ -135,7 +137,7 @@ ReportTemplateR6 <- R6::R6Class(
           "tidytable",
           "vroom",
           "xfun",
-          "NeurotypR",
+          "bwu",
           "NeurotypR"
         )
       } else {

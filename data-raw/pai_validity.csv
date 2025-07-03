@@ -1,0 +1,33 @@
+scale,raw_score,score,percentile,range,ci_95,test,test_name,domain,subdomain,narrow,pass,verbal,timed,test_type,score_type,absort,description,result
+Inconsistency,,61,86,High Average Score,,pai,PAI,Symptom Validity,Response Inconsistency,Inconsistency,,,,symptom_validity,t_score,pai_inconsistency_1,Inconsistency,"Corey's score on Inconsistency
+(Inconsistency) was High Average Score."
+Infrequency,,55,69,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Infrequency,,,,symptom_validity,t_score,pai_infrequency_2,Infrequency,"Corey's score on Infrequency
+(Infrequency) was Within Normal Limits Score."
+Negative Impression Management,,47,38,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Negative Impression Management,,,,symptom_validity,t_score,pai_negative impression management_3,Negative Impression Management,"Corey's score on Negative Impression Management
+(Negative Impression Management) was Within Normal Limits Score."
+Positive Impression Management,,43,24,Low Average Score,,pai,PAI,Symptom Validity,Positive Impresion,Positive Impression Management,,,,symptom_validity,t_score,pai_positive impression management_4,Positive Impression Management,"Corey's score on Positive Impression Management
+(Positive Impression Management) was Low Average Score."
+Malingering Index,,44,27,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Malingering Index,,,,symptom_validity,t_score,pai_malingering index_5,Malingering Index,"Corey's score on Malingering Index
+(Malingering Index) was Within Normal Limits Score."
+Rogers Discriminant Function,,56,72,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Rogers Discriminant Function,,,,symptom_validity,t_score,pai_rogers discriminant function_6,Rogers Discriminant Function,"Corey's score on Rogers Discriminant Function
+(Rogers Discriminant Function) was Within Normal Limits Score."
+Negative Distortion Scale,,45,30,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Negative Distortion Scale,,,,symptom_validity,t_score,pai_negative distortion scale_7,Negative Distortion Scale,"Corey's score on Negative Distortion Scale
+(Negative Distortion Scale) was Within Normal Limits Score."
+Hong Malingering Index,,55,69,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Hong Malingering Index,,,,symptom_validity,t_score,pai_hong malingering index_8,Hong Malingering Index,"Corey's score on Hong Malingering Index
+(Hong Malingering Index) was Within Normal Limits Score."
+Multiscale Feigning Index,,64,91,Above Average Score,,pai,PAI,Symptom Validity,Negative Impression,Multiscale Feigning Index,,,,symptom_validity,t_score,pai_multiscale feigning index_9,Multiscale Feigning Index,"Corey's score on Multiscale Feigning Index
+(Multiscale Feigning Index) was Above Average Score."
+Malingered Pain-Related Disability Discriminant Function,,52,57,Within Normal Limits Score,,pai,PAI,Symptom Validity,Negative Impression,Malingered Pain-Related Disability Discriminant Function,,,,symptom_validity,t_score,pai_malingered pain-related disability discriminant function_10,Malingered Pain-Related Disability Discriminant Function,"Corey's score on Malingered Pain-Related Disability Discriminant Function
+(Malingered Pain-Related Disability Discriminant Function) was Within Normal Limits Score."
+Defensiveness Index,,38,11,Low Average Score,,pai,PAI,Symptom Validity,Positive Impression,Defensiveness Index,,,,symptom_validity,t_score,pai_defensiveness index_11,Defensiveness Index,"Corey's score on Defensiveness Index
+(Defensiveness Index) was Low Average Score."
+Cashel Discriminant Function,,62,88,High Average Score,,pai,PAI,Symptom Validity,Positive Impression,Cashel Discriminant Function,,,,symptom_validity,t_score,pai_cashel discriminant function_12,Cashel Discriminant Function,"Corey's score on Cashel Discriminant Function
+(Cashel Discriminant Function) was High Average Score."
+Positive Distortion Scale,,33,4,Below Average Score,,pai,PAI,Symptom Validity,Positive Impression,Positive Distortion Scale,,,,symptom_validity,t_score,pai_positive distortion scale_13,Positive Distortion Scale,"Corey's score on Positive Distortion Scale
+(Positive Distortion Scale) was Below Average Score."
+Hong Defensiveness Index,,44,27,Within Normal Limits Score,,pai,PAI,Symptom Validity,Positive Impression,Hong Defensiveness Index,,,,symptom_validity,t_score,pai_hong defensiveness index_14,Hong Defensiveness Index,"Corey's score on Hong Defensiveness Index
+(Hong Defensiveness Index) was Within Normal Limits Score."
+Back Random Responding,,48,42,Within Normal Limits Score,,pai,PAI,Symptom Validity,Response Inconsistency,Back Random Responding,,,,symptom_validity,t_score,pai_back random responding_15,Back Random Responding,"Corey's score on Back Random Responding
+(Back Random Responding) was Within Normal Limits Score."
+Hong Randomness Index,,52,57,Within Normal Limits Score,,pai,PAI,Symptom Validity,Response Inconsistency,Hong Randomness Index,,,,symptom_validity,t_score,pai_hong randomness index_16,Hong Randomness Index,"Corey's score on Hong Randomness Index
+(Hong Randomness Index) was Within Normal Limits Score."

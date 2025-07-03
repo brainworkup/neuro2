@@ -1,0 +1,2 @@
+test,test_name,test_type,scale,raw_score,score,percentile,true_score,ci_95,range,score_type,domain,subdomain,narrow,pass,verbal,timed,absort,description,result
+topf,Test of Premorbid Functioning,npsych_test,TOPF Standard Score,58,115,84,,106 - 122,High Average,standard_score,General Cognitive Ability,Premorbid Ability,Word Reading,Knowledge,Verbal,Untimed,topf_topf standard score_1,An estimate of premorbid verbal ability level,An estimate of premorbid verbal ability level fell within the High Average range.

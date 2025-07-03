@@ -2,8 +2,8 @@ version: 0.1.0
 
 # VARIABLES
 case_number: ""
-patient: "Biggie"
-first_name: Biggie
+patient: "Ethan"
+first_name: Ethan
 last_name: Smalls
 dob: "1977-01-01"
 doe: "2024-09-08"

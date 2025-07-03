@@ -1,8 +1,8 @@
 #let report(
   title: "NEUROCOGNITIVE EXAMINATION",
   author: "Joey W. Trampush, Ph.D.",
-  patient: [Smalls, Biggie],
-  name: [Biggie],
+  patient: [Smalls, Ethan],
+  name: [Ethan],
   doe: [],
   date_of_report: [],
   date: none,

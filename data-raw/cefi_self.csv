@@ -1,0 +1,11 @@
+﻿test,test_name,scale,raw_score,score,percentile,range,ci_95,domain,subdomain,narrow,pass,verbal,timed,test_type,score_type,result,absort
+cefi_self,CEFI Self,Attention,,80,9,Low Average,75-96,ADHD,Attention,Attention (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_2
+cefi_self,CEFI Self,Emotion Regulation,,85,16,Low Average,78-98,ADHD,Emotion Regulation,Emotion Regulation (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_3
+cefi_self,CEFI Self,Flexibility,,86,18,Low Average,79-97,ADHD,Flexibility,Flexibility (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_4
+cefi_self,CEFI Self,Full Scale,,81,10,Low Average,77-86,ADHD,Full Scale,Full Scale (Self),,,,rating_scale,standard_score,- AJ's overall level of executive functioning was Low Average.,cefi_self_1
+cefi_self,CEFI Self,Inhibitory Control,,75,5,Below Average,71-90,ADHD,Inhibitory Control,Inhibitory Control (Self),,,,rating_scale,standard_score,"- Inhibitory Control (i.e., control behavior or impulses, including thinking about consequences before acting, maintaining self-control, and thinking before speaking) was Below Average",cefi_self_5
+cefi_self,CEFI Self,Initiation,,85,16,Low Average,78-97,ADHD,Initiation,Initiation (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_6
+cefi_self,CEFI Self,Organization,,90,25,Average,83-100,ADHD,Organization,Organization (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_7
+cefi_self,CEFI Self,Planning,,82,12,Low Average,76-97,ADHD,Planning,Planning (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_8
+cefi_self,CEFI Self,Self-Monitoring,,82,12,Low Average,76-95,ADHD,Self-Monitoring,Self-Monitoring (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_9
+cefi_self,CEFI Self,Working Memory,,84,14,Low Average,78-99,ADHD,Working Memory,Working Memory (Self),,,,rating_scale,standard_score,#NAME?,cefi_self_10

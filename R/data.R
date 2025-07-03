@@ -33,8 +33,6 @@
 #'   \item{domain}{Domain of the test.}
 #'   \item{subdomain}{Subdomain of the test.}
 #'   \item{narrow}{Narrow category of the test.}
-#'   \item{domain_broad}{Broad domain of the test.}
-#'   \item{domain_test}{Specific test within the broad domain.}
 #'   \item{test_type}{Type of the test.}
 #'   \item{score_type}{Type of the score.}
 #'   \item{timed}{Whether the test is timed.}
@@ -44,16 +42,10 @@
 #'   \item{z}{Z-score.}
 #'   \item{z_mean_dom}{Mean Z-score for domain.}
 #'   \item{z_sd_dom}{Standard deviation of Z-score for domain.}
-#'   \item{pct_mean_dom}{Mean percentile for domain.}
-#'   \item{pct_sd_dom}{Standard deviation of percentile for domain.}
 #'   \item{z_mean_sub}{Mean Z-score for subdomain.}
 #'   \item{z_sd_sub}{Standard deviation of Z-score for subdomain.}
-#'   \item{pct_mean_sub}{Mean percentile for subdomain.}
-#'   \item{pct_sd_sub}{Standard deviation of percentile for subdomain.}
 #'   \item{z_mean_narrow}{Mean Z-score for narrow category.}
 #'   \item{z_sd_narrow}{Standard deviation of Z-score for narrow category.}
-#'   \item{pct_mean_narrow}{Mean percentile for narrow category.}
-#'   \item{pct_sd_narrow}{Standard deviation of percentile for narrow category.}
 #'   \item{z_mean_verbal}{Mean Z-score for verbal score.}
 #'   \item{z_sd_verbal}{Standard deviation of Z-score for verbal score.}
 #'   \item{z_mean_pass}{Mean Z-score for passing score.}
@@ -62,7 +54,6 @@
 #'   \item{z_sd_timed}{Standard deviation of Z-score for timed score.}
 #' }
 "neurocog"
-
 
 
 #' pegboard_dom dataset
