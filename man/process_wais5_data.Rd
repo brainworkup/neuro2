@@ -8,6 +8,7 @@ process_wais5_data(
   patient,
   file_path = NULL,
   test_type = c("subtest", "index"),
+  pages = NULL,
   save_intermediate = TRUE
 )
 }
@@ -17,6 +18,8 @@ process_wais5_data(
 \item{file_path}{Character string of PDF file path (if NULL, will prompt)}
 
 \item{test_type}{Character string: either "subtest" or "index"}
+
+\item{pages}{Numeric vector of page numbers to extract data from (defaults to 10 for subtest, 12 for index if NULL)}
 
 \item{save_intermediate}{Logical, whether to save intermediate CSV files}
 }

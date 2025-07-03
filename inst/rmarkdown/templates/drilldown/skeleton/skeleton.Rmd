@@ -1,12 +1,12 @@
 ---
 title: "Neuropsychological Evaluation Results"
 patient: Biggie
-date: 2025-03-04
+date: "`r Sys.Date()`"
 author: "Joey Trampush, PhD"
 institute: "Department of Psychiatry and the Behavioral Sciences"
 output:
   xaringan::moon_reader:
-    css: ["inst/resources/css/npsych-fonts.css", "inst/resources/css/npsych-theme.css"]
+    css: ["../resources/npsych-fonts.css", "../resources/npsych-theme.css"]
     lib_dir: libs
     self_contained: true
     anchor_sections: false
@@ -24,7 +24,7 @@ output:
           </div>
         </div>
       includePresenterNotes: yes
-      beforeInit: ["inst/resources/js/macros.js"]
+      beforeInit: ["../resources/macros.js"]
 ---
 
 ```{r patient, include=FALSE}
@@ -34,8 +34,8 @@ patient <- "Biggie"
 
 ```{r setup, include=FALSE}
 ## load libraries
+library(tidyverse)
 library(crosstalk)
-library(dplyr)
 library(gifski)
 library(highcharter)
 library(htmlwidgets)
@@ -44,15 +44,11 @@ library(languageserver)
 library(manipulateWidget)
 library(revealjs)
 library(svglite)
-library(tibble)
-library(vroom)
-library(readr)
 library(widgetframe)
 library(xaringan)
 library(xaringanExtra)
 library(xaringanthemer)
-library(tidyverse)
-library(NeurotypR)
+library(bwu)
 library(NeurotypR)
 ## knitr options
 options(htmltools.dir.version = FALSE)
@@ -77,20 +73,20 @@ knitr::opts_chunk$set(
 
 ```{r}
 neuropsych <-
-  readr::read_csv(here::here("neuropsych.csv"), show_col_types = TRUE)
+  readr::read_csv(here::here("data", "neuropsych.csv"), show_col_types = TRUE)
 neurocog <-
-  readr::read_csv(here::here("neurocog.csv"), show_col_types = TRUE) |>
+  readr::read_csv(here::here("data", "neurocog.csv"), show_col_types = TRUE) |>
   dplyr::filter(narrow != "Response Monitoring") |>
   dplyr::filter(narrow != "Recognition Memory")
 neurobehav <-
-  readr::read_csv(here::here("neurobehav.csv"), show_col_types = TRUE)
+  readr::read_csv(here::here("data", "neurobehav.csv"), show_col_types = TRUE)
 validity <-
-  readr::read_csv(here::here("validity.csv"), show_col_types = TRUE)
+  readr::read_csv(here::here("data", "validity.csv"), show_col_types = TRUE)
 ```
 
 name: title
 class: title-slide, center, middle
-background-image: url(src/img/logo_usc_ksom_black.jpg)
+background-image: url(../resources/logo_usc_ksom_black.jpg)
 background-position: bottom
 background-repeat: no-repeat
 background-size: 25%
@@ -111,7 +107,7 @@ background-size: contain
 ### Distribution of Scores: _Population-level Interpretation_
 
 ```{r, gauss-plot1, fig.cap = 'Performance classification of neuropsychological test scores in the general population.', fig.retina = 3, fig.asp = 0.5, out.width = '50%'}
-knitr::include_graphics("src/img/plot_narrow.png", auto_pdf = TRUE)
+knitr::include_graphics("../resources/plot_narrow.png", auto_pdf = TRUE)
 ```
 
 ---
@@ -119,7 +115,7 @@ knitr::include_graphics("src/img/plot_narrow.png", auto_pdf = TRUE)
 class: left, middle, right top
 background-color: var(--near-black)
 class: background
-background-image: url(src/img/logo_usc_ksom_black.jpg)
+background-image: url(../resources/logo_usc_ksom_black.jpg)
 background-position: right top
 background-repeat: repeat
 background-size: 15%
@@ -160,7 +156,7 @@ plot1
 class: left, middle, right top
 background-color: var(--near-black)
 class: background
-background-image: url(src/img/logo_usc_ksom_black.jpg)
+background-image: url(../resources/logo_usc_ksom_black.jpg)
 background-position: right top
 background-repeat: repeat
 background-size: 15%
@@ -168,8 +164,8 @@ background-color: var(--usc-black)
 
 ### Behavioral/Emotional/Personality Functioning
 
-<!-- #### Summary of self-report and observer-report scales from the PAI, CAARS, and CEFI -->
-#### Summary of self-report and observer-report scales from the BASC-3 and CEFI
+#### Summary of self-report and observer-report scales from the PAI, CAARS, and CEFI
+<!-- #### Summary of self-report and observer-report scales from the BASC-3 and CEFI -->
 
 ```{r drilldown-plot2, fig.cap = 'Drilldown from broad to narrow behavioral domains.', fig.width = 12, fig.height = 8, fig.retina = 3, out.width = '100%'}
 data <- neurobehav
@@ -190,7 +186,7 @@ plot2
 class: left, middle, right top
 background-color: var(--near-black)
 class: background
-background-image: url(src/img/logo_usc_ksom_black.jpg)
+background-image: url(../resources/logo_usc_ksom_black.jpg)
 background-position: right top
 background-repeat: repeat
 background-size: 15%

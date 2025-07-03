@@ -6,6 +6,7 @@
 #' @param patient Character string of patient name
 #' @param file_path Character string of PDF file path (if NULL, will prompt)
 #' @param test_type Character string: either "subtest" or "index"
+#' @param pages Numeric vector of page numbers to extract data from (defaults to 10 for subtest, 12 for index if NULL)
 #' @param save_intermediate Logical, whether to save intermediate CSV files
 #' @return A processed dataframe with test results
 #'
@@ -13,6 +14,7 @@ process_wais5_data <- function(
   patient,
   file_path = NULL,
   test_type = c("subtest", "index"),
+  pages = NULL,
   save_intermediate = TRUE
 ) {
   # Validate test_type argument
@@ -22,14 +24,16 @@ process_wais5_data <- function(
   if (test_type == "subtest") {
     test <- "wais5_subtest"
     test_name <- "WAIS-5"
-    pages <- c(10)
+    # Use provided pages parameter or default to 10 if NULL
+    if (is.null(pages)) pages <- c(10)
     extract_columns <- c(2, 4, 5, 6)
     variables <- c("scale", "raw_score", "score", "percentile")
     score_type <- "scaled_score"
   } else if (test_type == "index") {
     test <- "wais5_index"
     test_name <- "WAIS-5"
-    pages <- c(12)
+    # Use provided pages parameter or default to 12 if NULL
+    if (is.null(pages)) pages <- c(12)
     extract_columns <- c(1, 3, 4, 5, 6)
     variables <- c("scale", "raw_score", "score", "percentile", "ci_95")
     score_type <- "standard_score"
@@ -211,7 +215,8 @@ process_wais5_complete <- function(
   wais5_subtest <- process_wais5_data(
     patient = patient,
     file_path = file_path,
-    test_type = "subtest"
+    test_type = "subtest",
+    pages = subtest_pages
   )
 
   # Process indexes (will prompt for file if file_path is NULL)
@@ -219,7 +224,8 @@ process_wais5_complete <- function(
   wais5_index <- process_wais5_data(
     patient = patient,
     file_path = file_path,
-    test_type = "index"
+    test_type = "index",
+    pages = index_pages
   )
 
   # Combine both datasets
