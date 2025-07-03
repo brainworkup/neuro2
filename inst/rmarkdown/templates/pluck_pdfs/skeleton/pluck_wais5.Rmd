@@ -205,7 +205,7 @@ pages <- params$pages
 # file <- file.path(file.choose())
 file <- file.path(params$file)
 saveRDS(file, paste0(test, "_path.rds"))
-# file <- qs::qread(paste0(test, "_path.rds"))
+# file <- readRDS(paste0(test, "_path.rds"))
 ```
 
 ## Extract areas with `tabulapdf`
@@ -230,7 +230,7 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 # saveRDS(extracted_areas, file = "extracted_areas.rds")
-# areas <- qs::qread("~/Biggie/src/rmd/areas_wisc5.rds")
+# areas <- readRDS("~/Biggie/src/rmd/areas_wisc5.rds")
 ```
 
 ## Locate areas
@@ -283,7 +283,7 @@ extracted_tables <- tabulapdf::extract_tables(
 ```{r}
 # Save the entire list to an R data file
 saveRDS(extracted_tables, file = "extracted_tables_wais5.rds")
-extracted_tables <- qs::qread("extracted_tables_wais5.rds")
+extracted_tables <- readRDS("extracted_tables_wais5.rds")
 # Load the entire list from an R data file
 ```
 

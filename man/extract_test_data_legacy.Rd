@@ -13,7 +13,7 @@ extract_test_data_legacy(
   extract_columns,
   score_type,
   variables,
-  lookup_table_path = "~/reports/neuropsych_lookup_table_combined.csv",
+  lookup_table_path = "~/Dropbox/neuropsych_lookup_table.csv",
   write_output = TRUE,
   output_dir = if (requireNamespace("here", quietly = TRUE)) {
      here::here("data",
@@ -22,7 +22,7 @@ extract_test_data_legacy(
      file.path("data", "csv")
  },
   write_to_g = TRUE,
-  g_filename = "g2"
+  g_filename = "g"
 )
 }
 \arguments{

@@ -5,7 +5,7 @@ library(stringr)
 library(tidyr)
 library(glue)
 library(here)
-library(qs)
+
 library(tabulapdf)
 library(bwu) # Assuming this package provides `calc_ci_95()` and `gpluck_make_columns()`
 
@@ -165,8 +165,8 @@ wisc5_params <- set_test_params(
 )
 
 file <- file.path(file.choose())
-qs::qsave(file, paste0(wisc5_params$test, "_path.rds"))
-file <- qs::qread(paste0(wisc5_params$test, "_path.rds"))
+saveRDS(file, paste0(wisc5_params$test, "_path.rds"))
+file <- readRDS(paste0(wisc5_params$test, "_path.rds"))
 
 extracted_data <- extract_data(
   file,

@@ -193,13 +193,13 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 save(extracted_areas, file = "wppsi4_tables.RData")
-qs::qsave(extracted_areas, "wppsi4_tables2.rds")
+saveRDS(extracted_areas, "wppsi4_tables2.rds")
 ```
 
 ```{r}
 # Load the entire list from an R data file
 load("wppsi4_tables.RData")
-qs::qread("wppsi4_tables2.rds")
+readRDS("wppsi4_tables2.rds")
 ```
 
 ## Areas

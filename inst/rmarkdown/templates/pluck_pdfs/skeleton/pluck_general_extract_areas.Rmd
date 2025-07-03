@@ -129,7 +129,6 @@ library(here)
 library(knitr)
 library(magrittr)
 library(purrr)
-library(qs)
 library(readr)
 library(rJava)
 library(rlang)
@@ -162,8 +161,8 @@ score_type <- params$score_type
 extract_columns <- params$extract_columns
 variables <- params$variables
 
-qs2::qd_save(file, paste0(test, "_path.rds"))
-# file <- qs::qread(paste0(test, "_path.rds"))
+saveRDS(file, paste0(test, "_path.rds"))
+# file <- readRDS(paste0(test, "_path.rds"))
 
 # saveRDS(file, paste0("file_pdf", test, ".rds")) # eventually update to data directory
 # f <- readRDS(paste0("file_pdf", test, ".rds"))
@@ -204,7 +203,6 @@ for (i in seq_along(extracted_areas)) {
 }
 
 # Save the entire list to an R data file
-# save(extracted_areas, file = paste0(test, "_extracted_areas.RData"))
 saveRDS(extracted_areas, paste0(test, "_extracted_areas.rds"))
 
 # Check the extracted areas

@@ -162,7 +162,7 @@ saveRDS(file, "ktea3.rds")
 # file <- file.path(file.choose())
 ```
 
-## UseThis - updated March 2025
+## updated March 2025
 
 ```{r}
 # This works well so far
@@ -182,7 +182,7 @@ save(extracted_tables_ktea3, file = "extracted_tables_ktea3.RData")
 load("extracted_tables_ktea3.RData")
 ```
 
-### Function process_ktea3_tables as individual data.frames
+### Function `process_ktea3_tables` as individual data.frames
 
 ```{r}
 library(dplyr)

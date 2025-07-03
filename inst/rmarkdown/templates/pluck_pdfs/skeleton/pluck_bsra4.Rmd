@@ -164,13 +164,13 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 save(extracted_areas, file = "bsra4_tables.RData")
-qs::qsave(extracted_areas, "bsra4_tables.rds")
+saveRDS(extracted_areas, "bsra4_tables.rds")
 ```
 
 ```{r}
 # Load the entire list from an R data file
 load("bsra4_tables.RData")
-qs::qread("bsra4_tables.rds")
+readRDS("bsra4_tables.rds")
 ```
 
 ## Areas

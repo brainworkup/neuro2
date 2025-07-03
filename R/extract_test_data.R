@@ -4,7 +4,6 @@
 #' processes the data, merges with a lookup table, and calculates score ranges and text descriptions.
 #' This is a legacy version being phased out in favor of the unified extraction system.
 #'
-#' @importFrom qs2 qd_save
 #' @param patient Character string with patient name
 #' @param test Character string identifying the test type (e.g., "wisc5", "wais5")
 #' @param test_name Character string with the full test name (e.g., "WISC-V", "WAIS-5")
@@ -44,7 +43,7 @@ extract_test_data_legacy <- function(
   extract_columns,
   score_type,
   variables,
-  lookup_table_path = "~/reports/neuropsych_lookup_table_combined.csv",
+  lookup_table_path = "~/Dropbox/neuropsych_lookup_table.csv",
   write_output = TRUE,
   output_dir = if (requireNamespace("here", quietly = TRUE)) {
     here::here("data", "csv")
@@ -52,7 +51,7 @@ extract_test_data_legacy <- function(
     file.path("data", "csv")
   },
   write_to_g = TRUE,
-  g_filename = "g2"
+  g_filename = "g"
 ) {
   # Check if required packages are installed
   if (!requireNamespace("tabulapdf", quietly = TRUE)) {
@@ -170,7 +169,7 @@ extract_test_data_legacy <- function(
       df$ci_hi[i] <- ci_values["upper_ci_95"]
       df$ci_95[i] <- paste0(
         ci_values["lower_ci_95"],
-        " - ",
+        "-",
         ci_values["upper_ci_95"]
       )
     }

@@ -108,13 +108,13 @@ for (i in seq_along(extracted_areas)) {
 
 # Save the entire list to an R data file
 save(extracted_areas, file = "nepsy2_tables.RData")
-qs2::qd_save(extracted_areas, "nepsy2_tables.rds")
+saveRDS(extracted_areas, "nepsy2_tables.rds")
 ```
 
 ```{r}
 # Load the entire list from an R data file
 load("nepsy2_tables.RData")
-qs::qread("nepsy2_tables.rds")
+readRDS("nepsy2_tables.rds")
 ```
 
 ## Locate areas

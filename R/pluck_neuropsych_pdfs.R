@@ -597,7 +597,6 @@ process_wais5_complete <- function(
 #' @importFrom tabulapdf extract_areas
 #' @importFrom glue glue
 #' @importFrom here here
-#' @importFrom qs qsave qread
 #'
 #' @examples
 #' \dontrun{

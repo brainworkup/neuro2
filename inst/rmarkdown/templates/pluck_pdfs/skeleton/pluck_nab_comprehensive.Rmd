@@ -440,7 +440,7 @@ pages <- params$pages
 domain_names <- params$domains
 # file <- file.path(file.choose())
 file <- file.path(params$file)
-qs2::qd_save(file, paste0(test, "_file_path.rds"))
+saveRDS(file, paste0(test, "_file_path.rds"))
 # qs2::qd_read(paste0(test, "_file_path.rds"))
 ```
 
@@ -522,7 +522,7 @@ areas <- list(
   }
 )
 
-qs2::qd_save(file, paste0(test, "_areas_list.rds"))
+saveRDS(file, paste0(test, "_areas_list.rds"))
 # qs2::qd_read(paste0(test, "_areas_list.rds"))
 ```
 
