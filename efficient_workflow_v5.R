@@ -65,14 +65,14 @@ if (file.exists("01_import_process_data.R")) {
 
   # Combine all validity data
   if (length(validity_data) > 0) {
-    validity <- bind_rows(validity_data, .id = "source_test")
+    validity <- dplyr::bind_rows(validity_data, .id = "source_test")
 
     # Standardize column names
     validity <- validity |> janitor::clean_names()
 
     # Add patient information
     validity <- validity |>
-      mutate(
+      dplyr::mutate(
         patient_name = patient_name,
         patient_age = patient_age,
         patient_sex = patient_sex,
@@ -270,7 +270,7 @@ generate_domain_texts <- function() {
     "Psychiatric Disorders" = "_02-10_emotion_adult_text.qmd",
     "Personality Disorders" = "_02-10_emotion_adult_text.qmd",
     "Substance Use" = "_02-10_emotion_adult_text.qmd",
-    "Psychosocial Probelems" = "_02-10_emotion_adult_text.qmd",
+    "Psychosocial Problems" = "_02-10_emotion_adult_text.qmd",
     "Adaptive Functioning" = "_02-11_adaptive_text.qmd",
     "Daily Living" = "_02-12_daily_living_text.qmd"
   )
