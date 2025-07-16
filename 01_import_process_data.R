@@ -51,8 +51,12 @@ neurobehav_files <- list(
   cefi_self = "data-raw/cefi_self.csv",
   cefi_observer = "data-raw/cefi_observer.csv",
   pai_clinical = "data-raw/pai_clinical.csv",
-  pai_validity = "data-raw/pai_validity.csv",
   pai_inatt = "data-raw/pai_inatt.csv"
+)
+
+# Import validity data
+validity_files <- list(
+  pai_validity = "data-raw/pai_validity.csv"
 )
 
 # Process neurocog data

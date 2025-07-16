@@ -277,7 +277,7 @@
 )
 
 #let name = [Smalls, Biggie]
-#let doe = [2025-06-29]
+#let doe = [2025-07-16]
 #let patient = [Biggie]
 // #v(2em, weak: true)
 // #show block: set par(leading: 0.65em)
@@ -285,7 +285,7 @@
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* 1981-06-27, Age 44 \
 *DATES OF EXAM:* 2025-05-28, 2025-05-31, and 2025-06-03 \
-*DATE OF REPORT*: 2025-06-29 \
+*DATE OF REPORT*: 2025-07-16 \
 ]
 = TESTS ADMINISTERED
 <tests-administered>
@@ -345,8 +345,6 @@ Biggie presented as alert and oriented to person, place, time, and situation. He
 <sec-iq>
 Testing of general cognitive ability revealed overall average performance (mean percentile = 51).
 
-A composite screening measure of language comprehension and word-finding abilities fell in the High Average classification range. An estimate of premorbid verbal ability level fell within the High Average range. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 63th percentile, indicating performance as good as or better than 63% of same-age peers from the general population. General intellectual ability fell within the Average and ranked at the 58th percentile, indicating performance as good as or better than 58% of same-age peers from the general population. A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 58th percentile, indicating performance as good as or better than 58% of same-age peers from the general population. An overall screening measure of the examinee's attentional functioning was Average. Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Average and ranked at the 50th percentile, indicating performance as good as or better than 50% of same-age peers from the general population. A composite screening measure of visuoperceptual skills, attention to detail, and visuoconstructional skills fell in the Average classification range. Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the Average and ranked at the 37th percentile, indicating performance as good as or better than 37% of same-age peers from the general population. A comprehensive measure of neuropsychological functioning (independent of general intelligence) in the domains of attentional and executive functioning, language, spatial processing, and memory fell in the Average range. A composite measure of executive skills involving planning, inhibition, speed/fluency, and generativity fell in the Low Average range. A composite measure of the examinee's verbal and visual memory functioning was Below Average.
-
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
@@ -389,8 +387,6 @@ A composite screening measure of language comprehension and word-finding abiliti
 == Academic Skills
 <sec-academics>
 Testing of academic skills revealed overall high average performance (mean percentile = 78).
-
-Orthographic knowledge, or the quality of stored orthographic representations (i.e., correct word spellings) fell within the High Average and ranked at the 88th percentile, indicating performance as good as or better than 88% of same-age peers from the general population. Orthographic lexicon, or sight vocabulary fluency fell within the Average and ranked at the 68th percentile, indicating performance as good as or better than 68% of same-age peers from the general population.
 
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
@@ -440,8 +436,6 @@ Orthographic knowledge, or the quality of stored orthographic representations (i
 <sec-verbal>
 Testing of verbal/language revealed overall average performance (mean percentile = 41).
 
-Screening of word-finding ability and retrieval fluency on a confrontation naming task was Above Average, with no obvious dysfluency in conversational/informal expression. Categorical/semantic word fluency fell within the Average range. Verbal concept formation and word knowledge fell within the Average and ranked at the 50th percentile, indicating performance as good as or better than 50% of same-age peers from the general population. Auditory comprehension (i.e., the ability to receive, process, and execute oral instructions of increasing syntactic complexity) was Average. Letter/phonemic word fluency was Average. Verbal concept formation and abstract reasoning fell within the Average and ranked at the 25th percentile, indicating performance as good as or better than 25% of same-age peers from the general population.
-
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
@@ -485,8 +479,6 @@ Screening of word-finding ability and retrieval fluency on a confrontation namin
 <sec-spatial>
 Testing of visual perception/construction revealed overall average performance (mean percentile = 50).
 
-Inductive reasoning and nonverbal problem-solving fell within the High Average and ranked at the 84th percentile, indicating performance as good as or better than 84% of same-age peers from the general population. Perceptual processing, discrimination, and pattern matching of a series of abstract images requiring close attention to visual detail was High Average. Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the High Average and ranked at the 75th percentile, indicating performance as good as or better than 75% of same-age peers from the general population. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 37th percentile, indicating performance as good as or better than 37% of same-age peers from the general population. Constructing and recreating abstract visual designs (tangrams) from a model using flat polygons (tans) to reproduce each stimulus fell in the Low Average range. Copying of a complex figure requiring visuospatial integration, planning and organization, and efficient encoding of visuospatial material was Below Average.
-
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
@@ -522,8 +514,6 @@ Inductive reasoning and nonverbal problem-solving fell within the High Average a
 <sec-memory>
 Testing of memory revealed overall average performance (mean percentile = 55).
 
-Correct number of words learned on the first trial was High Average. Correct number of words learned on the fourth trial was High Average. Correct number of words learned on the third trial was High Average. Learning and recall of rote verbal information (word list) was High Average. Yes/no recognition discriminability was High Average. Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range. Correct number of words learned on the second trial was Average. Recognition of the target visual material among nontarget distractors after a delay period was Low Average. The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range. Learning and recognition of visual material (abstract shapes) was Low Average. Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average. Delayed recall of the story details over time was Low Average. Correct number of words learned on the first trial was High Average. Correct number of words learned on the fourth trial was High Average. Correct number of words learned on the third trial was High Average. Learning and recall of rote verbal information (word list) was High Average. Yes/no recognition discriminability was High Average. Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range. Correct number of words learned on the second trial was Average. Recognition of the target visual material among nontarget distractors after a delay period was Low Average. The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range. Learning and recognition of visual material (abstract shapes) was Low Average. Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average. Delayed recall of the story details over time was Low Average. Correct number of words learned on the first trial was High Average. Correct number of words learned on the fourth trial was High Average. Correct number of words learned on the third trial was High Average. Learning and recall of rote verbal information (word list) was High Average. Yes/no recognition discriminability was High Average. Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range. Correct number of words learned on the second trial was Average. Recognition of the target visual material among nontarget distractors after a delay period was Low Average. The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range. Learning and recognition of visual material (abstract shapes) was Low Average. Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average. Delayed recall of the story details over time was Low Average.
-
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
@@ -558,8 +548,6 @@ Correct number of words learned on the first trial was High Average. Correct num
 == Attention/Executive
 <sec-executive>
 Testing of attention/executive revealed overall average performance (mean percentile = 53).
-
-Total number of repetitive response errors was High Average. Performance on a complex measure of divided attention, information processing speed, and inhibition was High Average. Working memory for orally presented information was High Average (6 digits backward). Total number of intrusive response errors was High Average. A measure of both attentional capacity and working memory fell within the Average range. The patient's ability to encode, maintain, and recall visual information in short-term working memory fell within the Average and ranked at the 63th percentile, indicating performance as good as or better than 63% of same-age peers from the general population. Auditory attentional capacity, or how much information can be processed at once fell within the Average range. Retrieval fluency, ideational fluency, and generativity was Average. Orientation to person, place, time, and situation was intact. A marker of reduced focus, or selective attention, distractibility, or reduced concentration, and diminished sustained attention fell within the Average range. Biggie's score on Inhibition Total Errors (Inhibition errors) was Average. Strategic planning and organization aptitude to formulate an action in advance of performance or intended performance fell within the Average range. Auditory attentional capacity was Average (7 digits forward). Biggie's score on Inhibition (Inhibition/cognitive control) was Average. An overall measure of efficiency in performing a selective attention letter cancellation task was Low Average. Psychomotor speed fell within the Low Average range. Planning and foresight, inhibition, and psychomotor speed examined through a series of maze-tracing tasks fell in the Low Average range. Self-monitoring and perseverative tendencies was Exceptionally Low.
 
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)

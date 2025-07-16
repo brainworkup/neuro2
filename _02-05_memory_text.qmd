@@ -3,39 +3,3 @@
 Testing of memory revealed overall average performance (mean percentile = 55).
 
 </summary>
-Correct number of words learned on the first trial was High Average.
-Correct number of words learned on the fourth trial was High Average.
-Correct number of words learned on the third trial was High Average.
-Learning and recall of rote verbal information (word list) was High Average.
-Yes/no recognition discriminability was High Average.
-Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range.
-Correct number of words learned on the second trial was Average.
-Recognition of the target visual material among nontarget distractors after a delay period was Low Average.
-The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range.
-Learning and recognition of visual material (abstract shapes) was Low Average.
-Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average.
-Delayed recall of the story details over time was Low Average.
-Correct number of words learned on the first trial was High Average.
-Correct number of words learned on the fourth trial was High Average.
-Correct number of words learned on the third trial was High Average.
-Learning and recall of rote verbal information (word list) was High Average.
-Yes/no recognition discriminability was High Average.
-Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range.
-Correct number of words learned on the second trial was Average.
-Recognition of the target visual material among nontarget distractors after a delay period was Low Average.
-The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range.
-Learning and recognition of visual material (abstract shapes) was Low Average.
-Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average.
-Delayed recall of the story details over time was Low Average.
-Correct number of words learned on the first trial was High Average.
-Correct number of words learned on the fourth trial was High Average.
-Correct number of words learned on the third trial was High Average.
-Learning and recall of rote verbal information (word list) was High Average.
-Yes/no recognition discriminability was High Average.
-Percentage of visual detail retained over time, scaled to how much was initially learned fell in the Average range.
-Correct number of words learned on the second trial was Average.
-Recognition of the target visual material among nontarget distractors after a delay period was Low Average.
-The percentage of story detail retained over time, scaled to how much was initially learned fell in the Low Average range.
-Learning and recognition of visual material (abstract shapes) was Low Average.
-Performance on a more complex one-trial verbal learning and recall task (story learning) was Low Average.
-Delayed recall of the story details over time was Low Average.
