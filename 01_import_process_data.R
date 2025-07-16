@@ -82,11 +82,26 @@ for (test_name in names(neurobehav_files)) {
   }
 }
 
+# Process validity data
+validity_list <- list()
+for (test_name in names(validity_files)) {
+  file_path <- validity_files[[test_name]]
+  if (file.exists(file_path)) {
+    validity_list[[test_name]] <- read_and_standardize(file_path, "behavioral")
+    message(paste("✓ Loaded", test_name))
+  } else {
+    warning(paste("File not found:", file_path))
+  }
+}
+
 # Combine neurocog data
-neurocog <- bind_rows(neurocog_list, .id = "source_test")
+neurocog <- dplyr::bind_rows(neurocog_list, .id = "source_test")
 
 # Combine neurobehav data
-neurobehav <- bind_rows(neurobehav_list, .id = "source_test")
+neurobehav <- dplyr::bind_rows(neurobehav_list, .id = "source_test")
+
+# Combine validity data
+validity <- dplyr::bind_rows(validity_list, .id = "source_test")
 
 # Add patient information
 neurocog <- neurocog |>
@@ -98,6 +113,14 @@ neurocog <- neurocog |>
   )
 
 neurobehav <- neurobehav |>
+  dplyr::mutate(
+    patient_name = patient_name,
+    patient_age = patient_age,
+    patient_sex = patient_sex,
+    date_tested = Sys.Date()
+  )
+
+validity <- validity |>
   dplyr::mutate(
     patient_name = patient_name,
     patient_age = patient_age,
@@ -160,7 +183,7 @@ compute_domain_scores <- function(data) {
         z_mean_narrow = mean(z, na.rm = TRUE),
         z_sd_narrow = sd(z, na.rm = TRUE)
       ) |>
-      ungroup()
+      dplyr::ungroup()
   }
 
   # Compute pass means if pass column exists
@@ -171,7 +194,7 @@ compute_domain_scores <- function(data) {
         z_mean_pass = mean(z, na.rm = TRUE),
         z_sd_pass = sd(z, na.rm = TRUE)
       ) |>
-      ungroup()
+      dplyr::ungroup()
   }
 
   # Compute verbal means if verbal column exists
@@ -182,7 +205,7 @@ compute_domain_scores <- function(data) {
         z_mean_verbal = mean(z, na.rm = TRUE),
         z_sd_verbal = sd(z, na.rm = TRUE)
       ) |>
-      ungroup()
+      dplyr::ungroup()
   }
 
   # Compute timed means if timed column exists
@@ -193,7 +216,7 @@ compute_domain_scores <- function(data) {
         z_mean_timed = mean(z, na.rm = TRUE),
         z_sd_timed = sd(z, na.rm = TRUE)
       ) |>
-      ungroup()
+      dplyr::ungroup()
   }
 
   return(data)
@@ -202,22 +225,26 @@ compute_domain_scores <- function(data) {
 # Apply domain score computation
 neurocog <- compute_domain_scores(neurocog)
 neurobehav <- compute_domain_scores(neurobehav)
+validity <- compute_domain_scores(validity)
 
 # Save processed data
 write_csv(neurocog, "data/neurocog.csv")
 write_csv(neurobehav, "data/neurobehav.csv")
+write_csv(validity, "data/validity.csv")
 
 message("\n✅ Data import and processing complete!")
 message(paste("Neurocog records:", nrow(neurocog)))
 message(paste("Neurobehav records:", nrow(neurobehav)))
+message(paste("Validity records:", nrow(validity)))
 
 # Create a combined neuropsych dataset for some analyses
 neuropsych <- bind_rows(
   neurocog |> dplyr::mutate(data_type = "cognitive"),
-  neurobehav |> dplyr::mutate(data_type = "behavioral")
+  neurobehav |> dplyr::mutate(data_type = "behavioral"),
+  validity |> dplyr::mutate(data_type = "validity")
 )
 
-write_csv(neuropsych, "data/neuropsych.csv")
+readr::write_excel_csv(neuropsych, "data/neuropsych.csv")
 
 # Print summary of domains
 if ("domain" %in% colnames(neurocog)) {
@@ -228,4 +255,9 @@ if ("domain" %in% colnames(neurocog)) {
 if ("domain" %in% colnames(neurobehav)) {
   message("\nBehavioral domains found:")
   print(table(neurobehav$domain))
+}
+
+if ("domain" %in% colnames(validity)) {
+  message("\nBehavioral domains found:")
+  print(table(validity$domain))
 }
