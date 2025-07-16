@@ -4,57 +4,62 @@ This guide provides detailed instructions for using the neuro2 package to genera
 
 ## Table of Contents
 
-1. [Initial Setup](#initial-setup)
-2. [Data Preparation](#data-preparation)
-3. [Running the Workflow](#running-the-workflow)
-4. [Customizing Reports](#customizing-reports)
-5. [Understanding the Output](#understanding-the-output)
-6. [Troubleshooting](#troubleshooting)
-7. [Advanced Workflows](#advanced-workflows)
+1.  [Initial Setup](#initial-setup)
+2.  [Data Preparation](#data-preparation)
+3.  [Running the Workflow](#running-the-workflow)
+4.  [Customizing Reports](#customizing-reports)
+5.  [Understanding the Output](#understanding-the-output)
+6.  [Troubleshooting](#troubleshooting)
+7.  [Advanced Workflows](#advanced-workflows)
 
----
+------------------------------------------------------------------------
 
-## Initial Setup
+## Initial Setup {#initial-setup}
 
 ### Step 1: Environment Preparation
 
-1. **Install R and RStudio**
-   - Download R (version 4.1+) from [CRAN](https://cran.r-project.org/)
-   - Install RStudio from [Posit](https://posit.co/products/open-source/rstudio/)
+1.  **Install R and RStudio**
 
-2. **Install Quarto**
-   ```bash
-   # macOS (using Homebrew)
-   brew install quarto
-   
-   # Or download from https://quarto.org/docs/get-started/
-   ```
+    -   Download R (version 4.1+) from [CRAN](https://cran.r-project.org/)
+    -   Install RStudio from [Posit](https://posit.co/products/open-source/rstudio/)
 
-3. **Install LaTeX (for PDF output)**
-   ```r
-   # In R console
-   install.packages("tinytex")
-   tinytex::install_tinytex()
-   ```
+2.  **Install Quarto**
 
-4. **Clone or Download the neuro2 Repository**
-   ```bash
-   git clone https://github.com/yourusername/neuro2.git
-   cd neuro2
-   ```
+    ``` bash
+    # macOS (using Homebrew)
+    brew install quarto
 
-5. **Install Package Dependencies**
-   ```r
-   # Open R in the neuro2 directory
-   install.packages("devtools")
-   devtools::install_deps()
-   ```
+    # Or download from https://quarto.org/docs/get-started/
+    ```
+
+3.  **Install LaTeX (for PDF output)**
+
+    ``` r
+    # In R console
+    install.packages("tinytex")
+    tinytex::install_tinytex()
+    ```
+
+4.  **Clone or Download the neuro2 Repository**
+
+    ``` bash
+    git clone https://github.com/brainworkup/neuro2.git
+    cd neuro2
+    ```
+
+5.  **Install Package Dependencies**
+
+    ``` r
+    # Open R in the neuro2 directory
+    install.packages("devtools")
+    devtools::install_deps()
+    ```
 
 ### Step 2: Verify Installation
 
 Run this verification script:
 
-```r
+``` r
 # Check R version
 R.version.string
 
@@ -71,44 +76,39 @@ library(quarto)
 getwd()  # Should show your neuro2 directory
 ```
 
----
+------------------------------------------------------------------------
 
-## Data Preparation
+## Data Preparation {#data-preparation}
 
 ### Step 1: Understanding Data Requirements
 
-Your CSV files must contain these columns:
-- `test`: Test abbreviation (e.g., "WAIS-5", "CVLT-3")
-- `test_name`: Full test name
-- `scale`: Subtest/scale name
-- `raw_score`: Raw score (can be NA)
-- `score`: Standard/scaled score
-- `percentile`: Percentile rank
-- `range`: Classification (e.g., "Average", "Low Average")
-- `domain`: Cognitive domain
+Your CSV files must contain these columns: - `test`: Name of test - `test_name`: Full test name (e.g., "WAIS-5", "CVLT-3") - `scale`: Subtest/scale name - `raw_score`: Raw score (can be NA) - `score`: Standard/scaled score - `percentile`: Percentile rank - `range`: Classification (e.g., "Average", "Low Average") - `domain`: Cognitive domain
 
 ### Step 2: Organizing Test Data
 
-1. **Create data directory structure**
-   ```bash
-   mkdir -p data-raw
-   mkdir -p data
-   ```
+1.  **Create data directory structure**
 
-2. **Place CSV files in data-raw/**
-   - Name files descriptively: `wais5.csv`, `cvlt3_brief.csv`, etc.
-   - Each file represents one test or battery
+    ``` bash
+    mkdir -p data-raw
+    mkdir -p data
+    ```
 
-3. **Example CSV format**
-   ```csv
-   test,test_name,scale,raw_score,score,percentile,range,domain
-   WAIS5,Wechsler Adult Intelligence Scale-5,Full Scale IQ,NA,95,37,Average,General Cognitive Ability
-   WAIS5,Wechsler Adult Intelligence Scale-5,Verbal Comprehension,NA,102,55,Average,Verbal/Language
-   ```
+2.  **Place CSV files in data-raw/**
+
+    -   Name files descriptively: `wais5.csv`, `cvlt3_brief.csv`, etc.
+    -   Each file represents one test or battery
+
+3.  **Example CSV format**
+
+    ``` csv
+    test,test_name,scale,raw_score,score,percentile,range,domain
+    WAIS5,Wechsler Adult Intelligence Scale-5,Full Scale IQ,NA,95,37,Average,General Cognitive Ability
+    WAIS5,Wechsler Adult Intelligence Scale-5,Verbal Comprehension,NA,102,55,Average,Verbal/Language
+    ```
 
 ### Step 3: Validate Your Data
 
-```r
+``` r
 # Check your CSV files
 csv_files <- list.files("data-raw", pattern = "*.csv", full.names = TRUE)
 print(csv_files)
@@ -119,15 +119,15 @@ names(sample_data)  # Should show required columns
 summary(sample_data)
 ```
 
----
+------------------------------------------------------------------------
 
-## Running the Workflow
+## Running the Workflow {#running-the-workflow}
 
 ### Option 1: Quick Start (Efficient Workflow)
 
 The fastest way to generate a report:
 
-```r
+``` r
 # 1. Set working directory
 setwd("/path/to/neuro2")
 
@@ -135,18 +135,15 @@ setwd("/path/to/neuro2")
 source("efficient_workflow_v5.R")
 ```
 
-This automatically:
-- Processes all CSV files in `data-raw/`
-- Updates patient variables
-- Generates domain summaries
-- Creates the final report
+This automatically: - Processes all CSV files in `data-raw/` - Updates patient variables - Generates domain summaries - Creates the final report
 
 ### Option 2: Step-by-Step Workflow
 
 For more control over each step:
 
 #### Step 1: Import and Process Data
-```r
+
+``` r
 # Load and process raw data files
 source("01_import_process_data.R")
 
@@ -157,7 +154,8 @@ source("01_import_process_data.R")
 ```
 
 #### Step 2: Update Patient Information
-```r
+
+``` r
 # Edit patient demographics
 # You can do this manually in _variables.yml or programmatically:
 
@@ -173,7 +171,8 @@ yaml::write_yaml(variables, "_variables.yml")
 ```
 
 #### Step 3: Create Domain Files
-```r
+
+``` r
 # Generate domain-specific QMD files
 source("02_create_domain_qmds.R")
 
@@ -184,7 +183,8 @@ source("02_create_domain_qmds.R")
 ```
 
 #### Step 4: Generate Domain Summaries
-```r
+
+``` r
 # Process data and create interpretations
 source("03_render_domains.R")
 
@@ -195,7 +195,8 @@ source("03_render_domains.R")
 ```
 
 #### Step 5: Render Final Report
-```r
+
+``` r
 # Compile everything into final report
 quarto::quarto_render("template.qmd")
 
@@ -206,7 +207,7 @@ quarto::quarto_render("template.qmd")
 
 For forensic evaluations with additional requirements:
 
-```r
+``` r
 # Run the forensic-specific workflow
 source("06_run_complete_workflow.R")
 
@@ -216,55 +217,55 @@ source("06_run_complete_workflow.R")
 # - Legal disclaimer sections
 ```
 
----
+------------------------------------------------------------------------
 
-## Customizing Reports
+## Customizing Reports {#customizing-reports}
 
 ### Modifying Patient Information
 
-1. **Edit `_variables.yml`**
-   ```yaml
-   patient: "Jane Smith"
-   first_name: "Jane"
-   last_name: "Smith"
-   age: 35
-   sex: "female"
-   dob: "1989-06-15"
-   education: 18  # Years of education
-   handedness: "left"
-   referral: "Dr. Johnson"
-   ```
+1.  **Edit `_variables.yml`**
 
-2. **Add custom variables**
-   ```yaml
-   # Add any custom fields
-   ethnicity: "Hispanic"
-   primary_language: "Spanish"
-   interpreter_used: false
-   ```
+    ``` yaml
+    patient: "Jane Smith"
+    first_name: "Jane"
+    last_name: "Smith"
+    age: 35
+    sex: "female"
+    dob: "1989-06-15"
+    education: 18  # Years of education
+    handedness: "left"
+    referral: "Dr. Johnson"
+    ```
+
+2.  **Add custom variables**
+
+    ``` yaml
+    # Add any custom fields
+    ethnicity: "Hispanic"
+    primary_language: "Spanish"
+    interpreter_used: false
+    ```
 
 ### Customizing Report Sections
 
-1. **Neurobehavioral Status Exam** (`_01-00_nse_adult.qmd`)
-   - Edit clinical history
-   - Modify mental status observations
-   - Add relevant background information
-
-2. **Domain Interpretations** (`_02-*_*_text.qmd` files)
-   - Customize clinical interpretations
-   - Add qualitative observations
-   - Include test-specific notes
-
-3. **Summary and Recommendations** (`_03-00_sirf.qmd`, `_03-01_recommendations.qmd`)
-   - Tailor diagnostic impressions
-   - Customize recommendations
-   - Add referral suggestions
+1.  **Neurobehavioral Status Exam** (`_01-00_nse_adult.qmd`)
+    -   Edit clinical history
+    -   Modify mental status observations
+    -   Add relevant background information
+2.  **Domain Interpretations** (`_02-*_*_text.qmd` files)
+    -   Customize clinical interpretations
+    -   Add qualitative observations
+    -   Include test-specific notes
+3.  **Summary and Recommendations** (`_03-00_sirf.qmd`, `_03-01_recommendations.qmd`)
+    -   Tailor diagnostic impressions
+    -   Customize recommendations
+    -   Add referral suggestions
 
 ### Changing Report Format
 
 Edit `_quarto.yml` to modify formatting:
 
-```yaml
+``` yaml
 format:
   neurotyp-adult-typst:
     fontsize: 12pt  # Change font size
@@ -276,78 +277,72 @@ format:
       right: 1in
 ```
 
----
+------------------------------------------------------------------------
 
-## Understanding the Output
+## Understanding the Output {#understanding-the-output}
 
 ### Generated Files
 
 After running the workflow, you'll find:
 
-1. **Data Files** (`data/` directory)
-   - `neurocog.csv`: Processed cognitive data
-   - `neurobehav.csv`: Processed behavioral data
-   - `validity.csv`: Validity indicators
-
-2. **Domain Files** (root directory)
-   - `_02-01_iq.qmd`: IQ analysis
-   - `_02-01_iq_text.qmd`: IQ interpretation
-   - Similar pairs for each domain
-
-3. **Output Files**
-   - `template.pdf`: Final report
-   - `template.html`: Web version
-   - `*.svg`: Generated figures
+1.  **Data Files** (`data/` directory)
+    -   `neurocog.csv`: Processed cognitive data
+    -   `neurobehav.csv`: Processed behavioral data
+    -   `validity.csv`: Validity indicators
+2.  **Domain Files** (root directory)
+    -   `_02-01_iq.qmd`: IQ analysis
+    -   `_02-01_iq_text.qmd`: IQ interpretation
+    -   Similar pairs for each domain
+3.  **Output Files**
+    -   `template.pdf`: Final report
+    -   `template.html`: Web version
+    -   `*.svg`: Generated figures
 
 ### Report Structure
 
 The final report includes:
 
-1. **Cover Page**
-   - Patient demographics
-   - Dates of evaluation
-   - Report date
+1.  **Cover Page**
+    -   Patient demographics
+    -   Dates of evaluation
+    -   Report date
+2.  **Tests Administered**
+    -   Complete list of assessments
+3.  **Neurobehavioral Status Exam**
+    -   Reason for referral
+    -   Background information
+    -   Mental status
+4.  **Neurocognitive Findings**
+    -   Domain-by-domain analysis
+    -   Tables and figures
+    -   Clinical interpretations
+5.  **Summary/Impressions**
+    -   Overall findings
+    -   Diagnostic considerations
+6.  **Recommendations**
+    -   Clinical recommendations
+    -   Follow-up suggestions
+7.  **Appendix**
+    -   Score classification table
+    -   Technical notes
 
-2. **Tests Administered**
-   - Complete list of assessments
+------------------------------------------------------------------------
 
-3. **Neurobehavioral Status Exam**
-   - Reason for referral
-   - Background information
-   - Mental status
-
-4. **Neurocognitive Findings**
-   - Domain-by-domain analysis
-   - Tables and figures
-   - Clinical interpretations
-
-5. **Summary/Impressions**
-   - Overall findings
-   - Diagnostic considerations
-
-6. **Recommendations**
-   - Clinical recommendations
-   - Follow-up suggestions
-
-7. **Appendix**
-   - Score classification table
-   - Technical notes
-
----
-
-## Troubleshooting
+## Troubleshooting {#troubleshooting}
 
 ### Common Issues and Solutions
 
 #### 1. Data Import Errors
 
 **Problem**: "File not found" errors
-```r
+
+``` r
 Error in read_csv(file_path) : 'data-raw/wais5.csv' does not exist
 ```
 
 **Solution**:
-```r
+
+``` r
 # Check working directory
 getwd()
 
@@ -361,12 +356,14 @@ file.exists("data-raw/wais5.csv")
 #### 2. Missing Columns
 
 **Problem**: "Unknown column" errors
-```r
+
+``` r
 Error: Can't subset columns that don't exist
 ```
 
 **Solution**:
-```r
+
+``` r
 # Check column names in your CSV
 data <- read_csv("data-raw/your_file.csv")
 names(data)
@@ -380,12 +377,14 @@ print(missing_cols)
 #### 3. Quarto Rendering Failures
 
 **Problem**: Report won't render
-```
+
+```         
 Error: Failed to render template.qmd
 ```
 
 **Solution**:
-```r
+
+``` r
 # Check Quarto installation
 system("quarto check")
 
@@ -400,12 +399,14 @@ sapply(required_files, file.exists)
 #### 4. LaTeX/PDF Issues
 
 **Problem**: PDF generation fails
-```
+
+```         
 ! LaTeX Error: File `typst.sty' not found
 ```
 
 **Solution**:
-```r
+
+``` r
 # Reinstall TinyTeX
 tinytex::reinstall_tinytex()
 
@@ -417,7 +418,7 @@ quarto::quarto_render("template.qmd", output_format = "html")
 
 Enable detailed logging:
 
-```r
+``` r
 # Set debug options
 options(
   neuro2.debug = TRUE,
@@ -430,13 +431,13 @@ debug(source)
 source("efficient_workflow_v5.R")
 ```
 
----
+------------------------------------------------------------------------
 
-## Advanced Workflows
+## Advanced Workflows {#advanced-workflows}
 
 ### Batch Processing Multiple Patients
 
-```r
+``` r
 # Process multiple patients
 patients <- list(
   list(name = "Patient A", age = 30, sex = "male", folder = "patient_a"),
@@ -470,7 +471,7 @@ for (patient in patients) {
 
 ### Custom Domain Analysis
 
-```r
+``` r
 # Load processed data
 neurocog <- read_csv("data/neurocog.csv")
 
@@ -494,7 +495,7 @@ ggplot(memory_data, aes(x = scale, y = mean_percentile)) +
 
 ### Integrating with Electronic Health Records
 
-```r
+``` r
 # Example: Export for EHR integration
 library(jsonlite)
 
@@ -512,36 +513,33 @@ summary_data <- list(
 write_json(summary_data, "patient_summary.json")
 ```
 
----
+------------------------------------------------------------------------
 
 ## Best Practices
 
-1. **Version Control**
-   - Keep your data and reports in git
-   - Tag versions for each patient report
-   - Use `.gitignore` for sensitive data
+1.  **Version Control**
+    -   Keep your data and reports in git
+    -   Tag versions for each patient report
+    -   Use `.gitignore` for sensitive data
+2.  **Data Security**
+    -   Never commit patient data to public repos
+    -   Use encrypted storage for PHI
+    -   Follow HIPAA guidelines
+3.  **Quality Control**
+    -   Review generated interpretations
+    -   Verify score conversions
+    -   Cross-check with manual calculations
+4.  **Documentation**
+    -   Document any custom modifications
+    -   Keep notes on unusual cases
+    -   Maintain change log for reports
 
-2. **Data Security**
-   - Never commit patient data to public repos
-   - Use encrypted storage for PHI
-   - Follow HIPAA guidelines
-
-3. **Quality Control**
-   - Review generated interpretations
-   - Verify score conversions
-   - Cross-check with manual calculations
-
-4. **Documentation**
-   - Document any custom modifications
-   - Keep notes on unusual cases
-   - Maintain change log for reports
-
----
+------------------------------------------------------------------------
 
 ## Getting Help
 
-- **Package Issues**: Check [GitHub Issues](https://github.com/yourusername/neuro2/issues)
-- **Quarto Help**: Visit [Quarto Documentation](https://quarto.org/docs/guide/)
-- **R Help**: Use `?function_name` or `help(package_name)`
+-   **Package Issues**: Check [GitHub Issues](https://github.com/yourusername/neuro2/issues)
+-   **Quarto Help**: Visit [Quarto Documentation](https://quarto.org/docs/guide/)
+-   **R Help**: Use `?function_name` or `help(package_name)`
 
-For additional support, contact: joey.trampush@brainworkup.org
+For additional support, contact: joey.trampush\@brainworkup.org
