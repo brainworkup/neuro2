@@ -50,3 +50,7 @@ _arxiv/gen_report_R6.qmd
 _arxiv/
 DESCRIPTION.bk
 neuro2_0.1.3.tar.gz
+data/neurobehav.csv
+data/neurocog.csv
+data/neuropsych.csv
+data/validity.csv
