@@ -55,6 +55,7 @@
 #' @importFrom glue glue
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
+#' @importFrom bwu gpluck_make_score_ranges gpluck_make_columns
 #'
 #' @examples
 #' \dontrun{

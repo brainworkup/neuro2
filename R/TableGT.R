@@ -393,11 +393,11 @@ TableGT2 <- R6::R6Class(
         ) {
           footnote_mapping[[
             test_name
-          ]] <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+          ]] <- "Scaled score: Mean = 10 [50th\\u2030], SD \\u00b1 3 [16th\\u2030, 84th\\u2030]"
         } else if (grepl("NAB|CELF|ABAS", test_name, ignore.case = TRUE)) {
           footnote_mapping[[
             test_name
-          ]] <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          ]] <- "Standard score: Mean = 100 [50th\\u2030], SD \\u00b1 15 [16th\\u2030, 84th\\u2030]"
         } else if (
           grepl(
             "NIH|EXAMINER|PAI|CAARS|BASC|Trail|TMT",
@@ -407,12 +407,12 @@ TableGT2 <- R6::R6Class(
         ) {
           footnote_mapping[[
             test_name
-          ]] <- "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
+          ]] <- "T-score: Mean = 50 [50th\\u2030], SD \\u00b1 10 [16th\\u2030, 84th\\u2030]"
         } else {
           # Default to standard score for unknown tests
           footnote_mapping[[
             test_name
-          ]] <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          ]] <- "Standard score: Mean = 100 [50th\\u2030], SD \\u00b1 15 [16th\\u2030, 84th\\u2030]"
         }
       }
 

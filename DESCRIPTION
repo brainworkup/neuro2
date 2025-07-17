@@ -8,10 +8,11 @@ Author: Joey Trampush [aut, cre]
 Maintainer: Joey Trampush <joey.trampush@brainworkup.org>
 Description: Provides Quarto .qmd and Typst .typ templates for
     neuropsychological evaluation data processing and report generation.
-License: MIT + file LICENSE
+License: MIT + file LICENSE.md
 Depends:
     R (>= 4.1)
 Imports:
+    bwu,
     cli,
     dplyr,
     fs,
