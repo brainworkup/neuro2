@@ -14,7 +14,8 @@ load_data_duckdb <- function(
   file_path,
   output_dir = here::here("data"),
   return_data = FALSE,
-  use_duckdb = TRUE
+  use_duckdb = TRUE,
+  patient = NULL
 ) {
   # Input validation
   if (missing(file_path)) {
@@ -27,6 +28,18 @@ load_data_duckdb <- function(
 
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
+  }
+
+  # Get patient name from _variables.yml if not provided
+  if (is.null(patient)) {
+    variables_file <- here::here("_variables.yml")
+    if (file.exists(variables_file)) {
+      variables <- yaml::read_yaml(variables_file)
+      patient <- variables$patient
+    } else {
+      patient <- "Unknown"
+      warning("_variables.yml not found, using 'Unknown' as patient name")
+    }
   }
 
   # If not using DuckDB, fall back to traditional approach
@@ -48,8 +61,10 @@ load_data_duckdb <- function(
   }
 
   # Register all CSV files as views in DuckDB
+  table_names <- character()
   for (file in files) {
     table_name <- tools::file_path_sans_ext(basename(file))
+    table_names <- c(table_names, table_name)
     query <- sprintf(
       "CREATE OR REPLACE VIEW %s AS SELECT *, '%s' as filename FROM read_csv_auto('%s', ignore_errors=true)",
       table_name,
@@ -59,12 +74,59 @@ load_data_duckdb <- function(
     DBI::dbExecute(con, query)
   }
 
-  # Combine all data using SQL UNION
-  table_names <- tools::file_path_sans_ext(basename(files))
-  union_query <- paste(
-    sprintf("SELECT * FROM %s", table_names),
-    collapse = " UNION ALL "
-  )
+  # Get all unique column names across all tables
+  all_columns <- character()
+  for (table_name in table_names) {
+    columns_query <- sprintf("SELECT * FROM %s LIMIT 0", table_name)
+    cols <- names(DBI::dbGetQuery(con, columns_query))
+    all_columns <- unique(c(all_columns, cols))
+  }
+
+  # Remove 'filename' from the list as we'll add it separately
+  # Keep index in all_columns so we can handle it properly
+  all_columns <- setdiff(all_columns, "filename")
+
+  # Build UNION query with explicit column ordering
+  union_parts <- character()
+  for (table_name in table_names) {
+    # Get columns present in this table
+    columns_query <- sprintf("SELECT * FROM %s LIMIT 0", table_name)
+    table_cols <- names(DBI::dbGetQuery(con, columns_query))
+
+    # Build SELECT clause with all columns in consistent order
+    select_parts <- character()
+
+    # Check if this table already has an index column
+    has_index <- "index" %in% table_cols
+
+    # If no index column exists, add patient name as index first
+    if (!has_index && "index" %in% all_columns) {
+      select_parts <- c(select_parts, sprintf("'%s' AS index", patient))
+    }
+
+    for (col in all_columns) {
+      if (col %in% table_cols) {
+        select_parts <- c(select_parts, col)
+      } else if (col != "index") {
+        # Add NULL for missing columns (except index which we handle separately)
+        select_parts <- c(select_parts, sprintf("NULL AS %s", col))
+      }
+    }
+
+    # Add filename column at the end
+    select_parts <- c(select_parts, "filename")
+
+    # Create the SELECT statement for this table
+    table_query <- sprintf(
+      "SELECT %s FROM %s",
+      paste(select_parts, collapse = ", "),
+      table_name
+    )
+    union_parts <- c(union_parts, table_query)
+  }
+
+  # Combine all parts with UNION ALL
+  union_query <- paste(union_parts, collapse = " UNION ALL ")
 
   # Create combined view
   DBI::dbExecute(
@@ -72,30 +134,57 @@ load_data_duckdb <- function(
     sprintf("CREATE OR REPLACE VIEW neuropsych AS %s", union_query)
   )
 
-  # Process data using SQL
-  process_query <- "
-    SELECT DISTINCT *,
-      CASE 
-        WHEN percentile IS NOT NULL THEN 
-          CAST((percentile / 100.0) AS DOUBLE)
+  # Get column names from the combined view to build explicit select list
+  view_columns <- names(DBI::dbGetQuery(
+    con,
+    "SELECT * FROM neuropsych LIMIT 0"
+  ))
+
+  # Build the select list with all columns - we'll filter in the final output
+  select_list <- paste(view_columns, collapse = ", ")
+
+  # Process data using SQL (excluding description and true_score)
+  # Convert percentile 0 to 0.5 and use TRY_CAST to handle malformed CSV data
+  process_query <- sprintf(
+    "
+    SELECT DISTINCT %s,
+      CASE
+        WHEN TRY_CAST(percentile AS DOUBLE) = 0 THEN 0.005  -- Convert 0 to 0.5 percentile (0.5/100)
+        WHEN TRY_CAST(percentile AS DOUBLE) IS NOT NULL THEN
+          TRY_CAST(percentile AS DOUBLE) / 100.0
         ELSE NULL
       END as percentile_decimal,
       -- Calculate z-scores using DuckDB's built-in functions
-      CASE 
-        WHEN percentile IS NOT NULL AND percentile > 0 AND percentile < 100 THEN
+      CASE
+        WHEN TRY_CAST(percentile AS DOUBLE) = 0 THEN
+          -- z-score for 0.5th percentile
+          -ABS(SQRT(2) * SQRT(-2 * LN(0.005)))
+        WHEN TRY_CAST(percentile AS DOUBLE) IS NOT NULL
+          AND TRY_CAST(percentile AS DOUBLE) > 0
+          AND TRY_CAST(percentile AS DOUBLE) < 100 THEN
           -- Using inverse normal CDF approximation
           CASE
-            WHEN percentile = 50 THEN 0
-            WHEN percentile < 50 THEN -ABS(SQRT(2) * SQRT(-2 * LN(percentile/100.0)))
-            ELSE ABS(SQRT(2) * SQRT(-2 * LN(1 - percentile/100.0)))
+            WHEN TRY_CAST(percentile AS DOUBLE) = 50 THEN 0
+            WHEN TRY_CAST(percentile AS DOUBLE) < 50 THEN
+              -ABS(SQRT(2) * SQRT(-2 * LN(TRY_CAST(percentile AS DOUBLE)/100.0)))
+            ELSE
+              ABS(SQRT(2) * SQRT(-2 * LN(1 - TRY_CAST(percentile AS DOUBLE)/100.0)))
           END
         ELSE NULL
       END as z
     FROM neuropsych
-  "
+  ",
+    select_list
+  )
+
+  # Create a processed view with calculated z-scores
+  DBI::dbExecute(
+    con,
+    sprintf("CREATE OR REPLACE VIEW neuropsych_processed AS %s", process_query)
+  )
 
   # Get processed data
-  neuropsych <- DBI::dbGetQuery(con, process_query)
+  neuropsych <- DBI::dbGetQuery(con, "SELECT * FROM neuropsych_processed")
 
   # Convert character columns
   char_cols <- c("domain", "subdomain", "narrow", "pass", "verbal", "timed")
@@ -124,28 +213,32 @@ load_data_duckdb <- function(
       AVG(z) OVER (PARTITION BY %s) as z_mean_domain,
       STDDEV(z) OVER (PARTITION BY %s) as z_sd_domain,
       AVG(z) OVER (PARTITION BY %s) as z_mean_subdomain,
-      STDDEV(z) OVER (PARTITION BY %s) as z_sd_subdomain
-    FROM neuropsych
+      STDDEV(z) OVER (PARTITION BY %s) as z_sd_subdomain,
+      AVG(z) OVER (PARTITION BY %s) as z_mean_narrow,
+      STDDEV(z) OVER (PARTITION BY %s) as z_sd_narrow
+    FROM neuropsych_processed
     WHERE test_type = 'npsych_test'
   ",
     "domain",
     "domain",
     "subdomain",
-    "subdomain"
+    "subdomain",
+    "narrow",
+    "narrow"
   )
 
   neurocog <- DBI::dbGetQuery(con, neurocog_query)
 
   # Process neurobehavioral data
   neurobehav_query <- "
-    SELECT * FROM neuropsych
+    SELECT * FROM neuropsych_processed
     WHERE test_type = 'rating_scale'
   "
   neurobehav <- DBI::dbGetQuery(con, neurobehav_query)
 
   # Process validity data
   validity_query <- "
-    SELECT * FROM neuropsych
+    SELECT * FROM neuropsych_processed
     WHERE test_type IN ('performance_validity', 'symptom_validity')
   "
   validity <- DBI::dbGetQuery(con, validity_query)
@@ -154,6 +247,24 @@ load_data_duckdb <- function(
   neurocog <- calculate_z_stats(neurocog, neurocog_groups)
   neurobehav <- calculate_z_stats(neurobehav, neurobehav_groups)
   validity <- calculate_z_stats(validity, validity_groups)
+
+  # Remove description and true_score columns from all result dataframes
+  cols_to_remove <- c("description", "true_score")
+
+  for (col in cols_to_remove) {
+    if (col %in% names(neuropsych)) {
+      neuropsych[[col]] <- NULL
+    }
+    if (col %in% names(neurocog)) {
+      neurocog[[col]] <- NULL
+    }
+    if (col %in% names(neurobehav)) {
+      neurobehav[[col]] <- NULL
+    }
+    if (col %in% names(validity)) {
+      validity[[col]] <- NULL
+    }
+  }
 
   # Prepare output
   result_list <- list(
@@ -230,34 +341,34 @@ get_example_queries <- function() {
   queries <- list(
     # Find all IQ scores
     iq_scores = "
-      SELECT test_name, scale, score, percentile 
-      FROM neurocog 
-      WHERE domain = 'General Cognitive Ability' 
+      SELECT test, test_name, scale, score, percentile, range
+      FROM neurocog
+      WHERE domain = 'General Cognitive Ability'
         AND scale LIKE '%IQ%'
       ORDER BY percentile DESC
     ",
 
     # Cross-domain analysis
     cross_domain = "
-      SELECT 
+      SELECT
         nc.domain as cognitive_domain,
         nc.percentile as cognitive_percentile,
         nb.domain as behavioral_domain,
         nb.percentile as behavioral_percentile
       FROM neurocog nc
-      INNER JOIN neurobehav nb 
+      INNER JOIN neurobehav nb
         ON nc.test = nb.test
-      WHERE nc.percentile < 25 
+      WHERE nc.percentile < 25
         AND nb.percentile > 75
     ",
 
     # Domain summary with performance categories
     domain_summary = "
-      SELECT 
+      SELECT
         domain,
         COUNT(*) as n_tests,
         AVG(percentile) as mean_percentile,
-        CASE 
+        CASE
           WHEN AVG(percentile) >= 75 THEN 'Above Average'
           WHEN AVG(percentile) >= 25 THEN 'Average'
           ELSE 'Below Average'
@@ -269,11 +380,11 @@ get_example_queries <- function() {
 
     # Validity check
     validity_check = "
-      SELECT 
+      SELECT
         test_name,
         scale,
         score,
-        CASE 
+        CASE
           WHEN score < 45 THEN 'Invalid'
           WHEN score < 50 THEN 'Questionable'
           ELSE 'Valid'
@@ -284,10 +395,10 @@ get_example_queries <- function() {
 
     # ADHD profile
     adhd_profile = "
-      SELECT 
+      SELECT
         scale,
         percentile,
-        CASE 
+        CASE
           WHEN percentile >= 93 THEN 'Clinically Significant'
           WHEN percentile >= 85 THEN 'At Risk'
           ELSE 'Normal Range'

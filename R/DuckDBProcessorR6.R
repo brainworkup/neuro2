@@ -229,10 +229,10 @@ DuckDBProcessorR6 <- R6::R6Class(
     calculate_z_stats = function(table_name, group_vars) {
       # For complex z-score calculations, export to R and use the tidy_data function
       data <- self$query(sprintf("SELECT * FROM %s WHERE z IS NOT NULL", table_name))
-      
+
       # Use the existing calculate_z_stats function from tidy_data.R
       result <- calculate_z_stats(data, group_vars)
-      
+
       return(result)
     },
 
@@ -294,7 +294,7 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @return Summary statistics by domain
     get_domain_summary = function(include_all = TRUE) {
       query <- "
-        SELECT 
+        SELECT
           domain,
           COUNT(*) as n_tests,
           AVG(percentile) as mean_percentile,
