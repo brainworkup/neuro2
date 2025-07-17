@@ -45,3 +45,6 @@ _freeze/
 duckdb.R
 
 r6_iq_comparison_cache/
+_arxiv/batch_processor.r
+_arxiv/gen_report_R6.qmd
+_arxiv/

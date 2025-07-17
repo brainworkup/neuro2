@@ -5,7 +5,7 @@
 \title{Generate IQ/Cognitive Ability Report (Function Wrapper)}
 \usage{
 generate_iq_report(
-  patient_name,
+  patient,
   input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
@@ -15,7 +15,7 @@ generate_iq_report(
 )
 }
 \arguments{
-\item{patient_name}{Patient's name for the report.}
+\item{patient}{Patient's name for the report.}
 
 \item{input_file}{Path to the input CSV file (neurocog.csv).}
 

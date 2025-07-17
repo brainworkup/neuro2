@@ -29,7 +29,7 @@ This class handles data loading, processing, visualization, and report generatio
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{patient_name}}{Patient's name for the report.}
+\item{\code{patient}}{Patient's name for the report.}
 
 \item{\code{input_file}}{Path to the input CSV file (neurocog.csv).}
 
@@ -72,7 +72,7 @@ This class handles data loading, processing, visualization, and report generatio
 Initialize a new IQReportGeneratorR6 object with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IQReportGeneratorR6$new(
-  patient_name,
+  patient,
   input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
@@ -83,7 +83,7 @@ Initialize a new IQReportGeneratorR6 object with configuration parameters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{patient_name}}{Patient's name for the report.}
+\item{\code{patient}}{Patient's name for the report.}
 
 \item{\code{input_file}}{Path to the input CSV file (neurocog.csv).}
 

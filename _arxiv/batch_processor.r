@@ -3,7 +3,6 @@
 
 # Function to process multiple patients
 batch_process_reports <- function(patient_list, output_dir = "reports") {
-
   # Create output directory
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
@@ -28,61 +27,62 @@ batch_process_reports <- function(patient_list, output_dir = "reports") {
     cat(strrep("─", 60), "\n")
 
     # Generate report
-    tryCatch({
-      # Update config
-      config <- list(
-        patient_name = patient$name,
-        first_name = patient$first_name %||% strsplit(patient$name, " ")[[1]][1],
-        last_name = patient$last_name %||% tail(strsplit(patient$name, " ")[[1]], 1),
-        age = patient$age,
-        sex = patient$sex %||% "male",
-        template_type = patient$template_type %||% "forensic",
-        referral = patient$referral %||% "Referring Physician",
-        extension_dir = "inst/extdata/_extensions",
-        overwrite_templates = FALSE
-      )
+    tryCatch(
+      {
+        # Update config
+        config <- list(
+          patient = patient$name,
+          first_name = patient$first_name %||%
+            strsplit(patient$name, " ")[[1]][1],
+          last_name = patient$last_name %||%
+            tail(strsplit(patient$name, " ")[[1]], 1),
+          age = patient$age,
+          sex = patient$sex %||% "male",
+          template_type = patient$template_type %||% "forensic",
+          referral = patient$referral %||% "Referring Physician",
+          extension_dir = "inst/extdata/_extensions",
+          overwrite_templates = FALSE
+        )
 
-      # Save config
-      assign("config", config, envir = .GlobalEnv)
+        # Save config
+        assign("config", config, envir = .GlobalEnv)
 
-      # Run workflow
-      source("run_forensic_report.R")
+        # Run workflow
+        source("run_forensic_report.R")
 
-      # Move output file
-      if (file.exists("template.pdf")) {
-        output_file <- file.path(
-          output_dir,
-          paste0(
-            gsub(" ", "_", patient$name),
-            "_report_",
-            format(Sys.Date(), "%Y%m%d"),
-            ".pdf"
+        # Move output file
+        if (file.exists("template.pdf")) {
+          output_file <- file.path(
+            output_dir,
+            paste0(
+              gsub(" ", "_", patient$name),
+              "_report_",
+              format(Sys.Date(), "%Y%m%d"),
+              ".pdf"
+            )
           )
-        )
-        file.copy("template.pdf", output_file, overwrite = TRUE)
+          file.copy("template.pdf", output_file, overwrite = TRUE)
 
-        results[[patient$name]] <- list(
-          status = "Success",
-          file = output_file
-        )
+          results[[patient$name]] <- list(
+            status = "Success",
+            file = output_file
+          )
 
-        cat("✅ Report saved:", output_file, "\n\n")
-      } else {
+          cat("✅ Report saved:", output_file, "\n\n")
+        } else {
+          results[[patient$name]] <- list(status = "Failed", file = NA)
+          cat("❌ Report generation failed\n\n")
+        }
+      },
+      error = function(e) {
         results[[patient$name]] <- list(
-          status = "Failed",
-          file = NA
+          status = "Error",
+          file = NA,
+          error = e$message
         )
-        cat("❌ Report generation failed\n\n")
+        cat("❌ Error:", e$message, "\n\n")
       }
-
-    }, error = function(e) {
-      results[[patient$name]] <- list(
-        status = "Error",
-        file = NA,
-        error = e$message
-      )
-      cat("❌ Error:", e$message, "\n\n")
-    })
+    )
 
     # Brief pause between reports
     Sys.sleep(2)
@@ -96,7 +96,13 @@ batch_process_reports <- function(patient_list, output_dir = "reports") {
   cat("\n")
 
   success_count <- sum(sapply(results, function(x) x$status == "Success"))
-  cat("Successfully generated:", success_count, "of", length(patient_list), "reports\n\n")
+  cat(
+    "Successfully generated:",
+    success_count,
+    "of",
+    length(patient_list),
+    "reports\n\n"
+  )
 
   # Show results
   cat("Results:\n")
@@ -158,7 +164,8 @@ example_patients <- list(
 # patients <- create_patient_list_from_csv("patients.csv")
 # batch_process_reports(patients)
 
-cat("
+cat(
+  "
 ╔══════════════════════════════════════════════════════════════╗
 ║               BATCH REPORT PROCESSOR                         ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -187,5 +194,6 @@ CSV Format:
 
 Output:
   Reports will be saved to 'reports/' directory with format:
-  Patient_Name_report_YYYYMMDD.pdf
-")
+  patient_report_YYYYMMDD.pdf
+"
+)

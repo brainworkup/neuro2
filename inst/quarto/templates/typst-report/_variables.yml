@@ -3,7 +3,7 @@ version: 0.2.0
 # VARIABLES
 # inst/quarto/templates/typst-report/_variables.yml
 # Patient information
-patient_name: "Patient Name"
+patient: "Patient Name"
 date_of_birth: "YYYY-MM-DD"
 date_of_eval: "YYYY-MM-DD"
 age: 0

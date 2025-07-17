@@ -5,12 +5,14 @@
 \title{Generate Complete Neuropsychological Report (Function Wrapper)}
 \usage{
 generate_neuropsych_report_system(
-  patient_name,
-  domains = c("General Cognitive Ability", "ADHD", "Memory", "Executive Functions"),
+  patient,
+  domains = c(domain_iq, domain_academics, domain_verbal, domain_spatial, domain_memory,
+    domain_executive, domain_motor, domain_social, domain_adhd_adult,
+    domain_emotion_adult),
   data_files = list(neurocog = "data-raw/neurocog.csv", neurobehav =
     "data-raw/neurobehav.csv", neuropsych = "data-raw/neuropsych.csv", validity =
     "data-raw/validity.csv"),
-  template_dir = "inst/extdata/_extensions/brainworkup",
+  template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = "output",
   template_file = "template.qmd",
   output_file = "neuropsych_report.pdf",
@@ -19,7 +21,7 @@ generate_neuropsych_report_system(
 )
 }
 \arguments{
-\item{patient_name}{Patient's name for the report.}
+\item{patient}{Patient's name for the report.}
 
 \item{domains}{List of domains to include in the report.}
 

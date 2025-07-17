@@ -47,7 +47,7 @@ After reviewing your neuro2 package, I found:
 ### Step 1: Basic R6 Workflow
 ```r
 # Use neuro2_r6_workflow.R
-source("neuro2_r6_workflow.R")
+source("neuro2_r6_update_workflow.R")
 ```
 
 ### Step 2: Performance Testing
@@ -104,11 +104,23 @@ plot <- dotplot$create_plot()
 
 ### 3. Generate Reports
 ```r
+# First define domain constants
+domain_iq <- "IQ/General Cognitive Ability"
+domain_academics <- "Academic Skills"
+domain_verbal <- "Verbal/Language"
+domain_spatial <- "Spatial/Nonverbal"
+domain_memory <- "Memory"
+domain_executive <- "Executive Function"
+domain_motor <- "Motor"
+domain_social <- "Social"
+domain_adhd_adult <- "ADHD Adult"
+domain_emotion_adult <- "Emotional/Behavioral Function Adult"
+
 # Use the report system
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
-    patient_name = "Patient Name",
-    domains = c("Memory", "Executive"),
+    patient = "Biggie",
+    domains = c(domain_memory, domain_executive),
     template_file = "template.qmd"
   )
 )

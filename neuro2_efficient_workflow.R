@@ -73,7 +73,7 @@ if (file.exists("01_import_process_data.R")) {
     # Add patient information
     validity <- validity |>
       dplyr::mutate(
-        patient_name = patient_name,
+        patient = patient,
         patient_age = patient_age,
         patient_sex = patient_sex,
         date_tested = Sys.Date()
@@ -190,7 +190,7 @@ if (file.exists("01_import_process_data.R")) {
 # STEP 2: Update Patient Variables (minimal update)
 message("📝 Step 2: Updating patient variables...")
 update_patient_variables <- function(
-  patient_name = "Biggie",
+  patient = "Biggie",
   first_name = "Biggie",
   last_name = "Smalls",
   age = 44,
@@ -204,7 +204,7 @@ update_patient_variables <- function(
   variables <- yaml::read_yaml("_variables.yml")
 
   # Update only essential patient info
-  variables$patient <- patient_name
+  variables$patient <- patient
   variables$first_name <- first_name
   variables$last_name <- last_name
   variables$age <- age

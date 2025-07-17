@@ -3,7 +3,7 @@
 #' An R6 class that encapsulates the entire workflow for generating IQ/cognitive ability reports.
 #' This class handles data loading, processing, visualization, and report generation.
 #'
-#' @field patient_name Patient's name for the report.
+#' @field patient Patient's name for the report.
 #' @field input_file Path to the input CSV file (neurocog.csv).
 #' @field output_dir Directory where output files will be saved (default: "data").
 #' @field domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -34,7 +34,7 @@
 IQReportGeneratorR6 <- R6::R6Class(
   classname = "IQReportGeneratorR6",
   public = list(
-    patient_name = NULL,
+    patient = NULL,
     input_file = NULL,
     output_dir = "data",
     domains = "General Cognitive Ability",
@@ -48,7 +48,7 @@ IQReportGeneratorR6 <- R6::R6Class(
     #' @description
     #' Initialize a new IQReportGeneratorR6 object with configuration parameters.
     #'
-    #' @param patient_name Patient's name for the report.
+    #' @param patient Patient's name for the report.
     #' @param input_file Path to the input CSV file (neurocog.csv).
     #' @param output_dir Directory where output files will be saved (default: "data").
     #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -56,13 +56,13 @@ IQReportGeneratorR6 <- R6::R6Class(
     #'
     #' @return A new IQReportGeneratorR6 object
     initialize = function(
-      patient_name,
+      patient,
       input_file = "data-raw/neurocog.csv",
       output_dir = "data",
       domains = "General Cognitive Ability",
       pheno = "iq"
     ) {
-      self$patient_name <- patient_name
+      self$patient <- patient
       self$input_file <- input_file
       self$output_dir <- output_dir
       self$domains <- domains
@@ -433,7 +433,9 @@ IQReportGeneratorR6 <- R6::R6Class(
           na.rm = TRUE
         )
       } else {
-        message("Warning: Skipping subdomain figure - required columns not found")
+        message(
+          "Warning: Skipping subdomain figure - required columns not found"
+        )
         # Create a simple placeholder figure
         if (requireNamespace("ggplot2", quietly = TRUE)) {
           plot_data <- data.frame(
@@ -537,7 +539,7 @@ IQReportGeneratorR6 <- R6::R6Class(
           self$summary_text <- paste0(
             "<summary>\n\n",
             "Placeholder summary for ",
-            self$patient_name,
+            self$patient,
             "'s cognitive assessment. ",
             "Please replace this with an actual clinical summary.\n\n",
             "</summary>"
@@ -661,7 +663,7 @@ IQReportGeneratorR6 <- R6::R6Class(
 #' This function encapsulates the entire workflow for generating IQ/cognitive ability reports.
 #' It's a wrapper around the IQReportGeneratorR6 class.
 #'
-#' @param patient_name Patient's name for the report.
+#' @param patient Patient's name for the report.
 #' @param input_file Path to the input CSV file (neurocog.csv).
 #' @param output_dir Directory where output files will be saved (default: "data").
 #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -673,7 +675,7 @@ IQReportGeneratorR6 <- R6::R6Class(
 #' @export
 #' @rdname generate_iq_report
 generate_iq_report <- function(
-  patient_name,
+  patient,
   input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
@@ -683,7 +685,7 @@ generate_iq_report <- function(
 ) {
   # Create an IQReportGeneratorR6 object and generate the report
   generator <- IQReportGeneratorR6$new(
-    patient_name = patient_name,
+    patient = patient,
     input_file = input_file,
     output_dir = output_dir,
     domains = domains,

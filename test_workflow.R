@@ -209,7 +209,7 @@ domains <- c(
 # Create the neuropsych report system
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
-    patient_name = patient_info$patient,
+    patient = patient_info$patient,
     domains = domains,
     data_files = list(
       neurocog = "data-raw/neurocog.csv",
@@ -229,7 +229,7 @@ domain_processors <- list()
 
 # General Cognitive Ability (IQ)
 iq_processor <- IQReportGeneratorR6$new(
-  patient_name = patient_info$patient,
+  patient = patient_info$patient,
   input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",

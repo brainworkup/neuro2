@@ -39,12 +39,12 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @return A new NeuropsychReportSystemR6 object
     initialize = function(
       config = list(),
-      template_dir = "inst/extdata/_extensions",
+      template_dir = "inst/quarto/_extensions",
       output_dir = "output"
     ) {
       # Set default config values if not provided
       default_config <- list(
-        patient_name = "Patient",
+        patient = "Patient",
         domains = c(
           domain_iq,
           domain_academics,
@@ -139,7 +139,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       }
 
       # Set environment variables
-      Sys.setenv(PATIENT = self$config$patient_name)
+      Sys.setenv(PATIENT = self$config$patient)
 
       invisible(self)
     },
@@ -185,7 +185,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Flatten domains in case some are vectors (like domain_emotion_adult)
       flat_domains <- unlist(domains)
-      
+
       # Generate domain files for each domain
       for (domain in flat_domains) {
         domain_key <- gsub(" ", "_", tolower(domain))
@@ -238,7 +238,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
           if (!file.exists(text_file)) {
             # Generate text file using NeuropsychResultsR6
-            filtered_data <- processor$filter_by_test("self_report")
+            filtered_data <- processor$filter_by_test("self")
             if (!is.null(filtered_data) && nrow(filtered_data) > 0) {
               results_obj <- NeuropsychResultsR6$new(
                 data = filtered_data,
@@ -286,7 +286,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       # Use default variables from config if not specified
       if (is.null(variables)) {
         variables <- list(
-          patient = self$config$patient_name,
+          patient = self$config$patient,
           # Add other variables as needed
           date_of_report = format(Sys.Date(), "%Y-%m-%d")
         )
@@ -340,7 +340,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 #' This function encapsulates the entire workflow for generating neuropsychological reports.
 #' It's a wrapper around the NeuropsychReportSystemR6 class.
 #'
-#' @param patient_name Patient's name for the report.
+#' @param patient Patient's name for the report.
 #' @param domains List of domains to include in the report.
 #' @param data_files List of paths to data files.
 #' @param template_dir Directory containing template files.
@@ -354,7 +354,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 #' @export
 #' @rdname generate_neuropsych_report_system
 generate_neuropsych_report_system <- function(
-  patient_name,
+  patient,
   domains = c(
     domain_iq,
     domain_academics,
@@ -373,7 +373,7 @@ generate_neuropsych_report_system <- function(
     neuropsych = "data-raw/neuropsych.csv",
     validity = "data-raw/validity.csv"
   ),
-  template_dir = "inst/extdata/_extensions/brainworkup",
+  template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = "output",
   template_file = "template.qmd",
   output_file = "neuropsych_report.pdf",
@@ -382,7 +382,7 @@ generate_neuropsych_report_system <- function(
 ) {
   # Create configuration
   config <- list(
-    patient_name = patient_name,
+    patient = patient,
     domains = domains,
     data_files = data_files,
     template_file = template_file,

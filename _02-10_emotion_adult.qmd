@@ -21,7 +21,7 @@ pheno <- "emotion_adult"
 processor_emotion_adult <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
-  input_file = "data/neurocog.csv"
+  input_file = "data/neurobehav.csv"
 )
 
 # Load and process data
@@ -151,4 +151,3 @@ dotplot_subdomain$create_plot()
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
-

@@ -1638,7 +1638,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
  44 |     ) {
  45 |       # Set default config values if not provided
  46 |       default_config <- list(
- 47 |         patient_name = "Patient",
+ 47 |         patient = "Patient",
  48 |         domains = c(
  49 |           "General Cognitive Ability",
  50 |           "Verbal",
@@ -1736,7 +1736,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
 142 |       }
 143 | 
 144 |       # Set environment variables
-145 |       Sys.setenv(PATIENT = self$config$patient_name)
+145 |       Sys.setenv(PATIENT = self$config$patient)
 146 | 
 147 |       invisible(self)
 148 |     },
@@ -1865,7 +1865,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
 271 |       # Use default variables from config if not specified
 272 |       if (is.null(variables)) {
 273 |         variables <- list(
-274 |           patient = self$config$patient_name,
+274 |           patient = self$config$patient,
 275 |           # Add other variables as needed
 276 |           date_of_report = format(Sys.Date(), "%Y-%m-%d")
 277 |         )
@@ -1919,7 +1919,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
 325 | #' This function encapsulates the entire workflow for generating neuropsychological reports.
 326 | #' It's a wrapper around the NeuropsychReportSystemR6 class.
 327 | #'
-328 | #' @param patient_name Patient's name for the report.
+328 | #' @param patient Patient's name for the report.
 329 | #' @param domains List of domains to include in the report.
 330 | #' @param data_files List of paths to data files.
 331 | #' @param template_dir Directory containing template files.
@@ -1933,7 +1933,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
 339 | #' @export
 340 | #' @rdname generate_neuropsych_report_system
 341 | generate_neuropsych_report_system <- function(
-342 |   patient_name,
+342 |   patient,
 343 |   domains = c(
 344 |     "General Cognitive Ability",
 345 |     "ADHD",
@@ -1955,7 +1955,7 @@ Now I'll check the other key R6 classes that handle neuropsychological data proc
 361 | ) {
 362 |   # Create configuration
 363 |   config <- list(
-364 |     patient_name = patient_name,
+364 |     patient = patient,
 365 |     domains = domains,
 366 |     data_files = data_files,
 367 |     template_file = template_file,
@@ -2600,7 +2600,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
   3 | #' An R6 class that encapsulates the entire workflow for generating IQ/cognitive ability reports.
   4 | #' This class handles data loading, processing, visualization, and report generation.
   5 | #'
-  6 | #' @field patient_name Patient's name for the report.
+  6 | #' @field patient Patient's name for the report.
   7 | #' @field input_file Path to the input CSV file (neurocog.csv).
   8 | #' @field output_dir Directory where output files will be saved (default: "data").
   9 | #' @field domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -2631,7 +2631,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
  34 | IQReportGeneratorR6 <- R6::R6Class(
  35 |   classname = "IQReportGeneratorR6",
  36 |   public = list(
- 37 |     patient_name = NULL,
+ 37 |     patient = NULL,
  38 |     input_file = NULL,
  39 |     output_dir = "data",
  40 |     domains = "General Cognitive Ability",
@@ -2645,7 +2645,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
  48 |     #' @description
  49 |     #' Initialize a new IQReportGeneratorR6 object with configuration parameters.
  50 |     #'
- 51 |     #' @param patient_name Patient's name for the report.
+ 51 |     #' @param patient Patient's name for the report.
  52 |     #' @param input_file Path to the input CSV file (neurocog.csv).
  53 |     #' @param output_dir Directory where output files will be saved (default: "data").
  54 |     #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -2653,13 +2653,13 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
  56 |     #'
  57 |     #' @return A new IQReportGeneratorR6 object
  58 |     initialize = function(
- 59 |       patient_name,
+ 59 |       patient,
  60 |       input_file = "data-raw/neurocog.csv",
  61 |       output_dir = "data",
  62 |       domains = "General Cognitive Ability",
  63 |       pheno = "iq"
  64 |     ) {
- 65 |       self$patient_name <- patient_name
+ 65 |       self$patient <- patient
  66 |       self$input_file <- input_file
  67 |       self$output_dir <- output_dir
  68 |       self$domains <- domains
@@ -2904,7 +2904,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
 307 |           self$summary_text <- paste0(
 308 |             "<summary>\n\n",
 309 |             "Placeholder summary for ",
-310 |             self$patient_name,
+310 |             self$patient,
 311 |             "'s cognitive assessment. ",
 312 |             "Please replace this with an actual clinical summary.\n\n",
 313 |             "</summary>"
@@ -3028,7 +3028,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
 431 | #' This function encapsulates the entire workflow for generating IQ/cognitive ability reports.
 432 | #' It's a wrapper around the IQReportGeneratorR6 class.
 433 | #'
-434 | #' @param patient_name Patient's name for the report.
+434 | #' @param patient Patient's name for the report.
 435 | #' @param input_file Path to the input CSV file (neurocog.csv).
 436 | #' @param output_dir Directory where output files will be saved (default: "data").
 437 | #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -3040,7 +3040,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
 443 | #' @export
 444 | #' @rdname generate_iq_report
 445 | generate_iq_report <- function(
-446 |   patient_name,
+446 |   patient,
 447 |   input_file = "data-raw/neurocog.csv",
 448 |   output_dir = "data",
 449 |   domains = "General Cognitive Ability",
@@ -3050,7 +3050,7 @@ Let me also look at the IQReportGeneratorR6 class to get a complete picture of t
 453 | ) {
 454 |   # Create an IQReportGeneratorR6 object and generate the report
 455 |   generator <- IQReportGeneratorR6$new(
-456 |     patient_name = patient_name,
+456 |     patient = patient,
 457 |     input_file = input_file,
 458 |     output_dir = output_dir,
 459 |     domains = domains,
@@ -3321,7 +3321,7 @@ domains <- c(
 # Create the neuropsych report system
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
-    patient_name = patient_info$patient,
+    patient = patient_info$patient,
     domains = domains,
     data_files = list(
       neurocog = "data-raw/neurocog.csv",
@@ -3341,7 +3341,7 @@ domain_processors <- list()
 
 # General Cognitive Ability (IQ)
 iq_processor <- IQReportGeneratorR6$new(
-  patient_name = patient_info$patient,
+  patient = patient_info$patient,
   input_file = "data-raw/neurocog.csv",
   output_dir = "data",
   domains = "General Cognitive Ability",
@@ -5056,7 +5056,7 @@ Let me first read the current content of the test_workflow.R file to make sure w
 114 | # Create the neuropsych report system
 115 | report_system <- NeuropsychReportSystemR6$new(
 116 |   config = list(
-117 |     patient_name = patient_info$patient,
+117 |     patient = patient_info$patient,
 118 |     domains = domains,
 119 |     data_files = list(
 120 |       neurocog = "data-raw/neurocog.csv",
@@ -5076,7 +5076,7 @@ Let me first read the current content of the test_workflow.R file to make sure w
 134 | 
 135 | # General Cognitive Ability (IQ)
 136 | iq_processor <- IQReportGeneratorR6$new(
-137 |   patient_name = patient_info$patient,
+137 |   patient = patient_info$patient,
 138 |   input_file = "data-raw/neurocog.csv",
 139 |   output_dir = "data",
 140 |   domains = "General Cognitive Ability",
@@ -7734,7 +7734,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
   3 | #' An R6 class that encapsulates the entire workflow for generating IQ/cognitive ability reports.
   4 | #' This class handles data loading, processing, visualization, and report generation.
   5 | #'
-  6 | #' @field patient_name Patient's name for the report.
+  6 | #' @field patient Patient's name for the report.
   7 | #' @field input_file Path to the input CSV file (neurocog.csv).
   8 | #' @field output_dir Directory where output files will be saved (default: "data").
   9 | #' @field domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -7765,7 +7765,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
  34 | IQReportGeneratorR6 <- R6::R6Class(
  35 |   classname = "IQReportGeneratorR6",
  36 |   public = list(
- 37 |     patient_name = NULL,
+ 37 |     patient = NULL,
  38 |     input_file = NULL,
  39 |     output_dir = "data",
  40 |     domains = "General Cognitive Ability",
@@ -7779,7 +7779,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
  48 |     #' @description
  49 |     #' Initialize a new IQReportGeneratorR6 object with configuration parameters.
  50 |     #'
- 51 |     #' @param patient_name Patient's name for the report.
+ 51 |     #' @param patient Patient's name for the report.
  52 |     #' @param input_file Path to the input CSV file (neurocog.csv).
  53 |     #' @param output_dir Directory where output files will be saved (default: "data").
  54 |     #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -7787,13 +7787,13 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
  56 |     #'
  57 |     #' @return A new IQReportGeneratorR6 object
  58 |     initialize = function(
- 59 |       patient_name,
+ 59 |       patient,
  60 |       input_file = "data-raw/neurocog.csv",
  61 |       output_dir = "data",
  62 |       domains = "General Cognitive Ability",
  63 |       pheno = "iq"
  64 |     ) {
- 65 |       self$patient_name <- patient_name
+ 65 |       self$patient <- patient
  66 |       self$input_file <- input_file
  67 |       self$output_dir <- output_dir
  68 |       self$domains <- domains
@@ -8038,7 +8038,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
 307 |           self$summary_text <- paste0(
 308 |             "<summary>\n\n",
 309 |             "Placeholder summary for ",
-310 |             self$patient_name,
+310 |             self$patient,
 311 |             "'s cognitive assessment. ",
 312 |             "Please replace this with an actual clinical summary.\n\n",
 313 |             "</summary>"
@@ -8162,7 +8162,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
 431 | #' This function encapsulates the entire workflow for generating IQ/cognitive ability reports.
 432 | #' It's a wrapper around the IQReportGeneratorR6 class.
 433 | #'
-434 | #' @param patient_name Patient's name for the report.
+434 | #' @param patient Patient's name for the report.
 435 | #' @param input_file Path to the input CSV file (neurocog.csv).
 436 | #' @param output_dir Directory where output files will be saved (default: "data").
 437 | #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -8174,7 +8174,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
 443 | #' @export
 444 | #' @rdname generate_iq_report
 445 | generate_iq_report <- function(
-446 |   patient_name,
+446 |   patient,
 447 |   input_file = "data-raw/neurocog.csv",
 448 |   output_dir = "data",
 449 |   domains = "General Cognitive Ability",
@@ -8184,7 +8184,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
 453 | ) {
 454 |   # Create an IQReportGeneratorR6 object and generate the report
 455 |   generator <- IQReportGeneratorR6$new(
-456 |     patient_name = patient_name,
+456 |     patient = patient,
 457 |     input_file = input_file,
 458 |     output_dir = output_dir,
 459 |     domains = domains,
@@ -13255,7 +13255,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
   3 | #' An R6 class that encapsulates the entire workflow for generating IQ/cognitive ability reports.
   4 | #' This class handles data loading, processing, visualization, and report generation.
   5 | #'
-  6 | #' @field patient_name Patient's name for the report.
+  6 | #' @field patient Patient's name for the report.
   7 | #' @field input_file Path to the input CSV file (neurocog.csv).
   8 | #' @field output_dir Directory where output files will be saved (default: "data").
   9 | #' @field domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -13286,7 +13286,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
  34 | IQReportGeneratorR6 <- R6::R6Class(
  35 |   classname = "IQReportGeneratorR6",
  36 |   public = list(
- 37 |     patient_name = NULL,
+ 37 |     patient = NULL,
  38 |     input_file = NULL,
  39 |     output_dir = "data",
  40 |     domains = "General Cognitive Ability",
@@ -13300,7 +13300,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
  48 |     #' @description
  49 |     #' Initialize a new IQReportGeneratorR6 object with configuration parameters.
  50 |     #'
- 51 |     #' @param patient_name Patient's name for the report.
+ 51 |     #' @param patient Patient's name for the report.
  52 |     #' @param input_file Path to the input CSV file (neurocog.csv).
  53 |     #' @param output_dir Directory where output files will be saved (default: "data").
  54 |     #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -13308,13 +13308,13 @@ Thank you for sharing your data processing approach! Now I understand the issue.
  56 |     #'
  57 |     #' @return A new IQReportGeneratorR6 object
  58 |     initialize = function(
- 59 |       patient_name,
+ 59 |       patient,
  60 |       input_file = "data-raw/neurocog.csv",
  61 |       output_dir = "data",
  62 |       domains = "General Cognitive Ability",
  63 |       pheno = "iq"
  64 |     ) {
- 65 |       self$patient_name <- patient_name
+ 65 |       self$patient <- patient
  66 |       self$input_file <- input_file
  67 |       self$output_dir <- output_dir
  68 |       self$domains <- domains
@@ -13789,7 +13789,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
 537 |           self$summary_text <- paste0(
 538 |             "<summary>\n\n",
 539 |             "Placeholder summary for ",
-540 |             self$patient_name,
+540 |             self$patient,
 541 |             "'s cognitive assessment. ",
 542 |             "Please replace this with an actual clinical summary.\n\n",
 543 |             "</summary>"
@@ -13913,7 +13913,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
 661 | #' This function encapsulates the entire workflow for generating IQ/cognitive ability reports.
 662 | #' It's a wrapper around the IQReportGeneratorR6 class.
 663 | #'
-664 | #' @param patient_name Patient's name for the report.
+664 | #' @param patient Patient's name for the report.
 665 | #' @param input_file Path to the input CSV file (neurocog.csv).
 666 | #' @param output_dir Directory where output files will be saved (default: "data").
 667 | #' @param domains Cognitive domains to include (default: "General Cognitive Ability").
@@ -13925,7 +13925,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
 673 | #' @export
 674 | #' @rdname generate_iq_report
 675 | generate_iq_report <- function(
-676 |   patient_name,
+676 |   patient,
 677 |   input_file = "data-raw/neurocog.csv",
 678 |   output_dir = "data",
 679 |   domains = "General Cognitive Ability",
@@ -13935,7 +13935,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
 683 | ) {
 684 |   # Create an IQReportGeneratorR6 object and generate the report
 685 |   generator <- IQReportGeneratorR6$new(
-686 |     patient_name = patient_name,
+686 |     patient = patient,
 687 |     input_file = input_file,
 688 |     output_dir = output_dir,
 689 |     domains = domains,
@@ -14154,7 +14154,7 @@ Let's look at the test_workflow.R and run_test_workflow.R files to understand th
 124 | # Create the neuropsych report system
 125 | report_system <- NeuropsychReportSystemR6$new(
 126 |   config = list(
-127 |     patient_name = patient_info$patient,
+127 |     patient = patient_info$patient,
 128 |     domains = domains,
 129 |     data_files = list(
 130 |       neurocog = "data-raw/neurocog.csv",
@@ -14174,7 +14174,7 @@ Let's look at the test_workflow.R and run_test_workflow.R files to understand th
 144 | 
 145 | # General Cognitive Ability (IQ)
 146 | iq_processor <- IQReportGeneratorR6$new(
-147 |   patient_name = patient_info$patient,
+147 |   patient = patient_info$patient,
 148 |   input_file = "data-raw/neurocog.csv",
 149 |   output_dir = "data",
 150 |   domains = "General Cognitive Ability",
@@ -15196,7 +15196,7 @@ Best Match Found:
 229 | 
 230 | # General Cognitive Ability (IQ)
 231 | iq_processor <- IQReportGeneratorR6$new(
-232 |   patient_name = patient_info$patient,
+232 |   patient = patient_info$patient,
 233 |   input_file = "data-raw/neurocog.csv",
 234 |   output_dir = "data",
 235 |   domains = "General Cognitive Ability",
@@ -15255,7 +15255,7 @@ Original Content:
 209 | # Create the neuropsych report system
 210 | report_system <- NeuropsychReportSystemR6$new(
 211 |   config = list(
-212 |     patient_name = patient_info$patient,
+212 |     patient = patient_info$patient,
 213 |     domains = domains,
 214 |     data_files = list(
 215 |       neurocog = "data-raw/neurocog.csv",
@@ -15275,7 +15275,7 @@ Original Content:
 229 | 
 230 | # General Cognitive Ability (IQ)
 231 | iq_processor <- IQReportGeneratorR6$new(
-232 |   patient_name = patient_info$patient,
+232 |   patient = patient_info$patient,
 233 |   input_file = "data-raw/neurocog.csv",
 234 |   output_dir = "data",
 235 |   domains = "General Cognitive Ability",
@@ -15603,7 +15603,7 @@ Let's read the current version of the test_workflow.R file to see what we're wor
 209 | # Create the neuropsych report system
 210 | report_system <- NeuropsychReportSystemR6$new(
 211 |   config = list(
-212 |     patient_name = patient_info$patient,
+212 |     patient = patient_info$patient,
 213 |     domains = domains,
 214 |     data_files = list(
 215 |       neurocog = "data-raw/neurocog.csv",
@@ -15623,7 +15623,7 @@ Let's read the current version of the test_workflow.R file to see what we're wor
 229 | 
 230 | # General Cognitive Ability (IQ)
 231 | iq_processor <- IQReportGeneratorR6$new(
-232 |   patient_name = patient_info$patient,
+232 |   patient = patient_info$patient,
 233 |   input_file = "data-raw/neurocog.csv",
 234 |   output_dir = "data",
 235 |   domains = "General Cognitive Ability",
@@ -20947,7 +20947,7 @@ Let's read the current content of the test_workflow.R file to find the correct l
 209 | # Create the neuropsych report system
 210 | report_system <- NeuropsychReportSystemR6$new(
 211 |   config = list(
-212 |     patient_name = patient_info$patient,
+212 |     patient = patient_info$patient,
 213 |     domains = domains,
 214 |     data_files = list(
 215 |       neurocog = "data-raw/neurocog.csv",
@@ -20967,7 +20967,7 @@ Let's read the current content of the test_workflow.R file to find the correct l
 229 | 
 230 | # General Cognitive Ability (IQ)
 231 | iq_processor <- IQReportGeneratorR6$new(
-232 |   patient_name = patient_info$patient,
+232 |   patient = patient_info$patient,
 233 |   input_file = "data-raw/neurocog.csv",
 234 |   output_dir = "data",
 235 |   domains = "General Cognitive Ability",
@@ -37667,7 +37667,7 @@ Let me check the test_workflow.R file to see the detailed implementation:
 209 | # Create the neuropsych report system
 210 | report_system <- NeuropsychReportSystemR6$new(
 211 |   config = list(
-212 |     patient_name = patient_info$patient,
+212 |     patient = patient_info$patient,
 213 |     domains = domains,
 214 |     data_files = list(
 215 |       neurocog = "data-raw/neurocog.csv",
@@ -37687,7 +37687,7 @@ Let me check the test_workflow.R file to see the detailed implementation:
 229 | 
 230 | # General Cognitive Ability (IQ)
 231 | iq_processor <- IQReportGeneratorR6$new(
-232 |   patient_name = patient_info$patient,
+232 |   patient = patient_info$patient,
 233 |   input_file = "data-raw/neurocog.csv",
 234 |   output_dir = "data",
 235 |   domains = "General Cognitive Ability",

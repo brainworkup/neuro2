@@ -193,7 +193,7 @@ Edit the corresponding QMD files:
 ```r
 # Set patient information
 update_patient_variables(
-  patient_name = "Jane Smith",
+  patient = "Jane Smith",
   age = 35,
   sex = "female"
 )
@@ -284,7 +284,7 @@ patients <- list(
 
 for (patient in patients) {
   update_patient_variables(
-    patient_name = patient$name,
+    patient = patient$name,
     age = patient$age,
     sex = patient$sex
   )

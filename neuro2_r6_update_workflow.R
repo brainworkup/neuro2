@@ -418,7 +418,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
     "```\n"
   )
-  
+
   # For ADHD, add self-report and observer report sections
   if (domain_info$pheno == "adhd_adult") {
     qmd_content <- paste0(
@@ -497,7 +497,7 @@ update_sirf_with_r6 <- function() {
     "# Create report system for overall summary\n",
     "report_system <- NeuropsychReportSystemR6$new(\n",
     "  config = list(\n",
-    "    patient_name = patient,\n",
+    "    patient = patient,\n",
     "    domains = unique(neurocog$domain)\n",
     "  )\n",
     ")\n",
