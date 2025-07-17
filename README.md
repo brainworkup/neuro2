@@ -178,7 +178,7 @@ format:
 Edit the corresponding QMD files:
 - `_01-00_nse_adult.qmd` - Neurobehavioral status exam
 - `_02-*_*_text.qmd` - Domain-specific interpretations
-- `_03-01_recommendations.qmd` - Clinical recommendations
+- `_03-01_recs.qmd` - Clinical recommendations
 
 ### Creating Custom Templates
 

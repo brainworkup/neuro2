@@ -309,7 +309,7 @@ template_files <- c(
   "_02-00_behav_obs.qmd",
   "_02-01_iq.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 for (file in template_files) {
@@ -366,7 +366,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )

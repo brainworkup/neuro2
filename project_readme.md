@@ -119,7 +119,7 @@ patient_info <- list(
 Modify individual QMD files:
 - `_01-00_nse.qmd` - Neurobehavioral status exam
 - `_03-00_summary.qmd` - Summary/impressions
-- `_03-01_recommendations.qmd` - Recommendations
+- `_03-01_recs.qmd` - Recommendations
 
 ### Domain Definitions
 Edit `forensic_domains` in `create_domain_qmds.R` to change which scales belong to each domain.

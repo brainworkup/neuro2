@@ -263,7 +263,7 @@ qmd_files <- c(
   "_02-01_iq_text.qmd",
   "_02-05_memory_text.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 missing_qmd <- qmd_files[!file.exists(qmd_files)]

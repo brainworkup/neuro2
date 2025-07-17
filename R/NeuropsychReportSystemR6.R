@@ -46,20 +46,16 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       default_config <- list(
         patient_name = "Patient",
         domains = c(
-          "General Cognitive Ability",
-          "Verbal",
-          "Spatial",
-          "Memory",
-          "Attention/Executive",
-          "ADHD",
-          c(
-            "Psychiatric Disorders",
-            "Personality Disorders",
-            "Substance Use",
-            "Psychosocial Problems",
-            "Behavioral/Emotional/Social",
-            "Emotional/Behavioral/Personality"
-          )
+          domain_iq,
+          domain_academics,
+          domain_verbal,
+          domain_spatial,
+          domain_memory,
+          domain_executive,
+          domain_motor,
+          domain_social,
+          domain_adhd_adult,
+          domain_emotion_adult
         ),
         data_files = list(
           neurocog = "data-raw/neurocog.csv",
@@ -95,7 +91,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Initialize domain processors
       self$domain_processors <- list()
-      for (domain in self$config$domains) {
+      # Flatten domains in case some are vectors (like domain_emotion_adult)
+      flat_domains <- unlist(self$config$domains)
+      for (domain in flat_domains) {
         domain_key <- gsub(" ", "_", tolower(domain))
         self$domain_processors[[domain_key]] <- DomainProcessorR6$new(
           domains = domain,
@@ -126,7 +124,6 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "rmarkdown",
         "stringr",
         "tidyr",
-        "NeurotypR",
         "NeurotypR"
       )
 
@@ -153,7 +150,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @param input_dir Directory containing input data files.
     #' @param output_dir Directory for output data files.
     #' @return Invisibly returns self for method chaining.
-    prepare_data = function(input_dir = "data/csv", output_dir = "data") {
+    prepare_data = function(input_dir = "data-raw", output_dir = "data") {
       # Check if output directory exists
       if (!dir.exists(output_dir)) {
         dir.create(output_dir, recursive = TRUE)
@@ -183,8 +180,14 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         domains <- self$config$domains
       }
 
+      # Initialize counter for sequential numbering
+      domain_counter <- 1
+
+      # Flatten domains in case some are vectors (like domain_emotion_adult)
+      flat_domains <- unlist(domains)
+      
       # Generate domain files for each domain
-      for (domain in domains) {
+      for (domain in flat_domains) {
         domain_key <- gsub(" ", "_", tolower(domain))
         if (domain_key %in% names(self$domain_processors)) {
           processor <- self$domain_processors[[domain_key]]
@@ -195,9 +198,19 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           processor$select_columns()
           processor$save_data()
 
-          # Generate domain QMD files
-          domain_file <- paste0("_02-01_", domain_key, ".qmd")
-          text_file <- paste0("_02-01_", domain_key, "_text.qmd")
+          # Generate domain QMD files with sequential numbering
+          domain_number <- sprintf("%02d", domain_counter)
+          domain_file <- paste0("_02-", domain_number, "_", domain_key, ".qmd")
+          text_file <- paste0(
+            "_02-",
+            domain_number,
+            "_",
+            domain_key,
+            "_text.qmd"
+          )
+
+          # Increment counter for next domain
+          domain_counter <- domain_counter + 1
 
           message("Generating domain files for: ", domain)
           message("  - ", domain_file)
@@ -213,7 +226,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
                 " {#sec-",
                 domain_key,
                 "}\n\n",
-                "{{< include _02-01_",
+                "{{< include _02-",
+                domain_number,
+                "_",
                 domain_key,
                 "_text.qmd >}}\n\n"
               ),
@@ -341,10 +356,16 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 generate_neuropsych_report_system <- function(
   patient_name,
   domains = c(
-    "General Cognitive Ability",
-    "ADHD",
-    "Memory",
-    "Executive Functions"
+    domain_iq,
+    domain_academics,
+    domain_verbal,
+    domain_spatial,
+    domain_memory,
+    domain_executive,
+    domain_motor,
+    domain_social,
+    domain_adhd_adult,
+    domain_emotion_adult
   ),
   data_files = list(
     neurocog = "data-raw/neurocog.csv",

@@ -137,7 +137,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -200,7 +200,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -250,7 +250,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
@@ -990,7 +990,7 @@ I'll need to look at the specific R6 classes that handle report generation in th
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -3417,7 +3417,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )
@@ -3972,7 +3972,7 @@ Rules:
 Let's create a simple recommendations file and a memory text file to complete our example:
 
 <write_to_file>
-<path>_03-01_recommendations.qmd</path>
+<path>_03-01_recs.qmd</path>
 <content>
 # RECOMMENDATIONS
 
@@ -4007,9 +4007,9 @@ This report is based on the information available at the time of the evaluation.
 
 **User:**
 
-[write_to_file for '_03-01_recommendations.qmd'] Result:
+[write_to_file for '_03-01_recs.qmd'] Result:
 <file_write_result>
-<path>_03-01_recommendations.qmd</path>
+<path>_03-01_recs.qmd</path>
 <operation>created</operation>
 <notice>
 <i>You do not need to re-read the file, as you have seen all changes</i>
@@ -4019,10 +4019,10 @@ This report is based on the information available at the time of the evaluation.
 
 <environment_details>
 # VSCode Visible Files
-_03-01_recommendations.qmd
+_03-01_recs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:03:50 PM (America/Los_Angeles, UTC-7:00)
@@ -4114,7 +4114,7 @@ _02-05_memory_text.qmd
 _02-05_memory_text.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:04:18 PM (America/Los_Angeles, UTC-7:00)
@@ -4240,7 +4240,7 @@ Caused by error in `normalizePath()`:
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:04:35 PM (America/Los_Angeles, UTC-7:00)
@@ -4414,7 +4414,7 @@ README.md
 README.md
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,run_test_workflow.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,run_test_workflow.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:05:09 PM (America/Los_Angeles, UTC-7:00)
@@ -4465,7 +4465,7 @@ I've now created all the necessary files for the test workflow:
    - `_02-01_iq_text.qmd` - IQ/Cognitive Ability text
    - `_02-05_memory_text.qmd` - Memory text
    - `_03-00_sirf_text.qmd` - Summary, Interpretation, and Recommendations
-   - `_03-01_recommendations.qmd` - Recommendations
+   - `_03-01_recs.qmd` - Recommendations
 
 These files demonstrate the workflow for generating a neuropsychological report from raw CSV data files, following the steps outlined in the task:
 
@@ -4505,7 +4505,7 @@ I've created a complete test workflow for generating a neuropsychological report
    - `_02-01_iq_text.qmd` - IQ/Cognitive Ability text
    - `_02-05_memory_text.qmd` - Memory text
    - `_03-00_sirf_text.qmd` - Summary, Interpretation, and Recommendations
-   - `_03-01_recommendations.qmd` - Recommendations
+   - `_03-01_recs.qmd` - Recommendations
 
 ## How to Run the Workflow
 
@@ -4595,7 +4595,7 @@ Error in eval(ei, envir) : object 'NeuropsychReportSystemR6' not found
 README.md
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,run_test_workflow.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,run_test_workflow.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:08:36 PM (America/Los_Angeles, UTC-7:00)
@@ -4712,7 +4712,7 @@ Caused by error in `normalizePath()`:
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:08:55 PM (America/Los_Angeles, UTC-7:00)
@@ -4883,7 +4883,7 @@ Suggested fixes:
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:09:18 PM (America/Los_Angeles, UTC-7:00)
@@ -5152,7 +5152,7 @@ Let me first read the current content of the test_workflow.R file to make sure w
 210 |     "_02-10_emotion_adult.qmd",
 211 |     "_03-00_sirf.qmd",
 212 |     "_03-00_sirf_text.qmd",
-213 |     "_03-01_recommendations.qmd",
+213 |     "_03-01_recs.qmd",
 214 |     "_03-02_signature.qmd",
 215 |     "_03-03_appendix.qmd"
 216 |   )
@@ -5179,7 +5179,7 @@ Let me first read the current content of the test_workflow.R file to make sure w
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,test_workflow.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:09:21 PM (America/Los_Angeles, UTC-7:00)
@@ -5314,7 +5314,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:09:31 PM (America/Los_Angeles, UTC-7:00)
@@ -5476,7 +5476,7 @@ Caused by error in `normalizePath()`:
 setup_environment.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:10:11 PM (America/Los_Angeles, UTC-7:00)
@@ -5724,7 +5724,7 @@ Caused by error in `normalizePath()`:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:10:41 PM (America/Los_Angeles, UTC-7:00)
@@ -5885,7 +5885,7 @@ Does that make sense?
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,test_workflow.R,setup_environment.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:14:46 PM (America/Los_Angeles, UTC-7:00)
@@ -6041,7 +6041,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,setup_environment.R,check_package.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,run_test_workflow.R,setup_environment.R,check_package.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:15:23 PM (America/Los_Angeles, UTC-7:00)
@@ -6151,7 +6151,7 @@ Caused by error in `normalizePath()`:
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,check_package.R,test_workflow.R,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,check_package.R,test_workflow.R,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:16:53 PM (America/Los_Angeles, UTC-7:00)
@@ -6328,7 +6328,7 @@ Caused by error in `normalizePath()`:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:17:34 PM (America/Los_Angeles, UTC-7:00)
@@ -6543,7 +6543,7 @@ qmd_files <- c(
   "_02-01_iq_text.qmd",
   "_02-05_memory_text.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 missing_qmd <- qmd_files[!file.exists(qmd_files)]
@@ -6821,7 +6821,7 @@ Suggested fixes:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:18:32 PM (America/Los_Angeles, UTC-7:00)
@@ -6960,7 +6960,7 @@ Let me read the current content of the setup_environment.R file:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,setup_environment.R,test_workflow.R,run_test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:18:36 PM (America/Los_Angeles, UTC-7:00)
@@ -7095,7 +7095,7 @@ qmd_files <- c(
   "_02-01_iq_text.qmd",
   "_02-05_memory_text.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 missing_qmd <- qmd_files[!file.exists(qmd_files)]
@@ -7153,7 +7153,7 @@ Caused by error in `normalizePath()`:
 setup_environment.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -7437,7 +7437,7 @@ README.md
 README.md
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -7654,7 +7654,7 @@ Hide Traceback
 README.md
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:38:49 PM (America/Los_Angeles, UTC-7:00)
@@ -8207,7 +8207,7 @@ Let's examine the IQReportGeneratorR6.R file to fix the error with the missing "
 README.md
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/NeuropsychReportSystemR6.R,R/IQReportGeneratorR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:38:57 PM (America/Los_Angeles, UTC-7:00)
@@ -8434,7 +8434,7 @@ Caused by error in `normalizePath()`:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -8590,7 +8590,7 @@ Caused by error in `normalizePath()`:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:40:10 PM (America/Los_Angeles, UTC-7:00)
@@ -8814,7 +8814,7 @@ Caused by error in `normalizePath()`:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:40:45 PM (America/Los_Angeles, UTC-7:00)
@@ -9313,7 +9313,7 @@ Caused by error in `normalizePath()`:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:41:45 PM (America/Los_Angeles, UTC-7:00)
@@ -9402,7 +9402,7 @@ Output:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:42:04 PM (America/Los_Angeles, UTC-7:00)
@@ -9464,7 +9464,7 @@ Output:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -9582,7 +9582,7 @@ Caused by error in `normalizePath()`:
 test_run.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:42:38 PM (America/Los_Angeles, UTC-7:00)
@@ -9832,7 +9832,7 @@ Caused by error in `normalizePath()`:
 R/utility_functions.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,run_test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:43:13 PM (America/Los_Angeles, UTC-7:00)
@@ -9955,7 +9955,7 @@ Caused by error in `normalizePath()`:
 run_test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,test_workflow.R,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:43:41 PM (America/Los_Angeles, UTC-7:00)
@@ -10110,7 +10110,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,check_package.R,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:43:56 PM (America/Los_Angeles, UTC-7:00)
@@ -10335,7 +10335,7 @@ Caused by error in `normalizePath()`:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:44:17 PM (America/Los_Angeles, UTC-7:00)
@@ -10763,7 +10763,7 @@ Suggested fixes:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:44:55 PM (America/Los_Angeles, UTC-7:00)
@@ -10956,7 +10956,7 @@ Let me read the current content of the check_package.R file:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:44:59 PM (America/Los_Angeles, UTC-7:00)
@@ -11215,7 +11215,7 @@ Caused by error in `normalizePath()`:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -11604,7 +11604,7 @@ Suggested fixes:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:46:04 PM (America/Los_Angeles, UTC-7:00)
@@ -11756,7 +11756,7 @@ Let me read the current content of setup_environment.R:
  93 |   "_02-01_iq_text.qmd",
  94 |   "_02-05_memory_text.qmd",
  95 |   "_03-00_sirf_text.qmd",
- 96 |   "_03-01_recommendations.qmd"
+ 96 |   "_03-01_recs.qmd"
  97 | )
  98 | 
  99 | missing_qmd <- qmd_files[!file.exists(qmd_files)]
@@ -11780,7 +11780,7 @@ Let me read the current content of setup_environment.R:
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,setup_environment.R,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:46:07 PM (America/Los_Angeles, UTC-7:00)
@@ -12093,7 +12093,7 @@ qmd_files <- c(
   "_02-01_iq_text.qmd",
   "_02-05_memory_text.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 missing_qmd <- qmd_files[!file.exists(qmd_files)]
@@ -12175,7 +12175,7 @@ Caused by error in `normalizePath()`:
 setup_environment.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -12396,7 +12396,7 @@ Check the error message for more details.
 setup_environment.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,R/IQReportGeneratorR6.R,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:47:21 PM (America/Los_Angeles, UTC-7:00)
@@ -12647,7 +12647,7 @@ Caused by error in `normalizePath()`:
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:48:04 PM (America/Los_Angeles, UTC-7:00)
@@ -12740,7 +12740,7 @@ I fixed several issues in the implementation:
   - `_02-01_iq_text.qmd`: IQ/Cognitive Ability text
   - `_02-05_memory_text.qmd`: Memory text
   - `_03-00_sirf_text.qmd`: Summary, Interpretation, and Recommendations
-  - `_03-01_recommendations.qmd`: Recommendations
+  - `_03-01_recs.qmd`: Recommendations
 
 ## Problem Solving
 The main challenges addressed were:
@@ -12920,7 +12920,7 @@ Check the error message for more details.
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:48:27 PM (America/Los_Angeles, UTC-7:00)
@@ -13172,7 +13172,7 @@ Changes to R/IQReportGeneratorR6.R were not approved by user
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -13958,7 +13958,7 @@ Thank you for sharing your data processing approach! Now I understand the issue.
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:52:18 PM (America/Los_Angeles, UTC-7:00)
@@ -14250,7 +14250,7 @@ Let's look at the test_workflow.R and run_test_workflow.R files to understand th
 220 |     "_02-10_emotion_adult.qmd",
 221 |     "_03-00_sirf.qmd",
 222 |     "_03-00_sirf_text.qmd",
-223 |     "_03-01_recommendations.qmd",
+223 |     "_03-01_recs.qmd",
 224 |     "_03-02_signature.qmd",
 225 |     "_03-03_appendix.qmd"
 226 |   )
@@ -14338,7 +14338,7 @@ Let's look at the test_workflow.R and run_test_workflow.R files to understand th
 R/IQReportGeneratorR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:52:25 PM (America/Los_Angeles, UTC-7:00)
@@ -14652,7 +14652,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:52:53 PM (America/Los_Angeles, UTC-7:00)
@@ -14946,7 +14946,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:53:13 PM (America/Los_Angeles, UTC-7:00)
@@ -15047,7 +15047,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )
@@ -15069,7 +15069,7 @@ template_files <- c(
   "_02-00_behav_obs.qmd",
   "_02-01_iq.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 for (file in template_files) {
@@ -15118,7 +15118,7 @@ template_manager <- ReportTemplateR6$new(
     "sections/_02-10_emotion_adult.qmd",
     "sections/_03-00_sirf.qmd",
     "sections/_03-00_sirf_text.qmd",
-    "sections/_03-01_recommendations.qmd",
+    "sections/_03-01_recs.qmd",
     "sections/_03-02_signature.qmd",
     "sections/_03-03_appendix.qmd"
   )
@@ -15170,7 +15170,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )
@@ -15331,7 +15331,7 @@ Suggested fixes:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:53:42 PM (America/Los_Angeles, UTC-7:00)
@@ -15699,7 +15699,7 @@ Let's read the current version of the test_workflow.R file to see what we're wor
 305 |     "_02-10_emotion_adult.qmd",
 306 |     "_03-00_sirf.qmd",
 307 |     "_03-00_sirf_text.qmd",
-308 |     "_03-01_recommendations.qmd",
+308 |     "_03-01_recs.qmd",
 309 |     "_03-02_signature.qmd",
 310 |     "_03-03_appendix.qmd"
 311 |   )
@@ -15726,7 +15726,7 @@ Let's read the current version of the test_workflow.R file to see what we're wor
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:53:46 PM (America/Los_Angeles, UTC-7:00)
@@ -15805,7 +15805,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )
@@ -15831,7 +15831,7 @@ template_files <- c(
   "_02-00_behav_obs.qmd",
   "_02-01_iq.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 for (file in template_files) {
@@ -15876,7 +15876,7 @@ template_manager <- ReportTemplateR6$new(
     "sections/_02-10_emotion_adult.qmd",
     "sections/_03-00_sirf.qmd",
     "sections/_03-00_sirf_text.qmd",
-    "sections/_03-01_recommendations.qmd",
+    "sections/_03-01_recs.qmd",
     "sections/_03-02_signature.qmd",
     "sections/_03-03_appendix.qmd"
   )
@@ -15999,7 +15999,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:54:25 PM (America/Los_Angeles, UTC-7:00)
@@ -16295,7 +16295,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -16390,7 +16390,7 @@ template_manager <- ReportTemplateR6$new(
     "sections/_02-10_emotion_adult.qmd",
     "sections/_03-00_sirf.qmd",
     "sections/_03-00_sirf_text.qmd",
-    "sections/_03-01_recommendations.qmd",
+    "sections/_03-01_recs.qmd",
     "sections/_03-02_signature.qmd",
     "sections/_03-03_appendix.qmd"
   )
@@ -16415,7 +16415,7 @@ template_manager <- ReportTemplateR6$new(
     "_02-10_emotion_adult.qmd",
     "_03-00_sirf.qmd",
     "_03-00_sirf_text.qmd",
-    "_03-01_recommendations.qmd",
+    "_03-01_recs.qmd",
     "_03-02_signature.qmd",
     "_03-03_appendix.qmd"
   )
@@ -16510,7 +16510,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:55:20 PM (America/Los_Angeles, UTC-7:00)
@@ -16672,7 +16672,7 @@ Let's check if the ReportTemplateR6 class supports the `sections_dir` parameter:
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -17124,7 +17124,7 @@ Let's check if the ReportTemplateR6 class supports the `sections_dir` parameter:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:55:26 PM (America/Los_Angeles, UTC-7:00)
@@ -17224,7 +17224,7 @@ template_files <- c(
   "_02-00_behav_obs.qmd",
   "_02-01_iq.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 for (file in template_files) {
@@ -17283,7 +17283,7 @@ template_files <- c(
   "_02-00_behav_obs.qmd",
   "_02-01_iq.qmd",
   "_03-00_sirf_text.qmd",
-  "_03-01_recommendations.qmd"
+  "_03-01_recs.qmd"
 )
 
 for (file in template_files) {
@@ -17400,7 +17400,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:55:59 PM (America/Los_Angeles, UTC-7:00)
@@ -17689,7 +17689,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -17852,7 +17852,7 @@ This suggests that `_02-01_iq.qmd` is trying to include `_02-01_iq_text.qmd` but
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:56:29 PM (America/Los_Angeles, UTC-7:00)
@@ -18026,7 +18026,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:57:31 PM (America/Los_Angeles, UTC-7:00)
@@ -18089,7 +18089,7 @@ You will be updated on the terminal status and new output in the future.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -18202,7 +18202,7 @@ Otherwise, if you have not completed the task and do not need additional informa
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -18490,7 +18490,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 7:58:34 PM (America/Los_Angeles, UTC-7:00)
@@ -18777,7 +18777,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,R/ReportTemplateR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -18958,7 +18958,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -19108,7 +19108,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:00:03 PM (America/Los_Angeles, UTC-7:00)
@@ -19268,7 +19268,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:00:21 PM (America/Los_Angeles, UTC-7:00)
@@ -19331,7 +19331,7 @@ You will be updated on the terminal status and new output in the future.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -19453,7 +19453,7 @@ Otherwise, if you have not completed the task and do not need additional informa
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -19675,7 +19675,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:12:05 PM (America/Los_Angeles, UTC-7:00)
@@ -19780,7 +19780,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -19843,7 +19843,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -19876,7 +19876,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-10_emotion_child_text_self.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_02-11_adaptive_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_02-11_adaptive.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03b_examiner_qualifications.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_include_domains.qmd
@@ -19998,7 +19998,7 @@ Changes to R/ReportTemplateR6.R were not approved by user
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:14:56 PM (America/Los_Angeles, UTC-7:00)
@@ -20157,7 +20157,7 @@ R/ReportTemplateR6.R
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:15:21 PM (America/Los_Angeles, UTC-7:00)
@@ -20303,7 +20303,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:15:49 PM (America/Los_Angeles, UTC-7:00)
@@ -20463,7 +20463,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:16:29 PM (America/Los_Angeles, UTC-7:00)
@@ -20607,7 +20607,7 @@ Original Content:
 309 |   "_02-00_behav_obs.qmd",
 310 |   "_02-01_iq.qmd",
 311 |   "_03-00_sirf_text.qmd",
-312 |   "_03-01_recommendations.qmd"
+312 |   "_03-01_recs.qmd"
 313 | )
 314 | 
 315 | for (file in template_files) {
@@ -20675,7 +20675,7 @@ Suggested fixes:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:16:51 PM (America/Los_Angeles, UTC-7:00)
@@ -21047,7 +21047,7 @@ Let's read the current content of the test_workflow.R file to find the correct l
 309 |   "_02-00_behav_obs.qmd",
 310 |   "_02-01_iq.qmd",
 311 |   "_03-00_sirf_text.qmd",
-312 |   "_03-01_recommendations.qmd"
+312 |   "_03-01_recs.qmd"
 313 | )
 314 | 
 315 | for (file in template_files) {
@@ -21104,7 +21104,7 @@ Let's read the current content of the test_workflow.R file to find the correct l
 366 |     "_02-10_emotion_adult.qmd",
 367 |     "_03-00_sirf.qmd",
 368 |     "_03-00_sirf_text.qmd",
-369 |     "_03-01_recommendations.qmd",
+369 |     "_03-01_recs.qmd",
 370 |     "_03-02_signature.qmd",
 371 |     "_03-03_appendix.qmd"
 372 |   )
@@ -21131,7 +21131,7 @@ Let's read the current content of the test_workflow.R file to find the correct l
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:16:56 PM (America/Los_Angeles, UTC-7:00)
@@ -21274,7 +21274,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -21442,7 +21442,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:17:34 PM (America/Los_Angeles, UTC-7:00)
@@ -21585,7 +21585,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:17:51 PM (America/Los_Angeles, UTC-7:00)
@@ -21881,7 +21881,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:18:01 PM (America/Los_Angeles, UTC-7:00)
@@ -22021,7 +22021,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:18:17 PM (America/Los_Angeles, UTC-7:00)
@@ -22160,7 +22160,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:18:31 PM (America/Los_Angeles, UTC-7:00)
@@ -22311,7 +22311,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:18:47 PM (America/Los_Angeles, UTC-7:00)
@@ -22453,7 +22453,7 @@ Caused by error in `normalizePath()`:
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:19:32 PM (America/Los_Angeles, UTC-7:00)
@@ -22762,7 +22762,7 @@ Check the error message for more details.
 test_workflow.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,R/ReportTemplateR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:20:11 PM (America/Los_Angeles, UTC-7:00)
@@ -22959,7 +22959,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:20:32 PM (America/Los_Angeles, UTC-7:00)
@@ -23270,7 +23270,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:21:01 PM (America/Los_Angeles, UTC-7:00)
@@ -23447,7 +23447,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:21:32 PM (America/Los_Angeles, UTC-7:00)
@@ -23758,7 +23758,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:21:51 PM (America/Los_Angeles, UTC-7:00)
@@ -23922,7 +23922,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:22:22 PM (America/Los_Angeles, UTC-7:00)
@@ -24321,7 +24321,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:22:34 PM (America/Los_Angeles, UTC-7:00)
@@ -24414,7 +24414,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:25:06 PM (America/Los_Angeles, UTC-7:00)
@@ -24527,7 +24527,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -24590,7 +24590,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -24788,7 +24788,7 @@ Let me check the current state of the ReportTemplateR6.R file to see if our prev
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -25226,7 +25226,7 @@ Let me check the current state of the ReportTemplateR6.R file to see if our prev
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:25:14 PM (America/Los_Angeles, UTC-7:00)
@@ -25353,7 +25353,7 @@ this is where they are located for each template respectvely
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:27:03 PM (America/Los_Angeles, UTC-7:00)
@@ -25465,7 +25465,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -25528,7 +25528,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -25655,7 +25655,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:31:19 PM (America/Los_Angeles, UTC-7:00)
@@ -25767,7 +25767,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -25830,7 +25830,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -26041,7 +26041,7 @@ Let me check the current state of the ReportTemplateR6.R file to see if our prev
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -26479,7 +26479,7 @@ Let me check the current state of the ReportTemplateR6.R file to see if our prev
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:31:28 PM (America/Los_Angeles, UTC-7:00)
@@ -26598,7 +26598,7 @@ Line 54 in ReportTemplateR6.R had the old path to the templates. I just updated 
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:37:26 PM (America/Los_Angeles, UTC-7:00)
@@ -26699,7 +26699,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -26762,7 +26762,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -26812,7 +26812,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
@@ -26972,7 +26972,7 @@ Let me check the current state of the ReportTemplateR6.R file to see what change
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -27410,7 +27410,7 @@ Let me check the current state of the ReportTemplateR6.R file to see what change
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:37:31 PM (America/Los_Angeles, UTC-7:00)
@@ -27542,7 +27542,7 @@ like "Loaded package:" below ... several words were escaped like that. Does tha 
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:43:41 PM (America/Los_Angeles, UTC-7:00)
@@ -27655,7 +27655,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -27718,7 +27718,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -27878,7 +27878,7 @@ I just undid them
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:45:12 PM (America/Los_Angeles, UTC-7:00)
@@ -27981,7 +27981,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -28044,7 +28044,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -28094,7 +28094,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
@@ -28253,7 +28253,7 @@ Let me check the current state of the ReportTemplateR6.R file to see what change
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -28691,7 +28691,7 @@ Let me check the current state of the ReportTemplateR6.R file to see what change
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:45:18 PM (America/Los_Angeles, UTC-7:00)
@@ -28810,7 +28810,7 @@ Let's move on... I can fix that later. I just want the general workflow to work!
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:47:29 PM (America/Los_Angeles, UTC-7:00)
@@ -28911,7 +28911,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -28974,7 +28974,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -29024,7 +29024,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
@@ -29095,7 +29095,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:50:03 PM (America/Los_Angeles, UTC-7:00)
@@ -29198,7 +29198,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -29261,7 +29261,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -29311,7 +29311,7 @@ inst/extdata/_extensions/neurotyp-pediatric/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-pediatric/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-pediatric/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-pediatric/_03-03a_informed_consent.qmd
@@ -29471,7 +29471,7 @@ Let's check if our change to the template_dir in the generate_neuropsych_report 
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -29909,7 +29909,7 @@ Let's check if our change to the template_dir in the generate_neuropsych_report 
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:50:11 PM (America/Los_Angeles, UTC-7:00)
@@ -30009,7 +30009,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:56:07 PM (America/Los_Angeles, UTC-7:00)
@@ -30128,7 +30128,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -30191,7 +30191,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -30384,7 +30384,7 @@ Let me check if our change to the template_dir in the generate_neuropsych_report
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -30822,7 +30822,7 @@ Let me check if our change to the template_dir in the generate_neuropsych_report
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 8:56:15 PM (America/Los_Angeles, UTC-7:00)
@@ -30912,7 +30912,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 DESCRIPTION
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 9:01:39 PM (America/Los_Angeles, UTC-7:00)
@@ -31031,7 +31031,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -31094,7 +31094,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -31248,7 +31248,7 @@ Let me check the DESCRIPTION file to understand the package dependencies:
 DESCRIPTION
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 9:01:46 PM (America/Los_Angeles, UTC-7:00)
@@ -31426,7 +31426,7 @@ Let me check if our previous change to update the template_dir in the generate_n
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -31864,7 +31864,7 @@ Let me check if our previous change to update the template_dir in the generate_n
 DESCRIPTION
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,DESCRIPTION,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R
 
 # Current Time
 6/25/2025, 9:01:53 PM (America/Los_Angeles, UTC-7:00)
@@ -31963,7 +31963,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:08:07 PM (America/Los_Angeles, UTC-7:00)
@@ -32082,7 +32082,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -32145,7 +32145,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -32234,7 +32234,7 @@ I just fixed line 500 to the correct path
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:08:26 PM (America/Los_Angeles, UTC-7:00)
@@ -32346,7 +32346,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -32409,7 +32409,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -32497,7 +32497,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:09:37 PM (America/Los_Angeles, UTC-7:00)
@@ -32616,7 +32616,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -32679,7 +32679,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -33040,7 +33040,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:09:54 PM (America/Los_Angeles, UTC-7:00)
@@ -33149,7 +33149,7 @@ I just fixed it
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:11:32 PM (America/Los_Angeles, UTC-7:00)
@@ -33262,7 +33262,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -33325,7 +33325,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -33690,7 +33690,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:11:46 PM (America/Los_Angeles, UTC-7:00)
@@ -33864,7 +33864,7 @@ New instructions for task continuation:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:12:37 PM (America/Los_Angeles, UTC-7:00)
@@ -33982,7 +33982,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -34045,7 +34045,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -35840,7 +35840,7 @@ I'll copy the apa.csl file from the template resources directory to the working 
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,R/DrilldownR6.R
 
 # Current Time
 6/25/2025, 9:12:43 PM (America/Los_Angeles, UTC-7:00)
@@ -36765,7 +36765,7 @@ apa.csl
 apa.csl
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:15:55 PM (America/Los_Angeles, UTC-7:00)
@@ -36858,7 +36858,7 @@ Otherwise, if you have not completed the task and do not need additional informa
 apa.csl
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:16:02 PM (America/Los_Angeles, UTC-7:00)
@@ -36931,7 +36931,7 @@ What is the next step to see if the report gets generated from start to finish? 
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:19:37 PM (America/Los_Angeles, UTC-7:00)
@@ -37050,7 +37050,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -37113,7 +37113,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd
@@ -37256,7 +37256,7 @@ To see if the report gets generated from start to finish, you should run the tes
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:19:46 PM (America/Los_Angeles, UTC-7:00)
@@ -37392,7 +37392,7 @@ Let me check the run_test_workflow.R file to see what it does specifically:
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:19:51 PM (America/Los_Angeles, UTC-7:00)
@@ -37767,7 +37767,7 @@ Let me check the test_workflow.R file to see the detailed implementation:
 309 |   "_02-00_behav_obs.qmd",
 310 |   "_02-01_iq.qmd",
 311 |   "_03-00_sirf_text.qmd",
-312 |   "_03-01_recommendations.qmd"
+312 |   "_03-01_recs.qmd"
 313 | )
 314 | 
 315 | for (file in template_files) {
@@ -37824,7 +37824,7 @@ Let me check the test_workflow.R file to see the detailed implementation:
 366 |     "_02-10_emotion_adult.qmd",
 367 |     "_03-00_sirf.qmd",
 368 |     "_03-00_sirf_text.qmd",
-369 |     "_03-01_recommendations.qmd",
+369 |     "_03-01_recs.qmd",
 370 |     "_03-02_signature.qmd",
 371 |     "_03-03_appendix.qmd"
 372 |   )
@@ -37851,7 +37851,7 @@ Let me check the test_workflow.R file to see the detailed implementation:
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:19:55 PM (America/Los_Angeles, UTC-7:00)
@@ -38236,7 +38236,7 @@ Check the error message for more details.
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:20:22 PM (America/Los_Angeles, UTC-7:00)
@@ -38425,7 +38425,7 @@ Let's look at the `ReportTemplateR6.R` file to understand how the template is ge
  97 |           "_02-00_behav_obs.qmd",
  98 |           "_03-00_sirf.qmd",
  99 |           "_03-00_sirf_text.qmd",
-100 |           "_03-01_recommendations.qmd",
+100 |           "_03-01_recs.qmd",
 101 |           "_03-02_signature.qmd",
 102 |           "_03-03_appendix.qmd"
 103 |         )
@@ -38863,7 +38863,7 @@ Let's look at the `ReportTemplateR6.R` file to understand how the template is ge
 _02-00_behav_obs.qmd
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/ReportTemplateR6.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:20:31 PM (America/Los_Angeles, UTC-7:00)
@@ -39010,7 +39010,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Recently Modified Files
 These files have been modified since you last accessed them (file was just edited so you may need to re-read it before editing):
@@ -39352,7 +39352,7 @@ Check the error message for more details.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:21:22 PM (America/Los_Angeles, UTC-7:00)
@@ -39447,7 +39447,7 @@ p apa.csl output/ ~/neuro2
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:21:36 PM (America/Los_Angeles, UTC-7:00)
@@ -39513,7 +39513,7 @@ You will be updated on the terminal status and new output in the future.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -39607,7 +39607,7 @@ Otherwise, if you have not completed the task and do not need additional informa
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Inactive Terminals with Completed Process Output
 ## Terminal 1 (Inactive)
@@ -39817,7 +39817,7 @@ wc -l output/apa.csl
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:23:01 PM (America/Los_Angeles, UTC-7:00)
@@ -39881,7 +39881,7 @@ Output:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:23:07 PM (America/Los_Angeles, UTC-7:00)
@@ -39945,7 +39945,7 @@ Output:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:23:19 PM (America/Los_Angeles, UTC-7:00)
@@ -40010,7 +40010,7 @@ Output:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:23:24 PM (America/Los_Angeles, UTC-7:00)
@@ -40078,7 +40078,7 @@ Output:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:24:03 PM (America/Los_Angeles, UTC-7:00)
@@ -40142,7 +40142,7 @@ i copied over the file
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:24:18 PM (America/Los_Angeles, UTC-7:00)
@@ -40206,7 +40206,7 @@ You will be updated on the terminal status and new output in the future.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -40450,7 +40450,7 @@ Suggested fixes:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:24:46 PM (America/Los_Angeles, UTC-7:00)
@@ -40614,7 +40614,7 @@ Suggested fixes:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:24:55 PM (America/Los_Angeles, UTC-7:00)
@@ -40743,7 +40743,7 @@ Caused by error in `normalizePath()`:
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:25:08 PM (America/Los_Angeles, UTC-7:00)
@@ -40811,7 +40811,7 @@ You will be updated on the terminal status and new output in the future.
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Actively Running Terminals
 ## Terminal 1 (Active)
@@ -40982,7 +40982,7 @@ Let's just try to run Typst first ... that's the priority
 R/ReportTemplateR6.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Inactive Terminals with Completed Process Output
 ## Terminal 1 (Inactive)
@@ -41064,7 +41064,7 @@ Note: If you previously attempted a tool use that the user did not provide a res
 check_package.R
 
 # VSCode Open Tabs
-scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recommendations.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
+scratch.R,R/NeuropsychResultsR6.R,_01-00_nse_forensic.qmd,_02-00_behav_obs.qmd,R/ReportTemplateR6.R,_02-01_iq_text.qmd,_03-00_sirf_text.qmd,_03-01_recs.qmd,_02-05_memory_text.qmd,README.md,test_run.R,R/utility_functions.R,run_test_workflow.R,check_package.R,setup_environment.R,R/IQReportGeneratorR6.R,test_workflow.R,R/NeuropsychReportSystemR6.R,R/DomainProcessorR6.R,apa.csl
 
 # Current Time
 6/25/2025, 9:45:12 PM (America/Los_Angeles, UTC-7:00)
@@ -41176,7 +41176,7 @@ inst/extdata/_extensions/neurotyp-adult/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-adult/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-adult/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-adult/_03-03a_informed_consent.qmd
@@ -41239,7 +41239,7 @@ inst/extdata/_extensions/neurotyp-forensic/_02-12_daily_living.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_dsm5_icd10_dx.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf_text.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-00_sirf.qmd
-inst/extdata/_extensions/neurotyp-forensic/_03-01_recommendations.qmd
+inst/extdata/_extensions/neurotyp-forensic/_03-01_recs.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-02_signature.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03_appendix.qmd
 inst/extdata/_extensions/neurotyp-forensic/_03-03a_informed_consent.qmd

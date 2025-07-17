@@ -166,7 +166,7 @@ neuropsych <- readr::read_csv("data-raw/neuropsych.csv")
 
 {{< include sections/_03-00_sirf_text.qmd >}}
 
-{{< include sections/_03-01_recommendations.qmd >}}
+{{< include sections/_03-01_recs.qmd >}}
 
 {{< include sections/_03-02_signature.qmd >}}
 

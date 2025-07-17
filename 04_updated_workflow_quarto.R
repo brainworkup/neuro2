@@ -425,7 +425,7 @@ update_include_domains <- function() {
 #
 # 5. **Re-evaluation**: Consider repeat neuropsychological evaluation in [timeframe] to monitor progress.
 # '
-#   writeLines(recommendations_content, "_03-01_recommendations.qmd")
+#   writeLines(recommendations_content, "_03-01_recs.qmd")
 #
 #   # Signature
 #   signature_content <- '

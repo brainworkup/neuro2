@@ -265,7 +265,7 @@ source("06_run_complete_workflow.R")
    - Customize clinical interpretations
    - Add qualitative observations
    - Include test-specific notes
-1. **Summary and Recommendations** (`_03-00_sirf.qmd`, `_03-01_recommendations.qmd`)
+1. **Summary and Recommendations** (`_03-00_sirf.qmd`, `_03-01_recs.qmd`)
 
    - Tailor diagnostic impressions
    - Customize recommendations

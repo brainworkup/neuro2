@@ -289,7 +289,7 @@ cat(
 
 [Timeline and nature of recommended follow-up]
 ',
-  file = "_03-01_recommendations.qmd"
+  file = "_03-01_recs.qmd"
 )
 
 message("\n✅ All domain QMD files created successfully!")

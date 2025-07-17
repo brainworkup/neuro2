@@ -99,7 +99,7 @@ ReportTemplateR6 <- R6::R6Class(
           "_02-00_behav_obs.qmd",
           "_03-00_sirf.qmd",
           "_03-00_sirf_text.qmd",
-          "_03-01_recommendations.qmd",
+          "_03-01_recs.qmd",
           "_03-02_signature.qmd",
           "_03-03_appendix.qmd"
         )

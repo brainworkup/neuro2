@@ -55,7 +55,7 @@ execute:
 
 {{< include _03-00_summary.qmd >}}
 
-{{< include _03-01_recommendations.qmd >}}
+{{< include _03-01_recs.qmd >}}
 
 \newpage
 

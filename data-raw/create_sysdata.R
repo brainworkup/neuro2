@@ -1353,12 +1353,14 @@ domain_iq <- "General Cognitive Ability"
 #' @description A character string label representing the academic skills domain for grouping and categorizing neuropsychological test scales related to reading, writing, and mathematics.
 #' @keywords data internal
 domain_academics <- "Academic Skills"
+
 #' @name domain_verbal
 #' @docType data
 #' @title Verbal and Language Domain
 #' @description A character string label representing the verbal and language functioning domain for grouping and categorizing neuropsychological test scales related to language abilities.
 #' @keywords data internal
 domain_verbal <- "Verbal/Language"
+
 #' @name domain_spatial
 #' @docType data
 #' @title Visual Perception and Construction Domain
@@ -1393,6 +1395,7 @@ domain_motor <- "Motor"
 #' @description A character string label representing the social cognition domain for grouping and categorizing neuropsychological test scales related to social-emotional processing and understanding.
 #' @keywords data internal
 domain_social <- "Social Cognition"
+
 #' @name domain_adhd_adult
 #' @docType data
 #' @title Adult ADHD Domain
@@ -1484,10 +1487,4 @@ usethis::use_data(
 #' @keywords data internal
 lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 
-usethis::use_data(
-  lookup_table,
-  internal = TRUE,
-  overwrite = TRUE
-)
-
-
+usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)

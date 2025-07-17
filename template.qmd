@@ -163,7 +163,7 @@ neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
 
 {{< include _03-00_sirf_text.qmd >}}
 
-{{< include _03-01_recommendations.qmd >}}
+{{< include _03-01_recs.qmd >}}
 
 {{< include _03-02_signature.qmd >}}
 

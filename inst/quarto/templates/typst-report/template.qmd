@@ -2,6 +2,7 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
+doe: {{< var doe >}}
 date_of_report: last-modified
 ---
 
@@ -30,7 +31,7 @@ packages <- c(
   "tidytable",
   "vroom",
   "xfun",
-  "NeurotypR",
+  "bwu",
   "NeurotypR"
 )
 
@@ -71,26 +72,6 @@ if (requireNamespace("xfun", quietly = TRUE)) {
   }
 }
 
-# Source the TableGT.R file for custom table functions
-if (file.exists("R/TableGT.R")) {
-  source("R/TableGT.R")
-  message("Loaded custom TableGT functions")
-  
-  # Make tbl_gt2 available globally for compatibility
-  if (exists("tbl_gt2") && is.function(tbl_gt2)) {
-    assign("tbl_gt2", tbl_gt2, envir = .GlobalEnv)
-    message("Made tbl_gt2 function available globally")
-  }
-  
-  # Also make TableGT2 available globally if needed
-  if (exists("TableGT2") && R6::is.R6Class(TableGT2)) {
-    assign("TableGT2", TableGT2, envir = .GlobalEnv)
-    message("Made TableGT2 class available globally")
-  }
-} else {
-  warning("R/TableGT.R not found - table functions may be unavailable")
-}
-
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -114,24 +95,12 @@ patient <- Sys.getenv("PATIENT")
 #| include: false
 
 path_data <- here::here("data")
-# Load data directly from the data directory instead of inst/extdata
-neurocog <- readr::read_csv(file.path(path_data, "neurocog.csv"))
-neurobehav <- readr::read_csv(file.path(path_data, "neurobehav.csv"))
-validity <- readr::read_csv(file.path(path_data, "validity.csv"))
-neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
-  readr::read_csv(file.path(path_data, "neuropsych.csv"))
-} else {
-  # Create an empty data frame with expected structure if file doesn't exist
-  data.frame(
-    patient_id = character(),
-    test_name = character(),
-    scale = character(),
-    score = numeric(),
-    percentile = numeric(),
-    classification = character(),
-    stringsAsFactors = FALSE
-  )
-}
+path_csv <- here::here("inst", "extdata")
+NeurotypR::load_data(here::here(path_csv))
+neurocog <- readr::read_csv("data/neurocog.csv")
+neurobehav <- readr::read_csv("data/neurobehav.csv")
+neuropsych <- readr::read_csv("data/neuropsych.csv")
+validity <- readr::read_csv("data/validity.csv")
 ```
 
 ```{=typst}
@@ -150,6 +119,11 @@ neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
 {{< include _00-00_tests.qmd >}}
 
 {{< include _01-00_nse_adult.qmd >}}
+
+<!-- {{< pagebreak >}} -->
+
+
+<!-- {{< pagebreak >}} -->
 
 {{< include _02-00_behav_obs.qmd >}}
 

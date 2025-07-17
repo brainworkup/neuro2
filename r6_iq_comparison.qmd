@@ -1,4 +1,4 @@
-# R6 Integration Comparison for _02-01_iq.qmd
+# R6 Integration Comparison for \_02-01_iq.qmd
 
 ## Key Changes Summary
 

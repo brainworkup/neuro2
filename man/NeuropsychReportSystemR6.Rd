@@ -105,7 +105,7 @@ Invisibly returns self for method chaining.
 Prepare data files for report generation.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$prepare_data(
-  input_dir = "data/csv",
+  input_dir = "data-raw",
   output_dir = "data"
 )}\if{html}{\out{</div>}}
 }

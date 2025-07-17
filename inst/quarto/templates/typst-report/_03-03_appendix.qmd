@@ -1,0 +1,46 @@
+```{=typst}
+= APPENDIX
+```
+
+<!-- {{< include _03-03a_informed_consent.qmd >}} -->
+
+<!-- {{< include _03-03b_examiner_qualifications.qmd >}} -->
+
+## Test Selection Procedures
+
+Neuropsychological tests are performance-based, and cognitive performance is summarized above. Cultural considerations were made in selecting measures, interpreting results, and making diagnostic impressions and recommendations. Test scores are reported in comparison to same-age and sex/gender peers, with labels (e.g., Below Average, Average, Above Average; [@guilmetteAmericanAcademyClinical2020]), intended to be descriptive, not diagnostic. Standardized scores provide important context, but do not alone lead to accurate diagnosis or treatment recommendations.
+
+## Conversion of Test Scores
+
+```{=typst}
+#import "@preview/tablem:0.2.0": tablem, three-line-table
+
+#set text(10pt)
+#let three-line-table = tablem.with(
+  render: (columns: auto, ..args) => {
+    table(
+      columns: (auto, 1fr, 1fr, 1fr, 1fr, 1fr),
+      align: (col, row) =>
+            if row == 0 { center + horizon }
+            else if col == 0 { left + horizon }
+            else { center + horizon },
+      table.hline(y: 0),
+      table.hline(y: 1),
+      ..args,
+      table.hline(),
+    )
+  }
+)
+
+#three-line-table[
+|*Range*|*Standard Score*|*_T_ Score*|*Scaled Score*|*z-Score*|*Percentile (‰)*|
+|---|---|---|---|---|---|
+|Exceptionally high score|130 +|70 +|16 +|2 +|98 +|
+|Above average score|120 – 129|63 – 69|14 – 15|1.3 – 1.9|91 – 97|
+|High average score|110 – 119|57 – 62|12 – 13|0.7 – 1.2|75 – 90|
+|Average score|90 – 109|44 – 56|9 – 11|-0.7 – 0.6|25 – 74|
+|Low average score|80 – 89|37 – 43|7 – 8|-1.3 – -0.6|9 – 24|
+|Below average score|70 – 79|30 – 36|4 – 6|-2 – -1.4|2 – 8|
+|Exceptionally low score|< 70|< 30|< 4|< -2|< 2|
+]
+```
