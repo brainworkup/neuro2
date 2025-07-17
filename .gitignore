@@ -42,3 +42,4 @@ _freeze/
 ..Rcheck/R_check_bin/Rscript
 .env
 # renv
+duckdb.R
