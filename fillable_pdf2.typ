@@ -1,42 +1,58 @@
-#import "@preview/filler:0.3.1": *
+#import "@preview/in-dexter:0.0.5": make-index, index
 
 #set document(author: "John Doe")
 
-// Define content type for PDF export.
-#show: content-type.with(content-type-pdf)
+// Simple fillable form using basic Typst elements
+#set page(paper: "a4")
+#set text(size: 12pt)
 
-// Signature field with default style.
-#show-field(
-(x: 2cm, y: 8cm),
-width: auto,
-height: auto,
-"Signature",
-style: (
-inset: .1em,
-radius: 4pt,
-fill: luma(250), // Set the background color
-stroke: none, // No border for the signature field itself
-),
+// Title
+#align(center, text(size: 16pt, weight: "bold")[Fillable Form])
+
+#v(2cm)
+
+// Name field
+#grid(
+  columns: (1fr, 2fr),
+  gutter: 1em,
+  [Name:], 
+  rect(width: 100%, height: 1.5em, stroke: 0.5pt, fill: rgb(250, 250, 250))[
+    #text(fill: gray)[Click to enter name]
+  ]
 )
 
-// Electronic signature field with default style.
-#show-field(
-(x: 8cm, y: 13cm),
-width: auto,
-height: auto,
-"Electronic Signature",
-style: (
-inset: .2em,
-radius: 4pt,
-fill: luma(250), // Set the background color
-stroke: none, // No border for the signature field itself
-),
+#v(1cm)
+
+// Date field
+#grid(
+  columns: (1fr, 2fr),
+  gutter: 1em,
+  [Date:], 
+  rect(width: 100%, height: 1.5em, stroke: 0.5pt, fill: rgb(250, 250, 250))[
+    #text(fill: gray)[Click to enter date]
+  ]
 )
 
-// Define template for fields.
-#show: template.with("fields", "content-type" => content-type-pdf)
+#v(1cm)
 
-// Render form with defined fields.
-#render-form(
-"fields",
+// Signature field
+#grid(
+  columns: (1fr, 2fr),
+  gutter: 1em,
+  [Signature:], 
+  rect(width: 100%, height: 3em, stroke: 0.5pt, fill: rgb(250, 250, 250))[
+    #text(fill: gray)[Click to sign]
+  ]
+)
+
+#v(1cm)
+
+// Electronic signature field
+#grid(
+  columns: (1fr, 2fr),
+  gutter: 1em,
+  [Electronic Signature:], 
+  rect(width: 100%, height: 2em, stroke: 0.5pt, fill: rgb(250, 250, 250))[
+    #text(fill: gray)[Click to enter electronic signature]
+  ]
 )
