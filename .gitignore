@@ -38,3 +38,7 @@ settings.json
 Environment changes - neuro2
 .dbxignore
 _freeze/
+..Rcheck/00check.log
+..Rcheck/00install.out
+..Rcheck/R_check_bin/R
+..Rcheck/R_check_bin/Rscript
