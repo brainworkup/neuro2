@@ -96,8 +96,8 @@ scales <- c(
   "Executive Functions Index (EXE)"
 )
 
-# Filter the data using the filter_data function from the bwu library
-data_iq <- bwu::filter_data(data = iq, domain = domains, scale = scales)
+# Filter the data using the filter_data function from the NeurotypR library
+data_iq <- NeurotypR::filter_data(data = iq, domain = domains, scale = scales)
 ```
 
 ```{r}
@@ -106,7 +106,7 @@ data_iq <- bwu::filter_data(data = iq, domain = domains, scale = scales)
 #| include: false
 
 # export text
-bwu::cat_neuropsych_results(data = data_iq, file = "_02-01_iq_text.qmd")
+NeurotypR::cat_neuropsych_results(data = data_iq, file = "_02-01_iq_text.qmd")
 ```
 
 ```{r}
@@ -233,7 +233,7 @@ filename <- "fig_iq_subdomain.svg"
 # keep <- c("General Ability", "Crystallized Knowledge", "Fluid Reasoning")
 # data_iq <- dplyr::filter(data_iq, scale %in% keep)
 # source("R/dotplot2_efficient.R")
-# Create the dotplot using the dotplot function from the bwu library
+# Create the dotplot using the dotplot function from the NeurotypR library
 NeurotypR::dotplot2(
   data = data_iq,
   x = x,

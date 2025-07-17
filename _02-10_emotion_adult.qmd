@@ -148,10 +148,10 @@ scales <- c(
   "Withdrawal"
 )
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 # The domain is specified by the 'domains' variable
 # The scale is specified by the 'scales' variable
-data_emotion <- bwu::filter_data(
+data_emotion <- NeurotypR::filter_data(
   data = emotion,
   domain = domains,
   scale = scales
@@ -165,7 +165,7 @@ data_emotion <- bwu::filter_data(
 #| eval: true
 
 # Flatten the text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_emotion,
   file = "_02-10_emotion_adult_text.qmd"
 )

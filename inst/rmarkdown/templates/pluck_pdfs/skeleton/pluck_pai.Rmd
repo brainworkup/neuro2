@@ -44,7 +44,7 @@ library(tidyr)
 library(vroom)
 library(xfun)
 library(yaml)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Export PAI CSV file from PARiConnect
@@ -276,7 +276,7 @@ df_clinical <- df_clinical |> dplyr::slice(
 ```{r mutate}
 # TODO: Probably delete pai df
 pai <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     data = pai,
     raw_score = "",
     range = "",
@@ -300,7 +300,7 @@ pai <-
 
 
 df_clinical <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     data = df_clinical,
     raw_score = "",
     range = "",
@@ -323,7 +323,7 @@ df_clinical <-
   )
 
 df_validity <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     data = df_validity,
     raw_score = "",
     range = "",
@@ -346,7 +346,7 @@ df_validity <-
   )
 
 df_inatt <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     data = df_inatt,
     raw_score = "",
     range = "",
@@ -372,15 +372,15 @@ df_inatt <-
 ## Rating Scale score ranges
 
 ```{r ranges}
-df_clinical <- bwu::gpluck_make_score_ranges(
+df_clinical <- NeurotypR::gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
 )
-df_validity <- bwu::gpluck_make_score_ranges(
+df_validity <- NeurotypR::gpluck_make_score_ranges(
   table = df_validity,
   test_type = "symptom_validity"
 )
-df_inatt <- bwu::gpluck_make_score_ranges(
+df_inatt <- NeurotypR::gpluck_make_score_ranges(
   table = df_inatt,
   test_type = "rating_scale"
 )

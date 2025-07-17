@@ -76,7 +76,7 @@ library(fs)
 library(magrittr)
 library(hablar)
 library(googledrive)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Patient
@@ -189,7 +189,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- bwu::calc_ci_95(
+ci_values <- NeurotypR::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,
@@ -206,7 +206,7 @@ data$ci_95 <- paste0(data$ci_lo, " - ", data$ci_hi)
 
 dkefs <- df_cwi
 
-dkefs <- bwu::gpluck_make_columns(
+dkefs <- NeurotypR::gpluck_make_columns(
   data = dkefs,
   test = params$test,
   test_name = params$test_name,
@@ -228,7 +228,7 @@ dkefs <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges}
-dkefs <- bwu::gpluck_make_score_ranges(
+dkefs <- NeurotypR::gpluck_make_score_ranges(
   table = dkefs,
   test_type = "npsych_test"
 )

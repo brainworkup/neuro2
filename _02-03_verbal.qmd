@@ -170,7 +170,7 @@ scales <- c(
   # "Executive Functions Index (EXE)",
 )
 
-# Filter the data using the filter_data function from the bwu library
+# Filter the data using the filter_data function from the NeurotypR library
 data_verbal <-
   filter_data(
     data = verbal,

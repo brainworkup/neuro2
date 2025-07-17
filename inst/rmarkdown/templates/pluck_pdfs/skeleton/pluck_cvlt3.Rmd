@@ -145,7 +145,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(bwu)
+library(NeurotypR)
 library(tidytable)
 library(hablar)
 library(here)
@@ -225,7 +225,7 @@ if (params$test == "cvlt3") {
 # if unknown
 # patient <- "Biggie"
 # file <- file.choose()
-# area <- bwu::gpluck_locate_areas(
+# area <- NeurotypR::gpluck_locate_areas(
 #   file = file,
 #   pages = c(18,20,18,18,18,22,18)
 # )
@@ -235,7 +235,7 @@ if (params$test == "cvlt3") {
 
 ```{r extract}
 plucked_tables <-
-  bwu::gpluck_extract_tables(
+  NeurotypR::gpluck_extract_tables(
     file = file,
     pages = pages,
     area = area,
@@ -330,7 +330,7 @@ table7 <- table7 |> tidytable::select(all_of(params$keep2))
 ## Create/Insert/Mutate new columns in tables
 
 ```{r mutate1}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   range = "",
   ci_95 = "",
@@ -350,7 +350,7 @@ table1 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate2}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -370,7 +370,7 @@ table2 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate3}
-table3 <- bwu::gpluck_make_columns(
+table3 <- NeurotypR::gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -390,7 +390,7 @@ table3 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate4}
-table4 <- bwu::gpluck_make_columns(
+table4 <- NeurotypR::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -410,7 +410,7 @@ table4 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate5}
-table5 <- bwu::gpluck_make_columns(
+table5 <- NeurotypR::gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -430,7 +430,7 @@ table5 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate6}
-table6 <- bwu::gpluck_make_columns(
+table6 <- NeurotypR::gpluck_make_columns(
   table6,
   range = "",
   ci_95 = "",
@@ -450,7 +450,7 @@ table6 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate7}
-table7 <- bwu::gpluck_make_columns(
+table7 <- NeurotypR::gpluck_make_columns(
   table7,
   score = NA_integer_,
   percentile = 50, # changed this, see if works
@@ -474,13 +474,13 @@ table7 <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r ranges}
-table1 <- bwu::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
-table2 <- bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
-table3 <- bwu::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
-table4 <- bwu::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
-table5 <- bwu::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
-table6 <- bwu::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
-table7 <- bwu::gpluck_make_score_ranges(table = table7, test_type = "npsych_test")
+table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table4 <- NeurotypR::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
+table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table7 <- NeurotypR::gpluck_make_score_ranges(table = table7, test_type = "npsych_test")
 ```
 
 ## Narrow subdomains

@@ -104,8 +104,8 @@ scales <- c(
   "Total ADHD Symptoms"
 )
 
-# Filter the data using the filter_data function from the bwu library
-data_adhd <- bwu::filter_data(data = adhd, domain = domains, scale = scales)
+# Filter the data using the filter_data function from the NeurotypR library
+data_adhd <- NeurotypR::filter_data(data = adhd, domain = domains, scale = scales)
 ```
 
 ```{r}
@@ -129,7 +129,7 @@ data_adhd_self <-
   dplyr::distinct(.keep_all = FALSE)
 
 # Flatten the text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_adhd_self,
   file = "_02-09_adhd_adult_text_self.qmd"
 )
@@ -289,7 +289,7 @@ data_adhd_observer <-
   dplyr::distinct(.keep_all = FALSE)
 
 # Flatten the text
-bwu::cat_neuropsych_results(
+NeurotypR::cat_neuropsych_results(
   data = data_adhd_observer,
   file = "_02-09_adhd_adult_text_observer.qmd"
 )

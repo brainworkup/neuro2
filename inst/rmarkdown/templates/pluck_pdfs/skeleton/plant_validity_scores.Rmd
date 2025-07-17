@@ -212,7 +212,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(bwu)
+library(NeurotypR)
 library(here)
 library(knitr)
 library(magrittr)
@@ -465,7 +465,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- bwu::calc_ci_95(
+ci_values <- NeurotypR::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,

@@ -61,7 +61,7 @@ library(vroom)
 library(glue)
 library(rlang)
 library(NeurotypR)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -177,7 +177,7 @@ if (params$test == "brown_efa_parent") {
 ## Format Tables
 
 ```{r}
-df <- bwu::gpluck_make_columns(
+df <- NeurotypR::gpluck_make_columns(
   data = df,
   test = params$test,
   test_name = params$test_name,
@@ -206,7 +206,7 @@ df <-
 ## Test score ranges
 
 ```{r test-score-ranges}
-df <- bwu::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
+df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
 ```
 
 ## Narrow subdomains

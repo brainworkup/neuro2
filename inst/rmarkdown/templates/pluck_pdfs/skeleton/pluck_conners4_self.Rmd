@@ -68,7 +68,7 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(yaml)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -443,7 +443,7 @@ if (params$test == "conners4_self") {
 ```{r}
 table <- combined_df
 
-table <- bwu::gpluck_make_columns(
+table <- NeurotypR::gpluck_make_columns(
   table,
   test = params$test,
   test_name = params$test_name,
@@ -466,7 +466,7 @@ table <- bwu::gpluck_make_columns(
 ## Range
 
 ```{r}
-table <- bwu::gpluck_make_score_ranges(
+table <- NeurotypR::gpluck_make_score_ranges(
   table = table,
   test_type = "rating_scale"
 )

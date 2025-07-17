@@ -48,7 +48,7 @@ library(widgetframe)
 library(xaringan)
 library(xaringanExtra)
 library(xaringanthemer)
-library(bwu)
+library(NeurotypR)
 library(NeurotypR)
 ## knitr options
 options(htmltools.dir.version = FALSE)

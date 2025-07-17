@@ -105,7 +105,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(vroom)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Patient
@@ -195,7 +195,7 @@ area <- list(
 ## Extract tables
 
 ```{r extract-tables, eval = F}
-plucked_tables <- bwu::gpluck_extract_tables(
+plucked_tables <- NeurotypR::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -257,7 +257,7 @@ df <- df |> dplyr::left_join(lookup_bsra4, by = c("test", "scale"))
 ## Mutate columns
 
 ```{r mutate, eval = T}
-df <- bwu::gpluck_make_columns(
+df <- NeurotypR::gpluck_make_columns(
   df,
   range = "",
   result = ""
@@ -267,7 +267,7 @@ df <- bwu::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- bwu::gpluck_make_score_ranges(
+df <- NeurotypR::gpluck_make_score_ranges(
   table = df,
   test_type = "npsych_test"
   )

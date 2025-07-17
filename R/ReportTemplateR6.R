@@ -137,7 +137,7 @@ ReportTemplateR6 <- R6::R6Class(
           "tidytable",
           "vroom",
           "xfun",
-          "bwu",
+          "NeurotypR",
           "NeurotypR"
         )
       } else {

@@ -5,9 +5,8 @@ library(stringr)
 library(tidyr)
 library(glue)
 library(here)
-
 library(tabulapdf)
-library(bwu) # Assuming this package provides `calc_ci_95()` and `gpluck_make_columns()`
+library(NeurotypR) # Assuming this package provides `calc_ci_95()` and `gpluck_make_columns()`
 
 # Define the function to set test parameters
 set_test_params <- function(
@@ -53,7 +52,7 @@ clean_data <- function(df, params) {
 # Define the function to create confidence intervals
 add_confidence_intervals <- function(df) {
   for (i in seq_len(nrow(df))) {
-    ci_values <- bwu::calc_ci_95(
+    ci_values <- NeurotypR::calc_ci_95(
       ability_score = df$score[i],
       mean = 10,
       standard_deviation = 3,
@@ -84,14 +83,14 @@ merge_with_lookup <- function(df, lookup_table_path) {
     left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) %>%
     relocate(all_of(c("test", "test_name")), .before = "scale")
 
-  df_mutated <- bwu::gpluck_make_columns(
+  df_mutated <- NeurotypR::gpluck_make_columns(
     df_merged,
     range = "",
     result = "",
     absort = NULL
   ) %>%
     mutate(range = NULL) %>%
-    bwu::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
+    NeurotypR::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
     relocate(c(range), .after = percentile)
 
   df_mutated
@@ -208,7 +207,7 @@ merge_with_lookup <- function(df, lookup_table_path) {
   # Ensure the merge was successful and inspect the first few rows for debugging
   print(head(df_merged))
 
-  df_mutated <- bwu::gpluck_make_columns(
+  df_mutated <- NeurotypR::gpluck_make_columns(
     df_merged,
     range = "",
     result = "",
@@ -227,7 +226,7 @@ merge_with_lookup <- function(df, lookup_table_path) {
         TRUE ~ NA_character_ # Default case catches any unexpected values
       )
     ) %>%
-    bwu::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
+    NeurotypR::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
     relocate(c(range), .after = percentile)
 
   # Return the mutated result

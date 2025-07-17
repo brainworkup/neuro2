@@ -12,7 +12,7 @@ License: MIT + file LICENSE.md
 Depends:
     R (>= 4.1)
 Imports:
-    bwu,
+    NeurotypR,
     cli,
     dplyr,
     fs,

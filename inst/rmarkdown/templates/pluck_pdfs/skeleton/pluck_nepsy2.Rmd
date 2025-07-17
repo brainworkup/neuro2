@@ -36,7 +36,7 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(bwu)
+library(NeurotypR)
 # Set JAVA environment
 options(java.parameters = "-Xmx16000m")
 Sys.setenv(JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
@@ -150,13 +150,13 @@ df <- df |> dplyr::relocate(c(patient), .before = test)
 ```
 
 ```{r mutate, eval = T}
-df <- df |> bwu::gpluck_make_columns(ci_95 = "", range = "")
+df <- df |> NeurotypR::gpluck_make_columns(ci_95 = "", range = "")
 ```
 
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 ```
 
 # Glue Results v2

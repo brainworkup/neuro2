@@ -55,7 +55,6 @@
 #' @importFrom glue glue
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
-#' @importFrom bwu gpluck_make_score_ranges gpluck_make_columns
 #'
 #' @examples
 #' \dontrun{
@@ -1250,10 +1249,10 @@ process_rbans_data <- function(
     dplyr::relocate(completion_time_seconds, .after = ci_95_upper)
 
   # Test score ranges
-  if (requireNamespace("bwu", quietly = TRUE)) {
-    df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+  if (requireNamespace("NeurotypR", quietly = TRUE)) {
+    df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
   } else {
-    # Fallback if bwu package is not available
+    # Fallback if NeurotypR package is not available
     df <- df |>
       dplyr::mutate(
         range = dplyr::case_when(
@@ -1313,8 +1312,8 @@ process_rbans_data <- function(
 #' @keywords internal
 add_rbans_metadata <- function(df, test, test_name, patient) {
   # Add basic columns if they don't exist
-  if (requireNamespace("bwu", quietly = TRUE)) {
-    df <- bwu::gpluck_make_columns(
+  if (requireNamespace("NeurotypR", quietly = TRUE)) {
+    df <- NeurotypR::gpluck_make_columns(
       data = df,
       test = test,
       test_name = test_name,
@@ -1335,7 +1334,7 @@ add_rbans_metadata <- function(df, test, test_name, patient) {
       result = ""
     )
   } else {
-    # Fallback if bwu package is not available
+    # Fallback if NeurotypR package is not available
     missing_cols <- setdiff(
       c(
         "test",

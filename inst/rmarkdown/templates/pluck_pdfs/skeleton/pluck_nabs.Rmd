@@ -235,7 +235,7 @@ library(snakecase)
 library(tabulapdf)
 library(tidyverse)
 library(xfun)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -268,7 +268,7 @@ area <- list(
 ```{r areas-get, eval = FALSE}
 # if unknown
 file <- file.choose()
-area2 <- bwu::gpluck_locate_areas(
+area2 <- NeurotypR::gpluck_locate_areas(
   file = file,
   pages = c(2, 5, 6, 7, 8, 8)
 )
@@ -277,7 +277,7 @@ area2 <- bwu::gpluck_locate_areas(
 # Extract tables
 
 ```{r extract}
-plucked_tables <- bwu::gpluck_extract_tables(
+plucked_tables <- NeurotypR::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -510,7 +510,7 @@ table6 <- table6 |> dplyr::select(all_of(params$keep2))
 # Mutate/Format Tables
 
 ```{r mutate1}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   range = "",
   test = params$test,
@@ -530,7 +530,7 @@ table1 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate2}
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -551,7 +551,7 @@ table2 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate3}
-table3 <- bwu::gpluck_make_columns(
+table3 <- NeurotypR::gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -571,7 +571,7 @@ table3 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate4}
-table4 <- bwu::gpluck_make_columns(
+table4 <- NeurotypR::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -591,7 +591,7 @@ table4 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate5}
-table5 <- bwu::gpluck_make_columns(
+table5 <- NeurotypR::gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -612,7 +612,7 @@ table5 <- bwu::gpluck_make_columns(
 ```
 
 ```{r mutate6}
-table6 <- bwu::gpluck_make_columns(
+table6 <- NeurotypR::gpluck_make_columns(
   table6,
   range = "",
   ci_95 = "",
@@ -636,17 +636,17 @@ table6 <- bwu::gpluck_make_columns(
 
 ```{r ranges}
 table1 <-
-  bwu::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
 table2 <-
-  bwu::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 table3 <-
-  bwu::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 table4 <-
-  bwu::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table4, test_type = "npsych_test")
 table5 <-
-  bwu::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 table6 <-
-  bwu::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+  NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Domains
@@ -1473,7 +1473,7 @@ nabs <- nabs |>
 # Compute CI 95%
 
 ```{r}
-library(bwu)
+library(NeurotypR)
 
 df <- nabs
 

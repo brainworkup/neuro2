@@ -75,7 +75,7 @@ library(pdftools)
 library(magrittr)
 library(hablar)
 library(googledrive)
-library(bwu)
+library(NeurotypR)
 library(NeurotypR)
 library(glue)
 ```
@@ -406,8 +406,8 @@ process_and_save_rbans_data <- function(
   df <- bind_rows(df, rbans_composite) |>
     relocate(completion_time_seconds, .after = ci_95_upper)
 
-  # Test score ranges (assuming bwu::gpluck_make_score_ranges is a predefined function)
-  df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+  # Test score ranges (assuming NeurotypR::gpluck_make_score_ranges is a predefined function)
+  df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 
   # Remove prefix from scale names
   df <- df |>
@@ -450,7 +450,7 @@ write_csv(df, output_file_path)
 ```{r mutate}
 rbans <- df
 
-rbans <- bwu::gpluck_make_columns(
+rbans <- NeurotypR::gpluck_make_columns(
   data = rbans,
   test = params$test,
   test_name = params$test_name,

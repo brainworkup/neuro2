@@ -429,7 +429,7 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(yaml)
-library(bwu)
+library(NeurotypR)
 ```
 
 ## Parameters
@@ -1144,7 +1144,7 @@ print(table9)
 ## Mutate
 
 ```{r}
-table1 <- bwu::gpluck_make_columns(
+table1 <- NeurotypR::gpluck_make_columns(
   table1,
   test = params$test,
   test_name = params$test_name,
@@ -1161,7 +1161,7 @@ table1 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table2 <- bwu::gpluck_make_columns(
+table2 <- NeurotypR::gpluck_make_columns(
   table2,
   test = params$test,
   test_name = params$test_name,
@@ -1179,7 +1179,7 @@ table2 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table3 <- bwu::gpluck_make_columns(
+table3 <- NeurotypR::gpluck_make_columns(
   table3,
   test = params$test,
   test_name = params$test_name,
@@ -1197,7 +1197,7 @@ table3 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table4 <- bwu::gpluck_make_columns(
+table4 <- NeurotypR::gpluck_make_columns(
   table4,
   test = params$test,
   test_name = params$test_name,
@@ -1215,7 +1215,7 @@ table4 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table5 <- bwu::gpluck_make_columns(
+table5 <- NeurotypR::gpluck_make_columns(
   table5,
   test = params$test,
   test_name = params$test_name,
@@ -1233,7 +1233,7 @@ table5 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table6 <- bwu::gpluck_make_columns(
+table6 <- NeurotypR::gpluck_make_columns(
   table6,
   test = params$test,
   test_name = params$test_name,
@@ -1251,7 +1251,7 @@ table6 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table7 <- bwu::gpluck_make_columns(
+table7 <- NeurotypR::gpluck_make_columns(
   table7,
   test = params$test,
   test_name = params$test_name,
@@ -1269,7 +1269,7 @@ table7 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table8 <- bwu::gpluck_make_columns(
+table8 <- NeurotypR::gpluck_make_columns(
   table8,
   test = params$test,
   test_name = params$test_name,
@@ -1287,7 +1287,7 @@ table8 <- bwu::gpluck_make_columns(
   result = ""
 )
 
-table9 <- bwu::gpluck_make_columns(
+table9 <- NeurotypR::gpluck_make_columns(
   table9,
   test = params$test,
   test_name = params$test_name,
@@ -1314,7 +1314,7 @@ tables <- list(table1, table2, table3, table4, table5, table6, table7, table8, t
 
 # Apply the function to each table using a for loop
 for (i in seq_along(tables)) {
-  tables[[i]] <- bwu::gpluck_make_score_ranges(table = tables[[i]], test_type = "npsych_test")
+  tables[[i]] <- NeurotypR::gpluck_make_score_ranges(table = tables[[i]], test_type = "npsych_test")
 }
 
 # Optionally, assign the modified tables back to individual variables if needed
@@ -2185,7 +2185,7 @@ if (params$test == "nab") {
 ## 95% CI
 
 ```{r eval=F}
-library(bwu)
+library(NeurotypR)
 
 # Assuming df is your dataframe and calc_ci_95 is your function
 for (i in seq_len(df)) {

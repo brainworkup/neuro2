@@ -223,7 +223,6 @@ gpluck_make_columns <- function(
       score_type = score_type,
       test_type = test_type,
       absort = paste0(tolower(test), "_", seq_len(nrow(data))),
-      # row_names = gsub(" ", "", paste(tolower(test), tolower(scale), sep = "_")),
       description = description,
       result = result,
       ...

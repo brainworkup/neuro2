@@ -347,7 +347,7 @@ library(tidyr)
 library(glue)
 library(dplyr)
 library(readr)
-library(bwu)
+library(NeurotypR)
 library(NeurotypR)
 ```
 
@@ -628,7 +628,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- bwu::calc_ci_95(
+ci_values <- NeurotypR::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,

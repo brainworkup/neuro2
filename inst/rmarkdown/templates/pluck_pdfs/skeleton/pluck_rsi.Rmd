@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(bwu)
+library(NeurotypR)
 library(hablar)
 library(here)
 library(magrittr)
@@ -258,7 +258,7 @@ df_clinical <- df_clinical |> tidytable::slice(
 
 ```{r mutate, eval=FALSE}
 df_clinical <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     table = df_clinical,
     raw_score = "",
     range = "",
@@ -283,7 +283,7 @@ df_clinical <-
 
 ```{r, eval=FALSE}
 df_validity <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     table = df_validity,
     raw_score = "",
     range = "",
@@ -308,7 +308,7 @@ df_validity <-
 
 ```{r, eval=FALSE}
 df_inatt <-
-  bwu::gpluck_make_columns(
+  NeurotypR::gpluck_make_columns(
     table = df_inatt,
     raw_score = "",
     range = "",
@@ -334,15 +334,15 @@ df_inatt <-
 ## Rating Scale score ranges
 
 ```{r ranges, eval=FALSE}
-df_clinical <- bwu::gpluck_make_score_ranges(
+df_clinical <- NeurotypR::gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
 )
-df_validity <- bwu::gpluck_make_score_ranges(
+df_validity <- NeurotypR::gpluck_make_score_ranges(
   table = df_validity,
   test_type = "symptom_validity"
 )
-df_inatt <- bwu::gpluck_make_score_ranges(
+df_inatt <- NeurotypR::gpluck_make_score_ranges(
   table = df_inatt,
   test_type = "rating_scale"
 )
