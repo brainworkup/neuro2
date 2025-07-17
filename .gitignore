@@ -42,3 +42,4 @@ _freeze/
 ..Rcheck/00install.out
 ..Rcheck/R_check_bin/R
 ..Rcheck/R_check_bin/Rscript
+.env

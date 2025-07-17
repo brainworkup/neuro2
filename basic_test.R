@@ -14,12 +14,14 @@ required_packages <- c(
   "quarto",
   "R6",
   "ggplot2",
-  "gt",
-  "NeurotypR"
+  "gt"
 )
+# NeurotypR is optional - the package has fallback mechanisms
+neurotypr_packages <- c("NeurotypR")
 optional_packages <- c("duckdb", "DBI", "future", "furrr")
 missing_packages <- c()
 missing_optional <- c()
+missing_neurotypr <- c()
 
 for (pkg in required_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -30,6 +32,12 @@ for (pkg in required_packages) {
 for (pkg in optional_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     missing_optional <- c(missing_optional, pkg)
+  }
+}
+
+for (pkg in neurotypr_packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    missing_neurotypr <- c(missing_neurotypr, pkg)
   }
 }
 
@@ -47,6 +55,18 @@ if (length(missing_packages) > 0) {
   quit(status = 1)
 } else {
   cat("✅ All required packages are available\n")
+}
+
+if (length(missing_neurotypr) > 0) {
+  cat(
+    "⚠️  Missing NeurotypR package:",
+    paste(missing_neurotypr, collapse = ", "),
+    "\n"
+  )
+  cat("   This package provides enhanced functionality but has fallback mechanisms\n")
+  cat("   The neuro2 package will work without it using built-in alternatives\n")
+} else {
+  cat("✅ NeurotypR package is available\n")
 }
 
 if (length(missing_optional) > 0) {

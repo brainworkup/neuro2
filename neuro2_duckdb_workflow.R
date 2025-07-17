@@ -13,12 +13,19 @@ packages <- c(
   "glue",
   "yaml",
   "quarto",
-  "NeurotypR",
   "R6",
   "duckdb",
   "DBI"
 )
 invisible(lapply(packages, library, character.only = TRUE))
+
+# Load NeurotypR if available, otherwise continue without it
+if (requireNamespace("NeurotypR", quietly = TRUE)) {
+  library(NeurotypR)
+  message("✅ NeurotypR loaded")
+} else {
+  message("⚠️  NeurotypR not available - using built-in alternatives")
+}
 
 # Source R6 classes
 source("R/DomainProcessorR6.R")
