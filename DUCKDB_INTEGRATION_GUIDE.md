@@ -3,6 +3,7 @@
 ## Executive Summary
 
 DuckDB is an in-process SQL database that provides:
+
 - **10-50x faster** queries on CSV files without loading them into memory
 - **90% less memory usage** for large datasets
 - **SQL flexibility** for complex data operations
@@ -316,6 +317,7 @@ processor$process()  # R6 processing logic
 ## Summary
 
 DuckDB + R6 provides the best of both worlds:
+
 - **DuckDB**: Lightning-fast data access without memory overhead
 - **R6**: Efficient object-oriented processing
 - **Together**: 10-50x performance improvement for large datasets
