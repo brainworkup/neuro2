@@ -16,17 +16,7 @@ A list of 45 data frames, each with the following 7 variables:
 \item{upperCI_PR}{Numeric vector of upper confidence interval PR scores.}
 }
 }
-\source{
-\url{[INSERT SOURCE URL HERE]}
-}
-\usage{
-pegboard_dom
-}
 \description{
 A list of multiple data frames representing pegboard dominance data. Each data frame corresponds to a different age group.
 There are 45 data frames in the list, each with 7 variables.
 }
-\references{
-\url{[INSERT REFERENCES URL HERE]}
-}
-\keyword{datasets}

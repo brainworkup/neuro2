@@ -1,57 +1,5 @@
 <summary>
 
-
+Score on this scale ....
 
 </summary>
-- Self-reported Negative Self-Concept (i.e., poor social relationships, low self-esteem and self confidence) was Exceptionally High.
-
-Corey's score on Inattention (INATTN) Index () was Exceptionally High.
-#NAME?
-- Self-reported ADHD Inattentive Symptoms (i.e., behave in a manner consistent with the DSM-5 Inattentive Presentation of ADHD) was Above Average.
-
-- Self-reported Inattention/Executive Dysfunction (i.e., trouble concentrating, difficulty planning or completing tasks, forgetfulness, absent-mindedness, being disorganized) was Above Average.
-
-- Self-reported Total ADHD Symptoms (i.e., behave in a manner consistent with the DSM-5 diagnostic criteria for Combined Presentation of ADHD) was Above Average.
-
-- Self-reported CAARS 2-ADHD Index (i.e., a composite indicator for identifying individuals 'at-risk' for ADHD) indicated a probability of 88% of having adult ADHD.
-
-#NAME?
-- Self-reported ADHD Hyperactive/Impulsive Symptoms (i.e., behave in a manner consistent with the DSM-5 Hyperactive-Impulsive Presentation of ADHD) was High Average.
-
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-- AJ's overall level of executive functioning was Low Average.
-#NAME?
-- Inhibitory Control (i.e., control behavior or impulses, including thinking about consequences before acting, maintaining self-control, and thinking before speaking) was Below Average
-- Self-reported Negative Self-Concept (i.e., poor social relationships, low self-esteem and self confidence) was Exceptionally High.
-
-Corey's score on Inattention (INATTN) Index () was Exceptionally High.
-#NAME?
-- Self-reported ADHD Inattentive Symptoms (i.e., behave in a manner consistent with the DSM-5 Inattentive Presentation of ADHD) was Above Average.
-
-- Self-reported Inattention/Executive Dysfunction (i.e., trouble concentrating, difficulty planning or completing tasks, forgetfulness, absent-mindedness, being disorganized) was Above Average.
-
-- Self-reported Total ADHD Symptoms (i.e., behave in a manner consistent with the DSM-5 diagnostic criteria for Combined Presentation of ADHD) was Above Average.
-
-- Self-reported CAARS 2-ADHD Index (i.e., a composite indicator for identifying individuals 'at-risk' for ADHD) indicated a probability of 88% of having adult ADHD.
-
-#NAME?
-- Self-reported ADHD Hyperactive/Impulsive Symptoms (i.e., behave in a manner consistent with the DSM-5 Hyperactive-Impulsive Presentation of ADHD) was High Average.
-
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-#NAME?
-- AJ's overall level of executive functioning was Low Average.
-#NAME?
-- Inhibitory Control (i.e., control behavior or impulses, including thinking about consequences before acting, maintaining self-control, and thinking before speaking) was Below Average

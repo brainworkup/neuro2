@@ -73,7 +73,11 @@ utils::globalVariables(c(
   "pct3",
   "abbrev",
   "`%||%`",
-  "`:=`"
+  "`:=`",
+  "V2",
+  "col2_paren",
+  "index_pages",
+  "subtest_pages"
 ))
 
 #' @importFrom utils str

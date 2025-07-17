@@ -40,10 +40,6 @@ A data frame with unknown rows and 26 or so variables:
 \item{z_sd_timed}{Standard deviation of Z-score for timed score.}
 }
 }
-\usage{
-neurocog
-}
 \description{
 A dataset containing neuropsych data.
 }
-\keyword{datasets}

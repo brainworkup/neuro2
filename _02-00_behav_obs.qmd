@@ -1,17 +1,36 @@
+## Mental Status/Behavioral Observations
 
-## Behavioral Observations
+<!-- **Information to Include in Behavioral Observations Section**
+• Note significant patterns of performance that occurred during testing
+• Sequence information in order of importance
+• Provide specific examples of examinee’s behavior
+Following are examples of information that may be included:
+**Appearance**
+• Size: height and weight
+• Facial characteristics
+• Grooming and cleanliness
+• Clothing style
+• Does the person look his or her chronological age?
+**Behavior**
+• Level of eye contact
+• Does he or she initiate conversation or merely answer examiner’s questions?
+• Speech articulation and language patterns
+• Attention span/distractibility (Does he or she ask for items to be repeated?)
+• Activity level (excessive talking, standing, foot wiggling, etc.)
+• Level of cooperativeness
+• Motivation to do well
+• How does the examinee go about solving problems?
+• How does the examinee react to failure or difficult tasks?
+• Examinee’s need for approval and response to positive praise
+**Validity of Test Results**
+• Statements such as, “Results of this assessment are considered a valid reflection of Mark’s current level of functioning.”
+• If results are felt to be invalid, explain why. -->
 
-{{< var patient >}} presented as alert and oriented to person, place, time, and situation. {{< var he_she_cap >}} was appropriately dressed and groomed, and appeared {{< var his_her >}} stated age of {{< var age >}} years. {{< var he_she_cap >}} was cooperative throughout the evaluation and appeared to put forth adequate effort on all tasks.
-
-### Mental Status
-
-- **Attention/Orientation**: Fully oriented ×4 (person, place, time, situation)
-- **Appearance**: Well-groomed, appropriately dressed
-- **Behavior/Attitude**: Cooperative, engaged, appropriate eye contact
-- **Speech/Language**: Fluent, normal rate and prosody
-- **Mood/Affect**: Euthymic mood with congruent affect
-- **Thought Process**: Linear, goal-directed
-- **Thought Content**: No evidence of delusions or hallucinations
-- **Insight/Judgment**: Fair to good
-- **Effort/Validity**: Adequate effort demonstrated on embedded validity measures
-
+- **Attention/Orientation**: Orientation to person, place, time, and situation was intact.
+- **Appearance**: Appropriate grooming and dress for context.
+- **Behavior/Attitude**: Cooperative, engaged. No gross behavioral apathy or disinhibition observed.
+- **Speech/Language**: Fluent and normal in rate, volume, and prosody.
+- **Mood/Affect**: Neutral, range was full and appropriate.
+- **Sensory/Motor**: Performance was not limited by any obvious sensory or motor difficulties.
+- **Cognitive Process**: Coherent and goal directed.
+- **Effort/Validity**: Normal; TOMM Trial 1 = 48/50, TOMM Trial 2 = 50/50, RDS = >6, DCT = 4.3.

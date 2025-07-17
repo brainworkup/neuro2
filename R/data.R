@@ -13,7 +13,9 @@
 #'   \item{sd}{standard deviation of score}
 #'   \item{normValue}{T score fot dot counting task}
 #' }
-"dots"
+#' @name dots
+#' @docType data
+NULL
 
 #' neurocog dataset
 #'
@@ -53,7 +55,9 @@
 #'   \item{z_mean_timed}{Mean Z-score for timed score.}
 #'   \item{z_sd_timed}{Standard deviation of Z-score for timed score.}
 #' }
-"neurocog"
+#' @name neurocog
+#' @docType data
+NULL
 
 
 #' pegboard_dom dataset
@@ -71,6 +75,6 @@
 #'   \item{lowerCI_PR}{Numeric vector of lower confidence interval PR scores.}
 #'   \item{upperCI_PR}{Numeric vector of upper confidence interval PR scores.}
 #' }
-#' @source \url{[INSERT SOURCE URL HERE]}
-#' @references \url{[INSERT REFERENCES URL HERE]}
-"pegboard_dom"
+#' @name pegboard_dom
+#' @docType data
+NULL

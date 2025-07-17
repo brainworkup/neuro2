@@ -20,13 +20,9 @@ A data frame with several rows and 8 variables:
 \item{normValue}{T score fot dot counting task}
 }
 }
-\usage{
-dots
-}
 \description{
 Dot Counting Task from NIH EXAMINER
 A dataset containing dot counting task data.
 The variables are as follows:
 raw age percentile n m md sd normValue
 }
-\keyword{datasets}
