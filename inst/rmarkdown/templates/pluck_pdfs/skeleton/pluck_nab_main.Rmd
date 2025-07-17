@@ -526,7 +526,7 @@ areas <- tabulapdf::locate_areas(
 ```{r}
 # Saves areas as text files in df or list
 # Convert the list to a data frame
-areas_df <- do.call(rbind, lapply(areas, function(x) as.data.frame(t(x))))
+areas_df <- dplyr::bind_rows(lapply(areas, function(x) as.data.frame(t(x))))
 
 # Write the data frame to a text file
 write.table(areas_df,

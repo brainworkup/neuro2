@@ -172,7 +172,7 @@ extracted_data <- extract_data(
   wisc5_params$pages,
   wisc5_params$extract_columns
 )
-df <- do.call(rbind, lapply(extracted_data, data.frame)) # Convert and combine extracted areas to data frame
+df <- dplyr::bind_rows(lapply(extracted_data, data.frame)) # Convert and combine extracted areas to data frame
 df_clean <- clean_data(df, wisc5_params) # Clean data
 df_with_ci <- add_confidence_intervals(df_clean) # Add confidence intervals
 

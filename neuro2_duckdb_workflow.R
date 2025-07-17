@@ -19,6 +19,9 @@ packages <- c(
 )
 invisible(lapply(packages, library, character.only = TRUE))
 
+# Source utility functions
+source("R/utils.R")
+
 # Load NeurotypR if available, otherwise continue without it
 if (requireNamespace("NeurotypR", quietly = TRUE)) {
   library(NeurotypR)
@@ -276,7 +279,7 @@ message("\n⚡ Step 6: Performance comparison...")
 
 # Traditional approach timing
 traditional_time <- system.time({
-  data_trad <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
+  data_trad <- safe_read_csv("data/neurocog.csv")
   iq_trad <- data_trad %>% filter(domain == "General Cognitive Ability")
 })
 
