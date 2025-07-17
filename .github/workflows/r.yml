@@ -10,9 +10,9 @@ name: R
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        r-version: ['4.1.1']
+        r-version: ["4.5.1"]
 
     steps:
       - uses: actions/checkout@v4
@@ -31,8 +31,9 @@ jobs:
         with:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
+        timeout-minutes: 30
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck"), upgrade = "never")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
