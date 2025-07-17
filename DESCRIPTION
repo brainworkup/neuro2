@@ -14,7 +14,9 @@ Depends:
 Imports:
     NeurotypR,
     cli,
+    DBI,
     dplyr,
+    duckdb,
     fs,
     future,
     future.apply,
