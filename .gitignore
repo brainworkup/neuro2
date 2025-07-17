@@ -8,7 +8,6 @@ inst/doc
 .specstory/.gitignore
 reports/
 reports*/
-
 /.quarto/
 gen_report_R6_cache/
 report_template_demo_files/
@@ -17,7 +16,6 @@ report_template_demo_files/
 *.pdf
 *.html
 .history/
-
 # google drive
 Icon
 /Icon/
@@ -43,3 +41,4 @@ _freeze/
 ..Rcheck/R_check_bin/R
 ..Rcheck/R_check_bin/Rscript
 .env
+renv
