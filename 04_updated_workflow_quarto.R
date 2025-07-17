@@ -9,7 +9,7 @@ library(quarto)
 
 # STEP 1: Update Variables YAML with Patient Information
 update_variables_yaml <- function(
-  patient_name = "Biggie",
+  patient = "Biggie",
   first_name = "Biggie",
   last_name = "Smalls",
   age = 44,
@@ -20,7 +20,7 @@ update_variables_yaml <- function(
   variables <- yaml::read_yaml("_variables.yml")
 
   # Update with new patient information
-  variables$patient <- patient_name
+  variables$patient <- patient
   variables$first_name <- first_name
   variables$last_name <- last_name
   variables$age <- age
@@ -117,15 +117,21 @@ create_domain_qmd_file <- function(data, domain_name, file_base) {
   }
 
   # Build the content using paste to avoid glue parsing issues
+  # For ADHD, don't include the text file at the top
+  qmd_content <- paste0("## ", domain_name, " {#sec-", section_id, "}\n\n")
+
+  # Only include the text file if it's not ADHD
+  if (file_base != "_02-09_adhd_adult") {
+    qmd_content <- paste0(
+      qmd_content,
+      "{{< include ",
+      file_base,
+      "_text.qmd >}}\n\n"
+    )
+  }
+
   qmd_content <- paste0(
-    "## ",
-    domain_name,
-    " {#sec-",
-    section_id,
-    "}\n\n",
-    "{{< include ",
-    file_base,
-    "_text.qmd >}}\n\n",
+    qmd_content,
     "```{r}\n",
     "#| label: setup-",
     section_id,
@@ -198,6 +204,17 @@ create_domain_qmd_file <- function(data, domain_name, file_base) {
     ")\n",
     "```\n"
   )
+
+  # For ADHD, add self-report and observer report sections at the end
+  if (file_base == "_02-09_adhd_adult") {
+    qmd_content <- paste0(
+      qmd_content,
+      "\n### Self-Report\n\n",
+      "{{< include _02-09_adhd_adult_text_self.qmd >}}\n\n",
+      "### Observer Report\n\n",
+      "{{< include _02-09_adhd_adult_text_observer.qmd >}}\n"
+    )
+  }
 
   # Write to root directory
   writeLines(qmd_content, paste0(file_base, ".qmd"))

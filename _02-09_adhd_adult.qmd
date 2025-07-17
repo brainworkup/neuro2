@@ -106,14 +106,6 @@ dotplot_subdomain <- DotplotR6$new(
 dotplot_subdomain$create_plot()
 ```
 
-### Self-Report
-
-{{< include _02-09_adhd_adult_text_self.qmd >}}
-
-### Observer Report
-
-{{< include _02-09_adhd_adult_text_observer.qmd >}}
-
 ```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
@@ -157,3 +149,11 @@ dotplot_subdomain$create_plot()
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
+
+### Self-Report
+
+{{< include _02-09_adhd_adult_text_self.qmd >}}
+
+### Observer Report
+
+{{< include _02-09_adhd_adult_text_observer.qmd >}}

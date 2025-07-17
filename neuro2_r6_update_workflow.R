@@ -418,6 +418,17 @@ update_domain_file_with_r6 <- function(domain_info) {
     "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
     "```\n"
   )
+  
+  # For ADHD, add self-report and observer report sections
+  if (domain_info$pheno == "adhd_adult") {
+    qmd_content <- paste0(
+      qmd_content,
+      "\n### Self-Report\n\n",
+      "{{< include _02-09_adhd_adult_text_self.qmd >}}\n\n",
+      "### Observer Report\n\n",
+      "{{< include _02-09_adhd_adult_text_observer.qmd >}}\n"
+    )
+  }
 
   # Write the updated file
   writeLines(qmd_content, qmd_file)
