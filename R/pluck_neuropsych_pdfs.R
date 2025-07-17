@@ -54,7 +54,6 @@
 #' @importFrom stringr str_remove_all
 #' @importFrom glue glue
 #' @importFrom readr read_csv write_excel_csv
-#' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
 #' @importFrom utils write.csv
 #'
 #' @examples
@@ -200,7 +199,7 @@ extract_wisc5_data <- function(
     )
 
     for (i in seq_len(nrow(df))) {
-      ci_values <- NeurotypR::calc_ci_95(
+      ci_values <- calc_ci_95(
         ability_score = df$score[i],
         mean = ci_params$mean,
         standard_deviation = ci_params$sd,
@@ -1252,26 +1251,7 @@ process_rbans_data <- function(
     dplyr::relocate(completion_time_seconds, .after = ci_95_upper)
 
   # Test score ranges
-  if (requireNamespace("NeurotypR", quietly = TRUE)) {
-    df <- NeurotypR::gpluck_make_score_ranges(
-      table = df,
-      test_type = "npsych_test"
-    )
-  } else {
-    # Fallback if NeurotypR package is not available
-    df <- df |>
-      dplyr::mutate(
-        range = dplyr::case_when(
-          percentile >= 98 ~ "Exceptionally High",
-          percentile >= 91 ~ "Above Average",
-          percentile >= 75 ~ "High Average",
-          percentile >= 25 ~ "Average",
-          percentile >= 9 ~ "Low Average",
-          percentile >= 2 ~ "Below Average",
-          TRUE ~ "Exceptionally Low"
-        )
-      )
-  }
+  df <- gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 
   # Remove prefix from scale names
   df <- df |>
@@ -1318,61 +1298,26 @@ process_rbans_data <- function(
 #' @keywords internal
 add_rbans_metadata <- function(df, test, test_name, patient) {
   # Add basic columns if they don't exist
-  if (requireNamespace("NeurotypR", quietly = TRUE)) {
-    df <- NeurotypR::gpluck_make_columns(
-      data = df,
-      test = test,
-      test_name = test_name,
-      ci_95 = ifelse(
-        !is.na(df$ci_95_lower) & !is.na(df$ci_95_upper),
-        paste0(df$ci_95_lower, "-", df$ci_95_upper),
-        ""
-      ),
-      domain = "",
-      subdomain = "",
-      narrow = "",
-      pass = "",
-      verbal = "",
-      timed = "",
-      test_type = "npsych_test",
-      score_type = "",
-      description = "",
-      result = ""
-    )
-  } else {
-    # Fallback if NeurotypR package is not available
-    missing_cols <- setdiff(
-      c(
-        "test",
-        "test_name",
-        "ci_95",
-        "domain",
-        "subdomain",
-        "narrow",
-        "pass",
-        "verbal",
-        "timed",
-        "test_type",
-        "score_type",
-        "description",
-        "result"
-      ),
-      names(df)
-    )
-
-    for (col in missing_cols) {
-      df[[col]] <- ""
-    }
-
-    df$test <- test
-    df$test_name <- test_name
-    df$ci_95 <- ifelse(
+  df <- gpluck_make_columns(
+    data = df,
+    test = test,
+    test_name = test_name,
+    ci_95 = ifelse(
       !is.na(df$ci_95_lower) & !is.na(df$ci_95_upper),
       paste0(df$ci_95_lower, "-", df$ci_95_upper),
       ""
-    )
-    df$test_type <- "npsych_test"
-  }
+    ),
+    domain = "",
+    subdomain = "",
+    narrow = "",
+    pass = "",
+    verbal = "",
+    timed = "",
+    test_type = "npsych_test",
+    score_type = "",
+    description = "",
+    result = ""
+  )
 
   # Add domain information
   df <- df |>

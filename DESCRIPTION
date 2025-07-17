@@ -1,7 +1,7 @@
 Type: Package
 Package: neuro2
 Title: Quarto + Typst Report Generator
-Version: 0.1.3
+Version: 0.1.4
 Authors@R:
     person("Joey", "Trampush", , "joey.trampush@brainworkup.org", role = c("aut", "cre"))
 Author: Joey Trampush [aut, cre]
@@ -10,7 +10,7 @@ Description: Provides Quarto .qmd and Typst .typ templates for
     neuropsychological evaluation data processing and report generation.
 License: MIT + file LICENSE
 Depends:
-    R (>= 4.1)
+    R (>= 4.5)
 Imports:
     cli,
     DBI,
@@ -31,7 +31,6 @@ Imports:
     kableExtra,
     knitr,
     memoise,
-    NeurotypR,
     progress,
     purrr,
     quarto (>= 1.4.0),

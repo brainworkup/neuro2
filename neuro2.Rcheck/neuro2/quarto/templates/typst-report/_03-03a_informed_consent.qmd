@@ -1,9 +1,0 @@
-## Notification/Informed Consent
-
-{{< var first_name >}} {{< var last_name >}} consented to undergo the current neuropsychological evaluation as part of a work-up for current legal proceedings. {{< var mr_mrs >}} {{< var last_name >}} was informed that none of what we discussed would remain confidential, and information {{< var he_she >}} provided during our meeting and the test results from my evaluation of {{< var him_her >}} would become a part of my report, to be used at {{< var his_her >}} attorney's discretion. {{< var he_she_cap >}} was informed a copy of any report I produced would be sent to {{< var his_her >}} attorney, possibly to the prosecuting attorney, and to the court. {{< var mr_mrs >}} {{< var last_name >}} indicated having understood the purpose of the evaluation and the limitations of confidentiality of our meeting and the testing I conducted.
-
-This report is based on a review of available information contained in medical records and criminal records, consultation with attorney {{< var attorney >}}, and information gathered during the evaluation.
-I reserve the right to change my opinions about the following should I be provided additional records that alter my understanding of the findings.
-[^1]
-
-[^1]: Please note my current employer, Keck School of Medicine of USC, is neither involved in nor affiliated with this case, and that the patient was referred to me by {{< var his_her >}} attorney's office.
