@@ -268,11 +268,37 @@ WHERE z IS NOT NULL",
 
       # Create processor
       if (processor_class == "DomainProcessorR6") {
+        # Create a clean phenotype name from domain
+        pheno <- tolower(gsub(" ", "_", domain))
+        
+        # Map common domains to their expected phenotype names
+        pheno_map <- c(
+          "general_cognitive_ability" = "iq",
+          "memory" = "memory",
+          "attention/executive" = "executive",
+          "verbal/language" = "verbal",
+          "visuospatial" = "spatial",
+          "academic_skills" = "academics",
+          "motor" = "motor",
+          "social_cognition" = "social",
+          "adhd" = "adhd",
+          "emotional/personality" = "emotion",
+          "adaptive_behavior" = "adaptive"
+        )
+        
+        # Use mapped name if available
+        if (pheno %in% names(pheno_map)) {
+          pheno <- pheno_map[pheno]
+        }
+        
         processor <- DomainProcessorR6$new(
           domains = domain,
-          pheno = tolower(gsub(" ", "_", domain)),
-          input_file = NULL # We'll inject data directly
+          pheno = pheno,
+          input_file = "data/neurocog.csv", # Set a default for compatibility
+          output_dir = "data"
         )
+        
+        # Inject the queried data
         processor$data <- data
       }
 

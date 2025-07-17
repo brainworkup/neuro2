@@ -51,12 +51,14 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param test_filters List of test filters for different report types (default: NULL).
     #'
     #' @return A new DomainProcessorR6 object
-    initialize = function(domains,
-                          pheno,
-                          input_file,
-                          output_dir = "data",
-                          scale_source = NULL,
-                          test_filters = NULL) {
+    initialize = function(
+      domains,
+      pheno,
+      input_file,
+      output_dir = "data",
+      scale_source = NULL,
+      test_filters = NULL
+    ) {
       self$domains <- domains
       self$pheno <- pheno
       self$input_file <- input_file
@@ -100,6 +102,17 @@ DomainProcessorR6 <- R6::R6Class(
     #'
     #' @return Invisibly returns self for method chaining.
     load_data = function() {
+      # Skip loading if data already exists (e.g., injected from DuckDB)
+      if (!is.null(self$data)) {
+        message("Data already loaded, skipping file read.")
+        return(invisible(self))
+      }
+
+      # Check if input_file is provided
+      if (is.null(self$input_file)) {
+        stop("No input file specified and no data pre-loaded.")
+      }
+
       self$data <- readr::read_csv(self$input_file)
       invisible(self)
     },
@@ -405,9 +418,11 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param output_file Output file path (default: NULL, will generate based on domain).
     #' @param report_type Type of report to generate (default: "self").
     #' @return The path to the generated file.
-    generate_domain_text_qmd = function(domain_name = NULL,
-                                        output_file = NULL,
-                                        report_type = "self") {
+    generate_domain_text_qmd = function(
+      domain_name = NULL,
+      output_file = NULL,
+      report_type = "self"
+    ) {
       # Use the first domain if domain_name not provided
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -478,9 +493,11 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param report_types Vector of report types to generate (default: c("self")).
     #' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
     #' @return Invisibly returns self for method chaining.
-    process = function(generate_reports = TRUE,
-                       report_types = c("self"),
-                       generate_domain_files = FALSE) {
+    process = function(
+      generate_reports = TRUE,
+      report_types = c("self"),
+      generate_domain_files = FALSE
+    ) {
       # Run the complete pipeline
       self$load_data()
       self$filter_by_domain()

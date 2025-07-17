@@ -60,7 +60,7 @@ source("01_import_process_data.R")
 
 # New way (5-10x faster):
 load_data_duckdb(
-  file_path = "path/to/csvs",
+  file_path = "data-raw/csv",
   output_dir = "data",
   use_duckdb = TRUE
 )
