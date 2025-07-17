@@ -229,7 +229,7 @@ Processed data for the domain
 \if{html}{\out{<a id="method-DuckDBProcessorR6-calculate_z_stats"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-calculate_z_stats}{}}}
 \subsection{Method \code{calculate_z_stats()}}{
-Calculate z-score statistics using SQL.
+Calculate z-score statistics using SQL (optimized for DuckDB).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$calculate_z_stats(table_name, group_vars)}\if{html}{\out{</div>}}
 }

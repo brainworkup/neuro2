@@ -8,7 +8,8 @@ load_data_duckdb(
   file_path,
   output_dir = here::here("data"),
   return_data = FALSE,
-  use_duckdb = TRUE
+  use_duckdb = TRUE,
+  patient = NULL
 )
 }
 \arguments{
