@@ -55,6 +55,7 @@
 #' @importFrom glue glue
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
+#' @importFrom utils write.csv
 #'
 #' @examples
 #' \dontrun{
@@ -839,6 +840,8 @@ pluck_wiat4 <- function(
 #' @importFrom readr read_csv write_excel_csv write_csv locale
 #' @import dplyr
 #' @import stringr
+#' @importFrom stats setNames
+#' @importFrom utils write.csv
 #'
 #' @return A data frame containing the processed RBANS data
 #' @export

@@ -34,7 +34,7 @@ load_data_duckdb <- function(
     return(load_data(file_path, output_dir, return_data))
   }
 
-  message("🦆 Loading data with DuckDB...")
+  message("[DuckDB] Loading data with DuckDB...")
 
   # Initialize DuckDB
   con <- DBI::dbConnect(duckdb::duckdb())
@@ -177,8 +177,8 @@ load_data_duckdb <- function(
       readr::write_excel_csv(result_list[[name]], file_paths[[name]])
     }
 
-    message("✅ Successfully wrote files to: ", output_dir)
-    message("🦆 DuckDB processing complete!")
+    message("[OK] Successfully wrote files to: ", output_dir)
+    message("[DuckDB] DuckDB processing complete!")
 
     return(invisible(NULL))
   }
@@ -318,7 +318,7 @@ run_example_query <- function(query_name, data_dir = "data") {
     )
   }
 
-  message("🦆 Running query: ", query_name)
+  message("[DuckDB] Running query: ", query_name)
   result <- query_neuropsych(queries[[query_name]], data_dir)
 
   return(result)

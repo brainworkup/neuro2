@@ -10,10 +10,6 @@ DomainProcessorR6       DomainProcessorR6 Class
 dotplot                 Create Dotplot for Neurocognitive Domains,
                         Version 2 (Function Wrapper)
 DotplotR6               DotplotR6 Class
-dots                    Dot Counting Task from NIH EXAMINER A dataset
-                        containing dot counting task data. The
-                        variables are as follows: raw age percentile n
-                        m md sd normValue
 drilldown               Drilldown on Neuropsych Domains (Function
                         Wrapper)
 DrilldownR6             DrilldownR6 Class
@@ -51,13 +47,11 @@ load_data_duckdb        Load neuropsychological data using DuckDB for
                         efficient processing
 merge_subtests          Function to merge multiple CSV files from the
                         same test
-neurocog                neurocog dataset
 NeuropsychReportSystemR6
                         NeuropsychReportSystemR6 Class
 NeuropsychResultsR6     NeuropsychResultsR6 Class
 parallel_map            Parallel Processing Helper
 pdf_02_filter_lines     Filter lines in a PDF file
-pegboard_dom            pegboard_dom dataset
 pluck_wiat4             Extract and Process WIAT-4 Test Results
 process_domain_data     Process Neuropsychological Domain Data
                         (Function Wrapper)

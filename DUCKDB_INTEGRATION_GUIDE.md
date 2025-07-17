@@ -161,7 +161,7 @@ domain_report <- ddb$query("
 ")
 ```
 
-### 4. Use dplyr Syntax with DuckDB
+### 4. Use `dplyr` Syntax with DuckDB
 ```r
 # Create lazy table reference
 neurocog_tbl <- ddb$query_lazy("neurocog")

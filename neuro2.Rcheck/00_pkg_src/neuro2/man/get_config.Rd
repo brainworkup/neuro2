@@ -6,16 +6,13 @@
 \usage{
 get_config()
 }
-\arguments{
-\item{key}{Configuration key to retrieve}
-
-\item{default}{Default value if key is not found}
-}
 \value{
-Configuration value or default
+A configuration environment object with a get method
 }
 \description{
 Retrieves configuration settings for the package.
 This function provides a centralized way to access configuration options.
+It returns a configuration object with a get method that can be used to
+retrieve specific configuration values.
 }
 \keyword{internal}

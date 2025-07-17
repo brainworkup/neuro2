@@ -55,6 +55,7 @@
 #' @importFrom glue glue
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom NeurotypR calc_ci_95 gpluck_make_columns gpluck_make_score_ranges
+#' @importFrom utils write.csv
 #'
 #' @examples
 #' \dontrun{
@@ -230,14 +231,14 @@ extract_wisc5_data <- function(
     dplyr::mutate(test = "wisc5") |>
     dplyr::left_join(lookup_table, by = c("test", "scale")) |>
     dplyr::relocate(c(test, test_name), .before = scale) |>
-    NeurotypR::gpluck_make_columns()
+    gpluck_make_columns()
 
   # Initialize range column with empty strings to avoid recycling issues
   df_merged <- df_merged |> dplyr::mutate(range = "")
 
   # Apply score ranges - using the test_type parameter only
   df_merged <- df_merged |>
-    NeurotypR::gpluck_make_score_ranges(test_type = "npsych_test") |>
+    gpluck_make_score_ranges(test_type = "npsych_test") |>
     dplyr::relocate(range, .after = percentile)
 
   # Generate descriptive text
@@ -839,6 +840,8 @@ pluck_wiat4 <- function(
 #' @importFrom readr read_csv write_excel_csv write_csv locale
 #' @import dplyr
 #' @import stringr
+#' @importFrom stats setNames
+#' @importFrom utils write.csv
 #'
 #' @return A data frame containing the processed RBANS data
 #' @export
@@ -1250,7 +1253,10 @@ process_rbans_data <- function(
 
   # Test score ranges
   if (requireNamespace("NeurotypR", quietly = TRUE)) {
-    df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+    df <- NeurotypR::gpluck_make_score_ranges(
+      table = df,
+      test_type = "npsych_test"
+    )
   } else {
     # Fallback if NeurotypR package is not available
     df <- df |>

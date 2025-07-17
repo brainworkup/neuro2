@@ -4,6 +4,7 @@
 #' processes the data, merges with a lookup table, and calculates score ranges and text descriptions.
 #' This is a legacy version being phased out in favor of the unified extraction system.
 #'
+#' @importFrom utils write.csv
 #' @param patient Character string with patient name
 #' @param test Character string identifying the test type (e.g., "wisc5", "wais5")
 #' @param test_name Character string with the full test name (e.g., "WISC-V", "WAIS-5")

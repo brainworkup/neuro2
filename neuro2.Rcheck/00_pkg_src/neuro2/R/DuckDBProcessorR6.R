@@ -134,7 +134,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       DBI::dbExecute(self$con, query)
       self$tables[[table_name]] <- file_path
 
-      message(paste("✅ Registered", table_name, "from", basename(file_path)))
+      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
 
       invisible(self)
     },
@@ -270,7 +270,7 @@ WHERE z IS NOT NULL",
       if (processor_class == "DomainProcessorR6") {
         # Create a clean phenotype name from domain
         pheno <- tolower(gsub(" ", "_", domain))
-        
+
         # Map common domains to their expected phenotype names
         pheno_map <- c(
           "general_cognitive_ability" = "iq",
@@ -285,19 +285,19 @@ WHERE z IS NOT NULL",
           "emotional/personality" = "emotion",
           "adaptive_behavior" = "adaptive"
         )
-        
+
         # Use mapped name if available
         if (pheno %in% names(pheno_map)) {
           pheno <- pheno_map[pheno]
         }
-        
+
         processor <- DomainProcessorR6$new(
           domains = domain,
           pheno = pheno,
           input_file = "data/neurocog.csv", # Set a default for compatibility
           output_dir = "data"
         )
-        
+
         # Inject the queried data
         processor$data <- data
       }

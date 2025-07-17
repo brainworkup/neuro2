@@ -1,3 +1,4 @@
+neuro2-package	neuro2-package
 %||%	neurotypr_utils
 add_rbans_metadata	add_rbans_metadata
 batch_process	batch_process
@@ -10,7 +11,6 @@ create_temp_dir	create_temp_dir
 DomainProcessorR6	DomainProcessorR6
 dotplot	dotplot
 DotplotR6	DotplotR6
-dots	dots
 drilldown	drilldown
 DrilldownR6	DrilldownR6
 DuckDBProcessorR6	DuckDBProcessorR6
@@ -29,17 +29,19 @@ gpluck_extract_tables	gpluck_extract_tables
 gpluck_locate_areas	gpluck_locate_areas
 gpluck_make_columns	gpluck_make_columns
 gpluck_make_score_ranges	gpluck_make_score_ranges
+iq	iq
 IQReportGeneratorR6	IQReportGeneratorR6
 load_data	load_data
 load_data_duckdb	load_data_duckdb
 merge_subtests	merge_subtests
-neurocog	neurocog
+neuro2	neuro2-package
+neurobehav	neurobehav
+neuropsych	neuropsych
 NeuropsychReportSystemR6	NeuropsychReportSystemR6
 NeuropsychResultsR6	NeuropsychResultsR6
 neurotypr_utils	neurotypr_utils
 parallel_map	parallel_map
 pdf_02_filter_lines	pdf_02_filter_lines
-pegboard_dom	pegboard_dom
 pluck_wiat4	pluck_wiat4
 process_domain_data	process_domain_data
 process_rbans_data	process_rbans_data
@@ -63,4 +65,5 @@ tbl_gt2	tbl_gt2
 TemplateContentManagerR6	TemplateContentManagerR6
 time_it	time_it
 validate_data_structure	validate_data_structure
+validity	validity
 with_progress	with_progress

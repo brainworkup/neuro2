@@ -204,7 +204,8 @@ if (nrow(domain_summary_viz) > 0) {
     y = "domain",
     filename = "output/duckdb_domain_summary.svg",
     theme = "fivethirtyeight",
-    point_size = 8
+    point_size = 8,
+    create.dir = TRUE
   )
 
   plot <- dotplot$create_plot()

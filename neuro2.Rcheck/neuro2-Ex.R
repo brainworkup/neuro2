@@ -1,6 +1,18 @@
 pkgname <- "neuro2"
 source(file.path(R.home("share"), "R", "examples-header.R"))
 options(warn = 1)
+base::assign(".ExTimings", "neuro2-Ex.timings", pos = 'CheckExEnv')
+base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+base::assign(".format_ptime",
+function(x) {
+  if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
+  if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
+  options(OutDec = '.')
+  format(x[1L:3L], digits = 7L)
+},
+pos = 'CheckExEnv')
+
+### * </HEADER>
 library('neuro2')
 
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -11,6 +23,7 @@ nameEx("ReportUtilitiesR6")
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: ReportUtilitiesR6
 ### Title: Report Utilities for Neuropsychological Assessment
 ### Aliases: ReportUtilitiesR6
@@ -53,12 +66,15 @@ report_utils$render_report(
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("ReportUtilitiesR6", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("TemplateContentManagerR6")
 ### * TemplateContentManagerR6
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: TemplateContentManagerR6
 ### Title: Template Content Manager for Neuropsychological Reports
 ### Aliases: TemplateContentManagerR6
@@ -83,12 +99,15 @@ if (!is.null(iq_content)) {
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("TemplateContentManagerR6", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("concatenate_results")
 ### * concatenate_results
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: concatenate_results
 ### Title: Concatenate Results
 ### Aliases: concatenate_results
@@ -108,12 +127,15 @@ concatenate_results(df)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("concatenate_results", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("extract_test_data_legacy")
 ### * extract_test_data_legacy
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: extract_test_data_legacy
 ### Title: Extract and Process Neuropsychological Test Data from PDF Files
 ###   (Legacy)
@@ -136,12 +158,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("extract_test_data_legacy", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("extract_wisc5_data")
 ### * extract_wisc5_data
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: extract_wisc5_data
 ### Title: Extract and Process WISC-V Test Data from PDF
 ### Aliases: extract_wisc5_data
@@ -175,12 +200,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("extract_wisc5_data", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("neurotypr_utils")
 ### * neurotypr_utils
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: neurotypr_utils
 ### Title: Enhanced Utility Functions for NeurotypR
 ### Aliases: neurotypr_utils %||%
@@ -198,12 +226,15 @@ x %||% "default"
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("neurotypr_utils", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("pluck_wiat4")
 ### * pluck_wiat4
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: pluck_wiat4
 ### Title: Extract and Process WIAT-4 Test Results
 ### Aliases: pluck_wiat4
@@ -227,12 +258,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("pluck_wiat4", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("process_rbans_data")
 ### * process_rbans_data
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: process_rbans_data
 ### Title: Extract and Process RBANS Data
 ### Aliases: process_rbans_data
@@ -252,6 +286,8 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("process_rbans_data", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 ### * <FOOTER>
 ###
 cleanEx()
