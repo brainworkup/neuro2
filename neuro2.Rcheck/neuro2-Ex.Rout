@@ -1,0 +1,304 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "neuro2"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('neuro2')
+
+Attaching package: ‘neuro2’
+
+The following object is masked from ‘package:base’:
+
+    %||%
+
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("ReportUtilitiesR6")
+> ### * ReportUtilitiesR6
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ReportUtilitiesR6
+> ### Title: Report Utilities for Neuropsychological Assessment
+> ### Aliases: ReportUtilitiesR6
+> 
+> ### ** Examples
+> 
+> # Example 1: Basic usage
+> # Initialize the utilities class
+> report_utils <- ReportUtilitiesR6$new(
++   config = list(
++     output_base_dir = "reports",
++     template_dir = "templates"
++   )
++ )
+> 
+> # Set up the environment and prepare data
+> report_utils$setup_environment()
+NULL
+> report_utils$prepare_data_files("raw_data", "processed_data")
+NULL
+> 
+> # Example 2: Process domains and render a report
+> # Initialize with a specific configuration
+> report_utils <- ReportUtilitiesR6$new(
++   config = list(
++     domains = c("memory", "executive", "attention"),
++     template = "comprehensive_report.qmd"
++   )
++ )
+> 
+> # Process the domains and render the report
+> report_utils$process_domains(
++   domains = report_utils$config$domains,
++   output_dir = "output/domains"
++ )
+NULL
+> report_utils$render_report(
++   template_file = report_utils$config$template,
++   output_dir = "reports",
++   output_name = "neuropsych_evaluation"
++ )
+NULL
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("TemplateContentManagerR6")
+> ### * TemplateContentManagerR6
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: TemplateContentManagerR6
+> ### Title: Template Content Manager for Neuropsychological Reports
+> ### Aliases: TemplateContentManagerR6
+> 
+> ### ** Examples
+> 
+> # Example 1: Initialize and list available sections
+> template_mgr <- TemplateContentManagerR6$new()
+> sections <- template_mgr$get_available_sections()
+> print(sections$domains) # List available domain templates
+character(0)
+> 
+> # Example 2: Retrieve content from a specific template file
+> template_mgr <- TemplateContentManagerR6$new(
++   template_dir = "inst/extdata/_extensions/neurotyp-adult"
++ )
+> iq_content <- template_mgr$get_content("_02-01_iq.qmd")
+Warning in template_mgr$get_content("_02-01_iq.qmd") :
+  Content file not found: _02-01_iq.qmd
+> if (!is.null(iq_content)) {
++   # Process or display the IQ section content
++   cat(paste(head(iq_content, 10), collapse = "\n"))
++ }
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("concatenate_results")
+> ### * concatenate_results
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: concatenate_results
+> ### Title: Concatenate Results
+> ### Aliases: concatenate_results
+> 
+> ### ** Examples
+> 
+> df <- data.frame(
++   scale = c("IQ", "Memory"),
++   score = c(100, 80),
++   range = c("Above Average", "Below Average"),
++   percentile = c(75, 25),
++   ci_95 = c("[95, 105]", "[75, 85]"),
++   description = c("intelligence", "memory")
++ )
+> concatenate_results(df)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("extract_test_data_legacy")
+> ### * extract_test_data_legacy
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: extract_test_data_legacy
+> ### Title: Extract and Process Neuropsychological Test Data from PDF Files
+> ###   (Legacy)
+> ### Aliases: extract_test_data_legacy
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Extract WISC-V subtest data
+> ##D wisc5_data <- extract_test_data_legacy(
+> ##D   patient = "Biggie",
+> ##D   test = "wisc5",
+> ##D   test_name = "WISC-V",
+> ##D   pages = c(30),
+> ##D   extract_columns = c(2, 4, 5, 6),
+> ##D   variables = c("scale", "raw_score", "score", "percentile"),
+> ##D   score_type = "scaled_score"
+> ##D )
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("extract_wisc5_data")
+> ### * extract_wisc5_data
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: extract_wisc5_data
+> ### Title: Extract and Process WISC-V Test Data from PDF
+> ### Aliases: extract_wisc5_data
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Extract WISC-V index scores
+> ##D index_data <- extract_wisc5_data(
+> ##D   patient = "Patient001",
+> ##D   test_type = "index",
+> ##D   file_path = "path/to/wisc5_report.pdf",
+> ##D   pages_index = c(32, 35)
+> ##D )
+> ##D 
+> ##D # Extract subtest scores with custom page numbers
+> ##D subtest_data <- extract_wisc5_data(
+> ##D   patient = "Patient001",
+> ##D   test_type = "subtest",
+> ##D   pages_subtest = c(30, 31)
+> ##D )
+> ##D 
+> ##D # Extract process scores (will prompt for file selection)
+> ##D process_data <- extract_wisc5_data(
+> ##D   patient = "Patient001",
+> ##D   test_type = "process",
+> ##D   pages_process = c(38)
+> ##D )
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("neurotypr_utils")
+> ### * neurotypr_utils
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: neurotypr_utils
+> ### Title: Enhanced Utility Functions for NeurotypR
+> ### Aliases: neurotypr_utils %||%
+> ### Keywords: Coalescing Null Operator internal
+> 
+> ### ** Examples
+> 
+> # Returns "default" because x is NULL
+> x <- NULL
+> x %||% "default"
+[1] "default"
+> 
+> # Returns "value" because x is not NULL
+> x <- "value"
+> x %||% "default"
+[1] "value"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("pluck_wiat4")
+> ### * pluck_wiat4
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pluck_wiat4
+> ### Title: Extract and Process WIAT-4 Test Results
+> ### Aliases: pluck_wiat4
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Basic usage with file chooser dialog
+> ##D results <- pluck_wiat4(patient = "Biggie")
+> ##D 
+> ##D # Specify file path and other parameters
+> ##D results <- pluck_wiat4(
+> ##D   patient = "Biggie",
+> ##D   file = "path/to/wiat4.pdf",
+> ##D   pages = c(20),
+> ##D   extract_columns = c(1, 2, 3, 4, 5),
+> ##D   variables = c("scale", "raw_score", "score", "ci_95", "percentile")
+> ##D )
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("process_rbans_data")
+> ### * process_rbans_data
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: process_rbans_data
+> ### Title: Extract and Process RBANS Data
+> ### Aliases: process_rbans_data
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D process_rbans_data(
+> ##D   input_file_path = "data/rbans_export.csv",
+> ##D   test_name_prefix = "RBANS Update Form A ",
+> ##D   test = "rbans_a",
+> ##D   test_name = "RBANS Update Form A",
+> ##D   patient = "Patient001",
+> ##D   output_file_path = "data/processed_rbans.csv"
+> ##D )
+> ## End(Not run)
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  1.031 0.103 1.113 0.004 0.005 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

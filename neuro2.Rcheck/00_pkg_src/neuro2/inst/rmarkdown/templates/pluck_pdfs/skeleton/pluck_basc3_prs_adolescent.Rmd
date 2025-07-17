@@ -1,0 +1,279 @@
+---
+title: |
+  <center> BASC-3 PRS Adolescent </center>
+date: "`r Sys.Date()`"
+params:
+  patient: Biggie
+  test: basc3_prs_adolescent
+  test_name: "BASC-3 PRS Adolescent"
+  file:
+    label: "Upload PDF file"
+    value: file
+    input: file
+  pages: [4, 4]
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+## Setup
+
+```{r setup, include = FALSE}
+# Set JAVA environment
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  error = TRUE
+)
+library(glue)
+library(here)
+library(knitr)
+library(pdftools)
+library(qs2)
+library(rmarkdown)
+library(rmdformats)
+library(shiny)
+library(snakecase)
+library(tabulapdf)
+library(tidyverse)
+library(xfun)
+library(yaml)
+library(NeurotypR)
+library(NeurotypR)
+```
+
+## Parameters
+
+```{r}
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+pages <- params$pages
+# file <- file.path(file.choose())
+file <- file.path(params$file)
+```
+
+## Areas
+
+```{r areas}
+# PRS
+areas <- list(
+  table1 = c(177, 87, 228, 523),
+  table2 = c(376, 37, 557, 575)
+)
+```
+
+## Extract Tables
+
+```{r}
+extracted_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  guess = NULL,
+  method = "stream",
+  output = "matrix"
+)
+
+# extracted_tables <- tabulapdf::extract_areas(
+#   file = file,
+#   pages = c(4,4),
+#   method = "stream",
+#   output = "matrix"
+# )
+
+```
+
+```{r}
+# Ensure the 'data' directory exists
+if (!dir.exists("data")) dir.create("data")
+
+# Define 'test' if it hasn't been set (for safety)
+# test <- "example"  # Uncomment and modify if needed
+
+# Save the extracted_tables object to a file
+saveRDS(
+  object = extracted_tables,
+  file = file.path("data", paste0("extracted_tables_", test, ".rds"))
+)
+```
+
+## CLINICAL AND ADAPTIVE SCORE TABLE
+
+```{r pluck-df1}
+table1 <- data.frame(extracted_tables[[1]])
+column_names1 <- c("scale", "raw_score", "score", "percentile", "ci_95")
+colnames(table1) <- column_names1
+# Convert columns to double, handling non-numeric values
+to_double <- c("raw_score", "score", "percentile")
+table1[to_double] <- lapply(table1[to_double], function(x) {
+  # First convert to character to ensure consistent handling
+  x_char <- as.character(x)
+  # Replace any non-numeric values (like "-" or "") with NA
+  x_char[!grepl("^\\s*-?\\d+\\.?\\d*\\s*$", x_char)] <- NA
+  # Convert to numeric with warning suppression
+  suppressWarnings(as.numeric(x_char))
+})
+```
+
+```{r pluck-df2}
+table2 <- data.frame(extracted_tables[[2]])
+column_names2 <- c("scale", "raw_score", "score", "percentile", "ci_95", "difference", "sig_level", "freq") # frequency doesnt extract if no data
+colnames(table2) <- column_names2
+# Convert columns to double, handling non-numeric values
+to_double <- c("raw_score", "score", "percentile")
+table2[to_double] <- lapply(table2[to_double], function(x) {
+  # First convert to character to ensure consistent handling
+  x_char <- as.character(x)
+  # Replace any non-numeric values (like "-" or "") with NA
+  x_char[!grepl("^\\s*-?\\d+\\.?\\d*\\s*$", x_char)] <- NA
+  # Convert to numeric with warning suppression
+  suppressWarnings(as.numeric(x_char))
+})
+
+# Bind rows into full data.frame
+df <- dplyr::bind_rows(table1, table2)
+```
+
+## Functions
+
+```{r}
+# Function to process the extracted tables
+process_basc3_tables <- function(basc3_data) {
+  table_list <- purrr::map(basc3_data, as.data.frame) |>
+    set_names(paste0("table", 1:length(basc3_data))) # Rename tables
+
+  list2env(table_list, .GlobalEnv) # Assign to global environment
+}
+
+# Loop over the list and write each matrix to a CSV file
+for (i in seq_along(extracted_tables)) {
+  write.csv(extracted_tables[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+}
+
+# convert columns
+convert_columns <- function(df) {
+  # Specify the columns to be converted to numeric
+  numeric_cols <- c("score", "percentile")
+
+  # Convert specified columns to numeric
+  df[numeric_cols] <- lapply(df[numeric_cols], function(x) as.numeric(as.character(x)))
+
+  # Convert remaining columns to character
+  char_cols <- setdiff(names(df), numeric_cols)
+  df[char_cols] <- lapply(df[char_cols], as.character)
+
+  return(df)
+}
+
+# Function to replace "-" with NA and filter out rows with no real data
+filter_real_data <- function(table, key_columns) {
+  table <- table |>
+    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) |>
+    mutate(across(all_of(key_columns), as.numeric)) |>
+    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
+
+  return(table)
+}
+
+# Function to extract text from PDF
+get_text <- function(file) {
+  tryCatch(
+    {
+      txt <- pdftools::pdf_text(file) |>
+        stringr::str_split("\n") |>
+        unlist()
+      return(txt)
+    },
+    error = function(e) {
+      message("Error reading PDF: ", e)
+      return(NULL)
+    }
+  )
+}
+```
+
+## Match with lookup table
+
+```{r eval = TRUE}
+# Load the lookup table
+lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- NeurotypR::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r ranges, eval = TRUE}
+df_mutated <- df_mutated |>
+  dplyr::mutate(range = NULL) |>
+  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale") |>
+  dplyr::relocate(c(range), .after = percentile)
+```
+
+## Glue results
+
+```{r result}
+df_mutated <- df_mutated |>
+  dplyr::rowwise() |>
+  dplyr::mutate(result = glue::glue("{patient}'s self-reported {description} was {range}.\n"))
+
+df <- df_mutated |>
+  dplyr::select(-description) |>
+  dplyr::relocate(absort, .after = result)
+```
+
+## Write out final csv
+
+```{r write}
+# Make sure we're using the fully processed data.frame with all columns
+if (!exists("df") || ncol(df) <= 4) {
+  # If df wasn't properly updated in the results section, use df_mutated
+  writedf <- df_mutated
+} else {
+  writedf <- df
+}
+readr::write_excel_csv(writedf, here::here("data", "csv", paste0(test, ".csv")), col_names = TRUE)
+```
+
+## Extract Text
+
+```{r}
+# BASC-3 Self-Report Adolescent
+if (params$test == "basc3_prs_adolescent") {
+  ## extract text
+  basc3_prs_adolescent_txt <- get_text(file)
+  if (!is.null(basc3_prs_adolescent_txt)) {
+    # Replace long spaces with a column break symbol
+    basc3_prs_adolescent_squished <- stringr::str_replace_all(basc3_prs_adolescent_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      basc3_prs_adolescent_squished,
+      here::here("basc3_prs_adolescent_text.md"),
+      sep = "\n"
+    )
+  }
+}
+```
+
+**THE END!!**

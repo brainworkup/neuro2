@@ -1,0 +1,4 @@
+name: pluck_pdfs
+description: >
+  Pluck tables from PDF files
+create_dir: FALSE

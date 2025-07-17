@@ -1,0 +1,649 @@
+---
+title: |
+  <center> Conners' 4 </center>
+  <center> Parent, Self, and Teacher Report </center>
+date: "`r Sys.Date()`"
+params:
+  patient: Biggie
+  test:
+    label: "Conners-4"
+    value: conners4_parent
+    input: select
+    multiple: no
+    choices:
+      - conners4_self
+      - conners4_parent
+      - conners4_teacher
+  test_name:
+    label: "Test Name:"
+    value: "Conners-4 Parent"
+    input: select
+    multiple: no
+    choices:
+      - "Conners-4 Self"
+      - "Conners-4 Parent"
+      - "Conners-4 Teacher"
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+    multiple: FALSE
+    accept: ".pdf"
+  pages1: [4, 4, 4]
+  pages2: [4]
+  category:
+    label: "Range temporary"
+    value: ""
+    input: select
+    multiple: no
+    choices:
+      - "Slightly Elevated"
+      - "Extremely Elevated etc"
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+```{r setup, include = FALSE}
+# Set JAVA environment
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  error = TRUE
+)
+library(dplyr)
+library(glue)
+library(here)
+library(knitr)
+library(pdftools)
+library(purrr)
+library(readr)
+library(rmarkdown)
+library(rmdformats)
+library(shiny)
+library(snakecase)
+library(stringr)
+library(tabulapdf)
+library(xfun)
+library(yaml)
+library(NeurotypR)
+library(NeurotypR)
+```
+
+## Parameters
+
+```{r}
+patient <- (params$patient)
+test <- (params$test)
+test_name <- (params$test_name)
+pages1 <- (params$pages1)
+pages2 <- (params$pages2)
+file <- file.path(params$file)
+# file <- file.path(file.choose())
+
+if (params$test == "conners4_self") {
+  saveRDS(file, "conners4_self_path.rds")
+} else if (params$test == "conners4_parent") {
+  saveRDS(file, "conners4_parent_path.rds")
+} else if (params$test == "conners4_teacher") {
+  saveRDS(file, "conners4_teacher_path.rds")
+}
+```
+
+## Areas
+
+```{r locate-areas, eval=FALSE}
+areas_1 <- tabulapdf::locate_areas(
+  file = file,
+  pages = pages1
+)
+areas_2 <- tabulapdf::locate_areas(
+  file = file,
+  pages = pages2
+)
+```
+
+## Areas for Parent ratings
+
+```{r}
+# tables 1,3,4 using lattice
+a_tbl1 <- list(
+  tbl1 = c(148, 34, 272, 572)
+)
+
+# table 2 using stream
+a_tbl2 <- list(
+  tbl2 = c(327, 34, 392, 572)
+)
+
+# lattice
+a_tbl3 <- list(
+  tbl3 = c(430, 35, 548, 572)
+)
+
+# lattice
+a_tbl4 <- list(
+  tbl4 = c(584, 34, 605, 572)
+)
+
+# Save the list to a file
+library(purrr)
+
+# List of tables
+areas <- list(a_tbl1, a_tbl2, a_tbl3, a_tbl4)
+
+# Function to save each table
+save_area <- function(tbl, i, report_type, test) {
+  report_type <- match.arg(report_type, c("parent", "teacher", "self"))
+  file_name <- paste0(
+    "area_table_", test, "_", i, "_conners4_", report_type, ".rds"
+  )
+  saveRDS(tbl, file = file_name)
+}
+
+report_type <- "parent"
+# Use map2 to iterate over the tables and their indices
+purrr::map2(
+  areas,
+  seq_along(areas),
+  save_area,
+  report_type = report_type,
+  test = test
+)
+```
+
+## Extract Tables
+
+```{r}
+# Function to extract and save each table using the specified method
+extract_and_save_table <- function(area, i, method) {
+  tbl <- tabulapdf::extract_tables(
+    file = file,
+    pages = c(4),
+    area = area,
+    guess = FALSE,
+    method = method,
+    output = "matrix"
+  )
+
+  file_name <- paste0("table", i, "_conners4_parent.rds")
+  saveRDS(tbl, file = file_name)
+
+  return(tbl)
+}
+
+# Define the areas and method
+areas_lattice <- list(a_tbl1, a_tbl3, a_tbl4)
+method <- "lattice"
+
+# Using purrr::partial
+extracted_tables_lattice <- map2(
+  areas_lattice, seq_along(areas_lattice),
+  purrr::partial(extract_and_save_table, method = method)
+)
+
+# Define the areas and method for stream
+areas_stream <- list(a_tbl2)
+method <- "stream"
+
+# Alternatively, using purrr::partial
+extracted_tables_stream <- map2(
+  areas_stream, seq_along(areas_stream),
+  purrr::partial(extract_and_save_table, method = method)
+)
+
+tbl1 <- extracted_tables_lattice[[1]]
+tbl2 <- extracted_tables_stream[[1]]
+tbl3 <- extracted_tables_lattice[[2]]
+tbl4 <- extracted_tables_lattice[[3]]
+```
+
+## Tables 1-4
+
+```{r}
+# Table 1
+merge_and_keep_rows <- function(tbl) {
+  # Create a tibble from the matrix data
+  df <- as_tibble(tbl[[1]], .name_repair = "minimal")
+
+  # Get column names from the first row
+  colnames(df) <- c("scale", "raw_score", "score", "ci_95", "percentile", "category", "diff", "significance")
+
+  # Create a new dataframe
+  result <- tibble(
+    # Merge rows 1-3 for the first entry
+    scale = "Inattention/Executive Dysfunction",
+    raw_score = df[[2, 2]],
+    score = df[[2, 3]],
+    ci_95 = df[[2, 4]],
+    percentile = df[[2, 5]],
+    category = params$category, # this will need to be changed
+    diff = df[[2, 7]],
+    significance = df[[2, 8]]
+  )
+
+  # Add rows 4-8
+  result <- bind_rows(
+    result,
+    df[4:8, ]
+  )
+
+  return(result)
+}
+
+df1 <- merge_and_keep_rows(tbl1)
+
+# Step (b): Remove "th", "nd", "rd", "st" from the Percentile (4th column)
+df1$percentile <- gsub("(th|nd|rd|st)", "", df1$percentile)
+
+# Set proper column names
+colnames(df1) <- c(
+  "scale", "raw_score", "score", "ci_95", "percentile", "category", "diff", "significance"
+)
+
+df$scale[1] <- "Inattention/Executive Dysfunction"
+df$scale[2] <- "Hyperactivity"
+df$scale[3] <- "Impulsivity"
+df$scale[4] <- "Emotional Dysregulation"
+df$scale[5] <- "Depressed Mood"
+df$scale[6] <- "Anxious Thoughts"
+
+# View the cleaned data frame
+View(df1)
+
+####################
+# Table 2
+# Convert to a data frame for easier manipulation
+df <- as.data.frame(tbl2[[1]], stringsAsFactors = FALSE)
+
+# Step (b): Remove "th", "nd", "rd", "st" from the Percentile (5th column)
+df$V5 <- gsub("(th|nd|rd|st)", "", df$V5)
+
+# Set proper column names
+colnames(df) <- c("scale", "raw_score", "score", "ci_95", "percentile", "category", "diff", "significance")
+
+df$scale[1] <- "Schoolwork"
+df$scale[2] <- "Peer Interactions"
+df$scale[3] <- "Family Life"
+
+df2 <- df
+View(df2)
+
+####################
+# Table 3
+
+# Convert to a data frame for easier manipulation
+df <- as.data.frame(tbl3[[1]], stringsAsFactors = FALSE)
+
+r2 <- tbl3[[1]][2, 1]
+r4 <- tbl3[[1]][4, 1]
+r7 <- tbl3[[1]][7, 1]
+r9 <- tbl3[[1]][9, 1]
+
+# Step (a): Split the first column into "Scale Name" and "Value"
+df <- df %>%
+  mutate(
+    Scale_Name = str_split_fixed(V1, " \\d+", n = 2)[, 1],
+    Value = str_extract(V1, "\\d+$") # Extracts the last digits as the value
+  ) %>%
+  select(-V1) %>% # Remove the original V1 column
+  select(Scale_Name, Value, everything()) # Reorder columns
+
+df <- df[-c(1, 3, 6, 8), ]
+df[, 7] <- c(r2, r4, NA, r7, r9)
+
+# Step (b): Remove "th", "nd", "rd", "st" from the Percentile (5th column)
+df$V4 <- gsub("(th|nd|rd|st)", "", df$V4)
+
+# Set proper column names
+colnames(df) <- c("scale", "raw_score", "score", "ci_95", "percentile", "category", "symptom_count")
+
+df$scale[1] <- "ADHD Inattentive Symptoms"
+df$scale[2] <- "ADHD Hyperactive/Impulsive Symptoms"
+df$scale[3] <- "Total ADHD Symptoms"
+df$scale[4] <- "Oppositional Defiant Disorder Symptoms"
+df$scale[5] <- "Conduct Disorder Symptoms"
+df3 <- df
+
+## Table 4
+
+df <- as.data.frame(tbl4[[1]], stringsAsFactors = FALSE)
+
+# Set proper column names
+colnames(df) <- c("scale", "raw_score", "probability_score", "category")
+df4 <- df
+```
+
+## Transform
+
+```{r}
+library(dplyr)
+library(stringr)
+
+# More robust function to remove ordinal suffixes and convert to numeric
+remove_ordinal_suffix <- function(x) {
+  # Attempt to extract numeric-only part of the string
+  cleaned <- str_extract(str_trim(x), "\\d+")
+  if (is.na(cleaned) || cleaned == "") {
+    NA # Return NA if no digits found
+  } else {
+    as.numeric(cleaned) # Convert the cleaned string to numeric
+  }
+}
+
+# Updated function to apply transformations safely to data frames
+transform_data <- function(df) {
+  # Check and transform percentile if it exists
+  if ("percentile" %in% names(df)) {
+    df$percentile <- sapply(df$percentile, remove_ordinal_suffix)
+  }
+
+  # Convert raw_score to numeric if it exists
+  if ("raw_score" %in% names(df)) {
+    df$raw_score <- as.numeric(df$raw_score)
+  }
+
+  # Convert score to numeric if it exists
+  if ("score" %in% names(df)) {
+    df$score <- as.numeric(df$score)
+  }
+
+  # Diagnostic checks to alert about any NA values introduced
+  cols_to_transform <- c("percentile", "raw_score", "score")
+  for (col in cols_to_transform) {
+    if (col %in% names(df) && any(is.na(df[[col]]), na.rm = TRUE)) {
+      warning(paste("Some values in", col, "could not be converted and were set to NA."))
+    }
+  }
+
+  df
+}
+
+# Example usage (assuming df1, df2, df3 are defined as earlier):
+df1_transformed <- transform_data(df1)
+df2_transformed <- transform_data(df2)
+df3_transformed <- transform_data(df3)
+df4_transformed <- transform_data(df4)
+combined_df <-
+  dplyr::bind_rows(
+    df1_transformed,
+    df2_transformed,
+    df3_transformed,
+    df4_transformed
+  )
+```
+
+## Extract Text
+
+```{r}
+# conners4 Self
+get_text <- function(file) {
+  txt <- pdftools::pdf_text(file) |>
+    stringr::str_split("\n") |>
+    unlist()
+}
+conners4_text <- get_text(file)
+
+if (params$test == "conners4_parent") {
+  ## extract text
+  conners4_parent_txt <- get_text(file)
+  if (!is.null(conners4_parent_txt)) {
+    # Replace long spaces with a col break symbol
+    conners4_parent_squished <- stringr::str_replace_all(conners4_parent_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      conners4_parent_squished,
+      here::here("conners4_parent_text.md"),
+      sep = "\n"
+    )
+    # save as text
+    readr::write_lines(
+      conners4_parent_squished,
+      here::here("conners4_parent_text.txt"),
+      sep = "\n"
+    )
+    # save as typst
+    readr::write_lines(
+      conners4_parent_squished,
+      here::here("conners4_self_text.typ"),
+      sep = "\n"
+    )
+  }
+  # conners4 self
+} else if (params$test == "conners4_self") {
+  ## extract text
+  conners4_parent_txt <- get_text(file)
+  if (!is.null(conners4_self_txt)) {
+    # Replace long spaces with a col break symbol
+    conners4_self_squished <- stringr::str_replace_all(conners4_self_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      conners4_self_squished,
+      here::here("conners4_self_text.md"),
+      sep = "\n"
+    )
+
+    # save as text
+    readr::write_lines(
+      conners4_self_squished,
+      here::here("conners4_self_text.txt"),
+      sep = "\n"
+    )
+  }
+  # conners4 teacher
+} else if (params$test == "conners4_teacher") {
+  ## extract text
+  conners4_parent_txt <- get_text(file)
+  if (!is.null(conners4_teacher_txt)) {
+    # Replace long spaces with a col break symbol
+    conners4_teacher_squished <- stringr::str_replace_all(conners4_teacher_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      conners4_teacher_squished,
+      here::here("conners4_teacher_text.md"),
+      sep = "\n"
+    )
+
+    # save as text
+    readr::write_lines(
+      conners4_teacher_squished,
+      here::here("conners4_teacher_text.txt"),
+      sep = "\n"
+    )
+  }
+}
+```
+
+## Match with lookup table
+
+```{r eval = TRUE}
+# Load the lookup table
+lookup_table <- readr::read_csv(
+  "~/reports/neuropsych_lookup_table_combined.csv"
+)
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(combined_df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- NeurotypR::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r ranges, eval = TRUE}
+df_mutated <-
+  df_mutated |>
+  dplyr::mutate(range = NULL) |>
+  NeurotypR::gpluck_make_score_ranges(
+    table = df_mutated,
+    test_type = "rating_scale"
+  ) |>
+  dplyr::relocate(c(range), .after = percentile)
+```
+
+## Glue results for each scale
+
+```{r}
+if (params$test == "conners4_parent") {
+  df_mutated <-
+    df_mutated |>
+    dplyr::mutate(
+      result = dplyr::case_when(
+        scale == "Inattention/Executive Dysfunction" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Hyperactivity" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Impulsivity" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Emotional Dysregulation" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Depressed Mood" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Anxious Thoughts" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Inattentive Symptoms" ~ glue::glue("- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"),
+        scale == "ADHD Hyperactive/Impulsive Symptoms" ~ glue::glue("- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"),
+        scale == "Total ADHD Symptoms" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Oppositional Defiant Disorder Symptoms" ~ glue::glue("- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"),
+        scale == "Conduct Disorder Symptoms" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Index" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) indicated a probability of {probability_score} of having ADHD, which in this context is considered to be {range} at risk for ADHD .\n\n"
+        ),
+        scale == "Schoolwork" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Peer Interactions" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Family Life" ~ glue::glue(
+          "- Parent-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        TRUE ~ as.character(result)
+      )
+    )
+} else if (params$test == "conners4_self") {
+  df_mutated <-
+    df_mutated |>
+    dplyr::mutate(
+      result = dplyr::case_when(
+        scale == "Inattention/Executive Dysfunction" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Hyperactivity" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Impulsivity" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Emotional Dysregulation" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Negative Parent-Concept" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Inattentive Symptoms" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Hyperactive/Impulsive Symptoms" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Total ADHD Symptoms" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Index" ~ glue::glue(
+          "- Self-reported {scale} (i.e., {description}) indicated a probability of {probability_score} of having ADHD.\n\n"
+        ),
+        TRUE ~ as.character(result)
+      )
+    )
+} else if (params$test == "conners4_teacher") {
+  df_mutated <-
+    df_mutated |>
+    dplyr::mutate(
+      result = dplyr::case_when(
+        scale == "Inattention/Executive Dysfunction" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Hyperactivity" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Impulsivity" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Emotional Dysregulation" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Negative Parent-Concept" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Inattentive Symptoms" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Hyperactive/Impulsive Symptoms" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "Total ADHD Symptoms" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) was {range}.\n\n"
+        ),
+        scale == "ADHD Index" ~ glue::glue(
+          "- Teacher-reported {scale} (i.e., {description}) indicated a probability of {probability_score} of having ADHD.\n\n"
+        ),
+        TRUE ~ as.character(result)
+      )
+    )
+}
+```
+
+## Save
+
+```{r}
+df_mutated <-
+  df_mutated |>
+  dplyr::relocate(
+    c(test, test_name),
+    .before = scale
+  ) |>
+  dplyr::relocate(
+    c(raw_score, score, ci_95, percentile, range),
+    .after = scale
+  ) |>
+  dplyr::relocate(
+    c(domain, subdomain, narrow, pass, verbal, timed, score_type, test_type, absort, description, result),
+    .after = range
+  ) |>
+  dplyr::select(-category, -diff, -significance, -symptom_count)
+
+file_path <- here::here("data", "csv", paste0(params$test, ".csv"))
+readr::write_excel_csv(df_mutated, file_path, col_names = TRUE, na = "")
+```

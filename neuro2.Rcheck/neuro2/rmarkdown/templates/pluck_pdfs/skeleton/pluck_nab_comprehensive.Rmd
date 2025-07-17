@@ -1,0 +1,1401 @@
+---
+title: |
+  <center> NAB Main Modules: </center>
+  <center> Comprehensive Score Report </center>
+date: "`r Sys.Date()`"
+params:
+  patient: Biggie
+  test: nab
+  test_name: NAB
+  pages: [2, 3, 6, 9, 10, 10, 11, 13, 16]
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+  index:
+    label: "NAB Index Score Summary Table"
+    value:
+      - Attention Index (ATT)
+      - Language Index (LAN)
+      - Memory Index (MEM)
+      - Spatial Index (SPT)
+      - Executive Functions Index (EXE)
+      - Total NAB Index (T-NAB)
+    input: select
+    multiple: yes
+    choices:
+      - Attention Index (ATT)
+      - Language Index (LAN)
+      - Memory Index (MEM)
+      - Spatial Index (SPT)
+      - Executive Functions Index (EXE)
+      - Total NAB Index (T-NAB)
+  att:
+    label: "Attention Module Score Table"
+    value:
+      - Orientation
+      - Orientation to Self
+      - Orientation to Time
+      - Orientation to Place
+      - Orientation to Situation
+      - Digits Forward
+      - Digits Forward Longest Span
+      - Digits Backward
+      - Digits Backward Longest Span
+      - Dots
+      - Numbers & Letters Part A Speed
+      - Numbers & Letters Part A Errors
+      - Numbers & Letters Part A Efficiency
+      - Numbers & Letters Part B Efficiency
+      - Numbers & Letters Part C Efficiency
+      - Numbers & Letters Part D Efficiency
+      - Numbers & Letters Part D Disruption
+      - Driving Scenes
+    input: select
+    multiple: yes
+    choices:
+      - Orientation
+      - Orientation to Self
+      - Orientation to Time
+      - Orientation to Place
+      - Orientation to Situation
+      - Digits Forward
+      - Digits Forward Longest Span
+      - Digits Backward
+      - Digits Backward Longest Span
+      - Dots
+      - Numbers & Letters Part A Speed
+      - Numbers & Letters Part A Errors
+      - Numbers & Letters Part A Efficiency
+      - Numbers & Letters Part B Efficiency
+      - Numbers & Letters Part C Efficiency
+      - Numbers & Letters Part D Efficiency
+      - Numbers & Letters Part D Disruption
+      - Driving Scenes
+  lan:
+    label: "Language Module Score Table"
+    value:
+      - Oral Production
+      - Auditory Comprehension
+      - Auditory Comprehension Colors
+      - Auditory Comprehension Shapes
+      - Auditory Comprehension Colors/Shapes/Numbers
+      - Auditory Comprehension Pointing
+      - Auditory Comprehension Yes/No
+      - Auditory Comprehension Paper Folding
+      - Naming
+      - Naming Semantic Cuing
+      - Naming Phonemic Cuing
+      - Reading Comprehension
+      - Reading Comprehension Words
+      - Reading Comprehension Sentences
+      - Writing
+      - Writing Legibility
+      - Writing Spelling
+      - Writing Syntax
+      - Writing Conveyance
+      - Bill Payment
+    input: select
+    multiple: yes
+    choices:
+      - Oral Production
+      - Auditory Comprehension
+      - Auditory Comprehension Colors
+      - Auditory Comprehension Shapes
+      - Auditory Comprehension Colors/Shapes/Numbers
+      - Auditory Comprehension Pointing
+      - Auditory Comprehension Yes/No
+      - Auditory Comprehension Paper Folding
+      - Naming
+      - Naming Semantic Cuing
+      - Naming Phonemic Cuing
+      - Reading Comprehension
+      - Reading Comprehension Words
+      - Reading Comprehension Sentences
+      - Writing
+      - Writing Legibility
+      - Writing Spelling
+      - Writing Syntax
+      - Writing Conveyance
+      - Bill Payment
+  mem_list:
+    label: "List Learning Score Table"
+    value:
+      - List Learning List A Trial 1 Immediate Recall
+      - List Learning List A Trial 2 Immediate Recall
+      - List Learning List A Trial 3 Immediate Recall
+      - List Learning List A Immediate Recall
+      - List Learning List B Immediate Recall
+      - List Learning List A Short Delayed Recall
+      - List Learning List A Long Delayed Recall
+      - Long Delayed Recall
+      - List Learning List A Percent Retention
+      - List Learning List A Long Delayed Forced-Choice Recognition
+      - List Learning List A Long Delayed Forced-Choice Recognition False Alarms
+      - List Learning List A Discriminability Index
+      - List Learning List A Recall vs. Recognition Index
+      - List Learning Semantic Clusters
+      - List Learning Perseverations
+      - List Learning Intrusions
+    input: select
+    multiple: yes
+    choices:
+      - List Learning List A Trial 1 Immediate Recall
+      - List Learning List A Trial 2 Immediate Recall
+      - List Learning List A Trial 3 Immediate Recall
+      - List Learning List A Immediate Recall
+      - List Learning List B Immediate Recall
+      - List Learning List A Short Delayed Recall
+      - List Learning List A Long Delayed Recall
+      - Long Delayed Recall
+      - List Learning List A Percent Retention
+      - List Learning List A Long Delayed Forced-Choice Recognition
+      - List Learning List A Long Delayed Forced-Choice Recognition False Alarms
+      - List Learning List A Discriminability Index
+      - List Learning List A Recall vs. Recognition Index
+      - List Learning Semantic Clusters
+      - List Learning Perseverations
+      - List Learning Intrusions
+  mem_shape:
+    label: "Shape Learning Score Table"
+    value:
+      - Shape Learning Trial 1 Immediate Recognition
+      - Shape Learning Trial 2 Immediate Recognition
+      - Shape Learning Trial 3 Immediate Recognition
+      - Shape Learning Immediate Recognition
+      - Shape Learning Delayed Recognition
+      - Shape Learning Percent Retention
+      - Shape Learning Delayed Forced-Choice Recognition
+      - Shape Learning Delayed Forced-Choice Recognition False Alarms
+      - Shape Learning Discriminability Index
+    input: select
+    multiple: yes
+    choices:
+      - Shape Learning Trial 1 Immediate Recognition
+      - Shape Learning Trial 2 Immediate Recognition
+      - Shape Learning Trial 3 Immediate Recognition
+      - Shape Learning Immediate Recognition
+      - Shape Learning Delayed Recognition
+      - Shape Learning Percent Retention
+      - Shape Learning Delayed Forced-Choice Recognition
+      - Shape Learning Delayed Forced-Choice Recognition False Alarms
+      - Shape Learning Discriminability Index
+  mem_story:
+    label: "Story Learning Score Table"
+    value:
+      - Story Learning Trial 1 Phrase Unit Immediate Recall
+      - Story Learning Trial 2 Phrase Unit Immediate Recall
+      - Story Learning Phrase Unit Immediate Recall
+      - Story Learning Thematic Unit Immediate Recall
+      - Story Learning Trial 1 Thematic Unit Immediate Recall
+      - Story Learning Trial 2 Thematic Unit Immediate Recall
+      - Story Learning Phrase Unit Delayed Recall
+      - Story Learning Thematic Unit Delayed Recall
+      - Story Learning Phrase Unit Percent Retention
+    input: select
+    multiple: yes
+    choices:
+      - Story Learning Trial 1 Phrase Unit Immediate Recall
+      - Story Learning Trial 2 Phrase Unit Immediate Recall
+      - Story Learning Phrase Unit Immediate Recall
+      - Story Learning Thematic Unit Immediate Recall
+      - Story Learning Trial 1 Thematic Unit Immediate Recall
+      - Story Learning Trial 2 Thematic Unit Immediate Recall
+      - Story Learning Phrase Unit Delayed Recall
+      - Story Learning Thematic Unit Delayed Recall
+      - Story Learning Phrase Unit Percent Retention
+  mem_daily:
+    label: "Daily Living Memory Score Table"
+    value:
+      - Daily Living Memory Immediate Recall
+      - Daily Living Memory Delayed Recall
+      - Daily Living Memory Retention
+      - Daily Living Memory Delayed Recognition
+      - Daily Living Memory Recall vs. Recognition
+      - Medication Instructions Immediate Recall
+      - Medication Instructions Delayed Recall
+      - Medication Instructions Delayed Recognition
+      - Name/Address/Phone Immediate Recall
+      - Name/Address/Phone Delayed Recall
+      - Name/Address/Phone Delayed Recognition
+    input: select
+    multiple: yes
+    choices:
+      - Daily Living Memory Immediate Recall
+      - Daily Living Memory Delayed Recall
+      - Daily Living Memory Retention
+      - Daily Living Memory Delayed Recognition
+      - Daily Living Memory Recall vs. Recognition
+      - Medication Instructions Immediate Recall
+      - Medication Instructions Delayed Recall
+      - Medication Instructions Delayed Recognition
+      - Name/Address/Phone Immediate Recall
+      - Name/Address/Phone Delayed Recall
+      - Name/Address/Phone Delayed Recognition
+  spt:
+    label: "Spatial Module Score Table"
+    value:
+      - Visual Discrimination
+      - Design Construction
+      - Figure Drawing Copy
+      - Figure Drawing Copy Organization
+      - Figure Drawing Copy Fragmentation
+      - Figure Drawing Copy Planning
+      - Figure Drawing Immediate Recall
+      - Figure Drawing Immediate Recall Organization
+      - Figure Drawing Immediate Recall Fragmentation
+      - Figure Drawing Immediate Recall Planning
+      - Figure Drawing Percent Retention
+      - Map Reading
+    input: select
+    multiple: yes
+    choices:
+      - Visual Discrimination
+      - Design Construction
+      - Figure Drawing Copy
+      - Figure Drawing Copy Organization
+      - Figure Drawing Copy Fragmentation
+      - Figure Drawing Copy Planning
+      - Figure Drawing Immediate Recall
+      - Figure Drawing Immediate Recall Organization
+      - Figure Drawing Immediate Recall Fragmentation
+      - Figure Drawing Immediate Recall Planning
+      - Figure Drawing Percent Retention
+      - Map Reading
+  exe:
+    label: "Executive Functions Module Score Table"
+    value:
+      - Mazes
+      - Judgment
+      - Categories
+      - Word Generation
+      - Word Generation Perseverations
+    input: select
+    multiple: yes
+    choices:
+      - Mazes
+      - Judgment
+      - Categories
+      - Word Generation
+      - Word Generation Perseverations
+  column_names1:
+    label: "Table 1 Column Names"
+    value: [scale, score, percentile, ci_95, category]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - score
+      - percentile
+      - ci_95
+      - category
+  column_names2:
+    label: "Tables 2-4"
+    value: [scale, raw_score, z_score, score, percentile, base_rate, category]
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - z_score
+      - score
+      - percentile
+      - base_rate
+      - category
+  column_names3:
+    label: "Tables 5-9"
+    value:
+      - scale
+      - raw_score
+      - z_score
+      - score
+      - percentile
+      - category
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - z_score
+      - score
+      - percentile
+      - category
+  keep1:
+    label: "Variables to Keep, Set 1"
+    value:
+      - scale
+      - raw_score
+      - score
+      - percentile
+      - ci_95
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - percentile
+      - ci_95
+  keep2:
+    label: "Variables to Keep, Set 2"
+    value:
+      - scale
+      - raw_score
+      - score
+      - percentile
+    input: select
+    multiple: yes
+    choices:
+      - scale
+      - raw_score
+      - score
+      - percentile
+  domains:
+    label: "NAB Domains"
+    value: [index, att, lan, mem_list, mem_shape, mem_story, mem_daily, spt, exe]
+    input: select
+    multiple: yes
+    choices:
+      - index
+      - att
+      - lan
+      - mem_list
+      - mem_shape
+      - mem_story
+      - mem_daily
+      - spt
+      - exe
+  slice: true
+  eval_index:
+    label: "Total NAB Index"
+    value: TRUE
+  eval_att:
+    label: "Attention"
+    value: TRUE
+  eval_lan:
+    label: "Language"
+    value: TRUE
+  eval_mem_list:
+    label: "Memory: list learning "
+    value: TRUE
+  eval_mem_shape:
+    label: "Memory: shape learning"
+    value: TRUE
+  eval_mem_story:
+    label: "Memory: story learning"
+    value: TRUE
+  eval_mem_daily:
+    label: "Memory: daily living"
+    value: TRUE
+  eval_spt:
+    label: "Spatial"
+    value: TRUE
+  eval_exe:
+    label: "Executive"
+    value: TRUE
+  match:
+    label: Subset/Match Rows
+    input: checkbox
+    value: TRUE
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+```{r setup, include = FALSE}
+Sys.setenv(
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
+)
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = TRUE,
+  warning = TRUE,
+  error = FALSE
+)
+library(googledrive)
+library(here)
+library(pdftools)
+library(shiny)
+library(tabulapdf)
+library(tidyr)
+library(glue)
+library(dplyr)
+library(rlang)
+library(purrr)
+library(qs2)
+library(readr)
+library(NeurotypR)
+library(NeurotypR)
+```
+
+## Parameters
+
+```{r}
+# source("params.R")
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+pages <- params$pages
+domain_names <- params$domains
+# file <- file.path(file.choose())
+file <- file.path(params$file)
+saveRDS(file, paste0(test, "_file_path.rds"))
+# qs2::qd_read(paste0(test, "_file_path.rds"))
+```
+
+## Areas
+
+```{r areas}
+areas <- list(
+  if (params$eval_index == TRUE) {
+    index <- c(
+      top = 133.92299687825,
+      left = 64.526534859521,
+      bottom = 249.30280957336,
+      right = 539.23204994797
+    )
+  },
+  if (params$eval_att == TRUE) {
+    att <- c(
+      top = 138.04370447451,
+      left = 66.174817898023,
+      bottom = 601.21123829344,
+      right = 540.88033298647
+    )
+  },
+  if (params$eval_lan == TRUE) {
+    lan <- c(
+      top = 137.21956295526,
+      left = 66.174817898023,
+      bottom = 691.86680541103,
+      right = 541.70447450572
+    )
+  },
+  if (params$eval_mem_list == TRUE) {
+    mem_list <- c(
+      top = 171.83350676379,
+      left = 64.526534859521,
+      bottom = 570.71800208117,
+      right = 540.88033298647
+    )
+  },
+  if (params$eval_mem_shape == TRUE) {
+    mem_shape <- c(
+      top = 118.26430801249,
+      left = 66.998959417274,
+      bottom = 361.38605619147,
+      right = 540.05619146722
+    )
+  },
+  if (params$eval_mem_story == TRUE) {
+    mem_story <- c(
+      top = 424.84495317378,
+      left = 67.823100936524,
+      bottom = 656.42872008325,
+      right = 540.88033298647
+    )
+  },
+  if (params$eval_mem_daily == TRUE) {
+    mem_daily <- c(
+      top = 117.44016649324,
+      left = 66.174817898023,
+      bottom = 400.12070759625,
+      right = 540.88033298647
+    )
+  },
+  if (params$eval_spt == TRUE) {
+    spt <- c(
+      top = 138.86784599376,
+      left = 67.823100936524,
+      bottom = 446.2726326743,
+      right = 538.40790842872
+    )
+  },
+  if (params$eval_exe == TRUE) {
+    exe <- c(
+      top = 138.86784599376,
+      left = 66.998959417274,
+      bottom = 271.55463059313,
+      right = 540.88033298647
+    )
+  }
+)
+
+saveRDS(file, paste0(test, "_areas_list.rds"))
+# qs2::qd_read(paste0(test, "_areas_list.rds"))
+```
+
+```{r eval = FALSE}
+# If need to locate areas
+areas <- tabulapdf::locate_areas(
+  file = file,
+  pages = c(2, 3, 6, 9, 10, 10, 11, 13)
+)
+
+# Saves areas as text files in df or list
+# Convert the list to a data frame
+areas_df <- do.call(rbind, lapply(areas, function(x) as.data.frame(t(x))))
+
+# Write the data frame to a text file
+write.table(
+  areas_df,
+  file = "areas_nab.txt",
+  sep = "\t",
+  row.names = FALSE,
+  col.names = TRUE,
+  quote = FALSE
+)
+
+# Save the list structure to a text file
+dput(areas, file = "areas_nab.txt")
+
+# Read the list back into R
+# areas_nab <- dget("areas_nab.txt")
+```
+
+## Extract
+
+```{r extract}
+## Create a logical vector based on the parameters outside the function
+area_selected <- c(
+  params$eval_index,
+  params$eval_att,
+  params$eval_lan,
+  params$eval_mem_list,
+  params$eval_mem_shape,
+  params$eval_mem_story,
+  params$eval_mem_daily,
+  params$eval_spt,
+  params$eval_exe
+)
+
+## Define a function to filter areas based on the parameters
+filter_areas <- function(areas, area_selected) {
+  # Subset the areas list to include only the selected areas
+  selected_areas <- areas[area_selected]
+  return(selected_areas)
+}
+
+## Apply the function to filter the areas list
+areas <- filter_areas(areas, area_selected)
+
+## Extract tables using the filtered `areas` and `pages`
+extracted_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  guess = NULL,
+  method = "lattice",
+  output = "matrix"
+)
+```
+
+## To save and load the extracted tables
+
+```{r save}
+# Assuming you have a list of tables extracted from some source
+# Let's say extracted_tables is currently a list of tables without names
+# You can assign names to it as follows:
+domain_names <- params$domains
+names(extracted_tables) <- domain_names
+
+# Save the list of data frames to a file
+saveRDS(extracted_tables, file = glue::glue(test, "_extracted_tables.rds"))
+
+# Load the list of data frames from the file
+extracted_tables <- readRDS(glue::glue(test, "_extracted_tables.rds"))
+
+# Verify that the list is loaded correctly
+str(extracted_tables)
+```
+
+# Functions
+
+## Define the Conversion and Tidy Functions
+
+```{r}
+# Function to handle percentile conversion
+convert_percentile <- function(df, column_name) {
+  column_sym <- rlang::sym(column_name)
+
+  df <- df |>
+    dplyr::mutate(original_percentile = .data[[column_name]]) |> # Store original percentile values
+    dplyr::mutate(
+      temp_column = as.numeric(ifelse(
+        grepl("^>", .data[[column_name]]),
+        as.numeric(sub("^>", "", .data[[column_name]])) + 0.1,
+        ifelse(grepl("^<", .data[[column_name]]), 0.9, .data[[column_name]])
+      ))
+    ) |>
+    dplyr::mutate(!!column_sym := temp_column) |>
+    select(-temp_column)
+  return(df)
+}
+
+# df <- df |> convert_percentile("column_name")
+
+# Function to convert specified columns to integer, double, and factor types
+convert_columns <- function(df, to_integer, to_double, to_factor) {
+  df <- df |>
+    dplyr::mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
+    dplyr::mutate(across(all_of(to_double), as.double, .names = "{.col}")) |>
+    dplyr::mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
+  return(df)
+}
+```
+
+## Function to tidy the data frame and maintain column types
+
+```{r}
+tidy_data <- function(df) {
+  # Select scale names (every 3rd row starting from the first one)
+  scales <- df |>
+    filter(row_number() %% 3 == 1) |>
+    select(scale)
+
+  # Select data rows (every 3rd row starting from the second one)
+  data <- df |>
+    filter(row_number() %% 3 == 2) |>
+    select(-scale)
+
+  # Combine the scale names and data
+  tidy_df <- bind_cols(scales, data)
+
+  return(tidy_df)
+}
+```
+
+## Function to extract columns by position
+
+```{r}
+library(dplyr)
+
+extract_and_clean_columns <- function(df, positions, new_colnames) {
+  # Extract columns by position
+  df <- df[, positions]
+
+  # Rename the variables
+  colnames(df) <- new_colnames
+
+  # Replace "-" with NA in the entire dataframe
+  df[df == "-"] <- NA
+
+  # Convert 'raw score', 'score', and 'percentile' to numeric
+  df <- df |>
+    dplyr::mutate(
+      across(c("raw_score", "score", "percentile"), as.numeric)
+    )
+
+  # Remove rows where 'score' or 'percentile' are missing
+  df <- df |>
+    filter(!is.na(score) & !is.na(percentile))
+
+  return(df)
+}
+```
+
+```{r}
+# Create path
+save_path <- "data"
+```
+
+## NAB Index Scores (Table 1)
+
+```{r}
+# Extract table
+table_name <- "index"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names1
+
+# Specify the columns to be converted
+to_integer <- c("score")
+to_double <- c("percentile")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("Attention Index (ATT)")
+  table[2, 1] <- c("Language Index (LAN)")
+  table[3, 1] <- c("Memory Index (MEM)")
+  table[4, 1] <- c("Spatial Index (SPT)")
+  table[5, 1] <- c("Executive Functions Index (EXE)")
+  table[6, 1] <- c("Total NAB Index (T-NAB)")
+} else if (params$test == "nabs") {
+  table[1, 1] <- c("NAB Total Index")
+  table[2, 1] <- c("NAB Language Index")
+  table[3, 1] <- c("NAB Memory Index")
+  table[4, 1] <- c("NAB Spatial Index")
+  table[5, 1] <- c("NAB Executive Functions Index")
+  table[6, 1] <- c("NAB Total NAB Index")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Attention Index (ATT)")
+  table[2, 1] <- c("Language Index (LAN)")
+  table[3, 1] <- c("Memory Index (MEM)")
+  table[4, 1] <- c("Spatial Index (SPT)")
+  table[5, 1] <- c("Executive Functions Index (EXE)")
+  table[6, 1] <- c("Total NAB Index (T-NAB)")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue::glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 1
+index <- table
+print(index)
+```
+
+## NAB Attention (Table 2)
+
+```{r}
+# Extract table
+table_name <- "att"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names2
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score")
+to_double <- c("percentile", "z_score", "base_rate")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nabs") {
+  table[1, 1] <- c("Orientation")
+  table[2, 1] <- c("Orientation to Self")
+  table[3, 1] <- c("Orientation to Time")
+  table[4, 1] <- c("Orientation to Place")
+  table[5, 1] <- c("Orientation to Situation")
+  table[6, 1] <- c("Digits Forward")
+  table[7, 1] <- c("Digits Forward Longest Span")
+  table[8, 1] <- c("Digits Backward")
+  table[9, 1] <- c("Digits Backward Longest Span")
+  table[10, 1] <- c("Numbers & Letters Part A Speed")
+  table[11, 1] <- c("Numbers & Letters Part A Errors")
+  table[12, 1] <- c("Numbers & Letters Part A Efficiency")
+  table[13, 1] <- c("Numbers & Letters Part B Efficiency")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Digits Forward")
+  table[2, 1] <- c("Digits Backward")
+  table[3, 1] <- c("Dots")
+  table[4, 1] <- c("Numbers & Letters Part A Efficiency")
+  table[5, 1] <- c("Numbers & Letters Part B Efficiency")
+  table[6, 1] <- c("Numbers & Letters Part C Efficiency")
+  table[7, 1] <- c("Numbers & Letters Part D Efficiency")
+  table[8, 1] <- c("Driving Scenes")
+} else if (params$test == "nab") {
+  table[1, 1] <- c("Orientation")
+  table[2, 1] <- c("Orientation to Self")
+  table[3, 1] <- c("Orientation to Time")
+  table[4, 1] <- c("Orientation to Place")
+  table[5, 1] <- c("Orientation to Situation")
+  table[6, 1] <- c("Digits Forward")
+  table[7, 1] <- c("Digits Forward Longest Span")
+  table[8, 1] <- c("Digits Backward")
+  table[9, 1] <- c("Digits Backward Longest Span")
+  table[10, 1] <- c("Dots")
+  table[11, 1] <- c("Numbers & Letters Part A Speed")
+  table[12, 1] <- c("Numbers & Letters Part A Errors")
+  table[13, 1] <- c("Numbers & Letters Part A Efficiency")
+  table[14, 1] <- c("Numbers & Letters Part B Efficiency")
+  table[15, 1] <- c("Numbers & Letters Part C Efficiency")
+  table[16, 1] <- c("Numbers & Letters Part D Efficiency")
+  table[17, 1] <- c("Numbers & Letters Part D Disruption")
+  table[18, 1] <- c("Driving Scenes")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 2
+att <- table
+print(att)
+```
+
+## NAB Language (Table 3)
+
+```{r}
+# Extract table
+table_name <- "lan"
+table <- as.data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names2
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score", "base_rate")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nabs") {
+  table[1, 1] <- c("Auditory Comprehension")
+  table[2, 1] <- c("Auditory Comprehension Colors")
+  table[3, 1] <- c("Auditory Comprehension Shapes")
+  table[4, 1] <- c("Auditory Comprehension Colors/Shapes/Numbers")
+  table[5, 1] <- c("Naming")
+  table[6, 1] <- c("Naming Semantic Cuing")
+  table[7, 1] <- c("Naming Phonemic Cuing")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Oral Production")
+  table[2, 1] <- c("Auditory Comprehension")
+  table[3, 1] <- c("Naming")
+  table[4, 1] <- c("Writing")
+  table[5, 1] <- c("Bill Payment")
+} else if (params$test == "nab") {
+  table[1, 1] <- c("Oral Production")
+  table[2, 1] <- c("Auditory Comprehension")
+  table[3, 1] <- c("Auditory Comprehension Colors")
+  table[4, 1] <- c("Auditory Comprehension Shapes")
+  table[5, 1] <- c("Auditory Comprehension Colors/Shapes/Numbers")
+  table[6, 1] <- c("Auditory Comprehension Pointing")
+  table[7, 1] <- c("Auditory Comprehension Yes/No")
+  table[8, 1] <- c("Auditory Comprehension Paper Folding")
+  table[9, 1] <- c("Naming")
+  table[10, 1] <- c("Naming Semantic Cuing")
+  table[11, 1] <- c("Naming Phonemic Cuing")
+  table[12, 1] <- c("Reading Comprehension")
+  table[13, 1] <- c("Reading Comprehension Words")
+  table[14, 1] <- c("Reading Comprehension Sentences")
+  table[15, 1] <- c("Writing")
+  table[16, 1] <- c("Writing Legibility")
+  table[17, 1] <- c("Writing Spelling")
+  table[18, 1] <- c("Writing Syntax")
+  table[19, 1] <- c("Writing Conveyance")
+  table[20, 1] <- c("Bill Payment")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 3
+lan <- table
+print(lan)
+```
+
+## NAB List Learning (Table 4)
+
+```{r}
+# Extract table
+table_name <- "mem_list"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names2
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score", "base_rate")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("List Learning List A Trial 1 Immediate Recall")
+  table[2, 1] <- c("List Learning List A Trial 2 Immediate Recall")
+  table[3, 1] <- c("List Learning List A Trial 3 Immediate Recall")
+  table[4, 1] <- c("List Learning List A Immediate Recall")
+  table[5, 1] <- c("List Learning List B Immediate Recall")
+  table[6, 1] <- c("List Learning List A Short Delayed Recall")
+  table[7, 1] <- c("List Learning List A Long Delayed Recall")
+  table[8, 1] <- c("List Learning List A Percent Retention")
+  table[9, 1] <- c(
+    "List Learning List A Long Delayed Forced-Choice Recognition"
+  )
+  table[10, 1] <- c(
+    "List Learning List A Long Delayed Forced-Choice Recognition False Alarms"
+  )
+  table[11, 1] <- c("List Learning List A Discriminability Index")
+  table[12, 1] <- c("List Learning List A Recall vs. Recognition Index")
+  table[13, 1] <- c("List Learning Semantic Clusters")
+  table[14, 1] <- c("List Learning Perseverations")
+  table[15, 1] <- c("List Learning Intrusions")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("List Learning List A Immediate Recall")
+  table[2, 1] <- c("List Learning List A Short Delayed Recall")
+  table[3, 1] <- c("List Learning List A Long Delayed Recall")
+} else if (params$test == "nabs") {
+  table[1, 1] <- c("Shape Learning Immediate Recognition")
+  table[2, 1] <- c("Shape Learning Delayed Recognition")
+  table[3, 1] <- c("Shape Learning Percent Retention")
+  table[4, 1] <- c("Story Learning Immediate Recall")
+  table[5, 1] <- c("Story Learning Delayed Recall")
+  table[6, 1] <- c("Story Learning Percent Retention")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 4
+mem_list <- table
+print(mem_list)
+```
+
+## NAB Shape Learning (Table 5)
+
+```{r}
+# Extract table
+table_name <- "mem_shape"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names3
+
+# Assign the table to a variable with a descriptive name
+# table_mem_shape <- table
+# print(table_mem_shape)
+
+# Table 5-9 don't have base_rate
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nabs") {
+  table[1, 1] <- c("Shape Learning Immediate Recognition")
+  table[2, 1] <- c("Shape Learning Delayed Recognition")
+} else if (params$test == "nab_main") {
+  table[4, 1] <- c("Shape Learning Immediate Recognition")
+  table[5, 1] <- c("Shape Learning Delayed Recognition")
+} else if (params$test == "nab") {
+  table[1, 1] <- c("Shape Learning Trial 1 Immediate Recognition")
+  table[2, 1] <- c("Shape Learning Trial 2 Immediate Recognition")
+  table[3, 1] <- c("Shape Learning Trial 3 Immediate Recognition")
+  table[4, 1] <- c("Shape Learning Immediate Recognition")
+  table[5, 1] <- c("Shape Learning Delayed Recognition")
+  table[6, 1] <- c("Shape Learning Percent Retention")
+  table[7, 1] <- c("Shape Learning Delayed Forced-Choice Recognition")
+  table[8, 1] <- c(
+    "Shape Learning Delayed Forced-Choice Recognition False Alarms"
+  )
+  table[9, 1] <- c("Shape Learning Discriminability Index")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 5
+mem_shape <- table
+print(mem_shape)
+```
+
+## NAB Story Learning (Table 6)
+
+```{r}
+# Extract table
+table_name <- "mem_story"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names3
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("Story Learning Trial 1 Phrase Unit")
+  table[2, 1] <- c("Story Learning Trial 2 Phrase Unit")
+  table[3, 1] <- c("Story Learning Phrase Unit Immediate Recall")
+  table[4, 1] <- c("Story Learning Thematic Unit Immediate Recall")
+  table[5, 1] <- c("Story Learning Trial 1 Thematic Unit")
+  table[6, 1] <- c("Story Learning Trial 2 Thematic Unit")
+  table[7, 1] <- c("Story Learning Phrase Unit Delayed Recall")
+  table[8, 1] <- c("Story Learning Thematic Unit Delayed Recall")
+  table[9, 1] <- c("Story Learning Phrase Unit Percent Retention")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Story Learning Phrase Unit Immediate Recall")
+  table[2, 1] <- c("Story Learning Phrase Unit Long Delayed Recall")
+} else if (params$test == "nabs") {
+  table[1, 1] <- c("Screening Story Learning Immediate Recall")
+  table[2, 1] <- c(
+    "Screening Story Learning
+Delayed Recall"
+  )
+  table[3, 1] <- c("Screening Story Learning Percent Retention")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 6
+mem_story <- table
+print(mem_story)
+```
+
+## NAB Daily Living Memory (Table 7)
+
+```{r}
+# Extract table
+table_name <- "mem_daily"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names3
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("Daily Living Memory Immediate Recall")
+  table[2, 1] <- c("Daily Living Memory Delayed Recall")
+  table[3, 1] <- c("Daily Living Memory Retention")
+  table[4, 1] <- c("Daily Living Memory Delayed Recognition")
+  table[5, 1] <- c("Daily Living Memory Recall vs. Recognition")
+  table[6, 1] <- c("Medication Instructions Immediate Recall")
+  table[7, 1] <- c("Medication Instructions Delayed Recall")
+  table[8, 1] <- c("Medication Instructions Delayed Recognition")
+  table[9, 1] <- c("Name/Address/Phone Immediate Recall")
+  table[10, 1] <- c("Name/Address/Phone Delayed Recall")
+  table[11, 1] <- c("Name/Address/Phone Delayed Recognition")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Daily Living Memory Immediate Recall")
+  table[2, 1] <- c("Daily Living Memory Delayed Recall")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 7
+mem_daily <- table
+print(mem_daily)
+```
+
+## NAB Spatial Module (Table 8)
+
+```{r eval = params$eval_spt}
+# Extract table
+table_name <- "spt"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names3
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("Visual Discrimination")
+  table[2, 1] <- c("Design Construction")
+  table[3, 1] <- c("Figure Drawing Copy")
+  table[4, 1] <- c("Figure Drawing Copy Organization")
+  table[5, 1] <- c("Figure Drawing Copy Fragmentation")
+  table[6, 1] <- c("Figure Drawing Copy Planning")
+  table[7, 1] <- c("Figure Drawing Immediate Recall")
+  table[8, 1] <- c("Figure Drawing Immediate Recall Organization")
+  table[9, 1] <- c("Figure Drawing Immediate Recall Fragmentation")
+  table[10, 1] <- c("Figure Drawing Immediate Recall Planning")
+  table[11, 1] <- c("Figure Drawing Percent Retention")
+  table[12, 1] <- c("Map Reading")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Visual Discrimination")
+  table[2, 1] <- c("Design Construction")
+  table[3, 1] <- c("Figure Drawing Copy")
+  table[4, 1] <- c("Map Reading")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 8
+spt <- table
+print(spt)
+```
+
+## NAB Executive Functions Module (Table 9)
+
+```{r}
+# Extract table
+table_name <- "exe"
+table <- data.frame(extracted_tables[[table_name]])
+colnames(table) <- params$column_names3
+
+# Specify the columns to be converted
+to_integer <- c("raw_score", "score", "percentile")
+to_double <- c("z_score")
+to_factor <- c("category")
+
+# Apply the convert_percentile function to the percentile column
+table <- convert_percentile(table, "percentile")
+
+# Use the function to convert the columns
+table <- convert_columns(table, to_integer, to_double, to_factor)
+
+# Tidy the data frame
+tidy_table <- tidy_data(table)
+
+# Convert columns again after tidying to ensure types are preserved
+table <- convert_columns(tidy_table, to_integer, to_double, to_factor)
+
+if (params$test == "nab") {
+  table[1, 1] <- c("Mazes")
+  table[2, 1] <- c("Judgment")
+  table[3, 1] <- c("Categories")
+  table[4, 1] <- c("Word Generation")
+  table[5, 1] <- c("Word Generation Perseverations")
+} else if (params$test == "nab_main") {
+  table[1, 1] <- c("Mazes")
+  table[2, 1] <- c("Judgment")
+  table[3, 1] <- c("Categories")
+  table[4, 1] <- c("Word Generation")
+}
+
+# Save table as csv file
+write.csv(
+  table,
+  glue("{save_path}/{test}_table_{table_name}.csv"),
+  row.names = FALSE
+)
+
+# make table 9
+exe <- table
+print(exe)
+```
+
+## Function to merge subtests specific to NAB
+
+```{r eval = TRUE}
+df <- data.frame()
+
+df <- df |>
+  dplyr::bind_rows(
+    index,
+    att,
+    lan,
+    mem_list,
+    mem_shape,
+    mem_story,
+    mem_daily,
+    spt,
+    exe
+  )
+```
+
+## Function to calculate 95% CI if needed
+
+```{r eval = FALSE}
+# Assuming df is your data.frame and calc_ci_95 is your function
+for (i in seq_len(nrow(df))) {
+  ci_values <- NeurotypR::calc_ci_95(
+    ability_score = df$score[i],
+    mean = 10, # change to 50, 0, 100, etc.
+    standard_deviation = 3, # change to 10, 1, 15, etc.
+    reliability = .90
+  )
+  df$true_score[i] <- ci_values["true_score"]
+  df$ci_lo[i] <- ci_values["lower_ci_95"]
+  df$ci_hi[i] <- ci_values["upper_ci_95"]
+  df$ci_95[i] <- paste0(ci_values["lower_ci_95"], "-", ci_values["upper_ci_95"])
+}
+
+df <- df |>
+  dplyr::select(-c(true_score, ci_lo, ci_hi)) |>
+  dplyr::relocate(ci_95, .after = score)
+```
+
+# Lookup Table Match
+
+```{r eval = TRUE}
+# Load the lookup table
+lookup_table <- readr::read_csv(
+  "~/reports/neuropsych_lookup_table_combined.csv"
+)
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- NeurotypR::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r ranges, eval = TRUE}
+df_mutated <- df_mutated |>
+  dplyr::mutate(range = NULL) |>
+  NeurotypR::gpluck_make_score_ranges(
+    table = df_mutated,
+    test_type = "npsych_test"
+  ) |>
+  dplyr::relocate(c(range), .after = percentile)
+```
+
+## Glue results for each scale
+
+```{r results, eval = TRUE}
+df <- df_mutated |>
+  dplyr::mutate(
+    result = glue::glue(
+      "{description} performed in the {range} range, exceeding {100 - percentile}% of peers in the general population.\n"
+    )
+  ) |>
+  dplyr::select(-description) |>
+  dplyr::relocate(absort, .after = result)
+```
+
+## Sort by domains and subtests
+
+```{r eval = TRUE}
+library(NeurotypR)
+df <- NeurotypR::sort_nab_scales(df)
+
+# Remove any incomplete rows (rows with just "test" value but missing other data)
+df <- df |>
+  dplyr::filter(!is.na(scale) & scale != "")
+```
+
+# Save
+
+## Write out final csv
+
+```{r write}
+test <- params$test
+readr::write_excel_csv(
+  df,
+  here::here("data", "csv", paste0(test, ".csv")),
+  na = "",
+  col_names = TRUE
+)
+```
+
+## Write to "g.csv" file
+
+```{r g, eval = TRUE}
+has_headers <- function(file_path) {
+  if (!file.exists(file_path)) {
+    return(FALSE) # File doesn't exist, headers are needed
+  }
+  # Check if the file has at least one line (header)
+  return(length(readLines(file_path, n = 1)) > 0)
+}
+
+csv_file <- df
+g <- "g"
+file_path <- here::here("data", paste0(g, ".csv"))
+
+readr::write_excel_csv(
+  csv_file,
+  file_path,
+  append = TRUE,
+  col_names = !has_headers(file_path),
+  quote = "all",
+  na = ""
+)
+```
+
+**THE END!!**

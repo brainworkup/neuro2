@@ -1,0 +1,541 @@
+---
+title: |
+  <center> CEFI </center>
+  <center> Adult and Child Self and Observer </center>
+  <center> Parent, Teacher, and Self </center>
+date: "`r Sys.Date()`"
+params:
+  patient: Biggie
+  test:
+    label: "CEFI"
+    value: "cefi_self_12-18"
+    input: select
+    multiple: no
+    choices:
+      - cefi_self
+      - cefi_observer
+      - cefi_self_12-18
+      - cefi_parent_5-18
+      - cefi_teacher_5-18
+  test_name:
+    label: "Test Name:"
+    value: "CEFI Self 12-18"
+    input: select
+    multiple: no
+    choices:
+      - "CEFI Self"
+      - "CEFI Observer"
+      - "CEFI Self 12-18"
+      - "CEFI Parent"
+      - "CEFI Teacher"
+  file:
+    label: "No file selected"
+    value: file
+    input: file
+    multiple: FALSE
+    accept: ".pdf"
+  pages: [3, 3]
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+## Setup
+
+```{r setup, include = FALSE}
+# Set JAVA environment
+Sys.setenv(
+  JAVA_HOME =
+    "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
+)
+options(java.parameters = "-Xmx16000m")
+knitr::opts_chunk$set(
+  root.dir = normalizePath("./"),
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  error = TRUE
+)
+library(glue)
+library(here)
+library(knitr)
+library(pdftools)
+library(qs2)
+library(rmarkdown)
+library(rmdformats)
+library(shiny)
+library(snakecase)
+library(tabulapdf)
+library(tidyverse)
+library(xfun)
+library(yaml)
+library(NeurotypR)
+library(NeurotypR)
+```
+
+## Parameters
+
+```{r}
+patient <- params$patient
+test <- params$test
+test_name <- params$test_name
+pages <- params$pages
+# file <- file.path(file.choose())
+file <- file.path(params$file)
+```
+
+```{r}
+if (params$test == "cefi_self") {
+  saveRDS(file, "cefi_self.rds")
+} else if (params$test == "cefi_observer") {
+  saveRDS(file, "cefi_observer.rds")
+} else if (params$test == "cefi_self_12-18") {
+  saveRDS(file, "cefi_self_12_18.rds")
+} else if (params$test == "cefi_parent_5-18") {
+  saveRDS(file, "cefi_parent_5_18.rds")
+} else if (params$test == "cefi_teacher_5-18") {
+  saveRDS(file, "cefi_teacher_5_18.rds")
+}
+```
+
+## Areas
+
+```{r}
+# get_areas <- tabulapdf::locate_areas(
+#   file = file,
+#   pages = pages,
+#   copy = TRUE
+# )
+
+# note: double check these areas
+if (params$test == "cefi_self" | params$test == "cefi_observer") {
+  areas <- list(
+    table1 = c(460, 34, 483, 578),
+    table2 = c(533, 34, 671, 578)
+  )
+} else if (params$test == "cefi_self_12-18") {
+  areas <- list(
+    table1 = c(458.6, 52.6, 472.5, 559.4), # OK
+    table2 = c(525.9, 54.9, 656.9, 557.1)
+  )
+} else if (params$test == "cefi_parent_5-18") {
+  areas <- list(
+    table1 = c(468, 52, 480, 559), # ok
+    table2 = c(534, 52, 678, 559)
+  )
+} else if (params$test == "cefi_teacher_5-18") {
+  areas <- list(
+    table1 = c(468.563, 53.0, 481.568, 557.9), # check
+    table2 = c(493.043, 50.49, 669.758, 559.98)
+  )
+}
+```
+
+## Extract Tables
+
+```{r}
+extracted_tables <- tabulapdf::extract_tables(
+  file = file,
+  pages = pages,
+  area = areas,
+  guess = NULL,
+  method = "decide", # stream, lattice
+  output = "matrix"
+)
+
+# Save the extracted_tables object to a file in the 'data' folder
+qs2::qs_save(extracted_tables, file = paste0("data/extracted_tables_", test, ".qs"))
+
+# Load the extracted_tables object from the 'data' folder
+# extracted_tables <- qs2::qs_read(paste0("data/extracted_tables_", test, ".qs"))
+```
+
+## Functions
+
+```{r}
+# Function to process the extracted tables
+process_cefi_tables <- function(cefi_data) {
+  table_list <- purrr::map(cefi_data, as.data.frame) |>
+    set_names(paste0("table", 1:length(cefi_data))) # Rename tables
+
+  list2env(table_list, .GlobalEnv) # Assign to global environment
+}
+
+# Loop over the list and write each matrix to a CSV file
+for (i in seq_along(extracted_tables)) {
+  write.csv(extracted_tables[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+}
+
+# convert columns
+convert_columns <- function(df) {
+  # Specify the columns to be converted to numeric
+  numeric_cols <- c("score", "percentile")
+
+  # Convert specified columns to numeric
+  df[numeric_cols] <- lapply(df[numeric_cols], function(x) as.numeric(as.character(x)))
+
+  # Convert remaining columns to character
+  char_cols <- setdiff(names(df), numeric_cols)
+  df[char_cols] <- lapply(df[char_cols], as.character)
+
+  return(df)
+}
+
+# Function to replace "-" with NA and filter out rows with no real data
+filter_real_data <- function(table, key_columns) {
+  table <- table |>
+    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) |>
+    mutate(across(all_of(key_columns), as.numeric)) |>
+    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
+
+  return(table)
+}
+
+# Function to extract text from PDF
+get_text <- function(file) {
+  tryCatch(
+    {
+      txt <- pdftools::pdf_text(file) |>
+        stringr::str_split("\n") |>
+        unlist()
+      return(txt)
+    },
+    error = function(e) {
+      message("Error reading PDF: ", e)
+      return(NULL)
+    }
+  )
+}
+```
+
+## CEFI Full Scale (Table 1)
+
+```{r}
+# Process tables
+process_cefi_tables(extracted_tables)
+
+# Convert to tibble
+table1 <- data.frame(table1)
+
+# Ensure column names are correct
+names(table1) <- c("score", "ci_95", "percentile", "category")
+
+# Add 'scale' column with empty strings
+table1 <- table1 |> dplyr::mutate(scale = "Full Scale")
+table1 <- table1[c("scale", "score", "ci_95", "percentile")]
+
+# Convert columns
+table1 <- convert_columns(df = table1)
+```
+
+## CEFI Scales (Table 2)
+
+```{r}
+# Convert to tibble
+table2 <- data.frame(table2)
+
+# Remove empty columns from table2
+table2 <- table2 |>
+  dplyr::select_if(~ any(. != ""))
+
+# Ensure column names are correct
+names(table2) <- c("scale", "score", "ci_95", "percentile", "category", "diff_from_avg", "stat", "strength")
+
+table2 <- table2 |>
+  dplyr::select(-c("diff_from_avg", "stat", "strength", "category"))
+
+# Usage (assuming you have a dataframe named 'df')
+table2 <- convert_columns(df = table2)
+
+# Fix split rows issue in table2
+# First, create a vector of all expected scale names
+expected_scales <- c(
+  "Attention", "Emotion Regulation", "Flexibility", "Inhibitory Control",
+  "Initiation", "Organization", "Planning", "Self-Monitoring", "Working Memory"
+)
+
+# Step 1: Find rows with NA scores that might contain parts of scale names
+na_rows <- which(is.na(table2$score))
+
+# Step 2: Fix split scale names by examining each NA row
+fixed_table2 <- table2
+if (length(na_rows) > 0) {
+  for (i in na_rows) {
+    # Check if this might be part of a scale name that got split
+    if (i < nrow(table2)) {
+      # Try to combine with next row to see if it makes a valid scale name
+      potential_scale <- paste(table2$scale[i], table2$scale[i + 1], sep = " ")
+
+      # Check if this matches any expected scale or part of it
+      for (expected_scale in expected_scales) {
+        if (grepl(potential_scale, expected_scale, fixed = TRUE) ||
+          potential_scale == expected_scale) {
+          # Found a match, update the scale name and move data from row i+1
+          fixed_table2$scale[i] <- expected_scale
+          fixed_table2$score[i] <- fixed_table2$score[i + 1]
+          fixed_table2$ci_95[i] <- fixed_table2$ci_95[i + 1]
+          fixed_table2$percentile[i] <- fixed_table2$percentile[i + 1]
+
+          # Mark row i+1 for removal
+          fixed_table2$scale[i + 1] <- "TO_REMOVE"
+          break
+        }
+      }
+    }
+  }
+
+  # Remove marked rows
+  fixed_table2 <- fixed_table2 |>
+    filter(scale != "TO_REMOVE")
+}
+
+# Special case for "Working Memory" which might be split across two rows
+working_memory_row <- which(fixed_table2$scale == "Working")
+if (length(working_memory_row) > 0 && working_memory_row[1] < nrow(fixed_table2)) {
+  next_row <- working_memory_row[1] + 1
+  if (fixed_table2$scale[next_row] == "Memory") {
+    fixed_table2$scale[working_memory_row[1]] <- "Working Memory"
+    fixed_table2$score[working_memory_row[1]] <- fixed_table2$score[next_row]
+    fixed_table2$ci_95[working_memory_row[1]] <- fixed_table2$ci_95[next_row]
+    fixed_table2$percentile[working_memory_row[1]] <- fixed_table2$percentile[next_row]
+    fixed_table2 <- fixed_table2[-next_row, ]
+  }
+}
+
+# Filter out any remaining rows with NA scores
+fixed_table2 <- fixed_table2 |>
+  dplyr::filter(!is.na(score))
+
+# Deduplicate by scale name (keep the first occurrence of each scale)
+fixed_table2 <- fixed_table2 |>
+  dplyr::group_by(scale) |>
+  dplyr::slice(1) |>
+  dplyr::ungroup()
+
+# Replace the original table2 with the fixed version
+table2 <- fixed_table2
+
+# Print the filtered table
+print(table1)
+print(table2)
+
+# Bind rows into full data.frame
+df <- rbind(table1, table2)
+```
+
+## Match with lookup table
+
+```{r eval = TRUE}
+library(readr)
+library(dplyr)
+
+# Load the lookup table
+lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+
+# Merge the data with the lookup table
+df_merged <- dplyr::mutate(df, test = test) |>
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
+  dplyr::relocate(c(test, test_name), .before = scale)
+
+# add missing columns
+df_mutated <- NeurotypR::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = "",
+  absort = NULL
+)
+```
+
+## Test score ranges
+
+```{r ranges, eval = TRUE}
+df_mutated <- df_mutated |>
+  dplyr::mutate(range = NULL) |>
+  NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale") |>
+  dplyr::relocate(c(range), .after = percentile)
+```
+
+## Glue results for each scale
+
+```{r glue, eval = TRUE}
+# Get the rater type from params$test
+rater <- params$test |>
+  stringr::str_extract("self|observer|parent|teacher")
+
+# Define the rater label based on the extracted rater type
+rater_labels <- c(
+  "self" = "self",
+  "observer" = "observer",
+  "parent" = "parent",
+  "teacher" = "teacher"
+)
+
+# Update the result column using the appropriate rater label
+df <- df_mutated |>
+  dplyr::mutate(
+    result = dplyr::case_when(
+      scale == "Full Scale" ~ glue::glue(
+        "In terms of executive functioning skills related to ADHD, {patient}'s {rater_labels[[rater]]}-reported {scale} score (measuring {description}) fell within the {range} range.\n\n"
+      ),
+      TRUE ~ glue::glue(
+        "- {patient}'s {rater_labels[[rater]]}-reported {scale} score ({description}) fell within the {range} range.\n\n"
+      )
+    )
+  )
+
+
+df <- df |>
+  dplyr::select(-description) |>
+  dplyr::relocate(absort, .after = result)
+```
+
+## Write out final csv
+
+```{r write}
+# Make sure we're using the fully processed data.frame with all columns
+if (!exists("df") || ncol(df) <= 4) {
+  # If df wasn't properly updated in the results section, use df_mutated
+  writedf <- df_mutated
+} else {
+  writedf <- df
+}
+readr::write_excel_csv(writedf, here::here("data", "csv", paste0(test, ".csv")), col_names = TRUE)
+```
+
+## Extract Text
+
+```{r}
+# CEFI Self
+if (params$test == "cefi_self") {
+  ## extract text
+  cefi_self_txt <- get_text(file)
+  if (!is.null(cefi_self_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_self_squished <- stringr::str_replace_all(cefi_self_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_self_squished,
+      here::here("cefi_self_text.md"),
+      sep = "\n"
+    )
+  }
+} else if (params$test == "cefi_self_12-18") {
+  ## extract text
+  cefi_self_txt <- get_text(file)
+  if (!is.null(cefi_self_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_self_squished <- stringr::str_replace_all(cefi_self_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_self_squished,
+      here::here("cefi_self_12-18_text.md"),
+      sep = "\n"
+    )
+  }
+}
+
+# CEFI Observer
+if (params$test == "cefi_observer") {
+  ## extract text
+  cefi_observer_txt <- get_text(file)
+  if (!is.null(cefi_observer_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_observer_squished <- stringr::str_replace_all(cefi_observer_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_observer_squished,
+      here::here("cefi_observer_text.md"),
+      sep = "\n"
+    )
+  }
+} else if (params$test == "cefi_observer_5-18") {
+  ## extract text
+  cefi_observer_txt <- get_text(file)
+  if (!is.null(cefi_observer_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_observer_squished <- stringr::str_replace_all(cefi_observer_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_observer_squished,
+      here::here("cefi_observer_5-18_text.md"),
+      sep = "\n"
+    )
+  }
+}
+
+# CEFI Parent
+if (params$test == "cefi_parent") {
+  ## extract text
+  cefi_parent_txt <- get_text(file)
+  if (!is.null(cefi_parent_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_parent_squished <- stringr::str_replace_all(cefi_parent_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_parent_squished,
+      here::here("cefi_parent_text.md"),
+      sep = "\n"
+    )
+  }
+} else if (params$test == "cefi_parent_5-18") {
+  ## extract text
+  cefi_parent_txt <- get_text(file)
+  if (!is.null(cefi_parent_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_parent_squished <- stringr::str_replace_all(cefi_parent_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_parent_squished,
+      here::here("cefi_parent_5-18_text.md"),
+      sep = "\n"
+    )
+  }
+}
+
+# CEFI Teacher
+if (params$test == "cefi_teacher") {
+  ## extract text
+  cefi_teacher_txt <- get_text(file)
+  if (!is.null(cefi_teacher_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_teacher_squished <- stringr::str_replace_all(cefi_teacher_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_teacher_squished,
+      here::here("cefi_teacher_text.md"),
+      sep = "\n"
+    )
+  }
+} else if (params$test == "cefi_teacher_5-18") {
+  ## extract text
+  cefi_teacher_txt <- get_text(file)
+  if (!is.null(cefi_teacher_txt)) {
+    # Replace long spaces with a column break symbol
+    cefi_teacher_squished <- stringr::str_replace_all(cefi_teacher_txt, "\\s{2,}", "- ") |>
+      stringr::str_remove_all(",")
+
+    # save as markdown
+    readr::write_lines(
+      cefi_teacher_squished,
+      here::here("cefi_teacher_5-18_text.md"),
+      sep = "\ n"
+    )
+  }
+}
+```
+
+**THE END!!**

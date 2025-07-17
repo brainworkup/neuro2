@@ -1,0 +1,146 @@
+---
+title: NEUROCOGNITIVE EXAMINATION
+patient: Biggie
+name: Smalls, Biggie
+doe: {{< var doe >}}
+date_of_report: last-modified
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+# Suppress xfun::attr() deprecation warnings
+options(warn = -1)
+
+packages <- c(
+  "dplyr",
+  "glue",
+  "gt",
+  "here",
+  "janitor",
+  "knitr",
+  "purrr",
+  "quarto",
+  "readr",
+  "readxl",
+  "rmarkdown",
+  "snakecase",
+  "stringr",
+  "tidytable",
+  "vroom",
+  "xfun",
+  "bwu",
+  "NeurotypR"
+)
+
+# Function to load packages one by one
+load_packages <- function(packages) {
+  for (pkg in packages) {
+    if (!require(pkg, character.only = TRUE)) {
+      install.packages(pkg)
+      library(pkg, character.only = TRUE)
+    }
+    message(paste("Loaded package:", pkg))
+  }
+}
+
+# Call the function to load packages
+load_packages(packages)
+
+# Apply xfun::attr() deprecation fix after loading xfun
+if (requireNamespace("xfun", quietly = TRUE)) {
+  # Check if attr function exists and patch it
+  if (exists("attr", envir = asNamespace("xfun"))) {
+    tryCatch(
+      {
+        # Temporarily unlock the binding
+        unlockBinding("attr", asNamespace("xfun"))
+        # Replace with attr2
+        assign("attr", xfun::attr2, envir = asNamespace("xfun"))
+        # Lock it back
+        lockBinding("attr", asNamespace("xfun"))
+        message("Applied xfun::attr() deprecation fix")
+      },
+      error = function(e) {
+        message(
+          "Could not patch xfun::attr(), continuing with warnings suppressed"
+        )
+      }
+    )
+  }
+}
+
+# Set knitr options
+knitr::opts_knit$set(
+  width = 80,
+  digits = 2,
+  warnPartialMatchArgs = FALSE,
+  crop = knitr::hook_pdfcrop,
+  optipng = knitr::hook_optipng
+)
+
+# Keep warnings suppressed for the rest of the document to avoid xfun::attr issues
+# This is a temporary workaround for the xfun::attr() deprecation warning
+options(warn = -1)
+
+# Set environment variables with default values
+Sys.setenv(PATIENT = "{{< var patient >}}")
+patient <- Sys.getenv("PATIENT")
+```
+
+```{r}
+#| label: data-load
+#| include: false
+
+path_data <- here::here("data")
+path_csv <- here::here("inst", "extdata")
+NeurotypR::load_data(here::here(path_csv))
+neurocog <- readr::read_csv("data/neurocog.csv")
+neurobehav <- readr::read_csv("data/neurobehav.csv")
+neuropsych <- readr::read_csv("data/neuropsych.csv")
+validity <- readr::read_csv("data/validity.csv")
+```
+
+```{=typst}
+#let name = [{{< var last_name >}}, {{< var first_name >}}]
+#let doe = [{{< var date_of_report >}}]
+#let patient = [{{< var patient >}}]
+// #v(2em, weak: true)
+// #show block: set par(leading: 0.65em)
+#block[
+*PATIENT NAME:* #name \
+*DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
+*DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
+*DATE OF REPORT*: {{< var date_of_report >}} \
+]
+```
+{{< include _00-00_tests.qmd >}}
+
+{{< include _01-00_nse_adult.qmd >}}
+
+<!-- {{< pagebreak >}} -->
+
+
+<!-- {{< pagebreak >}} -->
+
+{{< include _02-00_behav_obs.qmd >}}
+
+# NEUROCOGNITIVE FINDINGS
+
+{{< include _include_domains.qmd >}}
+
+<!-- {{< pagebreak >}} -->
+
+{{< include _03-00_sirf.qmd >}}
+
+{{< include _03-00_sirf_text.qmd >}}
+
+{{< include _03-01_recs.qmd >}}
+
+{{< include _03-02_signature.qmd >}}
+
+<!-- {{< pagebreak >}} -->
+
+{{< include _03-03_appendix.qmd >}}
