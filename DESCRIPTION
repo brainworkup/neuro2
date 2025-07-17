@@ -32,7 +32,6 @@ Imports:
     kableExtra,
     knitr,
     memoise,
-    NeurotypR,
     progress,
     purrr,
     quarto (>= 1.4.0),
