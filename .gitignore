@@ -43,3 +43,5 @@ _freeze/
 .env
 # renv
 duckdb.R
+
+r6_iq_comparison_cache/
