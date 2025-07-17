@@ -34,49 +34,6 @@ calculate_z_stats <- function(data, group_vars) {
   return(data)
 }
 
-#' @title Helper function to read and combine CSV files
-#' @description Efficiently reads multiple CSV files and combines them into a single dataframe
-#' @importFrom readr read_csv
-#' @importFrom purrr map list_rbind
-#' @param files Character vector of file paths
-#' @return Combined dataframe
-#' @keywords internal
-read_and_combine_files <- function(files) {
-  if (length(files) == 0) {
-    stop("No CSV files found in the specified directory.")
-  }
-
-  # Read files with error handling
-  data_list <- purrr::map(files, function(filename) {
-    tryCatch(
-      {
-        data <- readr::read_csv(
-          filename,
-          na = c("", "NA", "--", "-"),
-          show_col_types = FALSE
-        )
-        data$filename <- basename(filename)
-        return(data)
-      },
-      error = function(e) {
-        warning(paste("Failed to read file:", filename, "-", e$message))
-        return(NULL)
-      }
-    )
-  })
-
-  # Remove NULL entries (failed reads)
-  data_list <- data_list[!sapply(data_list, is.null)]
-
-  if (length(data_list) == 0) {
-    stop("No files could be successfully read.")
-  }
-
-  # Combine using list_rbind for better performance
-  combined_data <- purrr::list_rbind(data_list)
-
-  return(combined_data)
-}
 
 #' @title Read/Load Neuropsych Eval CSV Files
 #' @description This function reads .csv files of patient data and writes four different files of the same data that are categorized by neuropsychological test type.
@@ -111,8 +68,8 @@ load_data <- function(
   # Get CSV files
   files <- dir(file_path, pattern = "*.csv", full.names = TRUE)
 
-  # Read and combine files
-  neuropsych <- read_and_combine_files(files) |> dplyr::distinct()
+  # Read and combine files using the utility function
+  neuropsych <- read_multiple_csv(files, .id = "filename") |> dplyr::distinct()
 
   # Validate required columns
   required_cols <- c("test_type")

@@ -220,39 +220,20 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Calculate z-score statistics using SQL.
+    #' Calculate z-score statistics using SQL (optimized for DuckDB).
     #'
     #' @param table_name Table to process
     #' @param group_vars Vector of grouping variables
     #'
     #' @return Data with calculated z-score statistics
     calculate_z_stats = function(table_name, group_vars) {
-      # Build GROUP BY clause
-      group_clause <- paste(group_vars, collapse = ", ")
-
-      # Build selection with computed statistics
-      select_stats <- paste0(
-        "AVG(z) OVER (PARTITION BY ",
-        group_clause,
-        ") as z_mean_",
-        group_vars,
-        ",\n  STDDEV(z) OVER (PARTITION BY ",
-        group_clause,
-        ") as z_sd_",
-        group_vars,
-        collapse = ",\n  "
-      )
-
-      query <- sprintf(
-        "SELECT *,
-  %s
-FROM %s
-WHERE z IS NOT NULL",
-        select_stats,
-        table_name
-      )
-
-      return(self$query(query))
+      # For complex z-score calculations, export to R and use the tidy_data function
+      data <- self$query(sprintf("SELECT * FROM %s WHERE z IS NOT NULL", table_name))
+      
+      # Use the existing calculate_z_stats function from tidy_data.R
+      result <- calculate_z_stats(data, group_vars)
+      
+      return(result)
     },
 
     #' @description

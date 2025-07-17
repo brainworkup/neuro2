@@ -159,7 +159,7 @@ extract_wisc5_data <- function(
 
   # Combine pages if needed
   if (params$combine_pages && length(extracted_areas) > 1) {
-    df <- do.call(rbind, lapply(extracted_areas, as.data.frame))
+    df <- dplyr::bind_rows(lapply(extracted_areas, as.data.frame))
   } else {
     df <- as.data.frame(extracted_areas[[1]])
   }
