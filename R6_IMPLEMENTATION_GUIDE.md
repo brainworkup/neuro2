@@ -88,10 +88,13 @@ processor$process()
 
 ### 2. Create Visualizations
 ```r
+# data
+data <- readr::read_csv("data/neurocog.csv")
+
 # Use DotplotR6 for plots
 dotplot <- DotplotR6$new(
-  data = your_data,
-  x = "mean_z",
+  data = data,
+  x = "z_mean_domain",
   y = "domain",
   theme = "fivethirtyeight"
 )

@@ -33,15 +33,51 @@ create_sample_data <- function(n_rows = 1000) {
     ),
     raw_score = sample(50:150, n_rows, replace = TRUE),
     score = sample(70:130, n_rows, replace = TRUE),
+    ci_95 = sample(60:140, n_rows, replace = TRUE),
     percentile = sample(1:99, n_rows, replace = TRUE),
+    range = sample(
+      c(
+        "Above Average",
+        "High Average",
+        "Average",
+        "Low Average",
+        "Below Average"
+      ),
+      n_rows,
+      replace = TRUE
+    ),
     domain = sample(
       c("General Cognitive Ability", "Memory", "Executive"),
       n_rows,
       replace = TRUE
     ),
     subdomain = sample(c("Verbal", "Visual", "Speed"), n_rows, replace = TRUE),
+    narrow = sample(
+      c("Verbal Comprehension", "Working Memory", "Processing Speed"),
+      n_rows,
+      replace = TRUE
+    ),
+    pass = sample(
+      c("Sequential", "Simultaneous", "Attention", "Planning"),
+      n_rows,
+      replace = TRUE
+    ),
+    verbal = sample(c("Verbal", "Nonverbal"), n_rows, replace = TRUE),
+    timed = sample(c(TRUE, FALSE), n_rows, replace = TRUE),
     z = rnorm(n_rows, 0, 1),
     z_mean_domain = rnorm(n_rows, 0, 0.5),
+    z_sd_domain = runif(n_rows, 0.5, 1.5),
+    z_mean_subdomain = rnorm(n_rows, 0, 0.3),
+    z_sd_subdomain = runif(n_rows, 0.3, 1.0),
+    z_mean_narrow = rnorm(n_rows, 0, 0.2),
+    z_sd_narrow = runif(n_rows, 0.2, 0.8),
+    z_mean_pass = rnorm(n_rows, 0, 0.4),
+    z_sd_pass = runif(n_rows, 0.4, 1.2),
+    z_mean_verbal = rnorm(n_rows, 0, 0.3),
+    z_sd_verbal = runif(n_rows, 0.3, 0.9),
+    z_mean_timed = rnorm(n_rows, 0, 0.35),
+    z_sd_timed = runif(n_rows, 0.35, 1.1),
+    result = paste("Result for test", 1:n_rows),
     stringsAsFactors = FALSE
   )
 }
@@ -163,16 +199,19 @@ print(plot_benchmark)
 message("\n💾 Benchmark 3: Memory Usage")
 message("----------------------------")
 
+# Helper function to get object size in MB
+get_size_mb <- function(x) {
+  as.numeric(object.size(x)) / 1024^2
+}
+
 # Procedural approach memory
 gc()
-mem_before <- memory.size()
 proc_results <- lapply(1:10, function(i) procedural_process(test_data))
-mem_procedural <- memory.size() - mem_before
+mem_procedural <- get_size_mb(proc_results)
 rm(proc_results)
 gc()
 
 # R6 approach memory
-mem_before <- memory.size()
 r6_results <- lapply(1:10, function(i) {
   processor <- DomainProcessorR6$new(
     domains = "Memory",
@@ -182,17 +221,19 @@ r6_results <- lapply(1:10, function(i) {
   processor$data <- test_data
   processor
 })
-mem_r6 <- memory.size() - mem_before
+mem_r6 <- get_size_mb(r6_results)
 rm(r6_results)
 gc()
 
 message(paste("Procedural memory usage:", round(mem_procedural, 2), "MB"))
 message(paste("R6 memory usage:", round(mem_r6, 2), "MB"))
-message(paste(
-  "Memory savings with R6:",
-  round((mem_procedural - mem_r6) / mem_procedural * 100, 1),
-  "%"
-))
+if (mem_procedural > 0) {
+  message(paste(
+    "Memory savings with R6:",
+    round((mem_procedural - mem_r6) / mem_procedural * 100, 1),
+    "%"
+  ))
+}
 
 # BENCHMARK 4: Full Workflow
 message("\n🔄 Benchmark 4: Full Workflow Simulation")

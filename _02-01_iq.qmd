@@ -198,6 +198,7 @@ dotplot_narrow$create_plot()
   )
 }
 ```
+
 ```{=typst}
 // Define the title of the domain
 #let title = "General Cognitive Ability"
@@ -211,3 +212,4 @@ dotplot_narrow$create_plot()
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
+
