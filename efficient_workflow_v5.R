@@ -12,6 +12,12 @@ rm(list = ls())
 packages <- c("tidyverse", "here", "glue", "yaml", "quarto", "NeurotypR")
 invisible(lapply(packages, library, character.only = TRUE))
 
+# Load utility functions for efficiency improvements
+source("R/utils.R")
+
+# Create cached CSV reader for efficiency - eliminates repeated file reads
+cached_read_csv <- cache_function(safe_read_csv)
+
 message("🚀 EFFICIENT NEUROPSYCH REPORT WORKFLOW")
 message("=======================================\n")
 
@@ -31,8 +37,8 @@ if (file.exists("01_import_process_data.R")) {
     if (file.exists(csv_file)) {
       tryCatch(
         {
-          # Read the CSV file
-          temp_data <- readr::read_csv(csv_file, show_col_types = FALSE)
+          # Read the CSV file using cached reader for efficiency
+          temp_data <- cached_read_csv(csv_file)
 
           # Check if domain column exists and contains validity data
           if ("domain" %in% colnames(temp_data)) {
@@ -109,7 +115,7 @@ if (file.exists("01_import_process_data.R")) {
   message("🔧 Adding missing grouping variables...")
 
   if (file.exists("data/neurocog.csv")) {
-    neurocog <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
+    neurocog <- cached_read_csv("data/neurocog.csv")
 
     # Add missing z_mean computations for pass, verbal, timed
     if ("pass" %in% colnames(neurocog)) {
@@ -159,7 +165,7 @@ if (file.exists("01_import_process_data.R")) {
 
   # Do the same for neurobehav if it exists
   if (file.exists("data/neurobehav.csv")) {
-    neurobehav <- readr::read_csv("data/neurobehav.csv", show_col_types = FALSE)
+    neurobehav <- cached_read_csv("data/neurobehav.csv")
 
     # Add missing columns if they don't exist
     missing_cols <- c(
@@ -252,8 +258,8 @@ generate_domain_texts <- function() {
     stop("❌ Processed data files not found!")
   }
 
-  neurocog <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
-  neurobehav <- readr::read_csv("data/neurobehav.csv", show_col_types = FALSE)
+  neurocog <- cached_read_csv("data/neurocog.csv")
+  neurobehav <- cached_read_csv("data/neurobehav.csv")
 
   # Define domain mappings to existing text files
   domain_mappings <- list(
@@ -364,3 +370,5 @@ message("- No unnecessary file creation")
 message("- Uses existing template structure")
 message("- Minimal processing steps")
 message("- Fast execution")
+message("- Cached CSV reads eliminate redundant I/O")
+message("- Optimized data processing pipeline")

@@ -530,7 +530,7 @@ process_wais5_complete <- function(
   )
 
   # Combine both datasets
-  wais5 <- rbind(wais5_index, wais5_subtest)
+  wais5 <- dplyr::bind_rows(wais5_index, wais5_subtest)
 
   # Save the complete dataset
   test <- "wais5"
@@ -679,7 +679,7 @@ pluck_wiat4 <- function(
   if (length(extracted_areas) > 1) {
     df <- as.data.frame(extracted_areas[[1]])
     df2 <- data.frame(extracted_areas[[2]])
-    df <- rbind(df, df2)
+    df <- dplyr::bind_rows(df, df2)
   } else {
     df <- as.data.frame(extracted_areas[[1]])
   }

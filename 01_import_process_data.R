@@ -98,13 +98,9 @@ for (test_name in names(validity_files)) {
   }
 }
 
-# Combine neurocog data
+# Combine data efficiently using bind_rows for better performance
 neurocog <- dplyr::bind_rows(neurocog_list, .id = "source_test")
-
-# Combine neurobehav data
 neurobehav <- dplyr::bind_rows(neurobehav_list, .id = "source_test")
-
-# Combine validity data
 validity <- dplyr::bind_rows(validity_list, .id = "source_test")
 
 # Add patient information
@@ -242,7 +238,7 @@ message(paste("Neurobehav records:", nrow(neurobehav)))
 message(paste("Validity records:", nrow(validity)))
 
 # Create a combined neuropsych dataset for some analyses
-neuropsych <- bind_rows(
+neuropsych <- dplyr::bind_rows(
   neurocog |> dplyr::mutate(data_type = "cognitive"),
   neurobehav |> dplyr::mutate(data_type = "behavioral"),
   validity |> dplyr::mutate(data_type = "validity")
