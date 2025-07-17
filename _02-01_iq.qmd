@@ -6,14 +6,30 @@
 #| label: setup-iq
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+
 # Filter by domain
 domains <- c("General Cognitive Ability")
 
 # Target phenotype
 pheno <- "iq"
 
-# Read the CSV file into a data frame
-iq <- readr::read_csv("data/neurocog.csv")
+# Create R6 processor
+processor_iq <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.csv"
+)
+
+# Load and process data
+processor_iq$load_data()
+processor_iq$filter_by_domain()
+
+# Create the data object with original name for compatibility
+iq <- processor_iq$data
 ```
 
 ```{r}
@@ -21,51 +37,12 @@ iq <- readr::read_csv("data/neurocog.csv")
 #| include: false
 #| eval: true
 
-iq <- iq |> dplyr::filter(domain %in% domains)
+# Process and export data using R6
+processor_iq$select_columns()
+processor_iq$save_data()
 
-# Select specific columns from the data frame
-# Use dplyr::select with any_of to handle columns that might not exist
-available_cols <- c(
-  "test",
-  "test_name",
-  "scale",
-  "raw_score",
-  "score",
-  "ci_95",
-  "percentile",
-  "range",
-  "domain",
-  "subdomain",
-  "narrow",
-  "pass",
-  "verbal",
-  "timed",
-  "result",
-  "z",
-  "z_mean_domain",
-  "z_sd_domain",
-  "z_mean_subdomain",
-  "z_sd_subdomain",
-  "z_mean_narrow",
-  "z_sd_narrow",
-  "z_mean_pass",
-  "z_sd_pass",
-  "z_mean_verbal",
-  "z_sd_verbal",
-  "z_mean_timed",
-  "z_sd_timed"
-)
-
-iq <- iq |> dplyr::select(dplyr::any_of(available_cols))
-
-# Write the resulting data frame to a new CSV file
-readr::write_excel_csv(
-  iq,
-  here::here("data", paste0(pheno, ".csv")),
-  na = "",
-  col_names = TRUE,
-  append = FALSE
-)
+# Update the original object
+iq <- processor_iq$data
 ```
 
 ```{r}
@@ -116,8 +93,12 @@ scales <- c(
   "Executive Functions Index (EXE)"
 )
 
-# Filter the data using the filter_data function from the NeurotypR library
-data_iq <- NeurotypR::filter_data(data = iq, domain = domains, scale = scales)
+# Filter the data using NeurotypR
+data_iq <- NeurotypR::filter_data(
+  data = iq,
+  domain = domains,
+  scale = scales
+)
 ```
 
 ```{r}
@@ -125,8 +106,12 @@ data_iq <- NeurotypR::filter_data(data = iq, domain = domains, scale = scales)
 #| cache: true
 #| include: false
 
-# export text
-NeurotypR::cat_neuropsych_results(data = data_iq, file = "_02-01_iq_text.qmd")
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_iq,
+  file = "_02-01_iq_text.qmd"
+)
+results_processor$process()
 ```
 
 ```{r}
@@ -136,100 +121,21 @@ NeurotypR::cat_neuropsych_results(data = data_iq, file = "_02-01_iq_text.qmd")
 #| include: false
 #| eval: true
 
-# Set the default engine for tikz to "xetex"
+# Set the default engine for tikz
 options(tikzDefaultEngine = "xetex")
 
-# Define the scales to include
-subset <- c(
-  "Auditory Working Memory (AWMI)",
-  "Cognitive Proficiency (CPI)",
-  "Crystallized Knowledge",
-  "Fluid Reasoning (FRI)",
-  "Fluid Reasoning",
-  "Full Scale (FSIQ)",
-  "Full Scale IQ (FSIQ)",
-  "General Ability (GAI)",
-  "General Ability",
-  "General Intelligence",
-  "Global Neurocognitive Index (G)",
-  "NAB Attention Index",
-  "NAB Executive Functions Index",
-  "NAB Language Index",
-  "NAB Memory Index",
-  "NAB Spatial Index",
-  "NAB Total Index",
-  "Nonverbal (NVI)",
-  "Perceptual Reasoning (PRI)",
-  "Perceptual Reasoning",
-  "Processing Speed (PSI)",
-  "Processing Speed",
-  "RBANS Total Index",
-  "Test of Premorbid Functioning",
-  "TOPF Standard Score",
-  "Total NAB Index (T-NAB)",
-  "Verbal Comprehension (VCI)",
-  "Verbal Comprehension",
-  "Visual Perception/Construction",
-  "Visual Spatial (VSI)",
-  "Vocabulary Acquisition (VAI)",
-  "Word Reading",
-  "Working Memory (WMI)",
-  "Working Memory",
-  "Attention Index (ATT)",
-  "Language Index (LAN)",
-  "Spatial Index (SPT)",
-  "Memory Index (MEM)",
-  "Executive Functions Index (EXE)"
-)
-
-# Filter the data to subset only the specified scales
-data_iq <- dplyr::filter(data_iq, scale %in% subset)
-
-# Define the table name, vertical padding, and multiline setting
-pheno <- "iq"
+# Table parameters
 table_name <- "table_iq"
 vertical_padding <- 0
 multiline <- TRUE
 
-# footnotes
-fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-)
-
-source_note <- gt::md(
-  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-)
-
-# Define the groups for the table
-grp_iq <- list(
-  standard_score = c(
-    "Composite Scores",
-    "Test of Premorbid Functioning",
-    "WAIS-5",
-    "WAIS-IV",
-    "WAIS-4",
-    "WASI-2",
-    "WISC-5",
-    "WISC-V",
-    "WRAT-5",
-    "KTEA-3",
-    "NAB",
-    "NAB-S",
-    "RBANS",
-    "WPPSI-IV"
-  )
-)
-
-# Create the table using the NeurotypR::tbl_gt function
+# Create table using NeurotypR
 NeurotypR::tbl_gt(
   data = data_iq,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = source_note,
-  # fn_standard_score = fn_standard_score,
-  # grp_standard_score = grp_iq[["standard_score"]],
-  dynamic_grp = grp_iq,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
 ```
@@ -238,63 +144,29 @@ NeurotypR::tbl_gt(
 #| label: fig-iq-subdomain
 #| include: false
 #| eval: true
-#| fig-cap: "_Premorbid Ability_ is an estimate of an individual's intellectual functioning prior to known or suspected onset of brain disease or dysfunction. _General Ability_ is the overall skill to reason, solve problems, and gain useful knowledge. _Crystallized Knowledge_ involves understanding the world through language and reasoning. _Fluid Reasoning_ is the logical analysis and solution of new problems, identifying underlying patterns, and applying logic."
 
-# Define the x and y variables for the dotplot (as column names)
-x <- data_iq$z_mean_subdomain
-y <- data_iq$subdomain
-
-# plot args
-colors <- NULL
-return_plot <- TRUE
-filename <- "fig_iq_subdomain.svg"
-
-# Define the scales to keep
-# keep <- c("General Ability", "Crystallized Knowledge", "Fluid Reasoning")
-# data_iq <- dplyr::filter(data_iq, scale %in% keep)
-# source("R/dotplot2_efficient.R")
-# Create the dotplot using the dotplot function from the NeurotypR library
-NeurotypR::dotplot2(
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
   data = data_iq,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = return_plot,
-  filename = filename,
-  na.rm = TRUE
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_iq_subdomain.svg"
 )
+dotplot_subdomain$create_plot()
 ```
 
 ```{r}
 #| label: fig-iq-narrow
 #| include: false
-#| fig-cap: "_Premorbid Ability_ is an estimate of an individual's intellectual functioning prior to known or suspected onset of brain disease or dysfunction. _General Ability_ is the overall skill to reason, solve problems, and gain useful knowledge. _Crystallized Knowledge_ involves understanding the world through language and reasoning. _Fluid Reasoning_ is the logical analysis and solution of new problems, identifying underlying patterns, and applying logic."
 
-# Define the x and y variables for the dotplot (as column names)
-x <- data_iq$z_mean_narrow
-y <- data_iq$narrow
-
-# plot args
-colors <- NULL
-return_plot <- TRUE
-
-# Define the filename for the plot
-filename <- "fig_iq_narrow.svg"
-
-# Define the scales to keep
-# keep <- c("General Ability", "Crystallized Knowledge", "Fluid Reasoning")
-# data_iq <- dplyr::filter(data_iq, scale %in% keep)
-
-# Create the dotplot using the dotplot function from the NeurotypR package
-NeurotypR::dotplot2(
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
   data = data_iq,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = return_plot,
-  filename = filename,
-  na.rm = TRUE
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = "fig_iq_narrow.svg"
 )
+dotplot_narrow$create_plot()
 ```
 
 ```{=typst}
@@ -316,8 +188,7 @@ NeurotypR::dotplot2(
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [#emph[_Premorbid Ability_] is an estimate of an individual's intellectual functioning prior to known or suspected onset of brain disease or dysfunction. Neurocognition is independent of intelligence and evaluates cognitive functioning across five domains\: Attention (focus, concentration, and information processing), Language (verbal communication, naming, comprehension, and fluency), Memory (immediate and delayed verbal and visual recall), Spatial (visuospatial perception, construction, and orientation), and Executive Functions (planning, problem-solving, and mental flexibility). #footnote[All scores in these figures have been standardized as z-scores. In this system: A z-score of 0.0 represents average performance; Each unit represents one standard deviation from the average; Scores between -1.0 and +1.0 fall within the normal range; Scores below -1.0 indicate below-average performance and warrant attention; and Scores at or below -2.0 indicate significantly impaired performance and are clinically concerning.]
-        ],
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
       ),
       placement: none,
       kind: "image",
@@ -327,7 +198,6 @@ NeurotypR::dotplot2(
   )
 }
 ```
-
 ```{=typst}
 // Define the title of the domain
 #let title = "General Cognitive Ability"
@@ -338,20 +208,6 @@ NeurotypR::dotplot2(
 // Define the file name of the figure
 #let file_fig = "fig_iq_subdomain.svg"
 
-// The title is appended with ' Index Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
-```
-
-```{=typst}
-// Define the title of the domain
-#let title = "General Cognitive Ability"
-
-// Define the file name of the table
-#let file_qtbl = "table_iq.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_iq_narrow.svg"
-
-// The title is appended with ' Index Scores'
+// The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```

@@ -6,14 +6,30 @@
 #| label: setup-academics
 #| include: false
 
-# domain
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+
+# Filter by domain
 domains <- c("Academic Skills")
 
 # Target phenotype
 pheno <- "academics"
 
-# Read the CSV file into a data frame
-academics <- readr::read_csv(here::here("data", "neurocog.csv"))
+# Create R6 processor
+processor_academics <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.csv"
+)
+
+# Load and process data
+processor_academics$load_data()
+processor_academics$filter_by_domain()
+
+# Create the data object with original name for compatibility
+academics <- processor_academics$data
 ```
 
 ```{r}
@@ -21,36 +37,12 @@ academics <- readr::read_csv(here::here("data", "neurocog.csv"))
 #| include: false
 #| eval: true
 
-# Filter the data frame to keep only rows where 'domain' equals 'domains'
-academics <-
-  academics |>
-  dplyr::filter(domain %in% domains)
+# Process and export data using R6
+processor_academics$select_columns()
+processor_academics$save_data()
 
-# Use dplyr::select with any_of to handle columns that might not exist
-available_cols <- c(
-  "test", "test_name", "scale", "raw_score", "score", "ci_95",
-  "percentile", "range", "domain", "subdomain", "narrow",
-  "pass", "verbal", "timed", "result", "z",
-  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
-  "z_mean_narrow", "z_sd_narrow", "z_mean_pass", "z_sd_pass",
-  "z_mean_verbal", "z_sd_verbal", "z_mean_timed", "z_sd_timed"
-)
-
-academics <- academics |>
-  dplyr::select(dplyr::any_of(available_cols))
-
-# Write the resulting data frame to a new CSV file
-# The file name is created by concatenating the 'pheno' variable and ".csv"
-# NA values are replaced with an empty string in the output file
-# Column names are included in the output file
-# If the file already exists, it is overwritten (not appended)
-readr::write_excel_csv(
-  academics,
-  here::here("data", paste0(pheno, ".csv")),
-  na = "",
-  col_names = TRUE,
-  append = FALSE
-)
+# Update the original object
+academics <- processor_academics$data
 ```
 
 ```{r}
@@ -58,83 +50,8 @@ readr::write_excel_csv(
 #| include: false
 #| eval: true
 
-# Read the data using the read_data function from the NeurotypR library
-# The phenotype is specified by the 'pheno' variable
-data <- academics
-
-scales <- c(
-  "Academic Fluency Composite",
-  "Academic Language Readiness Index",
-  "Academic Skills Battery (ASB) Composite",
-  "Alphabet Writing Fluency",
-  "Associational Fluency",
-  "Basic Reading",
-  "Comprehension Composite",
-  "Decoding Composite",
-  "Decoding Fluency",
-  "Decoding",
-  "Dyslexia Index",
-  "Essay Composition",
-  "Expression Composite",
-  "Expressive Vocabulary",
-  "Letter & Word Recognition",
-  "Letter Naming Facility",
-  "Listening Comprehension",
-  "Math Composite",
-  "Math Computation",
-  "Math Concepts & Applications",
-  "Math Fluency-Addition",
-  "Math Fluency-Multiplication",
-  "Math Fluency-Subtraction",
-  "Math Fluency",
-  "Math Problem Solving",
-  "Mathematics",
-  "Nonsense Word Decoding",
-  "Numerical Operations",
-  "Object Naming Facility",
-  "Oral Discourse Comprehension",
-  "Oral Expression",
-  "Oral Fluency Composite",
-  "Oral Language Composite",
-  "Oral Reading Fluency",
-  "Oral Word Fluency",
-  "Orthographic Choice",
-  "Orthographic Fluency",
-  "Orthographic Processing Composite",
-  "Orthographic Processing Extended",
-  "Orthographic Processing",
-  "Phonemic Proficiency",
-  "Phonological Processing",
-  "Pseudoword Decoding",
-  "Reading Composite",
-  "Reading Comprehension",
-  "Reading Comprehension",
-  "Reading Fluency Composite",
-  "Reading Fluency",
-  "Reading Index",
-  "Reading Understanding Composite",
-  "Reading Vocabulary",
-  "Reading",
-  "Receptive Vocabulary",
-  "Sentence Composition",
-  "Sentence Comprehension",
-  "Sentence Repetition",
-  "Sentence Writing Fluency",
-  "Silent Reading Fluency",
-  "Sound-Symbol Composite",
-  "Spelling",
-  "Total Achievement",
-  "Word Reading",
-  "Word Recognition Fluency",
-  "Writing Fluency",
-  "Written Expression",
-  "Written Language Composite"
-)
-
-# Filter the data using the filter_data function from the NeurotypR library
-# The domain is specified by the 'domains' variable
-# The scale is specified by the 'scales' variable
-data_academics <- NeurotypR::filter_data(data, domain = domains, scale = scales)
+# Use all data for this domain
+data_academics <- academics
 ```
 
 ```{r}
@@ -142,11 +59,12 @@ data_academics <- NeurotypR::filter_data(data, domain = domains, scale = scales)
 #| cache: true
 #| include: false
 
-# export text
-NeurotypR::cat_neuropsych_results(
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
   data = data_academics,
   file = "_02-02_academics_text.qmd"
 )
+results_processor$process()
 ```
 
 ```{r}
@@ -154,32 +72,23 @@ NeurotypR::cat_neuropsych_results(
 #| dev: tikz
 #| fig-process: pdf2png
 #| include: false
+#| eval: true
 
-# Set the default engine for tikz to "xetex"
+# Set the default engine for tikz
 options(tikzDefaultEngine = "xetex")
 
-# arguments
+# Table parameters
 table_name <- "table_academics"
 vertical_padding <- 0
 multiline <- TRUE
 
-# footnotes
-fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-)
-
-# Define the groups for the table
-grp_academics <- list(
-  standard_score = c("KTEA-3", "WIAT-4", "WRAT-5")
-)
-
-# Create the table using NeurotypR::tbl_gt
+# Create table using NeurotypR
 NeurotypR::tbl_gt(
   data = data_academics,
   pheno = pheno,
   table_name = table_name,
-  source_note = fn_standard_score, # Use standard score as source note
   vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
 ```
@@ -187,63 +96,20 @@ NeurotypR::tbl_gt(
 ```{r}
 #| label: fig-academics-subdomain
 #| include: false
-#| fig-cap: "_Reading ability_ consists of three interrelated abilities: decoding, comprehension, and fluency. _Writing ability_ can be described in terms of spelling, grammar, expression of ideas, and writing fluency. _Math ability_ can be described in terms of calculation skills, applied problem solving, and math fluency."
+#| eval: true
 
-# data_academics <- data_academics |>
-#   dplyr::filter(
-#     scale == "School Readiness Composite (SRC)"
-#   )
-
-# Arguments
-filename <- "fig_academics_subdomain.svg"
-colors <- NULL
-
-# Define the x and y variables for the dotplot
-x <- data_academics$z_mean_subdomain
-y <- data_academics$subdomain
-
-# Make dotplot
-NeurotypR::dotplot2(
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
   data = data_academics,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = TRUE,
-  filename = filename,
-  na.rm = TRUE
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_academics_subdomain.svg"
 )
-```
-
-```{r}
-#| label: fig-academics-narrow
-#| include: false
-#| fig-height: 6
-#| out-height: 100%
-#| fig-cap: "_Reading ability_ consists of three interrelated abilities: decoding, comprehension, and fluency. _Writing ability_ can be described in terms of spelling, grammar, expression of ideas, and writing fluency. _Math ability_ can be described in terms of calculation skills, applied problem solving, and math fluency."
-
-# Define the filename for the plot
-filename <- "fig_academics_narrow.svg"
-
-# Define the x and y variables for the dotplot
-x <- data_academics$z_mean_narrow
-y <- data_academics$narrow
-
-# plot args
-colors <- NULL
-
-# Make dotplot
-NeurotypR::dotplot2(
-  data = data_academics,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = TRUE,
-  filename = filename,
-  na.rm = TRUE
-)
+dotplot_subdomain$create_plot()
 ```
 
 ```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
@@ -261,9 +127,7 @@ NeurotypR::dotplot2(
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [
-          Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability_ consists of three interrelated abilities: decoding, comprehension, and fluency. _Writing ability_ can be described in terms of spelling, grammar, expression of ideas, and writing fluency. _Math ability_ can be described in terms of calculation skills, applied problem solving, and math fluency.
-          ],
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
       ),
       placement: none,
       kind: "image",
@@ -275,24 +139,16 @@ NeurotypR::dotplot2(
 ```
 
 ```{=typst}
+// Define the title of the domain
 #let title = "Academic Skills"
+
+// Define the file name of the table
 #let file_qtbl = "table_academics.png"
+
+// Define the file name of the figure
 #let file_fig = "fig_academics_subdomain.svg"
-#domain(
-  title: [#title Scores],
-  file_qtbl,
-  file_fig,
-  )
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 ```
 
-
-```{=typst}
-#let title = "Academic Skills"
-#let file_qtbl = "table_academics.png"
-#let file_fig = "fig_academics_narrow.svg"
-#domain(
-  title: [#title Scores],
-  file_qtbl,
-  file_fig,
-  )
-```

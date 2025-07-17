@@ -1,433 +1,121 @@
-## ADHD/Executive Function {#sec-adhd}
+## ADHD {#sec-adhd_adult}
 
 ```{r}
-#| label: setup-adhd
+#| label: setup-adhd_adult
 #| include: false
 
-# domain
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+
+# Filter by domain
 domains <- c("ADHD")
 
-# target phenotype
-pheno <- "adhd"
+# Target phenotype
+pheno <- "adhd_adult"
+
+# Create R6 processor
+processor_adhd_adult <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.csv"
+)
+
+# Load and process data
+processor_adhd_adult$load_data()
+processor_adhd_adult$filter_by_domain()
+
+# Create the data object with original name for compatibility
+adhd_adult <- processor_adhd_adult$data
 ```
 
 ```{r}
-#| label: export-adhd
+#| label: export-adhd_adult
 #| include: false
 #| eval: true
 
-# Read the CSV file into a data frame
-adhd <- readr::read_csv(here::here("data", "neurobehav.csv"))
+# Process and export data using R6
+processor_adhd_adult$select_columns()
+processor_adhd_adult$save_data()
 
-# Filter the data frame based on certain conditions
-# Keep only the rows where 'domain' equals 'domains'
-adhd <- adhd |>
-  dplyr::filter(domain %in% domains)
-
-# Use dplyr::select with any_of to handle columns that might not exist
-available_cols <- c(
-  "test", "test_name", "scale", "raw_score", "score", "ci_95",
-  "percentile", "range", "domain", "subdomain", "narrow",
-  "pass", "verbal", "timed", "result", "z",
-  "z_mean_domain", "z_sd_domain", "z_mean_subdomain", "z_sd_subdomain",
-  "z_mean_narrow", "z_sd_narrow"
-)
-
-adhd <- adhd |>
-  dplyr::select(dplyr::any_of(available_cols))
-
-# Write the 'adhd' data frame to a CSV file
-# The file name is derived from the 'pheno' variable
-readr::write_excel_csv(
-  adhd,
-  here::here("data", paste0(pheno, ".csv")),
-  na = "",
-  col_names = TRUE,
-  append = FALSE
-)
+# Update the original object
+adhd_adult <- processor_adhd_adult$data
 ```
 
 ```{r}
-#| label: data-adhd
+#| label: data-adhd_adult
 #| include: false
+#| eval: true
 
-scales <- c(
-  # Brown EF/A
-  "Activation",
-  "Focus",
-  "Effort",
-  "Emotion",
-  "Memory",
-  "Action",
-  "Total Composite",
-  # CAARS
-  "Inattention/Memory Problems",
-  "Hyperactivity/Restlessness",
-  "Impulsivity/Emotional Lability",
-  "Problems with Self-Concept",
-  "DSM-5 Inattentive Symptoms",
-  "DSM-5 Hyperactive-Impulsive Symptoms",
-  "DSM-5 ADHD Symptoms Total",
-  "ADHD Index",
-  # CEFI
-  "Full Scale",
-  "Attention",
-  "Emotion Regulation",
-  "Flexibility",
-  "Inhibitory Control",
-  "Initiation",
-  "Organization",
-  "Planning",
-  "Self-Monitoring",
-  "Working Memory",
-  # Conners 4
-  "Inattention/Executive Dysfunction",
-  "Hyperactivity",
-  "Impulsivity",
-  "Emotional Dysregulation",
-  "Negative Self-Concept",
-  "ADHD Inattentive Symptoms",
-  "ADHD Hyperactive/Impulsive Symptoms",
-  "Total ADHD Symptoms",
-  "ADHD Index",
-  # PAI
-  "Inattention (INATTN) Index",
-  # CAARS-2
-  "ADHD Hyperactive/Impulsive Symptoms",
-  "ADHD Inattentive Symptoms",
-  "CAARS-2 ADHD Index",
-  "Emotional Dysregulation",
-  "Hyperactivity",
-  "Impulsivity",
-  "Inattention/Executive Dysfunction",
-  "Negative Self-Concept",
-  "Total ADHD Symptoms"
-)
-
-# Filter the data using the filter_data function from the NeurotypR library
-data_adhd <- NeurotypR::filter_data(data = adhd, domain = domains, scale = scales)
+# Use all data for this domain
+data_adhd_adult <- adhd_adult
 ```
 
 ```{r}
-#| label: text-adhd-self
+#| label: text-adhd_adult
 #| cache: true
-#| eval: true
 #| include: false
 
-# Self-report
-data_adhd_self <-
-  data_adhd |>
-  dplyr::filter(
-    test == "caars_self" |
-      test == "cefi_self" |
-      test == "caars2_self" |
-      test == "brown_efa_self" |
-      test == "pai" |
-      test == "cefi_self_12-18"
-  ) |>
-  dplyr::arrange(dplyr::desc(percentile)) |>
-  dplyr::distinct(.keep_all = FALSE)
-
-# Flatten the text
-NeurotypR::cat_neuropsych_results(
-  data = data_adhd_self,
-  file = "_02-09_adhd_adult_text_self.qmd"
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_adhd_adult,
+  file = "_02-09_adhd_adult_text.qmd"
 )
+results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-adhd-self
+#| label: qtbl-adhd_adult
 #| dev: tikz
 #| fig-process: pdf2png
-#| eval: true
 #| include: false
+#| eval: true
 
-# Set the default engine for tikz to "xetex"
+# Set the default engine for tikz
 options(tikzDefaultEngine = "xetex")
 
-# table arguments
-pheno <- "adhd_self"
-table_name <- "table_adhd_self"
+# Table parameters
+table_name <- "table_adhd_adult"
 vertical_padding <- 0
 multiline <- TRUE
 
-# variables
-data_adhd_self <-
-  dplyr::mutate(
-    data_adhd_self,
-    scale = stringr::str_remove_all(
-      scale,
-      "CAARS Self |CEFI Self |CAARS-2 Self |Brown EF/A Self |PAI |CEFI Self 12-18  |Conners 4 Self |Conners 4 Parent "
-    )
-  )
-
-# footnotes
-fn_standard_score <- gt::md(
-  "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030].
-
-Lower scores reflect reduced functioning."
-)
-
-fn_t_score <- gt::md(
-  "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
-
-Higher scores reflect reduced functioning."
-)
-
-source_note <- gt::md(
-  "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]. Higher scores reflect reduced functioning."
-)
-
-# groupings
-grp_adhd <- list(
-  # standard_score = c(
-  #   "CEFI Self",
-  #   "CEFI Observer",
-  #   "CEFI Self 12-18"
-  #   ),
-  t_score = c(
-    # "CAARS Self",
-    # "CAARS Observer",
-    "CAARS-2 Self",
-    # "CAARS-2 Observer",
-    # "Brown EF/A Self",
-    "PAI"
-    # "Conners-4 Self",
-    # "Conners-4 Parent"
-  )
-)
-
-grp_caars <- list(
-  t_score = c(
-    # "CAARS Self",
-    # "CAARS Observer",
-    "CAARS-2 Self"
-    # "CAARS-2 Observer"
-  )
-)
-
-grp_cefi <- list(
-  standard_score = c("CEFI Self", "CEFI Observer", "CEFI Self 12-18")
-)
-
-grp_brown_efa <- list(
-  standard_score = c("Brown EF/A Self", "Brown EF/A Observer")
-)
-
-grp_conners4 <- list(
-  standard_score = c("Conners-4 Parent", "Conners-4 Self")
-)
-
-grp_self <- list(
-  # standard_score = c("CEFI Self", "CEFI Self 12-18"),
-  t_score = c(
-    "CAARS-2 Self",
-    # "CAARS Self",
-    # "Brown EF/A Self",
-    "PAI"
-  )
-)
-
-# make `gt` table
+# Create table using NeurotypR
 NeurotypR::tbl_gt(
-  data = data_adhd_self,
+  data = data_adhd_adult,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = source_note,
-  dynamic_grp = grp_self,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
 ```
 
 ```{r}
-#| label: fig-adhd-self
+#| label: fig-adhd_adult-subdomain
 #| include: false
-#| fig-hight: 5
-#| out-height: 100%
-#| fig-cap: "Attention and executive functions are multidimensional concepts that contain several related processes. Both concepts require self-regulatory skills and have some common subprocesses; therefore, it is common to treat them together, or even to refer to both processes when talking about one or the other."
+#| eval: true
 
-# dotplot variables to plot (x, y)
-x <- data_adhd_self$z
-y <- data_adhd_self$scale
-
-# dotplot arguments
-filename <- "fig_adhd_self.svg"
-colors <- NULL
-return_plot <- TRUE
-
-NeurotypR::dotplot2(
-  data = data_adhd_self,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = return_plot,
-  filename = filename,
-  na.rm = TRUE
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_adhd_adult,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_adhd_adult_subdomain.svg"
 )
+dotplot_subdomain$create_plot()
 ```
 
-```{r}
-#| label: text-adhd-observer
-#| cache: true
-#| eval: false
-#| include: false
-
-# Observer-report
-data_adhd_observer <-
-  data_adhd |>
-  dplyr::filter(
-    test == "caars_observer" |
-      test == "cefi_observer" |
-      test == "caars2_observer" |
-      test == "brown_efa_observer" |
-      test == "conners4_parent" |
-      test == "cefi_parent" |
-      test == "cefi_teacher"
-  ) |>
-  dplyr::arrange(dplyr::desc(percentile)) |>
-  dplyr::distinct(.keep_all = FALSE)
-
-# Flatten the text
-NeurotypR::cat_neuropsych_results(
-  data = data_adhd_observer,
-  file = "_02-09_adhd_adult_text_observer.qmd"
-)
-```
-
-```{r}
-#| label: qtbl-adhd-observer
-#| dev: tikz
-#| fig-process: pdf2png
-#| eval: false
-#| include: false
-options(tikzDefaultEngine = "xetex")
-
-# table arguments
-pheno <- "adhd_observer"
-table_name <- "table_adhd_observer"
-vertical_padding <- 0
-multiline <- TRUE
-
-# variables
-data_adhd_observer <-
-  dplyr::mutate(
-    data_adhd_observer,
-    scale = stringr::str_remove_all(
-      scale,
-      "CAARS Observer |CEFI Observer |CAARS-2 Observer |Brown EF/A Observer |Conners 4 Parent"
-    )
-  )
-
-# footnotes
-fn_standard_score <- gt::md(
-  "CEFI Standard score: Mean = 100 [50th\u2030], SD ± 15
-[16th\u2030, 84th\u2030].
-
-Lower scores reflect reduced functioning."
-)
-
-fn_t_score <- gt::md(
-  "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
-
-Higher scores reflect reduced functioning."
-)
-
-# source_note <- gt::md("T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030].
-
-# Higher scores reflect reduced functioning.")
-
-# groupings
-grp_adhd <- list(
-  standard_score = c("CEFI Self", "CEFI Observer", "CEFI Self 12-18"),
-  t_score = c(
-    "CAARS Self",
-    "CAARS Observer",
-    "CAARS-2 Self",
-    "CAARS-2 Observer",
-    "Brown EF/A Self",
-    "Brown EF/A Observer",
-    "PAI",
-    "Conners-4 Self",
-    "Conners-4 Parent"
-  )
-)
-
-grp_caars <- list(
-  t_score = c(
-    "CAARS Self",
-    "CAARS Observer",
-    "CAARS-2 Self",
-    "CAARS-2 Observer"
-  )
-)
-
-grp_cefi <- list(
-  standard_score = c("CEFI Self", "CEFI Observer", "CEFI Self 12-18")
-)
-
-grp_brown_efa <- list(
-  standard_score = c("Brown EF/A Self", "Brown EF/A Observer")
-)
-
-grp_conners4 <- list(
-  standard_score = c("Conners-4 Parent", "Conners-4 Self")
-)
-
-grp_observer <- list(
-  standard_score = c("CEFI Observer"),
-  t_score = c(
-    "CAARS-2 Observer",
-    "CAARS Observer",
-    "Brown EF/A Observer",
-    "Conners-4 Parent"
-  )
-)
-
-# make `gt` table
-NeurotypR::tbl_gt(
-  data = data_adhd_observer,
-  pheno = pheno,
-  table_name = table_name,
-  source_note = fn_standard_score,  # Using standard score footnote as source note
-  dynamic_grp = grp_observer,
-  vertical_padding = vertical_padding,
-  multiline = multiline
-)
-```
-
-```{r}
-#| label: fig-adhd-observer
-#| include: false
-#| eval: false
-#| fig-hight: 5
-#| out-height: 100%
-#| fig-cap: "Attention and executive functions are multidimensional concepts that contain several related processes. Both concepts require observer-regulatory skills and have some common subprocesses; therefore, it is common to treat them together, or even to refer to both processes when talking about one or the other."
-
-# dotplot variables to plot (x, y)
-x <- data_adhd_observer$z
-y <- data_adhd_observer$scale
-# dotplot arguments
-filename <- "fig_adhd_observer.svg"
-colors <- NULL
-return_plot <- TRUE
-
-NeurotypR::dotplot2(
-  data = data_adhd_observer,
-  x = x,
-  y = y,
-  colors = colors,
-  return_plot = return_plot,
-  filename = filename,
-  na.rm = TRUE
-)
-```
-
-### SELF-REPORT
+### Self-Report
 
 {{< include _02-09_adhd_adult_text_self.qmd >}}
 
+### Observer Report
+
+{{< include _02-09_adhd_adult_text_observer.qmd >}}
+
 ```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
@@ -442,10 +130,10 @@ NeurotypR::dotplot2(
       supplement: [*Table*],
     ),
     figure(
-      [#image(file_fig)],
+      [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [Attention and executive functions are multidimensional concepts that contain several related processes. Both concepts require self-regulatory skills and have some common subprocesses; therefore, it is common to treat them together, or even to refer to both processes when talking about one or the other.],
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
       ),
       placement: none,
       kind: "image",
@@ -455,58 +143,17 @@ NeurotypR::dotplot2(
   )
 }
 ```
+
 ```{=typst}
-#let title = "ADHD/Executive Function Self Ratings"
-#let file_qtbl = "table_adhd_self.png"
-#let file_fig = "fig_adhd_self.svg"
-#domain(
-  title: [#title],
-  file_qtbl,
-  file_fig
-  )
+// Define the title of the domain
+#let title = "ADHD"
+
+// Define the file name of the table
+#let file_qtbl = "table_adhd_adult.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_adhd_adult_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 ```
-<!-- ### OBSERVER RATINGS -->
-
-<!-- {{< include _02-09_adhd_adult_text_observer.qmd >}} -->
-
-````{=html}
-<!-- ```{=typst}
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [Table],
-    ),
-    figure(
-      [#image(file_fig)],
-      caption: figure.caption(
-        position: bottom,
-        [
-          Observer-report of the patient's ADHD symptoms and executive functioning in daily life.
-        ],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [Figure],
-      gap: 0.5em,
-    ),
-  )
-}
-``` -->
-````
-
-````{=html}
-<!-- ```{=typst}
-#let title = "ADHD Observer Ratings"
-#let file_qtbl = "table_adhd_observer.png"
-#let file_fig = "fig_adhd_observer.svg"
-#domain(title: [#title], file_qtbl, file_fig)
-``` -->
-````
