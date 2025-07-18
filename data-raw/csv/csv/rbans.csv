@@ -1,0 +1,735 @@
+X1,X2,X3
+NA,NA,WIAT-4 data is not available at this time.
+NA,NA,An asterisk represents scores that were derived from unresolved flagged items.
+NA,NA,A blank represents subtests that were not administered.
+NA,NA,A dash represents subtests that were administered but could not be scored.
+RAW SCORES,NA,NA
+Subtest,NA,Raw score
+WISC-V Block Design,NA,NA
+WISC-V Similarities,NA,37
+WISC-V Matrix Reasoning,NA,19
+WISC-V Digit Span,NA,22
+WISC-V Coding,NA,43
+WISC-V Vocabulary,NA,38
+WISC-V Figure Weights,NA,24
+WISC-V Picture Span,NA,29
+WISC-V Symbol Search,NA,21
+WISC-V Visual Puzzles,NA,17
+WISC-V Picture Concepts,NA,17
+RBANS Update Form A List Learning,NA,32
+RBANS Update Form A Story Memory,NA,24
+RBANS Update Form A Figure Copy,NA,15
+RBANS Update Form A Line Orientation,NA,11
+RBANS Update Form A Picture Naming,NA,9
+RBANS Update Form A Semantic Fluency,NA,20
+RBANS Update Form A Digit Span,NA,10
+RBANS Update Form A Coding,NA,60
+RBANS Update Form A List Recall,NA,6
+RBANS Update Form A List Recognition,NA,20
+RBANS Update Form A Story Recall,NA,12
+RBANS Update Form A Figure Recall,NA,14
+WISC-V Block Design,NA,26
+WISC-V Comprehension,NA,21
+D-KEFS Color-Word Interference Test,NA,193
+WISC-V Cancellation,NA,72
+SCALED SCORES,NA,NA
+Subtest,NA,Scaled score
+WISC-V Block Design,NA,NA
+WISC-V Similarities,NA,14
+WISC-V Matrix Reasoning,NA,9
+WISC-V Digit Span,NA,7
+WISC-V Coding,NA,6
+WISC-V Vocabulary,NA,13
+WISC-V Figure Weights,NA,10
+WISC-V Picture Span,NA,9
+WISC-V Symbol Search,NA,6
+WISC-V Visual Puzzles,NA,9
+WISC-V Picture Concepts,NA,10
+RBANS Update Form A List Learning,NA,13
+RBANS Update Form A Story Memory,NA,16
+RBANS Update Form A Figure Copy,NA,7
+RBANS Update Form A Line Orientation,NA,NA
+RBANS Update Form A Picture Naming,NA,NA
+RBANS Update Form A Semantic Fluency,NA,13
+RBANS Update Form A Digit Span,NA,11
+RBANS Update Form A Coding,NA,14
+RBANS Update Form A List Recall,NA,NA
+RBANS Update Form A List Recognition,NA,NA
+RBANS Update Form A Story Recall,NA,16
+RBANS Update Form A Figure Recall,NA,10
+WISC-V Block Design,NA,7
+WISC-V Comprehension,NA,8
+D-KEFS Color-Word Interference Test,NA,NA
+WISC-V Cancellation,NA,9
+CONTEXTUAL EVENTS,NA,NA
+Subtest,Type,Total
+WISC-V Block Design,Dimension Error,0
+WISC-V Similarities,Don't Know,0
+WISC-V Similarities,Item Repetition,0
+WISC-V Similarities,No Response,0
+WISC-V Similarities,Query,2
+WISC-V Similarities,†Teaching,0
+WISC-V Matrix Reasoning,Don't Know,0
+WISC-V Matrix Reasoning,No Response,0
+WISC-V Matrix Reasoning,Self-Correction,0
+WISC-V Matrix Reasoning,Sub-Vocalization,0
+WISC-V Digit Span,Don't Know,0
+WISC-V Digit Span,No Response,0
+WISC-V Digit Span,Repetition Requested,0
+WISC-V Digit Span,Self-Correction,0
+WISC-V Coding,Prompt,0
+WISC-V Vocabulary,*Query,0
+WISC-V Vocabulary,Don't Know,3
+WISC-V Vocabulary,Item Repetition,0
+WISC-V Vocabulary,No Response,0
+WISC-V Vocabulary,Query,0
+WISC-V Vocabulary,†Teaching,0
+WISC-V Figure Weights,Don't Know,0
+WISC-V Figure Weights,No Response,0
+WISC-V Figure Weights,Self-Correction,0
+WISC-V Figure Weights,Sub-Vocalization,0
+WISC-V Picture Span,Don't Know,0
+WISC-V Picture Span,No Response,0
+WISC-V Picture Span,Repetition Requested,0
+WISC-V Picture Span,Self-Correction,0
+WISC-V Picture Span,Sub-Vocalization,0
+WISC-V Symbol Search,Prompt,0
+WISC-V Visual Puzzles,Don't Know,0
+WISC-V Visual Puzzles,No Response,0
+WISC-V Visual Puzzles,Self-Correction,0
+WISC-V Visual Puzzles,Sub-Vocalization,0
+WISC-V Picture Concepts,Don't Know,0
+WISC-V Picture Concepts,No Response,0
+WISC-V Picture Concepts,Self-Correction,0
+WISC-V Picture Concepts,Sub-Vocalization,0
+RBANS Update Form A List Learning,Don't Know,0
+RBANS Update Form A List Learning,No Response,0
+RBANS Update Form A List Learning,Prompt,0
+RBANS Update Form A Story Memory,Don't Know,0
+RBANS Update Form A Story Memory,No Response,0
+RBANS Update Form A Story Memory,Prompt,0
+RBANS Update Form A Figure Copy,Don't Know,0
+RBANS Update Form A Figure Copy,No Response,0
+RBANS Update Form A Figure Copy,Prompt,0
+RBANS Update Form A Line Orientation,Don't Know,0
+RBANS Update Form A Line Orientation,No Response,0
+RBANS Update Form A Line Orientation,Prompt,0
+RBANS Update Form A Picture Naming,Cue,0
+RBANS Update Form A Picture Naming,Don't Know,0
+RBANS Update Form A Picture Naming,No Response,0
+RBANS Update Form A Picture Naming,Prompt,0
+RBANS Update Form A Semantic Fluency,Don't Know,0
+RBANS Update Form A Semantic Fluency,No Response,0
+RBANS Update Form A Semantic Fluency,Prompt,0
+RBANS Update Form A Digit Span,Don't Know,0
+RBANS Update Form A Digit Span,No Response,0
+RBANS Update Form A Digit Span,Prompt,0
+RBANS Update Form A Coding,Don't Know,0
+RBANS Update Form A Coding,No Response,0
+RBANS Update Form A Coding,Prompt,0
+RBANS Update Form A List Recall,Don't Know,0
+RBANS Update Form A List Recall,No Response,0
+RBANS Update Form A List Recall,Prompt,0
+RBANS Update Form A List Recognition,Don't Know,0
+RBANS Update Form A List Recognition,No Response,0
+RBANS Update Form A List Recognition,Prompt,0
+RBANS Update Form A Story Recall,Don't Know,0
+RBANS Update Form A Story Recall,No Response,0
+RBANS Update Form A Story Recall,Prompt,0
+RBANS Update Form A Figure Recall,Don't Know,0
+RBANS Update Form A Figure Recall,No Response,0
+RBANS Update Form A Figure Recall,Prompt,0
+WISC-V Block Design,Dimension Error,2
+WISC-V Comprehension,Don't Know,1
+WISC-V Comprehension,Item Repetition,0
+WISC-V Comprehension,No Response,0
+WISC-V Comprehension,Query,8
+WISC-V Comprehension,§< 2 General Concepts,1
+WISC-V Comprehension,†Teaching,1
+D-KEFS Color-Word Interference Test,No Response,0
+D-KEFS Color-Word Interference Test,Prompt,0
+SUBTEST COMPLETION TIMES,NA,NA
+Subtest,NA,Completion Time (seconds)
+WISC-V Block Design,NA,554
+WISC-V Similarities,NA,652
+WISC-V Matrix Reasoning,NA,331
+WISC-V Digit Span,NA,558
+WISC-V Coding,NA,220
+WISC-V Vocabulary,NA,429
+WISC-V Figure Weights,NA,312
+WISC-V Picture Span,NA,523
+WISC-V Symbol Search,NA,196
+WISC-V Visual Puzzles,NA,405
+WISC-V Picture Concepts,NA,503
+RBANS Update Form A List Learning,NA,256
+RBANS Update Form A Story Memory,NA,138
+RBANS Update Form A Figure Copy,NA,285
+RBANS Update Form A Line Orientation,NA,315
+RBANS Update Form A Picture Naming,NA,147
+RBANS Update Form A Semantic Fluency,NA,86
+RBANS Update Form A Digit Span,NA,16
+RBANS Update Form A Coding,NA,215
+RBANS Update Form A List Recall,NA,53
+RBANS Update Form A List Recognition,NA,115
+RBANS Update Form A Story Recall,NA,47
+RBANS Update Form A Figure Recall,NA,115
+WISC-V Block Design,NA,749
+WISC-V Comprehension,NA,618
+D-KEFS Color-Word Interference Test,NA,460
+WISC-V Cancellation,NA,535
+RULES TRIGGERED,NA,NA
+Subtest,Type,Yes/No
+WISC-V Block Design,Discontinue,Yes
+WISC-V Block Design,Reverse,Yes
+WISC-V Similarities,Discontinue,No
+WISC-V Similarities,Reverse,No
+WISC-V Matrix Reasoning,Discontinue,No
+WISC-V Matrix Reasoning,Reverse,No
+WISC-V Digit Span,Discontinue,No
+WISC-V Digit Span,Reverse,No
+WISC-V Coding,Discontinue,No
+WISC-V Coding,Reverse,No
+WISC-V Vocabulary,Discontinue,Yes
+WISC-V Vocabulary,Reverse,No
+WISC-V Figure Weights,Discontinue,Yes
+WISC-V Figure Weights,Reverse,No
+WISC-V Picture Span,Discontinue,Yes
+WISC-V Picture Span,Reverse,No
+WISC-V Symbol Search,Discontinue,No
+WISC-V Symbol Search,Reverse,No
+WISC-V Visual Puzzles,Discontinue,No
+WISC-V Visual Puzzles,Reverse,No
+WISC-V Picture Concepts,Discontinue,Yes
+WISC-V Picture Concepts,Reverse,No
+RBANS Update Form A List Learning,Discontinue,No
+RBANS Update Form A List Learning,Reverse,No
+RBANS Update Form A Story Memory,Discontinue,No
+RBANS Update Form A Story Memory,Reverse,No
+RBANS Update Form A Figure Copy,Discontinue,No
+RBANS Update Form A Figure Copy,Reverse,No
+RBANS Update Form A Line Orientation,Discontinue,No
+RBANS Update Form A Line Orientation,Reverse,No
+RBANS Update Form A Picture Naming,Discontinue,No
+RBANS Update Form A Picture Naming,Reverse,No
+RBANS Update Form A Semantic Fluency,Discontinue,No
+RBANS Update Form A Semantic Fluency,Reverse,No
+RBANS Update Form A Digit Span,Discontinue,Yes
+RBANS Update Form A Digit Span,Reverse,No
+RBANS Update Form A Coding,Discontinue,No
+RBANS Update Form A Coding,Reverse,No
+RBANS Update Form A List Recall,Discontinue,No
+RBANS Update Form A List Recall,Reverse,No
+RBANS Update Form A List Recognition,Discontinue,No
+RBANS Update Form A List Recognition,Reverse,No
+RBANS Update Form A Story Recall,Discontinue,No
+RBANS Update Form A Story Recall,Reverse,No
+RBANS Update Form A Figure Recall,Discontinue,No
+RBANS Update Form A Figure Recall,Reverse,No
+WISC-V Block Design,Discontinue,Yes
+WISC-V Block Design,Reverse,No
+WISC-V Comprehension,Discontinue,No
+WISC-V Comprehension,Reverse,No
+D-KEFS Color-Word Interference Test,Discontinue,No
+D-KEFS Color-Word Interference Test,Reverse,No
+WISC-V Cancellation,Discontinue,No
+WISC-V Cancellation,Reverse,No
+Z SCORES,NA,NA
+Item,Score,NA
+Z SCORES: ITEM LEVEL SCORES,NA,NA
+Item,Score,NA
+ITEM-LEVEL RAW SCORES,NA,NA
+Item,NA,Raw score
+WISC-V Block Design Item 1 Trial 1,NA,NA
+WISC-V Block Design Item 1 Trial 2,NA,NA
+WISC-V Block Design Item 2 Trial 1,NA,NA
+WISC-V Block Design Item 2 Trial 2,NA,NA
+WISC-V Block Design Item 3 Trial 1,NA,0
+WISC-V Block Design Item 3 Trial 2,NA,0
+WISC-V Block Design Item 4,NA,NA
+WISC-V Block Design Item 5,NA,NA
+WISC-V Block Design Item 6,NA,NA
+WISC-V Block Design Item 7,NA,NA
+WISC-V Block Design Item 8,NA,NA
+WISC-V Block Design Item 9,NA,NA
+WISC-V Block Design Item 10,NA,NA
+WISC-V Block Design Item 11,NA,NA
+WISC-V Block Design Item 12,NA,NA
+WISC-V Block Design Item 13,NA,NA
+WISC-V Similarities Sample Item. Three-Four,NA,C
+WISC-V Similarities †Item 1. Red-Green,NA,2
+WISC-V Similarities †Item 2. Milk-Water,NA,2
+WISC-V Similarities Item 3. Grapes-Apples,NA,2
+WISC-V Similarities Item 4. Shirt-Shoe,NA,2
+WISC-V Similarities †Item 5. Butterfly-Bee,NA,2
+WISC-V Similarities †Item 6. Horse-Cow,NA,2
+WISC-V Similarities Item 7. Brother-Sister,NA,2
+WISC-V Similarities †Item 8. Winter-Summer,NA,2
+WISC-V Similarities †Item 9. Angry-Happy,NA,2
+WISC-V Similarities Item 10. Sour-Salty,NA,2
+WISC-V Similarities Item 11. Truck-Train,NA,2
+WISC-V Similarities Item 12. Blocks-Clay,NA,2
+WISC-V Similarities Item 13. Knee-Ankle,NA,2
+WISC-V Similarities Item 14. Thermometer-Timer,NA,1
+WISC-V Similarities Item 15. Ice-Steam,NA,1
+WISC-V Similarities Item 16. River-Mountain,NA,1
+WISC-V Similarities Item 17. Demand-Request,NA,1
+WISC-V Similarities Item 18. Light-Sound,NA,2
+WISC-V Similarities Item 19. Luck-Practice,NA,1
+WISC-V Similarities Item 20. Allow-Prevent,NA,1
+WISC-V Similarities Item 21. Shadow-Fingerprint,NA,2
+WISC-V Similarities Item 22. Reality-Dream,NA,1
+WISC-V Similarities Item 23. Space-Time,NA,0
+WISC-V Matrix Reasoning Sample Item A (Matrix),NA,C
+WISC-V Matrix Reasoning Sample Item B (Serial Order),NA,C
+WISC-V Matrix Reasoning Item 1,NA,1
+WISC-V Matrix Reasoning Item 2,NA,1
+WISC-V Matrix Reasoning Item 3,NA,1
+WISC-V Matrix Reasoning Item 4,NA,1
+WISC-V Matrix Reasoning Item 5,NA,1
+WISC-V Matrix Reasoning Item 6,NA,1
+WISC-V Matrix Reasoning Item 7,NA,1
+WISC-V Matrix Reasoning Item 8,NA,1
+WISC-V Matrix Reasoning Item 9,NA,1
+WISC-V Matrix Reasoning Item 10,NA,1
+WISC-V Matrix Reasoning Item 11,NA,1
+WISC-V Matrix Reasoning Item 12,NA,1
+WISC-V Matrix Reasoning Item 13,NA,0
+WISC-V Matrix Reasoning Item 14,NA,1
+WISC-V Matrix Reasoning Item 15,NA,0
+WISC-V Matrix Reasoning Item 16,NA,1
+WISC-V Matrix Reasoning Item 17,NA,1
+WISC-V Matrix Reasoning Item 18,NA,1
+WISC-V Matrix Reasoning Item 19,NA,0
+WISC-V Matrix Reasoning Item 20,NA,1
+WISC-V Matrix Reasoning Item 21,NA,0
+WISC-V Matrix Reasoning Item 22,NA,1
+WISC-V Matrix Reasoning Item 23,NA,1
+WISC-V Matrix Reasoning Item 24,NA,0
+WISC-V Matrix Reasoning Item 25,NA,0
+WISC-V Matrix Reasoning Item 26,NA,0
+WISC-V Matrix Reasoning Item 27,NA,NA
+WISC-V Matrix Reasoning Item 28,NA,NA
+WISC-V Matrix Reasoning Item 29,NA,NA
+WISC-V Matrix Reasoning Item 30,NA,NA
+WISC-V Matrix Reasoning Item 31,NA,NA
+WISC-V Matrix Reasoning Item 32,NA,NA
+WISC-V Digit Span Forward Item 1 Trial 1,NA,1
+WISC-V Digit Span Forward Item 1 Trial 2,NA,1
+WISC-V Digit Span Forward Item 2 Trial 1,NA,1
+WISC-V Digit Span Forward Item 2 Trial 2,NA,1
+WISC-V Digit Span Forward Item 3 Trial 1,NA,1
+WISC-V Digit Span Forward Item 3 Trial 2,NA,1
+WISC-V Digit Span Forward Item 4 Trial 1,NA,1
+WISC-V Digit Span Forward Item 4 Trial 2,NA,1
+WISC-V Digit Span Forward Item 5 Trial 1,NA,1
+WISC-V Digit Span Forward Item 5 Trial 2,NA,0
+WISC-V Digit Span Forward Item 6 Trial 1,NA,0
+WISC-V Digit Span Forward Item 6 Trial 2,NA,0
+WISC-V Digit Span Forward Item 7 Trial 1,NA,NA
+WISC-V Digit Span Forward Item 7 Trial 2,NA,NA
+WISC-V Digit Span Forward Item 8 Trial 1,NA,NA
+WISC-V Digit Span Forward Item 8 Trial 2,NA,NA
+WISC-V Digit Span Forward Item 9 Trial 1,NA,NA
+WISC-V Digit Span Forward Item 9 Trial 2,NA,NA
+WISC-V Digit Span Backward Sample Item Trial 1,NA,C
+WISC-V Digit Span Backward Sample Item Trial 2,NA,C
+WISC-V Digit Span Backward Item 1 Trial 1,NA,1
+WISC-V Digit Span Backward Item 1 Trial 2,NA,1
+WISC-V Digit Span Backward Item 2 Trial 1,NA,1
+WISC-V Digit Span Backward Item 2 Trial 2,NA,1
+WISC-V Digit Span Backward Item 3 Trial 1,NA,1
+WISC-V Digit Span Backward Item 3 Trial 2,NA,1
+WISC-V Digit Span Backward Item 4 Trial 1,NA,0
+WISC-V Digit Span Backward Item 4 Trial 2,NA,1
+WISC-V Digit Span Backward Item 5 Trial 1,NA,1
+WISC-V Digit Span Backward Item 5 Trial 2,NA,1
+WISC-V Digit Span Backward Item 6 Trial 1,NA,0
+WISC-V Digit Span Backward Item 6 Trial 2,NA,0
+WISC-V Digit Span Backward Item 7 Trial 1,NA,NA
+WISC-V Digit Span Backward Item 7 Trial 2,NA,NA
+WISC-V Digit Span Backward Item 8 Trial 1,NA,NA
+WISC-V Digit Span Backward Item 8 Trial 2,NA,NA
+WISC-V Digit Span Backward Item 9 Trial 1,NA,NA
+WISC-V Digit Span Backward Item 9 Trial 2,NA,NA
+WISC-V Digit Span Sequencing Qualifying Item,NA,NA
+WISC-V Digit Span Sequencing Sample Item A Trial 1,NA,C
+WISC-V Digit Span Sequencing Sample Item A Trial 2,NA,C
+WISC-V Digit Span Sequencing Sample Item B Trial 1,NA,C
+WISC-V Digit Span Sequencing Sample Item B Trial 2,NA,C
+WISC-V Digit Span Sequencing Item 1 Trial 1,NA,1
+WISC-V Digit Span Sequencing Item 1 Trial 2,NA,1
+WISC-V Digit Span Sequencing Item 2 Trial 1,NA,1
+WISC-V Digit Span Sequencing Item 2 Trial 2,NA,1
+WISC-V Digit Span Sequencing Item 3 Trial 1,NA,0
+WISC-V Digit Span Sequencing Item 3 Trial 2,NA,0
+WISC-V Digit Span Sequencing Item 4 Trial 1,NA,1
+WISC-V Digit Span Sequencing Item 4 Trial 2,NA,1
+WISC-V Digit Span Sequencing Item 5 Trial 1,NA,1
+WISC-V Digit Span Sequencing Item 5 Trial 2,NA,0
+WISC-V Digit Span Sequencing Item 6 Trial 1,NA,0
+WISC-V Digit Span Sequencing Item 6 Trial 2,NA,NA
+WISC-V Digit Span Sequencing Item 7 Trial 1,NA,NA
+WISC-V Digit Span Sequencing Item 7 Trial 2,NA,NA
+WISC-V Digit Span Sequencing Item 8 Trial 1,NA,NA
+WISC-V Digit Span Sequencing Item 8 Trial 2,NA,NA
+WISC-V Digit Span Sequencing Item 9 Trial 1,NA,NA
+WISC-V Digit Span Sequencing Item 9 Trial 2,NA,NA
+WISC-V Coding A: Demo Items,NA,NA
+WISC-V Coding A: Sample Items,NA,NA
+WISC-V Coding A: Test Items,NA,NA
+WISC-V Coding B: Demo Items,NA,NA
+WISC-V Coding B: Sample Items,NA,C
+WISC-V Coding B: Test Items,NA,43
+WISC-V Vocabulary †Item 1. Flower,NA,1
+WISC-V Vocabulary Item 2. Sun,NA,1
+WISC-V Vocabulary Item 3. Bucket,NA,1
+WISC-V Vocabulary Item 4. Pear,NA,1
+WISC-V Vocabulary †Item 5. Soap,NA,2
+WISC-V Vocabulary †Item 6. Kitchen,NA,2
+WISC-V Vocabulary Item 7. Coat,NA,2
+WISC-V Vocabulary Item 8. Mouse,NA,2
+WISC-V Vocabulary *†Item 9. Prize,NA,2
+WISC-V Vocabulary †Item 10. Pilot,NA,2
+WISC-V Vocabulary Item 11. Obey,NA,2
+WISC-V Vocabulary Item 12. Island,NA,2
+WISC-V Vocabulary *Item 13. Edible,NA,2
+WISC-V Vocabulary Item 14. Ancient,NA,1
+WISC-V Vocabulary *Item 15. Absorb,NA,2
+WISC-V Vocabulary Item 16. Pest,NA,2
+WISC-V Vocabulary *Item 17. Migrate,NA,2
+WISC-V Vocabulary Item 18. Precise,NA,2
+WISC-V Vocabulary *Item 19. Transparent,NA,2
+WISC-V Vocabulary Item 20. Remedy,NA,0
+WISC-V Vocabulary Item 21. Seldom,NA,0
+WISC-V Vocabulary Item 22. Strenuous,NA,2
+WISC-V Vocabulary *Item 23. Unanimous,NA,2
+WISC-V Vocabulary Item 24. Entice,NA,1
+WISC-V Vocabulary *Item 25. Obsolete,NA,0
+WISC-V Vocabulary Item 26. Frugal,NA,0
+WISC-V Vocabulary Item 27. Affable,NA,0
+WISC-V Vocabulary *Item 28. Aberration,NA,NA
+WISC-V Vocabulary Item 29. Garrulous,NA,NA
+WISC-V Figure Weights Sample Item A,NA,NA
+WISC-V Figure Weights Item 1,NA,1
+WISC-V Figure Weights Item 2,NA,1
+WISC-V Figure Weights Item 3,NA,1
+WISC-V Figure Weights Sample Item B,NA,C
+WISC-V Figure Weights Item 4,NA,1
+WISC-V Figure Weights Item 5,NA,1
+WISC-V Figure Weights Item 6,NA,1
+WISC-V Figure Weights Item 7,NA,1
+WISC-V Figure Weights Item 8,NA,1
+WISC-V Figure Weights Item 9,NA,1
+WISC-V Figure Weights Item 10,NA,1
+WISC-V Figure Weights Item 11,NA,1
+WISC-V Figure Weights Item 12,NA,1
+WISC-V Figure Weights Item 13,NA,1
+WISC-V Figure Weights Item 14,NA,1
+WISC-V Figure Weights Item 15,NA,1
+WISC-V Figure Weights Item 16,NA,1
+WISC-V Figure Weights Item 17,NA,1
+WISC-V Figure Weights Item 18,NA,1
+WISC-V Figure Weights Item 19,NA,1
+WISC-V Figure Weights Item 20,NA,1
+WISC-V Figure Weights Item 21,NA,1
+WISC-V Figure Weights Item 22,NA,1
+WISC-V Figure Weights Item 23,NA,1
+WISC-V Figure Weights Item 24,NA,1
+WISC-V Figure Weights Item 25,NA,0
+WISC-V Figure Weights Item 26,NA,0
+WISC-V Figure Weights **Item 27,NA,0
+WISC-V Figure Weights Item 28,NA,0
+WISC-V Figure Weights Item 29,NA,0
+WISC-V Figure Weights Item 30,NA,NA
+WISC-V Figure Weights Item 31,NA,NA
+WISC-V Figure Weights Item 32,NA,NA
+WISC-V Figure Weights Item 33,NA,NA
+WISC-V Figure Weights Item 34,NA,NA
+WISC-V Picture Span Sample Item A Trial 1,NA,NA
+WISC-V Picture Span Sample Item A Trial 2,NA,NA
+WISC-V Picture Span †Item 1,NA,1
+WISC-V Picture Span †Item 2,NA,1
+WISC-V Picture Span Item 3,NA,1
+WISC-V Picture Span Sample Item B Trial 1,NA,C
+WISC-V Picture Span Sample Item B Trial 2,NA,NA
+WISC-V Picture Span Sample Item C Trial 1,NA,C
+WISC-V Picture Span Sample Item C Trial 2,NA,NA
+WISC-V Picture Span †Item 4,NA,2
+WISC-V Picture Span †Item 5,NA,2
+WISC-V Picture Span Item 6,NA,2
+WISC-V Picture Span Item 7,NA,0
+WISC-V Picture Span Item 8,NA,2
+WISC-V Picture Span Item 9,NA,2
+WISC-V Picture Span Item 10,NA,2
+WISC-V Picture Span Item 11,NA,2
+WISC-V Picture Span Item 12,NA,2
+WISC-V Picture Span Item 13,NA,2
+WISC-V Picture Span Item 14,NA,2
+WISC-V Picture Span Item 15,NA,2
+WISC-V Picture Span Item 16,NA,2
+WISC-V Picture Span Item 17,NA,0
+WISC-V Picture Span Item 18,NA,2
+WISC-V Picture Span Item 19,NA,0
+WISC-V Picture Span Item 20,NA,0
+WISC-V Picture Span Item 21,NA,0
+WISC-V Picture Span Item 22,NA,NA
+WISC-V Picture Span Item 23,NA,NA
+WISC-V Picture Span Item 24,NA,NA
+WISC-V Picture Span Item 25,NA,NA
+WISC-V Picture Span Item 26,NA,NA
+WISC-V Symbol Search A: Demo Items,NA,NA
+WISC-V Symbol Search A: Sample Items,NA,NA
+WISC-V Symbol Search A: Test Items,NA,NA
+WISC-V Symbol Search B: Demo Items,NA,NA
+WISC-V Symbol Search B: Sample Items,NA,C
+WISC-V Symbol Search B: Test Items,NA,21
+WISC-V Visual Puzzles Demonstration Item,NA,C
+WISC-V Visual Puzzles Sample Item,NA,C
+WISC-V Visual Puzzles Item 1,NA,1
+WISC-V Visual Puzzles Item 2,NA,1
+WISC-V Visual Puzzles Item 3,NA,1
+WISC-V Visual Puzzles Item 4,NA,1
+WISC-V Visual Puzzles Item 5,NA,1
+WISC-V Visual Puzzles Item 6,NA,1
+WISC-V Visual Puzzles Item 7,NA,1
+WISC-V Visual Puzzles Item 8,NA,1
+WISC-V Visual Puzzles Item 9,NA,1
+WISC-V Visual Puzzles Item 10,NA,1
+WISC-V Visual Puzzles Item 11,NA,1
+WISC-V Visual Puzzles Item 12,NA,1
+WISC-V Visual Puzzles Item 13,NA,1
+WISC-V Visual Puzzles Item 14,NA,0
+WISC-V Visual Puzzles Item 15,NA,1
+WISC-V Visual Puzzles Item 16,NA,1
+WISC-V Visual Puzzles Item 17,NA,1
+WISC-V Visual Puzzles Item 18,NA,0
+WISC-V Visual Puzzles Item 19,NA,1
+WISC-V Visual Puzzles Item 20,NA,0
+WISC-V Visual Puzzles Item 21,NA,0
+WISC-V Visual Puzzles Item 22,NA,0
+WISC-V Visual Puzzles Item 23,NA,NA
+WISC-V Visual Puzzles Item 24,NA,NA
+WISC-V Visual Puzzles Item 25,NA,NA
+WISC-V Visual Puzzles Item 26,NA,NA
+WISC-V Visual Puzzles Item 27,NA,NA
+WISC-V Visual Puzzles Item 28,NA,NA
+WISC-V Visual Puzzles Item 29,NA,NA
+WISC-V Picture Concepts Sample Item A,NA,C
+WISC-V Picture Concepts Sample Item B,NA,C
+WISC-V Picture Concepts Item 1,NA,1
+WISC-V Picture Concepts Item 2,NA,1
+WISC-V Picture Concepts Item 3,NA,1
+WISC-V Picture Concepts Item 4,NA,1
+WISC-V Picture Concepts Item 5,NA,1
+WISC-V Picture Concepts Item 6,NA,1
+WISC-V Picture Concepts Item 7,NA,1
+WISC-V Picture Concepts **Item 8,NA,1
+WISC-V Picture Concepts Item 9,NA,1
+WISC-V Picture Concepts Item 10,NA,0
+WISC-V Picture Concepts Item 11,NA,1
+WISC-V Picture Concepts Item 12,NA,1
+WISC-V Picture Concepts Item 13,NA,1
+WISC-V Picture Concepts Item 14,NA,0
+WISC-V Picture Concepts Item 15,NA,0
+WISC-V Picture Concepts Item 16,NA,1
+WISC-V Picture Concepts Item 17,NA,1
+WISC-V Picture Concepts Item 18,NA,1
+WISC-V Picture Concepts Item 19,NA,0
+WISC-V Picture Concepts Item 20,NA,1
+WISC-V Picture Concepts Item 21,NA,1
+WISC-V Picture Concepts Item 22,NA,0
+WISC-V Picture Concepts Item 23,NA,0
+WISC-V Picture Concepts Item 24,NA,0
+WISC-V Picture Concepts Item 25,NA,NA
+WISC-V Picture Concepts Item 26,NA,NA
+WISC-V Picture Concepts Item 27,NA,NA
+RBANS Update Form A List Learning Trial 1,NA,6
+RBANS Update Form A List Learning Trial 2,NA,8
+RBANS Update Form A List Learning Trial 3,NA,9
+RBANS Update Form A List Learning Trial 4,NA,9
+RBANS Update Form A Story Memory Trial 1,NA,12
+RBANS Update Form A Story Memory Trial 2,NA,12
+RBANS Update Form A Figure Copy Test Items,NA,15
+RBANS Update Form A Line Orientation Sample,NA,C
+RBANS Update Form A Line Orientation Item 1,NA,0
+RBANS Update Form A Line Orientation Item 2,NA,0
+RBANS Update Form A Line Orientation Item 3,NA,2
+RBANS Update Form A Line Orientation Item 4,NA,2
+RBANS Update Form A Line Orientation Item 5,NA,0
+RBANS Update Form A Line Orientation Item 6,NA,2
+RBANS Update Form A Line Orientation Item 7,NA,1
+RBANS Update Form A Line Orientation Item 8,NA,0
+RBANS Update Form A Line Orientation Item 9,NA,2
+RBANS Update Form A Line Orientation Item 10,NA,2
+RBANS Update Form A Picture Naming Item 1. chair,NA,1
+RBANS Update Form A Picture Naming Item 2. pencil,NA,1
+RBANS Update Form A Picture Naming Item 3. well,NA,1
+RBANS Update Form A Picture Naming Item 4. giraffe,NA,1
+RBANS Update Form A Picture Naming Item 5. sailboat,NA,1
+RBANS Update Form A Picture Naming Item 6. cannon,NA,1
+RBANS Update Form A Picture Naming Item 7. pliers,NA,1
+RBANS Update Form A Picture Naming Item 8. trumpet,NA,1
+RBANS Update Form A Picture Naming Item 9. clothespin,NA,0
+RBANS Update Form A Picture Naming Item 10. kite,NA,1
+RBANS Update Form A Semantic Fluency Test Items,NA,20
+RBANS Update Form A Digit Span Item 1 Trial 1,NA,2
+RBANS Update Form A Digit Span Item 1 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 2 Trial 1,NA,2
+RBANS Update Form A Digit Span Item 2 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 3 Trial 1,NA,2
+RBANS Update Form A Digit Span Item 3 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 4 Trial 1,NA,2
+RBANS Update Form A Digit Span Item 4 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 5 Trial 1,NA,2
+RBANS Update Form A Digit Span Item 5 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 6 Trial 1,NA,0
+RBANS Update Form A Digit Span Item 6 Trial 2,NA,0
+RBANS Update Form A Digit Span Item 7 Trial 1,NA,NA
+RBANS Update Form A Digit Span Item 7 Trial 2,NA,NA
+RBANS Update Form A Digit Span Item 8 Trial 1,NA,NA
+RBANS Update Form A Digit Span Item 8 Trial 2,NA,NA
+RBANS Update Form A Coding Sample,NA,C
+RBANS Update Form A Coding Test Items,NA,60
+RBANS Update Form A List Recall Recall Trial,NA,6
+RBANS Update Form A List Recognition Items: 1–20,NA,20
+RBANS Update Form A Story Recall Test Items,NA,12
+RBANS Update Form A Figure Recall Test Items,NA,14
+WISC-V Block Design Item 1 Trial 1,NA,2
+WISC-V Block Design Item 1 Trial 2,NA,0
+WISC-V Block Design Item 2 Trial 1,NA,2
+WISC-V Block Design Item 2 Trial 2,NA,0
+WISC-V Block Design Item 3 Trial 1,NA,2
+WISC-V Block Design Item 3 Trial 2,NA,0
+WISC-V Block Design Item 4,NA,4
+WISC-V Block Design Item 5,NA,4
+WISC-V Block Design Item 6,NA,4
+WISC-V Block Design Item 7,NA,4
+WISC-V Block Design Item 8,NA,4
+WISC-V Block Design Item 9,NA,0
+WISC-V Block Design Item 10,NA,0
+WISC-V Block Design Item 11,NA,0
+WISC-V Block Design Item 12,NA,0
+WISC-V Block Design Item 13,NA,NA
+WISC-V Comprehension †Item 1. Teeth,NA,2
+WISC-V Comprehension †Item 2. Vegetables,NA,2
+WISC-V Comprehension †Item 3. Seatbelts,NA,2
+WISC-V Comprehension †Item 4. Wallet,NA,2
+WISC-V Comprehension §Item 5. Smoke,NA,0
+WISC-V Comprehension Item 6. Cell phones,NA,2
+WISC-V Comprehension §Item 7. Lights,NA,1
+WISC-V Comprehension Item 8. Calendars,NA,2
+WISC-V Comprehension Item 9. Chores,NA,2
+WISC-V Comprehension Item 10. Brag,NA,1
+WISC-V Comprehension Item 11. Door,NA,2
+WISC-V Comprehension Item 12. Field trips,NA,1
+WISC-V Comprehension Item 13. Plans,NA,1
+WISC-V Comprehension Item 14. Truth,NA,0
+WISC-V Comprehension Item 15. Candle,NA,1
+WISC-V Comprehension Item 16. Cheat,NA,0
+WISC-V Comprehension Item 17. Stress,NA,0
+WISC-V Comprehension §Item 18. Technology,NA,0
+WISC-V Comprehension Item 19. Guests,NA,0
+D-KEFS Color-Word Interference Test Condition 1: Color Naming practice item,NA,NA
+D-KEFS Color-Word Interference Test Condition 1: Color Naming test item,NA,37
+D-KEFS Color-Word Interference Test Condition 2: Word Reading practice item,NA,NA
+D-KEFS Color-Word Interference Test Condition 2: Word Reading test item,NA,29
+D-KEFS Color-Word Interference Test Condition 3: Inhibition practice item,NA,NA
+D-KEFS Color-Word Interference Test Condition 3: Inhibition test item,NA,68
+D-KEFS Color-Word Interference Test Condition 4: Inhibition/Switching practice item,NA,NA
+D-KEFS Color-Word Interference Test Condition 4: Inhibition/Switching test item,NA,59
+WISC-V Cancellation Demonstration Item,NA,NA
+WISC-V Cancellation Sample Items,NA,C
+WISC-V Cancellation Item 1. Random,NA,33
+WISC-V Cancellation Item 2. Structured,NA,39
+Additional Measures (Primary and Combined and Process),NA,NA
+Scoring Type,NA,Scores
+WISC-V Block Design,NA,NA
+Total raw score,NA,NA
+WISC-V Similarities,NA,14
+Total raw score,NA,37
+WISC-V Matrix Reasoning,NA,9
+Total raw score,NA,19
+WISC-V Digit Span,NA,7
+Digit Span Total,NA,22
+Digit Span Forward,NA,9
+Digit Span Backward,NA,9
+Digit Span Sequencing,NA,4
+WISC-V Coding,NA,6
+Total raw score,NA,43
+WISC-V Vocabulary,NA,13
+Total raw score,NA,38
+WISC-V Figure Weights,NA,10
+Total raw score,NA,24
+WISC-V Picture Span,NA,9
+Total raw score,NA,29
+WISC-V Symbol Search,NA,6
+Total raw score,NA,21
+WISC-V Visual Puzzles,NA,9
+Total raw score,NA,17
+WISC-V Picture Concepts,NA,10
+Total raw score,NA,17
+NA,NA,13
+Total raw score,NA,32
+NA,NA,16
+Total raw score,NA,24
+NA,NA,7
+Total raw score,NA,15
+null,NA,10-16
+Total raw score,NA,11
+null,NA,26-50
+Total raw score,NA,9
+NA,NA,13
+Total raw score,NA,20
+Equated raw score,NA,20
+NA,NA,11
+Total raw score,NA,10
+NA,NA,14
+Total raw score,NA,60
+null,NA,26-50
+Total raw score,NA,6
+null,NA,51-75
+Total raw score,NA,20
+NA,NA,16
+Total raw score,NA,12
+NA,NA,10
+Total raw score,NA,14
+WISC-V Block Design,NA,7
+Total raw score,NA,26
+WISC-V Comprehension,NA,8
+Total raw score,NA,21
+Color Naming scaled score,NA,8
+Word Reading scaled score,NA,8
+Inhibition scaled score,NA,9
+Inhibition/Switching scaled score,NA,11
+Color Naming errors,NA,15
+Word Reading errors,NA,100
+Inhibition errors,NA,7
+Inhibition/Switching errors,NA,5
+Color Naming,NA,37
+Word Reading,NA,29
+Inhibition,NA,68
+Inhibition/Switching,NA,59
+Color Naming errors,NA,2
+Word Reading errors,NA,0
+Inhibition errors,NA,6
+Inhibition/Switching errors,NA,8
+Inhibition total self-corrected errors,NA,2
+Inhibition total uncorrected errors,NA,4
+Inhibition/Switching total self-corrected errors,NA,2
+Inhibition/Switching total uncorrected errors,NA,6
+WISC-V Cancellation,NA,9
+Total raw score,NA,72
+Composite Score,NA,NA
+Name,Index score,"Percentile Rank,Confidence Interval 90 Low,Confidence Interval 90 High,Confidence Interval 95 Low,Confidence Interval 95 High"
+WISC-V Verbal Comprehension Index (VCI),118,"88,110,123,109,124"
+WISC-V Visual Spatial Index (VSI),89,"23,83,96,82,98"
+WISC-V Fluid Reasoning Index (FRI),97,"42,91,103,90,104"
+WISC-V Working Memory Index (WMI),88,"21,83,95,81,97"
+WISC-V Processing Speed Index (PSI),77,"6,72,87,71,89"
+WISC-V Full Scale Intelligence Quotient (FSIQ),96,"39,91,101,91,102"
+RBANS Update Form A Immediate Memory Index (IMI),126,"96,119,133,118,134"
+RBANS Update Form A Visuospatial/ Constructional Index (VCI),75,"5,60,90,57,93"
+RBANS Update Form A Language Index (LGI),109,"73,98,120,96,122"
+RBANS Update Form A Attention Index (ATI),116,"86,105,127,103,129"
+RBANS Update Form A Delayed Memory Index (DRI),89,"23,79,99,78,100"
+RBANS Update Form A Total Scale (TOT),103,"58,96,110,95,111"

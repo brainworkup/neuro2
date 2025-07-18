@@ -81,6 +81,10 @@ DuckDBProcessorR6 <- R6::R6Class(
       DBI::dbExecute(self$con, "INSTALL 'json'")
       DBI::dbExecute(self$con, "LOAD 'json'")
 
+      # Install parquet extension
+      DBI::dbExecute(self$con, "INSTALL 'parquet'")
+      DBI::dbExecute(self$con, "LOAD 'parquet'")
+
       invisible(self)
     },
 
@@ -140,6 +144,71 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Register a Parquet file as a virtual table in DuckDB.
+    #'
+    #' @param file_path Path to the Parquet file
+    #' @param table_name Name for the table (default: based on filename)
+    #'
+    #' @return Invisibly returns self for method chaining.
+    register_parquet = function(file_path, table_name = NULL) {
+      if (!file.exists(file_path)) {
+        stop("File not found: ", file_path)
+      }
+
+      # Generate table name from file if not provided
+      if (is.null(table_name)) {
+        table_name <- tools::file_path_sans_ext(basename(file_path))
+      }
+
+      # Create view from Parquet
+      query <- sprintf(
+        "CREATE OR REPLACE VIEW %s AS SELECT * FROM read_parquet('%s')",
+        table_name,
+        file_path
+      )
+
+      DBI::dbExecute(self$con, query)
+      self$tables[[table_name]] <- file_path
+
+      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
+
+      invisible(self)
+    },
+
+    #' @description
+    #' Register an Arrow/Feather file as a virtual table in DuckDB.
+    #'
+    #' @param file_path Path to the Arrow/Feather file
+    #' @param table_name Name for the table (default: based on filename)
+    #'
+    #' @return Invisibly returns self for method chaining.
+    register_arrow = function(file_path, table_name = NULL) {
+      if (!file.exists(file_path)) {
+        stop("File not found: ", file_path)
+      }
+
+      # Check if arrow package is available
+      if (!requireNamespace("arrow", quietly = TRUE)) {
+        stop("The 'arrow' package is required to read Arrow/Feather files. Please install it with: install.packages('arrow')")
+      }
+
+      # Generate table name from file if not provided
+      if (is.null(table_name)) {
+        table_name <- tools::file_path_sans_ext(basename(file_path))
+      }
+
+      # Read Arrow table and register it directly
+      arrow_table <- arrow::read_feather(file_path)
+      duckdb::duckdb_register_arrow(self$con, table_name, arrow_table)
+
+      self$tables[[table_name]] <- file_path
+
+      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
+
+      invisible(self)
+    },
+
+    #' @description
     #' Register all CSV files in a directory.
     #'
     #' @param data_dir Directory containing CSV files
@@ -152,6 +221,68 @@ DuckDBProcessorR6 <- R6::R6Class(
       for (file in csv_files) {
         self$register_csv(file)
       }
+
+      invisible(self)
+    },
+
+    #' @description
+    #' Register all data files in a directory (CSV, Parquet, and Arrow).
+    #'
+    #' @param data_dir Directory containing data files
+    #' @param formats Character vector of formats to register (default: c("csv", "parquet", "arrow"))
+    #'
+    #' @return Invisibly returns self for method chaining.
+    register_all_files = function(data_dir = "data", formats = c("csv", "parquet", "arrow")) {
+
+      # Register CSV files
+      if ("csv" %in% formats) {
+        csv_files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
+        for (file in csv_files) {
+          self$register_csv(file)
+        }
+      }
+
+      # Register Parquet files
+      if ("parquet" %in% formats) {
+        parquet_files <- list.files(data_dir, pattern = "\\.parquet$", full.names = TRUE)
+        for (file in parquet_files) {
+          self$register_parquet(file)
+        }
+      }
+
+      # Register Arrow/Feather files
+      if ("arrow" %in% formats) {
+        arrow_files <- list.files(data_dir, pattern = "\\.(arrow|feather)$", full.names = TRUE)
+        for (file in arrow_files) {
+          self$register_arrow(file)
+        }
+      }
+
+      invisible(self)
+    },
+
+    #' @description
+    #' Export data to Parquet format using DuckDB.
+    #'
+    #' @param table_name Name of the table to export
+    #' @param output_path Path for the output Parquet file
+    #' @param compression Compression algorithm (default: "zstd")
+    #'
+    #' @return Invisibly returns self for method chaining.
+    export_to_parquet = function(table_name, output_path, compression = "zstd") {
+      if (!table_name %in% names(self$tables)) {
+        stop("Table not found: ", table_name)
+      }
+
+      query <- sprintf(
+        "COPY %s TO '%s' (FORMAT PARQUET, COMPRESSION %s)",
+        table_name,
+        output_path,
+        compression
+      )
+
+      DBI::dbExecute(self$con, query)
+      message(paste("[OK] Exported", table_name, "to", output_path))
 
       invisible(self)
     },
@@ -175,6 +306,27 @@ DuckDBProcessorR6 <- R6::R6Class(
       }
 
       return(result)
+    },
+
+    #' @description
+    #' Execute a SQL statement that doesn't return results (CREATE, DROP, etc.).
+    #'
+    #' @param statement SQL statement string
+    #' @param params Named list of parameters for parameterized statements
+    #'
+    #' @return Number of rows affected (invisibly)
+    execute = function(statement, params = NULL) {
+      if (is.null(self$con)) {
+        stop("No database connection. Call connect() first.")
+      }
+
+      if (!is.null(params)) {
+        result <- DBI::dbExecute(self$con, statement, params = params)
+      } else {
+        result <- DBI::dbExecute(self$con, statement)
+      }
+
+      invisible(result)
     },
 
     #' @description

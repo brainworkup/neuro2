@@ -48,8 +48,13 @@ This class enables SQL-based querying without loading entire datasets into memor
 \item \href{#method-DuckDBProcessorR6-connect}{\code{DuckDBProcessorR6$connect()}}
 \item \href{#method-DuckDBProcessorR6-disconnect}{\code{DuckDBProcessorR6$disconnect()}}
 \item \href{#method-DuckDBProcessorR6-register_csv}{\code{DuckDBProcessorR6$register_csv()}}
+\item \href{#method-DuckDBProcessorR6-register_parquet}{\code{DuckDBProcessorR6$register_parquet()}}
+\item \href{#method-DuckDBProcessorR6-register_arrow}{\code{DuckDBProcessorR6$register_arrow()}}
 \item \href{#method-DuckDBProcessorR6-register_all_csvs}{\code{DuckDBProcessorR6$register_all_csvs()}}
+\item \href{#method-DuckDBProcessorR6-register_all_files}{\code{DuckDBProcessorR6$register_all_files()}}
+\item \href{#method-DuckDBProcessorR6-export_to_parquet}{\code{DuckDBProcessorR6$export_to_parquet()}}
 \item \href{#method-DuckDBProcessorR6-query}{\code{DuckDBProcessorR6$query()}}
+\item \href{#method-DuckDBProcessorR6-execute}{\code{DuckDBProcessorR6$execute()}}
 \item \href{#method-DuckDBProcessorR6-query_lazy}{\code{DuckDBProcessorR6$query_lazy()}}
 \item \href{#method-DuckDBProcessorR6-process_domain}{\code{DuckDBProcessorR6$process_domain()}}
 \item \href{#method-DuckDBProcessorR6-calculate_z_stats}{\code{DuckDBProcessorR6$calculate_z_stats()}}
@@ -138,6 +143,50 @@ Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-register_parquet"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_parquet}{}}}
+\subsection{Method \code{register_parquet()}}{
+Register a Parquet file as a virtual table in DuckDB.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_parquet(file_path, table_name = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file_path}}{Path to the Parquet file}
+
+\item{\code{table_name}}{Name for the table (default: based on filename)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-register_arrow"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_arrow}{}}}
+\subsection{Method \code{register_arrow()}}{
+Register an Arrow/Feather file as a virtual table in DuckDB.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_arrow(file_path, table_name = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file_path}}{Path to the Arrow/Feather file}
+
+\item{\code{table_name}}{Name for the table (default: based on filename)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-register_all_csvs"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_all_csvs}{}}}
 \subsection{Method \code{register_all_csvs()}}{
@@ -152,6 +201,59 @@ Register all CSV files in a directory.
 \item{\code{data_dir}}{Directory containing CSV files}
 
 \item{\code{pattern}}{File pattern to match (default: "*.csv")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-register_all_files"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_all_files}{}}}
+\subsection{Method \code{register_all_files()}}{
+Register all data files in a directory (CSV, Parquet, and Arrow).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_all_files(
+  data_dir = "data",
+  formats = c("csv", "parquet", "arrow")
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data_dir}}{Directory containing data files}
+
+\item{\code{formats}}{Character vector of formats to register (default: c("csv", "parquet", "arrow"))}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-export_to_parquet"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-export_to_parquet}{}}}
+\subsection{Method \code{export_to_parquet()}}{
+Export data to Parquet format using DuckDB.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$export_to_parquet(
+  table_name,
+  output_path,
+  compression = "zstd"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{table_name}}{Name of the table to export}
+
+\item{\code{output_path}}{Path for the output Parquet file}
+
+\item{\code{compression}}{Compression algorithm (default: "zstd")}
 }
 \if{html}{\out{</div>}}
 }
@@ -179,6 +281,28 @@ Execute a SQL query and return results.
 }
 \subsection{Returns}{
 Query results as a data frame
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-execute"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-execute}{}}}
+\subsection{Method \code{execute()}}{
+Execute a SQL statement that doesn't return results (CREATE, DROP, etc.).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$execute(statement, params = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{statement}}{SQL statement string}
+
+\item{\code{params}}{Named list of parameters for parameterized statements}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Number of rows affected (invisibly)
 }
 }
 \if{html}{\out{<hr>}}

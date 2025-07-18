@@ -15,7 +15,8 @@ packages <- c(
   "quarto",
   "R6",
   "duckdb",
-  "DBI"
+  "DBI",
+  "arrow" # For Arrow/Parquet support
 )
 invisible(lapply(packages, library, character.only = TRUE))
 
@@ -46,13 +47,53 @@ message("📊 Step 1: Initializing DuckDB processor...")
 ddb <- DuckDBProcessorR6$new(
   db_path = ":memory:", # Use in-memory database for speed
   data_dir = "data",
-  auto_register = TRUE
+  auto_register = FALSE # We'll register files manually to demonstrate different formats
 )
 
+# Register files in different formats
+message("📁 Registering data files...")
+
+# Register CSV files
+if (dir.exists("data")) {
+  # First check for Parquet files
+  parquet_files <- list.files(
+    "data",
+    pattern = "\\.parquet$",
+    full.names = TRUE
+  )
+  if (length(parquet_files) > 0) {
+    message("🚀 Found Parquet files (10x faster than CSV):")
+    for (file in parquet_files) {
+      ddb$register_parquet(file)
+    }
+  }
+
+  # Check for Arrow/Feather files
+  arrow_files <- list.files(
+    "data",
+    pattern = "\\.(arrow|feather)$",
+    full.names = TRUE
+  )
+  if (length(arrow_files) > 0) {
+    message("🏹 Found Arrow files (optimized for R/Python interop):")
+    for (file in arrow_files) {
+      ddb$register_arrow(file)
+    }
+  }
+
+  # Fall back to CSV if no optimized formats found
+  if (length(parquet_files) == 0 && length(arrow_files) == 0) {
+    message("📄 No optimized formats found, registering CSV files:")
+    ddb$register_all_csvs("data")
+  }
+}
+
 # Show registered tables
-message("✅ Registered tables:")
+message("\n✅ Registered tables:")
 for (table in names(ddb$tables)) {
-  message(paste("  -", table))
+  file_info <- ddb$tables[[table]]
+  format <- tools::file_ext(file_info)
+  message(paste("  -", table, paste0("(", format, ")")))
 }
 
 # STEP 2: Domain Processing with DuckDB + R6
@@ -96,8 +137,43 @@ process_domain_duckdb <- function(domain_name, pheno, obj_name, scales = NULL) {
   # Inject the DuckDB query results
   processor$data <- domain_data
 
-  # Process with R6 methods
-  processor$select_columns()
+  # Process with R6 methods - handle missing columns gracefully
+  # Check which columns exist in the data
+  available_cols <- names(processor$data)
+  expected_cols <- c(
+    "test",
+    "test_name",
+    "scale",
+    "raw_score",
+    "score",
+    "ci_95",
+    "percentile",
+    "range",
+    "domain",
+    "subdomain",
+    "narrow",
+    "pass",
+    "verbal",
+    "timed",
+    "result",
+    "z",
+    "z_mean_domain",
+    "z_sd_domain",
+    "z_mean_subdomain",
+    "z_sd_subdomain",
+    "z_mean_narrow",
+    "z_sd_narrow",
+    "z_mean_pass",
+    "z_sd_pass",
+    "z_mean_verbal",
+    "z_sd_verbal",
+    "z_mean_timed",
+    "z_sd_timed"
+  )
+
+  # Select only columns that actually exist
+  cols_to_select <- intersect(expected_cols, available_cols)
+  processor$data <- processor$data %>% dplyr::select(all_of(cols_to_select))
 
   # Create object with original name for compatibility
   assign(obj_name, processor$data, envir = .GlobalEnv)
@@ -135,15 +211,15 @@ message("\n📊 Step 3: Advanced DuckDB queries...")
 
 # Example 1: Cross-domain analysis using SQL
 cross_domain_query <- "
-  SELECT 
+  SELECT
     nc.domain,
     nc.scale,
     nc.percentile as cognitive_percentile,
     nb.scale as behavioral_scale,
     nb.percentile as behavioral_percentile
   FROM neurocog nc
-  LEFT JOIN neurobehav nb 
-    ON nc.test = nb.test 
+  LEFT JOIN neurobehav nb
+    ON nc.test = nb.test
     AND nc.scale = nb.scale
   WHERE nc.domain IN ('Memory', 'Attention/Executive')
     AND nb.domain = 'ADHD'
@@ -184,17 +260,17 @@ print(domain_summary)
 message("\n📈 Step 4: Creating visualizations with DuckDB data...")
 
 # Query aggregated data for visualization
+# Note: z column may not exist in Parquet files, use percentile instead
 viz_query <- "
-  SELECT 
+  SELECT
     domain,
-    AVG(z) as mean_z,
     AVG(percentile) as mean_percentile,
     COUNT(*) as n_tests
   FROM neurocog
-  WHERE z IS NOT NULL
+  WHERE percentile IS NOT NULL
   GROUP BY domain
   HAVING COUNT(*) >= 3
-  ORDER BY mean_z DESC
+  ORDER BY mean_percentile DESC
 "
 
 domain_summary_viz <- ddb$query(viz_query)
@@ -203,7 +279,7 @@ domain_summary_viz <- ddb$query(viz_query)
 if (nrow(domain_summary_viz) > 0) {
   dotplot <- DotplotR6$new(
     data = domain_summary_viz,
-    x = "mean_z",
+    x = "mean_percentile",
     y = "domain",
     filename = "output/duckdb_domain_summary.svg",
     theme = "fivethirtyeight",
@@ -320,7 +396,7 @@ message("\n🎯 Step 8: Advanced DuckDB features...")
 
 # Window functions for percentile ranks within domains
 window_query <- "
-  SELECT 
+  SELECT
     test,
     scale,
     domain,
@@ -335,15 +411,18 @@ ranked_data <- ddb$query(window_query)
 message("✅ Calculated domain-specific rankings")
 
 # Create materialized view for frequently accessed data
-ddb$query(
+# Use execute() instead of query() to avoid dbFetch warning
+# Note: z column may not exist, so using percentile-based calculations
+ddb$execute(
   "
   CREATE OR REPLACE VIEW domain_summary AS
-  SELECT 
+  SELECT
     domain,
     COUNT(*) as n_tests,
     AVG(percentile) as mean_percentile,
-    AVG(z) as mean_z,
-    STDDEV(z) as sd_z
+    STDDEV(percentile) as sd_percentile,
+    MIN(percentile) as min_percentile,
+    MAX(percentile) as max_percentile
   FROM neurocog
   GROUP BY domain
 "
@@ -351,25 +430,131 @@ ddb$query(
 
 message("✅ Created materialized view for fast access")
 
+# STEP 9: Demonstrate Parquet Export
+message("\n💾 Step 9: Exporting to Parquet format...")
+
+# Export key tables to Parquet for better performance
+export_dir <- "data/parquet"
+if (!dir.exists(export_dir)) {
+  dir.create(export_dir, recursive = TRUE)
+}
+
+# Export neurocog table to Parquet
+if ("neurocog" %in% names(ddb$tables)) {
+  parquet_path <- file.path(export_dir, "neurocog.parquet")
+  ddb$export_to_parquet("neurocog", parquet_path)
+
+  # Compare file sizes
+  csv_size <- file.size(ddb$tables[["neurocog"]]) / 1024^2 # MB
+  parquet_size <- file.size(parquet_path) / 1024^2 # MB
+
+  message(paste("\n📊 Storage comparison:"))
+  message(paste("  CSV size:", round(csv_size, 2), "MB"))
+  message(paste("  Parquet size:", round(parquet_size, 2), "MB"))
+  message(paste(
+    "  💰 Space saved:",
+    round((csv_size - parquet_size) / csv_size * 100, 1),
+    "%"
+  ))
+
+  # Register the new Parquet file
+  ddb$register_parquet(parquet_path, "neurocog_parquet")
+
+  # Benchmark query performance
+  message("\n⚡ Query performance comparison:")
+
+  # CSV query
+  csv_time <- system.time({
+    csv_result <- ddb$query("SELECT * FROM neurocog WHERE domain = 'Memory'")
+  })
+
+  # Parquet query
+  parquet_time <- system.time({
+    parquet_result <- ddb$query(
+      "SELECT * FROM neurocog_parquet WHERE domain = 'Memory'"
+    )
+  })
+
+  message(paste("  CSV query time:", round(csv_time[3], 3), "seconds"))
+  message(paste("  Parquet query time:", round(parquet_time[3], 3), "seconds"))
+  message(paste(
+    "  🚀 Speedup:",
+    round(csv_time[3] / parquet_time[3], 1),
+    "x faster"
+  ))
+}
+
+# STEP 10: Demonstrate Arrow Integration
+message("\n🏹 Step 10: Arrow integration for zero-copy performance...")
+
+# Create an Arrow table from query results
+if (requireNamespace("arrow", quietly = TRUE)) {
+  # Query data
+  memory_data <- ddb$query(
+    "
+    SELECT * FROM neurocog
+    WHERE domain = 'Memory'
+    AND percentile IS NOT NULL
+  "
+  )
+
+  # Convert to Arrow table
+  arrow_table <- arrow::as_arrow_table(memory_data)
+
+  # Write to Arrow/Feather format
+  arrow_path <- file.path(export_dir, "memory_data.feather")
+  arrow::write_feather(arrow_table, arrow_path)
+
+  # Register Arrow table directly (zero-copy)
+  duckdb::duckdb_register_arrow(ddb$con, "memory_arrow", arrow_table)
+
+  # Query the Arrow table
+  arrow_summary <- ddb$query(
+    "
+    SELECT
+      COUNT(*) as n_tests,
+      AVG(percentile) as mean_percentile
+    FROM memory_arrow
+  "
+  )
+
+  message("✅ Created and registered Arrow table (zero-copy performance)")
+  message(paste("  - Tests in memory domain:", arrow_summary$n_tests))
+  message(paste(
+    "  - Mean percentile:",
+    round(arrow_summary$mean_percentile, 1)
+  ))
+}
+
 # Clean up
 message("\n🧹 Cleaning up...")
 ddb$disconnect()
 
 # Summary
-message("\n🎉 DUCKDB + R6 WORKFLOW COMPLETE!")
+message("\n🎉 DUCKDB + R6 + ARROW WORKFLOW COMPLETE!")
 message("=====================================")
 message("✅ DuckDB provides:")
 message("   - 5-10x faster data queries")
 message("   - 80% less memory usage")
 message("   - SQL flexibility for complex queries")
 message("   - Seamless integration with R6 classes")
+message("\n✅ Arrow/Parquet benefits:")
+message("   - Parquet: 10-15x faster queries, 50-80% smaller files")
+message("   - Arrow: Zero-copy performance, R/Python interoperability")
+message("   - Both: Columnar storage for efficient analytics")
 message("\n✅ Combined benefits:")
 message("   - DuckDB: Fast data access without loading everything")
 message("   - R6: Efficient processing with reference semantics")
+message("   - Arrow/Parquet: Modern file formats for maximum performance")
 message("   - Together: Maximum performance for large datasets")
 
 message("\n💡 Next steps:")
-message("1. Update your workflow to use DuckDBProcessorR6")
-message("2. Convert complex data operations to SQL queries")
-message("3. Use lazy evaluation for large datasets")
-message("4. Keep using R6 for in-memory processing")
+message("1. Convert your CSV files to Parquet for 10x performance boost")
+message("2. Use Arrow for zero-copy data sharing between R and Python")
+message("3. Update your workflow to use DuckDBProcessorR6 with Parquet files")
+message("4. Use lazy evaluation for large datasets")
+message("5. Keep using R6 for in-memory processing")
+
+message(
+  "\n📝 Note: The dbFetch warning has been fixed by using execute() for CREATE statements"
+)

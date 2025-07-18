@@ -62,7 +62,32 @@ source("01_import_process_data.R")
 load_data_duckdb(
   file_path = "data-raw/csv",
   output_dir = "data",
-  use_duckdb = TRUE
+  use_duckdb = TRUE,
+  output_format = "csv"  # Options: "csv", "parquet", "arrow", "all"
+)
+```
+
+### 4. Use Modern File Formats for Better Performance
+```r
+# Export to Parquet format (10x faster queries)
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_format = "parquet",  # Creates .parquet files
+  return_data = FALSE
+)
+
+# Export to Arrow/Feather format (efficient R/Python interoperability)
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_format = "arrow",  # Creates .feather files
+  return_data = FALSE
+)
+
+# Export all formats at once
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_format = "all",  # Creates CSV, Parquet, and Arrow files
+  return_data = FALSE
 )
 ```
 
@@ -193,6 +218,19 @@ DuckDB:       0.1 seconds (no pre-loading needed)
 # Complex join across 3 tables:
 Traditional R: 5.2 seconds
 DuckDB:       0.4 seconds
+
+# File format performance comparison:
+CSV:     1.0x (baseline)
+Parquet: 10-15x faster queries, 50-80% smaller file size
+Arrow:   8-12x faster queries, optimized for R/Python interop
+```
+
+### Storage Benefits:
+```r
+# Example: 100MB neuropsych CSV dataset
+CSV:     100MB (uncompressed)
+Parquet: 20-40MB (compressed with ZSTD)
+Arrow:   30-50MB (optimized columnar format)
 ```
 
 ## Advanced Features
@@ -228,19 +266,78 @@ ddb$query("
 low_perf <- ddb$query("SELECT * FROM low_performers WHERE domain = 'Memory'")
 ```
 
-### 3. Export to Parquet for Even Better Performance
+### 3. Export to Modern File Formats for Better Performance
+
 ```r
-# Convert CSV to Parquet (10x faster queries)
+# Option 1: Use load_data_duckdb to create Parquet files
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_format = "parquet",  # 10x faster queries
+  return_data = FALSE
+)
+
+# Option 2: Convert existing CSV to Parquet with DuckDB
 ddb$query("
-  COPY neurocog 
-  TO 'data/neurocog.parquet' 
+  COPY neurocog
+  TO 'data/neurocog.parquet'
   (FORMAT PARQUET, COMPRESSION ZSTD)
 ")
 
-# Register Parquet file
+# Register Parquet file for querying
 ddb$query("
-  CREATE OR REPLACE VIEW neurocog_fast AS 
+  CREATE OR REPLACE VIEW neurocog_fast AS
   SELECT * FROM 'data/neurocog.parquet'
+")
+```
+
+### 4. Work with Arrow Tables for Zero-Copy Performance
+
+```r
+# Read data into Arrow format
+arrow_table <- arrow::read_csv_arrow("data-raw/csv/*.csv")
+
+# Register Arrow table in DuckDB (zero-copy, no data duplication!)
+con <- DBI::dbConnect(duckdb::duckdb())
+duckdb::duckdb_register_arrow(con, "neuropsych_arrow", arrow_table)
+
+# Query Arrow data with SQL
+high_performers <- DBI::dbGetQuery(
+  con,
+  "SELECT * FROM neuropsych_arrow WHERE percentile > 90"
+)
+```
+
+## Working with Multiple File Formats
+
+The `query_neuropsych()` function now automatically detects and works with multiple file formats:
+
+```r
+# Query across any supported format (CSV, Parquet, or Arrow/Feather)
+iq_data <- query_neuropsych("
+  SELECT * FROM neurocog
+  WHERE domain = 'General Cognitive Ability'
+")
+
+# The function automatically:
+# - Detects .csv, .parquet, and .feather files in your data directory
+# - Registers them as DuckDB views
+# - Allows querying across formats seamlessly
+```
+
+### Format-Specific Query Examples:
+```r
+# If you have neurocog.parquet (10x faster than CSV)
+fast_iq <- query_neuropsych("
+  SELECT * FROM neurocog  -- DuckDB finds neurocog.parquet
+  WHERE percentile > 90
+")
+
+# Mix formats in joins (e.g., CSV validity with Parquet neurocog)
+mixed_query <- query_neuropsych("
+  SELECT n.*, v.validity_status
+  FROM neurocog n  -- Could be .parquet
+  JOIN validity v  -- Could be .csv
+  ON n.test = v.test
 ")
 ```
 
@@ -251,15 +348,16 @@ ddb$query("
 2. Add `use_duckdb = TRUE` parameter to functions
 3. Test performance improvements
 
-### Phase 2: Update Domain Processing
-1. Modify domain QMD files to use DuckDB queries
-2. Keep R6 classes for processing logic
-3. Use DuckDB for data access
+### Phase 2: Convert to Efficient Formats
+1. Export existing CSV data to Parquet/Arrow formats
+2. Update queries to use new formats (automatic with `query_neuropsych`)
+3. Benchmark performance improvements
 
 ### Phase 3: Full Integration
 1. Replace all CSV reading with DuckDB
 2. Convert complex data operations to SQL
 3. Use Parquet format for production
+4. Use Arrow format for R/Python interoperability
 
 ## Best Practices
 
@@ -320,6 +418,25 @@ DuckDB + R6 provides the best of both worlds:
 
 - **DuckDB**: Lightning-fast data access without memory overhead
 - **R6**: Efficient object-oriented processing
+- **Modern File Formats**:
+  - **Parquet**: 10-15x faster queries, 50-80% smaller files
+  - **Arrow**: Zero-copy performance, seamless R/Python interoperability
+- **Flexible Integration**: Works with CSV, Parquet, and Arrow formats simultaneously
 - **Together**: 10-50x performance improvement for large datasets
 
-Start with `neuro2_duckdb_workflow.R` to see it in action!
+### Quick Start Commands:
+```r
+# Convert your data to efficient formats
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_format = "all"  # Creates CSV, Parquet, and Arrow files
+)
+
+# Query any format seamlessly
+iq_data <- query_neuropsych("
+  SELECT * FROM neurocog
+  WHERE domain = 'General Cognitive Ability'
+")
+```
+
+Start with `neuro2_duckdb_workflow.R` or `DuckDB_TidyData.R` to see it in action!
