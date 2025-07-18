@@ -61,3 +61,5 @@ data/neuropsych.parquet
 data/validity.parquet
 .roo/
 *.tar.gz
+Archive.zip
+data-raw/g.csv

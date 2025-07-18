@@ -10,7 +10,11 @@ library(readr)
 library(gt)
 library(ggplot2)
 library(here)
-library(neuro2)
+library(arrow)
+library(DBI)
+library(duckdb)
+library(glue)
+library(purrr)
 
 # Source R6 classes
 source("R/DomainProcessorR6.R")
@@ -111,7 +115,7 @@ tryCatch(
     # Create report system for specific domains
     report_config <- list(
       patient = "Test Patient",
-      domains = c("Verbal/Language", "Memory", "Executive"),
+      domains = c("Verbal/Language", "Memory", "Attention/Executive"),
       data_files = list(
         neurocog = "data/neurocog.csv",
         neurobehav = "data/neurobehav.csv"
@@ -123,9 +127,9 @@ tryCatch(
     # Generate domain files only (not full report)
     report_system$generate_domain_files()
 
-    cat("✓ Domain files generated for: Verbal/Language, Memory, Executive\n")
+    cat("✓ Domain files generated for: Verbal/Language, Memory, Attention/Executive\n")
     cat("  Check for files:\n")
-    cat("  - _02-03_verbal_language.qmd\n")
+    cat("  - _02-03_verbal.qmd\n")
     cat("  - _02-04_memory.qmd\n")
     cat("  - _02-05_executive.qmd\n")
   },

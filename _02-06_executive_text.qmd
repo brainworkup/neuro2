@@ -1,5 +1,0 @@
-<summary>
-
-Testing of attention/executive revealed overall average performance (mean percentile = 53).
-
-</summary>
