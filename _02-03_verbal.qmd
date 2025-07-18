@@ -10,6 +10,7 @@
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
+source("R/TableGT.R")
 
 # Filter by domain
 domains <- c("Verbal/Language")
@@ -82,8 +83,8 @@ table_name <- "table_verbal"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using NeurotypR
-NeurotypR::tbl_gt(
+# Create table using TableGT R6 class
+table_gt <- TableGT$new(
   data = data_verbal,
   pheno = pheno,
   table_name = table_name,
@@ -91,6 +92,9 @@ NeurotypR::tbl_gt(
   source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
+
+# Build and save the table
+table_gt$build_table()
 ```
 
 ```{r}
@@ -150,5 +154,3 @@ dotplot_subdomain$create_plot()
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
-```
-
