@@ -55,3 +55,9 @@ data/neurobehav.csv
 data/neurocog.csv
 data/neuropsych.csv
 data/validity.csv
+data/neurobehav.parquet
+data/neurocog.parquet
+data/neuropsych.parquet
+data/validity.parquet
+.roo/
+*.tar.gz
