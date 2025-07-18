@@ -40,7 +40,156 @@ load_data_duckdb <- function(
     )
   }
 
-  # [ … DuckDB setup, UNION and processing logic unchanged … ]
+  # Connect to DuckDB
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+
+  # Get CSV files
+  files <- dir(file_path, pattern = "*.csv", full.names = TRUE)
+
+  if (length(files) == 0) {
+    stop("No CSV files found in: ", file_path)
+  }
+
+  # Create a union of all CSV files with filename column
+  # First, read each CSV to determine the common columns
+  all_data <- list()
+
+  for (i in seq_along(files)) {
+    file <- files[i]
+    # Read CSV using DuckDB
+    query <- sprintf("SELECT * FROM read_csv_auto('%s')", file)
+    df <- DBI::dbGetQuery(con, query)
+    df$filename <- basename(file)
+
+    # Ensure numeric columns are properly typed
+    numeric_cols <- c(
+      "raw_score",
+      "score",
+      "percentile",
+      "ci_95",
+      "z_score",
+      "scaled_score",
+      "t_score",
+      "standard_score",
+      "base_rate"
+    )
+
+    for (col in numeric_cols) {
+      if (col %in% names(df)) {
+        df[[col]] <- as.numeric(df[[col]])
+      }
+    }
+
+    all_data[[i]] <- df
+  }
+
+  # Combine all dataframes
+  neuropsych_df <- dplyr::bind_rows(all_data) |> dplyr::distinct()
+
+  # Create a DuckDB table from the combined dataframe
+  duckdb::duckdb_register(con, "neuropsych", neuropsych_df)
+
+  # Create a persistent table
+  DBI::dbExecute(
+    con,
+    "CREATE OR REPLACE TABLE neuropsych AS SELECT * FROM neuropsych"
+  )
+
+  # Add type conversions (z-score will be calculated in R)
+  DBI::dbExecute(
+    con,
+    "
+    CREATE OR REPLACE TABLE neuropsych_processed AS
+    SELECT *,
+      CAST(domain AS VARCHAR) as domain,
+      CAST(subdomain AS VARCHAR) as subdomain,
+      CAST(narrow AS VARCHAR) as narrow,
+      CAST(pass AS VARCHAR) as pass,
+      CAST(verbal AS VARCHAR) as verbal,
+      CAST(timed AS VARCHAR) as timed
+    FROM neuropsych
+  "
+  )
+
+  # Process neurocognitive data
+  DBI::dbExecute(
+    con,
+    "
+    CREATE OR REPLACE TABLE neurocog_final AS
+    SELECT * FROM neuropsych_processed
+    WHERE test_type = 'npsych_test'
+  "
+  )
+
+  # Process neurobehavioral data
+  DBI::dbExecute(
+    con,
+    "
+    CREATE OR REPLACE TABLE neurobehav_final AS
+    SELECT * FROM neuropsych_processed
+    WHERE test_type = 'rating_scale'
+  "
+  )
+
+  # Process validity data
+  DBI::dbExecute(
+    con,
+    "
+    CREATE OR REPLACE TABLE validity_final AS
+    SELECT * FROM neuropsych_processed
+    WHERE test_type IN ('performance_validity', 'symptom_validity')
+  "
+  )
+
+  # Fetch results for the result_list
+  neuropsych <- DBI::dbGetQuery(
+    con,
+    "SELECT DISTINCT * FROM neuropsych_processed"
+  )
+  neurocog <- DBI::dbGetQuery(con, "SELECT * FROM neurocog_final")
+  neurobehav <- DBI::dbGetQuery(con, "SELECT * FROM neurobehav_final")
+  validity <- DBI::dbGetQuery(con, "SELECT * FROM validity_final")
+
+  # Calculate z-scores in R (more accurate than SQL approximation)
+  if ("percentile" %in% names(neuropsych)) {
+    neuropsych$z <- ifelse(
+      !is.na(neuropsych$percentile),
+      qnorm(neuropsych$percentile / 100),
+      NA_real_
+    )
+    neurocog$z <- ifelse(
+      !is.na(neurocog$percentile),
+      qnorm(neurocog$percentile / 100),
+      NA_real_
+    )
+    neurobehav$z <- ifelse(
+      !is.na(neurobehav$percentile),
+      qnorm(neurobehav$percentile / 100),
+      NA_real_
+    )
+    validity$z <- ifelse(
+      !is.na(validity$percentile),
+      qnorm(validity$percentile / 100),
+      NA_real_
+    )
+  }
+
+  # Calculate z-statistics using the helper function
+  neurocog_groups <- c(
+    "domain",
+    "subdomain",
+    "narrow",
+    "pass",
+    "verbal",
+    "timed"
+  )
+  neurobehav_groups <- c("domain", "subdomain", "narrow")
+  validity_groups <- c("domain", "subdomain", "narrow")
+
+  neurocog <- calculate_z_stats(neurocog, neurocog_groups)
+  neurobehav <- calculate_z_stats(neurobehav, neurobehav_groups)
+  validity <- calculate_z_stats(validity, validity_groups)
 
   # Prepare the list of result tables
   result_list <- list(
@@ -293,8 +442,28 @@ run_example_query <- function(query_name, data_dir = "data") {
 #' @param groups Character vector of grouping variables
 #' @return Data frame with added z-statistics
 calculate_z_stats <- function(data, groups) {
-  # Implementation of z-statistics calculation
-  # This would need to be implemented based on your existing logic
-  # For now, returning data as-is
+  # Filter out NA group variables to avoid unnecessary computations
+  valid_vars <- groups[groups %in% names(data)]
+
+  if (length(valid_vars) == 0) {
+    return(data)
+  }
+
+  # Calculate statistics for each grouping variable
+  for (var in valid_vars) {
+    # Skip if variable is all NA
+    if (all(is.na(data[[var]]))) {
+      next
+    }
+
+    data <- data |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(var)), .add = TRUE) |>
+      dplyr::mutate(
+        !!paste0("z_mean_", var) := mean(z, na.rm = TRUE),
+        !!paste0("z_sd_", var) := sd(z, na.rm = TRUE)
+      ) |>
+      dplyr::ungroup()
+  }
+
   return(data)
 }
