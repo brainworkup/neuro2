@@ -48,6 +48,7 @@ r6_iq_comparison_cache/
 _arxiv/batch_processor.r
 _arxiv/gen_report_R6.qmd
 _arxiv/
+_arxiv
 DESCRIPTION.bk
 neuro2_0.1.3.tar.gz
 data/neurobehav.csv
