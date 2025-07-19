@@ -3,7 +3,6 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Core Architecture
-
 **neuro2** is a neuropsychological report generation system built on modern R patterns:
 
 - **R6 Object-Oriented Classes**: Core functionality implemented using R6 for better performance and maintainability
@@ -78,6 +77,7 @@ R -e "renv::snapshot()"
 
 ### Input Data (data-raw/csv/)
 CSV files with required columns:
+
 - `test`: Test abbreviation
 - `test_name`: Full test name  
 - `scale`: Subtest/scale name
@@ -87,6 +87,7 @@ CSV files with required columns:
 - `domain`: Cognitive domain
 
 **Important**: The `range` column (e.g., "Average", "High Average") is automatically added by `gpluck_make_score_ranges()` based on percentiles:
+
 - 98+: "Exceptionally High"
 - 91-97: "Above Average"
 - 75-90: "High Average"
@@ -97,12 +98,14 @@ CSV files with required columns:
 
 ### Processed Data (data/)
 Files are converted to multiple formats:
+
 - `*.csv`: Original format
 - `*.parquet`: High-performance format (recommended)
 - `*.feather`: Alternative binary format
 
 ### Domain Mappings
 Defined in `data-raw/create_sysdata.R`:
+
 - General Cognitive Ability → `iq` 
 - Academic Skills → `academics`
 - Verbal/Language → `verbal`
@@ -125,11 +128,13 @@ Sequential numbering (XX) is assigned based on available domains.
 ## Performance Notes
 
 ### R6 vs Procedural Approach
+
 - R6 classes provide 2-3x performance improvement
 - 40-60% memory reduction through reference semantics
 - Better code organization and maintainability
 
 ### DuckDB vs CSV
+
 - Parquet files process 4-5x faster than CSV
 - Use `load_data_duckdb()` for optimal performance
 - SQL queries available via `query_neuropsych()`
@@ -179,8 +184,8 @@ Reinstall: `webshot2::install_chromote()`
 Ensure all QMD template files exist and Quarto is properly installed.
 
 ## Testing
-
 No formal test framework is configured. Testing is done through:
+
 - `test_domain_workflow_parquet.R`: Tests domain processing pipeline
 - `run_test_workflow.sh`: Full workflow integration test
 - Manual verification of generated reports and outputs
