@@ -39,12 +39,12 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @return A new NeuropsychReportSystemR6 object
     initialize = function(
       config = list(),
-      template_dir = "inst/quarto/_extensions",
+      template_dir = "inst/quarto/brainworkup/_extensions",
       output_dir = "output"
     ) {
       # Set default config values if not provided
       default_config <- list(
-        patient = "Patient",
+        patient = "Biggie",
         domains = c(
           domain_iq,
           domain_academics,
@@ -69,40 +69,56 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Merge provided config with defaults
       self$config <- modifyList(default_config, config)
-      
+
       # Generate dynamic output filename if not explicitly provided
-      if (!("output_file" %in% names(config)) ||
+      if (
+        !("output_file" %in% names(config)) ||
           config$output_file == "neuropsych_report.pdf" ||
-          is.null(config$output_file)) {
+          is.null(config$output_file)
+      ) {
         # Try to read patient info from _variables.yml
         variables_file <- "_variables.yml"
         if (file.exists(variables_file)) {
-          tryCatch({
-            # Read YAML file
-            variables <- yaml::read_yaml(variables_file)
-            
-            # Extract names
-            first_name <- variables$first_name
-            last_name <- variables$last_name
-            
-            # Clean names for filename (remove special characters)
-            first_name <- gsub("[^A-Za-z0-9]", "", first_name)
-            last_name <- gsub("[^A-Za-z0-9]", "", last_name)
-            
-            # Generate filename with current date
-            date_str <- format(Sys.Date(), "%Y-%m-%d")
-            
-            if (!is.null(last_name) && !is.null(first_name) &&
-                nchar(last_name) > 0 && nchar(first_name) > 0) {
-              self$config$output_file <- paste0(
-                last_name, "-", first_name,
-                "_neuropsych_report_", date_str, ".pdf"
+          tryCatch(
+            {
+              # Read YAML file
+              variables <- yaml::read_yaml(variables_file)
+
+              # Extract names
+              first_name <- variables$first_name
+              last_name <- variables$last_name
+
+              # Clean names for filename (remove special characters)
+              first_name <- gsub("[^A-Za-z0-9]", "", first_name)
+              last_name <- gsub("[^A-Za-z0-9]", "", last_name)
+
+              # Generate filename with current date
+              date_str <- format(Sys.Date(), "%Y-%m-%d")
+
+              if (
+                !is.null(last_name) &&
+                  !is.null(first_name) &&
+                  nchar(last_name) > 0 &&
+                  nchar(first_name) > 0
+              ) {
+                self$config$output_file <- paste0(
+                  last_name,
+                  "-",
+                  first_name,
+                  "_neuropsych_report_",
+                  date_str,
+                  ".pdf"
+                )
+                message("Output file will be: ", self$config$output_file)
+              }
+            },
+            error = function(e) {
+              warning(
+                "Could not read patient info from _variables.yml: ",
+                e$message
               )
-              message("Output file will be: ", self$config$output_file)
             }
-          }, error = function(e) {
-            warning("Could not read patient info from _variables.yml: ", e$message)
-          })
+          )
         }
       }
 
@@ -209,8 +225,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "readxl",
         "rmarkdown",
         "stringr",
-        "tidyr",
-        "NeurotypR"
+        "tidyr"
       )
 
       for (pkg in packages) {

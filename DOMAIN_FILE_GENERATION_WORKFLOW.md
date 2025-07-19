@@ -14,8 +14,8 @@ The main orchestrator that manages the entire report generation workflow.
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
     patient = "Patient Name",
-    domains = c("IQ", "Academics", "Verbal/Language", "Spatial", "Memory", ...),
-    data_files = list(neurocog = "data/neurocog.csv", ...)
+    domains = c("General Cognitive Ability", "Academics", "Verbal/Language", "Spatial", "Memory", ...),
+    data_files = list(neurocog = "data/neurocog.parquet", ...)
   )
 )
 ```
