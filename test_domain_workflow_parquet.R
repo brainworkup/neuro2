@@ -90,33 +90,61 @@ tryCatch(
 
 # Helper function to get test filters for each domain
 get_domain_test_filters <- function(domain) {
-  # Define test filters for each domain
-  # These are examples - adjust based on your actual test names
+  # Define test filters for each domain based on actual test names in the data
+  # The 'test' column in your CSV files contains: rbans, pegboard, tmt, pai, basc3, wisc5
   filters <- list(
     verbal = list(
-      self = c("wais4_vci", "wais4_verbal", "dkefs_verbal", "celf5"),
+      self = c("rbans"), # RBANS has verbal/language subtests
       observer = character(0),
-      performance = c("wais4_vci", "wais4_verbal", "dkefs_verbal")
+      performance = c("rbans") # RBANS Language Index
     ),
     memory = list(
-      self = c("wms4_memory", "cvlt3", "rbans_memory", "rcft_memory"),
+      self = c("rbans"), # RBANS has memory subtests
       observer = character(0),
-      performance = c("wms4_memory", "cvlt3", "rbans_memory", "rcft_memory")
+      performance = c("rbans") # RBANS Memory indices
     ),
     executive = list(
-      self = c("dkefs_executive", "wcst", "cpt3", "tova", "trails"),
-      observer = c("brief2", "cefi_observer"),
-      performance = c("dkefs_executive", "wcst", "cpt3", "trails")
+      self = c("rbans", "tmt"), # RBANS Attention Index, TMT Part B
+      observer = character(0), # Could add basc3 if it has executive measures
+      performance = c("rbans", "tmt")
+    ),
+    # Add additional domains to prevent warnings
+    iq = list(
+      self = c("wisc5", "rbans"), # WISC-5 for IQ, RBANS Total Index
+      observer = character(0),
+      performance = c("wisc5", "rbans")
+    ),
+    spatial = list(
+      self = c("rbans"), # RBANS Visuospatial/Constructional Index
+      observer = character(0),
+      performance = c("rbans")
+    ),
+    motor = list(
+      self = c("pegboard"), # Grooved Pegboard test
+      observer = character(0),
+      performance = c("pegboard")
+    ),
+    emotion = list(
+      self = c("pai"), # PAI for emotional/personality
+      observer = c("basc3"), # BASC-3 for behavioral observations
+      performance = character(0)
+    ),
+    validity = list(
+      self = character(0), # No validity tests in current data
+      observer = character(0),
+      performance = character(0)
     )
   )
 
   return(filters[[tolower(domain)]])
 }
 
-# Test 1: Generate domain files for Verbal, Memory, and Executive
-cat(
-  "=== Test 1: Generate Domain Files for Verbal, Memory, and Executive ===\n\n"
-)
+# Test 1: Generate domain files for Verbal, Memory, and Executive (and optionally IQ)
+cat("=== Test 1: Generate Domain Files for Multiple Domains ===\n\n")
+
+# Note: Add IQ domain if you want to generate iq.csv
+# Uncomment the line below to include IQ processing:
+# list(domain = "General Cognitive Ability", pheno = "iq"),
 
 domains_to_test <- list(
   list(domain = "Verbal/Language", pheno = "verbal"),
@@ -124,46 +152,59 @@ domains_to_test <- list(
   list(domain = "Attention/Executive", pheno = "executive")
 )
 
+cat(
+  "Note: Domain-specific CSV files (e.g., verbal.csv, memory.csv) are created\n"
+)
+cat("      by processor$save_data() for each processed domain.\n\n")
+
 # Process each domain
 for (domain_info in domains_to_test) {
   cat(paste0("--- Processing ", domain_info$domain, " domain ---\n"))
 
   tryCatch(
     {
-      # Check if parquet file exists
-      if (!file.exists("data/neurocog.parquet")) {
-        # Try CSV as fallback
-        if (file.exists("data/neurocog.csv")) {
-          cat("  Note: Using CSV file as parquet not found\n")
-          domain_data <- readr::read_csv(
-            "data/neurocog.csv",
-            show_col_types = FALSE
-          ) |>
-            filter(domain == domain_info$domain)
-        } else {
-          stop("Neither neurocog.parquet nor neurocog.csv found in data/")
-        }
+      # Use the properly processed data with z-scores from Step 0
+      if (exists("result_data") && !is.null(result_data$neurocog)) {
+        # Get domain data from the processed result that includes z-scores
+        domain_data <- result_data$neurocog |>
+          filter(domain == domain_info$domain)
+        cat("  Using processed data with z-scores\n")
       } else {
-        # Load from parquet using DuckDB query
-        con <- DBI::dbConnect(duckdb::duckdb())
+        # Fallback: load from file if result_data not available
+        if (!file.exists("data/neurocog.parquet")) {
+          # Try CSV as fallback
+          if (file.exists("data/neurocog.csv")) {
+            cat("  Note: Using CSV file as parquet not found\n")
+            domain_data <- readr::read_csv(
+              "data/neurocog.csv",
+              show_col_types = FALSE
+            ) |>
+              filter(domain == domain_info$domain)
+          } else {
+            stop("Neither neurocog.parquet nor neurocog.csv found in data/")
+          }
+        } else {
+          # Load from parquet using DuckDB query
+          con <- DBI::dbConnect(duckdb::duckdb())
 
-        # Register parquet file as a view
-        DBI::dbExecute(
-          con,
-          "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
-        )
-
-        # Query domain data
-        domain_data <- DBI::dbGetQuery(
-          con,
-          paste0(
-            "SELECT * FROM neurocog WHERE domain = '",
-            domain_info$domain,
-            "'"
+          # Register parquet file as a view
+          DBI::dbExecute(
+            con,
+            "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
           )
-        )
 
-        DBI::dbDisconnect(con, shutdown = TRUE)
+          # Query domain data
+          domain_data <- DBI::dbGetQuery(
+            con,
+            paste0(
+              "SELECT * FROM neurocog WHERE domain = '",
+              domain_info$domain,
+              "'"
+            )
+          )
+
+          DBI::dbDisconnect(con, shutdown = TRUE)
+        }
       }
 
       # Create processor with proper test filters
@@ -174,7 +215,7 @@ for (domain_info in domains_to_test) {
         test_filters = get_domain_test_filters(domain_info$pheno)
       )
 
-      # Inject the DuckDB query result
+      # Inject the processed data
       processor$data <- domain_data
 
       # Process without loading (data already loaded)
@@ -196,6 +237,10 @@ for (domain_info in domains_to_test) {
       # Store processor for later use
       if (domain_info$pheno == "verbal") {
         processor_verbal <- processor
+      } else if (domain_info$pheno == "memory") {
+        processor_memory <- processor
+      } else if (domain_info$pheno == "executive") {
+        processor_executive <- processor
       }
 
       cat("\n")
@@ -209,37 +254,96 @@ for (domain_info in domains_to_test) {
   )
 }
 
-# Test 2: Use TableGT R6 class with parquet data
-cat("\n=== Test 2: Generate Table with TableGT R6 ===\n")
+# Test 2: Generate tables and plots for all domains
+cat("\n=== Test 2: Generate Tables and Plots for All Domains ===\n")
 
-tryCatch(
-  {
-    # Use the processed data
-    if (exists("processor_verbal") && !is.null(processor_verbal$data)) {
-      # Create table using TableGT
-      table_gt <- TableGT$new(
-        data = processor_verbal$data,
-        pheno = "verbal",
-        table_name = "table_verbal_parquet",
-        vertical_padding = 0,
-        source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        multiline = TRUE
-      )
-
-      # Build the table
-      table_result <- table_gt$build_table()
-      cat("✓ Table generated and saved as table_verbal_parquet.png/pdf\n")
-    } else {
-      cat("  Skipped: No verbal data available from Test 1\n")
-    }
-  },
-  error = function(e) {
-    cat("✗ Error in Test 2:", e$message, "\n")
-    cat("  Full error details:\n")
-    print(e)
-    cat("\n")
-  }
+# List of domains to process
+domains_with_processors <- list(
+  list(name = "verbal", processor_var = "processor_verbal"),
+  list(name = "memory", processor_var = "processor_memory"),
+  list(name = "executive", processor_var = "processor_executive")
 )
+
+for (domain_info in domains_with_processors) {
+  cat(paste0(
+    "\n--- Generating visualizations for ",
+    domain_info$name,
+    " ---\n"
+  ))
+
+  tryCatch(
+    {
+      # Check if processor exists
+      if (exists(domain_info$processor_var)) {
+        processor <- get(domain_info$processor_var)
+
+        if (!is.null(processor$data)) {
+          # Create table using TableGT
+          table_gt <- TableGT$new(
+            data = processor$data,
+            pheno = domain_info$name,
+            table_name = paste0("table_", domain_info$name, "_parquet"),
+            vertical_padding = 0,
+            source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+            multiline = TRUE
+          )
+
+          # Build the table
+          table_result <- table_gt$build_table()
+          cat(
+            "  ✓ Table generated and saved as table_",
+            domain_info$name,
+            "_parquet.png/pdf\n",
+            sep = ""
+          )
+
+          # Create dotplot using DotplotR6
+          dotplot <- DotplotR6$new(
+            data = processor$data,
+            filename = paste0("test_", domain_info$name, "_dotplot"),
+            aspect_ratio = 1.5
+          )
+
+          # Build the plot
+          plot_result <- dotplot$build_plot()
+          cat(
+            "  ✓ Dotplot generated and saved as test_",
+            domain_info$name,
+            "_dotplot.svg\n",
+            sep = ""
+          )
+        } else {
+          cat(
+            "  Skipped: No data available for ",
+            domain_info$name,
+            "\n",
+            sep = ""
+          )
+        }
+      } else {
+        cat(
+          "  Skipped: No processor found for ",
+          domain_info$name,
+          "\n",
+          sep = ""
+        )
+      }
+    },
+    error = function(e) {
+      cat(
+        "  ✗ Error generating visualizations for ",
+        domain_info$name,
+        ": ",
+        e$message,
+        "\n",
+        sep = ""
+      )
+      cat("    Full error details:\n")
+      print(e)
+      cat("\n")
+    }
+  )
+}
 
 # Test 3: Query multiple domains using DuckDB
 cat("\n=== Test 3: Multi-Domain Query with DuckDB ===\n")
@@ -387,6 +491,25 @@ cat("\n=== Test 5: Full Report System with Parquet ===\n")
 
 tryCatch(
   {
+    # First ensure we have properly processed data with z-scores
+    # The NeuropsychReportSystemR6 expects these columns to exist
+
+    # Check if the processed data from Step 0 is available
+    if (exists("result_data") && !is.null(result_data)) {
+      # Use the data that was processed with z-scores
+      neurocog_data <- result_data$neurocog
+      neurobehav_data <- result_data$neurobehav
+      validity_data <- result_data$validity
+
+      # Verify z-score columns exist
+      z_cols <- grep("^z", names(neurocog_data), value = TRUE)
+      if (length(z_cols) > 0) {
+        cat("  Found z-score columns:", paste(z_cols, collapse = ", "), "\n\n")
+      } else {
+        cat("  WARNING: No z-score columns found in data\n")
+      }
+    }
+
     # Update the report system to use parquet files
     report_config <- list(
       patient = "Biggie",
@@ -404,19 +527,38 @@ tryCatch(
     ) {
       report_config$data_files <- list(
         neurocog = "data/neurocog.csv",
-        neurobehav = "data/neurobehav.csv"
+        neurobehav = "data/neurobehav.csv",
+        validity = "data/validity.csv"
       )
       cat("  Note: Using CSV files as parquet not available\n")
     }
 
+    # Create report system
     report_system <- NeuropsychReportSystemR6$new(config = report_config)
 
-    # Generate domain files only (not full report)
-    report_system$generate_domain_files()
+    # Inject the properly processed data with z-scores if available
+    if (exists("result_data") && !is.null(result_data)) {
+      # Override the domain processors to use our processed data
+      for (domain_info in domains_to_test) {
+        pheno <- domain_info$pheno
+        if (pheno %in% names(report_system$domain_processors)) {
+          # Get domain data with z-scores
+          domain_data <- result_data$neurocog |>
+            filter(domain == domain_info$domain)
+
+          # Inject the processed data
+          report_system$domain_processors[[pheno]]$data <- domain_data
+        }
+      }
+    }
+
+    # Generate domain files only for the configured domains (not full report)
+    # This prevents warnings about missing processors for other domains
+    report_system$generate_domain_files(domains = report_config$domains)
 
     cat("✓ Domain files generated for patient\n")
     cat("  Using modern data pipeline:\n")
-    cat("  1. Raw CSV → DuckDB → Parquet\n")
+    cat("  1. Raw CSV → DuckDB → Parquet (with z-score calculation)\n")
     cat("  2. Parquet → Domain Processing\n")
     cat("  3. R6 Classes → Tables & Plots\n")
   },

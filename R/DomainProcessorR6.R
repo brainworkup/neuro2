@@ -166,11 +166,21 @@ DomainProcessorR6 <- R6::R6Class(
       # Only select columns that actually exist in the data
       existing_columns <- intersect(desired_columns, names(self$data))
       
-      # Warn if some expected columns are missing
+      # Only warn about missing z-score columns if verbose mode
+      # (they're expected to be missing in some workflows)
       missing_columns <- setdiff(desired_columns, existing_columns)
-      if (length(missing_columns) > 0) {
+      missing_z_columns <- grep("^z", missing_columns, value = TRUE)
+      missing_other_columns <- setdiff(missing_columns, missing_z_columns)
+      
+      if (length(missing_other_columns) > 0) {
         message("Note: The following columns were not found in the data: ",
-                paste(missing_columns, collapse = ", "))
+                paste(missing_other_columns, collapse = ", "))
+      }
+      
+      # If z-score columns are missing but percentile exists, calculate basic z-score
+      if ("percentile" %in% names(self$data) && !"z" %in% names(self$data)) {
+        self$data$z <- qnorm(self$data$percentile / 100)
+        existing_columns <- c(existing_columns, "z")
       }
       
       self$data <- self$data |>

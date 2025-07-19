@@ -5,9 +5,9 @@ library(stringr)
 library(tidyr)
 library(glue)
 library(here)
+library(qs)
 library(tabulapdf)
-library(NeurotypR) # Assuming this package provides `calc_ci_95()` and `gpluck_make_columns()`
-
+#TODO:
 # Define the function to set test parameters
 set_test_params <- function(
   test,
@@ -44,15 +44,15 @@ clean_data <- function(df, params) {
   colnames(df) <- params$variables
   df[df == "-"] <- NA
   df <- df %>%
-    mutate(across(c(raw_score, score, percentile), as.numeric)) %>%
-    filter(!is.na(score) & !is.na(percentile))
+    dplyr::mutate(across(c(raw_score, score, percentile), as.numeric)) %>%
+    dplyr::filter(!is.na(score) & !is.na(percentile))
   df
 }
 
 # Define the function to create confidence intervals
 add_confidence_intervals <- function(df) {
   for (i in seq_len(nrow(df))) {
-    ci_values <- NeurotypR::calc_ci_95(
+    ci_values <- neuro2::calc_ci_95(
       ability_score = df$score[i],
       mean = 10,
       standard_deviation = 3,
@@ -65,7 +65,7 @@ add_confidence_intervals <- function(df) {
     )]
     df$ci_95[i] <- paste0(
       ci_values["lower_ci_95"],
-      " - ",
+      "-",
       ci_values["upper_ci_95"]
     )
   }
@@ -83,14 +83,14 @@ merge_with_lookup <- function(df, lookup_table_path) {
     left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) %>%
     relocate(all_of(c("test", "test_name")), .before = "scale")
 
-  df_mutated <- NeurotypR::gpluck_make_columns(
+  df_mutated <- bwu::gpluck_make_columns(
     df_merged,
     range = "",
     result = "",
     absort = NULL
   ) %>%
     mutate(range = NULL) %>%
-    NeurotypR::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
+    bwu::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
     relocate(c(range), .after = percentile)
 
   df_mutated
@@ -153,32 +153,51 @@ write_output <- function(df, test_name, g) {
 
 patient <- "Biggie" # Define patient name
 
+# Run patient -------------------------------------------------------------
+
 # Example for WISC-V Subtests
+set_test_params <- function(
+  test,
+  test_name,
+  pages,
+  extract_columns,
+  variables,
+  score_type
+) {
+  list(
+    test = test,
+    test_name = test_name,
+    pages = pages,
+    extract_columns = extract_columns,
+    variables = variables,
+    score_type = score_type
+  )
+}
+
 wisc5_params <- set_test_params(
   "wisc5",
   "WISC-V",
-  c(7),
-  c(2, 4, 5, 6),
-  c("scale", "raw_score", "score", "percentile"),
+  c(28),
+  c("scale", "raw_score", "score", "percentile", "ci_95"),
   "scaled_score"
 )
 
 file <- file.path(file.choose())
-saveRDS(file, paste0(wisc5_params$test, "_path.rds"))
-file <- readRDS(paste0(wisc5_params$test, "_path.rds"))
+qs::qsave(file, paste0(wisc5_params$test, "_path.rds"))
+file <- qs::qread(paste0(wisc5_params$test, "_path.rds"))
 
 extracted_data <- extract_data(
   file,
   wisc5_params$pages,
   wisc5_params$extract_columns
 )
-df <- dplyr::bind_rows(lapply(extracted_data, data.frame)) # Convert and combine extracted areas to data frame
+df <- do.call(rbind, lapply(extracted_data, data.frame)) # Convert and combine extracted areas to data frame
 df_clean <- clean_data(df, wisc5_params) # Clean data
 df_with_ci <- add_confidence_intervals(df_clean) # Add confidence intervals
 
 df_final <- merge_with_lookup(
   df_with_ci,
-  "~/reports/neuropsych_lookup_table_combined.csv"
+  "~/Dropbox/neuropsych_lookup_table.csv"
 ) # Merge with lookup table
 df_result <- generate_result(df_final) # Generate descriptive results
 
@@ -207,7 +226,7 @@ merge_with_lookup <- function(df, lookup_table_path) {
   # Ensure the merge was successful and inspect the first few rows for debugging
   print(head(df_merged))
 
-  df_mutated <- NeurotypR::gpluck_make_columns(
+  df_mutated <- bwu::gpluck_make_columns(
     df_merged,
     range = "",
     result = "",
@@ -226,7 +245,7 @@ merge_with_lookup <- function(df, lookup_table_path) {
         TRUE ~ NA_character_ # Default case catches any unexpected values
       )
     ) %>%
-    NeurotypR::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
+    bwu::gpluck_make_score_ranges(table = ., test_type = "npsych_test") %>%
     relocate(c(range), .after = percentile)
 
   # Return the mutated result
@@ -236,7 +255,7 @@ merge_with_lookup <- function(df, lookup_table_path) {
 # Now attempt to run your function again to see if this resolves the issue
 df_final <- merge_with_lookup(
   df_with_ci,
-  "~/reports/neuropsych_lookup_table_combined.csv"
+  "~/Dropbox/neuropsych_lookup_table.csv"
 )
 
 # Now apply function again to the dataframe

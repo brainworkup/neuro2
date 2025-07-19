@@ -1108,26 +1108,26 @@ scales_all <- c(
   scales_daily_living
 )
 
-usethis::use_data(
-  scales_iq,
-  scales_academics,
-  scales_verbal,
-  scales_spatial,
-  scales_memory,
-  scales_memory_order,
-  scales_executive,
-  scales_motor,
-  scales_social,
-  scales_adhd_adult,
-  scales_adhd_child,
-  scales_emotion_adult,
-  scales_emotion_child,
-  scales_adaptive,
-  scales_daily_living,
-  scales_all,
-  internal = TRUE,
-  overwrite = TRUE
-)
+# usethis::use_data(
+#   scales_iq,
+#   scales_academics,
+#   scales_verbal,
+#   scales_spatial,
+#   scales_memory,
+#   scales_memory_order,
+#   scales_executive,
+#   scales_motor,
+#   scales_social,
+#   scales_adhd_adult,
+#   scales_adhd_child,
+#   scales_emotion_adult,
+#   scales_emotion_child,
+#   scales_adaptive,
+#   scales_daily_living,
+#   scales_all,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )
 
 # Plot Titles ------------------------------------------------------------------
 
@@ -1319,24 +1319,23 @@ community use."
 #' @keywords internal data
 plot_title_daily_living <- "_Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence."
 
-
-usethis::use_data(
-  plot_title_neurocognition,
-  plot_title_iq,
-  plot_title_academics,
-  plot_title_verbal,
-  plot_title_spatial,
-  plot_title_memory,
-  plot_title_executive,
-  plot_title_motor,
-  plot_title_social,
-  plot_title_adhd_adult,
-  plot_title_emotion_adult,
-  plot_title_adaptive,
-  plot_title_daily_living,
-  internal = TRUE,
-  overwrite = TRUE
-)
+# usethis::use_data(
+#   plot_title_neurocognition,
+#   plot_title_iq,
+#   plot_title_academics,
+#   plot_title_verbal,
+#   plot_title_spatial,
+#   plot_title_memory,
+#   plot_title_executive,
+#   plot_title_motor,
+#   plot_title_social,
+#   plot_title_adhd_adult,
+#   plot_title_emotion_adult,
+#   plot_title_adaptive,
+#   plot_title_daily_living,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )
 
 # Domains ------------------------------------------------------------------
 
@@ -1452,24 +1451,24 @@ domain_daily_living <- "Daily Living"
 
 # Save domain labels --------------------------------------------------------
 
-usethis::use_data(
-  domain_iq,
-  domain_academics,
-  domain_verbal,
-  domain_spatial,
-  domain_memory,
-  domain_executive,
-  domain_motor,
-  domain_social,
-  domain_adhd_adult,
-  domain_adhd_child,
-  domain_emotion_adult,
-  domain_emotion_child,
-  domain_adaptive,
-  domain_daily_living,
-  internal = TRUE,
-  overwrite = TRUE
-)
+# usethis::use_data(
+#   domain_iq,
+#   domain_academics,
+#   domain_verbal,
+#   domain_spatial,
+#   domain_memory,
+#   domain_executive,
+#   domain_motor,
+#   domain_social,
+#   domain_adhd_adult,
+#   domain_adhd_child,
+#   domain_emotion_adult,
+#   domain_emotion_child,
+#   domain_adaptive,
+#   domain_daily_living,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )
 
 
 # CSV lookup tables -------------------------------------------------------
@@ -1485,20 +1484,140 @@ usethis::use_data(
 #' \item \code{description}: A brief description of what the scale measures.
 #' }
 #' @keywords data internal
-lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
-usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
+lookup_neuropsych_scales <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
+# usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
 
-source("safe_sysdata_update_fixed.R")
+# Safe sysdata update -----------------------------------------------------
+
+source("R/safe_sysdata_update_fixed.R")
+# Safe way to update sysdata.rda without overwriting existing variables
+# This addresses the issue mentioned about create_sysdata.R overwriting the entire file
+
+library(usethis)
+
+# Example usage for your create_sysdata.R script:
+# Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
+# You would use:
+
+# Example 1: Only add new objects, never overwrite existing ones
+# safe_use_data_internal(
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   add_only = TRUE
+# )
+
+# Example 2: Only overwrite specific objects
+# safe_use_data_internal(
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   dots = dots,  # This exists in the file
+#   overwrite = c("dots")  # Only allow overwriting 'dots'
+# )
+
+# Example 3: Update create_sysdata.R to use this function
+# At the end of your create_sysdata.R, replace the usethis::use_data() calls with:
+#
+# source("safe_sysdata_update_fixed.R")  # Note: Use the fixed version
+#
+# For the scales data
 safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
-  overwrite = c("scales_iq", "scales_academics")  # Only these will be overwritten
+  scales_verbal = scales_verbal,
+  scales_spatial = scales_spatial,
+  scales_memory = scales_memory,
+  scales_memory_order = scales_memory_order,
+  scales_executive = scales_executive,
+  scales_motor = scales_motor,
+  scales_social = scales_social,
+  scales_adhd_adult = scales_adhd_adult,
+  scales_adhd_child = scales_adhd_child,
+  scales_emotion_adult = scales_emotion_adult,
+  scales_emotion_child = scales_emotion_child,
+  scales_adaptive = scales_adaptive,
+  scales_daily_living = scales_daily_living,
+  scales_all = scales_all,
+  overwrite = c(
+    "scales_iq",
+    "scales_academics",
+    "scales_verbal",
+    "scales_spatial",
+    "scales_memory",
+    "scales_memory_order",
+    "scales_executive",
+    "scales_motor",
+    "scales_social",
+    "scales_adhd_adult",
+    "scales_adhd_child",
+    "scales_emotion_adult",
+    "scales_emotion_child",
+    "scales_adaptive",
+    "scales_daily_living",
+    "scales_all"
+  )
 )
 
-# Example 1: Only add new objects, never overwrite existing ones
+# For the plot titles
 safe_use_data_internal(
-  dots = dots,
-  add_only = TRUE
+  plot_title_neurocognition = plot_title_neurocognition,
+  plot_title_iq = plot_title_iq,
+  plot_title_academics = plot_title_academics,
+  plot_title_verbal = plot_title_verbal,
+  plot_title_spatial = plot_title_spatial,
+  plot_title_memory = plot_title_memory,
+  plot_title_executive = plot_title_executive,
+  plot_title_motor = plot_title_motor,
+  plot_title_social = plot_title_social,
+  plot_title_adhd_adult = plot_title_adhd_adult,
+  plot_title_emotion_adult = plot_title_emotion_adult,
+  plot_title_adaptive = plot_title_adaptive,
+  plot_title_daily_living = plot_title_daily_living,
+  overwrite = c(
+    "plot_title_neurocognition",
+    "plot_title_iq",
+    "plot_title_academics",
+    "plot_title_verbal",
+    "plot_title_spatial",
+    "plot_title_memory",
+    "plot_title_executive",
+    "plot_title_motor",
+    "plot_title_social",
+    "plot_title_adhd_adult",
+    "plot_title_emotion_adult",
+    "plot_title_adaptive",
+    "plot_title_daily_living"
+  )
 )
+
+# Test score ranges lookup ------------------------------------------------
+
+# Lookup score ranges
+#' @name lookup_score_ranges
+#' @docType data
+#' @title Neuropsychological Test Score Ranges Lookup Table
+#' @description Lookup z, t, ss, SS, and percentile score ranges for neuropsychological tests.
+#' @format A data frame with columns:
+#' \itemize{
+#' \item \code{standard_score}: M=100, SD=15.
+#' \item \code{percentile}: Percentile rank corresponding to the standard score.
+#' \item \code{z_score}: Z-score corresponding to the standard score.
+#' \item \code{t_score}: T-score corresponding to the standard score.
+#' \item \code{scaled_score}: Scaled score M=10, SD=3.
+#' \item \code{range}: The score range for the specified score type.
+#' }
+lookup_score_conversions <- readr::read_csv("/Users/joey/neuro2/inst/extdata/lookup_score_range.csv")
+
+# For other data
+safe_use_data_internal(
+  lookup_neuropsych_scales = lookup_neuropsych_scales,
+  lookup_score_conversions = lookup_score_conversions,
+  dots = dots,
+  overwrite = c("lookup_table", "dots")
+)
+
+
+# Normative test data -----------------------------------------------------
+categories <- readRDS("inst/extdata/categories.rds")
+
 
 
