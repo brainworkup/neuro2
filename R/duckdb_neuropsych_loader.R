@@ -311,22 +311,35 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
     ext <- tolower(tools::file_ext(f))
     table_name <- tools::file_path_sans_ext(basename(f))
 
-    reader_sql <- switch(
-      ext,
-      csv = sprintf("read_csv_auto('%s')", f),
-      parquet = sprintf("read_parquet('%s')", f),
-      feather = sprintf("read_feather('%s')", f),
-      stop("Unsupported file type: ", ext)
-    )
-
-    DBI::dbExecute(
-      con,
-      sprintf(
-        "CREATE OR REPLACE VIEW %s AS SELECT * FROM %s",
-        DBI::dbQuoteIdentifier(con, table_name),
-        reader_sql
+    if (ext == "feather") {
+      # For feather files, read with arrow and register as a table
+      tryCatch(
+        {
+          feather_data <- arrow::read_feather(f)
+          duckdb::duckdb_register(con, table_name, feather_data)
+        },
+        error = function(e) {
+          warning("Failed to read feather file ", basename(f), ": ", e$message)
+        }
       )
-    )
+    } else {
+      # For CSV and Parquet, use DuckDB's native readers
+      reader_sql <- switch(
+        ext,
+        csv = sprintf("read_csv_auto('%s')", f),
+        parquet = sprintf("read_parquet('%s')", f),
+        stop("Unsupported file type: ", ext)
+      )
+
+      DBI::dbExecute(
+        con,
+        sprintf(
+          "CREATE OR REPLACE VIEW %s AS SELECT * FROM %s",
+          DBI::dbQuoteIdentifier(con, table_name),
+          reader_sql
+        )
+      )
+    }
   }
 
   # Run user’s query

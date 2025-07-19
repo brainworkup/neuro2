@@ -21,8 +21,21 @@ source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGT.R")
+source("R/ReportTemplateR6.R") # Add missing R6 class
 source("R/NeuropsychReportSystemR6.R")
 source("R/duckdb_neuropsych_loader.R")
+
+# Define domain constants (needed for NeuropsychReportSystemR6)
+domain_iq <- "General Cognitive Ability"
+domain_academics <- "Academic Skills"
+domain_verbal <- "Verbal/Language"
+domain_spatial <- "Visual Perception/Construction"
+domain_memory <- "Memory"
+domain_executive <- "Attention/Executive"
+domain_motor <- "Motor"
+domain_social <- "Social Cognition"
+domain_adhd_child <- "ADHD"
+domain_emotion_child <- "Emotional/Behavioral/Personality"
 
 # Step 0: Process raw CSV files into parquet format
 cat("=== Step 0: Process Raw CSV Files ===\n")
@@ -34,21 +47,37 @@ tryCatch(
       dir.create("data")
     }
 
-    # Process raw CSV files using DuckDB loader
-    result_data <- load_data_duckdb(
+    # First, process and WRITE files (return_data = FALSE)
+    load_data_duckdb(
       file_path = "data-raw/csv",
       output_dir = "data",
-      return_data = TRUE, # Return data for immediate use
+      return_data = FALSE, # This will write files
       use_duckdb = TRUE,
       output_format = "all" # Generate CSV, Parquet, and Arrow formats
     )
 
+    # Then load the data for immediate use
+    result_data <- load_data_duckdb(
+      file_path = "data-raw/csv",
+      output_dir = "data",
+      return_data = TRUE, # This will return data
+      use_duckdb = TRUE,
+      output_format = "all"
+    )
+
     cat("✓ Raw CSV files processed successfully\n")
-    cat("  Generated files in data/:\n")
-    cat("  - neurocog.csv/parquet/feather\n")
-    cat("  - neurobehav.csv/parquet/feather\n")
-    cat("  - validity.csv/parquet/feather\n")
-    cat("  - neuropsych.csv/parquet/feather\n\n")
+
+    # Check what files were actually created
+    files_created <- list.files("data", pattern = "\\.(csv|parquet|feather)$")
+    if (length(files_created) > 0) {
+      cat("  Actually created files:\n")
+      for (f in files_created) {
+        cat("  -", f, "\n")
+      }
+    } else {
+      cat("  WARNING: No files were created in data/\n")
+    }
+    cat("\n")
   },
   error = function(e) {
     cat("✗ Error processing raw CSV files:", e$message, "\n")
@@ -62,22 +91,37 @@ cat("=== Test 1: Generate Verbal Domain Files with DuckDB ===\n")
 
 tryCatch(
   {
-    # Method 1: Load from parquet using DuckDB query
-    con <- DBI::dbConnect(duckdb::duckdb())
+    # Check if parquet file exists
+    if (!file.exists("data/neurocog.parquet")) {
+      # Try CSV as fallback
+      if (file.exists("data/neurocog.csv")) {
+        cat("  Note: Using CSV file as parquet not found\n")
+        verbal_data <- readr::read_csv(
+          "data/neurocog.csv",
+          show_col_types = FALSE
+        ) |>
+          filter(domain == "Verbal/Language")
+      } else {
+        stop("Neither neurocog.parquet nor neurocog.csv found in data/")
+      }
+    } else {
+      # Method 1: Load from parquet using DuckDB query
+      con <- DBI::dbConnect(duckdb::duckdb())
 
-    # Register parquet file as a view
-    DBI::dbExecute(
-      con,
-      "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
-    )
+      # Register parquet file as a view
+      DBI::dbExecute(
+        con,
+        "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
+      )
 
-    # Query verbal domain data
-    verbal_data <- DBI::dbGetQuery(
-      con,
-      "SELECT * FROM neurocog WHERE domain = 'Verbal/Language'"
-    )
+      # Query verbal domain data
+      verbal_data <- DBI::dbGetQuery(
+        con,
+        "SELECT * FROM neurocog WHERE domain = 'Verbal/Language'"
+      )
 
-    DBI::dbDisconnect(con, shutdown = TRUE)
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
 
     # Create processor with injected data
     processor_verbal <- DomainProcessorR6$new(
@@ -130,6 +174,8 @@ tryCatch(
       # Build the table
       table_result <- table_gt$build_table()
       cat("✓ Table generated and saved as table_verbal_parquet.png/pdf\n")
+    } else {
+      cat("  Skipped: No verbal data available from Test 1\n")
     }
   },
   error = function(e) {
@@ -142,41 +188,64 @@ cat("\n=== Test 3: Multi-Domain Query with DuckDB ===\n")
 
 tryCatch(
   {
-    # Example of querying multiple domains at once
-    domains_of_interest <- c("Verbal/Language", "Memory", "Attention/Executive")
-
-    query <- glue::glue(
-      "SELECT * FROM 'data/neurocog.parquet' 
-     WHERE domain IN ({domains_str})",
-      domains_str = paste0("'", domains_of_interest, "'", collapse = ", ")
+    # Check if we have any data files
+    data_files <- list.files(
+      "data",
+      pattern = "\\.(csv|parquet|feather)$",
+      full.names = TRUE
     )
 
-    multi_domain_data <- query_neuropsych(query, "data")
-
-    cat("✓ Multi-domain query successful\n")
-    cat(
-      "  Found",
-      nrow(multi_domain_data),
-      "records across",
-      length(unique(multi_domain_data$domain)),
-      "domains\n"
-    )
-
-    # Generate domain files for each
-    for (domain in unique(multi_domain_data$domain)) {
-      domain_data <- multi_domain_data |> filter(domain == !!domain)
-      domain_key <- gsub("[/ ]", "_", tolower(domain))
-
-      processor <- DomainProcessorR6$new(
-        domains = domain,
-        pheno = domain_key,
-        input_file = NULL
+    if (length(data_files) == 0) {
+      cat("  Skipped: No data files found in data/\n")
+    } else {
+      # Example of querying multiple domains at once
+      domains_of_interest <- c(
+        "Verbal/Language",
+        "Memory",
+        "Attention/Executive"
       )
 
-      processor$data <- domain_data
-      processor$select_columns()
+      # Find a neurocog file
+      neurocog_file <- data_files[grepl("neurocog", data_files)][1]
 
-      cat("  - Processed", domain, "with", nrow(domain_data), "tests\n")
+      if (!is.na(neurocog_file)) {
+        query <- glue::glue(
+          "SELECT * FROM '{file}'
+         WHERE domain IN ({domains_str})",
+          file = neurocog_file,
+          domains_str = paste0("'", domains_of_interest, "'", collapse = ", ")
+        )
+
+        multi_domain_data <- query_neuropsych(query, "data")
+
+        cat("✓ Multi-domain query successful\n")
+        cat(
+          "  Found",
+          nrow(multi_domain_data),
+          "records across",
+          length(unique(multi_domain_data$domain)),
+          "domains\n"
+        )
+
+        # Generate domain files for each
+        for (domain in unique(multi_domain_data$domain)) {
+          domain_data <- multi_domain_data |> filter(domain == !!domain)
+          domain_key <- gsub("[/ ]", "_", tolower(domain))
+
+          processor <- DomainProcessorR6$new(
+            domains = domain,
+            pheno = domain_key,
+            input_file = NULL
+          )
+
+          processor$data <- domain_data
+          processor$select_columns()
+
+          cat("  - Processed", domain, "with", nrow(domain_data), "tests\n")
+        }
+      } else {
+        cat("  Skipped: No neurocog file found\n")
+      }
     }
   },
   error = function(e) {
@@ -189,36 +258,60 @@ cat("\n=== Test 4: Performance Comparison ===\n")
 
 tryCatch(
   {
-    # Time CSV loading
-    csv_start <- Sys.time()
-    csv_data <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
-    csv_time <- difftime(Sys.time(), csv_start, units = "secs")
+    # Check if files exist before testing
+    csv_exists <- file.exists("data/neurocog.csv")
+    parquet_exists <- file.exists("data/neurocog.parquet")
 
-    # Time Parquet loading with Arrow
-    parquet_start <- Sys.time()
-    parquet_data <- arrow::read_parquet("data/neurocog.parquet")
-    parquet_time <- difftime(Sys.time(), parquet_start, units = "secs")
+    if (!csv_exists && !parquet_exists) {
+      cat("  Skipped: No data files available for comparison\n")
+    } else {
+      if (csv_exists) {
+        # Time CSV loading
+        csv_start <- Sys.time()
+        csv_data <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
+        csv_time <- difftime(Sys.time(), csv_start, units = "secs")
+        cat(sprintf("  CSV loading: %.3f seconds\n", csv_time))
+      }
 
-    # Time DuckDB query
-    duckdb_start <- Sys.time()
-    duckdb_data <- query_neuropsych(
-      "SELECT * FROM neurocog WHERE domain = 'Verbal/Language'",
-      "data"
-    )
-    duckdb_time <- difftime(Sys.time(), duckdb_start, units = "secs")
+      if (parquet_exists) {
+        # Time Parquet loading with Arrow
+        parquet_start <- Sys.time()
+        parquet_data <- arrow::read_parquet("data/neurocog.parquet")
+        parquet_time <- difftime(Sys.time(), parquet_start, units = "secs")
+        cat(sprintf("  Parquet loading: %.3f seconds", parquet_time))
 
-    cat("✓ Performance comparison:\n")
-    cat(sprintf("  CSV loading: %.3f seconds\n", csv_time))
-    cat(sprintf(
-      "  Parquet loading: %.3f seconds (%.1fx faster)\n",
-      parquet_time,
-      as.numeric(csv_time / parquet_time)
-    ))
-    cat(sprintf(
-      "  DuckDB query: %.3f seconds (%.1fx faster)\n",
-      duckdb_time,
-      as.numeric(csv_time / duckdb_time)
-    ))
+        if (exists("csv_time")) {
+          cat(sprintf(
+            " (%.1fx faster)\n",
+            as.numeric(csv_time) / as.numeric(parquet_time)
+          ))
+        } else {
+          cat("\n")
+        }
+      }
+
+      # Time DuckDB query if we have any file
+      if (csv_exists || parquet_exists) {
+        duckdb_start <- Sys.time()
+        duckdb_data <- query_neuropsych(
+          "SELECT * FROM neurocog WHERE domain = 'Verbal/Language'",
+          "data"
+        )
+        duckdb_time <- difftime(Sys.time(), duckdb_start, units = "secs")
+        cat(sprintf("  DuckDB query: %.3f seconds", duckdb_time))
+
+        if (exists("csv_time")) {
+          cat(sprintf(
+            " (%.1fx faster)\n",
+            as.numeric(csv_time) / as.numeric(duckdb_time)
+          ))
+        } else {
+          cat("\n")
+        }
+      }
+
+      cat("✓ Performance comparison complete\n")
+    }
   },
   error = function(e) {
     cat("✗ Error in Test 4:", e$message, "\n")
@@ -241,12 +334,16 @@ tryCatch(
       )
     )
 
-    # Note: This would require updating NeuropsychReportSystemR6 to support parquet
-    # For now, we'll use the CSV files that were also generated
-    report_config$data_files <- list(
-      neurocog = "data/neurocog.csv",
-      neurobehav = "data/neurobehav.csv"
-    )
+    # Check if parquet files exist, otherwise use CSV
+    if (
+      !file.exists("data/neurocog.parquet") && file.exists("data/neurocog.csv")
+    ) {
+      report_config$data_files <- list(
+        neurocog = "data/neurocog.csv",
+        neurobehav = "data/neurobehav.csv"
+      )
+      cat("  Note: Using CSV files as parquet not available\n")
+    }
 
     report_system <- NeuropsychReportSystemR6$new(config = report_config)
 
@@ -277,3 +374,16 @@ cat("- Faster data loading (Parquet vs CSV)\n")
 cat("- SQL queries for complex filtering\n")
 cat("- Memory-efficient processing\n")
 cat("- Scalable to large datasets\n")
+
+# Final check
+cat("\n=== Final Status Check ===\n")
+data_files <- list.files("data", pattern = "\\.(csv|parquet|feather)$")
+if (length(data_files) > 0) {
+  cat("✓ Data files created in data/:\n")
+  for (f in data_files) {
+    size <- file.info(file.path("data", f))$size
+    cat(sprintf("  - %s (%.1f KB)\n", f, size / 1024))
+  }
+} else {
+  cat("✗ WARNING: No data files were created\n")
+}

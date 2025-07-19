@@ -12,6 +12,7 @@ License: MIT + file LICENSE
 Depends:
     R (>= 4.5)
 Imports:
+    arrow,
     cli,
     DBI,
     dplyr,
@@ -47,6 +48,7 @@ Imports:
     tools,
     usethis,
     utils,
+    webshot2,
     xfun,
     yaml
 Config/testthat/edition: 3
