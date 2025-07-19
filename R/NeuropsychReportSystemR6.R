@@ -69,6 +69,42 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Merge provided config with defaults
       self$config <- modifyList(default_config, config)
+      
+      # Generate dynamic output filename if not explicitly provided
+      if (!("output_file" %in% names(config)) ||
+          config$output_file == "neuropsych_report.pdf" ||
+          is.null(config$output_file)) {
+        # Try to read patient info from _variables.yml
+        variables_file <- "_variables.yml"
+        if (file.exists(variables_file)) {
+          tryCatch({
+            # Read YAML file
+            variables <- yaml::read_yaml(variables_file)
+            
+            # Extract names
+            first_name <- variables$first_name
+            last_name <- variables$last_name
+            
+            # Clean names for filename (remove special characters)
+            first_name <- gsub("[^A-Za-z0-9]", "", first_name)
+            last_name <- gsub("[^A-Za-z0-9]", "", last_name)
+            
+            # Generate filename with current date
+            date_str <- format(Sys.Date(), "%Y-%m-%d")
+            
+            if (!is.null(last_name) && !is.null(first_name) &&
+                nchar(last_name) > 0 && nchar(first_name) > 0) {
+              self$config$output_file <- paste0(
+                last_name, "-", first_name,
+                "_neuropsych_report_", date_str, ".pdf"
+              )
+              message("Output file will be: ", self$config$output_file)
+            }
+          }, error = function(e) {
+            warning("Could not read patient info from _variables.yml: ", e$message)
+          })
+        }
+      }
 
       # Initialize component classes
       self$utilities <- structure(list(), class = "ReportUtilitiesR6") # Placeholder
