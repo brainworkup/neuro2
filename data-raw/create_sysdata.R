@@ -1488,3 +1488,7 @@ usethis::use_data(
 lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 
 usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
+
+#' @name dots
+dots <- dots
+usethis::use_data(dots, internal = TRUE, overwrite = TRUE)
