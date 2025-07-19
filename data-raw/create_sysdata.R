@@ -1488,9 +1488,17 @@ usethis::use_data(
 lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
 
-source("safe_sysdata_update.R")
+source("safe_sysdata_update_fixed.R")
 safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
   overwrite = c("scales_iq", "scales_academics")  # Only these will be overwritten
 )
+
+# Example 1: Only add new objects, never overwrite existing ones
+safe_use_data_internal(
+  dots = dots,
+  add_only = TRUE
+)
+
+

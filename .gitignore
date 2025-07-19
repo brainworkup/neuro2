@@ -64,3 +64,11 @@ data/validity.parquet
 Archive.zip
 data-raw/g.csv
 shiny-pegboard/norms_grooved_pegboard_2021-12-13.xlsx
+examine_rda_files.R
+merge_rda_files.R
+norms_tmt_a.R
+norms_tmt_b.R
+r_package_internal_data_guide.md
+rda_merge_explanation.md
+RDA_MERGE_SUMMARY.md
+safe_sysdata_update_fixed.R
