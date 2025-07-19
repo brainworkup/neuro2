@@ -1486,9 +1486,11 @@ usethis::use_data(
 #' }
 #' @keywords data internal
 lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
-
 usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
 
-#' @name dots
-dots <- dots
-usethis::use_data(dots, internal = TRUE, overwrite = TRUE)
+source("safe_sysdata_update.R")
+safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  overwrite = c("scales_iq", "scales_academics")  # Only these will be overwritten
+)
