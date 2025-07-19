@@ -10,6 +10,10 @@ process_rbans_data(
   test_prefix,
   patient_id,
   lookup_file,
+  line_orientation_pct_rank = NULL,
+  picture_naming_pct_rank = NULL,
+  list_recall_pct_rank = NULL,
+  list_recognition_pct_rank = NULL,
   manual_entries = NULL,
   output_file = NULL
 )
@@ -19,6 +23,10 @@ process_rbans_data(
   test_prefix,
   patient_id,
   lookup_file,
+  line_orientation_pct_rank = NULL,
+  picture_naming_pct_rank = NULL,
+  list_recall_pct_rank = NULL,
+  list_recognition_pct_rank = NULL,
   manual_entries = NULL,
   output_file = NULL
 )
@@ -32,6 +40,14 @@ process_rbans_data(
 
 \item{lookup_file}{Path to the RBANS lookup table CSV containing metadata columns:
 scale, domain, subdomain, narrow, pass, verbal, timed, score_type, description.}
+
+\item{line_orientation_pct_rank}{Numeric. Manual percentile for "Line Orientation".}
+
+\item{picture_naming_pct_rank}{Numeric. Manual percentile for "Picture Naming".}
+
+\item{list_recall_pct_rank}{Numeric. Manual percentile for "List Recall".}
+
+\item{list_recognition_pct_rank}{Numeric. Manual percentile for "List Recognition".}
 
 \item{manual_entries}{Optional tibble of manual entries for missing subtests.}
 
@@ -53,7 +69,7 @@ scale, domain, subdomain, narrow, pass, verbal, timed, score_type, description.}
 A data frame containing the processed RBANS data
 
 A data.frame with one row per RBANS subtest, including scores, times,
-composite values, and metadata joined from the lookup table.
+composite values, metadata, and manual percentile overrides.
 }
 \description{
 This function processes RBANS (Repeatable Battery for the Assessment of Neuropsychological Status) data
@@ -62,7 +78,8 @@ and composite scores, then combines them into a single dataset with appropriate 
 
 Reads a UTF-16 CSV export from Q-interactive and extracts raw scores,
 scaled scores, completion times, and composite scores. It then merges in
-detailed metadata from an external RBANS lookup table CSV.
+detailed metadata from an external RBANS lookup table CSV and allows
+manual entry of four percentile ranks.
 }
 \examples{
 \dontrun{

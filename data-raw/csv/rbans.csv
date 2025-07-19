@@ -1,29 +1,19 @@
-﻿test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,test_type,score_type,absort,result
-rbans,RBANS,List Learning,32,13,,84,High Average,Memory,Learning Efficiency,Word-List Learning,Sequential,Verbal,Untimed,npsych_test,scaled_score,rbans_1,"Word list learning fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
-"
-rbans,RBANS,Story Memory,24,16,,97,Above Average,Memory,Learning Efficiency,Story Memory,Sequential,Verbal,Untimed,npsych_test,scaled_score,rbans_2,"Expository story learning fell within the Above Average and ranked at the 97th percentile. This indicates performance as good as or better than 97% of same-age peers from the general population.
-"
-rbans,RBANS,Figure Copy,15,7,,15,Low Average,Visual Perception/Construction,Organization,Figure Copy,Simultaneous,Nonverbal,Untimed,npsych_test,scaled_score,rbans_3,"The accuracy of copying a figure from a model fell within the Low Average and ranked at the 15th percentile. This indicates performance as good as or better than 15% of same-age peers from the general population.
-"
-rbans,RBANS,Semantic Fluency,20,13,,84,High Average,Verbal/Language,Fluency,Semantic Fluency,Sequential,Verbal,Timed,npsych_test,scaled_score,rbans_6,"Semantic word fluency/generativity fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
-"
-rbans,RBANS,Digit Span,10,11,,63,Average,Attention/Executive,Attention,Attention Span,Attention,Verbal,Untimed,npsych_test,scaled_score,rbans_7,"Attention span and auditory attention fell within the Average and ranked at the 63th percentile. This indicates performance as good as or better than 63% of same-age peers from the general population.
-"
-rbans,RBANS,Coding,60,14,,90,High Average,Attention/Executive,Processing Speed,Cognitive Efficiency,Planning,Nonverbal,Timed,npsych_test,scaled_score,rbans_8,"Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the High Average and ranked at the 90th percentile. This indicates performance as good as or better than 90% of same-age peers from the general population.
-"
-rbans,RBANS,Story Recall,12,16,,97,Above Average,Memory,Delayed Recall,Story Memory,Sequential,Verbal,Untimed,npsych_test,scaled_score,rbans_11,"Long-term recall of a detailed story fell within the Above Average and ranked at the 97th percentile. This indicates performance as good as or better than 97% of same-age peers from the general population.
-"
-rbans,RBANS,Figure Recall,14,10,,50,Average,Memory,Delayed Recall,Visual Memory,Simultaneous,Nonverbal,Untimed,npsych_test,scaled_score,rbans_12,"Long-term recall and reconstruction of a complex abstract figure fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
-"
-rbans,RBANS,Immediate Memory Index,NA,126,118-134,96,Above Average,Memory,Learning Efficiency,Immediate Memory Index,NA,NA,NA,npsych_test,standard_score,rbans_13,"Composite verbal learning of a word list and a logical story fell within the Above Average and ranked at the 96th percentile. This indicates performance as good as or better than 96% of same-age peers from the general population.
-"
-rbans,RBANS,Visuospatial/Constructional Index,NA,75,57-93,5,Below Average,Visual Perception/Construction,Spatial,Visuospatial Index,NA,NA,NA,npsych_test,standard_score,rbans_14,"Broadband index of visuospatial processing and construction fell within the Below Average and ranked at the 5th percentile. This indicates performance as good as or better than 5% of same-age peers from the general population.
-"
-rbans,RBANS,Language Index,NA,109,96-122,73,Average,Verbal/Language,Language,Language Index,NA,NA,NA,npsych_test,standard_score,rbans_15,"General language processing fell within the Average and ranked at the 73th percentile. This indicates performance as good as or better than 73% of same-age peers from the general population.
-"
-rbans,RBANS,Attention Index,NA,116,103-129,86,High Average,Attention/Executive,Attention,Attention Index,Attention,NA,NA,npsych_test,standard_score,rbans_16,"General attentional and executive functioning fell within the High Average and ranked at the 86th percentile. This indicates performance as good as or better than 86% of same-age peers from the general population.
-"
-rbans,RBANS,Delayed Memory Index,NA,89,78-100,23,Low Average,Memory,Delayed Recall,Delayed Memory Index,NA,NA,NA,npsych_test,standard_score,rbans_17,"Long-term recall of verbal and nonverbal material fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
-"
-rbans,RBANS,RBANS Total Index,NA,103,95-111,58,Average,General Cognitive Ability,Neurocognition,Neurocognitive Index,NA,NA,NA,npsych_test,standard_score,rbans_18,"Composite indicator of overall neurocognitive functioning fell within the Average and ranked at the 58th percentile. This indicates performance as good as or better than 58% of same-age peers from the general population.
-"
+﻿test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,absort,description,result
+rbans,RBANS,RBANS Update Form A List Learning,32,13,,84,High Average,,,,,,,scaled_score,npsych_test,rbans_1,,Biggie's score on RBANS Update Form A List Learning () was High Average.
+rbans,RBANS,RBANS Update Form A Story Memory,24,16,,97,Above Average,,,,,,,scaled_score,npsych_test,rbans_2,,Biggie's score on RBANS Update Form A Story Memory () was Above Average.
+rbans,RBANS,RBANS Update Form A Figure Copy,15,7,,15,Low Average,,,,,,,scaled_score,npsych_test,rbans_3,,Biggie's score on RBANS Update Form A Figure Copy () was Low Average.
+rbans,RBANS,RBANS Update Form A Line Orientation,11,,,,,,,,,,,scaled_score,npsych_test,rbans_4,,Biggie's score on RBANS Update Form A Line Orientation () was .
+rbans,RBANS,RBANS Update Form A Picture Naming,9,,,,,,,,,,,scaled_score,npsych_test,rbans_5,,Biggie's score on RBANS Update Form A Picture Naming () was .
+rbans,RBANS,RBANS Update Form A Semantic Fluency,20,13,,84,High Average,,,,,,,scaled_score,npsych_test,rbans_6,,Biggie's score on RBANS Update Form A Semantic Fluency () was High Average.
+rbans,RBANS,RBANS Update Form A Digit Span,10,11,,63,Average,,,,,,,scaled_score,npsych_test,rbans_7,,Biggie's score on RBANS Update Form A Digit Span () was Average.
+rbans,RBANS,RBANS Update Form A Coding,60,14,,90,High Average,,,,,,,scaled_score,npsych_test,rbans_8,,Biggie's score on RBANS Update Form A Coding () was High Average.
+rbans,RBANS,RBANS Update Form A List Recall,6,,,,,,,,,,,scaled_score,npsych_test,rbans_9,,Biggie's score on RBANS Update Form A List Recall () was .
+rbans,RBANS,RBANS Update Form A List Recognition,20,,,,,,,,,,,scaled_score,npsych_test,rbans_10,,Biggie's score on RBANS Update Form A List Recognition () was .
+rbans,RBANS,RBANS Update Form A Story Recall,12,16,,97,Above Average,,,,,,,scaled_score,npsych_test,rbans_11,,Biggie's score on RBANS Update Form A Story Recall () was Above Average.
+rbans,RBANS,RBANS Update Form A Figure Recall,14,10,,50,Average,,,,,,,scaled_score,npsych_test,rbans_12,,Biggie's score on RBANS Update Form A Figure Recall () was Average.
+rbans,RBANS,RBANS Update Form A Immediate Memory Index (IMI),,126,118-134,96,Above Average,,,,,,,standard_score,npsych_test,rbans_13,,Biggie's score on RBANS Update Form A Immediate Memory Index (IMI) () was Above Average.
+rbans,RBANS,RBANS Update Form A Visuospatial/ Constructional Index (VCI),,75,57-93,5,Below Average,,,,,,,standard_score,npsych_test,rbans_14,,Biggie's score on RBANS Update Form A Visuospatial/ Constructional Index (VCI) () was Below Average.
+rbans,RBANS,RBANS Update Form A Language Index (LGI),,109,96-122,73,Average,,,,,,,standard_score,npsych_test,rbans_15,,Biggie's score on RBANS Update Form A Language Index (LGI) () was Average.
+rbans,RBANS,RBANS Update Form A Attention Index (ATI),,116,103-129,86,High Average,,,,,,,standard_score,npsych_test,rbans_16,,Biggie's score on RBANS Update Form A Attention Index (ATI) () was High Average.
+rbans,RBANS,RBANS Update Form A Delayed Memory Index (DRI),,89,78-100,23,Low Average,,,,,,,standard_score,npsych_test,rbans_17,,Biggie's score on RBANS Update Form A Delayed Memory Index (DRI) () was Low Average.
+rbans,RBANS,RBANS Update Form A Total Scale (TOT),,103,95-111,58,Average,,,,,,,standard_score,npsych_test,rbans_18,,Biggie's score on RBANS Update Form A Total Scale (TOT) () was Average.

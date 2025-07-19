@@ -1,0 +1,19 @@
+﻿"scale","raw_score","score","percentile","range","ci_95_lower","ci_95_upper","completion_time_seconds"
+,32,13,84,"High Average",NA,NA,256
+,24,16,97,"Above Average",NA,NA,138
+,15,7,15,"Low Average",NA,NA,285
+,11,NA,NA,"",NA,NA,315
+,9,NA,NA,"",NA,NA,147
+,20,13,84,"High Average",NA,NA,86
+,10,11,63,"Average",NA,NA,16
+,60,14,90,"High Average",NA,NA,215
+,6,NA,NA,"",NA,NA,53
+,20,NA,NA,"",NA,NA,115
+,12,16,97,"Above Average",NA,NA,47
+,14,10,50,"Average",NA,NA,115
+,NA,126,96,"Above Average",118,134,NA
+,NA,75,5,"Below Average",57,93,NA
+,NA,109,73,"Average",96,122,NA
+,NA,116,86,"High Average",103,129,NA
+,NA,89,23,"Low Average",78,100,NA
+,NA,103,58,"Average",95,111,NA

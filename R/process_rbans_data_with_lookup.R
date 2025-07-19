@@ -1,39 +1,47 @@
-#' Process RBANS Q-interactive Export with Embedded Lookup
+#' Process RBANS Q-interactive Export with Embedded Lookup and Manual Overrides
 #'
 #' Reads a UTF-16 CSV export from Q-interactive and extracts raw scores,
 #' scaled scores, completion times, and composite scores. It then merges in
-#' detailed metadata from an external RBANS lookup table CSV.
+#' detailed metadata from an external RBANS lookup table CSV and allows
+#' manual entry of four percentile ranks.
 #'
 #' @param input_file Path to the UTF-16 CSV export from Q-interactive.
 #' @param test_prefix Prefix used for Subtest names in the export (e.g., "RBANS Update Form A ").
 #' @param patient_id Identifier for the patient (e.g., "Patient001").
 #' @param lookup_file Path to the RBANS lookup table CSV containing metadata columns:
 #'   scale, domain, subdomain, narrow, pass, verbal, timed, score_type, description.
+#' @param line_orientation_pct_rank Numeric. Manual percentile for "Line Orientation".
+#' @param picture_naming_pct_rank Numeric. Manual percentile for "Picture Naming".
+#' @param list_recall_pct_rank Numeric. Manual percentile for "List Recall".
+#' @param list_recognition_pct_rank Numeric. Manual percentile for "List Recognition".
 #' @param manual_entries Optional tibble of manual entries for missing subtests.
 #' @param output_file Optional path to write the combined, processed data as CSV.
 #' @return A data.frame with one row per RBANS subtest, including scores, times,
-#'   composite values, and metadata joined from the lookup table.
+#'   composite values, metadata, and manual percentile overrides.
 #' @export
 process_rbans_data <- function(
-  input_file,
-  test_prefix,
-  patient_id,
-  lookup_file,
-  manual_entries = NULL,
-  output_file = NULL
+    input_file,
+    test_prefix,
+    patient_id,
+    lookup_file,
+    line_orientation_pct_rank = NULL,
+    picture_naming_pct_rank = NULL,
+    list_recall_pct_rank = NULL,
+    list_recognition_pct_rank = NULL,
+    manual_entries = NULL,
+    output_file = NULL
 ) {
-  # Load required packages
   library(dplyr)
   library(stringr)
   library(tidyr)
   library(readr)
 
   # 1) Read the Q-interactive export once
-  df <- readr::read_csv(
+  df <- read_csv(
     input_file,
     col_names = FALSE,
     show_col_types = FALSE,
-    locale = readr::locale(encoding = "UTF-16LE")
+    locale = locale(encoding = "UTF-16LE")
   )
 
   # 2) Generic helper to pluck any section
@@ -59,13 +67,14 @@ process_rbans_data <- function(
   scaled_scores <- pluck_section(df, "SCALED SCORES",          "SUBTEST COMPLETION TIMES", c("scale", "scaled_score"))
   times         <- pluck_section(df, "SUBTEST COMPLETION TIMES","RULES TRIGGERED",           c("scale", "completion_time"))
   composites    <- pluck_section(df, "Composite Score",        NULL,                        c(
-    "scale", "composite_score", "percentile",
-    "ci_95_lower", "ci_95_upper"
+    "scale", "composite_score", "percentile", "ci_95_lower", "ci_95_upper"
   ))
 
-  # 4) Combine extracted data and any manual entries
-  combined <- list(raw_scores, scaled_scores, times, composites) %>%
-    reduce(full_join, by = "scale")
+  # 4) Combine extracted data and any manual entries using base Reduce
+  combined <- Reduce(
+    function(x, y) dplyr::full_join(x, y, by = "scale"),
+    list(raw_scores, scaled_scores, times, composites)
+  )
   if (!is.null(manual_entries)) {
     combined <- combined %>%
       bind_rows(manual_entries) %>%
@@ -83,17 +92,27 @@ process_rbans_data <- function(
     ) %>%
     select(-z)
 
-  # 6) Merge in metadata from the external lookup table
-  #    The lookup CSV must include: scale, domain, subdomain, narrow,
-  #    pass, verbal, timed, score_type, description
-  lookup <- readr::read_csv(
+  # 6) Apply manual percentile overrides for specific scales
+  combined <- combined %>%
+    mutate(
+      percentile = case_when(
+        scale == "Line Orientation"   & !is.null(line_orientation_pct_rank)  ~ line_orientation_pct_rank,
+        scale == "Picture Naming"    & !is.null(picture_naming_pct_rank)    ~ picture_naming_pct_rank,
+        scale == "List Recall"       & !is.null(list_recall_pct_rank)       ~ list_recall_pct_rank,
+        scale == "List Recognition"  & !is.null(list_recognition_pct_rank)  ~ list_recognition_pct_rank,
+        TRUE                                                             ~ percentile
+      )
+    )
+
+  # 7) Merge in metadata from the external lookup table
+  lookup <- read_csv(
     lookup_file,
     show_col_types = FALSE
   )
   combined <- combined %>%
     left_join(lookup, by = "scale")
 
-  # 7) Add patient/test metadata columns
+  # 8) Add patient/test metadata columns
   combined <- combined %>%
     mutate(
       patient   = patient_id,
@@ -101,9 +120,10 @@ process_rbans_data <- function(
       test_type = "npsych_test"
     )
 
-  # 8) Optionally write the combined data to CSV
+  # 9) Optionally write the combined data to CSV
   if (!is.null(output_file)) {
-    readr::write_csv(combined, output_file)
+    write_csv(combined, output_file)
   }
+
   return(combined)
 }
