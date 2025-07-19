@@ -82,23 +82,37 @@ patient <- Sys.getenv("PATIENT")
 #| output: asis
 #| echo: false
 
-# Dynamically include domain files based on what's been generated
-# Domain files follow the pattern _02-XX_domain.qmd
-domain_files <- list.files(
-  pattern = "^_02-[0-9]{2}_[a-z_]+\\.qmd$",
-  full.names = FALSE
+# Define all possible domain files in canonical order
+# Up to 14 total domains, with up to 10-12 domains per patient
+all_possible_domains <- c(
+  "_02-01_iq.qmd",
+  "_02-02_academics.qmd",
+  "_02-03_verbal.qmd",
+  "_02-04_spatial.qmd",
+  "_02-05_memory.qmd",
+  "_02-06_executive.qmd",
+  "_02-07_motor.qmd",
+  "_02-08_social.qmd",
+  "_02-09_adhd_adult.qmd",
+  "_02-09_adhd_child.qmd",
+  "_02-10_emotion_adult.qmd",
+  "_02-10_emotion_child.qmd",
+  "_02-11_adaptive.qmd",
+  "_02-12_daily_living.qmd"
 )
 
-# Sort files by their numeric prefix to maintain order
-domain_files <- domain_files[order(domain_files)]
+# Check which domain files actually exist
+existing_files <- character()
+for (file in all_possible_domains) {
+  if (file.exists(file)) {
+    existing_files <- c(existing_files, file)
+  }
+}
 
-# Generate include statements for each domain file
-if (length(domain_files) > 0) {
-  for (file in domain_files) {
-    # Extract domain name from filename for section creation
-    domain_name <- gsub("^_02-[0-9]{2}_(.+)\\.qmd$", "\\1", file)
-
-    # Create the include statement
+# Generate include statements for existing domain files
+if (length(existing_files) > 0) {
+  cat("<!-- Including", length(existing_files), "domain files -->\n")
+  for (file in existing_files) {
     cat(sprintf("\n{{< include %s >}}\n", file))
   }
 } else {

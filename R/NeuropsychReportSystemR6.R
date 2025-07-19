@@ -253,130 +253,143 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       # Flatten domains in case some are vectors
       flat_domains <- unlist(domains)
 
-      # Define canonical domain order
-      domain_order <- c(
-        "General Cognitive Ability", # 01
-        "Academic Skills", # 02
-        "Verbal/Language", # 03
-        "Visual Perception/Construction", # 04
-        "Memory", # 05
-        "Attention/Executive", # 06
-        "Motor", # 07
-        "Social Cognition", # 08
-        "ADHD", # 09
-        "Emotional/Behavioral/Personality", # 10
-        "Behavioral/Emotional/Social", # 10 alt
-        "Psychiatric Disorders", # 10 alt
-        "Personality Disorders", # 10 alt
-        "Substance Use", # 10 alt
-        "Psychosocial Problems", # 10 alt
-        "Adaptive Functioning", # 11
-        "Daily Living", # 12
-        "Symptom Validity" # 13 (new)
+      # Define canonical domain order with adult/child variants
+      # Each entry can be a string or a list with 'domain' and 'variant'
+      domain_config <- list(
+        list(domain = "General Cognitive Ability", number = "01", pheno = "iq"),
+        list(domain = "Academic Skills", number = "02", pheno = "academics"),
+        list(domain = "Verbal/Language", number = "03", pheno = "verbal"),
+        list(
+          domain = "Visual Perception/Construction",
+          number = "04",
+          pheno = "spatial"
+        ),
+        list(domain = "Memory", number = "05", pheno = "memory"),
+        list(
+          domain = "Attention/Executive",
+          number = "06",
+          pheno = "executive"
+        ),
+        list(domain = "Motor", number = "07", pheno = "motor"),
+        list(domain = "Social Cognition", number = "08", pheno = "social"),
+        # ADHD has adult/child variants
+        list(
+          domain = "ADHD",
+          number = "09",
+          pheno = "adhd",
+          variants = c("adult", "child")
+        ),
+        # Emotion domains all map to same number with adult/child variants
+        list(
+          domain = c(
+            "Emotional/Behavioral/Personality",
+            "Behavioral/Emotional/Social",
+            "Psychiatric Disorders",
+            "Personality Disorders",
+            "Substance Use",
+            "Psychosocial Problems"
+          ),
+          number = "10",
+          pheno = "emotion",
+          variants = c("adult", "child")
+        ),
+        list(
+          domain = "Adaptive Functioning",
+          number = "11",
+          pheno = "adaptive"
+        ),
+        list(domain = "Daily Living", number = "12", pheno = "daily_living"),
+        list(domain = "Symptom Validity", number = "13", pheno = "validity")
       )
 
-      # Define domain to pheno mapping
-      domain_pheno_map <- list(
-        "General Cognitive Ability" = "iq",
-        "Academic Skills" = "academics",
-        "Verbal/Language" = "verbal",
-        "Visual Perception/Construction" = "spatial",
-        "Memory" = "memory",
-        "Attention/Executive" = "executive",
-        "Motor" = "motor",
-        "Social Cognition" = "social",
-        "ADHD" = "adhd",
-        "Psychiatric Disorders" = "emotion",
-        "Personality Disorders" = "emotion",
-        "Substance Use" = "emotion",
-        "Psychosocial Problems" = "emotion",
-        "Behavioral/Emotional/Social" = "emotion",
-        "Emotional/Behavioral/Personality" = "emotion",
-        "Adaptive Functioning" = "adaptive",
-        "Daily Living" = "daily_living",
-        "Symptom Validity" = "validity"
-      )
+      # Determine patient type (adult/child) based on data or config
+      # This could be enhanced to detect from actual test data
+      patient_type <- "adult" # Default to adult, could be parameterized
 
-      # Sort domains by canonical order, keeping only those present in data
-      ordered_domains <- intersect(domain_order, flat_domains)
+      # Process domains according to configuration
+      generated_files <- character()
 
-      # Track which domains we've already processed to avoid duplicates
-      processed_phenos <- list()
-      domain_counter <- 1
-
-      # Generate domain files for each domain
-      for (domain in ordered_domains) {
-        # Get proper pheno name from mapping
-        pheno <- domain_pheno_map[[domain]]
-        if (is.null(pheno)) {
-          pheno <- gsub("[/ ]", "_", tolower(domain))
+      for (config in domain_config) {
+        # Get all domain names for this config
+        domain_names <- if (is.character(config$domain)) {
+          config$domain
+        } else {
+          unlist(config$domain)
         }
 
-        # For emotion domains, create unique suffix
-        if (pheno == "emotion" && pheno %in% names(processed_phenos)) {
-          # This is a subsequent emotion domain, skip or merge
-          message("Merging additional emotion domain: ", domain)
-          next
-        }
+        # Check if any of these domains exist in the data
+        matching_domains <- intersect(domain_names, flat_domains)
 
-        if (pheno %in% names(self$domain_processors)) {
-          processor <- self$domain_processors[[pheno]]
-
-          # Process the domain data
-          if (!is.null(processor$input_file)) {
-            file_ext <- tools::file_ext(processor$input_file)
-
-            if (file_ext %in% c("parquet", "feather")) {
-              # Load data using appropriate method
-              if (file_ext == "parquet") {
-                processor$data <- arrow::read_parquet(processor$input_file)
-              } else if (file_ext == "feather") {
-                processor$data <- arrow::read_feather(processor$input_file)
-              }
-              # Data is already loaded, so skip load_data()
-              processor$filter_by_domain()
-              processor$select_columns()
-              processor$save_data()
-            } else {
-              # Standard CSV processing
-              processor$load_data()
-              processor$filter_by_domain()
-              processor$select_columns()
-              processor$save_data()
-            }
+        if (length(matching_domains) > 0) {
+          # Determine variant to use
+          variant_suffix <- ""
+          if (!is.null(config$variants) && patient_type %in% config$variants) {
+            variant_suffix <- paste0("_", patient_type)
           }
 
-          # Generate domain QMD files with sequential numbering
-          domain_number <- sprintf("%02d", domain_counter)
-          domain_file <- paste0("_02-", domain_number, "_", pheno, ".qmd")
-          text_file <- paste0("_02-", domain_number, "_", pheno, "_text.qmd")
+          # Generate file names
+          pheno_name <- paste0(config$pheno, variant_suffix)
+          domain_file <- paste0("_02-", config$number, "_", pheno_name, ".qmd")
+          text_file <- paste0(
+            "_02-",
+            config$number,
+            "_",
+            pheno_name,
+            "_text.qmd"
+          )
 
-          # Mark this pheno as processed
-          processed_phenos[[pheno]] <- domain_counter
+          # Get the processor for this phenotype
+          if (config$pheno %in% names(self$domain_processors)) {
+            processor <- self$domain_processors[[config$pheno]]
 
-          # Increment counter for next domain
-          domain_counter <- domain_counter + 1
+            # Update processor domains to include all matching domains
+            processor$domains <- matching_domains
 
-          message("Generating domain files for: ", domain)
-          message("  - ", domain_file)
-          message("  - ", text_file)
+            # Process the domain data
+            if (!is.null(processor$input_file)) {
+              file_ext <- tools::file_ext(processor$input_file)
 
-          # Generate the domain QMD file
-          if (!file.exists(domain_file) || TRUE) {
-            # Always regenerate for consistency
+              if (file_ext %in% c("parquet", "feather")) {
+                # Load data using appropriate method
+                if (file_ext == "parquet") {
+                  processor$data <- arrow::read_parquet(processor$input_file)
+                } else if (file_ext == "feather") {
+                  processor$data <- arrow::read_feather(processor$input_file)
+                }
+                processor$filter_by_domain()
+                processor$select_columns()
+                processor$save_data()
+              } else {
+                # Standard CSV processing
+                processor$load_data()
+                processor$filter_by_domain()
+                processor$select_columns()
+                processor$save_data()
+              }
+            }
+
+            message(
+              "Generating domain files for: ",
+              paste(matching_domains, collapse = ", ")
+            )
+            message("  - ", domain_file)
+            message("  - ", text_file)
+
+            # Generate the domain QMD file
+            domain_title <- matching_domains[1] # Use first matching domain as title
             cat(
               paste0(
                 "## ",
-                domain,
+                domain_title,
                 " {#sec-",
-                pheno,
+                config$pheno,
                 "}\n\n",
                 "{{< include ",
                 text_file,
                 " >}}\n\n",
                 "```{r}\n",
                 "#| label: data-",
-                pheno,
+                pheno_name,
                 "\n",
                 "#| include: false\n\n",
                 "# Domain-specific data is loaded here if needed\n",
@@ -384,10 +397,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
                 "```\n\n",
                 "```{r}\n",
                 "#| label: table-",
-                pheno,
+                pheno_name,
                 "\n",
                 "#| tbl-cap: \"",
-                domain,
+                domain_title,
                 " Test Results\"\n",
                 "#| echo: false\n\n",
                 "# Table generation code here\n",
@@ -396,14 +409,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
               ),
               file = domain_file
             )
-          }
 
-          if (!file.exists(text_file) || TRUE) {
-            # Always regenerate for consistency
-            # Generate text file using NeuropsychResultsR6
+            # Generate text file
             filtered_data <- processor$filter_by_test("self")
             if (!is.null(filtered_data) && nrow(filtered_data) > 0) {
-              # Check if NeuropsychResultsR6 exists
               if (exists("NeuropsychResultsR6")) {
                 results_obj <- NeuropsychResultsR6$new(
                   data = filtered_data,
@@ -411,34 +420,34 @@ NeuropsychReportSystemR6 <- R6::R6Class(
                 )
                 results_obj$process()
               } else {
-                # Fallback: create simple summary
                 cat(
                   "<summary>\n\n",
                   "Results for ",
-                  domain,
+                  domain_title,
                   " domain.\n\n",
                   "</summary>",
                   file = text_file
                 )
               }
             } else {
-              # Create placeholder if no data
               cat(
                 "<summary>\n\n",
                 "No data available for ",
-                domain,
+                domain_title,
                 " domain.\n\n",
                 "</summary>",
                 file = text_file
               )
             }
+
+            generated_files <- c(generated_files, domain_file)
+          } else {
+            warning("No processor configured for phenotype: ", config$pheno)
           }
-        } else {
-          warning("No processor configured for domain: ", domain)
         }
       }
 
-      message("\nGenerated ", domain_counter - 1, " domain files")
+      message("\nGenerated ", length(generated_files), " domain files")
       invisible(self)
     },
 
