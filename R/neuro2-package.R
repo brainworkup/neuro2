@@ -17,5 +17,7 @@ utils::globalVariables(c(
   "domain_motor",
   "domain_social",
   "domain_adhd_adult",
-  "domain_emotion_adult"
+  "domain_adhd_child",
+  "domain_emotion_adult",
+  "domain_emotion_child"
 ))

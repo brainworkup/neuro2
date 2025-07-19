@@ -85,3 +85,13 @@ _02-03_executive.qmd
 _02-03_verbal_text.qmd
 _02-03_verbal.qmd
 data/test_combined.csv
+README.html
+README.Rmd
+_02-05_memory_text.qmd
+_02-05_memory.qmd
+_02-06_executive_text.qmd
+_02-06_executive.qmd
+data/parquet/memory_data.feather
+data/parquet/neurocog.parquet
+data/iq.csv
+data/neuropsych.feather

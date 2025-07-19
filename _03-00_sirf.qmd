@@ -1,0 +1,48 @@
+# SUMMARY/IMPRESSION {#sec-sirf}
+
+{{< include _03-00_sirf_text.qmd >}}
+
+```{r}
+#| label: setup-sirf
+#| include: false
+
+# Source R6 classes
+source("R/NeuropsychReportSystemR6.R")
+source("R/DotplotR6.R")
+
+# Load all domain data
+all_data <- arrow::open_dataset(here::here("data")) |> dplyr::collect()
+neurocog <- arrow::read_parquet(here::here("data", "neurocog.parquet")) |>
+  dplyr::collect()
+
+# Create report system for overall summary
+report_system <- NeuropsychReportSystemR6$new(
+  config = list(patient = patient, domains = unique(neurocog$domain))
+)
+```
+
+```{r}
+#| label: fig-sirf-overall
+#| fig-cap: "Overall cognitive profile across all domains"
+#| include: false
+
+# Create overall summary plot
+domain_summary <- neurocog |>
+  group_by(domain) |>
+  summarise(
+    mean_z = mean(z, na.rm = TRUE),
+    mean_percentile = mean(percentile, na.rm = TRUE)
+  ) |>
+  filter(!is.na(mean_z))
+
+# Create plot using R6 DotplotR6
+overall_plot <- DotplotR6$new(
+  data = domain_summary,
+  x = "mean_z",
+  y = "domain",
+  filename = "fig_sirf_overall.svg",
+  theme = "fivethirtyeight",
+  point_size = 8
+)
+overall_plot$create_plot()
+```

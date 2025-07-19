@@ -88,76 +88,126 @@ tryCatch(
   }
 )
 
-# Test 1: Generate domain files using DuckDB/Parquet data
-cat("=== Test 1: Generate Verbal Domain Files with DuckDB ===\n")
-
-tryCatch(
-  {
-    # Check if parquet file exists
-    if (!file.exists("data/neurocog.parquet")) {
-      # Try CSV as fallback
-      if (file.exists("data/neurocog.csv")) {
-        cat("  Note: Using CSV file as parquet not found\n")
-        verbal_data <- readr::read_csv(
-          "data/neurocog.csv",
-          show_col_types = FALSE
-        ) |>
-          filter(domain == "Verbal/Language")
-      } else {
-        stop("Neither neurocog.parquet nor neurocog.csv found in data/")
-      }
-    } else {
-      # Method 1: Load from parquet using DuckDB query
-      con <- DBI::dbConnect(duckdb::duckdb())
-
-      # Register parquet file as a view
-      DBI::dbExecute(
-        con,
-        "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
-      )
-
-      # Query verbal domain data
-      verbal_data <- DBI::dbGetQuery(
-        con,
-        "SELECT * FROM neurocog WHERE domain = 'Verbal/Language'"
-      )
-
-      DBI::dbDisconnect(con, shutdown = TRUE)
-    }
-
-    # Create processor with injected data
-    processor_verbal <- DomainProcessorR6$new(
-      domains = "Verbal/Language",
-      pheno = "verbal",
-      input_file = NULL # No file, data will be injected
+# Helper function to get test filters for each domain
+get_domain_test_filters <- function(domain) {
+  # Define test filters for each domain
+  # These are examples - adjust based on your actual test names
+  filters <- list(
+    verbal = list(
+      self = c("wais4_vci", "wais4_verbal", "dkefs_verbal", "celf5"),
+      observer = character(0),
+      performance = c("wais4_vci", "wais4_verbal", "dkefs_verbal")
+    ),
+    memory = list(
+      self = c("wms4_memory", "cvlt3", "rbans_memory", "rcft_memory"),
+      observer = character(0),
+      performance = c("wms4_memory", "cvlt3", "rbans_memory", "rcft_memory")
+    ),
+    executive = list(
+      self = c("dkefs_executive", "wcst", "cpt3", "tova", "trails"),
+      observer = c("brief2", "cefi_observer"),
+      performance = c("dkefs_executive", "wcst", "cpt3", "trails")
     )
+  )
 
-    # Inject the DuckDB query result
-    processor_verbal$data <- verbal_data
+  return(filters[[tolower(domain)]])
+}
 
-    # Process without loading (data already loaded)
-    processor_verbal$filter_by_domain()
-    processor_verbal$select_columns()
-
-    # Save processed data
-    processor_verbal$save_data()
-
-    cat("✓ Data processed with DuckDB and saved successfully\n")
-
-    # Generate domain files
-    processor_verbal$generate_domain_qmd()
-    cat("✓ Domain QMD file generated\n")
-
-    processor_verbal$generate_domain_text_qmd()
-    cat("✓ Domain text file generated\n")
-  },
-  error = function(e) {
-    cat("✗ Error in Test 1:", e$message, "\n")
-    cat("  Full error details:\n")
-    print(e)
-    cat("\n")
-  }
+# Test 1: Generate domain files for Verbal, Memory, and Executive
+cat(
+  "=== Test 1: Generate Domain Files for Verbal, Memory, and Executive ===\n\n"
 )
+
+domains_to_test <- list(
+  list(domain = "Verbal/Language", pheno = "verbal"),
+  list(domain = "Memory", pheno = "memory"),
+  list(domain = "Attention/Executive", pheno = "executive")
+)
+
+# Process each domain
+for (domain_info in domains_to_test) {
+  cat(paste0("--- Processing ", domain_info$domain, " domain ---\n"))
+
+  tryCatch(
+    {
+      # Check if parquet file exists
+      if (!file.exists("data/neurocog.parquet")) {
+        # Try CSV as fallback
+        if (file.exists("data/neurocog.csv")) {
+          cat("  Note: Using CSV file as parquet not found\n")
+          domain_data <- readr::read_csv(
+            "data/neurocog.csv",
+            show_col_types = FALSE
+          ) |>
+            filter(domain == domain_info$domain)
+        } else {
+          stop("Neither neurocog.parquet nor neurocog.csv found in data/")
+        }
+      } else {
+        # Load from parquet using DuckDB query
+        con <- DBI::dbConnect(duckdb::duckdb())
+
+        # Register parquet file as a view
+        DBI::dbExecute(
+          con,
+          "CREATE OR REPLACE VIEW neurocog AS SELECT * FROM read_parquet('data/neurocog.parquet')"
+        )
+
+        # Query domain data
+        domain_data <- DBI::dbGetQuery(
+          con,
+          paste0(
+            "SELECT * FROM neurocog WHERE domain = '",
+            domain_info$domain,
+            "'"
+          )
+        )
+
+        DBI::dbDisconnect(con, shutdown = TRUE)
+      }
+
+      # Create processor with proper test filters
+      processor <- DomainProcessorR6$new(
+        domains = domain_info$domain,
+        pheno = domain_info$pheno,
+        input_file = "data/neurocog.csv", # Needed for generate_domain_qmd
+        test_filters = get_domain_test_filters(domain_info$pheno)
+      )
+
+      # Inject the DuckDB query result
+      processor$data <- domain_data
+
+      # Process without loading (data already loaded)
+      processor$filter_by_domain()
+      processor$select_columns()
+
+      # Save processed data
+      processor$save_data()
+      cat("  ✓ Data processed and saved successfully\n")
+
+      # Generate domain QMD file
+      processor$generate_domain_qmd()
+      cat("  ✓ Domain QMD file generated\n")
+
+      # Generate domain text file
+      processor$generate_domain_text_qmd()
+      cat("  ✓ Domain text file generated\n")
+
+      # Store processor for later use
+      if (domain_info$pheno == "verbal") {
+        processor_verbal <- processor
+      }
+
+      cat("\n")
+    },
+    error = function(e) {
+      cat("  ✗ Error processing", domain_info$domain, ":", e$message, "\n")
+      cat("    Full error details:\n")
+      print(e)
+      cat("\n")
+    }
+  )
+}
 
 # Test 2: Use TableGT R6 class with parquet data
 cat("\n=== Test 2: Generate Table with TableGT R6 ===\n")
@@ -339,7 +389,7 @@ tryCatch(
   {
     # Update the report system to use parquet files
     report_config <- list(
-      patient = "Test Patient",
+      patient = "Biggie",
       domains = c("Verbal/Language", "Memory", "Attention/Executive"),
       data_files = list(
         neurocog = "data/neurocog.parquet",
@@ -378,6 +428,60 @@ tryCatch(
   }
 )
 
+# Test 6: Render domain files to typst format
+cat("\n=== Test 6: Render Domain Files to Typst ===\n")
+
+tryCatch(
+  {
+    # Find all generated domain QMD files
+    domain_files <- list.files(
+      pattern = "^_02-0[356]_(verbal|memory|executive)\\.qmd$",
+      full.names = FALSE
+    )
+
+    if (length(domain_files) > 0) {
+      cat("Found domain files to render:\n")
+      for (f in domain_files) {
+        cat("  -", f, "\n")
+      }
+      cat("\n")
+
+      # Render each file to typst
+      for (domain_file in domain_files) {
+        cat(paste0("Rendering ", domain_file, " to typst format...\n"))
+
+        # Get output name
+        output_name <- gsub("\\.qmd$", ".typ", domain_file)
+
+        # Render using quarto
+        tryCatch(
+          {
+            system2(
+              "quarto",
+              args = c("render", domain_file, "--to", "typst"),
+              stdout = TRUE,
+              stderr = TRUE
+            )
+            cat("  ✓ Successfully rendered to", output_name, "\n")
+          },
+          error = function(e) {
+            cat("  ✗ Error rendering", domain_file, ":", e$message, "\n")
+          }
+        )
+      }
+      cat("\n✓ Typst rendering complete\n")
+    } else {
+      cat("  No domain QMD files found to render\n")
+    }
+  },
+  error = function(e) {
+    cat("✗ Error in Test 6:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
+  }
+)
+
 # Summary
 cat("\n=== Parquet/DuckDB Workflow Summary ===\n")
 cat("The updated workflow demonstrates:\n")
@@ -386,11 +490,13 @@ cat("2. Converting to efficient Parquet format\n")
 cat("3. Using DuckDB for fast data queries\n")
 cat("4. Injecting query results into R6 processors\n")
 cat("5. Generating domain files with modern tools\n")
+cat("6. Rendering domain files to typst format\n")
 cat("\nBenefits:\n")
 cat("- Faster data loading (Parquet vs CSV)\n")
 cat("- SQL queries for complex filtering\n")
 cat("- Memory-efficient processing\n")
 cat("- Scalable to large datasets\n")
+cat("- Modern typesetting with typst\n")
 
 # Final check
 cat("\n=== Final Status Check ===\n")

@@ -129,13 +129,18 @@ Invisibly returns self for method chaining.
 \subsection{Method \code{generate_domain_files()}}{
 Generate domain-specific QMD files for the report.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$generate_domain_files(domains = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$generate_domain_files(
+  domains = NULL,
+  data_dir = "data-raw/csv/"
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{domains}}{List of domains to generate files for (default: all configured domains).}
+
+\item{\code{data_dir}}{Directory containing CSV data files (default: "data-raw/csv/").}
 }
 \if{html}{\out{</div>}}
 }

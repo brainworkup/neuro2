@@ -142,11 +142,17 @@ load_data_duckdb <- function(
   "
   )
 
-  # Fetch results for the result_list
-  neuropsych <- DBI::dbGetQuery(
+  # Create neuropsych_final for consistency
+  DBI::dbExecute(
     con,
-    "SELECT DISTINCT * FROM neuropsych_processed"
+    "
+    CREATE OR REPLACE TABLE neuropsych_final AS
+    SELECT DISTINCT * FROM neuropsych_processed
+  "
   )
+
+  # Fetch results for the result_list
+  neuropsych <- DBI::dbGetQuery(con, "SELECT * FROM neuropsych_final")
   neurocog <- DBI::dbGetQuery(con, "SELECT * FROM neurocog_final")
   neurobehav <- DBI::dbGetQuery(con, "SELECT * FROM neurobehav_final")
   validity <- DBI::dbGetQuery(con, "SELECT * FROM validity_final")

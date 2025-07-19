@@ -37,18 +37,10 @@ DuckDB/Parquet, and beautiful typesetting with Quarto/Typst.
 ### Prerequisites
 
 1.  **R** (version 4.1 or higher)
-
 2.  **Quarto** (version 1.4.0 or higher) - [Install
     Quarto](https://quarto.org/docs/get-started/)
-
 3.  **CMake** (version 3.10 or higher) - Required for some dependencies
-
-4.  **webshot2** - For converting tables to images:
-
-    ``` r
-    install.packages("webshot2")
-    webshot2::install_chromote()
-    ```
+4.  **webshot2** - For converting tables to images
 
 ### Install from GitHub
 
@@ -65,17 +57,16 @@ pak::pak("brainworkup/neuro2")
 ``` r
 # Core dependencies
 install.packages(c(
-  "tidyverse", "here", "glue", "yaml", "quarto",
-  "gt", "gtExtras", "janitor", "R6", "readr", "readxl",
+  "dplyr", "tidyr", "ggplot2", "stringr", "here", "glue", "yaml", "quarto ","gt", "gtExtras", "janitor", "R6", "readr", "readxl",
   "DBI", "duckdb", "arrow", "webshot2"
 ))
-```
+```KJx
 
 ## 🏃 Quick Start
 
 ### Basic Workflow
 
-``` r
+```r
 # Load the package
 library(neuro2)
 
@@ -190,10 +181,9 @@ plot$build_plot()
 ### 1. Import Raw Data
 
 Place CSV files in `data-raw/csv/` with required columns: - `test`: Test
-abbreviation - `test_name`: Full test name  
-- `scale`: Subtest/scale name - `raw_score`: Raw score - `score`:
-Standard score - `percentile`: Percentile rank - `domain`: Cognitive
-domain
+abbreviation - `test_name`: Full test name - `scale`: Subtest/scale
+name - `raw_score`: Raw score - `score`: Standard score - `percentile`:
+Percentile rank - `domain`: Cognitive domain
 
 ### 2. Process with DuckDB
 
@@ -335,7 +325,7 @@ This project is licensed under the MIT License - see the
 
 If you use this package in your work, please cite:
 
-    Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System. 
+    Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System.
     R package version 0.2.2. https://github.com/brainworkup/neuro2
 
 ## 📧 Contact

@@ -78,8 +78,8 @@ DuckDBProcessorR6 <- R6::R6Class(
       self$con <- DBI::dbConnect(duckdb::duckdb(), self$db_path)
 
       # Set up useful extensions
-      DBI::dbExecute(self$con, "INSTALL 'json'")
-      DBI::dbExecute(self$con, "LOAD 'json'")
+      DBI::dbExecute(self$con, "INSTALL 'feather'")
+      DBI::dbExecute(self$con, "LOAD 'feather'")
 
       # Install parquet extension
       DBI::dbExecute(self$con, "INSTALL 'parquet'")
@@ -189,7 +189,9 @@ DuckDBProcessorR6 <- R6::R6Class(
 
       # Check if arrow package is available
       if (!requireNamespace("arrow", quietly = TRUE)) {
-        stop("The 'arrow' package is required to read Arrow/Feather files. Please install it with: install.packages('arrow')")
+        stop(
+          "The 'arrow' package is required to read Arrow/Feather files. Please install it with: install.packages('arrow')"
+        )
       }
 
       # Generate table name from file if not provided
@@ -232,11 +234,17 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param formats Character vector of formats to register (default: c("csv", "parquet", "arrow"))
     #'
     #' @return Invisibly returns self for method chaining.
-    register_all_files = function(data_dir = "data", formats = c("csv", "parquet", "arrow")) {
-
+    register_all_files = function(
+      data_dir = "data",
+      formats = c("csv", "parquet", "arrow")
+    ) {
       # Register CSV files
       if ("csv" %in% formats) {
-        csv_files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
+        csv_files <- list.files(
+          data_dir,
+          pattern = "\\.csv$",
+          full.names = TRUE
+        )
         for (file in csv_files) {
           self$register_csv(file)
         }
@@ -244,7 +252,11 @@ DuckDBProcessorR6 <- R6::R6Class(
 
       # Register Parquet files
       if ("parquet" %in% formats) {
-        parquet_files <- list.files(data_dir, pattern = "\\.parquet$", full.names = TRUE)
+        parquet_files <- list.files(
+          data_dir,
+          pattern = "\\.parquet$",
+          full.names = TRUE
+        )
         for (file in parquet_files) {
           self$register_parquet(file)
         }
@@ -252,7 +264,11 @@ DuckDBProcessorR6 <- R6::R6Class(
 
       # Register Arrow/Feather files
       if ("arrow" %in% formats) {
-        arrow_files <- list.files(data_dir, pattern = "\\.(arrow|feather)$", full.names = TRUE)
+        arrow_files <- list.files(
+          data_dir,
+          pattern = "\\.(arrow|feather)$",
+          full.names = TRUE
+        )
         for (file in arrow_files) {
           self$register_arrow(file)
         }
@@ -269,7 +285,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param compression Compression algorithm (default: "zstd")
     #'
     #' @return Invisibly returns self for method chaining.
-    export_to_parquet = function(table_name, output_path, compression = "zstd") {
+    export_to_parquet = function(
+      table_name,
+      output_path,
+      compression = "zstd"
+    ) {
       if (!table_name %in% names(self$tables)) {
         stop("Table not found: ", table_name)
       }
@@ -380,7 +400,10 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @return Data with calculated z-score statistics
     calculate_z_stats = function(table_name, group_vars) {
       # For complex z-score calculations, export to R and use the tidy_data function
-      data <- self$query(sprintf("SELECT * FROM %s WHERE z IS NOT NULL", table_name))
+      data <- self$query(sprintf(
+        "SELECT * FROM %s WHERE z IS NOT NULL",
+        table_name
+      ))
 
       # Use the existing calculate_z_stats function from tidy_data.R
       result <- calculate_z_stats(data, group_vars)

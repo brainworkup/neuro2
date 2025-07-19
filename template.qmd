@@ -13,12 +13,19 @@ date_of_report: last-modified
 # Suppress warnings during setup
 options(warn = -1)
 
-# Load required libraries
-library(knitr)
-library(here)
-library(readr)
-library(dplyr)
-library(gt)
+# Source package loading function
+if (file.exists("R/load_packages.R")) {
+  source("R/load_packages.R")
+  # Load all required packages using centralized function
+  load_neuropsych_packages(verbose = FALSE)
+} else {
+  # Fallback: Load minimal required packages directly
+  library(knitr)
+  library(here)
+  library(readr)
+  library(dplyr)
+  library(gt)
+}
 
 # Source custom functions if available
 if (file.exists("R/TableGT.R")) {
