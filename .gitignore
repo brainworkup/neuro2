@@ -63,3 +63,4 @@ data/validity.parquet
 *.tar.gz
 Archive.zip
 data-raw/g.csv
+shiny-pegboard/norms_grooved_pegboard_2021-12-13.xlsx

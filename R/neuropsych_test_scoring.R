@@ -281,3 +281,77 @@ pegboard_dominant_hand <- function(age, raw_score) {
     predicted_sd
   ))
 }
+
+#' @title Grooved Pegboard, NonDominant Hand
+#' @description Calculates a GPT dominant hand (T-score) from a raw score and age. The predicted score and standard deviation are also calculated.
+#' @param age A numeric value of the age of the participant. Must be between 16 and 89 years old.
+#' @param raw_score A numeric value of the raw score from the GPT nondom.
+#' @return Returns a numeric value of the T-score for the GPT nondom hand trial.
+#' @rdname pegboard_nondominant_hand
+#' @export
+pegboard_nondominant_hand <- function(age, raw_score) {
+  MIN_AGE <- 20
+  MAX_AGE <- 64
+
+  validate_inputs <- function(age, raw_score) {
+    if (raw_score == "") {
+      return("No raw score provided")
+    }
+
+    if (age == "") {
+      return("No age provided")
+    }
+
+    if (!is.numeric(raw_score)) {
+      return("Raw score must be numeric")
+    }
+
+    if (!is.numeric(age)) {
+      return("Age must be numeric")
+    }
+
+    if (age < MIN_AGE) {
+      return(paste0("Age must be ", MIN_AGE, " or older"))
+    }
+
+    if (age > MAX_AGE) {
+      return(paste0("Age must be ", MAX_AGE, " or younger"))
+    }
+    return(NULL)
+  }
+
+  validation_message <- validate_inputs(age, raw_score)
+  if (!is.null(validation_message)) {
+    return(validation_message)
+  }
+
+  predicted_score <-
+    53.27121 + 0.460912 * age
+
+  predicted_sd <-
+    -5.48594 + (0.8551187 * age) - (0.0085961 * (age * age))
+
+  # For GPT, a lower raw score is better, so we invert the z-score calculation.
+  z_score <- (predicted_score - raw_score) / predicted_sd
+
+  t_score <- (z_score * 10) + 50
+
+  t_score <- round(t_score, digits = 0)
+
+  z_score <- round(z_score, digits = 2)
+
+  predicted_score <- round(predicted_score, digits = 2)
+
+  predicted_sd <- round(predicted_sd, digits = 2)
+
+  return(paste0(
+    "GPT NonDominant Hand: ",
+    t_score,
+    ", z-Score = ",
+    z_score,
+    ", Predicted Score = ",
+    predicted_score,
+    ", Predicted SD = ",
+    predicted_sd
+  ))
+}
