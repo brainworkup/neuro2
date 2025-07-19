@@ -93,12 +93,62 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       self$domain_processors <- list()
       # Flatten domains in case some are vectors (like domain_emotion_adult)
       flat_domains <- unlist(self$config$domains)
+
+      # Define domain to pheno mapping based on create_sysdata.R
+      domain_pheno_map <- list(
+        "General Cognitive Ability" = "iq",
+        "Academic Skills" = "academics",
+        "Verbal/Language" = "verbal",
+        "Visual Perception/Construction" = "spatial",
+        "Memory" = "memory",
+        "Attention/Executive" = "executive",
+        "Motor" = "motor",
+        "Social Cognition" = "social",
+        "ADHD" = "adhd",
+        "Psychiatric Disorders" = "emotion",
+        "Personality Disorders" = "emotion",
+        "Substance Use" = "emotion",
+        "Psychosocial Problems" = "emotion",
+        "Behavioral/Emotional/Social" = "emotion",
+        "Emotional/Behavioral/Personality" = "emotion",
+        "Adaptive Functioning" = "adaptive",
+        "Daily Living" = "daily_living"
+      )
+
+      # Determine the appropriate data file based on domain type
       for (domain in flat_domains) {
-        domain_key <- gsub(" ", "_", tolower(domain))
-        self$domain_processors[[domain_key]] <- DomainProcessorR6$new(
+        # Get proper pheno name from mapping, or create a safe default
+        pheno <- domain_pheno_map[[domain]]
+        if (is.null(pheno)) {
+          # Fallback: create safe pheno from domain name
+          pheno <- gsub("[/ ]", "_", tolower(domain))
+        }
+
+        # Select appropriate input file based on domain
+        if (
+          domain %in%
+            c(
+              "ADHD",
+              "Emotional/Behavioral/Personality",
+              "Psychiatric Disorders",
+              "Personality Disorders",
+              "Substance Use",
+              "Psychosocial Problems",
+              "Behavioral/Emotional/Social"
+            )
+        ) {
+          input_file <- self$config$data_files$neurobehav
+        } else if (domain %in% c("Adaptive Functioning")) {
+          # Adaptive data might be in a different file
+          input_file <- self$config$data_files$neurobehav
+        } else {
+          input_file <- self$config$data_files$neurocog
+        }
+
+        self$domain_processors[[pheno]] <- DomainProcessorR6$new(
           domains = domain,
-          pheno = domain_key,
-          input_file = self$config$data_files$neurocog
+          pheno = pheno,
+          input_file = input_file
         )
       }
     },
@@ -186,28 +236,67 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       # Flatten domains in case some are vectors (like domain_emotion_adult)
       flat_domains <- unlist(domains)
 
+      # Define domain to pheno mapping (same as in initialize)
+      domain_pheno_map <- list(
+        "General Cognitive Ability" = "iq",
+        "Academic Skills" = "academics",
+        "Verbal/Language" = "verbal",
+        "Visual Perception/Construction" = "spatial",
+        "Memory" = "memory",
+        "Attention/Executive" = "executive",
+        "Motor" = "motor",
+        "Social Cognition" = "social",
+        "ADHD" = "adhd",
+        "Psychiatric Disorders" = "emotion",
+        "Personality Disorders" = "emotion",
+        "Substance Use" = "emotion",
+        "Psychosocial Problems" = "emotion",
+        "Behavioral/Emotional/Social" = "emotion",
+        "Emotional/Behavioral/Personality" = "emotion",
+        "Adaptive Functioning" = "adaptive",
+        "Daily Living" = "daily_living"
+      )
+
       # Generate domain files for each domain
       for (domain in flat_domains) {
-        domain_key <- gsub(" ", "_", tolower(domain))
-        if (domain_key %in% names(self$domain_processors)) {
-          processor <- self$domain_processors[[domain_key]]
+        # Get proper pheno name from mapping
+        pheno <- domain_pheno_map[[domain]]
+        if (is.null(pheno)) {
+          pheno <- gsub("[/ ]", "_", tolower(domain))
+        }
+
+        if (pheno %in% names(self$domain_processors)) {
+          processor <- self$domain_processors[[pheno]]
 
           # Process the domain data
-          processor$load_data()
-          processor$filter_by_domain()
-          processor$select_columns()
-          processor$save_data()
+          # Check if we need to handle parquet/feather files
+          if (!is.null(processor$input_file)) {
+            file_ext <- tools::file_ext(processor$input_file)
+
+            if (file_ext %in% c("parquet", "feather")) {
+              # Load data using appropriate method
+              if (file_ext == "parquet") {
+                processor$data <- arrow::read_parquet(processor$input_file)
+              } else if (file_ext == "feather") {
+                processor$data <- arrow::read_feather(processor$input_file)
+              }
+              # Data is already loaded, so skip load_data()
+              processor$filter_by_domain()
+              processor$select_columns()
+              processor$save_data()
+            } else {
+              # Standard CSV processing
+              processor$load_data()
+              processor$filter_by_domain()
+              processor$select_columns()
+              processor$save_data()
+            }
+          }
 
           # Generate domain QMD files with sequential numbering
           domain_number <- sprintf("%02d", domain_counter)
-          domain_file <- paste0("_02-", domain_number, "_", domain_key, ".qmd")
-          text_file <- paste0(
-            "_02-",
-            domain_number,
-            "_",
-            domain_key,
-            "_text.qmd"
-          )
+          domain_file <- paste0("_02-", domain_number, "_", pheno, ".qmd")
+          text_file <- paste0("_02-", domain_number, "_", pheno, "_text.qmd")
 
           # Increment counter for next domain
           domain_counter <- domain_counter + 1
@@ -224,12 +313,12 @@ NeuropsychReportSystemR6 <- R6::R6Class(
                 "## ",
                 domain,
                 " {#sec-",
-                domain_key,
+                pheno,
                 "}\n\n",
                 "{{< include _02-",
                 domain_number,
                 "_",
-                domain_key,
+                pheno,
                 "_text.qmd >}}\n\n"
               ),
               file = domain_file

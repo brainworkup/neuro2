@@ -603,31 +603,33 @@ padding-top: 0px;
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<h1 id="neuro2-neuropsychological-report-generation-package">neuro2:
-Neuropsychological Report Generation Package</h1>
-<p>A comprehensive R package for generating professional
-neuropsychological evaluation reports using Quarto and Typst. This
-package automates the process of converting raw neuropsychological test
-data into publication-ready clinical reports.</p>
+<h1 id="neuro2-modern-neuropsychological-report-generation-system">neuro2:
+Modern Neuropsychological Report Generation System</h1>
+<!-- badges: start -->
+
+<p><a href="https://github.com/brainworkup/neuro2/actions"><img role="img" aria-label="R-CMD-check" src="data:text/plain; charset=utf-8;charset=utf-8,Not%20Found" alt="R-CMD-check" /></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img role="img" aria-label="Lifecycle: experimental" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzgiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0ibGlmZWN5Y2xlOiBleHBlcmltZW50YWwiPjx0aXRsZT5saWZlY3ljbGU6IGV4cGVyaW1lbnRhbDwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iMTM4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI3IpIj48cmVjdCB3aWR0aD0iNTUiIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSI1NSIgd2lkdGg9IjgzIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmU3ZDM3Ii8+PHJlY3Qgd2lkdGg9IjEzOCIgaGVpZ2h0PSIyMCIgZmlsbD0idXJsKCNzKSIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iVmVyZGFuYSxHZW5ldmEsRGVqYVZ1IFNhbnMsc2Fucy1zZXJpZiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgZm9udC1zaXplPSIxMTAiPjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIyODUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjQ1MCI+bGlmZWN5Y2xlPC90ZXh0Pjx0ZXh0IHg9IjI4NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNDUwIj5saWZlY3ljbGU8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9Ijk1NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNzMwIj5leHBlcmltZW50YWw8L3RleHQ+PHRleHQgeD0iOTU1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI3MzAiPmV4cGVyaW1lbnRhbDwvdGV4dD48L2c+PC9zdmc+" alt="Lifecycle: experimental" /></a></p>
+<!-- badges: end -->
+
 <h2 id="overview">Overview</h2>
-<p>The <code>neuro2</code> package provides an integrated workflow for:
-- Importing and processing neuropsychological test data from CSV files -
-Standardizing test scores across different assessment instruments -
-Generating domain-specific analyses and interpretations - Creating
-professional reports using customizable Quarto/Typst templates -
-Producing publication-quality tables and visualizations</p>
-<h3 id="key-features">Key Features</h3>
+<p>The <code>neuro2</code> package is a comprehensive R package for
+generating professional neuropsychological evaluation reports using
+modern R6 object-oriented design, high-performance data processing with
+DuckDB/Parquet, and beautiful typesetting with Quarto/Typst.</p>
+<h3 id="dart-key-features">🎯 Key Features</h3>
 <ul>
-<li><strong>Automated Data Processing</strong>: Imports CSV files from
-various neuropsychological tests and standardizes the data format</li>
-<li><strong>Domain-Based Analysis</strong>: Organizes results by
-cognitive domains (e.g., IQ, Memory, Executive Function)</li>
-<li><strong>Clinical Interpretations</strong>: Generates automated text
-summaries based on test performance</li>
-<li><strong>Professional Formatting</strong>: Uses Typst for
-high-quality PDF output with customizable templates</li>
-<li><strong>R6 Object-Oriented Design</strong>: Modular architecture for
-extensibility and maintainability</li>
+<li><strong>🚀 High-Performance Data Pipeline</strong>: Uses DuckDB and
+Parquet for 4-5x faster data processing</li>
+<li><strong>🏗️ Modern R6 Architecture</strong>: Object-oriented design
+for extensibility and maintainability</li>
+<li><strong>🧠 Dynamic Domain Generation</strong>: Automatically
+generates report sections based on available patient data</li>
+<li><strong>📊 Beautiful Visualizations</strong>: Creates
+publication-quality tables and plots with <code>gt</code> and custom R6
+classes</li>
+<li><strong>📄 Professional Reports</strong>: Generates PDF reports
+using Quarto and Typst for superior typography</li>
+<li><strong>🔧 Flexible Configuration</strong>: Easily customizable for
+different assessment types and clinical settings</li>
 </ul>
 <h2 id="installation">Installation</h2>
 <h3 id="prerequisites">Prerequisites</h3>
@@ -636,244 +638,241 @@ extensibility and maintainability</li>
 <li><p><strong>Quarto</strong> (version 1.4.0 or higher) - <a href="https://quarto.org/docs/get-started/">Install Quarto</a></p></li>
 <li><p><strong>CMake</strong> (version 3.10 or higher) - Required for
 some dependencies</p></li>
-<li><p><strong>LaTeX</strong> distribution (for PDF output) - TinyTeX
-recommended:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>tinytex<span class="sc">::</span><span class="fu">install_tinytex</span>()</span></code></pre></div></li>
+<li><p><strong>webshot2</strong> - For converting tables to images:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;webshot2&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>webshot2<span class="sc">::</span><span class="fu">install_chromote</span>()</span></code></pre></div></li>
 </ol>
 <h3 id="install-from-github">Install from GitHub</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Install devtools if not already installed</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Install pak if not already installed</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;pak&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Install neuro2 package</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;brainworkup/neuro2&quot;</span>)</span></code></pre></div>
-<h3 id="install-required-dependencies">Install Required
-Dependencies</h3>
-<p>The package will automatically install most dependencies, but you can
-manually install them:</p>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">&quot;brainworkup/neuro2&quot;</span>)</span></code></pre></div>
+<h3 id="install-core-dependencies">Install Core Dependencies</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Core dependencies</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;here&quot;</span>, <span class="st">&quot;glue&quot;</span>, <span class="st">&quot;yaml&quot;</span>, <span class="st">&quot;quarto&quot;</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">&quot;gt&quot;</span>, <span class="st">&quot;gtExtras&quot;</span>, <span class="st">&quot;janitor&quot;</span>, <span class="st">&quot;R6&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;readxl&quot;</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>))</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># Install NeurotypR if not available</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;NeurotypR&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;brainworkup/NeurotypR&quot;</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="basic-usage">Basic Usage</h3>
-<p>The simplest way to generate a report is using the efficient
-workflow:</p>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">&quot;gt&quot;</span>, <span class="st">&quot;gtExtras&quot;</span>, <span class="st">&quot;janitor&quot;</span>, <span class="st">&quot;R6&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;readxl&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="st">&quot;DBI&quot;</span>, <span class="st">&quot;duckdb&quot;</span>, <span class="st">&quot;arrow&quot;</span>, <span class="st">&quot;webshot2&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>))</span></code></pre></div>
+<h2 id="running-quick-start">🏃 Quick Start</h2>
+<h3 id="basic-workflow">Basic Workflow</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Load the package</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(neuro2)</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Run the efficient workflow</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;efficient_workflow_v5.R&quot;</span>)</span></code></pre></div>
-<p>This will: 1. Process data files from <code>data-raw/</code>
-directory 2. Update patient variables 3. Generate domain summaries 4.
-Render the final report</p>
-<h3 id="step-by-step-workflow">Step-by-Step Workflow</h3>
-<p>For more control over the process:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Step 1: Import and process data</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;01_import_process_data.R&quot;</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># Step 2: Create domain-specific QMD files</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;02_create_domain_qmds.R&quot;</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># Step 3: Render domains and generate summaries</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;03_render_domains.R&quot;</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co"># Step 4: Update variables and render final report</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;04_updated_workflow_quarto.R&quot;</span>)</span></code></pre></div>
-<h2 id="directory-structure">Directory Structure</h2>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># 1. Process raw data files (CSV → Parquet)</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">load_data_duckdb</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">file_path =</span> <span class="st">&quot;data-raw/csv&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">output_dir =</span> <span class="st">&quot;data&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="at">output_format =</span> <span class="st">&quot;all&quot;</span>  <span class="co"># Creates CSV, Parquet, and Feather formats</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co"># 2. Generate a neuropsychological report</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>report_system <span class="ot">&lt;-</span> NeuropsychReportSystemR6<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  <span class="at">config =</span> <span class="fu">list</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="at">patient =</span> <span class="st">&quot;John Doe&quot;</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    <span class="at">domains =</span> <span class="fu">c</span>(<span class="st">&quot;General Cognitive Ability&quot;</span>, <span class="st">&quot;Memory&quot;</span>, <span class="st">&quot;Attention/Executive&quot;</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    <span class="at">data_files =</span> <span class="fu">list</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>      <span class="at">neurocog =</span> <span class="st">&quot;data/neurocog.parquet&quot;</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>      <span class="at">neurobehav =</span> <span class="st">&quot;data/neurobehav.parquet&quot;</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>    )</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  )</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>)</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co"># 3. Run the complete workflow</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>report_system<span class="sc">$</span><span class="fu">run_workflow</span>()</span></code></pre></div>
+<h2 id="file_folder-project-structure">📁 Project Structure</h2>
 <pre><code>neuro2/
 ├── data-raw/           # Input CSV files from neuropsych tests
-├── data/               # Processed data files
-├── R/                  # R6 classes and utility functions
-├── inst/               # Package resources
-│   ├── extdata/        # Data files and templates
-│   └── rmarkdown/      # Report templates
-├── _*.qmd             # Quarto template sections
-├── template.qmd        # Main report template
-├── _quarto.yml        # Quarto configuration
-└── _variables.yml     # Patient variables configuration</code></pre>
-<h2 id="data-requirements">Data Requirements</h2>
-<h3 id="input-data-format">Input Data Format</h3>
-<p>Place CSV files in the <code>data-raw/</code> directory. Each CSV
-should contain:</p>
+│   ├── csv/           # Raw test data files
+│   └── create_sysdata.R # Domain and scale definitions
+├── data/              # Processed data (Parquet/Feather/CSV)
+├── R/                 # R6 classes and functions
+│   ├── DomainProcessorR6.R      # Domain data processing
+│   ├── NeuropsychReportSystemR6.R # Report orchestration
+│   ├── TableGT.R                # Table generation
+│   ├── DotplotR6.R             # Visualization
+│   └── duckdb_neuropsych_loader.R # Data loading
+├── inst/              # Package resources
+│   ├── extdata/       # Lookup tables and templates
+│   └── quarto/        # Report templates
+├── _*.qmd            # Domain template sections
+├── template.qmd      # Main report template
+└── _quarto.yml      # Quarto configuration</code></pre>
+<h2 id="test_tube-core-r6-classes">🧪 Core R6 Classes</h2>
+<h3 id="neuropsychreportsystemr6">NeuropsychReportSystemR6</h3>
+<p>Orchestrates the entire report generation workflow:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Create report system with configuration</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>report_system <span class="ot">&lt;-</span> NeuropsychReportSystemR6<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">config =</span> <span class="fu">list</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="at">patient =</span> <span class="st">&quot;Jane Smith&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">domains =</span> <span class="fu">c</span>(<span class="st">&quot;Memory&quot;</span>, <span class="st">&quot;Verbal/Language&quot;</span>, <span class="st">&quot;Attention/Executive&quot;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  )</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># Generate domain files dynamically</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>report_system<span class="sc">$</span><span class="fu">generate_domain_files</span>()</span></code></pre></div>
+<h3 id="domainprocessorr6">DomainProcessorR6</h3>
+<p>Processes neuropsychological test data by cognitive domain:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Process verbal domain data</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>processor <span class="ot">&lt;-</span> DomainProcessorR6<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">domains =</span> <span class="st">&quot;Verbal/Language&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">pheno =</span> <span class="st">&quot;verbal&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">input_file =</span> <span class="st">&quot;data/neurocog.parquet&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>processor<span class="sc">$</span><span class="fu">process</span>()  <span class="co"># Runs complete pipeline</span></span></code></pre></div>
+<h3 id="tablegt">TableGT</h3>
+<p>Creates publication-quality tables:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Generate a formatted table</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>table <span class="ot">&lt;-</span> TableGT<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">data =</span> domain_data,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">pheno =</span> <span class="st">&quot;memory&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="at">table_name =</span> <span class="st">&quot;table_memory&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>table<span class="sc">$</span><span class="fu">build_table</span>()  <span class="co"># Creates PNG and PDF outputs</span></span></code></pre></div>
+<h3 id="dotplotr6">DotplotR6</h3>
+<p>Creates domain visualization plots:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Create domain visualization</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>plot <span class="ot">&lt;-</span> DotplotR6<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">data =</span> domain_data,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">pheno =</span> <span class="st">&quot;executive&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>plot<span class="sc">$</span><span class="fu">build_plot</span>()</span></code></pre></div>
+<h2 id="bar_chart-data-processing-pipeline">📊 Data Processing
+Pipeline</h2>
+<h3 id="id_1-import-raw-data">1. Import Raw Data</h3>
+<p>Place CSV files in <code>data-raw/csv/</code> with required columns:
+- <code>test</code>: Test abbreviation - <code>test_name</code>: Full
+test name</p>
 <ul>
-<li><code>test</code>: Test abbreviation (e.g., “WAIS-5”)</li>
-<li><code>test_name</code>: Full test name</li>
-<li><code>scale</code>: Subtest or scale name</li>
-<li><code>raw_score</code>: Raw score value</li>
-<li><code>score</code>: Standard/scaled score</li>
-<li><code>percentile</code>: Percentile rank</li>
-<li><code>range</code>: Performance classification</li>
-<li><code>domain</code>: Cognitive domain</li>
+<li><code>scale</code>: Subtest/scale name - <code>raw_score</code>: Raw
+score - <code>score</code>: Standard score - <code>percentile</code>:
+Percentile rank - <code>domain</code>: Cognitive domain</li>
 </ul>
-<h3 id="example-csv-structure">Example CSV Structure</h3>
-<pre class="csv"><code>test,test_name,scale,raw_score,score,percentile,range,domain
-WAIS5,Wechsler Adult Intelligence Scale-5,Full Scale IQ,NA,95,37,Average,General Cognitive Ability
-WAIS5,Wechsler Adult Intelligence Scale-5,Verbal Comprehension,NA,98,45,Average,Verbal/Language</code></pre>
-<h2 id="configuration">Configuration</h2>
-<h3 id="patient-information">Patient Information</h3>
-<p>Edit <code>_variables.yml</code> to set patient demographics:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">patient</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;John Doe&quot;</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">first_name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;John&quot;</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">last_name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Doe&quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">age</span><span class="kw">:</span><span class="at"> </span><span class="dv">45</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">sex</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;male&quot;</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="fu">dob</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1979-01-15&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">education</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">handedness</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;right&quot;</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="fu">referral</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Dr. Smith&quot;</span></span></code></pre></div>
-<h3 id="report-format">Report Format</h3>
-<p>Configure output format in <code>_quarto.yml</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="at">  </span><span class="fu">neurotyp-adult-typst</span><span class="kw">:</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="at">    </span><span class="fu">papersize</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;us-letter&quot;</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="at">    </span><span class="fu">fontsize</span><span class="kw">:</span><span class="at"> 11pt</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="at">    </span><span class="fu">fig-format</span><span class="kw">:</span><span class="at"> svg</span></span></code></pre></div>
-<h2 id="customization">Customization</h2>
-<h3 id="adding-new-tests">Adding New Tests</h3>
+<h3 id="id_2-process-with-duckdb">2. Process with DuckDB</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># High-performance data processing</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">load_data_duckdb</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">file_path =</span> <span class="st">&quot;data-raw/csv&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">output_dir =</span> <span class="st">&quot;data&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">use_duckdb =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">output_format =</span> <span class="st">&quot;parquet&quot;</span>  <span class="co"># 4-5x faster than CSV</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>)</span></code></pre></div>
+<h3 id="id_3-query-with-sql">3. Query with SQL</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Use SQL for complex queries</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">query_neuropsych</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="st">&quot;SELECT * FROM neurocog WHERE domain = &#39;Memory&#39; AND percentile &lt; 16&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>)</span></code></pre></div>
+<h2 id="art-customization">🎨 Customization</h2>
+<h3 id="configure-patient-information">Configure Patient
+Information</h3>
+<p>Edit <code>_variables.yml</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">patient</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;John Doe&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">age</span><span class="kw">:</span><span class="at"> </span><span class="dv">45</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">sex</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;male&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">education</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="fu">handedness</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;right&quot;</span></span></code></pre></div>
+<h3 id="customize-domains">Customize Domains</h3>
+<p>The system automatically detects available domains from your data.
+Domain mappings are defined in <code>data-raw/create_sysdata.R</code>: -
+General Cognitive Ability → <code>iq</code> - Academic Skills →
+<code>academics</code> - Verbal/Language → <code>verbal</code> - Memory
+→ <code>memory</code> - Attention/Executive → <code>executive</code></p>
+<h3 id="add-custom-tests">Add Custom Tests</h3>
 <ol style="list-style-type: decimal">
-<li>Create CSV file with test data in <code>data-raw/</code></li>
-<li>Ensure proper column naming convention</li>
-<li>Run workflow to include in report</li>
+<li>Add test data to CSV in <code>data-raw/csv/</code></li>
+<li>Ensure proper domain assignment</li>
+<li>Run the workflow - domains are generated dynamically</li>
 </ol>
-<h3 id="modifying-report-sections">Modifying Report Sections</h3>
-<p>Edit the corresponding QMD files: - <code>_01-00_nse_adult.qmd</code>
-- Neurobehavioral status exam - <code>_02-*_*_text.qmd</code> -
-Domain-specific interpretations - <code>_03-01_recs.qmd</code> -
-Clinical recommendations</p>
-<h3 id="creating-custom-templates">Creating Custom Templates</h3>
-<ol style="list-style-type: decimal">
-<li>Copy existing template structure</li>
-<li>Modify Typst formatting in template files</li>
-<li>Update <code>_quarto.yml</code> to use new template</li>
-</ol>
-<h2 id="workflow-examples">Workflow Examples</h2>
-<h3 id="example-1-standard-adult-assessment">Example 1: Standard Adult
-Assessment</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Set patient information</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">update_patient_variables</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">patient =</span> <span class="st">&quot;Jane Smith&quot;</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">age =</span> <span class="dv">35</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">sex =</span> <span class="st">&quot;female&quot;</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>)</span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Run complete workflow</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;efficient_workflow_v5.R&quot;</span>)</span></code></pre></div>
-<h3 id="example-2-forensic-evaluation">Example 2: Forensic
-Evaluation</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Use forensic-specific workflow</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;06_run_complete_workflow.R&quot;</span>)</span></code></pre></div>
-<h3 id="example-3-custom-domain-analysis">Example 3: Custom Domain
-Analysis</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Load and process specific domains</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>neurocog <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/neurocog.csv&quot;</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>memory_data <span class="ot">&lt;-</span> neurocog <span class="sc">%&gt;%</span> </span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">filter</span>(domain <span class="sc">==</span> <span class="st">&quot;Memory&quot;</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># Generate custom analysis</span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;R/DomainProcessorR6.R&quot;</span>)</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>processor <span class="ot">&lt;-</span> DomainProcessorR6<span class="sc">$</span><span class="fu">new</span>(memory_data)</span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>processor<span class="sc">$</span><span class="fu">generate_summary</span>()</span></code></pre></div>
-<h2 id="troubleshooting">Troubleshooting</h2>
+<h2 id="wrench-advanced-usage">🔧 Advanced Usage</h2>
+<h3 id="using-individual-components">Using Individual Components</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Load specific domain data</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>memory_data <span class="ot">&lt;-</span> <span class="fu">query_neuropsych</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="st">&quot;SELECT * FROM neurocog WHERE domain = &#39;Memory&#39;&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>)</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co"># Create custom table</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>table_gt <span class="ot">&lt;-</span> TableGT<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="at">data =</span> memory_data,</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  <span class="at">pheno =</span> <span class="st">&quot;memory&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  <span class="at">table_name =</span> <span class="st">&quot;custom_memory_table&quot;</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>)</span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>table_gt<span class="sc">$</span><span class="fu">build_table</span>()</span></code></pre></div>
+<h3 id="batch-processing">Batch Processing</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Process multiple patients</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>patients <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Patient1&quot;</span>, <span class="at">age =</span> <span class="dv">30</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Patient2&quot;</span>, <span class="at">age =</span> <span class="dv">45</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="cf">for</span> (patient <span class="cf">in</span> patients) {</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  report_system <span class="ot">&lt;-</span> NeuropsychReportSystemR6<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>    <span class="at">config =</span> <span class="fu">list</span>(<span class="at">patient =</span> patient<span class="sc">$</span>name, <span class="at">age =</span> patient<span class="sc">$</span>age)</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  )</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  report_system<span class="sc">$</span><span class="fu">run_workflow</span>()</span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>}</span></code></pre></div>
+<h2 id="bug-troubleshooting">🐛 Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <ol style="list-style-type: decimal">
-<li><strong>Missing data files</strong>
+<li><p><strong>Missing dependencies</strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Check and install dependencies</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;install_dependencies.R&quot;</span>)</span></code></pre></div></li>
+<li><p><strong>DuckDB errors</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Verify DuckDB installation</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>DBI<span class="sc">::</span><span class="fu">dbConnect</span>(duckdb<span class="sc">::</span><span class="fu">duckdb</span>())</span></code></pre></div></li>
+<li><p><strong>Webshot2 issues</strong></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Reinstall chromote</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>webshot2<span class="sc">::</span><span class="fu">install_chromote</span>()</span></code></pre></div></li>
+<li><p><strong>Domain not found</strong></p>
 <ul>
-<li>Ensure CSV files are in <code>data-raw/</code> directory</li>
-<li>Check file naming conventions</li>
-</ul></li>
-<li><strong>Quarto rendering errors</strong>
-<ul>
-<li>Verify Quarto installation: <code>quarto check</code></li>
-<li>Check LaTeX installation for PDF output</li>
-</ul></li>
-<li><strong>Package dependencies</strong>
-<ul>
-<li>Run <code>devtools::install_deps()</code> to install missing
-packages</li>
-<li>Update R to version 4.1 or higher if needed</li>
-</ul></li>
-<li><strong>Template not found</strong>
-<ul>
-<li>Ensure all <code>_*.qmd</code> files are in project root</li>
-<li>Check <code>_include_domains.qmd</code> references</li>
+<li>Check domain spelling in data matches
+<code>create_sysdata.R</code></li>
+<li>Verify data file contains the domain</li>
 </ul></li>
 </ol>
-<h3 id="debug-mode">Debug Mode</h3>
-<p>Enable verbose output for troubleshooting:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Set debug options</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">options</span>(<span class="at">neuro2.debug =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">neuro2.verbose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co"># Run workflow with debugging</span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;efficient_workflow_v5.R&quot;</span>)</span></code></pre></div>
-<h2 id="advanced-usage">Advanced Usage</h2>
-<h3 id="using-r6-classes-directly">Using R6 Classes Directly</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Create report system instance</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">library</span>(neuro2)</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>report_system <span class="ot">&lt;-</span> NeuropsychReportSystemR6<span class="sc">$</span><span class="fu">new</span>()</span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co"># Process specific test</span></span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>report_system<span class="sc">$</span><span class="fu">process_test_data</span>(<span class="st">&quot;data-raw/wais5.csv&quot;</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co"># Generate domain report</span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>iq_generator <span class="ot">&lt;-</span> IQReportGeneratorR6<span class="sc">$</span><span class="fu">new</span>()</span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>iq_generator<span class="sc">$</span><span class="fu">generate_report</span>(report_system<span class="sc">$</span>data)</span></code></pre></div>
-<h3 id="batch-processing">Batch Processing</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Process multiple patients</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>patients <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Patient1&quot;</span>, <span class="at">age =</span> <span class="dv">30</span>, <span class="at">sex =</span> <span class="st">&quot;male&quot;</span>),</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Patient2&quot;</span>, <span class="at">age =</span> <span class="dv">45</span>, <span class="at">sex =</span> <span class="st">&quot;female&quot;</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>)</span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="cf">for</span> (patient <span class="cf">in</span> patients) {</span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="fu">update_patient_variables</span>(</span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>    <span class="at">patient =</span> patient<span class="sc">$</span>name,</span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>    <span class="at">age =</span> patient<span class="sc">$</span>age,</span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>    <span class="at">sex =</span> patient<span class="sc">$</span>sex</span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>  )</span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>  <span class="fu">source</span>(<span class="st">&quot;efficient_workflow_v5.R&quot;</span>)</span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>  </span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>  <span class="co"># Move output to patient folder</span></span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>  <span class="fu">dir.create</span>(patient<span class="sc">$</span>name)</span>
-<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a>  <span class="fu">file.copy</span>(<span class="st">&quot;template.pdf&quot;</span>, </span>
-<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>            <span class="fu">file.path</span>(patient<span class="sc">$</span>name, <span class="st">&quot;report.pdf&quot;</span>))</span>
-<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="contributing">Contributing</h2>
-<p>Contributions are welcome! Please:</p>
-<ol style="list-style-type: decimal">
-<li>Fork the repository</li>
-<li>Create a feature branch
-(<code>git checkout -b feature/NewFeature</code>)</li>
-<li>Commit changes (<code>git commit -m &#39;Add NewFeature&#39;</code>)</li>
-<li>Push to branch
-(<code>git push origin feature/NewFeature</code>)</li>
-<li>Open a Pull Request</li>
-</ol>
-<h2 id="license">License</h2>
+<h2 id="books-documentation">📚 Documentation</h2>
+<ul>
+<li><a href="DOMAIN_FILE_GENERATION_WORKFLOW.md">Domain File Generation
+Workflow</a></li>
+<li><a href="DUCKDB_INTEGRATION_GUIDE.md">DuckDB Integration
+Guide</a></li>
+<li><a href="R6_IMPLEMENTATION_GUIDE.md">R6 Implementation
+Guide</a></li>
+</ul>
+<h2 id="handshake-contributing">🤝 Contributing</h2>
+<p>Contributions are welcome! Please: 1. Fork the repository 2. Create a
+feature branch (<code>git checkout -b feature/NewFeature</code>) 3.
+Commit changes (<code>git commit -m &#39;Add NewFeature&#39;</code>) 4. Push to
+branch (<code>git push origin feature/NewFeature</code>) 5. Open a Pull
+Request</p>
+<h2 id="pencil-license">📝 License</h2>
 <p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details.</p>
-<h2 id="citation">Citation</h2>
+<h2 id="open_book-citation">📖 Citation</h2>
 <p>If you use this package in your work, please cite:</p>
-<pre><code>Trampush, J. (2024). neuro2: Neuropsychological Report Generation Package. 
-R package version 0.2.2. https://github.com/yourusername/neuro2</code></pre>
-<h2 id="contact">Contact</h2>
+<pre><code>Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System. 
+R package version 0.2.2. https://github.com/brainworkup/neuro2</code></pre>
+<h2 id="e-mail-contact">📧 Contact</h2>
 <ul>
 <li><strong>Author</strong>: Joey Trampush</li>
 <li><strong>Email</strong>: <a href="mailto:joey.trampush@brainworkup.org">joey.trampush@brainworkup.org</a></li>
-<li><strong>Issues</strong>: <a href="https://github.com/yourusername/neuro2/issues">GitHub
+<li><strong>Issues</strong>: <a href="https://github.com/brainworkup/neuro2/issues">GitHub
 Issues</a></li>
 </ul>
-<h2 id="acknowledgments">Acknowledgments</h2>
+<h2 id="pray-acknowledgments">🙏 Acknowledgments</h2>
 <ul>
-<li>Built on the Quarto publishing system</li>
-<li>Uses Typst for high-quality typesetting</li>
-<li>Incorporates gt for table generation</li>
-<li>Integrates with NeurotypR for specialized neuropsych functions</li>
+<li>Built on the <a href="https://quarto.org">Quarto</a> publishing
+system</li>
+<li>Uses <a href="https://typst.app">Typst</a> for beautiful
+typesetting</li>
+<li>Powered by <a href="https://duckdb.org">DuckDB</a> for fast data
+processing</li>
+<li>Tables created with <a href="https://gt.rstudio.com">gt</a></li>
+<li>R6 architecture inspired by modern OOP best practices</li>
 </ul>
 
 </body>

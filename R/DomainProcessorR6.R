@@ -131,37 +131,51 @@ DomainProcessorR6 <- R6::R6Class(
     #'
     #' @return Invisibly returns self for method chaining.
     select_columns = function() {
+      # Define all possible columns we want to select
+      desired_columns <- c(
+        "test",
+        "test_name",
+        "scale",
+        "raw_score",
+        "score",
+        "ci_95",
+        "percentile",
+        "range",
+        "domain",
+        "subdomain",
+        "narrow",
+        "pass",
+        "verbal",
+        "timed",
+        "result",
+        "z",
+        "z_mean_domain",
+        "z_sd_domain",
+        "z_mean_subdomain",
+        "z_sd_subdomain",
+        "z_mean_narrow",
+        "z_sd_narrow",
+        "z_mean_pass",
+        "z_sd_pass",
+        "z_mean_verbal",
+        "z_sd_verbal",
+        "z_mean_timed",
+        "z_sd_timed"
+      )
+      
+      # Only select columns that actually exist in the data
+      existing_columns <- intersect(desired_columns, names(self$data))
+      
+      # Warn if some expected columns are missing
+      missing_columns <- setdiff(desired_columns, existing_columns)
+      if (length(missing_columns) > 0) {
+        message("Note: The following columns were not found in the data: ",
+                paste(missing_columns, collapse = ", "))
+      }
+      
       self$data <- self$data |>
-        dplyr::select(
-          test,
-          test_name,
-          scale,
-          raw_score,
-          score,
-          ci_95,
-          percentile,
-          range,
-          domain,
-          subdomain,
-          narrow,
-          pass,
-          verbal,
-          timed,
-          result,
-          z,
-          z_mean_domain,
-          z_sd_domain,
-          z_mean_subdomain,
-          z_sd_subdomain,
-          z_mean_narrow,
-          z_sd_narrow,
-          z_mean_pass,
-          z_sd_pass,
-          z_mean_verbal,
-          z_sd_verbal,
-          z_mean_timed,
-          z_sd_timed
-        )
+        dplyr::select(all_of(existing_columns))
+        
       invisible(self)
     },
 

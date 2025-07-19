@@ -13,26 +13,25 @@ knitr::opts_chunk$set(
 )
 ```
 
-# neuro2: Neuropsychological Report Generation Package
+# neuro2: Modern Neuropsychological Report Generation System
 
-A comprehensive R package for generating professional neuropsychological evaluation reports using Quarto and Typst. This package automates the process of converting raw neuropsychological test data into publication-ready clinical reports.
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/brainworkup/neuro2/workflows/R-CMD-check/badge.svg)](https://github.com/brainworkup/neuro2/actions)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
 
 ## Overview
 
-The `neuro2` package provides an integrated workflow for:
-- Importing and processing neuropsychological test data from CSV files
-- Standardizing test scores across different assessment instruments
-- Generating domain-specific analyses and interpretations
-- Creating professional reports using customizable Quarto/Typst templates
-- Producing publication-quality tables and visualizations
+The `neuro2` package is a comprehensive R package for generating professional neuropsychological evaluation reports using modern R6 object-oriented design, high-performance data processing with DuckDB/Parquet, and beautiful typesetting with Quarto/Typst.
 
-### Key Features
+### 🎯 Key Features
 
-- **Automated Data Processing**: Imports CSV files from various neuropsychological tests and standardizes the data format
-- **Domain-Based Analysis**: Organizes results by cognitive domains (e.g., IQ, Memory, Executive Function)
-- **Clinical Interpretations**: Generates automated text summaries based on test performance
-- **Professional Formatting**: Uses Typst for high-quality PDF output with customizable templates
-- **R6 Object-Oriented Design**: Modular architecture for extensibility and maintainability
+- **🚀 High-Performance Data Pipeline**: Uses DuckDB and Parquet for 4-5x faster data processing
+- **🏗️ Modern R6 Architecture**: Object-oriented design for extensibility and maintainability
+- **🧠 Dynamic Domain Generation**: Automatically generates report sections based on available patient data
+- **📊 Beautiful Visualizations**: Creates publication-quality tables and plots with `gt` and custom R6 classes
+- **📄 Professional Reports**: Generates PDF reports using Quarto and Typst for superior typography
+- **🔧 Flexible Configuration**: Easily customizable for different assessment types and clinical settings
 
 ## Installation
 
@@ -41,309 +40,298 @@ The `neuro2` package provides an integrated workflow for:
 1. **R** (version 4.1 or higher)
 2. **Quarto** (version 1.4.0 or higher) - [Install Quarto](https://quarto.org/docs/get-started/)
 3. **CMake** (version 3.10 or higher) - Required for some dependencies
-4. **LaTeX** distribution (for PDF output) - TinyTeX recommended:
+4. **webshot2** - For converting tables to images:
    ```r
-   tinytex::install_tinytex()
+   install.packages("webshot2")
+   webshot2::install_chromote()
    ```
 
 ### Install from GitHub
 
 ```r
-# Install devtools if not already installed
-install.packages("devtools")
+# Install pak if not already installed
+install.packages("pak")
 
 # Install neuro2 package
-devtools::install_github("brainworkup/neuro2")
+pak::pak("brainworkup/neuro2")
 ```
 
-### Install Required Dependencies
-
-The package will automatically install most dependencies, but you can manually install them:
+### Install Core Dependencies
 
 ```r
 # Core dependencies
 install.packages(c(
   "tidyverse", "here", "glue", "yaml", "quarto",
-  "gt", "gtExtras", "janitor", "R6", "readr", "readxl"
+  "gt", "gtExtras", "janitor", "R6", "readr", "readxl",
+  "DBI", "duckdb", "arrow", "webshot2"
 ))
-
-# Install NeurotypR if not available
-if (!requireNamespace("NeurotypR", quietly = TRUE)) {
-  devtools::install_github("brainworkup/NeurotypR")
-}
 ```
 
-## Quick Start
+## 🏃 Quick Start
 
-### Basic Usage
-
-The simplest way to generate a report is using the efficient workflow:
+### Basic Workflow
 
 ```r
 # Load the package
 library(neuro2)
 
-# Run the efficient workflow
-source("efficient_workflow_v5.R")
+# 1. Process raw data files (CSV → Parquet)
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_dir = "data",
+  output_format = "all"  # Creates CSV, Parquet, and Feather formats
+)
+
+# 2. Generate a neuropsychological report
+report_system <- NeuropsychReportSystemR6$new(
+  config = list(
+    patient = "John Doe",
+    domains = c("General Cognitive Ability", "Memory", "Attention/Executive"),
+    data_files = list(
+      neurocog = "data/neurocog.parquet",
+      neurobehav = "data/neurobehav.parquet"
+    )
+  )
+)
+
+# 3. Run the complete workflow
+report_system$run_workflow()
 ```
 
-This will:
-1. Process data files from `data-raw/` directory
-2. Update patient variables
-3. Generate domain summaries
-4. Render the final report
-
-### Step-by-Step Workflow
-
-For more control over the process:
-
-```r
-# Step 1: Import and process data
-source("01_import_process_data.R")
-
-# Step 2: Create domain-specific QMD files
-source("02_create_domain_qmds.R")
-
-# Step 3: Render domains and generate summaries
-source("03_render_domains.R")
-
-# Step 4: Update variables and render final report
-source("04_updated_workflow_quarto.R")
-```
-
-## Directory Structure
+## 📁 Project Structure
 
 ```
 neuro2/
 ├── data-raw/           # Input CSV files from neuropsych tests
-├── data/               # Processed data files
-├── R/                  # R6 classes and utility functions
-├── inst/               # Package resources
-│   ├── extdata/        # Data files and templates
-│   └── rmarkdown/      # Report templates
-├── _*.qmd             # Quarto template sections
-├── template.qmd        # Main report template
-├── _quarto.yml        # Quarto configuration
-└── _variables.yml     # Patient variables configuration
+│   ├── csv/           # Raw test data files
+│   └── create_sysdata.R # Domain and scale definitions
+├── data/              # Processed data (Parquet/Feather/CSV)
+├── R/                 # R6 classes and functions
+│   ├── DomainProcessorR6.R      # Domain data processing
+│   ├── NeuropsychReportSystemR6.R # Report orchestration
+│   ├── TableGT.R                # Table generation
+│   ├── DotplotR6.R             # Visualization
+│   └── duckdb_neuropsych_loader.R # Data loading
+├── inst/              # Package resources
+│   ├── extdata/       # Lookup tables and templates
+│   └── quarto/        # Report templates
+├── _*.qmd            # Domain template sections
+├── template.qmd      # Main report template
+└── _quarto.yml      # Quarto configuration
 ```
 
-## Data Requirements
+## 🧪 Core R6 Classes
 
-### Input Data Format
-
-Place CSV files in the `data-raw/` directory. Each CSV should contain:
-
-- `test`: Test abbreviation (e.g., "WAIS-5")
-- `test_name`: Full test name
-- `scale`: Subtest or scale name
-- `raw_score`: Raw score value
-- `score`: Standard/scaled score
-- `percentile`: Percentile rank
-- `range`: Performance classification
-- `domain`: Cognitive domain
-
-### Example CSV Structure
-
-```csv
-test,test_name,scale,raw_score,score,percentile,range,domain
-WAIS5,Wechsler Adult Intelligence Scale-5,Full Scale IQ,NA,95,37,Average,General Cognitive Ability
-WAIS5,Wechsler Adult Intelligence Scale-5,Verbal Comprehension,NA,98,45,Average,Verbal/Language
-```
-
-## Configuration
-
-### Patient Information
-
-Edit `_variables.yml` to set patient demographics:
-
-```yaml
-patient: "John Doe"
-first_name: "John"
-last_name: "Doe"
-age: 45
-sex: "male"
-dob: "1979-01-15"
-education: 16
-handedness: "right"
-referral: "Dr. Smith"
-```
-
-### Report Format
-
-Configure output format in `_quarto.yml`:
-
-```yaml
-format:
-  neurotyp-adult-typst:
-    papersize: "us-letter"
-    fontsize: 11pt
-    fig-format: svg
-```
-
-## Customization
-
-### Adding New Tests
-
-1. Create CSV file with test data in `data-raw/`
-2. Ensure proper column naming convention
-3. Run workflow to include in report
-
-### Modifying Report Sections
-
-Edit the corresponding QMD files:
-- `_01-00_nse_adult.qmd` - Neurobehavioral status exam
-- `_02-*_*_text.qmd` - Domain-specific interpretations
-- `_03-01_recs.qmd` - Clinical recommendations
-
-### Creating Custom Templates
-
-1. Copy existing template structure
-2. Modify Typst formatting in template files
-3. Update `_quarto.yml` to use new template
-
-## Workflow Examples
-
-### Example 1: Standard Adult Assessment
-
+### NeuropsychReportSystemR6
+Orchestrates the entire report generation workflow:
 ```r
-# Set patient information
-update_patient_variables(
-  patient = "Jane Smith",
-  age = 35,
-  sex = "female"
+# Create report system with configuration
+report_system <- NeuropsychReportSystemR6$new(
+  config = list(
+    patient = "Jane Smith",
+    domains = c("Memory", "Verbal/Language", "Attention/Executive")
+  )
 )
 
-# Run complete workflow
-source("efficient_workflow_v5.R")
+# Generate domain files dynamically
+report_system$generate_domain_files()
 ```
 
-### Example 2: Forensic Evaluation
-
+### DomainProcessorR6
+Processes neuropsychological test data by cognitive domain:
 ```r
-# Use forensic-specific workflow
-source("06_run_complete_workflow.R")
+# Process verbal domain data
+processor <- DomainProcessorR6$new(
+  domains = "Verbal/Language",
+  pheno = "verbal",
+  input_file = "data/neurocog.parquet"
+)
+
+processor$process()  # Runs complete pipeline
 ```
 
-### Example 3: Custom Domain Analysis
-
+### TableGT
+Creates publication-quality tables:
 ```r
-# Load and process specific domains
-neurocog <- read_csv("data/neurocog.csv")
-memory_data <- neurocog %>% 
-  filter(domain == "Memory")
+# Generate a formatted table
+table <- TableGT$new(
+  data = domain_data,
+  pheno = "memory",
+  table_name = "table_memory"
+)
 
-# Generate custom analysis
-source("R/DomainProcessorR6.R")
-processor <- DomainProcessorR6$new(memory_data)
-processor$generate_summary()
+table$build_table()  # Creates PNG and PDF outputs
 ```
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Missing data files**
-   - Ensure CSV files are in `data-raw/` directory
-   - Check file naming conventions
-
-2. **Quarto rendering errors**
-   - Verify Quarto installation: `quarto check`
-   - Check LaTeX installation for PDF output
-
-3. **Package dependencies**
-   - Run `devtools::install_deps()` to install missing packages
-   - Update R to version 4.1 or higher if needed
-
-4. **Template not found**
-   - Ensure all `_*.qmd` files are in project root
-   - Check `_include_domains.qmd` references
-
-### Debug Mode
-
-Enable verbose output for troubleshooting:
-
+### DotplotR6
+Creates domain visualization plots:
 ```r
-# Set debug options
-options(neuro2.debug = TRUE)
-options(neuro2.verbose = TRUE)
+# Create domain visualization
+plot <- DotplotR6$new(
+  data = domain_data,
+  pheno = "executive"
+)
 
-# Run workflow with debugging
-source("efficient_workflow_v5.R")
+plot$build_plot()
 ```
 
-## Advanced Usage
+## 📊 Data Processing Pipeline
 
-### Using R6 Classes Directly
+### 1. Import Raw Data
+Place CSV files in `data-raw/csv/` with required columns:
+- `test`: Test abbreviation
+- `test_name`: Full test name  
+- `scale`: Subtest/scale name
+- `raw_score`: Raw score
+- `score`: Standard score
+- `percentile`: Percentile rank
+- `domain`: Cognitive domain
 
+### 2. Process with DuckDB
 ```r
-# Create report system instance
-library(neuro2)
-report_system <- NeuropsychReportSystemR6$new()
+# High-performance data processing
+load_data_duckdb(
+  file_path = "data-raw/csv",
+  output_dir = "data",
+  use_duckdb = TRUE,
+  output_format = "parquet"  # 4-5x faster than CSV
+)
+```
 
-# Process specific test
-report_system$process_test_data("data-raw/wais5.csv")
+### 3. Query with SQL
+```r
+# Use SQL for complex queries
+query_neuropsych(
+  "SELECT * FROM neurocog WHERE domain = 'Memory' AND percentile < 16",
+  "data"
+)
+```
 
-# Generate domain report
-iq_generator <- IQReportGeneratorR6$new()
-iq_generator$generate_report(report_system$data)
+## 🎨 Customization
+
+### Configure Patient Information
+Edit `_variables.yml`:
+```yaml
+patient: "John Doe"
+age: 45
+sex: "male"
+education: 16
+handedness: "right"
+```
+
+### Customize Domains
+The system automatically detects available domains from your data. Domain mappings are defined in `data-raw/create_sysdata.R`:
+- General Cognitive Ability → `iq`
+- Academic Skills → `academics`
+- Verbal/Language → `verbal`
+- Memory → `memory`
+- Attention/Executive → `executive`
+
+### Add Custom Tests
+1. Add test data to CSV in `data-raw/csv/`
+2. Ensure proper domain assignment
+3. Run the workflow - domains are generated dynamically
+
+## 🔧 Advanced Usage
+
+### Using Individual Components
+```r
+# Load specific domain data
+memory_data <- query_neuropsych(
+  "SELECT * FROM neurocog WHERE domain = 'Memory'",
+  "data"
+)
+
+# Create custom table
+table_gt <- TableGT$new(
+  data = memory_data,
+  pheno = "memory",
+  table_name = "custom_memory_table"
+)
+
+table_gt$build_table()
 ```
 
 ### Batch Processing
-
 ```r
 # Process multiple patients
 patients <- list(
-  list(name = "Patient1", age = 30, sex = "male"),
-  list(name = "Patient2", age = 45, sex = "female")
+  list(name = "Patient1", age = 30),
+  list(name = "Patient2", age = 45)
 )
 
 for (patient in patients) {
-  update_patient_variables(
-    patient = patient$name,
-    age = patient$age,
-    sex = patient$sex
+  report_system <- NeuropsychReportSystemR6$new(
+    config = list(patient = patient$name, age = patient$age)
   )
-  source("efficient_workflow_v5.R")
-  
-  # Move output to patient folder
-  dir.create(patient$name)
-  file.copy("template.pdf", 
-            file.path(patient$name, "report.pdf"))
+  report_system$run_workflow()
 }
 ```
 
-## Contributing
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Missing dependencies**
+   ```r
+   # Check and install dependencies
+   source("install_dependencies.R")
+   ```
+
+2. **DuckDB errors**
+   ```r
+   # Verify DuckDB installation
+   DBI::dbConnect(duckdb::duckdb())
+   ```
+
+3. **Webshot2 issues**
+   ```r
+   # Reinstall chromote
+   webshot2::install_chromote()
+   ```
+
+4. **Domain not found**
+   - Check domain spelling in data matches `create_sysdata.R`
+   - Verify data file contains the domain
+
+## 📚 Documentation
+
+- [Domain File Generation Workflow](DOMAIN_FILE_GENERATION_WORKFLOW.md)
+- [DuckDB Integration Guide](DUCKDB_INTEGRATION_GUIDE.md)
+- [R6 Implementation Guide](R6_IMPLEMENTATION_GUIDE.md)
+
+## 🤝 Contributing
 
 Contributions are welcome! Please:
-
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/NewFeature`)
 3. Commit changes (`git commit -m 'Add NewFeature'`)
 4. Push to branch (`git push origin feature/NewFeature`)
 5. Open a Pull Request
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Citation
+## 📖 Citation
 
 If you use this package in your work, please cite:
 
 ```
-Trampush, J. (2024). neuro2: Neuropsychological Report Generation Package. 
-R package version 0.2.2. https://github.com/yourusername/neuro2
+Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System. 
+R package version 0.2.2. https://github.com/brainworkup/neuro2
 ```
 
-## Contact
+## 📧 Contact
 
 - **Author**: Joey Trampush
 - **Email**: joey.trampush@brainworkup.org
-- **Issues**: [GitHub Issues](https://github.com/yourusername/neuro2/issues)
+- **Issues**: [GitHub Issues](https://github.com/brainworkup/neuro2/issues)
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Built on the Quarto publishing system
-- Uses Typst for high-quality typesetting
-- Incorporates gt for table generation
-- Integrates with NeurotypR for specialized neuropsych functions
+- Built on the [Quarto](https://quarto.org) publishing system
+- Uses [Typst](https://typst.app) for beautiful typesetting
+- Powered by [DuckDB](https://duckdb.org) for fast data processing
+- Tables created with [gt](https://gt.rstudio.com)
+- R6 architecture inspired by modern OOP best practices

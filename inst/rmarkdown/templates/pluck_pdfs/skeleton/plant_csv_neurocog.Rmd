@@ -5,12 +5,12 @@ title: |
 date: "`r Sys.Date()`"
 params:
   patient:
-    value: Biggie
+    value: Ethan
     label: "Patient's first name:"
     input: text
   test_name:
     label: "Name of Test/Test Battery:"
-    value: NIH EXAMINER
+    value: "NIH EXAMINER"
     input: radio
     choices:
       - "NIH EXAMINER"
@@ -347,7 +347,7 @@ library(tidyr)
 library(glue)
 library(dplyr)
 library(readr)
-library(NeurotypR)
+library(bwu)
 library(NeurotypR)
 ```
 
@@ -546,7 +546,7 @@ glue_result <- function(data, scale, description, range, result) {
   # Simplify the dictionary
   phrase_dict <- c(
     "Dominant Hand Time" = "fell within the",
-    "Nondominant Hand Time" = "was",
+    "Nondominant Hand Time" = "was performed within the",
     "Unstructured Task" = "fell within the",
     "Letter Fluency" = "fell within the",
     "Category Fluency" = "fell within the",
@@ -628,7 +628,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- NeurotypR::calc_ci_95(
+ci_values <- bwu::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,
@@ -638,11 +638,33 @@ ci_values <- NeurotypR::calc_ci_95(
 data$true_score <- ci_values["true_score"]
 data$ci_lo <- ci_values["lower_ci_95"]
 data$ci_hi <- ci_values["upper_ci_95"]
-data$ci_95 <- paste0(data$ci_lo, " - ", data$ci_hi)
+data$ci_95 <- paste0(data$ci_lo, "-", data$ci_hi)
 ```
 
 ```{r}
-data <- data |> dplyr::select(-.z)
+vars <- c(
+  "test",
+  "test_name",
+  "scale",
+  "raw_score",
+  "score",
+  "ci_95",
+  "percentile",
+  "range",
+  "domain",
+  "subdomain",
+  "narrow",
+  "pass",
+  "verbal",
+  "timed",
+  "test_type",
+  "score_type",
+  "absort",
+  "result"
+)
+data <- data |>
+  dplyr::select(dplyr::all_of(vars))
+
 ```
 
 ## Write csv files
@@ -651,7 +673,7 @@ data <- data |> dplyr::select(-.z)
 table <- data
 test <- table$test
 scale <- snakecase::to_snake_case(table$scale)
-file_path <- here::here("data", paste0(test, "_", scale, ".csv"))
+file_path <- here::here("data-raw", paste0(test, "_", scale, ".csv"))
 readr::write_excel_csv(
   table,
   file_path,
@@ -673,7 +695,7 @@ has_headers <- function(file_path) {
 ```{r writeout-test}
 table <- data
 test <- table$test
-file_path <- here::here("data", "csv", paste0(test, ".csv"))
+file_path <- here::here("data-raw", "csv", paste0(test, ".csv"))
 
 readr::write_excel_csv(
   table,
@@ -686,7 +708,7 @@ readr::write_excel_csv(
 ```{r writeout-g}
 table <- data
 test <- "g"
-file_path <- here::here("data", paste0(test, ".csv"))
+file_path <- here::here("data-raw", paste0(test, ".csv"))
 
 readr::write_excel_csv(
   table,

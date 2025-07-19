@@ -35,7 +35,9 @@ domain_executive <- "Attention/Executive"
 domain_motor <- "Motor"
 domain_social <- "Social Cognition"
 domain_adhd_child <- "ADHD"
+domain_adhd_adult <- "ADHD"
 domain_emotion_child <- "Emotional/Behavioral/Personality"
+domain_emotion_adult <- "Emotional/Behavioral/Personality"
 
 # Step 0: Process raw CSV files into parquet format
 cat("=== Step 0: Process Raw CSV Files ===\n")
@@ -151,6 +153,9 @@ tryCatch(
   },
   error = function(e) {
     cat("✗ Error in Test 1:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
   }
 )
 
@@ -180,6 +185,9 @@ tryCatch(
   },
   error = function(e) {
     cat("✗ Error in Test 2:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
   }
 )
 
@@ -250,6 +258,9 @@ tryCatch(
   },
   error = function(e) {
     cat("✗ Error in Test 3:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
   }
 )
 
@@ -315,6 +326,9 @@ tryCatch(
   },
   error = function(e) {
     cat("✗ Error in Test 4:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
   }
 )
 
@@ -358,6 +372,9 @@ tryCatch(
   },
   error = function(e) {
     cat("✗ Error in Test 5:", e$message, "\n")
+    cat("  Full error details:\n")
+    print(e)
+    cat("\n")
   }
 )
 

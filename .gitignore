@@ -72,3 +72,15 @@ r_package_internal_data_guide.md
 rda_merge_explanation.md
 RDA_MERGE_SUMMARY.md
 safe_sysdata_update_fixed.R
+data/executive.csv
+data/memory.csv
+data/neurobehav.feather
+data/verbal.csv
+_02-01_verbal_text.qmd
+_02-01_verbal.qmd
+_02-02_memory_text.qmd
+_02-02_memory.qmd
+_02-03_executive_text.qmd
+_02-03_executive.qmd
+_02-03_verbal_text.qmd
+_02-03_verbal.qmd

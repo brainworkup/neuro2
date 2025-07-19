@@ -1,7 +1,7 @@
 ---
 title: "Create table and csv for RBANS"
 params:
-  patient: Biggie
+  patient: Ethan
   test:
     label: "Test"
     value: rbans
@@ -15,7 +15,7 @@ params:
       - rbans_d
   test_name:
     label: "Test Name"
-    value: RBANS
+    value: "RBANS"
     input: select
     multiple: no
     choices: [RBANS, RBANS Update Form A, RBANS Update Form B, RBANS Update Form C, RBANS Update Form D]
@@ -23,21 +23,21 @@ params:
     label: "No file selected"
     value: file
     input: file
-  pct1:
+  line_orientation_pct_rank:
     label: "Percentile 1"
-    value: 44
+    value: 13
     input: numeric
-  pct2:
+  picture_naming_pct_rank:
     label: "Percentile 2"
-    value: 55
+    value: 37
     input: numeric
-  pct3:
+  list_recall_pct_rank:
     label: "Percentile 3"
-    value: 66
+    value: 37
     input: numeric
-  pct4:
+  list_recognition_pct_rank:
     label: "Percentile 4"
-    value: 77
+    value: 63
     input: numeric
   eval: TRUE
 output:
@@ -47,16 +47,48 @@ output:
 
 # Data
 
--   Export raw CSV file from Q-interactive using "download files" or whatever its callled
+-   Export raw CSV file from Q-interactive using "download files" or whatever its called
+
+**Note**: If you encounter Java issues with this RMarkdown file, consider using the `process_rbans_data()` function from `pluck_neuropsych_pdfs.R` instead, which provides the same functionality with better error handling:
 
 # Setup
 
 ```{r setup, include=F}
-# Set JAVA environment
-Sys.setenv(
-  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home"
+# Configure Java environment for RStudio
+java_homes <- c(
+  "/Library/Java/JavaVirtualMachines/graalvm-community-openjdk-22.0.1+8.1/Contents/Home",
+  "/Library/Java/JavaVirtualMachines/openjdk-21.jdk/Contents/Home",
+  "/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home",
+  "/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home",
+  "/usr/libexec/java_home"
 )
-# options(java.parameters = "-Xmx16000m")
+
+# Find working Java installation
+java_home <- NULL
+for (path in java_homes) {
+  if (dir.exists(path) || path == "/usr/libexec/java_home") {
+    if (path == "/usr/libexec/java_home") {
+      # Try to get system default Java
+      tryCatch({
+        java_home <- system("/usr/libexec/java_home", intern = TRUE)
+        if (dir.exists(java_home)) break
+      }, error = function(e) NULL)
+    } else if (dir.exists(path)) {
+      java_home <- path
+      break
+    }
+  }
+}
+
+# Set Java environment if found
+if (!is.null(java_home)) {
+  Sys.setenv(JAVA_HOME = java_home)
+  options(java.parameters = "-Xmx8000m")
+  cat("Java configured at:", java_home, "\n")
+} else {
+  cat("Warning: No Java installation found. Some functions may not work.\n")
+}
+
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
   echo = FALSE,
@@ -66,55 +98,81 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
+
+# Load non-Java dependent libraries first
 library(tidyverse)
-library(tabulapdf)
-library(rJava)
-library(shiny)
 library(here)
-library(pdftools)
 library(magrittr)
-library(hablar)
-library(googledrive)
-library(NeurotypR)
-library(NeurotypR)
 library(glue)
+
+# Try to load Java-dependent libraries with error handling
+tryCatch({
+  library(rJava)
+  library(tabulapdf)
+  java_available <- TRUE
+}, error = function(e) {
+  cat("Warning: Java-dependent packages not available:", e$message, "\n")
+  cat("Consider using the process_rbans_data() function from pluck_neuropsych_pdfs.R instead.\n")
+  java_available <<- FALSE
+})
+
+# Load other libraries
+suppressPackageStartupMessages({
+  if (requireNamespace("shiny", quietly = TRUE)) library(shiny)
+  if (requireNamespace("pdftools", quietly = TRUE)) library(pdftools)
+  if (requireNamespace("hablar", quietly = TRUE)) library(hablar)
+  if (requireNamespace("googledrive", quietly = TRUE)) library(googledrive)
+  if (requireNamespace("bwu", quietly = TRUE)) library(bwu)
+  if (requireNamespace("NeurotypR", quietly = TRUE)) library(NeurotypR)
+})
 ```
 
-## Patient
+## Parameters
 
 ```{r patient}
 patient <- params$patient
-```
-
-## Test
-
-Name of neuropsych test or rating scale.
-
-```{r test}
 test <- params$test
 test_name <- params$test_name
-```
-
-## Load text/csv file and save as file.path
-
-```{r file}
-input_file_path <- file.path(file.choose())
-# input_file_path <- file.path(params$file)
+# input_file_path <- file.path(file.choose())
+input_file_path <- file.path(params$file)
 ```
 
 ## RAW SCORES
 
 ```{r}
-library(tidyverse)
-input_file_path <- "data/0099999_5_11_2024Biggie_S_FollowUp_ADHD-LD_Age14_scores.csv"
 test_name_prefix <- "RBANS Update Form A "
-output_file_path <- "data/processed_rbans_raw_data.csv"
 
-df <- read_csv(
-  input_file_path,
-  col_names = FALSE,
-  show_col_types = FALSE,
-  locale = locale(encoding = "UTF-16LE")
+library(tidyverse)
+
+df <- tryCatch(
+  {
+    suppressWarnings(
+      readr::read_csv(
+        input_file_path,
+        col_names = FALSE,
+        col_types = readr::cols(.default = "c"),
+        show_col_types = FALSE,
+        locale = readr::locale(encoding = "UTF-16LE"),
+        skip_empty_rows = TRUE,
+        trim_ws = TRUE,
+        na = c("", "NA", "N/A", "-")
+      )
+    )
+  },
+  error = function(e) {
+    # If read_csv fails, try with different encoding
+    suppressWarnings(
+      readr::read_csv(
+        input_file_path,
+        col_names = FALSE,
+        col_types = readr::cols(.default = "c"),
+        show_col_types = FALSE,
+        skip_empty_rows = TRUE,
+        trim_ws = TRUE,
+        na = c("", "NA", "N/A", "-")
+      )
+    )
+  }
 )
 
 # function
@@ -122,11 +180,35 @@ pluck_rbans_raw <- function(
     input_file_path,
     test_name_prefix,
     output_file_path = NULL) {
-  df <- read_csv(
-    input_file_path,
-    col_names = FALSE,
-    show_col_types = FALSE,
-    locale = locale(encoding = "UTF-16LE")
+  df <- tryCatch(
+    {
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          locale = readr::locale(encoding = "UTF-16LE"),
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    },
+    error = function(e) {
+      # If read_csv fails, try with different encoding
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    }
   )
 
   # Rename the columns
@@ -161,10 +243,10 @@ pluck_rbans_raw <- function(
 
   return(df_raw)
 }
+# Run it 
 rbans_raw <- pluck_rbans_raw(
   input_file_path,
-  output_file_path = output_file_path,
-  test_name_prefix
+  output_file_path = output_file_path
 )
 ```
 
@@ -180,11 +262,35 @@ pluck_rbans_score <- function(
     input_file_path,
     test_name_prefix,
     output_file_path = NULL) {
-  df <- read_csv(
-    input_file_path,
-    col_names = FALSE,
-    show_col_types = FALSE,
-    locale = locale(encoding = "UTF-16LE")
+  df <- tryCatch(
+    {
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          locale = readr::locale(encoding = "UTF-16LE"),
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    },
+    error = function(e) {
+      # If read_csv fails, try with different encoding
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    }
   )
 
   # Rename the columns
@@ -229,8 +335,6 @@ rbans_score <- pluck_rbans_score(
 ## SUBTEST COMPLETION TIMES
 
 ```{r}
-# input_file_path <- "data/004004907_3_10_2024.csv"
-# test_name_prefix <- "RBANS Update Form A "
 output_file_path <- "data/processed_rbans_completion_time_data.csv"
 
 # function
@@ -238,11 +342,35 @@ pluck_rbans_completion_times <- function(
     input_file_path,
     test_name_prefix,
     output_file_path = NULL) {
-  df <- readr::ead_csv(
-    input_file_path,
-    col_names = FALSE,
-    show_col_types = FALSE,
-    locale = readr::locale(encoding = "UTF-16LE")
+  df <- tryCatch(
+    {
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          locale = readr::locale(encoding = "UTF-16LE"),
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    },
+    error = function(e) {
+      # If read_csv fails, try with different encoding
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    }
   )
 
   # Rename the columns
@@ -296,11 +424,35 @@ pluck_rbans_composite <- function(
     input_file_path,
     test_name_prefix,
     output_file_path = NULL) {
-  df <- read_csv(
-    input_file_path,
-    col_names = FALSE,
-    show_col_types = FALSE,
-    locale = locale(encoding = "UTF-16LE")
+  df <- tryCatch(
+    {
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          locale = readr::locale(encoding = "UTF-16LE"),
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    },
+    error = function(e) {
+      # If read_csv fails, try with different encoding
+      suppressWarnings(
+        readr::read_csv(
+          input_file_path,
+          col_names = FALSE,
+          col_types = readr::cols(.default = "c"),
+          show_col_types = FALSE,
+          skip_empty_rows = TRUE,
+          trim_ws = TRUE,
+          na = c("", "NA", "N/A", "-")
+        )
+      )
+    }
   )
 
   # Assume the first row after "Composite Score" has the column names
@@ -441,8 +593,8 @@ df <- process_and_save_rbans_data(
 )
 
 # Write the combined data to a CSV file
-output_file_path <- "data/rbans.csv"
-write_csv(df, output_file_path)
+# output_file_path <- "data/rbans.csv"
+# write_csv(df, output_file_path)
 ```
 
 # MUTATE
