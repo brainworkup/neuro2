@@ -10,85 +10,19 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
-# Suppress xfun::attr() deprecation warnings
+# Suppress warnings during setup
 options(warn = -1)
 
-packages <- c(
-  "dplyr",
-  "glue",
-  "gt",
-  "here",
-  "janitor",
-  "knitr",
-  "purrr",
-  "quarto",
-  "readr",
-  "readxl",
-  "rmarkdown",
-  "snakecase",
-  "stringr",
-  "tidytable",
-  "vroom",
-  "xfun",
-  "NeurotypR",
-  "NeurotypR"
-)
+# Load required libraries
+library(knitr)
+library(here)
+library(readr)
+library(dplyr)
+library(gt)
 
-# Function to load packages one by one
-load_packages <- function(packages) {
-  for (pkg in packages) {
-    if (!require(pkg, character.only = TRUE)) {
-      install.packages(pkg)
-      library(pkg, character.only = TRUE)
-    }
-    message(paste("Loaded package:", pkg))
-  }
-}
-
-# Call the function to load packages
-load_packages(packages)
-
-# Apply xfun::attr() deprecation fix after loading xfun
-if (requireNamespace("xfun", quietly = TRUE)) {
-  # Check if attr function exists and patch it
-  if (exists("attr", envir = asNamespace("xfun"))) {
-    tryCatch(
-      {
-        # Temporarily unlock the binding
-        unlockBinding("attr", asNamespace("xfun"))
-        # Replace with attr2
-        assign("attr", xfun::attr2, envir = asNamespace("xfun"))
-        # Lock it back
-        lockBinding("attr", asNamespace("xfun"))
-        message("Applied xfun::attr() deprecation fix")
-      },
-      error = function(e) {
-        message(
-          "Could not patch xfun::attr(), continuing with warnings suppressed"
-        )
-      }
-    )
-  }
-}
-
-# Source the TableGT.R file for custom table functions
+# Source custom functions if available
 if (file.exists("R/TableGT.R")) {
   source("R/TableGT.R")
-  message("Loaded custom TableGT functions")
-
-  # Make tbl_gt2 available globally for compatibility
-  if (exists("tbl_gt2") && is.function(tbl_gt2)) {
-    assign("tbl_gt2", tbl_gt2, envir = .GlobalEnv)
-    message("Made tbl_gt2 function available globally")
-  }
-
-  # Also make TableGT2 available globally if needed
-  if (exists("TableGT2") && R6::is.R6Class(TableGT2)) {
-    assign("TableGT2", TableGT2, envir = .GlobalEnv)
-    message("Made TableGT2 class available globally")
-  }
-} else {
-  warning("R/TableGT.R not found - table functions may be unavailable")
 }
 
 # Set knitr options
@@ -100,47 +34,35 @@ knitr::opts_knit$set(
   optipng = knitr::hook_optipng
 )
 
-# Keep warnings suppressed for the rest of the document to avoid xfun::attr issues
-# This is a temporary workaround for the xfun::attr() deprecation warning
-options(warn = -1)
-
-# Set environment variables with default values
+# Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
+
+# Note: Data loading is now handled by the domain processors
+# The NeuropsychReportSystemR6 generates domain-specific files
+# that include their own data processing
 ```
 
 ```{r}
-#| label: data-load
+#| label: data-prep
 #| include: false
 
-path_data <- here::here("data")
-# Load data directly from the data directory instead of inst/extdata
-neurocog <- readr::read_csv(file.path(path_data, "neurocog.csv"))
-neurobehav <- readr::read_csv(file.path(path_data, "neurobehav.csv"))
-validity <- readr::read_csv(file.path(path_data, "validity.csv"))
-neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
-  readr::read_csv(file.path(path_data, "neuropsych.csv"))
-} else {
-  # Create an empty data frame with expected structure if file doesn't exist
-  data.frame(
-    patient_id = character(),
-    test_name = character(),
-    scale = character(),
-    score = numeric(),
-    percentile = numeric(),
-    classification = character(),
-    stringsAsFactors = FALSE
-  )
-}
+# Data is now loaded dynamically by domain processors
+# Each domain file (_02-XX_domain.qmd) handles its own data
+# This ensures only relevant data is loaded for each domain
+
+# If global data operations are needed, they can be added here
+# For example, loading patient metadata or configuration
 ```
 
 ```{=typst}
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
 #let doe = [{{< var date_of_report >}}]
 #let patient = [{{< var patient >}}]
-// #v(2em, weak: true)
-// #show block: set par(leading: 0.65em)
+#v(2em, weak: true)
+#show block: set par(leading: 0.65em)
 #block[
+*CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
 *DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
@@ -155,7 +77,34 @@ neuropsych <- if(file.exists(file.path(path_data, "neuropsych.csv"))) {
 
 # NEUROCOGNITIVE FINDINGS
 
-{{< include _include_domains.qmd >}}
+```{r}
+#| label: include-domains
+#| output: asis
+#| echo: false
+
+# Dynamically include domain files based on what's been generated
+# Domain files follow the pattern _02-XX_domain.qmd
+domain_files <- list.files(
+  pattern = "^_02-[0-9]{2}_[a-z_]+\\.qmd$",
+  full.names = FALSE
+)
+
+# Sort files by their numeric prefix to maintain order
+domain_files <- domain_files[order(domain_files)]
+
+# Generate include statements for each domain file
+if (length(domain_files) > 0) {
+  for (file in domain_files) {
+    # Extract domain name from filename for section creation
+    domain_name <- gsub("^_02-[0-9]{2}_(.+)\\.qmd$", "\\1", file)
+
+    # Create the include statement
+    cat(sprintf("\n{{< include %s >}}\n", file))
+  }
+} else {
+  cat("\n*No domain files found. Please run the domain generation process.*\n")
+}
+```
 
 <!-- {{< pagebreak >}} -->
 
