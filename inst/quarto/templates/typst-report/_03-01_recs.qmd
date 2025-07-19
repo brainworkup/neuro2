@@ -1,0 +1,67 @@
+# RECOMMENDATIONS {#sec-recs}
+
+## Recommendations for Medical/Healthcare
+
+- {{< var first_name >}} should receive interventions to enhance concentration, manage anxiety, and improve emotional understanding. This includes social skills training, psychoeducational interventions for self-image improvement, and monitoring for signs of internalization or externalization of problems.
+
+- **Cognitive Behavioral Therapy (CBT):** To develop strategies for improving executive functions and addressing self-esteem issues.
+
+- **Occupational Therapy:** To enhance graphomotor skills for academic tasks and daily activities.
+
+- **Cognitive Training:** Techniques to boost working memory and attention, along with strategies to improve focus.
+
+- **Speech-Language Therapy:** Working with a speech-language pathologist can help improve memory skills, particularly for verbal material.
+
+- **Psychoeducation:** To empower {{< var patient >}} with self-awareness and enable {{< var his_her >}} to advocate for {{< var his_her >}} needs in various settings.
+
+- Additional support is recommended in areas like attentional function, processing speed, and cognitive efficiency. This can be achieved through occupational therapy, the use of organizational tools, and creating a distraction-free environment.
+
+- Treatment options for ADHD should include behavioral techniques, stimulant medication consideration, environmental organization, and long-term perspective maintenance. Medical treatment discussion with a child and adolescent psychiatrist could be beneficial.
+
+- Additional support is suggested in areas like auditory comprehension and complex figure copying. This can be accomplished through speech-language pathology and occupational therapy respectively. Use of visual aids and breaking down complex tasks into smaller steps can also be helpful.
+
+## Recommendations for School
+
+- **Accommodated Testing:** Extended time accommodations are recommended due to relative weakness in processing speed and academic fluency.
+
+- **Calculator Use:** Please consider allowing {{< var patient >}} to utilize a calculator for class assignments and examinations as {{< var he_she >}} progresses in the mathematics curriculum.
+
+- {{< var patient >}} should receive additional support in mathematics through:
+  - Individual or small group tutoring.
+  - Visual aids and hands-on activities.
+  - Technology-based learning tools.
+  - Real-life math scenarios practice.
+  - Extra time for math-related tasks.
+
+- Support within the educational setting, such as an individualized education plan (IEP) or 504 Plan, to address attentional/executive challenges. Academic accommodations should include extended time on tests, reduced copying from the board, or a note-taker to offset slower psychomotor speed and attentional challenges.
+
+- **Adaptive Writing Tools:** Use of ergonomic pens or pencil grips for better control and fewer errors.
+
+- **Graphomotor Exercises:** Drawing or tracing exercises for improved fine motor coordination.
+
+- **Extra Time for Written Tasks:** Additional time for tasks requiring writing to compensate for slower graphomotor speed.
+
+- **Technology Use:** Keyboard or voice-to-text software use to mitigate graphomotor weaknesses' effect on academic performance.
+
+- Tutoring or teaching assistance is recommended for improving {{< var his_her >}} sentence level writing fluency and overall academic fluency in reading, math, and writing. 
+
+- A supportive environment at home and school involving clear instructions, task breakdown into smaller steps, and praise for efforts and achievements.
+
+## Recommendations for Home
+
+- **Mnemonic Devices:** Use of mnemonic strategies like acronyms or visual images for memory retention.
+
+- **Organizational Strategies:** Note-taking, list-making, and visual schedules can provide external memory support.
+
+- **Task Simplification:** Break down complex information into smaller, manageable parts for effective processing and remembering.
+
+- **Repeated Exposure and Practice:** Repeated exposure to material and additional practice are beneficial due to below-average learning efficiency.
+
+- **Set Reminders:** Use calendars, alarms, written notes, and lists for task reminders.
+
+- **Mindfulness Training:** Technique to ignore distracting thoughts and concentrate on the task at hand, aiding in cognitive control.
+
+## Recommendations for Follow-Up Evaluation
+
+- A follow-up assessment in 12-18 months is suggested to measure progress and assess the interventions' impact, unless urgent concerns arise. Continuous monitoring and reassessment are vital to adjust support as {{< var first_name >}} develops and {{< var his_her >}} needs change.
+
