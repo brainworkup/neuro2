@@ -13,6 +13,6 @@ load_neuropsych_packages(verbose = TRUE)
 Invisible NULL
 }
 \description{
-This function loads the minimal set of packages needed for
-report generation. Most data processing is handled by R6 classes.
+This function checks that the minimal set of packages needed for
+report generation are available. Most data processing is handled by R6 classes.
 }

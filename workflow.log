@@ -1,24 +1,23 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-07-21 13:44:33.863544 
+Date: 2025-07-21 14:53:07.568096 
 
-[2025-07-21 13:44:34] [CONFIG] Loading configuration from: config.yml
-[2025-07-21 13:44:34] [CONFIG] Configuration file not found. Creating default configuration.
-[2025-07-21 13:44:34] [CONFIG] Created default configuration file: config.yml
-[2025-07-21 13:44:34] [CONFIG] Configuration loaded successfully
-[2025-07-21 13:44:34] [CONFIG] Patient: Patient Name
-[2025-07-21 13:44:34] [CONFIG] Age: 35
-[2025-07-21 13:44:34] [CONFIG] DOE: 2025-07-21
-[2025-07-21 13:44:34] [INFO] Initialized WorkflowRunner for patient: Patient Name
-[2025-07-21 13:44:34] [WORKFLOW] Starting unified workflow for patient: Patient Name
-[2025-07-21 13:44:34] [WORKFLOW] Step 1: Setting up environment...
-[2025-07-21 13:44:34] [SETUP] Running setup_environment.R
-[2025-07-21 13:44:34] [SETUP] All required R6 class files are present
-[2025-07-21 13:44:34] [SETUP] Found 8 CSV files in data-raw/csv
-[2025-07-21 13:44:34] [SETUP] Environment setup complete
-[2025-07-21 13:44:34] [WORKFLOW] Step 2: Processing data...
-[2025-07-21 13:44:34] [DATA] data_processor_module.R not found. Using fallback processing.
-[2025-07-21 13:44:34] [DATA] Using DuckDB data processor
-[2025-07-21 13:44:34] [DATA] Data processing complete
-[2025-07-21 13:44:34] [WORKFLOW] Step 3: Generating domain files...
-[2025-07-21 13:44:34] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
-[2025-07-21 13:44:34] [DOMAINS] Using neuro2_R6_update_workflow.R
+[2025-07-21 14:53:07] [CONFIG] Loading configuration from: config.yml
+[2025-07-21 14:53:07] [CONFIG] Configuration loaded successfully
+[2025-07-21 14:53:07] [CONFIG] Patient: Biggie
+[2025-07-21 14:53:07] [CONFIG] Age: 35
+[2025-07-21 14:53:07] [CONFIG] DOE: 2025-07-21
+[2025-07-21 14:53:07] [INFO] Initialized WorkflowRunner for patient: Biggie
+[2025-07-21 14:53:07] [WORKFLOW] Starting unified workflow for patient: Biggie
+[2025-07-21 14:53:07] [WORKFLOW] Step 1: Setting up environment...
+[2025-07-21 14:53:07] [SETUP] Running setup_environment.R
+[2025-07-21 14:53:08] [SETUP] All required R6 class files are present
+[2025-07-21 14:53:08] [SETUP] Found 8 CSV files in data-raw/csv
+[2025-07-21 14:53:08] [SETUP] Environment setup complete
+[2025-07-21 14:53:08] [WORKFLOW] Step 2: Processing data...
+[2025-07-21 14:53:08] [DATA] data_processor_module.R not found. Using fallback processing.
+[2025-07-21 14:53:08] [DATA] Using DuckDB data processor
+[2025-07-21 14:53:08] [DATA] Data processing complete
+[2025-07-21 14:53:08] [WORKFLOW] Step 3: Generating domain files...
+[2025-07-21 14:53:08] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
+[2025-07-21 14:53:08] [ERROR] No suitable domain generator found
+[2025-07-21 14:53:08] [ERROR] Domain generation failed

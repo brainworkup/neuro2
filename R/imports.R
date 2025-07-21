@@ -8,5 +8,6 @@
 #' @importFrom tools file_path_sans_ext
 #' @importFrom usethis use_package use_data
 #' @importFrom utils installed.packages packageVersion
+#' @importFrom webshot2 webshot
 #' @importFrom xfun session_info file_ext
 NULL

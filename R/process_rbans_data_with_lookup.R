@@ -20,21 +20,30 @@
 #'   composite values, metadata, and manual percentile overrides.
 #' @export
 process_rbans_data <- function(
-    input_file,
-    test_prefix,
-    patient_id,
-    lookup_file,
-    line_orientation_pct_rank = NULL,
-    picture_naming_pct_rank = NULL,
-    list_recall_pct_rank = NULL,
-    list_recognition_pct_rank = NULL,
-    manual_entries = NULL,
-    output_file = NULL
+  input_file,
+  test_prefix,
+  patient_id,
+  lookup_file,
+  line_orientation_pct_rank = NULL,
+  picture_naming_pct_rank = NULL,
+  list_recall_pct_rank = NULL,
+  list_recognition_pct_rank = NULL,
+  manual_entries = NULL,
+  output_file = NULL
 ) {
-  library(dplyr)
-  library(stringr)
-  library(tidyr)
-  library(readr)
+  # Use requireNamespace instead of library
+  if (!requireNamespace("dplyr", quietly = TRUE)) {
+    stop("Package 'dplyr' is required but not installed. Please install it.")
+  }
+  if (!requireNamespace("stringr", quietly = TRUE)) {
+    stop("Package 'stringr' is required but not installed. Please install it.")
+  }
+  if (!requireNamespace("tidyr", quietly = TRUE)) {
+    stop("Package 'tidyr' is required but not installed. Please install it.")
+  }
+  if (!requireNamespace("readr", quietly = TRUE)) {
+    stop("Package 'readr' is required but not installed. Please install it.")
+  }
 
   # 1) Read the Q-interactive export once
   df <- read_csv(
@@ -46,29 +55,59 @@ process_rbans_data <- function(
 
   # 2) Generic helper to pluck any section
   pluck_section <- function(df, start_pattern, end_pattern, col_names) {
-    start_row <- which(str_detect(df$X1, regex(start_pattern, ignore_case = TRUE)))
+    start_row <- which(str_detect(
+      df$X1,
+      regex(start_pattern, ignore_case = TRUE)
+    ))
     start <- if (length(start_row)) start_row[1] + 1 else 1
     if (!is.null(end_pattern)) {
-      end_row <- which(str_detect(df$X1, regex(end_pattern, ignore_case = TRUE)))
+      end_row <- which(str_detect(
+        df$X1,
+        regex(end_pattern, ignore_case = TRUE)
+      ))
       stop <- if (length(end_row)) end_row[1] - 1 else nrow(df)
     } else {
       stop <- nrow(df)
     }
-    df %>%
+    # Create a filtered data frame with the rows we want
+    filtered_df <- df %>%
       slice(start:stop) %>%
-      filter(str_starts(X1, fixed(test_prefix))) %>%
+      filter(stringr::str_starts(X1, fixed(test_prefix)))
+
+    # Create a temporary column for separation
+    filtered_df <- filtered_df %>%
       mutate(tmp = X1) %>%
-      separate(tmp, into = col_names, sep = ",", fill = "right") %>%
+      tidyr::separate(.data$tmp, into = col_names, sep = ",", fill = "right") %>%
       select(all_of(col_names))
+
+    return(filtered_df)
   }
 
   # 3) Extract raw scores, scaled scores, completion times, and composites
-  raw_scores    <- pluck_section(df, "RAW SCORES",             "SCALED SCORES",            c("scale", "raw_score"))
-  scaled_scores <- pluck_section(df, "SCALED SCORES",          "SUBTEST COMPLETION TIMES", c("scale", "scaled_score"))
-  times         <- pluck_section(df, "SUBTEST COMPLETION TIMES","RULES TRIGGERED",           c("scale", "completion_time"))
-  composites    <- pluck_section(df, "Composite Score",        NULL,                        c(
-    "scale", "composite_score", "percentile", "ci_95_lower", "ci_95_upper"
-  ))
+  raw_scores <- pluck_section(
+    df,
+    "RAW SCORES",
+    "SCALED SCORES",
+    c("scale", "raw_score")
+  )
+  scaled_scores <- pluck_section(
+    df,
+    "SCALED SCORES",
+    "SUBTEST COMPLETION TIMES",
+    c("scale", "scaled_score")
+  )
+  times <- pluck_section(
+    df,
+    "SUBTEST COMPLETION TIMES",
+    "RULES TRIGGERED",
+    c("scale", "completion_time")
+  )
+  composites <- pluck_section(
+    df,
+    "Composite Score",
+    NULL,
+    c("scale", "composite_score", "percentile", "ci_95_lower", "ci_95_upper")
+  )
 
   # 4) Combine extracted data and any manual entries using base Reduce
   combined <- Reduce(
@@ -85,10 +124,7 @@ process_rbans_data <- function(
   combined <- combined %>%
     mutate(
       z = (as.numeric(scaled_score) - 10) / 3,
-      percentile = coalesce(
-        as.numeric(percentile),
-        round(pnorm(z) * 100)
-      )
+      percentile = coalesce(as.numeric(percentile), round(pnorm(z) * 100))
     ) %>%
     select(-z)
 
@@ -96,29 +132,25 @@ process_rbans_data <- function(
   combined <- combined %>%
     mutate(
       percentile = case_when(
-        scale == "Line Orientation"   & !is.null(line_orientation_pct_rank)  ~ line_orientation_pct_rank,
-        scale == "Picture Naming"    & !is.null(picture_naming_pct_rank)    ~ picture_naming_pct_rank,
-        scale == "List Recall"       & !is.null(list_recall_pct_rank)       ~ list_recall_pct_rank,
-        scale == "List Recognition"  & !is.null(list_recognition_pct_rank)  ~ list_recognition_pct_rank,
-        TRUE                                                             ~ percentile
+        scale == "Line Orientation" & !is.null(line_orientation_pct_rank) ~
+          line_orientation_pct_rank,
+        scale == "Picture Naming" & !is.null(picture_naming_pct_rank) ~
+          picture_naming_pct_rank,
+        scale == "List Recall" & !is.null(list_recall_pct_rank) ~
+          list_recall_pct_rank,
+        scale == "List Recognition" & !is.null(list_recognition_pct_rank) ~
+          list_recognition_pct_rank,
+        TRUE ~ percentile
       )
     )
 
   # 7) Merge in metadata from the external lookup table
-  lookup <- read_csv(
-    lookup_file,
-    show_col_types = FALSE
-  )
-  combined <- combined %>%
-    left_join(lookup, by = "scale")
+  lookup <- read_csv(lookup_file, show_col_types = FALSE)
+  combined <- combined %>% left_join(lookup, by = "scale")
 
   # 8) Add patient/test metadata columns
   combined <- combined %>%
-    mutate(
-      patient   = patient_id,
-      test      = test_prefix,
-      test_type = "npsych_test"
-    )
+    mutate(patient = patient_id, test = test_prefix, test_type = "npsych_test")
 
   # 9) Optionally write the combined data to CSV
   if (!is.null(output_file)) {

@@ -16,22 +16,48 @@ extract_domains_from_data <- function(data_dir = "data-raw/csv/") {
     cat("Reading:", basename(file), "\n")
     data <- read_csv(file, show_col_types = FALSE)
 
+    # Debug output
+    cat(
+      "Column names in",
+      basename(file),
+      ":",
+      paste(names(data), collapse = ", "),
+      "\n"
+    )
+    cat("Has 'domain' column:", "domain" %in% names(data), "\n")
+
     if ("domain" %in% names(data)) {
-      tibble(file = basename(file), domain = unique(data$domain))
+      result <- tibble(file = basename(file), domain = unique(data$domain))
+      cat("Found domains:", paste(unique(data$domain), collapse = ", "), "\n")
+      return(result)
     } else {
-      tibble(file = basename(file), domain = character())
+      cat("No domain column found in", basename(file), "\n")
+      return(tibble(file = basename(file), domain = character()))
     }
   })
 
   # Get unique domains across all files
   unique_domains <- sort(unique(all_domains$domain))
 
+  # Debug output
+  cat("\nAll domains data frame structure:\n")
+  str(all_domains)
+  cat("\nUnique domains:", paste(unique_domains, collapse = ", "), "\n")
+
   # Show which files contain which domains
   cat("\n--- Domains by file ---\n")
-  all_domains %>%
+  # Check if 'file' column exists
+  if (!"file" %in% names(all_domains)) {
+    cat("ERROR: 'file' column is missing from all_domains data frame\n")
+    print(all_domains)
+    return(list(domains = character(), domain_files = all_domains))
+  }
+
+  domains_by_file <- all_domains %>%
     group_by(file) %>%
-    summarise(domains = paste(domain, collapse = ", ")) %>%
-    print()
+    summarise(domains = paste(domain, collapse = ", "))
+
+  print(domains_by_file)
 
   cat("\n--- All unique domains found ---\n")
   print(unique_domains)

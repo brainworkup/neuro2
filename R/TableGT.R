@@ -176,8 +176,12 @@ TableGT <- R6::R6Class(
         ) |>
         gt::opt_vertical_padding(scale = self$vertical_padding)
 
-      # Save outputs
-      gt::gtsave(tbl, glue::glue("table_{self$pheno}.png"))
+      # Save outputs - explicitly using webshot2 for PNG
+      gt::gtsave(
+        tbl,
+        glue::glue("table_{self$pheno}.png"),
+        webshot = webshot2::webshot
+      )
       gt::gtsave(tbl, glue::glue("table_{self$pheno}.pdf"))
 
       return(tbl)
@@ -364,9 +368,13 @@ TableGT2 <- R6::R6Class(
         ) %>%
         gt::opt_vertical_padding(scale = self$vertical_padding)
 
-      # Save table files
+      # Save table files - explicitly using webshot2 for PNG
       gt::gtsave(table, glue::glue("{self$table_name}.pdf"))
-      gt::gtsave(table, glue::glue("{self$table_name}.png"))
+      gt::gtsave(
+        table,
+        glue::glue("{self$table_name}.png"),
+        webshot = webshot2::webshot
+      )
 
       return(table)
     },
