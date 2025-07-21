@@ -246,6 +246,593 @@ WorkflowRunner <- R6::R6Class(
     generate_domains = function() {
       log_message("Step 3: Generating domain files...", "WORKFLOW")
 
+      # Check for template QMD files and create them if needed
+      log_message("Checking for required template QMD files...", "DOMAINS")
+
+      # Define domain templates mapping based on official domain definitions
+      domain_templates <- list(
+        # 1. General Cognitive Ability (domain_iq)
+        "General Cognitive Ability" = list(
+          file = "_02-01_iq_text.qmd",
+          title = "IQ Text Template",
+          content = '---
+title: "IQ Text Template"
+format: html
+---
+
+## Intellectual Functioning
+
+The patient was administered the Wechsler Intelligence Scale. Overall intellectual functioning was in the {{iq_range}} range (Full Scale IQ = {{fsiq}}).
+
+### Verbal Comprehension
+Verbal comprehension abilities were {{vci_desc}} (VCI = {{vci}}).
+
+### Perceptual Reasoning
+Perceptual reasoning abilities were {{pri_desc}} (PRI = {{pri}}).
+
+### Working Memory
+Working memory abilities were {{wmi_desc}} (WMI = {{wmi}}).
+
+### Processing Speed
+Processing speed abilities were {{psi_desc}} (PSI = {{psi}}).'
+        ),
+        
+        # 2. Academic Skills (domain_academics)
+        "Academic Skills" = list(
+          file = "_02-02_academic_text.qmd",
+          title = "Academic Skills Assessment Template",
+          content = '---
+title: "Academic Skills Assessment Template"
+format: html
+---
+
+## Academic Skills
+
+The patient was administered academic skills assessments. Overall academic skills were in the {{academic_range}} range.
+
+### Reading
+Reading abilities were {{reading_desc}} (Score = {{reading_score}}).
+
+### Mathematics
+Mathematics abilities were {{math_desc}} (Score = {{math_score}}).
+
+### Written Expression
+Written expression abilities were {{writing_desc}} (Score = {{writing_score}}).'
+        ),
+        
+        # 3. Verbal/Language (domain_verbal)
+        "Verbal/Language" = list(
+          file = "_02-03_verbal_text.qmd",
+          title = "Verbal and Language Assessment Template",
+          content = '---
+title: "Verbal and Language Assessment Template"
+format: html
+---
+
+## Verbal and Language Functioning
+
+The patient was administered verbal and language assessments. Overall verbal/language functioning was in the {{verbal_range}} range.
+
+### Expressive Language
+Expressive language abilities were {{expressive_desc}} (Score = {{expressive_score}}).
+
+### Receptive Language
+Receptive language abilities were {{receptive_desc}} (Score = {{receptive_score}}).
+
+### Verbal Fluency
+Verbal fluency abilities were {{verbal_fluency_desc}} (Score = {{verbal_fluency_score}}).'
+        ),
+        
+        # 4. Visual Perception/Construction (domain_spatial)
+        "Visual Perception/Construction" = list(
+          file = "_02-04_visuospatial_text.qmd",
+          title = "Visual Perception and Construction Assessment Template",
+          content = '---
+title: "Visual Perception and Construction Assessment Template"
+format: html
+---
+
+## Visual Perception and Construction
+
+The patient was administered visual-spatial assessments. Overall visual perception and construction abilities were in the {{visuospatial_range}} range.
+
+### Visual Processing
+Visual processing abilities were {{visual_processing_desc}} (Score = {{visual_processing_score}}).
+
+### Spatial Reasoning
+Spatial reasoning abilities were {{spatial_reasoning_desc}} (Score = {{spatial_reasoning_score}}).
+
+### Visual Construction
+Visual construction abilities were {{visual_construction_desc}} (Score = {{visual_construction_score}}).'
+        ),
+        
+        # 5. Memory (domain_memory)
+        "Memory" = list(
+          file = "_02-05_memory_text.qmd",
+          title = "Memory Assessment Template",
+          content = '---
+title: "Memory Assessment Template"
+format: html
+---
+
+## Memory Functioning
+
+The patient was administered memory assessments. Overall memory functioning was in the {{memory_range}} range.
+
+### Immediate Memory
+Immediate memory abilities were {{immediate_memory_desc}} (Score = {{immediate_memory_score}}).
+
+### Delayed Memory
+Delayed memory abilities were {{delayed_memory_desc}} (Score = {{delayed_memory_score}}).
+
+### Working Memory
+Working memory abilities were {{working_memory_desc}} (Score = {{working_memory_score}}).
+
+### Visual Memory
+Visual memory abilities were {{visual_memory_desc}} (Score = {{visual_memory_score}}).
+
+### Verbal Memory
+Verbal memory abilities were {{verbal_memory_desc}} (Score = {{verbal_memory_score}}).'
+        ),
+        
+        # 6. Attention/Executive (domain_executive)
+        "Attention/Executive" = list(
+          file = "_02-06_executive_text.qmd",
+          title = "Attention and Executive Functions Assessment Template",
+          content = '---
+title: "Attention and Executive Functions Assessment Template"
+format: html
+---
+
+## Attention and Executive Functioning
+
+The patient was administered attention and executive function assessments. Overall executive functioning was in the {{executive_range}} range.
+
+### Attention
+Attention abilities were {{attention_desc}} (Score = {{attention_score}}).
+
+### Processing Speed
+Processing speed was {{processing_speed_desc}} (Score = {{processing_speed_score}}).
+
+### Cognitive Flexibility
+Cognitive flexibility was {{cognitive_flexibility_desc}} (Score = {{cognitive_flexibility_score}}).
+
+### Inhibition
+Inhibition abilities were {{inhibition_desc}} (Score = {{inhibition_score}}).
+
+### Planning
+Planning abilities were {{planning_desc}} (Score = {{planning_score}}).'
+        ),
+        
+        # 7. Motor (domain_motor)
+        "Motor" = list(
+          file = "_02-07_motor_text.qmd",
+          title = "Motor Assessment Template",
+          content = '---
+title: "Motor Assessment Template"
+format: html
+---
+
+## Motor Functioning
+
+The patient was administered motor assessments. Overall motor functioning was in the {{motor_range}} range.
+
+### Fine Motor
+Fine motor abilities were {{fine_motor_desc}} (Score = {{fine_motor_score}}).
+
+### Gross Motor
+Gross motor abilities were {{gross_motor_desc}} (Score = {{gross_motor_score}}).
+
+### Motor Speed
+Motor speed was {{motor_speed_desc}} (Score = {{motor_speed_score}}).
+
+### Motor Coordination
+Motor coordination was {{motor_coordination_desc}} (Score = {{motor_coordination_score}}).'
+        ),
+        
+        # 8. Social Cognition (domain_social)
+        "Social Cognition" = list(
+          file = "_02-08_social_cognition_text.qmd",
+          title = "Social Cognition Assessment Template",
+          content = '---
+title: "Social Cognition Assessment Template"
+format: html
+---
+
+## Social Cognition
+
+The patient was administered social cognition assessments. Overall social cognition was in the {{social_cognition_range}} range.
+
+### Social Perception
+Social perception abilities were {{social_perception_desc}} (Score = {{social_perception_score}}).
+
+### Theory of Mind
+Theory of mind abilities were {{theory_of_mind_desc}} (Score = {{theory_of_mind_score}}).
+
+### Emotion Recognition
+Emotion recognition abilities were {{emotion_recognition_desc}} (Score = {{emotion_recognition_score}}).'
+        ),
+        
+        # 9. ADHD (domain_adhd_adult and domain_adhd_child)
+        "ADHD" = list(
+          file = "_02-09_adhd_text.qmd",
+          title = "ADHD Assessment Template",
+          content = '---
+title: "ADHD Assessment Template"
+format: html
+---
+
+## ADHD Symptoms
+
+The patient was administered ADHD assessments. Overall ADHD symptomatology was in the {{adhd_range}} range.
+
+### Inattention
+Inattention symptoms were {{inattention_desc}} (Score = {{inattention_score}}).
+
+### Hyperactivity/Impulsivity
+Hyperactivity/impulsivity symptoms were {{hyperactivity_desc}} (Score = {{hyperactivity_score}}).
+
+### Executive Functioning
+ADHD-related executive functioning was {{adhd_executive_desc}} (Score = {{adhd_executive_score}}).'
+        ),
+        
+        # 10. Emotional/Behavioral/Personality domains
+        "Emotional/Behavioral/Personality" = list(
+          file = "_02-10_emotional_behavioral_text.qmd",
+          title = "Emotional and Behavioral Assessment Template",
+          content = '---
+title: "Emotional and Behavioral Assessment Template"
+format: html
+---
+
+## Emotional, Behavioral, and Personality Functioning
+
+The patient was administered emotional and behavioral assessments. Overall emotional and behavioral functioning was in the {{emotional_range}} range.
+
+### Externalizing Problems
+Externalizing behaviors were {{externalizing_desc}} (Score = {{externalizing_score}}).
+
+### Internalizing Problems
+Internalizing behaviors were {{internalizing_desc}} (Score = {{internalizing_score}}).
+
+### Personality Features
+Personality features were {{personality_desc}} (Score = {{personality_score}}).'
+        ),
+        
+        # Additional domains from domain_emotion_adult and domain_emotion_child
+        "Psychiatric Disorders" = list(
+          file = "_02-11_psychiatric_text.qmd",
+          title = "Psychiatric Assessment Template",
+          content = '---
+title: "Psychiatric Assessment Template"
+format: html
+---
+
+## Psychiatric Functioning
+
+The patient was administered psychiatric assessments. Overall psychiatric functioning was in the {{psychiatric_range}} range.
+
+### Anxiety
+Anxiety symptoms were {{anxiety_desc}} (Score = {{anxiety_score}}).
+
+### Depression
+Depression symptoms were {{depression_desc}} (Score = {{depression_score}}).
+
+### Other Psychiatric Symptoms
+Other psychiatric symptoms were {{other_psychiatric_desc}} (Score = {{other_psychiatric_score}}).'
+        ),
+        
+        "Personality Disorders" = list(
+          file = "_02-12_personality_text.qmd",
+          title = "Personality Assessment Template",
+          content = '---
+title: "Personality Assessment Template"
+format: html
+---
+
+## Personality Functioning
+
+The patient was administered personality assessments. Overall personality functioning was in the {{personality_range}} range.
+
+### Borderline Features
+Borderline features were {{borderline_desc}} (Score = {{borderline_score}}).
+
+### Antisocial Features
+Antisocial features were {{antisocial_desc}} (Score = {{antisocial_score}}).
+
+### Other Personality Features
+Other personality features were {{other_personality_desc}} (Score = {{other_personality_score}}).'
+        ),
+        
+        "Substance Use" = list(
+          file = "_02-13_substance_text.qmd",
+          title = "Substance Use Assessment Template",
+          content = '---
+title: "Substance Use Assessment Template"
+format: html
+---
+
+## Substance Use
+
+The patient was administered substance use assessments.
+
+### Alcohol Use
+Alcohol use was {{alcohol_desc}} (Score = {{alcohol_score}}).
+
+### Drug Use
+Drug use was {{drug_desc}} (Score = {{drug_score}}).
+
+### Substance Use Impact
+Impact of substance use was {{substance_impact_desc}} (Score = {{substance_impact_score}}).'
+        ),
+        
+        "Psychosocial Problems" = list(
+          file = "_02-14_psychosocial_text.qmd",
+          title = "Psychosocial Assessment Template",
+          content = '---
+title: "Psychosocial Assessment Template"
+format: html
+---
+
+## Psychosocial Functioning
+
+The patient was administered psychosocial assessments.
+
+### Social Environment
+Social environment was {{social_env_desc}} (Score = {{social_env_score}}).
+
+### Treatment Considerations
+Treatment considerations were {{treatment_desc}} (Score = {{treatment_score}}).
+
+### Interpersonal Functioning
+Interpersonal functioning was {{interpersonal_desc}} (Score = {{interpersonal_score}}).'
+        ),
+        
+        "Behavioral/Emotional/Social" = list(
+          file = "_02-15_behavioral_text.qmd",
+          title = "Behavioral Assessment Template",
+          content = '---
+title: "Behavioral Assessment Template"
+format: html
+---
+
+## Behavioral, Emotional, and Social Functioning
+
+The patient was administered behavioral and emotional assessments. Overall behavioral functioning was in the {{behavioral_range}} range.
+
+### Externalizing Problems
+Externalizing behaviors were {{externalizing_desc}} (Score = {{externalizing_score}}).
+
+### Internalizing Problems
+Internalizing behaviors were {{internalizing_desc}} (Score = {{internalizing_score}}).
+
+### Adaptive Skills
+Adaptive skills were {{adaptive_desc}} (Score = {{adaptive_score}}).'
+        ),
+        
+        # 11. Adaptive Functioning (domain_adaptive)
+        "Adaptive Functioning" = list(
+          file = "_02-16_adaptive_text.qmd",
+          title = "Adaptive Functioning Assessment Template",
+          content = '---
+title: "Adaptive Functioning Assessment Template"
+format: html
+---
+
+## Adaptive Functioning
+
+The patient was administered adaptive functioning assessments. Overall adaptive functioning was in the {{adaptive_range}} range.
+
+### Conceptual Skills
+Conceptual adaptive skills were {{conceptual_desc}} (Score = {{conceptual_score}}).
+
+### Social Skills
+Social adaptive skills were {{social_adaptive_desc}} (Score = {{social_adaptive_score}}).
+
+### Practical Skills
+Practical adaptive skills were {{practical_desc}} (Score = {{practical_score}}).'
+        ),
+        
+        # 12. Daily Living (domain_daily_living)
+        "Daily Living" = list(
+          file = "_02-17_daily_living_text.qmd",
+          title = "Daily Living Assessment Template",
+          content = '---
+title: "Daily Living Assessment Template"
+format: html
+---
+
+## Daily Living Skills
+
+The patient was administered daily living skills assessments. Overall daily living skills were in the {{daily_living_range}} range.
+
+### Self-Care
+Self-care abilities were {{self_care_desc}} (Score = {{self_care_score}}).
+
+### Home Living
+Home living abilities were {{home_living_desc}} (Score = {{home_living_score}}).
+
+### Community Use
+Community use abilities were {{community_use_desc}} (Score = {{community_use_score}}).'
+        )
+      )
+
+      # Check if neurocog data exists
+      neurocog_exists <- file.exists(file.path(
+        self$config$data$output_dir,
+        "neurocog.csv"
+      )) ||
+        file.exists(file.path(
+          self$config$data$output_dir,
+          "neurocog.parquet"
+        )) ||
+        file.exists(file.path(self$config$data$output_dir, "neurocog.feather"))
+
+      if (!neurocog_exists) {
+        log_message("No neurocog data files found", "DOMAINS")
+      } else {
+        # Get all unique domains from the neurocog data
+        tryCatch(
+          {
+            domains_data <- query_neuropsych(
+              "SELECT DISTINCT domain FROM neurocog WHERE domain IS NOT NULL",
+              self$config$data$output_dir
+            )
+
+            log_message(
+              paste0("Found ", nrow(domains_data), " unique domains"),
+              "DOMAINS"
+            )
+
+            # Also check neurobehav data for additional domains
+            if (
+              file.exists(file.path(
+                self$config$data$output_dir,
+                "neurobehav.csv"
+              )) ||
+                file.exists(file.path(
+                  self$config$data$output_dir,
+                  "neurobehav.parquet"
+                )) ||
+                file.exists(file.path(
+                  self$config$data$output_dir,
+                  "neurobehav.feather"
+                ))
+            ) {
+              behav_domains_data <- query_neuropsych(
+                "SELECT DISTINCT domain FROM neurobehav WHERE domain IS NOT NULL",
+                self$config$data$output_dir
+              )
+
+              # Combine domains
+              domains_data <- unique(rbind(domains_data, behav_domains_data))
+              log_message(
+                paste0("Found ", nrow(domains_data), " total unique domains"),
+                "DOMAINS"
+              )
+            }
+
+            # Create templates for each domain that has data
+            created_templates <- c()
+
+            for (i in 1:nrow(domains_data)) {
+              domain <- domains_data$domain[i]
+
+              # Check if we have a template for this domain
+              if (domain %in% names(domain_templates)) {
+                template_info <- domain_templates[[domain]]
+
+                # Check if the template file already exists
+                if (file.exists(template_info$file)) {
+                  log_message(
+                    paste0(
+                      "Template for domain '",
+                      domain,
+                      "' already exists: ",
+                      template_info$file
+                    ),
+                    "DOMAINS"
+                  )
+                } else {
+                  log_message(
+                    paste0("Creating template for domain: ", domain),
+                    "DOMAINS"
+                  )
+                  writeLines(template_info$content, template_info$file)
+                  log_message(paste0("Created ", template_info$file), "DOMAINS")
+                  created_templates <- c(created_templates, template_info$file)
+                }
+              } else {
+                log_message(
+                  paste0("No template defined for domain: ", domain),
+                  "WARNING"
+                )
+              }
+            }
+
+            # Check for domains that might be in subdomains but not in main domains
+            special_domains <- c(
+              "Memory",
+              "Executive Function",
+              "Language",
+              "Visual-Spatial",
+              "Motor"
+            )
+
+            for (special_domain in special_domains) {
+              if (!(special_domain %in% domains_data$domain)) {
+                # Check if it exists as a subdomain
+                subdomain_query <- paste0(
+                  "SELECT COUNT(*) as count FROM neurocog WHERE subdomain = '",
+                  special_domain,
+                  "'"
+                )
+
+                subdomain_data <- query_neuropsych(
+                  subdomain_query,
+                  self$config$data$output_dir
+                )
+
+                if (subdomain_data$count > 0) {
+                  log_message(
+                    paste0(
+                      "Found data for '",
+                      special_domain,
+                      "' in subdomains"
+                    ),
+                    "DOMAINS"
+                  )
+
+                  # Create template if it doesn't exist
+                  if (special_domain %in% names(domain_templates)) {
+                    template_info <- domain_templates[[special_domain]]
+
+                    if (!file.exists(template_info$file)) {
+                      log_message(
+                        paste0(
+                          "Creating template for subdomain: ",
+                          special_domain
+                        ),
+                        "DOMAINS"
+                      )
+                      writeLines(template_info$content, template_info$file)
+                      log_message(
+                        paste0("Created ", template_info$file),
+                        "DOMAINS"
+                      )
+                      created_templates <- c(
+                        created_templates,
+                        template_info$file
+                      )
+                    }
+                  }
+                }
+              }
+            }
+
+            # Display summary of created templates
+            if (length(created_templates) > 0) {
+              print_colored(
+                "Some template QMD files are missing. Creating them now:",
+                "yellow"
+              )
+              for (template in created_templates) {
+                print_colored(paste0("  - Creating ", template), "yellow")
+              }
+              print_colored("Template QMD files created successfully.", "green")
+            } else {
+              print_colored(
+                "All required template QMD files already exist.",
+                "green"
+              )
+            }
+          },
+          error = function(e) {
+            log_message(paste0("Error querying domains: ", e$message), "ERROR")
+          }
+        )
+      }
+
       # Source the domain generator module
       if (file.exists("domain_generator_module.R")) {
         log_message("Running domain_generator_module.R", "DOMAINS")
