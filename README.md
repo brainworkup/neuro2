@@ -64,9 +64,23 @@ install.packages(c(
 
 ## 🏃 Quick Start
 
-### Basic Workflow
+### Option 1: Unified Workflow Scripts (Recommended)
 
-```r
+```bash
+# Interactive shell workflow (with guided prompts)
+./unified_neuropsych_workflow.sh "Patient Name"
+
+# Or programmatic R workflow
+Rscript unified_workflow_runner.R config.yml
+```
+
+The unified workflow scripts provide a streamlined, efficient process
+that combines the best features of all workflow components. See [Unified
+Workflow README](UNIFIED_WORKFLOW_README.md) for detailed documentation.
+
+### Option 2: Direct R6 Usage
+
+``` r
 # Load the package
 library(neuro2)
 
@@ -111,7 +125,11 @@ report_system$run_workflow()
     │   └── quarto/        # Report templates
     ├── _*.qmd            # Domain template sections
     ├── template.qmd      # Main report template
-    └── _quarto.yml      # Quarto configuration
+    ├── _quarto.yml      # Quarto configuration
+    ├── unified_workflow_runner.R    # Main R workflow entry point
+    ├── unified_neuropsych_workflow.sh # Interactive shell workflow
+    ├── UNIFIED_WORKFLOW_README.md   # Unified workflow documentation
+    └── _arxiv/           # Archived legacy scripts
 
 ## 🧪 Core R6 Classes
 
@@ -305,9 +323,14 @@ for (patient in patients) {
 
 ## 📚 Documentation
 
+- [Unified Workflow Guide](UNIFIED_WORKFLOW_README.md) - **Recommended
+  workflow**
+- [Unified Workflow Architecture](unified_workflow_architecture.md) -
+  Technical design
 - [Domain File Generation Workflow](DOMAIN_FILE_GENERATION_WORKFLOW.md)
 - [DuckDB Integration Guide](DUCKDB_INTEGRATION_GUIDE.md)
 - [R6 Implementation Guide](R6_IMPLEMENTATION_GUIDE.md)
+- [Dependency Setup Guide](DEPENDENCY_SETUP_GUIDE.md)
 
 ## 🤝 Contributing
 

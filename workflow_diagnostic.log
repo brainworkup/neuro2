@@ -1,0 +1,60 @@
+NEURO2 WORKFLOW DIAGNOSTIC LOG
+Date: 2025-07-21 13:32:20.260211 
+
+[2025-07-21 13:32:20] [INFO] Checking for workflow scripts...
+[2025-07-21 13:32:20] [INFO] Found: setup_environment.R
+[2025-07-21 13:32:20] [INFO] Found: neuropsych_workflow.sh
+[2025-07-21 13:32:20] [INFO] Found: new_patient_workflow.R
+[2025-07-21 13:32:20] [INFO] Found: run_test_workflow.sh
+[2025-07-21 13:32:20] [INFO] Found: neuro2_R6_update_workflow.R
+[2025-07-21 13:32:20] [INFO] Found: neuro2_duckdb_workflow.R
+[2025-07-21 13:32:20] [INFO] 
+Checking for R6 class files...
+[2025-07-21 13:32:20] [INFO] Found: R/ReportTemplateR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/NeuropsychResultsR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/NeuropsychReportSystemR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/IQReportGeneratorR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/DomainProcessorR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/DotplotR6.R
+[2025-07-21 13:32:20] [INFO] Found: R/DuckDBProcessorR6.R
+[2025-07-21 13:32:20] [INFO] 
+Checking for data directories...
+[2025-07-21 13:32:20] [INFO] Found directory: data-raw
+[2025-07-21 13:32:20] [INFO]   Contains 6 data files
+[2025-07-21 13:32:20] [INFO] Found directory: data
+[2025-07-21 13:32:20] [INFO]   Contains 15 data files
+[2025-07-21 13:32:20] [INFO] Found directory: data-raw/csv
+[2025-07-21 13:32:20] [INFO]   Contains 7 data files
+[2025-07-21 13:32:20] [INFO] Found directory: output
+[2025-07-21 13:32:20] [WARNING]   Directory is empty or contains no data files
+[2025-07-21 13:32:20] [INFO] 
+Checking for template files...
+[2025-07-21 13:32:20] [INFO] Found 22 template files
+[2025-07-21 13:32:20] [INFO] 
+Checking for package dependencies...
+[2025-07-21 13:32:20] [INFO] Package installed: R6
+[2025-07-21 13:32:20] [INFO] Package installed: dplyr
+[2025-07-21 13:32:20] [INFO] Package installed: readr
+[2025-07-21 13:32:20] [INFO] Package installed: purrr
+[2025-07-21 13:32:20] [INFO] Package installed: stringr
+[2025-07-21 13:32:20] [INFO] Package installed: tidyr
+[2025-07-21 13:32:20] [INFO] Package installed: here
+[2025-07-21 13:32:20] [INFO] Package installed: quarto
+[2025-07-21 13:32:20] [INFO] Package installed: duckdb
+[2025-07-21 13:32:20] [INFO] Package installed: arrow
+[2025-07-21 13:32:20] [INFO] 
+Analyzing script dependencies...
+[2025-07-21 13:32:20] [INFO] setup_environment.R has no dependencies on other workflow scripts
+[2025-07-21 13:32:20] [INFO] setup_environment.R is not used by other workflow scripts
+[2025-07-21 13:32:20] [INFO] neuropsych_workflow.sh depends on: new_patient_workflow.R, neuro2_duckdb_workflow.R
+[2025-07-21 13:32:20] [INFO] neuropsych_workflow.sh is not used by other workflow scripts
+[2025-07-21 13:32:20] [INFO] new_patient_workflow.R depends on: neuro2_R6_update_workflow.R, neuro2_duckdb_workflow.R
+[2025-07-21 13:32:20] [INFO] new_patient_workflow.R is used by: neuropsych_workflow.sh
+[2025-07-21 13:32:20] [INFO] run_test_workflow.sh has no dependencies on other workflow scripts
+[2025-07-21 13:32:20] [INFO] run_test_workflow.sh is not used by other workflow scripts
+[2025-07-21 13:32:20] [INFO] neuro2_R6_update_workflow.R has no dependencies on other workflow scripts
+[2025-07-21 13:32:20] [INFO] neuro2_R6_update_workflow.R is used by: new_patient_workflow.R
+[2025-07-21 13:32:20] [INFO] neuro2_duckdb_workflow.R has no dependencies on other workflow scripts
+[2025-07-21 13:32:20] [INFO] neuro2_duckdb_workflow.R is used by: neuropsych_workflow.sh, new_patient_workflow.R
+[2025-07-21 13:32:20] [INFO] 
+Diagnostic complete. See workflow_diagnostic.log for details.

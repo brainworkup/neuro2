@@ -1,0 +1,16 @@
+{{< include _02-01_iq.qmd >}}
+
+{{< include _02-02_academics.qmd >}}
+
+{{< include _02-03_verbal.qmd >}}
+
+{{< include _02-04_spatial.qmd >}}
+
+{{< include _02-05_memory.qmd >}}
+
+{{< include _02-06_executive.qmd >}}
+
+{{< include _02-09_adhd_adult.qmd >}}
+
+{{< include _02-10_emotion_adult.qmd >}}
+

@@ -16,7 +16,10 @@ neurobehav <- readr::read_csv("data/neurobehav.csv")
 
 # Create report system for overall summary
 report_system <- NeuropsychReportSystemR6$new(
-  config = list(patient = patient, domains = unique(neurocog$domain))
+  config = list(
+    patient = patient,
+    domains = unique(neurocog$domain)
+  )
 )
 ```
 
@@ -45,3 +48,4 @@ overall_plot <- DotplotR6$new(
 )
 overall_plot$create_plot()
 ```
+

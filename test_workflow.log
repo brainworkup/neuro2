@@ -1,0 +1,43 @@
+NEURO2 UNIFIED WORKFLOW TEST LOG
+Date: 2025-07-21 13:44:32.821737 
+
+[2025-07-21 13:44:32] [TEST] Starting unified workflow tests
+[2025-07-21 13:44:32] [TEST] Running test: Required files exist
+[2025-07-21 13:44:32] [INFO] All required files exist
+[2025-07-21 13:44:32] [SUCCESS] Test passed: Required files exist
+[2025-07-21 13:44:32] [TEST] Running test: Required packages can be loaded
+[2025-07-21 13:44:33] [INFO] All required packages can be loaded
+[2025-07-21 13:44:33] [SUCCESS] Test passed: Required packages can be loaded
+[2025-07-21 13:44:33] [TEST] Running test: R6 class files exist
+[2025-07-21 13:44:33] [INFO] All R6 class files exist
+[2025-07-21 13:44:33] [SUCCESS] Test passed: R6 class files exist
+[2025-07-21 13:44:33] [TEST] Running test: Test directories
+[2025-07-21 13:44:33] [INFO] Directory exists: data-raw/csv
+[2025-07-21 13:44:33] [INFO] Directory exists: data
+[2025-07-21 13:44:33] [INFO] Directory exists: output
+[2025-07-21 13:44:33] [SUCCESS] Test passed: Test directories
+[2025-07-21 13:44:33] [TEST] Running test: Test configuration
+[2025-07-21 13:44:33] [INFO] Created test configuration file: test_config.yml
+[2025-07-21 13:44:33] [SUCCESS] Test passed: Test configuration
+[2025-07-21 13:44:33] [TEST] Running test: Sample data creation
+[2025-07-21 13:44:33] [INFO] Created test CSV file: data-raw/csv/test_data.csv
+[2025-07-21 13:44:33] [SUCCESS] Test passed: Sample data creation
+[2025-07-21 13:44:33] [TEST] Running test: Workflow runner syntax
+[2025-07-21 13:44:35] [INFO] No syntax errors found in unified_workflow_runner.R
+[2025-07-21 13:44:35] [SUCCESS] Test passed: Workflow runner syntax
+[2025-07-21 13:44:35] [TEST] Running test: Shell script syntax
+[2025-07-21 13:44:35] [INFO] No syntax errors found in unified_neuropsych_workflow.sh
+[2025-07-21 13:44:35] [SUCCESS] Test passed: Shell script syntax
+[2025-07-21 13:44:35] [SUMMARY] 
+Test Summary:
+[2025-07-21 13:44:35] [SUMMARY] Total tests: 8
+[2025-07-21 13:44:35] [SUMMARY] Passed: 8
+[2025-07-21 13:44:35] [SUMMARY] Failed: 0
+[2025-07-21 13:44:35] [SUCCESS] 
+All tests passed! The unified workflow is ready to use.
+[2025-07-21 13:44:35] [INFO] To run the workflow, use:
+[2025-07-21 13:44:35] [INFO]   ./unified_neuropsych_workflow.sh
+[2025-07-21 13:44:35] [INFO]   or
+[2025-07-21 13:44:35] [INFO]   Rscript unified_workflow_runner.R
+[2025-07-21 13:44:35] [INFO] Made workflow scripts executable
+[2025-07-21 13:44:35] [INFO] Test script completed
