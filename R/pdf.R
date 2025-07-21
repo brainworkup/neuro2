@@ -1,28 +1,3 @@
-# Need to add pdf_01_extract_text() and pdf_02_filter_lines() to the package
-
-#' @title Filter lines in a PDF file
-#' @description Filter lines from text extracted from a PDF for given words.
-#' @param extracted_text A \code{list} of strings, containing text extracted from the PDF file.
-#' @param pdf_file Path to the PDF file.
-#' @param page Optional \code{integer}: Page number in the PDF used for extraction, defaults to \code{NULL}.
-#' @param scale The word which is searched in lines and then filtered.
-#' @return A \code{vector} of strings, for all lines that contains the word in \code{scale}.
-#' @rdname pdf_02_filter_lines
-#' @export
-pdf_02_filter_lines <- function(extracted_text, pdf_file, page = NULL, scale) {
-  # Extract text
-  scale_text <- extracted_text[[page]]
-
-  # Convert the string into a vector of lines
-  lines <- strsplit(scale_text, "\n")[[1]]
-
-  # Filter lines that contain the word in scale
-  scale_text_filtered <- lines[grepl(scale, lines)]
-
-  return(scale_text_filtered)
-}
-
-
 #' @title Locate PDF Areas
 #' @description This is a function to pluck and locate areas from file.
 #' @importFrom tabulapdf locate_areas

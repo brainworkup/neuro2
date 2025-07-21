@@ -13,7 +13,9 @@ cat("Step 1: Checking prerequisites...\n")
 # Check if CSV files exist
 csv_files <- list.files("data-raw/csv", pattern = "\\.csv$", full.names = TRUE)
 if (length(csv_files) == 0) {
-  stop("❌ No CSV files found in data-raw/csv/\n   Please add your test data CSV files to data-raw/csv/ directory")
+  stop(
+    "❌ No CSV files found in data-raw/csv/\n   Please add your test data CSV files to data-raw/csv/ directory"
+  )
 }
 
 cat("✅ Found", length(csv_files), "CSV files:\n")
@@ -23,7 +25,9 @@ for (file in basename(csv_files)) {
 
 # Check if _variables.yml exists
 if (!file.exists("_variables.yml")) {
-  stop("❌ _variables.yml not found\n   Please update patient information in _variables.yml")
+  stop(
+    "❌ _variables.yml not found\n   Please update patient information in _variables.yml"
+  )
 }
 
 # Step 2: Load required packages
@@ -45,7 +49,7 @@ cat("\nStep 3: Processing data (CSV → Parquet conversion)...\n")
 # Load the data processing function
 if (file.exists("R/duckdb_neuropsych_loader.R")) {
   source("R/duckdb_neuropsych_loader.R")
-  
+
   # Process the data
   load_data_duckdb(
     file_path = "data-raw/csv",
@@ -53,24 +57,24 @@ if (file.exists("R/duckdb_neuropsych_loader.R")) {
     output_format = "all"
   )
   cat("✅ Data processing complete\n")
-  
+
   # Step 3.5: Add score ranges based on percentiles
   cat("\nStep 3.5: Adding score ranges to processed data...\n")
-  
+
   # Source the PDF processing functions if available
   if (file.exists("R/pdf.R")) {
     source("R/pdf.R")
   }
-  
+
   # Process each generated CSV file to add ranges
   data_files <- list.files("data", pattern = "\\.csv$", full.names = TRUE)
-  
+
   for (file in data_files) {
     cat("   Adding ranges to", basename(file), "...\n")
-    
+
     # Read the data
     data <- read.csv(file, stringsAsFactors = FALSE)
-    
+
     # Add score ranges if percentile column exists
     if ("percentile" %in% colnames(data)) {
       # Apply gpluck_make_score_ranges function
@@ -89,17 +93,16 @@ if (file.exists("R/duckdb_neuropsych_loader.R")) {
           TRUE ~ NA_character_
         )
       }
-      
+
       # Write back the file
       write.csv(data, file, row.names = FALSE)
     }
   }
-  
+
   cat("✅ Score ranges added successfully\n")
-  
 } else {
   cat("⚠️  DuckDB loader not found, using basic CSV processing...\n")
-  
+
   # Basic CSV consolidation
   all_data <- data.frame()
   for (csv_file in csv_files) {
@@ -107,7 +110,7 @@ if (file.exists("R/duckdb_neuropsych_loader.R")) {
     data <- read.csv(csv_file, stringsAsFactors = FALSE)
     all_data <- rbind(all_data, data)
   }
-  
+
   # Add score ranges to consolidated data
   if ("percentile" %in% colnames(all_data)) {
     all_data$range <- case_when(
@@ -121,7 +124,7 @@ if (file.exists("R/duckdb_neuropsych_loader.R")) {
       TRUE ~ NA_character_
     )
   }
-  
+
   # Create basic output files
   dir.create("data", showWarnings = FALSE)
   write.csv(all_data, "data/neuropsych.csv", row.names = FALSE)
@@ -138,9 +141,9 @@ cat("   DOE:", patient_info$doe, "\n")
 # Step 5: Generate domain files and report
 cat("\nStep 5: Generating report...\n")
 
-if (file.exists("neuro2_r6_update_workflow.R")) {
+if (file.exists("neuro2_R6_update_workflow.R")) {
   cat("   Using R6 workflow (recommended)...\n")
-  source("neuro2_r6_update_workflow.R")
+  source("neuro2_R6_update_workflow.R")
 } else if (file.exists("neuro2_duckdb_workflow.R")) {
   cat("   Using DuckDB workflow...\n")
   source("neuro2_duckdb_workflow.R")
@@ -156,20 +159,23 @@ if (file.exists("neuro2_r6_update_workflow.R")) {
 # Step 6: Final report rendering
 cat("\nStep 6: Rendering final PDF report...\n")
 if (file.exists("template.qmd")) {
-  tryCatch({
-    quarto::quarto_render("template.qmd", output_format = "typst-pdf")
-    cat("✅ Report generated successfully!\n")
-  }, error = function(e) {
-    cat("⚠️  PDF rendering failed:", e$message, "\n")
-    cat("   Trying HTML format...\n")
-    quarto::quarto_render("template.qmd", output_format = "html")
-  })
+  tryCatch(
+    {
+      quarto::quarto_render("template.qmd", output_format = "typst-pdf")
+      cat("✅ Report generated successfully!\n")
+    },
+    error = function(e) {
+      cat("⚠️  PDF rendering failed:", e$message, "\n")
+      cat("   Trying HTML format...\n")
+      quarto::quarto_render("template.qmd", output_format = "html")
+    }
+  )
 } else {
   cat("❌ template.qmd not found\n")
 }
 
 # Summary
-cat("\n" , "=" , rep("=", 50), "\n")
+cat("\n", "=", rep("=", 50), "\n")
 cat("🎉 WORKFLOW COMPLETE!\n\n")
 
 cat("Generated files:\n")

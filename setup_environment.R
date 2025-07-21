@@ -58,154 +58,154 @@ if (file.exists(utility_file)) {
   message("⚠️ utility_functions.R file not found")
   message("Creating utility_functions.R with required functions...")
 
-  # Create a basic utility_functions.R file if it doesn't exist
-  utility_content <- '
-#\' Utility functions to replace NeurotypR dependencies
-#\'
-#\' This file contains utility functions that replace NeurotypR functions
-#\' used in the neuro2 package.
-
-#\' Filter data by domain and scale
-#\'
-#\' @param data Data frame to filter
-#\' @param domain Domain(s) to filter by
-#\' @param scale Scale(s) to filter by
-#\' @return Filtered data frame
-#\' @export
-filter_data <- function(data, domain = NULL, scale = NULL) {
-  if (is.null(data)) {
-    message("Data is NULL. Cannot filter.")
-    return(NULL)
-  }
-  
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    if ("domain" %in% colnames(data)) {
-      data <- data[data$domain %in% domain, ]
-    } else {
-      message("Column \'domain\' not found in data. Skipping domain filtering.")
-    }
-  }
-  
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    if ("scale" %in% colnames(data)) {
-      data <- data[data$scale %in% scale, ]
-    } else {
-      message("Column \'scale\' not found in data. Skipping scale filtering.")
-    }
-  }
-  
-  return(data)
-}
-
-#\' Create a dot plot
-#\'
-#\' @param data Data frame containing the data
-#\' @param x Numeric vector for x-axis
-#\' @param y Character vector for y-axis
-#\' @param colors Optional color vector
-#\' @param return_plot Whether to return the plot object
-#\' @param filename Optional filename to save the plot
-#\' @param na.rm Whether to remove NA values
-#\' @return A ggplot object if return_plot is TRUE
-#\' @export
-dotplot2 <- function(data, x, y, colors = NULL, return_plot = TRUE, filename = NULL, na.rm = TRUE) {
-  # Check if ggplot2 is available
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    message("ggplot2 package is required for plotting. Please install it.")
-    return(NULL)
-  }
-  
-  # Remove NA values if requested
-  if (na.rm) {
-    valid_indices <- !is.na(x) & !is.na(y)
-    x <- x[valid_indices]
-    y <- y[valid_indices]
-    if (!is.null(data)) {
-      data <- data[valid_indices, ]
-    }
-  }
-  
-  # Create a data frame for plotting
-  plot_data <- data.frame(x = x, y = y)
-  
-  # Create the plot
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y = y)) +
-    ggplot2::geom_point(size = 3) +
-    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
-    ggplot2::geom_vline(xintercept = c(-1, 1), linetype = "dotted", color = "gray70") +
-    ggplot2::scale_x_continuous(limits = c(-3, 3), breaks = seq(-3, 3, 1)) +
-    ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Z-Score", y = "")
-  
-  # Save the plot if filename is provided
-  if (!is.null(filename)) {
-    ggplot2::ggsave(filename, plot, width = 6, height = 4)
-  }
-  
-  if (return_plot) {
-    return(plot)
-  } else {
-    return(invisible(NULL))
-  }
-}
-
-#\' Create a GT table
-#\'
-#\' @param data Data frame to display in the table
-#\' @param pheno Phenotype name
-#\' @param table_name Table name
-#\' @param vertical_padding Vertical padding
-#\' @param source_note Source note
-#\' @param dynamic_grp Dynamic group
-#\' @param multiline Whether to allow multiline text
-#\' @return A GT table object
-#\' @export
-tbl_gt <- function(data, pheno, table_name = NULL, vertical_padding = 0, 
-                   source_note = NULL, dynamic_grp = NULL, multiline = TRUE) {
-  # Check if gt package is available
-  if (!requireNamespace("gt", quietly = TRUE)) {
-    message("gt package is required for table creation. Please install it.")
-    return(NULL)
-  }
-  
-  # Check if data is valid
-  if (is.null(data) || nrow(data) == 0) {
-    message("No data available for table creation.")
-    return(NULL)
-  }
-  
-  message("Creating table with ", nrow(data), " rows")
-  
-  # Create a basic gt table
-  table <- gt::gt(data)
-  
-  # Add title
-  if (!is.null(table_name)) {
-    table <- gt::tab_header(table, title = paste0(pheno, " Scores"))
-  }
-  
-  # Add source note
-  if (!is.null(source_note)) {
-    table <- gt::tab_source_note(table, source_note)
-  }
-  
-  # Save the table as an image
-  table_file <- paste0("data/table_", pheno, ".png")
-  message("Saving table to ", table_file)
-  
-  # Try to save the table
-  tryCatch({
-    gt::gtsave(table, filename = table_file, expand = 10)
-    message("Table saved successfully")
-  }, error = function(e) {
-    message("Error saving table: ", e$message)
-  })
-  
-  return(table)
-}
-'
+  # Create utility functions content using concatenated strings
+  utility_content <- paste0(
+    "#' Utility functions to replace NeurotypR dependencies\n",
+    "#'\n",
+    "#' This file contains utility functions that replace NeurotypR functions\n",
+    "#' used in the neuro2 package.\n",
+    "\n",
+    "#' Filter data by domain and scale\n",
+    "#'\n",
+    "#' @param data Data frame to filter\n",
+    "#' @param domain Domain(s) to filter by\n",
+    "#' @param scale Scale(s) to filter by\n",
+    "#' @return Filtered data frame\n",
+    "#' @export\n",
+    "filter_data <- function(data, domain = NULL, scale = NULL) {\n",
+    "  if (is.null(data)) {\n",
+    "    message(\"Data is NULL. Cannot filter.\")\n",
+    "    return(NULL)\n",
+    "  }\n",
+    "  \n",
+    "  # Filter by domain if provided\n",
+    "  if (!is.null(domain)) {\n",
+    "    if (\"domain\" %in% colnames(data)) {\n",
+    "      data <- data[data$domain %in% domain, ]\n",
+    "    } else {\n",
+    "      message(\"Column 'domain' not found in data. Skipping domain filtering.\")\n",
+    "    }\n",
+    "  }\n",
+    "  \n",
+    "  # Filter by scale if provided\n",
+    "  if (!is.null(scale)) {\n",
+    "    if (\"scale\" %in% colnames(data)) {\n",
+    "      data <- data[data$scale %in% scale, ]\n",
+    "    } else {\n",
+    "      message(\"Column 'scale' not found in data. Skipping scale filtering.\")\n",
+    "    }\n",
+    "  }\n",
+    "  \n",
+    "  return(data)\n",
+    "}\n",
+    "\n",
+    "#' Create a dot plot\n",
+    "#'\n",
+    "#' @param data Data frame containing the data\n",
+    "#' @param x Numeric vector for x-axis\n",
+    "#' @param y Character vector for y-axis\n",
+    "#' @param colors Optional color vector\n",
+    "#' @param return_plot Whether to return the plot object\n",
+    "#' @param filename Optional filename to save the plot\n",
+    "#' @param na.rm Whether to remove NA values\n",
+    "#' @return A ggplot object if return_plot is TRUE\n",
+    "#' @export\n",
+    "dotplot2 <- function(data, x, y, colors = NULL, return_plot = TRUE, filename = NULL, na.rm = TRUE) {\n",
+    "  # Check if ggplot2 is available\n",
+    "  if (!requireNamespace(\"ggplot2\", quietly = TRUE)) {\n",
+    "    message(\"ggplot2 package is required for plotting. Please install it.\")\n",
+    "    return(NULL)\n",
+    "  }\n",
+    "  \n",
+    "  # Remove NA values if requested\n",
+    "  if (na.rm) {\n",
+    "    valid_indices <- !is.na(x) & !is.na(y)\n",
+    "    x <- x[valid_indices]\n",
+    "    y <- y[valid_indices]\n",
+    "    if (!is.null(data)) {\n",
+    "      data <- data[valid_indices, ]\n",
+    "    }\n",
+    "  }\n",
+    "  \n",
+    "  # Create a data frame for plotting\n",
+    "  plot_data <- data.frame(x = x, y = y)\n",
+    "  \n",
+    "  # Create the plot\n",
+    "  plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = x, y = y)) +\n",
+    "    ggplot2::geom_point(size = 3) +\n",
+    "    ggplot2::geom_vline(xintercept = 0, linetype = \"dashed\", color = \"gray50\") +\n",
+    "    ggplot2::geom_vline(xintercept = c(-1, 1), linetype = \"dotted\", color = \"gray70\") +\n",
+    "    ggplot2::scale_x_continuous(limits = c(-3, 3), breaks = seq(-3, 3, 1)) +\n",
+    "    ggplot2::theme_minimal() +\n",
+    "    ggplot2::labs(x = \"Z-Score\", y = \"\")\n",
+    "  \n",
+    "  # Save the plot if filename is provided\n",
+    "  if (!is.null(filename)) {\n",
+    "    ggplot2::ggsave(filename, plot, width = 6, height = 4)\n",
+    "  }\n",
+    "  \n",
+    "  if (return_plot) {\n",
+    "    return(plot)\n",
+    "  } else {\n",
+    "    return(invisible(NULL))\n",
+    "  }\n",
+    "}\n",
+    "\n",
+    "#' Create a GT table\n",
+    "#'\n",
+    "#' @param data Data frame to display in the table\n",
+    "#' @param pheno Phenotype name\n",
+    "#' @param table_name Table name\n",
+    "#' @param vertical_padding Vertical padding\n",
+    "#' @param source_note Source note\n",
+    "#' @param dynamic_grp Dynamic group\n",
+    "#' @param multiline Whether to allow multiline text\n",
+    "#' @return A GT table object\n",
+    "#' @export\n",
+    "tbl_gt <- function(data, pheno, table_name = NULL, vertical_padding = 0, \n",
+    "                   source_note = NULL, dynamic_grp = NULL, multiline = TRUE) {\n",
+    "  # Check if gt package is available\n",
+    "  if (!requireNamespace(\"gt\", quietly = TRUE)) {\n",
+    "    message(\"gt package is required for table creation. Please install it.\")\n",
+    "    return(NULL)\n",
+    "  }\n",
+    "  \n",
+    "  # Check if data is valid\n",
+    "  if (is.null(data) || nrow(data) == 0) {\n",
+    "    message(\"No data available for table creation.\")\n",
+    "    return(NULL)\n",
+    "  }\n",
+    "  \n",
+    "  message(\"Creating table with \", nrow(data), \" rows\")\n",
+    "  \n",
+    "  # Create a basic gt table\n",
+    "  table <- gt::gt(data)\n",
+    "  \n",
+    "  # Add title\n",
+    "  if (!is.null(table_name)) {\n",
+    "    table <- gt::tab_header(table, title = paste0(pheno, \" Scores\"))\n",
+    "  }\n",
+    "  \n",
+    "  # Add source note\n",
+    "  if (!is.null(source_note)) {\n",
+    "    table <- gt::tab_source_note(table, source_note)\n",
+    "  }\n",
+    "  \n",
+    "  # Save the table as an image\n",
+    "  table_file <- paste0(\"data/table_\", pheno, \".png\")\n",
+    "  message(\"Saving table to \", table_file)\n",
+    "  \n",
+    "  # Try to save the table\n",
+    "  tryCatch({\n",
+    "    gt::gtsave(table, filename = table_file, expand = 10)\n",
+    "    message(\"Table saved successfully\")\n",
+    "  }, error = function(e) {\n",
+    "    message(\"Error saving table: \", e$message)\n",
+    "  })\n",
+    "  \n",
+    "  return(table)\n",
+    "}\n"
+  )
 
   # Write the utility functions file
   cat(utility_content, file = utility_file)
@@ -240,16 +240,16 @@ for (dir in c("data-raw", "data", "output")) {
   }
 }
 
-# Check for CSV files in data-raw
-csv_files <- list.files(path = "data-raw", pattern = "\\.csv$")
+# Check for CSV files in data-raw/csv
+csv_files <- list.files(path = "data-raw/csv", pattern = "\\.csv$")
 if (length(csv_files) == 0) {
-  message("\n⚠️ No CSV files found in data-raw directory.")
+  message("\n⚠️ No CSV files found in data-raw/csv directory.")
   message("You need to add CSV files before running the workflow.")
 } else {
   message(paste0(
     "\n✓ Found ",
     length(csv_files),
-    " CSV files in data-raw directory:"
+    " CSV files in data-raw/csv directory:"
   ))
   for (file in csv_files) {
     message(paste0("  - ", file))
@@ -268,11 +268,54 @@ qmd_files <- c(
 
 missing_qmd <- qmd_files[!file.exists(qmd_files)]
 if (length(missing_qmd) > 0) {
-  message("\n⚠️ Some template QMD files are missing:")
+  message("\n⚠️ Some template QMD files are missing. Creating them now:")
+
+  # Template content for _02-01_iq_text.qmd
+  iq_text_content <- paste0(
+    "---\n",
+    "title: \"IQ Text Template\"\n",
+    "format: html\n",
+    "---\n\n",
+    "## Intellectual Functioning\n\n",
+    "The patient was administered the Wechsler Intelligence Scale. Overall intellectual functioning was in the {{iq_range}} range (Full Scale IQ = {{fsiq}}).\n\n",
+    "### Verbal Comprehension\n",
+    "Verbal comprehension abilities were {{vci_desc}} (VCI = {{vci}}).\n\n",
+    "### Perceptual Reasoning\n",
+    "Perceptual reasoning abilities were {{pri_desc}} (PRI = {{pri}}).\n\n",
+    "### Working Memory\n",
+    "Working memory abilities were {{wmi_desc}} (WMI = {{wmi}}).\n\n",
+    "### Processing Speed\n",
+    "Processing speed abilities were {{psi_desc}} (PSI = {{psi}}).\n"
+  )
+
+  # Template content for _02-05_memory_text.qmd
+  memory_text_content <- paste0(
+    "---\n",
+    "title: \"Memory Text Template\"\n",
+    "format: html\n",
+    "---\n\n",
+    "## Memory Functioning\n\n",
+    "### Immediate Memory\n",
+    "The patient's immediate memory abilities were {{immediate_memory_desc}}.\n\n",
+    "### Delayed Memory\n",
+    "The patient's delayed memory abilities were {{delayed_memory_desc}}.\n\n",
+    "### Working Memory\n",
+    "The patient's working memory abilities were {{working_memory_desc}}.\n\n",
+    "### Memory Profile\n",
+    "Overall, the patient's memory profile indicates {{memory_profile_summary}}.\n"
+  )
+
+  # Create the missing files
   for (file in missing_qmd) {
-    message(paste0("  - ", file))
+    message(paste0("  - Creating ", file))
+    if (file == "_02-01_iq_text.qmd") {
+      cat(iq_text_content, file = file)
+    } else if (file == "_02-05_memory_text.qmd") {
+      cat(memory_text_content, file = file)
+    }
   }
-  message("These files are needed for the report template.")
+
+  message("Template QMD files created successfully.")
 } else {
   message("\n✓ All template QMD files are present.")
 }

@@ -11,9 +11,8 @@ source("R/NeuropsychReportSystemR6.R")
 source("R/DotplotR6.R")
 
 # Load all domain data
-all_data <- arrow::open_dataset(here::here("data")) |> dplyr::collect()
-neurocog <- arrow::read_parquet(here::here("data", "neurocog.parquet")) |>
-  dplyr::collect()
+neurocog <- readr::read_csv("data/neurocog.csv")
+neurobehav <- readr::read_csv("data/neurobehav.csv")
 
 # Create report system for overall summary
 report_system <- NeuropsychReportSystemR6$new(

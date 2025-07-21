@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# 
-# 
-
 set -e  # Exit on any error
 
 RED='\033[0;31m'
