@@ -10,9 +10,8 @@ generate_neuropsych_report_system(
     domain_executive, domain_motor, domain_social, domain_adhd_adult,
     domain_emotion_adult, domain_adhd_child, domain_emotion_child, domain_adaptive,
     domain_daily_living),
-  data_files = list(neurocog = "data-raw/neurocog.csv", neurobehav =
-    "data-raw/neurobehav.csv", neuropsych = "data-raw/neuropsych.csv", validity =
-    "data-raw/validity.csv"),
+  data_files = list(neurocog = "data/neurocog.csv", neurobehav = "data/neurobehav.csv",
+    neuropsych = "data/neuropsych.csv", validity = "data/validity.csv"),
   template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = "output",
   template_file = "template.qmd",
