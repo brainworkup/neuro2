@@ -238,7 +238,7 @@ DomainProcessorR6 <- R6::R6Class(
         }
       )
 
-      return(scales)
+      scales
     },
 
     #' @description
@@ -349,13 +349,13 @@ DomainProcessorR6 <- R6::R6Class(
       # Use %||% operator for NULL handling
       result <- titles[[tolower(self$pheno)]]
       if (is.null(result)) {
-        return(paste(
+        paste(
           "This section presents results from the",
           self$domains[1],
           "domain assessment."
-        ))
+        )
       } else {
-        return(result)
+        result
       }
     },
 

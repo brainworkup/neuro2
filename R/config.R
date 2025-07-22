@@ -28,5 +28,5 @@ get_config <- function() {
     return(default)
   }
 
-  return(config)
+  config
 }
