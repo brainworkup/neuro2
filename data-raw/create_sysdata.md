@@ -1319,23 +1319,23 @@ community use."
 #' @keywords internal data
 plot_title_daily_living <- "_Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence."
 
-# Using safe_use_data_internal instead of usethis::use_data
-safe_use_data_internal(
-  plot_title_neurocognition = plot_title_neurocognition,
-  plot_title_iq = plot_title_iq,
-  plot_title_academics = plot_title_academics,
-  plot_title_verbal = plot_title_verbal,
-  plot_title_spatial = plot_title_spatial,
-  plot_title_memory = plot_title_memory,
-  plot_title_executive = plot_title_executive,
-  plot_title_motor = plot_title_motor,
-  plot_title_social = plot_title_social,
-  plot_title_adhd_adult = plot_title_adhd_adult,
-  plot_title_emotion_adult = plot_title_emotion_adult,
-  plot_title_adaptive = plot_title_adaptive,
-  plot_title_daily_living = plot_title_daily_living,
-  add_only = TRUE
-)
+# usethis::use_data(
+#   plot_title_neurocognition,
+#   plot_title_iq,
+#   plot_title_academics,
+#   plot_title_verbal,
+#   plot_title_spatial,
+#   plot_title_memory,
+#   plot_title_executive,
+#   plot_title_motor,
+#   plot_title_social,
+#   plot_title_adhd_adult,
+#   plot_title_emotion_adult,
+#   plot_title_adaptive,
+#   plot_title_daily_living,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )
 
 # Domains ------------------------------------------------------------------
 
@@ -1451,24 +1451,25 @@ domain_daily_living <- "Daily Living"
 
 # Save domain labels --------------------------------------------------------
 
-# Using safe_use_data_internal instead of usethis::use_data
-safe_use_data_internal(
-  domain_iq = domain_iq,
-  domain_academics = domain_academics,
-  domain_verbal = domain_verbal,
-  domain_spatial = domain_spatial,
-  domain_memory = domain_memory,
-  domain_executive = domain_executive,
-  domain_motor = domain_motor,
-  domain_social = domain_social,
-  domain_adhd_adult = domain_adhd_adult,
-  domain_adhd_child = domain_adhd_child,
-  domain_emotion_adult = domain_emotion_adult,
-  domain_emotion_child = domain_emotion_child,
-  domain_adaptive = domain_adaptive,
-  domain_daily_living = domain_daily_living,
-  add_only = TRUE
-)
+# usethis::use_data(
+#   domain_iq,
+#   domain_academics,
+#   domain_verbal,
+#   domain_spatial,
+#   domain_memory,
+#   domain_executive,
+#   domain_motor,
+#   domain_social,
+#   domain_adhd_adult,
+#   domain_adhd_child,
+#   domain_emotion_adult,
+#   domain_emotion_child,
+#   domain_adaptive,
+#   domain_daily_living,
+#   internal = TRUE,
+#   overwrite = TRUE
+# )
+
 
 # CSV lookup tables -------------------------------------------------------
 
@@ -1483,9 +1484,7 @@ safe_use_data_internal(
 #' \item \code{description}: A brief description of what the scale measures.
 #' }
 #' @keywords data internal
-lookup_neuropsych_scales <- readr::read_csv(
-  "~/Dropbox/neuropsych_lookup_table.csv"
-)
+lookup_neuropsych_scales <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 # usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
 
 # Safe sysdata update -----------------------------------------------------
@@ -1501,11 +1500,11 @@ library(usethis)
 # You would use:
 
 # Example 1: Only add new objects, never overwrite existing ones
-safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  add_only = TRUE
-)
+# safe_use_data_internal(
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   add_only = TRUE
+# )
 
 # Example 2: Only overwrite specific objects
 # safe_use_data_internal(
@@ -1606,9 +1605,7 @@ safe_use_data_internal(
 #' \item \code{scaled_score}: Scaled score M=10, SD=3.
 #' \item \code{range}: The score range for the specified score type.
 #' }
-lookup_score_conversions <- readr::read_csv(
-  "/Users/joey/neuro2/inst/extdata/lookup_score_range.csv"
-)
+lookup_score_conversions <- readr::read_csv("/Users/joey/neuro2/inst/extdata/lookup_score_range.csv")
 
 # For other data
 safe_use_data_internal(
@@ -1620,37 +1617,4 @@ safe_use_data_internal(
 
 
 # Normative test data -----------------------------------------------------
-#' @name categories
-#' @docType data internal
 categories <- readRDS("inst/extdata/categories.rds")
-safe_use_data_internal(categories = categories, add_only = TRUE)
-
-#' @name letters
-#' @docType data internal
-letters <- readRDS("inst/extdata/letters.rds")
-safe_use_data_internal(letters = letters, add_only = TRUE)
-
-#' @name pegboard.dom
-#' @docType data internal
-pegboard.dom <- readRDS("inst/extdata/pegboard.dom.rds")
-safe_use_data_internal(pegboard.dom = pegboard.dom, add_only = TRUE)
-
-#' @name pegboard.nondom
-#' @docType data internal
-pegboard.nondom <- readRDS("inst/extdata/pegboard.nondom.rds")
-safe_use_data_internal(pegboard.nondom = pegboard.nondom, add_only = TRUE)
-
-#' @name rocft.copy
-#' @docType data internal
-rocft.copy <- readRDS("inst/extdata/rocft.copy.rds")
-safe_use_data_internal(rocft.copy = rocft.copy, add_only = TRUE)
-
-#' @name rocft.recall
-#' @docType data internal
-rocft.recall <- readRDS("inst/extdata/rocft.recall.rds")
-safe_use_data_internal(rocft.recall = rocft.recall, add_only = TRUE)
-
-#' @name ut
-#' @docType data internal
-ut <- readRDS("inst/extdata/ut.rds")
-safe_use_data_internal(ut = ut, add_only = TRUE)
