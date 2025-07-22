@@ -62,10 +62,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           domain_daily_living
         ),
         data_files = list(
-          neurocog = "data-raw/neurocog.csv",
-          neurobehav = "data-raw/neurobehav.csv",
-          neuropsych = "data-raw/neuropsych.csv",
-          validity = "data-raw/validity.csv"
+          neurocog = "data/neurocog.csv",
+          neurobehav = "data/neurobehav.csv",
+          neuropsych = "data/neuropsych.csv",
+          validity = "data/validity.csv"
         ),
         template_file = "template.qmd",
         output_file = "neuropsych_report.pdf"
@@ -180,25 +180,65 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           pheno <- gsub("[/ ]", "_", tolower(domain))
         }
 
-        # Select appropriate input file based on domain
-        if (
-          domain %in%
-            c(
-              "ADHD",
-              "Emotional/Behavioral/Personality",
-              "Psychiatric Disorders",
-              "Personality Disorders",
-              "Substance Use",
-              "Psychosocial Problems",
-              "Behavioral/Emotional/Social"
-            )
-        ) {
-          input_file <- self$config$data_files$neurobehav
-        } else if (domain %in% c("Adaptive Functioning")) {
-          # Adaptive data might be in a different file
-          input_file <- self$config$data_files$neurobehav
-        } else {
+        # Select appropriate input file based on domain type using the domain_pheno_map
+        # This is more maintainable than hardcoding specific domain names
+        pheno <- domain_pheno_map[[domain]]
+
+        # Create a mapping of data file types based on domain categories
+        # This is more maintainable than hardcoding specific phenotypes
+        data_file_mapping <- list(
+          # Cognitive domains
+          "iq" = "neurocog",
+          "academics" = "neurocog",
+          "verbal" = "neurocog",
+          "spatial" = "neurocog",
+          "memory" = "neurocog",
+          "executive" = "neurocog",
+          "motor" = "neurocog",
+          "social" = "neurocog",
+          "daily_living" = "neurocog",
+
+          # Behavioral/emotional domains
+          "adhd" = "neurobehav",
+          "emotion" = "neurobehav",
+          "adaptive" = "neurobehav",
+          "social" = "neurobehav",
+
+          # Validity domains
+          "validity" = "validity"
+        )
+
+        # Determine which file to use based on phenotype
+        if (is.null(pheno)) {
+          # Default to neurocog for unknown domains
           input_file <- self$config$data_files$neurocog
+        } else if (pheno == "social") {
+          # Special handling for social cognition which has both neurocognitive and behavioral measures
+          # For social cognition, we need to check the domain name to determine which file to use
+
+          # If domain contains behavioral keywords, use neurobehav
+          if (
+            grepl(
+              "behavioral|rating|scale|questionnaire|social skill",
+              tolower(domain),
+              ignore.case = TRUE
+            )
+          ) {
+            input_file <- self$config$data_files$neurobehav
+          } else {
+            # Default to neurocog for cognitive measures of social cognition
+            input_file <- self$config$data_files$neurocog
+          }
+        } else {
+          # Look up the file type in the mapping
+          file_type <- data_file_mapping[[pheno]]
+
+          # If not found in mapping, default to neurocog
+          if (is.null(file_type)) {
+            file_type <- "neurocog"
+          }
+
+          input_file <- self$config$data_files[[file_type]]
         }
 
         self$domain_processors[[pheno]] <- DomainProcessorR6$new(
@@ -615,10 +655,10 @@ generate_neuropsych_report_system <- function(
     domain_daily_living
   ),
   data_files = list(
-    neurocog = "data-raw/neurocog.csv",
-    neurobehav = "data-raw/neurobehav.csv",
-    neuropsych = "data-raw/neuropsych.csv",
-    validity = "data-raw/validity.csv"
+    neurocog = "data/neurocog.csv",
+    neurobehav = "data/neurobehav.csv",
+    neuropsych = "data/neuropsych.csv",
+    validity = "data/validity.csv"
   ),
   template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = "output",
