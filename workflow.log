@@ -1,23 +1,42 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-07-21 14:53:07.568096 
+Date: 2025-07-22 11:27:44.769416 
 
-[2025-07-21 14:53:07] [CONFIG] Loading configuration from: config.yml
-[2025-07-21 14:53:07] [CONFIG] Configuration loaded successfully
-[2025-07-21 14:53:07] [CONFIG] Patient: Biggie
-[2025-07-21 14:53:07] [CONFIG] Age: 35
-[2025-07-21 14:53:07] [CONFIG] DOE: 2025-07-21
-[2025-07-21 14:53:07] [INFO] Initialized WorkflowRunner for patient: Biggie
-[2025-07-21 14:53:07] [WORKFLOW] Starting unified workflow for patient: Biggie
-[2025-07-21 14:53:07] [WORKFLOW] Step 1: Setting up environment...
-[2025-07-21 14:53:07] [SETUP] Running setup_environment.R
-[2025-07-21 14:53:08] [SETUP] All required R6 class files are present
-[2025-07-21 14:53:08] [SETUP] Found 8 CSV files in data-raw/csv
-[2025-07-21 14:53:08] [SETUP] Environment setup complete
-[2025-07-21 14:53:08] [WORKFLOW] Step 2: Processing data...
-[2025-07-21 14:53:08] [DATA] data_processor_module.R not found. Using fallback processing.
-[2025-07-21 14:53:08] [DATA] Using DuckDB data processor
-[2025-07-21 14:53:08] [DATA] Data processing complete
-[2025-07-21 14:53:08] [WORKFLOW] Step 3: Generating domain files...
-[2025-07-21 14:53:08] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
-[2025-07-21 14:53:08] [ERROR] No suitable domain generator found
-[2025-07-21 14:53:08] [ERROR] Domain generation failed
+[2025-07-22 11:27:45] [CONFIG] Loading configuration from: config.yml
+[2025-07-22 11:27:45] [CONFIG] Configuration loaded successfully
+[2025-07-22 11:27:45] [CONFIG] Patient: Ethan
+[2025-07-22 11:27:45] [CONFIG] Age: 35
+[2025-07-22 11:27:45] [CONFIG] DOE: 2025-07-21
+[2025-07-22 11:27:45] [INFO] Initialized WorkflowRunner for patient: Ethan
+[2025-07-22 11:27:45] [WORKFLOW] Starting unified workflow for patient: Ethan
+[2025-07-22 11:27:45] [WORKFLOW] Step 1: Setting up environment...
+[2025-07-22 11:27:45] [SETUP] Running setup_environment.R
+[2025-07-22 11:27:45] [SETUP] All required R6 class files are present
+[2025-07-22 11:27:45] [SETUP] Found 8 CSV files in data-raw/csv
+[2025-07-22 11:27:45] [SETUP] Environment setup complete
+[2025-07-22 11:27:45] [WORKFLOW] Step 2: Processing data...
+[2025-07-22 11:27:45] [DATA] data_processor_module.R not found. Using fallback processing.
+[2025-07-22 11:27:45] [DATA] Using DuckDB data processor
+[2025-07-22 11:27:45] [DATA] Data processing complete
+[2025-07-22 11:27:45] [WORKFLOW] Step 3: Generating domain files...
+[2025-07-22 11:27:45] [DOMAINS] Checking for required template QMD files...
+[2025-07-22 11:27:45] [DOMAINS] Found 5 unique domains
+[2025-07-22 11:27:45] [DOMAINS] Found 10 total unique domains
+[2025-07-22 11:27:45] [DOMAINS] Template for domain 'Verbal/Language' already exists: _02-03_verbal_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Template for domain 'General Cognitive Ability' already exists: _02-01_iq_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Visual Perception/Construction
+[2025-07-22 11:27:45] [DOMAINS] Created _02-04_visuospatial_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Motor
+[2025-07-22 11:27:45] [DOMAINS] Created _02-07_motor_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Template for domain 'Attention/Executive' already exists: _02-06_executive_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Substance Use
+[2025-07-22 11:27:45] [DOMAINS] Created _02-13_substance_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Personality Disorders
+[2025-07-22 11:27:45] [DOMAINS] Created _02-12_personality_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Psychiatric Disorders
+[2025-07-22 11:27:45] [DOMAINS] Created _02-11_psychiatric_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Behavioral/Emotional/Social
+[2025-07-22 11:27:45] [DOMAINS] Created _02-15_behavioral_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Psychosocial Problems
+[2025-07-22 11:27:45] [DOMAINS] Created _02-14_psychosocial_text.qmd
+[2025-07-22 11:27:45] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
+[2025-07-22 11:27:45] [DOMAINS] Using neuro2_R6_update_workflow.R

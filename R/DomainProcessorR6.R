@@ -67,31 +67,10 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Set default test filters if none provided
       if (is.null(test_filters)) {
-        # Example default filters for ADHD domain
-        if ("ADHD" %in% domains) {
-          self$test_filters <- list(
-            self = c(
-              "caars_self",
-              "cefi_self",
-              "caars2_self",
-              "brown_efa_self",
-              "pai",
-              "cefi_self_12-18"
-            ),
-            observer = c(
-              "caars_observer",
-              "cefi_observer",
-              "caars2_observer",
-              "brown_efa_observer"
-            )
-          )
-        } else {
-          # Generic empty filter structure
-          self$test_filters <- list(
-            self = character(0),
-            observer = character(0)
-          )
-        }
+        # Create a generic filter structure for all domains
+        # This can be extended later with a more sophisticated lookup mechanism
+        # if domain-specific default filters are needed
+        self$test_filters <- list(self = character(0), observer = character(0))
       } else {
         self$test_filters <- test_filters
       }
@@ -162,30 +141,31 @@ DomainProcessorR6 <- R6::R6Class(
         "z_mean_timed",
         "z_sd_timed"
       )
-      
+
       # Only select columns that actually exist in the data
       existing_columns <- intersect(desired_columns, names(self$data))
-      
+
       # Only warn about missing z-score columns if verbose mode
       # (they're expected to be missing in some workflows)
       missing_columns <- setdiff(desired_columns, existing_columns)
       missing_z_columns <- grep("^z", missing_columns, value = TRUE)
       missing_other_columns <- setdiff(missing_columns, missing_z_columns)
-      
+
       if (length(missing_other_columns) > 0) {
-        message("Note: The following columns were not found in the data: ",
-                paste(missing_other_columns, collapse = ", "))
+        message(
+          "Note: The following columns were not found in the data: ",
+          paste(missing_other_columns, collapse = ", ")
+        )
       }
-      
+
       # If z-score columns are missing but percentile exists, calculate basic z-score
       if ("percentile" %in% names(self$data) && !"z" %in% names(self$data)) {
         self$data$z <- qnorm(self$data$percentile / 100)
         existing_columns <- c(existing_columns, "z")
       }
-      
-      self$data <- self$data |>
-        dplyr::select(all_of(existing_columns))
-        
+
+      self$data <- self$data |> dplyr::select(all_of(existing_columns))
+
       invisible(self)
     },
 
@@ -220,25 +200,10 @@ DomainProcessorR6 <- R6::R6Class(
         return(self$scale_source)
       }
 
-      # Otherwise try to get scales from package internal data
-      # This is just a placeholder - you'll need to adapt this to your actual package structure
-      scales <- NULL
-
-      tryCatch(
-        {
-          # Try to get scales from package data based on phenotype
-          # Example: scales_adhd_adult for pheno="adhd"
-          scale_name <- paste0("scales_", self$pheno, "_adult")
-          if (exists(scale_name, envir = asNamespace("NeurotypR"))) {
-            scales <- get(scale_name, envir = asNamespace("NeurotypR"))
-          }
-        },
-        error = function(e) {
-          warning("Could not retrieve scales from package data: ", e$message)
-        }
-      )
-
-      scales
+      # If no scale_source was provided and we've reached this point,
+      # return an empty vector - the calling code should handle this appropriately
+      # This simplifies the design by removing dynamic lookups based on naming conventions
+      return(character(0))
     },
 
     #' @description
@@ -337,11 +302,11 @@ DomainProcessorR6 <- R6::R6Class(
     get_default_plot_titles = function() {
       titles <- list(
         iq = "Intellectual and cognitive abilities represent an individual's capacity to think, reason, and solve problems.",
-        memory = "Memory functions are crucial for learning, daily functioning, and cognitive processing.",
-        executive = "Attentional and executive functions underlie most domains of cognitive performance.",
+        academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
         verbal = "Verbal and language functioning refers to the ability to access and apply acquired word knowledge.",
         spatial = "Visuospatial abilities involve perceiving, analyzing, and mentally manipulating visual information.",
-        academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
+        memory = "Memory functions are crucial for learning, daily functioning, and cognitive processing.",
+        executive = "Attentional and executive functions underlie most domains of cognitive performance.",
         motor = "Motor functions involve the planning and execution of voluntary movements.",
         social = "Social cognition encompasses the mental processes involved in perceiving, interpreting, and responding to social information."
       )

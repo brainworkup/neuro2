@@ -8,7 +8,8 @@ generate_neuropsych_report_system(
   patient,
   domains = c(domain_iq, domain_academics, domain_verbal, domain_spatial, domain_memory,
     domain_executive, domain_motor, domain_social, domain_adhd_adult,
-    domain_emotion_adult),
+    domain_emotion_adult, domain_adhd_child, domain_emotion_child, domain_adaptive,
+    domain_daily_living),
   data_files = list(neurocog = "data-raw/neurocog.csv", neurobehav =
     "data-raw/neurobehav.csv", neuropsych = "data-raw/neuropsych.csv", validity =
     "data-raw/validity.csv"),

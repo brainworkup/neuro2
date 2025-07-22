@@ -55,7 +55,11 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           domain_motor,
           domain_social,
           domain_adhd_adult,
-          domain_emotion_adult
+          domain_emotion_adult,
+          domain_adhd_child,
+          domain_emotion_child,
+          domain_adaptive,
+          domain_daily_living
         ),
         data_files = list(
           neurocog = "data-raw/neurocog.csv",
@@ -604,7 +608,11 @@ generate_neuropsych_report_system <- function(
     domain_motor,
     domain_social,
     domain_adhd_adult,
-    domain_emotion_adult
+    domain_emotion_adult,
+    domain_adhd_child,
+    domain_emotion_child,
+    domain_adaptive,
+    domain_daily_living
   ),
   data_files = list(
     neurocog = "data-raw/neurocog.csv",

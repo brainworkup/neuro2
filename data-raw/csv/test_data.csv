@@ -1,5 +1,0 @@
-"test","test_name","scale","raw_score","score","ci_95","percentile","range","domain","subdomain","narrow","pass","verbal","timed","result","z"
-"WISC-V","Wechsler Intelligence Scale for Children","Full Scale (FSIQ)",NA,105,"100-110",63,"Average","General Cognitive Ability","Overall",NA,NA,NA,NA,NA,0.33
-"WISC-V","Wechsler Intelligence Scale for Children","Verbal Comprehension (VCI)",NA,110,"105-115",75,"High Average","General Cognitive Ability","Verbal",NA,NA,"Yes","No",NA,0.67
-"WISC-V","Wechsler Intelligence Scale for Children","Perceptual Reasoning (PRI)",NA,100,"95-105",50,"Average","General Cognitive Ability","Nonverbal",NA,NA,"No","No",NA,0
-"WISC-V","Wechsler Intelligence Scale for Children","Working Memory (WMI)",NA,95,"90-100",37,"Average","General Cognitive Ability","Working Memory",NA,NA,NA,"Yes",NA,-0.33

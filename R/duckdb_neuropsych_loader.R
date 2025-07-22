@@ -63,17 +63,9 @@ load_data_duckdb <- function(
     df$filename <- basename(file)
 
     # Ensure numeric columns are properly typed
-    numeric_cols <- c(
-      "raw_score",
-      "score",
-      "percentile",
-      "ci_95",
-      "z_score",
-      "scaled_score",
-      "t_score",
-      "standard_score",
-      "base_rate"
-    )
+    # Note: z_score, scaled_score, t_score, standard_score, and base_rate
+    # are values in the score_type column, not separate columns
+    numeric_cols <- c("raw_score", "score", "ci_95", "percentile")
 
     for (col in numeric_cols) {
       if (col %in% names(df)) {
