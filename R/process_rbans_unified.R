@@ -1,13 +1,11 @@
 #' Process RBANS Data with Unified Approach
 #'
 #' A comprehensive function that processes RBANS Q-interactive exports, combining
-#' the best features of both existing approaches. It supports built-in metadata,
+#' the best features of both existing approaches. It supports internal lookup tables,
 #' manual overrides, summary reporting, and detailed debugging.
 #'
 #' @param input_file Path to the UTF-16 CSV export from Q-interactive.
-#' @param patient_id Identifier for the patient (e.g., "Patient001").
 #' @param test_prefix Prefix used for Subtest names in the export (default: "RBANS Update Form A ").
-#' @param lookup_file Optional path to a custom RBANS lookup table CSV. If NULL, uses built-in metadata.
 #' @param output_file Optional path to write the processed data as CSV.
 #' @param summary_file Optional path to write a summary report as CSV.
 #' @param manual_percentiles Named list of manual percentile overrides (e.g., list("Line Orientation" = 75)).
@@ -17,9 +15,7 @@
 #' @export
 process_rbans_unified <- function(
   input_file,
-  patient_id,
   test_prefix = "RBANS Update Form A ",
-  lookup_file = NULL,
   output_file = NULL,
   summary_file = NULL,
   manual_percentiles = NULL,
@@ -45,211 +41,12 @@ process_rbans_unified <- function(
   if (debug) {
     cat("=== RBANS Unified Processor ===\n")
     cat("Processing file:", input_file, "\n")
-    cat("Patient ID:", patient_id, "\n")
     cat("Test prefix:", test_prefix, "\n")
-    if (!is.null(lookup_file)) {
-      cat("Using custom lookup file:", lookup_file, "\n")
-    } else {
-      cat("Using built-in metadata\n")
-    }
+    cat("Using internal lookup table: lookup_neuropsych_scales\n")
   }
 
-  # Built-in RBANS metadata
-  rbans_metadata <- dplyr::tribble(
-    ~scale,
-    ~domain,
-    ~subdomain,
-    ~narrow,
-    ~pass,
-    ~verbal,
-    ~timed,
-    ~score_type,
-    ~test_type,
-    ~description,
-    # Composite Scores (Indices)
-    "Total Scale",
-    "General Cognitive Ability",
-    "Neurocognition",
-    "General Ability",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "Composite indicator of overall neurocognitive functioning",
-    "Attention Index",
-    "Attention/Executive",
-    "Attention",
-    "Attention Index",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "General attentional and executive functioning",
-    "Immediate Memory Index",
-    "Memory",
-    "Learning Efficiency",
-    "Immediate Memory",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "Composite verbal learning of a word list and a logical story",
-    "Language Index",
-    "Verbal/Language",
-    "Language",
-    "Language Index",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "General language processing",
-    "Visuospatial/ Constructional Index",
-    "Visual Perception/Construction",
-    "Spatial",
-    "Visuospatial Index",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "Broadband index of visuospatial processing and construction",
-    "Delayed Memory Index",
-    "Memory",
-    "Delayed Recall",
-    "Delayed Memory",
-    NA,
-    NA,
-    NA,
-    "standard_score",
-    "composite",
-    "Long-term recall of verbal and nonverbal material",
-
-    # Subtests
-    "Digit Span",
-    "Attention/Executive",
-    "Attention",
-    "Attention Span",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "Attention span and auditory attention",
-    "Coding",
-    "Attention/Executive",
-    "Processing Speed",
-    "Cognitive Efficiency",
-    "Planning",
-    "Nonverbal",
-    "Timed",
-    "scaled_score",
-    "subtest",
-    "Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination",
-    "List Learning",
-    "Memory",
-    "Learning Efficiency",
-    "Verbal Learning",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "Word list learning",
-    "Story Memory",
-    "Memory",
-    "Learning Efficiency",
-    "Verbal Learning",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "Expository story learning",
-    "Picture Naming",
-    "Verbal/Language",
-    "Word Retrieval",
-    "Naming",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "percentile",
-    "subtest",
-    "Confrontation naming/expressive vocabulary",
-    "Semantic Fluency",
-    "Verbal/Language",
-    "Fluency",
-    "Verbal Fluency",
-    "Sequential",
-    "Verbal",
-    "Timed",
-    "scaled_score",
-    "subtest",
-    "Semantic word fluency/generativity",
-    "Figure Copy",
-    "Visual Perception/Construction",
-    "Organization",
-    "Construction",
-    "Simultaneous",
-    "Nonverbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "The accuracy of copying a figure from a model",
-    "Line Orientation",
-    "Visual Perception/Construction",
-    "Perception",
-    "Spatial Perception",
-    "Simultaneous",
-    "Nonverbal",
-    "Untimed",
-    "percentile",
-    "subtest",
-    "Basic perception of visual stimuli",
-    "List Recall",
-    "Memory",
-    "Delayed Recall",
-    "Verbal Memory",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "percentile",
-    "subtest",
-    "Long-term recall of a word list",
-    "List Recognition",
-    "Memory",
-    "Recognition Memory",
-    "Verbal Memory",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "percentile",
-    "subtest",
-    "Delayed recognition of a word list",
-    "Story Recall",
-    "Memory",
-    "Delayed Recall",
-    "Verbal Memory",
-    "Sequential",
-    "Verbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "Long-term recall of a detailed story",
-    "Figure Recall",
-    "Memory",
-    "Delayed Recall",
-    "Visual Memory",
-    "Simultaneous",
-    "Nonverbal",
-    "Untimed",
-    "scaled_score",
-    "subtest",
-    "Long-term recall and reconstruction of a complex abstract figure"
-  )
+  # Load the internal lookup table
+  # This is already loaded in the R/sysdata.rda file
 
   # 1) Read the Q-interactive export
   tryCatch(
@@ -314,30 +111,75 @@ process_rbans_unified <- function(
     cat("Extracting data sections...\n")
   }
 
+  # Improved extraction to handle the specific format of the input file
   raw_scores <- pluck_section(
     df,
     "RAW SCORES",
     "SCALED SCORES",
     c("scale", "raw_score")
   )
+
+  # Filter to keep only RBANS entries
+  raw_scores <- raw_scores %>%
+    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+
+  if (debug) {
+    cat("Extracted", nrow(raw_scores), "raw scores\n")
+  }
+
   scaled_scores <- pluck_section(
     df,
     "SCALED SCORES",
-    "SUBTEST COMPLETION TIMES",
+    "CONTEXTUAL EVENTS",
     c("scale", "scaled_score")
   )
+
+  # Filter to keep only RBANS entries
+  scaled_scores <- scaled_scores %>%
+    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+
+  if (debug) {
+    cat("Extracted", nrow(scaled_scores), "scaled scores\n")
+  }
+
   times <- pluck_section(
     df,
     "SUBTEST COMPLETION TIMES",
     "RULES TRIGGERED",
     c("scale", "completion_time")
   )
-  composites <- pluck_section(
-    df,
-    "Composite Score",
-    NULL,
-    c("scale", "composite_score", "percentile", "ci_95_lower", "ci_95_upper")
-  )
+
+  # Filter to keep only RBANS entries
+  times <- times %>%
+    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+
+  if (debug) {
+    cat("Extracted", nrow(times), "completion times\n")
+  }
+
+  # Extract composites from the Composite Score section
+  composites <- df %>%
+    dplyr::filter(stringr::str_detect(X1, "RBANS Update Form A")) %>%
+    dplyr::filter(stringr::str_detect(X1, "Index|Total Scale")) %>%
+    tidyr::separate(
+      X1,
+      into = c(
+        "scale",
+        "composite_score",
+        "percentile",
+        "ci_95_lower",
+        "ci_95_upper",
+        "ci_95_low2",
+        "ci_95_high2"
+      ),
+      sep = ",",
+      fill = "right"
+    ) %>%
+    dplyr::select(scale, composite_score, percentile, ci_95_lower, ci_95_upper)
+
+  if (debug) {
+    cat("Extracted", nrow(composites), "composite scores\n")
+  }
 
   # 4) Combine extracted data and any manual entries
   combined <- Reduce(
@@ -384,71 +226,121 @@ process_rbans_unified <- function(
     }
   }
 
-  # 8) Get metadata (either from lookup file or built-in)
-  if (!is.null(lookup_file)) {
-    if (debug) {
-      cat("Using custom lookup file:", lookup_file, "\n")
-    }
-    metadata <- readr::read_csv(lookup_file, show_col_types = FALSE)
-  } else {
-    if (debug) {
-      cat("Using built-in metadata\n")
-    }
-    metadata <- rbans_metadata
+  # 8) Get metadata from internal lookup table
+  if (debug) {
+    cat("Using internal lookup table: lookup_neuropsych_scales\n")
   }
 
-  # 9) Merge in metadata
-  combined <- combined %>% dplyr::left_join(metadata, by = "scale")
+  # Load the internal lookup table from sysdata.rda
+  # This is a workaround to access the internal data
+  sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
+  if (file.exists(sysdata_path)) {
+    # If the package is installed, load from the package
+    load(sysdata_path)
+  } else {
+    # If working in development mode, load from the local path
+    load("R/sysdata.rda")
+  }
 
-  # 10) Add patient/test metadata columns
-  combined <- combined %>%
+  # Filter the lookup table for RBANS entries and rename scales according to the provided mapping
+  metadata <- lookup_neuropsych_scales %>%
+    dplyr::filter(test == "rbans") %>%
+    # Rename scales to match the expected names in the input file
     dplyr::mutate(
-      patient = patient_id,
-      test = "rbans",
-      test_name = "RBANS Update Form A"
+      scale = dplyr::case_when(
+        scale == "RBANS Total" ~ "Total Scale",
+        scale == "Attention Index" ~ "Attention Index",
+        scale == "Immediate Memory Index" ~ "Immediate Memory Index",
+        scale == "Language Index" ~ "Language Index",
+        scale == "Visuospatial Index" ~ "Visuospatial/ Constructional Index",
+        scale == "Delayed Memory Index" ~ "Delayed Memory Index",
+        scale == "Digit Span" ~ "Digit Span",
+        scale == "Coding" ~ "Coding",
+        scale == "List Learning" ~ "List Learning",
+        scale == "Story Memory" ~ "Story Memory",
+        scale == "Picture Naming" ~ "Picture Naming",
+        scale == "Semantic Fluency" ~ "Semantic Fluency",
+        scale == "Figure Copy" ~ "Figure Copy",
+        scale == "Line Orientation" ~ "Line Orientation",
+        scale == "List Recall" ~ "List Recall",
+        scale == "List Recognition" ~ "List Recognition",
+        scale == "Story Recall" ~ "Story Recall",
+        scale == "Figure Recall" ~ "Figure Recall",
+        TRUE ~ scale
+      )
     )
+
+  # 9) Ensure metadata has unique scale values
+  metadata <- metadata %>%
+    dplyr::group_by(scale) %>%
+    dplyr::slice(1) %>%
+    dplyr::ungroup()
+
+  combined <- combined %>%
+    dplyr::left_join(metadata, by = "scale") %>%
+    # Ensure we have unique rows after joining
+    dplyr::distinct(scale, .keep_all = TRUE)
+
+  # 10) Add test metadata columns
+  combined <- combined %>%
+    dplyr::mutate(test = "rbans", test_name = "RBANS Update Form A")
 
   # 11) Create a summary with performance levels
   summary_data <- combined %>%
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(composite_score) >= 115 ~
-          "Superior",
-        score_type == "standard_score" & as.numeric(composite_score) >= 108 ~
-          "Above Average",
-        score_type == "standard_score" & as.numeric(composite_score) >= 92 ~
-          "Average",
-        score_type == "standard_score" & as.numeric(composite_score) >= 85 ~
-          "Low Average",
+        score_type == "standard_score" & as.numeric(composite_score) >= 130 ~
+          "Exceptionally high score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 120 ~
+          "Above average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 110 ~
+          "High average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 90 ~
+          "Average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 80 ~
+          "Low average score",
         score_type == "standard_score" & as.numeric(composite_score) >= 70 ~
-          "Borderline",
+          "Below average score",
         score_type == "standard_score" & as.numeric(composite_score) < 70 ~
-          "Impaired",
+          "Exceptionally low score",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 13 ~
-          "Above Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 8 ~
-          "Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 5 ~
-          "Below Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) < 5 ~
-          "Impaired",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 16 ~
+          "Exceptionally high score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 14 ~
+          "Above average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 12 ~
+          "High average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 9 ~
+          "Average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 7 ~
+          "Low average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 4 ~
+          "Below average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) < 4 ~
+          "Exceptionally low score",
 
         # For percentiles
+        score_type == "percentile" & as.numeric(percentile) >= 98 ~
+          "Exceptionally high score",
+        score_type == "percentile" & as.numeric(percentile) >= 91 ~
+          "Above average score",
         score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "Above Average",
-        score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
+          "High average score",
+        score_type == "percentile" & as.numeric(percentile) >= 25 ~
+          "Average score",
         score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Below Average",
-        score_type == "percentile" & as.numeric(percentile) < 9 ~ "Impaired",
+          "Low average score",
+        score_type == "percentile" & as.numeric(percentile) >= 2 ~
+          "Below average score",
+        score_type == "percentile" & as.numeric(percentile) < 2 ~
+          "Exceptionally low score",
 
         TRUE ~ "Not Available"
       )
     ) %>%
     dplyr::select(
-      patient,
       scale,
       test_name,
       domain,
@@ -515,47 +407,65 @@ process_rbans_unified <- function(
 #' @return A data frame containing the summary report
 #' @export
 create_rbans_summary <- function(rbans_data, output_file = NULL) {
+  # Ensure we have unique rows by scale before creating summary
+  rbans_data <- rbans_data %>% dplyr::distinct(scale, .keep_all = TRUE)
+
   # Create summary with performance levels
   summary_report <- rbans_data %>%
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(composite_score) >= 115 ~
-          "Superior",
-        score_type == "standard_score" & as.numeric(composite_score) >= 108 ~
-          "Above Average",
-        score_type == "standard_score" & as.numeric(composite_score) >= 92 ~
-          "Average",
-        score_type == "standard_score" & as.numeric(composite_score) >= 85 ~
-          "Low Average",
+        score_type == "standard_score" & as.numeric(composite_score) >= 130 ~
+          "Exceptionally high score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 120 ~
+          "Above average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 110 ~
+          "High average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 90 ~
+          "Average score",
+        score_type == "standard_score" & as.numeric(composite_score) >= 80 ~
+          "Low average score",
         score_type == "standard_score" & as.numeric(composite_score) >= 70 ~
-          "Borderline",
+          "Below average score",
         score_type == "standard_score" & as.numeric(composite_score) < 70 ~
-          "Impaired",
+          "Exceptionally low score",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 13 ~
-          "Above Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 8 ~
-          "Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 5 ~
-          "Below Average",
-        score_type == "scaled_score" & as.numeric(scaled_score) < 5 ~
-          "Impaired",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 16 ~
+          "Exceptionally high score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 14 ~
+          "Above average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 12 ~
+          "High average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 9 ~
+          "Average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 7 ~
+          "Low average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) >= 4 ~
+          "Below average score",
+        score_type == "scaled_score" & as.numeric(scaled_score) < 4 ~
+          "Exceptionally low score",
 
         # For percentiles
+        score_type == "percentile" & as.numeric(percentile) >= 98 ~
+          "Exceptionally high score",
+        score_type == "percentile" & as.numeric(percentile) >= 91 ~
+          "Above average score",
         score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "Above Average",
-        score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
+          "High average score",
+        score_type == "percentile" & as.numeric(percentile) >= 25 ~
+          "Average score",
         score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Below Average",
-        score_type == "percentile" & as.numeric(percentile) < 9 ~ "Impaired",
+          "Low average score",
+        score_type == "percentile" & as.numeric(percentile) >= 2 ~
+          "Below average score",
+        score_type == "percentile" & as.numeric(percentile) < 2 ~
+          "Exceptionally low score",
 
         TRUE ~ "Not Available"
       )
     ) %>%
     dplyr::select(
-      dplyr::any_of(c("patient")),
       scale,
       test_name,
       domain,

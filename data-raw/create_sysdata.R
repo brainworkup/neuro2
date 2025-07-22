@@ -1472,7 +1472,7 @@ safe_use_data_internal(
 
 # CSV lookup tables -------------------------------------------------------
 
-#' @name lookup_table
+#' @name lookup_neuropsych_scales
 #' @docType data
 #' @title Neuropsychological Test Scales Lookup Table
 #' @description A data frame containing neuropsychological test scale names, their associated domains, and descriptions. This table is used for mapping scales to their respective cognitive and behavioral domains.
@@ -1613,9 +1613,8 @@ lookup_score_conversions <- readr::read_csv(
 # For other data
 safe_use_data_internal(
   lookup_neuropsych_scales = lookup_neuropsych_scales,
-  lookup_score_conversions = lookup_score_conversions,
-  dots = dots,
-  overwrite = c("lookup_table", "dots")
+  # lookup_score_conversions = lookup_score_conversions,
+  overwrite = c("lookup_neuropsych_scales")
 )
 
 

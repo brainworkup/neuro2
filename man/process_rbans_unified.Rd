@@ -6,9 +6,7 @@
 \usage{
 process_rbans_unified(
   input_file,
-  patient_id,
   test_prefix = "RBANS Update Form A ",
-  lookup_file = NULL,
   output_file = NULL,
   summary_file = NULL,
   manual_percentiles = NULL,
@@ -19,11 +17,7 @@ process_rbans_unified(
 \arguments{
 \item{input_file}{Path to the UTF-16 CSV export from Q-interactive.}
 
-\item{patient_id}{Identifier for the patient (e.g., "Patient001").}
-
 \item{test_prefix}{Prefix used for Subtest names in the export (default: "RBANS Update Form A ").}
-
-\item{lookup_file}{Optional path to a custom RBANS lookup table CSV. If NULL, uses built-in metadata.}
 
 \item{output_file}{Optional path to write the processed data as CSV.}
 
@@ -40,6 +34,6 @@ A list containing two data frames: 'data' (processed data) and 'summary' (perfor
 }
 \description{
 A comprehensive function that processes RBANS Q-interactive exports, combining
-the best features of both existing approaches. It supports built-in metadata,
+the best features of both existing approaches. It supports internal lookup tables,
 manual overrides, summary reporting, and detailed debugging.
 }
