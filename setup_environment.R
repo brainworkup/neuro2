@@ -219,15 +219,22 @@ for (pkg in utility_packages) {
   install_if_missing(pkg)
 }
 
-# Check for template directory
-template_dir <- "inst/extdata/_extensions/neurotyp-forensic"
-if (!dir.exists(template_dir)) {
-  message("\nTemplate directory not found:", template_dir)
-  message("Creating directory structure...")
-  dir.create(template_dir, recursive = TRUE, showWarnings = FALSE)
-  message("You need to ensure template files are placed in this directory.")
-} else {
-  message("\n✓ Template directory exists:", template_dir)
+# Check for template directories
+template_dirs <- c(
+  "inst/quarto/_extensions/brainworkup/neurotyp-adult",
+  "inst/quarto/_extensions/brainworkup/neurotyp-forensic",
+  "inst/quarto/_extensions/brainworkup/neurotyp-pediatric"
+)
+
+for (template_dir in template_dirs) {
+  if (!dir.exists(template_dir)) {
+    message("\nTemplate directory not found:", template_dir)
+    message("Creating directory structure...")
+    dir.create(template_dir, recursive = TRUE, showWarnings = FALSE)
+    message("You need to ensure template files are placed in this directory.")
+  } else {
+    message("\n✓ Template directory exists:", template_dir)
+  }
 }
 
 # Check for data directories
@@ -260,64 +267,17 @@ if (length(csv_files) == 0) {
 qmd_files <- c(
   "_01-00_nse_forensic.qmd",
   "_02-00_behav_obs.qmd",
-  "_02-01_iq_text.qmd",
-  "_02-05_memory_text.qmd",
   "_03-00_sirf_text.qmd",
   "_03-01_recs.qmd"
 )
 
-missing_qmd <- qmd_files[!file.exists(qmd_files)]
-if (length(missing_qmd) > 0) {
-  message("\n⚠️ Some template QMD files are missing. Creating them now:")
-
-  # Template content for _02-01_iq_text.qmd
-  iq_text_content <- paste0(
-    "---\n",
-    "title: \"IQ Text Template\"\n",
-    "format: html\n",
-    "---\n\n",
-    "## Intellectual Functioning\n\n",
-    "The patient was administered the Wechsler Intelligence Scale. Overall intellectual functioning was in the {{iq_range}} range (Full Scale IQ = {{fsiq}}).\n\n",
-    "### Verbal Comprehension\n",
-    "Verbal comprehension abilities were {{vci_desc}} (VCI = {{vci}}).\n\n",
-    "### Perceptual Reasoning\n",
-    "Perceptual reasoning abilities were {{pri_desc}} (PRI = {{pri}}).\n\n",
-    "### Working Memory\n",
-    "Working memory abilities were {{wmi_desc}} (WMI = {{wmi}}).\n\n",
-    "### Processing Speed\n",
-    "Processing speed abilities were {{psi_desc}} (PSI = {{psi}}).\n"
-  )
-
-  # Template content for _02-05_memory_text.qmd
-  memory_text_content <- paste0(
-    "---\n",
-    "title: \"Memory Text Template\"\n",
-    "format: html\n",
-    "---\n\n",
-    "## Memory Functioning\n\n",
-    "### Immediate Memory\n",
-    "The patient's immediate memory abilities were {{immediate_memory_desc}}.\n\n",
-    "### Delayed Memory\n",
-    "The patient's delayed memory abilities were {{delayed_memory_desc}}.\n\n",
-    "### Working Memory\n",
-    "The patient's working memory abilities were {{working_memory_desc}}.\n\n",
-    "### Memory Profile\n",
-    "Overall, the patient's memory profile indicates {{memory_profile_summary}}.\n"
-  )
-
-  # Create the missing files
-  for (file in missing_qmd) {
-    message(paste0("  - Creating ", file))
-    if (file == "_02-01_iq_text.qmd") {
-      cat(iq_text_content, file = file)
-    } else if (file == "_02-05_memory_text.qmd") {
-      cat(memory_text_content, file = file)
-    }
+message("\nChecking for template QMD files...")
+for (file in qmd_files) {
+  if (file.exists(file)) {
+    message(paste0("✓ Found template file: ", file))
+  } else {
+    message(paste0("⚠️ Template file not found: ", file))
   }
-
-  message("Template QMD files created successfully.")
-} else {
-  message("\n✓ All template QMD files are present.")
 }
 
 message("\n✓ Environment setup complete.")
