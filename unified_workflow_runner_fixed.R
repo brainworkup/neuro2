@@ -247,13 +247,13 @@ WorkflowRunner <- R6::R6Class(
       log_message("Step 3: Generating domain files...", "WORKFLOW")
 
       # Check for required R6 classes
-      log_message("Checking for required R6 classes for domain processing...", "DOMAINS")
-      
-      r6_domain_files <- c(
-        "R/NeuropsychResultsR6.R",
-        "R/DomainProcessorR6.R"
+      log_message(
+        "Checking for required R6 classes for domain processing...",
+        "DOMAINS"
       )
-      
+
+      r6_domain_files <- c("R/NeuropsychResultsR6.R", "R/DomainProcessorR6.R")
+
       missing_r6_files <- r6_domain_files[!file.exists(r6_domain_files)]
       if (length(missing_r6_files) > 0) {
         log_message("Some required R6 class files are missing:", "WARNING")
@@ -262,8 +262,11 @@ WorkflowRunner <- R6::R6Class(
         }
         log_message("Will use fallback domain generation method", "WARNING")
       } else {
-        log_message("All required R6 class files for domain processing are present", "DOMAINS")
-        
+        log_message(
+          "All required R6 class files for domain processing are present",
+          "DOMAINS"
+        )
+
         # Check if neurocog data exists
         neurocog_exists <- file.exists(file.path(
           self$config$data$output_dir,
@@ -273,53 +276,62 @@ WorkflowRunner <- R6::R6Class(
             self$config$data$output_dir,
             "neurocog.parquet"
           )) ||
-          file.exists(file.path(self$config$data$output_dir, "neurocog.feather"))
-        
+          file.exists(file.path(
+            self$config$data$output_dir,
+            "neurocog.feather"
+          ))
+
         if (!neurocog_exists) {
           log_message("No neurocog data files found", "DOMAINS")
         } else {
           # Load the R6 classes
           source("R/NeuropsychResultsR6.R")
           source("R/DomainProcessorR6.R")
-          
+
           # Get all unique domains from the neurocog data
           tryCatch(
             {
-              log_message("Using DomainProcessorR6 to generate domain files", "DOMAINS")
-              
+              log_message(
+                "Using DomainProcessorR6 to generate domain files",
+                "DOMAINS"
+              )
+
               # Get the list of domains from the data
               domains_data <- query_neuropsych(
                 "SELECT DISTINCT domain FROM neurocog WHERE domain IS NOT NULL",
                 self$config$data$output_dir
               )
-              
+
               log_message(
                 paste0("Found ", nrow(domains_data), " unique domains"),
                 "DOMAINS"
               )
-              
+
               # Process each domain
               for (i in 1:nrow(domains_data)) {
                 domain <- domains_data$domain[i]
-                
+
                 # Create a domain processor for this domain
                 domain_processor <- DomainProcessorR6$new(
                   domains = domain,
                   pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
-                  input_file = file.path(self$config$data$output_dir, "neurocog.parquet"),
+                  input_file = file.path(
+                    self$config$data$output_dir,
+                    "neurocog.parquet"
+                  ),
                   output_dir = self$config$data$output_dir
                 )
-                
+
                 # Process the domain and generate files
                 domain_processor$process(
                   generate_reports = TRUE,
                   report_types = c("self"),
                   generate_domain_files = TRUE
                 )
-                
+
                 log_message(paste0("Processed domain: ", domain), "DOMAINS")
               }
-              
+
               # Also check neurobehav data for additional domains
               if (
                 file.exists(file.path(
@@ -339,35 +351,41 @@ WorkflowRunner <- R6::R6Class(
                   "SELECT DISTINCT domain FROM neurobehav WHERE domain IS NOT NULL",
                   self$config$data$output_dir
                 )
-                
+
                 # Process behavioral domains
                 for (i in 1:nrow(behav_domains_data)) {
                   domain <- behav_domains_data$domain[i]
-                  
+
                   # Skip if already processed
                   if (domain %in% domains_data$domain) {
                     next
                   }
-                  
+
                   # Create a domain processor for this domain
                   domain_processor <- DomainProcessorR6$new(
                     domains = domain,
                     pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
-                    input_file = file.path(self$config$data$output_dir, "neurobehav.parquet"),
+                    input_file = file.path(
+                      self$config$data$output_dir,
+                      "neurobehav.parquet"
+                    ),
                     output_dir = self$config$data$output_dir
                   )
-                  
+
                   # Process the domain and generate files
                   domain_processor$process(
                     generate_reports = TRUE,
                     report_types = c("self"),
                     generate_domain_files = TRUE
                   )
-                  
-                  log_message(paste0("Processed behavioral domain: ", domain), "DOMAINS")
+
+                  log_message(
+                    paste0("Processed behavioral domain: ", domain),
+                    "DOMAINS"
+                  )
                 }
               }
-              
+
               # List generated domain files
               domain_files <- list.files(".", pattern = "_02-.*\\.qmd$")
               if (length(domain_files) > 0) {
@@ -380,8 +398,14 @@ WorkflowRunner <- R6::R6Class(
               }
             },
             error = function(e) {
-              log_message(paste0("Error processing domains: ", e$message), "ERROR")
-              log_message("Will use fallback domain generation method", "WARNING")
+              log_message(
+                paste0("Error processing domains: ", e$message),
+                "ERROR"
+              )
+              log_message(
+                "Will use fallback domain generation method",
+                "WARNING"
+              )
             }
           )
         }
