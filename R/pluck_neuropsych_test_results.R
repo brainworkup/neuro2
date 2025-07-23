@@ -621,8 +621,8 @@ pluck_wiat4 <- function(
   extract_columns = c(1, 2, 3, 4, 5),
   score_type = "standard_score",
   variables = c("scale", "raw_score", "score", "ci_95", "percentile"),
-  lookup_table_path = "~/Dropbox/neuropsych_lookup_table_combined.csv",
-  output_dir = here::here("data", "csv"),
+  lookup_table_path = "~/Dropbox/neuropsych_lookup_table.csv",
+  output_dir = here::here("data-raw", "csv"),
   g_file_name = "2"
 ) {
   # WIAT-4 parameters
@@ -657,7 +657,6 @@ pluck_wiat4 <- function(
     copy = TRUE
   )
 
-  # Loop and Save
   # Loop over the list and write each matrix to a CSV file
   for (i in seq_along(extracted_areas)) {
     write.csv(
@@ -677,9 +676,9 @@ pluck_wiat4 <- function(
 
   # To convert a single test using extracted areas into a single data frame
   if (length(extracted_areas) > 1) {
-    df <- as.data.frame(extracted_areas[[1]])
-    df2 <- data.frame(extracted_areas[[2]])
-    df <- dplyr::bind_rows(df, df2)
+    df1 <- as.data.frame(extracted_areas[[1]])
+    df2 <- as.data.frame(extracted_areas[[2]])
+    df <- dplyr::bind_rows(df1, df2)
   } else {
     df <- as.data.frame(extracted_areas[[1]])
   }
@@ -763,7 +762,7 @@ pluck_wiat4 <- function(
       )
     ) |>
     dplyr::select(-description) |>
-    dplyr::relocate(dplyr::all_of(c("absort", "score_type")), .after = result)
+    dplyr::relocate(dplyr::all_of(c("absort")), .before = result)
 
   # Create output directory if it doesn't exist
   if (!dir.exists(output_dir)) {

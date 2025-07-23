@@ -1,72 +1,72 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-07-22 21:26:32.185376 
+Date: 2025-07-23 01:29:41.778354 
 
-[2025-07-22 21:26:32] [CONFIG] Loading configuration from: config.yml
-[2025-07-22 21:26:32] [CONFIG] Configuration loaded successfully
-[2025-07-22 21:26:32] [CONFIG] Patient: Ethan
-[2025-07-22 21:26:32] [CONFIG] Age: 13
-[2025-07-22 21:26:32] [CONFIG] DOE: 2025-07-21
-[2025-07-22 21:26:32] [INFO] Initialized WorkflowRunner for patient: Ethan
-[2025-07-22 21:26:32] [WORKFLOW] Starting unified workflow for patient: Ethan
-[2025-07-22 21:26:32] [WORKFLOW] Step 1: Setting up environment...
-[2025-07-22 21:26:32] [SETUP] Running setup_environment.R
-[2025-07-22 21:26:32] [SETUP] All required R6 class files are present
-[2025-07-22 21:26:32] [SETUP] Found 7 CSV files in data-raw/csv
-[2025-07-22 21:26:32] [SETUP] Environment setup complete
-[2025-07-22 21:26:32] [WORKFLOW] Step 2: Processing data...
-[2025-07-22 21:26:32] [DATA] data_processor_module.R not found. Using fallback processing.
-[2025-07-22 21:26:32] [DATA] Using DuckDB data processor
-[2025-07-22 21:26:33] [DATA] Data processing complete
-[2025-07-22 21:26:33] [WORKFLOW] Step 3: Generating domain files...
-[2025-07-22 21:26:33] [DOMAINS] Checking for required R6 classes for domain processing...
-[2025-07-22 21:26:33] [DOMAINS] All required R6 class files for domain processing are present
-[2025-07-22 21:26:33] [DOMAINS] Using DomainProcessorR6 to generate domain files
-[2025-07-22 21:26:33] [DOMAINS] Found 6 unique domains
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: Verbal/Language
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: Attention/Executive
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: Motor
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: Memory
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: Visual Perception/Construction
-[2025-07-22 21:26:33] [DOMAINS] Processed domain: General Cognitive Ability
-[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Personality Disorders
-[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Psychiatric Disorders
-[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Substance Use
-[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Behavioral/Emotional/Social
-[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Psychosocial Problems
-[2025-07-22 21:26:33] [DOMAINS] Generated domain files:
-[2025-07-22 21:26:33] [DOMAINS]   - _02-00_behav_obs.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-05_memory_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-05_memory.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-07_motor_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-07_motor.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_attention_executive_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_behavioral_emotional_social_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_general_cognitive_ability_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_memory_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_motor_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_personality_disorders_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_psychiatric_disorders_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_psychosocial_problems_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_substance_use_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_verbal_language_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-09_visual_perception_construction_adult_text_self.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_attention_executive_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_attention_executive.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_behavioral_emotional_social_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_behavioral_emotional_social.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_general_cognitive_ability_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_general_cognitive_ability.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_personality_disorders_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_personality_disorders.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychiatric_disorders_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychiatric_disorders.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychosocial_problems_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychosocial_problems.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_substance_use_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_substance_use.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_verbal_language_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_verbal_language.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_visual_perception_construction_text.qmd
-[2025-07-22 21:26:33] [DOMAINS]   - _02-99_visual_perception_construction.qmd
-[2025-07-22 21:26:33] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
-[2025-07-22 21:26:33] [DOMAINS] Using neuro2_R6_update_workflow.R
+[2025-07-23 01:29:42] [CONFIG] Loading configuration from: config.yml
+[2025-07-23 01:29:42] [CONFIG] Configuration loaded successfully
+[2025-07-23 01:29:42] [CONFIG] Patient: Ethan
+[2025-07-23 01:29:42] [CONFIG] Age: 13
+[2025-07-23 01:29:42] [CONFIG] DOE: 2025-07-21
+[2025-07-23 01:29:42] [INFO] Initialized WorkflowRunner for patient: Ethan
+[2025-07-23 01:29:42] [WORKFLOW] Starting unified workflow for patient: Ethan
+[2025-07-23 01:29:42] [WORKFLOW] Step 1: Setting up environment...
+[2025-07-23 01:29:42] [SETUP] Running setup_environment.R
+[2025-07-23 01:29:42] [SETUP] Copying template files to working directory...
+[2025-07-23 01:29:42] [SETUP] Copied template file: _00-00_tests.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _01-00_nse_adult.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _01-00_nse_forensic.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _01-00_nse_pediatric.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _01-00_nse_referral.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _02-00_behav_obs.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-00_dsm5_icd10_dx.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-00_sirf_text.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-00_sirf.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-01_recs.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-02_signature.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-03_appendix.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-03a_informed_consent.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _03-03b_examiner_qualifications.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _include_domains.qmd
+[2025-07-23 01:29:42] [SETUP] Copied template file: _quarto.yml
+[2025-07-23 01:29:42] [SETUP] Copied template file: _variables.yml
+[2025-07-23 01:29:42] [SETUP] Template file already exists: template.qmd
+[2025-07-23 01:29:42] [SETUP] All required R6 class files are present
+[2025-07-23 01:29:42] [SETUP] Found 8 CSV files in data-raw/csv
+[2025-07-23 01:29:42] [SETUP] Environment setup complete
+[2025-07-23 01:29:42] [WORKFLOW] Step 2: Processing data...
+[2025-07-23 01:29:42] [DATA] Running data_processor_module.R
+[2025-07-23 01:29:42] [DATA] Starting data processing with DuckDB
+[2025-07-23 01:29:42] [DATA] Data processing completed successfully
+[2025-07-23 01:29:42] [DATA] Data processing complete
+[2025-07-23 01:29:42] [WORKFLOW] Step 3: Generating domain files...
+[2025-07-23 01:29:42] [DOMAINS] Checking for required R6 classes for domain processing...
+[2025-07-23 01:29:42] [DOMAINS] All required R6 class files for domain processing are present
+[2025-07-23 01:29:42] [DOMAINS] Using DomainProcessorR6 to generate domain files
+[2025-07-23 01:29:42] [DOMAINS] Found 7 unique domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Verbal/Language - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Attention/Executive - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Academic Skills - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Motor - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Memory - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: Visual Perception/Construction - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing domain: General Cognitive Ability - 'data/neurocog.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:42] [ERROR] Error processing behavioral domain: Substance Use - 'data/neurobehav.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:42] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:43] [ERROR] Error processing behavioral domain: Personality Disorders - 'data/neurobehav.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:43] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:43] [ERROR] Error processing behavioral domain: Behavioral/Emotional/Social - 'data/neurobehav.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:43] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:43] [ERROR] Error processing behavioral domain: Psychosocial Problems - 'data/neurobehav.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:43] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:43] [ERROR] Error processing behavioral domain: Psychiatric Disorders - 'data/neurobehav.all' does not exist in current working directory ('/Users/joey/neuro2').
+[2025-07-23 01:29:43] [WARNING] Will try to continue with other domains
+[2025-07-23 01:29:43] [DOMAINS] Generated domain files:
+[2025-07-23 01:29:43] [DOMAINS]   - _02-00_behav_obs.qmd
+[2025-07-23 01:29:43] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
+[2025-07-23 01:29:43] [DOMAINS] Using neuro2_R6_update_workflow.R

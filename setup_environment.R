@@ -268,20 +268,19 @@ if (length(csv_files) == 0) {
   }
 }
 
-# Check for template QMD files
+# Check only for essential template files that should already exist
+# Other template files will be copied by the WorkflowRunner later
 qmd_files <- c(
-  "_01-00_nse_forensic.qmd",
-  "_02-00_behav_obs.qmd",
-  "_03-00_sirf_text.qmd",
-  "_03-01_recs.qmd"
+  "template.qmd"  # Only check for the main template file
 )
 
-message("\nChecking for template QMD files...")
+message("\nChecking for essential template files...")
 for (file in qmd_files) {
   if (file.exists(file)) {
     message(paste0("✓ Found template file: ", file))
   } else {
-    message(paste0("⚠️ Template file not found: ", file))
+    message(paste0("⚠️ Essential template file not found: ", file))
+    message("  This file is required and should be created before running the workflow.")
   }
 }
 

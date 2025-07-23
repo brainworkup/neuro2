@@ -620,32 +620,7 @@ run_r6_update_workflow <- function() {
   # Update SIRF file
   update_sirf_with_r6()
 
-  # Update _include_domains.qmd if needed
-  update_include_domains <- function() {
-    message("\n🔗 Updating _include_domains.qmd...")
-
-    # List all domain files in order
-    domain_files <- c(
-      "_02-01_iq.qmd",
-      "_02-02_academics.qmd",
-      "_02-03_verbal.qmd",
-      "_02-04_spatial.qmd",
-      "_02-05_memory.qmd",
-      "_02-06_executive.qmd",
-      "_02-09_adhd_adult.qmd",
-      "_02-10_emotion_adult.qmd"
-    )
-
-    # Create include statements
-    includes <- paste0("{{< include ", domain_files, " >}}\n")
-
-    # Write to file
-    writeLines(includes, "_include_domains.qmd")
-    message("✅ Updated _include_domains.qmd")
-    log_message("Updated _include_domains.qmd", "DOMAINS")
-  }
-
-  update_include_domains()
+  # Domain files are now generated dynamically, no need to update _include_domains.qmd
 
   message("\n🎉 R6 UPDATE WORKFLOW COMPLETE!")
   message("=====================================")
