@@ -78,8 +78,8 @@ tryCatch(
     # Create sample CSV data
     neurocog_data <- data.frame(
       domain = c("General Cognitive Ability", "Memory"),
-      test = c("WAIS-IV", "WMS-IV"),
-      scale = c("FSIQ", "Auditory Memory"),
+      test = c("wais4", "wms4"),
+      scale = c("General Ability (GAI)", "Logical Memory I"),
       score = c(100, 95),
       z = c(0, -0.33),
       percentile = c(50, 45),

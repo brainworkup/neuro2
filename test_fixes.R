@@ -38,7 +38,8 @@ file.copy(
 # Create sample CSV data files
 neurocog_data <- data.frame(
   domain = c("General Cognitive Ability", "Memory", "Attention/Executive"),
-  test = c("WAIS-IV", "WMS-IV", "D-KEFS"),
+  test = c("wais4", "wms4", "dkefs"),
+  test_name = c("WAIS-IV", "WMS-IV", "D-KEFS"),
   scale = c("FSIQ", "Auditory Memory", "Trail Making"),
   score = c(100, 95, 90),
   z = c(0, -0.33, -0.67),
@@ -49,8 +50,9 @@ neurocog_data <- data.frame(
 
 neurobehav_data <- data.frame(
   domain = c("ADHD", "Psychiatric Disorders"),
-  test = c("CAARS", "MMPI-2"),
-  scale = c("Inattention", "Depression"),
+  test = c("caars2_self", "pai"),
+  test_name = c("CAARS2 Self", "PAI"),
+  scale = c("Inattention/Executive Dysfunction", "Depression"),
   score = c(65, 70),
   z = c(1.5, 2.0),
   percentile = c(93, 98),
@@ -72,7 +74,7 @@ date_of_evaluation: "2023-01-01"
 age: 23
 gender: "male"
 ',
-  file = "_variables.yml"
+  file = "_variables_test.yml"
 )
 
 # Create a minimal _03-00_sirf_text.qmd file

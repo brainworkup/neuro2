@@ -26,7 +26,6 @@ if (file.exists("R/load_packages.R")) {
   library(dplyr)
   library(gt)
 }
-
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
