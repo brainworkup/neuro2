@@ -5,16 +5,16 @@
 \title{Template Content Manager for Neuropsychological Reports}
 \description{
 An R6 class that manages Quarto template content for neuropsychological report generation.
-This class provides functionality to access and organize template sections used in
+This class provides functionality to access and organize template domains used in
 constructing comprehensive neuropsychological assessment reports.
 }
 \details{
 The TemplateContentManagerR6 class scans a specified directory for template files (Quarto .qmd files
 with names starting with underscore), categorizes them by section type based on filename
 prefixes, and provides methods to access their content. This facilitates modular report
-construction by allowing selective inclusion of sections based on assessment needs.
+construction by allowing selective inclusion of domains based on assessment needs.
 
-The class categorizes template files into sections:
+The class categorizes template files into domains:
 \itemize{
 \item Tests (_00*): Test descriptions and administration details
 \item NSE (Neurobehavioral Status Exam) (_01*): Clinical interview and behavioral observations
@@ -23,14 +23,14 @@ The class categorizes template files into sections:
 }
 }
 \examples{
-# Example 1: Initialize and list available sections
+# Example 1: Initialize and list available domains
 template_mgr <- TemplateContentManagerR6$new()
-sections <- template_mgr$get_available_sections()
-print(sections$domains) # List available domain templates
+domains <- template_mgr$get_available_domains()
+print(domains$domains) # List available domain templates
 
 # Example 2: Retrieve content from a specific template file
 template_mgr <- TemplateContentManagerR6$new(
-  template_dir = "inst/extdata/_extensions/neurotyp-adult"
+  template_dir = "inst/quarto/_extensions/brainworkup"
 )
 iq_content <- template_mgr$get_content("_02-01_iq.qmd")
 if (!is.null(iq_content)) {
@@ -42,7 +42,7 @@ if (!is.null(iq_content)) {
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{template_dir}}{Character string specifying the directory containing template files}
+\item{\code{template_dir}}{Character string specifying the directory containing template files (default: "inst/quarto/_extensions/brainworkup")}
 
 \item{\code{content_files}}{Character vector of template filenames found in the template directory}
 }
@@ -54,7 +54,7 @@ if (!is.null(iq_content)) {
 \item \href{#method-TemplateContentManagerR6-new}{\code{TemplateContentManagerR6$new()}}
 \item \href{#method-TemplateContentManagerR6-refresh_content_list}{\code{TemplateContentManagerR6$refresh_content_list()}}
 \item \href{#method-TemplateContentManagerR6-get_content}{\code{TemplateContentManagerR6$get_content()}}
-\item \href{#method-TemplateContentManagerR6-get_available_sections}{\code{TemplateContentManagerR6$get_available_sections()}}
+\item \href{#method-TemplateContentManagerR6-get_available_domains}{\code{TemplateContentManagerR6$get_available_domains()}}
 \item \href{#method-TemplateContentManagerR6-clone}{\code{TemplateContentManagerR6$clone()}}
 }
 }
@@ -65,7 +65,7 @@ if (!is.null(iq_content)) {
 Initialize a new TemplateContentManagerR6 object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TemplateContentManagerR6$new(
-  template_dir = "inst/quarto/templates/typst-report"
+  template_dir = "inst/quarto/_extensions/brainworkup"
 )}\if{html}{\out{</div>}}
 }
 
@@ -73,7 +73,7 @@ Initialize a new TemplateContentManagerR6 object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{template_dir}}{Character string specifying the directory containing template files
-(default: "inst/quarto/templates/typst-report")}
+(default: "inst/quarto/_extensions/brainworkup")}
 }
 \if{html}{\out{</div>}}
 }
@@ -123,12 +123,12 @@ with a warning
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TemplateContentManagerR6-get_available_sections"></a>}}
-\if{latex}{\out{\hypertarget{method-TemplateContentManagerR6-get_available_sections}{}}}
-\subsection{Method \code{get_available_sections()}}{
-Get a categorized list of available template sections
+\if{html}{\out{<a id="method-TemplateContentManagerR6-get_available_domains"></a>}}
+\if{latex}{\out{\hypertarget{method-TemplateContentManagerR6-get_available_domains}{}}}
+\subsection{Method \code{get_available_domains()}}{
+Get a categorized list of available template domains
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TemplateContentManagerR6$get_available_sections()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TemplateContentManagerR6$get_available_domains()}\if{html}{\out{</div>}}
 }
 
 \subsection{Details}{

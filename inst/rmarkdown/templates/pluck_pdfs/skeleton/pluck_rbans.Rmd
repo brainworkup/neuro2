@@ -1,7 +1,7 @@
 ---
 title: "Create table and csv for RBANS"
 params:
-  patient: Ethan
+  patient: "Biggie"
   test:
     label: "Test"
     value: rbans
@@ -122,8 +122,6 @@ suppressPackageStartupMessages({
   if (requireNamespace("pdftools", quietly = TRUE)) library(pdftools)
   if (requireNamespace("hablar", quietly = TRUE)) library(hablar)
   if (requireNamespace("googledrive", quietly = TRUE)) library(googledrive)
-  if (requireNamespace("bwu", quietly = TRUE)) library(bwu)
-  if (requireNamespace("NeurotypR", quietly = TRUE)) library(NeurotypR)
 })
 ```
 
@@ -244,7 +242,7 @@ pluck_rbans_raw <- function(
   return(df_raw)
 }
 # Define output file path for raw scores
-output_file_path <- "data/processed_rbans_raw_data.csv"
+output_file_path <- "data-raw/processed_rbans_raw_data.csv"
 
 # Run it
 rbans_raw <- pluck_rbans_raw(
@@ -257,9 +255,9 @@ rbans_raw <- pluck_rbans_raw(
 ## SCALED SCORES
 
 ```{r}
-# input_file_path <- "data/004004907_3_10_2024.csv"
+# input_file_path <- "data-raw/004004907_3_10_2024.csv"
 # test_name_prefix <- "RBANS Update Form A "
-output_file_path <- "data/processed_rbans_scaled_data.csv"
+output_file_path <- "data-raw/processed_rbans_scaled_data.csv"
 
 # function
 pluck_rbans_score <- function(
@@ -339,7 +337,7 @@ rbans_score <- pluck_rbans_score(
 ## SUBTEST COMPLETION TIMES
 
 ```{r}
-output_file_path <- "data/processed_rbans_completion_time_data.csv"
+output_file_path <- "data-raw/processed_rbans_completion_time_data.csv"
 
 # function
 pluck_rbans_completion_times <- function(
@@ -421,7 +419,7 @@ rbans_time <- pluck_rbans_completion_times(
 ## COMPOSITE SCORES
 
 ```{r}
-output_file_path <- "data/processed_rbans_composite_data.csv"
+output_file_path <- "data-raw/processed_rbans_composite_data.csv"
 
 # function
 pluck_rbans_composite <- function(
@@ -483,7 +481,7 @@ pluck_rbans_composite <- function(
     # Filter based on the prefix
     filter(str_starts(scale, test_name_prefix)) |>
     select(-c(ci_90_lo, ci_90_up)) |>
-    mutate(
+    dplyr::mutate(
       scale = as.character(scale),
       score = as.numeric(score),
       percentile = as.numeric(percentile),
@@ -535,7 +533,7 @@ process_and_save_rbans_data <- function(
 
   # Join the data into one dataframe by the test name
   df <- left_join(rbans_raw, rbans_score, by = "scale") |>
-    mutate(percentile = as.numeric(""), range = as.character("")) |>
+    dplyr::mutate(percentile = as.numeric(""), range = as.character("")) |>
     left_join(rbans_time, by = "scale")
 
   # Update specific percentile values
@@ -552,8 +550,8 @@ process_and_save_rbans_data <- function(
 
   # Recalculate percentiles based on score
   df <- df |>
-    mutate(z = ifelse(!is.na(score), (score - 10) / 3, NA)) |>
-    mutate(
+    dplyr::mutate(z = ifelse(!is.na(score), (score - 10) / 3, NA)) |>
+    dplyr::mutate(
       percentile = ifelse(is.na(percentile), trunc(pnorm(z) * 100), percentile)
     ) |>
     select(-z)
@@ -562,12 +560,12 @@ process_and_save_rbans_data <- function(
   df <- bind_rows(df, rbans_composite) |>
     relocate(completion_time_seconds, .after = ci_95_upper)
 
-  # Test score ranges (assuming NeurotypR::gpluck_make_score_ranges is a predefined function)
-  df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+  # Test score ranges (assuming gpluck_make_score_ranges is a predefined function)
+  df <- gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 
   # Remove prefix from scale names
   df <- df |>
-    mutate(scale = str_remove(scale, test_name_prefix))
+    dplyr::mutate(scale = str_remove(scale, test_name_prefix))
 
   scales_to_rename <- c(
     "Immediate Memory Index (IMI)" = "Immediate Memory Index",
@@ -617,7 +615,7 @@ if (!("ci_95_lower" %in% names(rbans) && "ci_95_upper" %in% names(rbans))) {
   )
 }
 
-rbans <- NeurotypR::gpluck_make_columns(
+rbans <- gpluck_make_columns(
   data = rbans,
   test = params$test,
   test_name = params$test_name,
@@ -694,7 +692,7 @@ rbans <-
   rbans |>
   dplyr::mutate(
     subdomain = dplyr::case_when(
-      is.character(scale) & scale == "RBANS Total Index" ~ "Neuropsychological Functioning",
+      is.character(scale) & scale == "RBANS Total Index" ~ "Neurocognitive Index",
       is.character(scale) & scale == "Immediate Memory Index" ~ "Neuropsychological Functioning",
       is.character(scale) & scale == "List Learning" ~ "Learning Efficiency",
       is.character(scale) & scale == "Story Memory" ~ "Learning Efficiency",
@@ -723,7 +721,7 @@ rbans <-
 ```{r}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     narrow = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~ "RBANS Total Index",
       is.character(scale) & scale == "Immediate Memory Index" ~ "RBANS Memory Index",
@@ -754,7 +752,7 @@ rbans <-
 ```{r}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     timed = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~ "",
       is.character(scale) & scale == "Immediate Memory Index" ~ "Untimed",
@@ -784,7 +782,7 @@ rbans <-
 ```{r}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     verbal = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~ "",
       is.character(scale) & scale == "Immediate Memory Index" ~ "Verbal",
@@ -814,7 +812,7 @@ rbans <-
 ```{r pass}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     pass = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~ "",
       is.character(scale) & scale == "Immediate Memory Index" ~ "Sequential",
@@ -844,7 +842,7 @@ rbans <-
 ```{r score-type}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     score_type = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~ "standard_score",
       is.character(scale) & scale == "Immediate Memory Index" ~ "standard_score",
@@ -874,7 +872,7 @@ rbans <-
 ```{r}
 rbans <-
   rbans |>
-  mutate(
+  dplyr::mutate(
     description = case_when(
       is.character(scale) & scale == "RBANS Total Index" ~
         "composite indicator of general cognitive functioning",
@@ -933,7 +931,7 @@ rbans <-
 ```{r}
 readr::write_excel_csv(
   rbans,
-  here::here("data", "csv", "rbans.csv"),
+  here::here("data-raw", "csv", "rbans.csv"),
   col_names = TRUE,
   na = ""
 )

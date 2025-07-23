@@ -6,23 +6,23 @@
 \usage{
 generate_neuropsych_report(
   variables = NULL,
-  template_dir = "inst/extdata/_extensions",
+  template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = ".",
-  sections = NULL,
+  domains = NULL,
   data_paths = NULL,
   output_file = "report_template.qmd",
   render = TRUE,
-  output_format = "pdf"
+  output_format = "neurotypr-adult-typst"
 )
 }
 \arguments{
 \item{variables}{List of variables or path to a YAML file containing variables.}
 
-\item{template_dir}{Directory containing the template files (default: "inst/quarto/templates/typst-report").}
+\item{template_dir}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
 
 \item{output_dir}{Directory where generated reports will be saved (default: ".").}
 
-\item{sections}{List of sections to include in the report (default: NULL, will use all sections).}
+\item{domains}{List of domains to include in the report (default: NULL, will use all domains).}
 
 \item{data_paths}{List of paths to data files (default: NULL).}
 
@@ -30,7 +30,7 @@ generate_neuropsych_report(
 
 \item{render}{Whether to render the report after generating the template (default: TRUE).}
 
-\item{output_format}{Output format for rendering (default: "pdf").}
+\item{output_format}{Output format for rendering (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").}
 }
 \value{
 Invisibly returns the ReportTemplateR6 object.

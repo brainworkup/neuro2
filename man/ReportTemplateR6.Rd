@@ -19,9 +19,9 @@ This class handles template variables, section inclusion, and report generation.
 \item{load_variables}{Load variables from a YAML file or list.}
 \item{set_variable}{Set a specific variable value.}
 \item{get_variable}{Get a specific variable value.}
-\item{set_sections}{Set the sections to include in the report.}
-\item{add_section}{Add a section to the report.}
-\item{remove_section}{Remove a section from the report.}
+\item{set_domains}{Set the domains to include in the report.}
+\item{add_domain}{Add a domain to the report.}
+\item{remove_domain}{Remove a domain from the report.}
 \item{generate_template}{Generate the Quarto template file.}
 \item{render_report}{Render the report using Quarto.}
 }
@@ -32,11 +32,11 @@ This class handles template variables, section inclusion, and report generation.
 \describe{
 \item{\code{variables}}{List of variables used in the report template.}
 
-\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/templates/typst-report").}
+\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
 
 \item{\code{output_dir}}{Directory where generated reports will be saved (default: ".").}
 
-\item{\code{sections}}{List of sections to include in the report.}
+\item{\code{domains}}{List of domains to include in the report.}
 
 \item{\code{data_paths}}{List of paths to data files.}
 
@@ -51,9 +51,9 @@ This class handles template variables, section inclusion, and report generation.
 \item \href{#method-ReportTemplateR6-load_variables}{\code{ReportTemplateR6$load_variables()}}
 \item \href{#method-ReportTemplateR6-set_variable}{\code{ReportTemplateR6$set_variable()}}
 \item \href{#method-ReportTemplateR6-get_variable}{\code{ReportTemplateR6$get_variable()}}
-\item \href{#method-ReportTemplateR6-set_sections}{\code{ReportTemplateR6$set_sections()}}
-\item \href{#method-ReportTemplateR6-add_section}{\code{ReportTemplateR6$add_section()}}
-\item \href{#method-ReportTemplateR6-remove_section}{\code{ReportTemplateR6$remove_section()}}
+\item \href{#method-ReportTemplateR6-set_domains}{\code{ReportTemplateR6$set_domains()}}
+\item \href{#method-ReportTemplateR6-add_domain}{\code{ReportTemplateR6$add_domain()}}
+\item \href{#method-ReportTemplateR6-remove_domain}{\code{ReportTemplateR6$remove_domain()}}
 \item \href{#method-ReportTemplateR6-generate_template}{\code{ReportTemplateR6$generate_template()}}
 \item \href{#method-ReportTemplateR6-render_report}{\code{ReportTemplateR6$render_report()}}
 \item \href{#method-ReportTemplateR6-clone}{\code{ReportTemplateR6$clone()}}
@@ -67,9 +67,9 @@ Initialize a new ReportTemplateR6 object with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$new(
   variables = NULL,
-  template_dir = "inst/extdata/_extensions",
+  template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = ".",
-  sections = NULL,
+  domains = NULL,
   data_paths = NULL,
   packages = NULL
 )}\if{html}{\out{</div>}}
@@ -80,11 +80,11 @@ Initialize a new ReportTemplateR6 object with configuration parameters.
 \describe{
 \item{\code{variables}}{List of variables or path to a YAML file containing variables.}
 
-\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/templates/typst-report").}
+\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
 
 \item{\code{output_dir}}{Directory where generated reports will be saved (default: ".").}
 
-\item{\code{sections}}{List of sections to include in the report (default: NULL, will use all sections).}
+\item{\code{domains}}{List of domains to include in the report (default: NULL, will use all domains).}
 
 \item{\code{data_paths}}{List of paths to data files (default: NULL).}
 
@@ -159,18 +159,18 @@ The value of the variable.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ReportTemplateR6-set_sections"></a>}}
-\if{latex}{\out{\hypertarget{method-ReportTemplateR6-set_sections}{}}}
-\subsection{Method \code{set_sections()}}{
-Set the sections to include in the report.
+\if{html}{\out{<a id="method-ReportTemplateR6-set_domains"></a>}}
+\if{latex}{\out{\hypertarget{method-ReportTemplateR6-set_domains}{}}}
+\subsection{Method \code{set_domains()}}{
+Set the domains to include in the report.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$set_sections(sections)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$set_domains(domains)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sections}}{List of section file names.}
+\item{\code{domains}}{List of domain file names.}
 }
 \if{html}{\out{</div>}}
 }
@@ -179,20 +179,20 @@ Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ReportTemplateR6-add_section"></a>}}
-\if{latex}{\out{\hypertarget{method-ReportTemplateR6-add_section}{}}}
-\subsection{Method \code{add_section()}}{
-Add a section to the report.
+\if{html}{\out{<a id="method-ReportTemplateR6-add_domain"></a>}}
+\if{latex}{\out{\hypertarget{method-ReportTemplateR6-add_domain}{}}}
+\subsection{Method \code{add_domain()}}{
+Add a domain to the report.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$add_section(section, position = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$add_domain(domain, position = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{section}}{Section file name.}
+\item{\code{domain}}{Domain file name.}
 
-\item{\code{position}}{Position to insert the section (default: end of list).}
+\item{\code{position}}{Position to insert the domain (default: end of list).}
 }
 \if{html}{\out{</div>}}
 }
@@ -201,18 +201,18 @@ Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ReportTemplateR6-remove_section"></a>}}
-\if{latex}{\out{\hypertarget{method-ReportTemplateR6-remove_section}{}}}
-\subsection{Method \code{remove_section()}}{
-Remove a section from the report.
+\if{html}{\out{<a id="method-ReportTemplateR6-remove_domain"></a>}}
+\if{latex}{\out{\hypertarget{method-ReportTemplateR6-remove_domain}{}}}
+\subsection{Method \code{remove_domain()}}{
+Remove a domain from the report.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$remove_section(section)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$remove_domain(domain)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{section}}{Section file name or position.}
+\item{\code{domain}}{Domain file name or position.}
 }
 \if{html}{\out{</div>}}
 }
@@ -248,7 +248,7 @@ Render the report using Quarto.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$render_report(
   input_file,
-  output_format = "pdf",
+  output_format = "neurotypr-adult-typst",
   output_file = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -258,7 +258,7 @@ Render the report using Quarto.
 \describe{
 \item{\code{input_file}}{Input Quarto file path.}
 
-\item{\code{output_format}}{Output format (default: "pdf").}
+\item{\code{output_format}}{Output format (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").}
 
 \item{\code{output_file}}{Output file path (default: NULL, will use Quarto default).}
 }

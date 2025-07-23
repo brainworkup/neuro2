@@ -4,9 +4,9 @@
 #' This class handles template variables, section inclusion, and report generation.
 #'
 #' @field variables List of variables used in the report template.
-#' @field template_dir Directory containing the template files (default: "inst/quarto/templates/typst-report").
+#' @field template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
 #' @field output_dir Directory where generated reports will be saved (default: ".").
-#' @field sections List of sections to include in the report.
+#' @field domains List of domains to include in the report.
 #' @field data_paths List of paths to data files.
 #' @field packages List of R packages required for the report.
 #'
@@ -16,9 +16,9 @@
 #'   \item{load_variables}{Load variables from a YAML file or list.}
 #'   \item{set_variable}{Set a specific variable value.}
 #'   \item{get_variable}{Get a specific variable value.}
-#'   \item{set_sections}{Set the sections to include in the report.}
-#'   \item{add_section}{Add a section to the report.}
-#'   \item{remove_section}{Remove a section from the report.}
+#'   \item{set_domains}{Set the domains to include in the report.}
+#'   \item{add_domain}{Add a domain to the report.}
+#'   \item{remove_domain}{Remove a domain from the report.}
 #'   \item{generate_template}{Generate the Quarto template file.}
 #'   \item{render_report}{Render the report using Quarto.}
 #' }
@@ -34,7 +34,7 @@ ReportTemplateR6 <- R6::R6Class(
     variables = NULL,
     template_dir = NULL,
     output_dir = NULL,
-    sections = NULL,
+    domains = NULL,
     data_paths = NULL,
     packages = NULL,
 
@@ -42,18 +42,18 @@ ReportTemplateR6 <- R6::R6Class(
     #' Initialize a new ReportTemplateR6 object with configuration parameters.
     #'
     #' @param variables List of variables or path to a YAML file containing variables.
-    #' @param template_dir Directory containing the template files (default: "inst/quarto/templates/typst-report").
+    #' @param template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
     #' @param output_dir Directory where generated reports will be saved (default: ".").
-    #' @param sections List of sections to include in the report (default: NULL, will use all sections).
+    #' @param domains List of domains to include in the report (default: NULL, will use all domains).
     #' @param data_paths List of paths to data files (default: NULL).
     #' @param packages List of R packages required for the report (default: NULL, will use defaults).
     #'
     #' @return A new ReportTemplateR6 object
     initialize = function(
       variables = NULL,
-      template_dir = "inst/extdata/_extensions",
+      template_dir = "inst/quarto/_extensions/brainworkup",
       output_dir = ".",
-      sections = NULL,
+      domains = NULL,
       data_paths = NULL,
       packages = NULL
     ) {
@@ -89,9 +89,9 @@ ReportTemplateR6 <- R6::R6Class(
         self$variables <- variables
       }
 
-      # Set default sections if not provided
-      if (is.null(sections)) {
-        self$sections <- list(
+      # Set default domains if not provided
+      if (is.null(domains)) {
+        self$domains <- list(
           "_00-00_tests.qmd",
           "_01-00_nse_adult.qmd",
           "_01-00_nse_forensic.qmd",
@@ -104,7 +104,7 @@ ReportTemplateR6 <- R6::R6Class(
           "_03-03_appendix.qmd"
         )
       } else {
-        self$sections <- sections
+        self$domains <- domains
       }
 
       # Set default data paths if not provided
@@ -182,44 +182,44 @@ ReportTemplateR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Set the sections to include in the report.
+    #' Set the domains to include in the report.
     #'
-    #' @param sections List of section file names.
+    #' @param domains List of domain file names.
     #' @return Invisibly returns self for method chaining.
-    set_sections = function(sections) {
-      self$sections <- sections
+    set_domains = function(domains) {
+      self$domains <- domains
 
       invisible(self)
     },
 
     #' @description
-    #' Add a section to the report.
+    #' Add a domain to the report.
     #'
-    #' @param section Section file name.
-    #' @param position Position to insert the section (default: end of list).
+    #' @param domain Domain file name.
+    #' @param position Position to insert the domain (default: end of list).
     #' @return Invisibly returns self for method chaining.
-    add_section = function(section, position = NULL) {
-      if (is.null(position) || position > length(self$sections)) {
-        self$sections <- c(self$sections, section)
+    add_domain = function(domain, position = NULL) {
+      if (is.null(position) || position > length(self$domains)) {
+        self$domains <- c(self$domains, domain)
       } else {
-        self$sections <- append(self$sections, section, after = position - 1)
+        self$domains <- append(self$domains, domain, after = position - 1)
       }
 
       invisible(self)
     },
 
     #' @description
-    #' Remove a section from the report.
+    #' Remove a domain from the report.
     #'
-    #' @param section Section file name or position.
+    #' @param domain Domain file name or position.
     #' @return Invisibly returns self for method chaining.
-    remove_section = function(section) {
-      if (is.numeric(section)) {
-        if (section > 0 && section <= length(self$sections)) {
-          self$sections <- self$sections[-section]
+    remove_domain = function(domain) {
+      if (is.numeric(domain)) {
+        if (domain > 0 && domain <= length(self$domains)) {
+          self$domains <- self$domains[-domain]
         }
-      } else if (section %in% self$sections) {
-        self$sections <- self$sections[self$sections != section]
+      } else if (domain %in% self$domains) {
+        self$domains <- self$domains[self$domains != domain]
       }
 
       invisible(self)
@@ -249,7 +249,7 @@ ReportTemplateR6 <- R6::R6Class(
         "date_of_report: ",
         self$variables$date_of_report,
         "\n",
-        "format: pdf\n",
+        "format: neurotypr-adult-typst\n",
         "\n",
         "execute:\n",
         "  warning: false\n",
@@ -409,20 +409,20 @@ ReportTemplateR6 <- R6::R6Class(
         "```\n\n"
       )
 
-      # Create the section includes
-      section_includes <- ""
-      for (section in self$sections) {
-        section_includes <- paste0(
-          section_includes,
-          "{{< include sections/",
-          section,
+      # Create the domain includes
+      domain_includes <- ""
+      for (domain in self$domains) {
+        domain_includes <- paste0(
+          domain_includes,
+          "{{< include domains/",
+          domain,
           " >}}\n\n"
         )
       }
 
       # Add the "NEUROCOGNITIVE FINDINGS" heading
-      section_includes <- paste0(
-        section_includes,
+      domain_includes <- paste0(
+        domain_includes,
         "# NEUROCOGNITIVE FINDINGS\n\n"
       )
 
@@ -432,7 +432,7 @@ ReportTemplateR6 <- R6::R6Class(
         setup_chunk,
         data_load_chunk,
         typst_block,
-        section_includes
+        domain_includes
       )
 
       # Write to file
@@ -445,12 +445,12 @@ ReportTemplateR6 <- R6::R6Class(
     #' Render the report using Quarto.
     #'
     #' @param input_file Input Quarto file path.
-    #' @param output_format Output format (default: "pdf").
+    #' @param output_format Output format (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").
     #' @param output_file Output file path (default: NULL, will use Quarto default).
     #' @return Invisibly returns self for method chaining.
     render_report = function(
       input_file,
-      output_format = "pdf",
+      output_format = "neurotypr-adult-typst",
       output_file = NULL
     ) {
       if (!file.exists(input_file)) {
@@ -482,33 +482,33 @@ ReportTemplateR6 <- R6::R6Class(
 #' It's a wrapper around the ReportTemplateR6 class.
 #'
 #' @param variables List of variables or path to a YAML file containing variables.
-#' @param template_dir Directory containing the template files (default: "inst/quarto/templates/typst-report").
+#' @param template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
 #' @param output_dir Directory where generated reports will be saved (default: ".").
-#' @param sections List of sections to include in the report (default: NULL, will use all sections).
+#' @param domains List of domains to include in the report (default: NULL, will use all domains).
 #' @param data_paths List of paths to data files (default: NULL).
 #' @param output_file Output file path for the generated template (default: "report_template.qmd").
 #' @param render Whether to render the report after generating the template (default: TRUE).
-#' @param output_format Output format for rendering (default: "pdf").
+#' @param output_format Output format for rendering (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").
 #'
 #' @return Invisibly returns the ReportTemplateR6 object.
 #' @export
 #' @rdname generate_neuropsych_report
 generate_neuropsych_report <- function(
   variables = NULL,
-  template_dir = "inst/extdata/_extensions",
+  template_dir = "inst/quarto/_extensions/brainworkup",
   output_dir = ".",
-  sections = NULL,
+  domains = NULL,
   data_paths = NULL,
   output_file = "report_template.qmd",
   render = TRUE,
-  output_format = "pdf"
+  output_format = "neurotypr-adult-typst"
 ) {
   # Create a ReportTemplateR6 object
   report_generator <- ReportTemplateR6$new(
     variables = variables,
     template_dir = template_dir,
     output_dir = output_dir,
-    sections = sections,
+    domains = domains,
     data_paths = data_paths
   )
 
