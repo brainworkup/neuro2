@@ -105,3 +105,4 @@ template_files/Icon?
 ..Rcheck
 rbans_summary.csv
 data-raw/rename_rbans.xlsx
+data-raw/index_scores.xlsx
