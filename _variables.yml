@@ -3,11 +3,13 @@ version: 0.2.0
 # VARIABLES
 # inst/quarto/templates/typst-report/_variables.yml
 # Patient information
-patient: "Patient Name"
-date_of_birth: "YYYY-MM-DD"
-date_of_eval: "YYYY-MM-DD"
-age: 0
-education: "Years"
+patient: "Biggie"
+dob: "YYYY-MM-DD"
+doe: "YYYY-MM-DD"
+doe2: "YYYY-MM-DD"
+doe3: "YYYY-MM-DD"
+age: 18
+education: :"12 years"
 
 # Clinician information
 clinician: "Dr. Name"
@@ -21,13 +23,8 @@ include_scores_table: true
 
 # Other variables
 case_number: ""
-patient: "Biggie"
 first_name: Biggie
 last_name: Smalls
-dob: "1977-01-01"
-doe: "2024-09-08"
-doe2: "2024-09-11"
-doe3: "2024-09-15"
 date_of_report: "2025-01-20"
 sex: male
 sex_cap: Male

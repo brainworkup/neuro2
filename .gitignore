@@ -112,3 +112,4 @@ _*-*_*.qmd
 workflow_r6_update.log
 workflow.log
 _include_domains.qmd
+data/*.parquet

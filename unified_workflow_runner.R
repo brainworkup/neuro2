@@ -41,6 +41,74 @@ print_colored(
 )
 print_colored("")
 
+# Check for essential template files before starting
+print_colored("Checking for essential template files...", "blue")
+essential_files <- c("template.qmd", "_quarto.yml", "_variables.yml")
+missing_files <- character()
+
+for (file in essential_files) {
+  if (!file.exists(file)) {
+    # Check if it exists in the template directory
+    template_dir <- "inst/quarto/templates/typst-report"
+    if (file.exists(file.path(template_dir, file))) {
+      print_colored(
+        paste0(
+          "⚠️ Essential template file not found in working directory: ",
+          file
+        ),
+        "yellow"
+      )
+      print_colored(
+        paste0(
+          "  This file exists in ",
+          template_dir,
+          " and will be copied during setup."
+        ),
+        "yellow"
+      )
+    } else {
+      print_colored(
+        paste0("⚠️ Essential template file not found: ", file),
+        "red"
+      )
+      print_colored(
+        paste0(
+          "  This file is required and should be created before running the workflow."
+        ),
+        "red"
+      )
+      missing_files <- c(missing_files, file)
+    }
+  }
+}
+
+if (length(missing_files) > 0) {
+  print_colored(
+    "Some essential template files are missing. Would you like to copy them from the template directory? (y/n)",
+    "yellow"
+  )
+  answer <- readline(prompt = "")
+
+  if (tolower(answer) == "y") {
+    template_dir <- "inst/quarto/templates/typst-report"
+    for (file in missing_files) {
+      source_file <- file.path(template_dir, file)
+      if (file.exists(source_file)) {
+        file.copy(source_file, file)
+        print_colored(
+          paste0("✓ Copied ", file, " from template directory"),
+          "green"
+        )
+      } else {
+        print_colored(
+          paste0("⚠️ Could not find ", file, " in template directory"),
+          "red"
+        )
+      }
+    }
+  }
+}
+
 # Parse command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -159,6 +227,8 @@ WorkflowRunner <- R6::R6Class(
 
       # Copy template files from inst/quarto/templates/typst-report/ to working directory
       log_message("Copying template files to working directory...", "SETUP")
+
+      # First try using system.file (for installed package)
       template_dir <- system.file(
         "quarto/templates/typst-report",
         package = "neuro2"
@@ -173,6 +243,50 @@ WorkflowRunner <- R6::R6Class(
         )
       }
 
+      # Check if template directory exists
+      if (!dir.exists(template_dir)) {
+        log_message(
+          paste0("Template directory not found: ", template_dir),
+          "ERROR"
+        )
+        # Try alternative locations
+        alt_dirs <- c(
+          "inst/quarto/templates/typst-report",
+          "../inst/quarto/templates/typst-report",
+          "../../inst/quarto/templates/typst-report"
+        )
+
+        for (alt_dir in alt_dirs) {
+          if (dir.exists(alt_dir)) {
+            template_dir <- alt_dir
+            log_message(
+              paste0("Found alternative template directory: ", template_dir),
+              "SETUP"
+            )
+            break
+          }
+        }
+
+        if (!dir.exists(template_dir)) {
+          log_message(
+            "Could not find template directory in any location",
+            "ERROR"
+          )
+          return(FALSE)
+        }
+      }
+
+      # List files in the template directory
+      log_message(
+        paste0("Listing files in template directory: ", template_dir),
+        "SETUP"
+      )
+      dir_contents <- list.files(template_dir)
+      log_message(
+        paste0("Directory contents: ", paste(dir_contents, collapse = ", ")),
+        "SETUP"
+      )
+
       # Get list of template files
       template_files <- list.files(
         template_dir,
@@ -180,17 +294,79 @@ WorkflowRunner <- R6::R6Class(
         full.names = TRUE
       )
 
+      if (length(template_files) == 0) {
+        log_message(
+          paste0("No template files found in: ", template_dir),
+          "ERROR"
+        )
+        return(FALSE)
+      }
+
+      log_message(
+        paste0("Found ", length(template_files), " template files"),
+        "SETUP"
+      )
+
       # Copy each file to working directory if it doesn't already exist
       for (file in template_files) {
         dest_file <- basename(file)
+        log_message(
+          paste0("Processing template file: ", file, " -> ", dest_file),
+          "SETUP"
+        )
+
         if (!file.exists(dest_file)) {
-          file.copy(file, dest_file)
-          log_message(paste0("Copied template file: ", dest_file), "SETUP")
+          # Check if source file exists
+          if (!file.exists(file)) {
+            log_message(paste0("Source file does not exist: ", file), "ERROR")
+            next
+          }
+
+          # Try to copy the file
+          copy_result <- file.copy(file, dest_file)
+
+          if (copy_result) {
+            log_message(paste0("Copied template file: ", dest_file), "SETUP")
+          } else {
+            log_message(
+              paste0("Failed to copy template file: ", dest_file),
+              "ERROR"
+            )
+          }
         } else {
           log_message(
             paste0("Template file already exists: ", dest_file),
             "SETUP"
           )
+        }
+      }
+
+      # Verify essential files exist after copying
+      essential_files <- c("template.qmd", "_quarto.yml", "_variables.yml")
+      missing_files <- character()
+
+      for (file in essential_files) {
+        if (!file.exists(file)) {
+          missing_files <- c(missing_files, file)
+        }
+      }
+
+      if (length(missing_files) > 0) {
+        log_message(
+          paste0(
+            "Essential files still missing after copy: ",
+            paste(missing_files, collapse = ", ")
+          ),
+          "ERROR"
+        )
+
+        # Last resort: try direct copy for each missing file
+        for (file in missing_files) {
+          source_file <- file.path(template_dir, file)
+          if (file.exists(source_file)) {
+            file.copy(source_file, file, overwrite = TRUE)
+            log_message(paste0("Direct copy attempt for: ", file), "SETUP")
+          }
         }
       }
 
@@ -359,9 +535,49 @@ WorkflowRunner <- R6::R6Class(
                   paste0("neurocog.", input_format)
                 )
 
+                # Map domain names to the correct pheno values
+                domain_to_pheno <- function(domain_name) {
+                  mapping <- list(
+                    "General Cognitive Ability" = "iq",
+                    "Academic Skills" = "academics",
+                    "Verbal/Language" = "verbal",
+                    "Visual Perception/Construction" = "spatial",
+                    "Memory" = "memory",
+                    "Attention/Executive" = "executive",
+                    "Motor" = "motor",
+                    "ADHD" = "adhd",
+                    "Behavioral/Emotional/Social" = "emotion"
+                  )
+
+                  # Check if the domain should be combined into emotion.parquet
+                  emotion_domains <- c(
+                    "Substance Use",
+                    "Psychosocial Problems",
+                    "Psychiatric Disorders",
+                    "Personality Disorders"
+                  )
+
+                  if (domain_name %in% emotion_domains) {
+                    return("emotion")
+                  }
+
+                  # Return the mapped pheno value or a default based on the domain name
+                  pheno_value <- mapping[[domain_name]]
+                  if (is.null(pheno_value)) {
+                    # Default to a safe version of the domain name
+                    pheno_value <- tolower(gsub(
+                      "[^a-zA-Z0-9]",
+                      "_",
+                      domain_name
+                    ))
+                  }
+
+                  return(pheno_value)
+                }
+
                 domain_processor <- DomainProcessorR6$new(
                   domains = domain,
-                  pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
+                  pheno = domain_to_pheno(domain),
                   input_file = input_file,
                   output_dir = self$config$data$output_dir
                 )
@@ -437,7 +653,7 @@ WorkflowRunner <- R6::R6Class(
 
                   domain_processor <- DomainProcessorR6$new(
                     domains = domain,
-                    pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
+                    pheno = domain_to_pheno(domain),
                     input_file = input_file,
                     output_dir = self$config$data$output_dir
                   )
@@ -537,13 +753,59 @@ WorkflowRunner <- R6::R6Class(
           "REPORT"
         )
 
-        # Check if template.qmd exists
-        if (!file.exists(self$config$report$template)) {
-          log_message(
-            paste0(self$config$report$template, " not found"),
-            "ERROR"
-          )
-          return(FALSE)
+        # Check if template.qmd exists with detailed logging
+        template_file <- self$config$report$template
+        log_message(
+          paste0("Checking for template file: ", template_file),
+          "REPORT"
+        )
+        log_message(paste0("Current working directory: ", getwd()), "REPORT")
+
+        if (file.exists(template_file)) {
+          log_message(paste0("Template file found: ", template_file), "REPORT")
+          # Get file info for additional verification
+          file_info <- file.info(template_file)
+          log_message(paste0("File size: ", file_info$size, " bytes"), "REPORT")
+          log_message(paste0("Last modified: ", file_info$mtime), "REPORT")
+        } else {
+          # Check if the file exists in the template directory
+          template_dir <- "inst/quarto/templates/typst-report"
+          alt_template_path <- file.path(template_dir, template_file)
+
+          if (file.exists(alt_template_path)) {
+            log_message(
+              paste0(
+                "Template found in template directory: ",
+                alt_template_path
+              ),
+              "REPORT"
+            )
+            log_message(
+              "Copying template file to working directory...",
+              "REPORT"
+            )
+            file.copy(alt_template_path, template_file)
+
+            if (file.exists(template_file)) {
+              log_message("Template file copied successfully", "REPORT")
+            } else {
+              log_message(
+                paste0(
+                  "Failed to copy template file from: ",
+                  alt_template_path
+                ),
+                "ERROR"
+              )
+              return(FALSE)
+            }
+          } else {
+            log_message(
+              paste0("Template file not found: ", template_file),
+              "ERROR"
+            )
+            log_message(paste0("Also checked: ", alt_template_path), "ERROR")
+            return(FALSE)
+          }
         }
 
         # Render the report

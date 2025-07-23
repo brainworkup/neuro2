@@ -11,8 +11,8 @@ pluck_wiat4(
   extract_columns = c(1, 2, 3, 4, 5),
   score_type = "standard_score",
   variables = c("scale", "raw_score", "score", "ci_95", "percentile"),
-  lookup_table_path = "~/Dropbox/neuropsych_lookup_table_combined.csv",
-  output_dir = here::here("data", "csv"),
+  lookup_table_path = "~/Dropbox/neuropsych_lookup_table.csv",
+  output_dir = here::here("data-raw", "csv"),
   g_file_name = "2"
 )
 }

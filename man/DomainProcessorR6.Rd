@@ -146,15 +146,17 @@ Invisibly returns self for method chaining.
 \if{html}{\out{<a id="method-DomainProcessorR6-save_data"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-save_data}{}}}
 \subsection{Method \code{save_data()}}{
-Save the processed data to a CSV file.
+Save the processed data to a file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$save_data(filename = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$save_data(filename = NULL, format = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{filename}}{Optional custom filename (default: based on pheno).}
+
+\item{\code{format}}{Output format ("csv", "parquet", or "feather", default: determined from filename extension).}
 }
 \if{html}{\out{</div>}}
 }

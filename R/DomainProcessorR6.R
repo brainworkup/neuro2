@@ -310,15 +310,13 @@ DomainProcessorR6 <- R6::R6Class(
       # Get filtered data for the specified report type
       filtered_data <- self$filter_by_test(report_type)
 
+      # Get the domain number for file naming
+      domain_num <- self$get_domain_number()
+
       # Generate default output filename if not provided
       if (is.null(output_file)) {
-        output_file <- paste0(
-          "_02-09_",
-          self$pheno,
-          "_adult_text_",
-          gsub("_report", "", report_type),
-          ".qmd"
-        )
+        # Use the proper domain number and simplified naming
+        output_file <- paste0("_02-", domain_num, "_", self$pheno, "_text.qmd")
       }
 
       # Use the NeuropsychResultsR6 class we created earlier
@@ -520,25 +518,14 @@ DomainProcessorR6 <- R6::R6Class(
 
       # If no output file specified, create default name with proper domain number
       if (is.null(output_file)) {
-        if (report_type == "self") {
-          output_file <- paste0(
-            "_02-",
-            domain_num,
-            "_",
-            tolower(self$pheno),
-            "_text.qmd"
-          )
-        } else {
-          output_file <- paste0(
-            "_02-",
-            domain_num,
-            "_",
-            tolower(self$pheno),
-            "_text_",
-            report_type,
-            ".qmd"
-          )
-        }
+        # Always use the simplified naming convention
+        output_file <- paste0(
+          "_02-",
+          domain_num,
+          "_",
+          tolower(self$pheno),
+          "_text.qmd"
+        )
       }
 
       # Process data for this domain if not already processed
@@ -548,10 +535,10 @@ DomainProcessorR6 <- R6::R6Class(
         self$select_columns()
       }
 
-      # Filter data for this domain to create text summary
-      filtered_data <- self$filter_by_test(report_type = report_type)
+      # Use all data for this domain to create text summary
+      filtered_data <- self$data
 
-      # If there's no data after filtering, create a placeholder
+      # If there's no data, create a placeholder
       if (is.null(filtered_data) || nrow(filtered_data) == 0) {
         cat(
           "<summary>\n\nNo data available for ",
@@ -593,15 +580,6 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Get scales (could be used for further processing)
       scales <- self$get_scales()
-
-      # Generate reports if requested
-      if (generate_reports) {
-        for (report_type in report_types) {
-          if (report_type %in% names(self$test_filters)) {
-            self$generate_report(report_type)
-          }
-        }
-      }
 
       # Generate domain files if requested
       if (generate_domain_files) {
