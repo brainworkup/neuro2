@@ -7,7 +7,7 @@
 # Clear workspace and load packages
 rm(list = ls())
 
-packages <- c("tidyverse", "here", "glue", "yaml", "quarto", "NeurotypR", "R6")
+packages <- c("tidyverse", "here", "glue", "yaml", "quarto", "R6")
 invisible(lapply(packages, library, character.only = TRUE))
 
 # Source R6 classes

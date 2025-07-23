@@ -72,8 +72,7 @@ library(dplyr)
 library(readr)
 library(rlang)
 library(stringr)
-library(bwu)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters
@@ -487,7 +486,7 @@ process_and_save_rbans_data <- function(rbans_raw,
     dplyr::relocate(completion_time_seconds, .after = ci_95_upper)
 
   # Test score ranges
-  df <- bwu::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+  df <- neuro2::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 
   # Remove prefix from scale names
   # df <- df |>
@@ -531,7 +530,7 @@ readr::write_excel_csv(df, output_file_path)
 ```{r mutate}
 rbans <- df
 
-rbans <- bwu::gpluck_make_columns(
+rbans <- neuro2::gpluck_make_columns(
   data = rbans,
   test = params$test,
   test_name = params$test_name,

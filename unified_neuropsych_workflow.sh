@@ -131,9 +131,9 @@ fi
 # Ask about PDF extraction
 print_step "Step 4: PDF Data Extraction"
 echo "Available extraction templates:"
-echo "  - pluck_wisc5.Rmd (WISC-V Intelligence)"
-echo "  - pluck_wais5.Rmd (WAIS-V Adult Intelligence)" 
-echo "  - pluck_rbans.Rmd (RBANS Memory)"
+echo "  - pluck_wisc5.Rmd (WISC-V Child Intelligence)"
+echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)" 
+echo "  - pluck_rbans.Rmd (RBANS)"
 echo "  - pluck_wiat4.Rmd (WIAT-4 Achievement)"
 echo "  - pluck_ktea3.Rmd (KTEA-3 Achievement)"
 echo "  - pluck_caars2.Rmd (CAARS-2 ADHD)"

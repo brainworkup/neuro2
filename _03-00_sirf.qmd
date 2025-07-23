@@ -12,14 +12,10 @@ source("R/DotplotR6.R")
 
 # Load all domain data
 neurocog <- readr::read_csv("data/neurocog.csv")
-neurobehav <- readr::read_csv("data/neurobehav.csv")
 
 # Create report system for overall summary
 report_system <- NeuropsychReportSystemR6$new(
-  config = list(
-    patient = patient,
-    domains = unique(neurocog$domain)
-  )
+  config = list(patient = patient, domains = unique(neurocog$domain))
 )
 ```
 
@@ -49,3 +45,27 @@ overall_plot <- DotplotR6$new(
 overall_plot$create_plot()
 ```
 
+```{=typst}
+#let domain(file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.9em)
+  set text(..font)
+  figure(
+    [#image(file_fig, width: 70%)],
+    placement: none,
+    caption: figure.caption(
+      position: bottom,
+      [
+        These plots illustrate the patient's performance across various neurocognitive function subdomains, with z-scores standardized to have a mean of 0 and a standard deviation of ±1, allowing for clear identification of relative strengths (above +1) and relative weaknesses (below -1).
+        ],
+    ),
+    kind: "image",
+    supplement: [Figure],
+    gap: 0.5em,
+  )
+}
+```
+
+```{=typst}
+#let file_fig = "fig_domains.svg"
+#domain(file_fig)
+```

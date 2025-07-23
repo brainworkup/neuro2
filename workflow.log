@@ -1,42 +1,29 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-07-22 11:27:44.769416 
+Date: 2025-07-22 19:44:38.923174 
 
-[2025-07-22 11:27:45] [CONFIG] Loading configuration from: config.yml
-[2025-07-22 11:27:45] [CONFIG] Configuration loaded successfully
-[2025-07-22 11:27:45] [CONFIG] Patient: Ethan
-[2025-07-22 11:27:45] [CONFIG] Age: 35
-[2025-07-22 11:27:45] [CONFIG] DOE: 2025-07-21
-[2025-07-22 11:27:45] [INFO] Initialized WorkflowRunner for patient: Ethan
-[2025-07-22 11:27:45] [WORKFLOW] Starting unified workflow for patient: Ethan
-[2025-07-22 11:27:45] [WORKFLOW] Step 1: Setting up environment...
-[2025-07-22 11:27:45] [SETUP] Running setup_environment.R
-[2025-07-22 11:27:45] [SETUP] All required R6 class files are present
-[2025-07-22 11:27:45] [SETUP] Found 8 CSV files in data-raw/csv
-[2025-07-22 11:27:45] [SETUP] Environment setup complete
-[2025-07-22 11:27:45] [WORKFLOW] Step 2: Processing data...
-[2025-07-22 11:27:45] [DATA] data_processor_module.R not found. Using fallback processing.
-[2025-07-22 11:27:45] [DATA] Using DuckDB data processor
-[2025-07-22 11:27:45] [DATA] Data processing complete
-[2025-07-22 11:27:45] [WORKFLOW] Step 3: Generating domain files...
-[2025-07-22 11:27:45] [DOMAINS] Checking for required template QMD files...
-[2025-07-22 11:27:45] [DOMAINS] Found 5 unique domains
-[2025-07-22 11:27:45] [DOMAINS] Found 10 total unique domains
-[2025-07-22 11:27:45] [DOMAINS] Template for domain 'Verbal/Language' already exists: _02-03_verbal_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Template for domain 'General Cognitive Ability' already exists: _02-01_iq_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Visual Perception/Construction
-[2025-07-22 11:27:45] [DOMAINS] Created _02-04_visuospatial_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Motor
-[2025-07-22 11:27:45] [DOMAINS] Created _02-07_motor_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Template for domain 'Attention/Executive' already exists: _02-06_executive_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Substance Use
-[2025-07-22 11:27:45] [DOMAINS] Created _02-13_substance_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Personality Disorders
-[2025-07-22 11:27:45] [DOMAINS] Created _02-12_personality_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Psychiatric Disorders
-[2025-07-22 11:27:45] [DOMAINS] Created _02-11_psychiatric_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Behavioral/Emotional/Social
-[2025-07-22 11:27:45] [DOMAINS] Created _02-15_behavioral_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] Creating template for domain: Psychosocial Problems
-[2025-07-22 11:27:45] [DOMAINS] Created _02-14_psychosocial_text.qmd
-[2025-07-22 11:27:45] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
-[2025-07-22 11:27:45] [DOMAINS] Using neuro2_R6_update_workflow.R
+[2025-07-22 19:44:39] [CONFIG] Loading configuration from: config.yml
+[2025-07-22 19:44:39] [CONFIG] Configuration loaded successfully
+[2025-07-22 19:44:39] [CONFIG] Patient: Ethan
+[2025-07-22 19:44:39] [CONFIG] Age: 13
+[2025-07-22 19:44:39] [CONFIG] DOE: 2025-07-21
+[2025-07-22 19:44:39] [INFO] Initialized WorkflowRunner for patient: Ethan
+[2025-07-22 19:44:39] [WORKFLOW] Starting unified workflow for patient: Ethan
+[2025-07-22 19:44:39] [WORKFLOW] Step 1: Setting up environment...
+[2025-07-22 19:44:39] [SETUP] Running setup_environment.R
+[2025-07-22 19:44:39] [WARNING] Some R6 class files are missing:
+[2025-07-22 19:44:39] [WARNING]   - R/IQReportGeneratorR6.R
+[2025-07-22 19:44:39] [SETUP] Found 7 CSV files in data-raw/csv
+[2025-07-22 19:44:39] [SETUP] Environment setup complete
+[2025-07-22 19:44:39] [WORKFLOW] Step 2: Processing data...
+[2025-07-22 19:44:39] [DATA] data_processor_module.R not found. Using fallback processing.
+[2025-07-22 19:44:39] [DATA] Using DuckDB data processor
+[2025-07-22 19:44:39] [DATA] Data processing complete
+[2025-07-22 19:44:39] [WORKFLOW] Step 3: Generating domain files...
+[2025-07-22 19:44:39] [DOMAINS] Checking for required R6 classes for domain processing...
+[2025-07-22 19:44:39] [DOMAINS] All required R6 class files for domain processing are present
+[2025-07-22 19:44:39] [DOMAINS] Using DomainProcessorR6 to generate domain files
+[2025-07-22 19:44:39] [DOMAINS] Found 6 unique domains
+[2025-07-22 19:44:39] [ERROR] Error processing domains: embedded nul in string: 'PAR1\025\004\025J\025NL\025\b\025\0\0\0%\x90\b\0\0\0pegboard\005\0\0\0rbans\003\0\0\0tmt\005\0\0\0wisc5\025\0\025\xd0\001\025@'
+[2025-07-22 19:44:39] [WARNING] Will use fallback domain generation method
+[2025-07-22 19:44:39] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
+[2025-07-22 19:44:39] [DOMAINS] Using neuro2_R6_update_workflow.R

@@ -35,8 +35,7 @@ scales <- c(
 )
 
 # make g
-g <-
-  readxl::read_excel("data/index_scores.xlsx") |>
+g <- readxl::read_excel("data-raw/index_scores.xlsx") |>
   janitor::clean_names() |>
   dplyr::mutate(z = (index - 100) / 15) |>
   dplyr::filter(composite_name %in% scales) |>
@@ -52,16 +51,16 @@ g <-
     subdomain = scale,
     test_type = "npsych_test"
   ) |>
-  bwu::gpluck_make_score_ranges(range = "", test_type = "npsych_test") |>
+  gpluck_make_score_ranges(range = "", test_type = "npsych_test") |>
   dplyr::select(
+    test,
+    test_name,
     scale,
     score,
     ci_95,
     z,
     percentile,
     range,
-    test,
-    test_name,
     domain,
     subdomain,
     test_type,
@@ -70,7 +69,7 @@ g <-
   )
 
 # save g.csv
-readr::write_csv(g, "data/g.csv")
+readr::write_csv(g, "data-raw/g.csv")
 ```
 
 ```{r}
@@ -79,7 +78,7 @@ readr::write_csv(g, "data/g.csv")
 #| eval: false
 #| fig-cap: "Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-Scores have a mean of 0 and a standard deviation of 1."
 
-g <- readr::read_csv("data/g.csv")
+g <- readr::read_csv("data-raw/g.csv")
 
 # scales
 keep <- c(
@@ -122,7 +121,8 @@ colors <- NULL
 return_plot <- TRUE
 filename <- "fig_g.svg"
 
-bwu::dotplot(
+# Create a DotplotR6 object
+dotplot_obj <- neuro2::DotplotR6$new(
   data = g,
   x = x,
   y = y,
@@ -130,6 +130,9 @@ bwu::dotplot(
   return_plot = return_plot,
   filename = filename
 )
+
+# Generate the plot
+dotplot_obj$create_plot()
 ```
 
 ```{r}
@@ -142,12 +145,11 @@ bwu::dotplot(
 #| fig-format: svg
 
 # Read the data and filter out "Cognitive Proficiency" scale
-data <- readr::read_csv("data/neurocog.csv") |>
+data <- readr::read_csv("data-raw/neurocog.csv") |>
   dplyr::filter(scale != "Cognitive Proficiency")
 
 # Calculate M,SD
-data <-
-  data |>
+data <- data |>
   dplyr::group_by(domain, .add = TRUE) |>
   dplyr::mutate(
     z_mean_domain = mean(z, na.rm = TRUE),
@@ -165,8 +167,8 @@ colors <- NULL
 filename <- "fig_domains.svg"
 return_plot <- TRUE
 
-# Make dotplot
-NeurotypR::dotplot2(
+# Create a DotplotR6 object
+dotplot_obj <- neuro2::DotplotR6$new(
   data = data,
   x = x,
   y = y,
@@ -175,6 +177,9 @@ NeurotypR::dotplot2(
   filename = filename,
   na.rm = TRUE
 )
+
+# Generate the plot
+dotplot_obj$create_plot()
 ```
 
 ```{=typst}

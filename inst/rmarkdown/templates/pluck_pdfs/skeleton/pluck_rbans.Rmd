@@ -120,7 +120,6 @@ tryCatch({
 suppressPackageStartupMessages({
   if (requireNamespace("shiny", quietly = TRUE)) library(shiny)
   if (requireNamespace("pdftools", quietly = TRUE)) library(pdftools)
-  if (requireNamespace("hablar", quietly = TRUE)) library(hablar)
   if (requireNamespace("googledrive", quietly = TRUE)) library(googledrive)
 })
 ```
