@@ -83,7 +83,30 @@ if (!is.null(neurobehav_data) && "domain" %in% names(neurobehav_data)) {
 domains <- unique(domains)
 log_message(paste("Found", length(domains), "unique domains"), "DOMAINS")
 
-# Map domains to file names
+# Function to determine patient type (adult or child) based on age
+determine_patient_type <- function() {
+  # Read config to get patient age
+  config <- yaml::read_yaml("config.yml")
+  age <- config$patient$age
+  
+  # Default to child if age is not specified
+  if (is.null(age)) {
+    return("child")
+  }
+  
+  # Determine type based on age
+  if (age >= 18) {
+    return("adult")
+  } else {
+    return("child")
+  }
+}
+
+# Get patient type
+patient_type <- determine_patient_type()
+log_message(paste("Determined patient type:", patient_type), "DOMAINS")
+
+# Map domains to file names based on patient type
 domain_files <- list(
   "General Cognitive Ability" = "_02-01_iq.qmd",
   "Academic Skills" = "_02-02_academics.qmd",
@@ -92,12 +115,29 @@ domain_files <- list(
   "Memory" = "_02-05_memory.qmd",
   "Attention/Executive" = "_02-06_executive.qmd",
   "Motor" = "_02-07_motor.qmd",
-  "Social Cognition" = "_02-08_social.qmd",
-  "ADHD" = "_02-09_adhd_child.qmd",
-  "Behavioral/Emotional/Social" = "_02-10_emotion_child.qmd",
-  "Adaptive Functioning" = "_02-11_adaptive.qmd",
-  "Daily Living" = "_02-12_daily_living.qmd"
+  "Social Cognition" = "_02-08_social.qmd"
 )
+
+# Add ADHD domain file based on patient type
+if (patient_type == "adult") {
+  domain_files[["ADHD"]] <- "_02-09_adhd_adult.qmd"
+} else {
+  domain_files[["ADHD"]] <- "_02-09_adhd_child.qmd"
+}
+
+# Add emotion domain file based on patient type
+emotion_file <- if (patient_type == "adult") "_02-10_emotion_adult.qmd" else "_02-10_emotion_child.qmd"
+domain_files[["Behavioral/Emotional/Social"]] <- emotion_file
+
+# Add other domains
+domain_files[["Adaptive Functioning"]] <- "_02-11_adaptive.qmd"
+domain_files[["Daily Living"]] <- "_02-12_daily_living.qmd"
+
+# Map all behavioral domains to the emotion file
+domain_files[["Psychiatric Disorders"]] <- emotion_file
+domain_files[["Psychosocial Problems"]] <- emotion_file
+domain_files[["Substance Use"]] <- emotion_file
+domain_files[["Personality Disorders"]] <- emotion_file
 
 # Create a basic template for each domain
 domain_template <- '---

@@ -535,6 +535,31 @@ WorkflowRunner <- R6::R6Class(
                   paste0("neurocog.", input_format)
                 )
 
+                # Function to determine patient type (adult or child) based on age
+                determine_patient_type <- function() {
+                  # Get patient age from config
+                  age <- self$config$patient$age
+
+                  # Default to child if age is not specified
+                  if (is.null(age)) {
+                    return("child")
+                  }
+
+                  # Determine type based on age
+                  if (age >= 18) {
+                    return("adult")
+                  } else {
+                    return("child")
+                  }
+                }
+
+                # Get patient type
+                patient_type <- determine_patient_type()
+                log_message(
+                  paste("Determined patient type:", patient_type),
+                  "DOMAINS"
+                )
+
                 # Map domain names to the correct pheno values
                 domain_to_pheno <- function(domain_name) {
                   mapping <- list(
@@ -564,6 +589,16 @@ WorkflowRunner <- R6::R6Class(
                   # Return the mapped pheno value or a default based on the domain name
                   pheno_value <- mapping[[domain_name]]
                   if (is.null(pheno_value)) {
+                    # Check if this is a behavioral domain that should map to emotion
+                    if (
+                      grepl(
+                        "Behav|Emot|Psych|Social|Substance|Personality",
+                        domain_name
+                      )
+                    ) {
+                      return("emotion")
+                    }
+
                     # Default to a safe version of the domain name
                     pheno_value <- tolower(gsub(
                       "[^a-zA-Z0-9]",
@@ -573,6 +608,57 @@ WorkflowRunner <- R6::R6Class(
                   }
 
                   return(pheno_value)
+                }
+
+                # Function to get the appropriate output file name based on domain and patient type
+                get_output_file <- function(domain_name) {
+                  # Basic domain file mapping
+                  domain_files <- list(
+                    "General Cognitive Ability" = "_02-01_iq.qmd",
+                    "Academic Skills" = "_02-02_academics.qmd",
+                    "Verbal/Language" = "_02-03_verbal.qmd",
+                    "Visual Perception/Construction" = "_02-04_spatial.qmd",
+                    "Memory" = "_02-05_memory.qmd",
+                    "Attention/Executive" = "_02-06_executive.qmd",
+                    "Motor" = "_02-07_motor.qmd",
+                    "Social Cognition" = "_02-08_social.qmd"
+                  )
+
+                  # Special handling for ADHD domain
+                  if (domain_name == "ADHD") {
+                    if (patient_type == "adult") {
+                      return("_02-09_adhd_adult.qmd")
+                    } else {
+                      return("_02-09_adhd_child.qmd")
+                    }
+                  }
+
+                  # Special handling for emotion domains
+                  emotion_domains <- c(
+                    "Behavioral/Emotional/Social",
+                    "Substance Use",
+                    "Psychosocial Problems",
+                    "Psychiatric Disorders",
+                    "Personality Disorders"
+                  )
+
+                  if (domain_name %in% emotion_domains) {
+                    if (patient_type == "adult") {
+                      return("_02-10_emotion_adult.qmd")
+                    } else {
+                      return("_02-10_emotion_child.qmd")
+                    }
+                  }
+
+                  # Return the mapped file name or create a default one
+                  file_name <- domain_files[[domain_name]]
+                  if (is.null(file_name)) {
+                    # Create a safe file name from the domain
+                    safe_name <- tolower(gsub("[^a-zA-Z0-9]", "_", domain_name))
+                    file_name <- paste0("_02-", safe_name, ".qmd")
+                  }
+
+                  return(file_name)
                 }
 
                 domain_processor <- DomainProcessorR6$new(
@@ -585,10 +671,15 @@ WorkflowRunner <- R6::R6Class(
                 # Process the domain and generate files
                 tryCatch(
                   {
+                    # Get the appropriate output file name for this domain
+                    output_file <- get_output_file(domain)
+
+                    # Process the domain with the appropriate output file
                     domain_processor$process(
                       generate_reports = TRUE,
                       report_types = c("self"),
-                      generate_domain_files = TRUE
+                      generate_domain_files = TRUE,
+                      output_file = output_file
                     )
                     log_message(paste0("Processed domain: ", domain), "DOMAINS")
                   },
@@ -661,10 +752,15 @@ WorkflowRunner <- R6::R6Class(
                   # Process the domain and generate files
                   tryCatch(
                     {
+                      # Get the appropriate output file name for this domain
+                      output_file <- get_output_file(domain)
+                      
+                      # Process the domain with the appropriate output file
                       domain_processor$process(
                         generate_reports = TRUE,
                         report_types = c("self"),
-                        generate_domain_files = TRUE
+                        generate_domain_files = TRUE,
+                        output_file = output_file
                       )
                       log_message(
                         paste0("Processed behavioral domain: ", domain),
@@ -715,24 +811,67 @@ WorkflowRunner <- R6::R6Class(
         }
       }
 
-      # Source the domain generator module
-      if (file.exists("domain_generator_module.R")) {
-        log_message("Running domain_generator_module.R", "DOMAINS")
-        source("domain_generator_module.R")
+      # Check which domain files have been generated
+      domain_files_generated <- list.files(".", pattern = "_02-.*\\.qmd$")
+      log_message(paste("Domain files already generated:", paste(domain_files_generated, collapse=", ")), "DOMAINS")
+      
+      # Check if we need to run the domain generator module
+      # Only run it if essential domain files are missing
+      
+      # Define essential domain files based on patient type
+      patient_type <- determine_patient_type()
+      
+      # Basic essential files that should always be present
+      essential_files <- c(
+        "_02-01_iq.qmd",
+        "_02-02_academics.qmd",
+        "_02-03_verbal.qmd",
+        "_02-04_spatial.qmd",
+        "_02-05_memory.qmd",
+        "_02-06_executive.qmd",
+        "_02-07_motor.qmd"
+      )
+      
+      # Add ADHD and emotion files based on patient type
+      if (patient_type == "adult") {
+        essential_files <- c(essential_files, "_02-09_adhd_adult.qmd", "_02-10_emotion_adult.qmd")
+      } else {
+        essential_files <- c(essential_files, "_02-09_adhd_child.qmd", "_02-10_emotion_child.qmd")
+      }
+      
+      # Check if any essential files are missing
+      missing_files <- essential_files[!essential_files %in% domain_files_generated]
+      
+      if (length(missing_files) > 0) {
+        log_message(paste("Missing essential domain files:", paste(missing_files, collapse=", ")), "DOMAINS")
+        
+        # Source the domain generator module as a fallback
+        if (file.exists("domain_generator_module.R")) {
+          log_message(
+            "Running domain_generator_module.R to generate missing files",
+            "DOMAINS"
+          )
+          source("domain_generator_module.R")
+        } else {
+          log_message(
+            "domain_generator_module.R not found. Using fallback domain generation.",
+            "DOMAINS"
+          )
+
+          # Fallback to using existing scripts
+          if (file.exists("neuro2_R6_update_workflow.R")) {
+            log_message("Using neuro2_R6_update_workflow.R", "DOMAINS")
+            source("neuro2_R6_update_workflow.R")
+          } else {
+            log_message("No suitable domain generator found", "ERROR")
+            return(FALSE)
+          }
+        }
       } else {
         log_message(
-          "domain_generator_module.R not found. Using fallback domain generation.",
+          "All essential domain files already generated, skipping domain_generator_module.R",
           "DOMAINS"
         )
-
-        # Fallback to using existing scripts
-        if (file.exists("neuro2_R6_update_workflow.R")) {
-          log_message("Using neuro2_R6_update_workflow.R", "DOMAINS")
-          source("neuro2_R6_update_workflow.R")
-        } else {
-          log_message("No suitable domain generator found", "ERROR")
-          return(FALSE)
-        }
       }
 
       log_message("Domain generation complete", "DOMAINS")
