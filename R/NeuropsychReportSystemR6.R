@@ -39,7 +39,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @return A new NeuropsychReportSystemR6 object
     initialize = function(
       config = list(),
-      template_dir = "inst/quarto/brainworkup/_extensions",
+      template_dir = "inst/quarto/_extensions/brainworkup",
       output_dir = "output"
     ) {
       # Set default config values if not provided
@@ -62,10 +62,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           domain_daily_living
         ),
         data_files = list(
-          neurocog = "data/neurocog.csv",
-          neurobehav = "data/neurobehav.csv",
-          neuropsych = "data/neuropsych.csv",
-          validity = "data/validity.csv"
+          neurocog = "data/neurocog.parquet",
+          neurobehav = "data/neurobehav.parquet",
+          neuropsych = "data/neuropsych.parquet",
+          validity = "data/validity.parquet"
         ),
         template_file = "template.qmd",
         output_file = "neuropsych_report.pdf"

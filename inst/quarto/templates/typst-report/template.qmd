@@ -11,22 +11,22 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
-# Suppress warnings during setup
-options(warn = -1)
+# # Suppress warnings during setup
+# options(warn = -1)
 
-# Source package loading function
-if (file.exists("R/load_packages.R")) {
-  source("R/load_packages.R")
-  # Load all required packages using centralized function
-  load_neuropsych_packages(verbose = FALSE)
-} else {
-  # Fallback: Load minimal required packages directly
-  library(knitr)
-  library(here)
-  library(readr)
-  library(dplyr)
-  library(gt)
-}
+# # Source package loading function
+# if (file.exists("R/load_packages.R")) {
+#   source("R/load_packages.R")
+#   # Load all required packages using centralized function
+#   load_neuropsych_packages(verbose = FALSE)
+# } else {
+#   # Fallback: Load minimal required packages directly
+#   library(knitr)
+#   library(here)
+#   library(readr)
+#   library(dplyr)
+#   library(gt)
+# }
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -45,17 +45,6 @@ patient <- Sys.getenv("PATIENT")
 # that include their own data processing
 ```
 
-```{r}
-#| label: data-prep
-#| include: false
-
-# Data is now loaded dynamically by domain processors
-# Each domain file (_02-XX_domain.qmd) handles its own data
-# This ensures only relevant data is loaded for each domain
-
-# If global data operations are needed, they can be added here
-# For example, loading patient metadata or configuration
-```
 
 ```{=typst}
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
@@ -73,7 +62,7 @@ patient <- Sys.getenv("PATIENT")
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_[name].qmd >}}
+{{< include _01-00_nse_[type of eval].qmd >}}
 
 {{< include _02-00_behav_obs.qmd >}}
 

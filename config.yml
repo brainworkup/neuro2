@@ -11,5 +11,5 @@ processing:
   parallel: yes
 report:
   template: template.qmd
-  format: neurotyp-forensic-typst
+  format: neurotyp-pediatric-typst
   output_dir: output

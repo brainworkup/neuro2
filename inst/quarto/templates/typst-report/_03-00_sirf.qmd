@@ -1,12 +1,13 @@
 # SUMMARY/IMPRESSION {#sec-sirf}
 
-{{< include _03-00_sirf_text.qmd >}}
-
 ```{r}
 #| label: setup-sirf
 #| include: false
 
-# Source R6 classes
+# Source R6 classes in the correct order
+source("R/ReportTemplateR6.R") # Must be sourced first as NeuropsychReportSystemR6 depends on it
+source("R/NeuropsychResultsR6.R") # Also needed by NeuropsychReportSystemR6
+source("R/DomainProcessorR6.R") # Also needed by NeuropsychReportSystemR6
 source("R/NeuropsychReportSystemR6.R")
 source("R/DotplotR6.R")
 
@@ -77,15 +78,14 @@ overall_plot$create_plot()
 
 ```{=typst}
 #let domain(file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.5em)
+  let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
   figure(
     [#image(file_fig, width: 85%)],
     placement: none,
     caption: figure.caption(
       position: bottom,
-      [Overall neurocognitive function subdomain plots of the patient's strengths and
-        weaknesses. _Note:_ _z_-scores have a mean of 0 and a standard deviation of 1.],
+      [Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-scores have a mean of 0 and a standard deviation of 1.],
     ),
     kind: "image",
     supplement: [Figure],

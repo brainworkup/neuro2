@@ -813,12 +813,19 @@ WorkflowRunner <- R6::R6Class(
                     output_file <- get_output_file(domain)
 
                     # Process the domain with the appropriate output file
+                    # First set the output file name
+                    output_file_name <- output_file
+                    # Then process the domain (without passing output_file parameter)
                     domain_processor$process(
                       generate_reports = TRUE,
                       report_types = c("self"),
-                      generate_domain_files = TRUE,
-                      output_file = output_file
+                      generate_domain_files = TRUE
                     )
+                    # If needed, rename the generated file to match the expected output file
+                    generated_file <- paste0("_02-", domain_processor$get_domain_number(), "_", tolower(domain_processor$pheno), ".qmd")
+                    if (generated_file != output_file_name && file.exists(generated_file)) {
+                      file.rename(generated_file, output_file_name)
+                    }
                     log_message(paste0("Processed domain: ", domain), "DOMAINS")
                   },
                   error = function(e) {
@@ -894,12 +901,19 @@ WorkflowRunner <- R6::R6Class(
                       output_file <- get_output_file(domain)
 
                       # Process the domain with the appropriate output file
+                      # First set the output file name
+                      output_file_name <- output_file
+                      # Then process the domain (without passing output_file parameter)
                       domain_processor$process(
                         generate_reports = TRUE,
                         report_types = c("self"),
-                        generate_domain_files = TRUE,
-                        output_file = output_file
+                        generate_domain_files = TRUE
                       )
+                      # If needed, rename the generated file to match the expected output file
+                      generated_file <- paste0("_02-", domain_processor$get_domain_number(), "_", tolower(domain_processor$pheno), ".qmd")
+                      if (generated_file != output_file_name && file.exists(generated_file)) {
+                        file.rename(generated_file, output_file_name)
+                      }
                       log_message(
                         paste0("Processed behavioral domain: ", domain),
                         "DOMAINS"

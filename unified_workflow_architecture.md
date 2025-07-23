@@ -9,7 +9,7 @@ This document outlines the architecture for a unified neuropsychological report 
 ```
 ┌─────────────────────────────────────┐
 │                                     │
-   unified_neuropsych_workflow.sh     │◄────────┐
+|   unified_neuropsych_workflow.sh    │◄────────┐
 │     (Shell Script Entry Point)      │         │
 │                                     │         │
 └───────────────┬─────────────────────┘         │
