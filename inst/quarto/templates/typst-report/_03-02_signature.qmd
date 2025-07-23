@@ -25,7 +25,7 @@ knitr::include_graphics(sig_path)
 #block[
 *Joey W. Trampush, Ph.D.* \
 Chief Neuropsychologist \
-BrainWorkup Neuropsychology, LLC \
+Brainworkup Neuropsychology, LLC \
 Assistant Professor \
 Department of Psychiatry and the Behavioral Sciences \
 Keck School of Medicine of USC \

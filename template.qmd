@@ -27,11 +27,6 @@ if (file.exists("R/load_packages.R")) {
   library(gt)
 }
 
-# Source custom functions if available
-if (file.exists("R/TableGT.R")) {
-  source("R/TableGT.R")
-}
-
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,

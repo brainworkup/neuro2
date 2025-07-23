@@ -1,29 +1,72 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-07-22 20:12:18.01132 
+Date: 2025-07-22 21:26:32.185376 
 
-[2025-07-22 20:12:18] [CONFIG] Loading configuration from: config.yml
-[2025-07-22 20:12:18] [CONFIG] Configuration loaded successfully
-[2025-07-22 20:12:18] [CONFIG] Patient: Ethan
-[2025-07-22 20:12:18] [CONFIG] Age: 13
-[2025-07-22 20:12:18] [CONFIG] DOE: 2025-07-21
-[2025-07-22 20:12:18] [INFO] Initialized WorkflowRunner for patient: Ethan
-[2025-07-22 20:12:18] [WORKFLOW] Starting unified workflow for patient: Ethan
-[2025-07-22 20:12:18] [WORKFLOW] Step 1: Setting up environment...
-[2025-07-22 20:12:18] [SETUP] Running setup_environment.R
-[2025-07-22 20:12:18] [WARNING] Some R6 class files are missing:
-[2025-07-22 20:12:18] [WARNING]   - R/IQReportGeneratorR6.R
-[2025-07-22 20:12:18] [SETUP] Found 7 CSV files in data-raw/csv
-[2025-07-22 20:12:18] [SETUP] Environment setup complete
-[2025-07-22 20:12:18] [WORKFLOW] Step 2: Processing data...
-[2025-07-22 20:12:18] [DATA] data_processor_module.R not found. Using fallback processing.
-[2025-07-22 20:12:18] [DATA] Using DuckDB data processor
-[2025-07-22 20:12:18] [DATA] Data processing complete
-[2025-07-22 20:12:18] [WORKFLOW] Step 3: Generating domain files...
-[2025-07-22 20:12:18] [DOMAINS] Checking for required R6 classes for domain processing...
-[2025-07-22 20:12:18] [DOMAINS] All required R6 class files for domain processing are present
-[2025-07-22 20:12:18] [DOMAINS] Using DomainProcessorR6 to generate domain files
-[2025-07-22 20:12:18] [DOMAINS] Found 6 unique domains
-[2025-07-22 20:12:18] [ERROR] Error processing domains: embedded nul in string: 'PAR1\025\004\025J\025NL\025\b\025\0\0\0%\x90\b\0\0\0pegboard\005\0\0\0rbans\003\0\0\0tmt\005\0\0\0wisc5\025\0\025\xd0\001\025@'
-[2025-07-22 20:12:18] [WARNING] Will use fallback domain generation method
-[2025-07-22 20:12:18] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
-[2025-07-22 20:12:18] [DOMAINS] Using neuro2_R6_update_workflow.R
+[2025-07-22 21:26:32] [CONFIG] Loading configuration from: config.yml
+[2025-07-22 21:26:32] [CONFIG] Configuration loaded successfully
+[2025-07-22 21:26:32] [CONFIG] Patient: Ethan
+[2025-07-22 21:26:32] [CONFIG] Age: 13
+[2025-07-22 21:26:32] [CONFIG] DOE: 2025-07-21
+[2025-07-22 21:26:32] [INFO] Initialized WorkflowRunner for patient: Ethan
+[2025-07-22 21:26:32] [WORKFLOW] Starting unified workflow for patient: Ethan
+[2025-07-22 21:26:32] [WORKFLOW] Step 1: Setting up environment...
+[2025-07-22 21:26:32] [SETUP] Running setup_environment.R
+[2025-07-22 21:26:32] [SETUP] All required R6 class files are present
+[2025-07-22 21:26:32] [SETUP] Found 7 CSV files in data-raw/csv
+[2025-07-22 21:26:32] [SETUP] Environment setup complete
+[2025-07-22 21:26:32] [WORKFLOW] Step 2: Processing data...
+[2025-07-22 21:26:32] [DATA] data_processor_module.R not found. Using fallback processing.
+[2025-07-22 21:26:32] [DATA] Using DuckDB data processor
+[2025-07-22 21:26:33] [DATA] Data processing complete
+[2025-07-22 21:26:33] [WORKFLOW] Step 3: Generating domain files...
+[2025-07-22 21:26:33] [DOMAINS] Checking for required R6 classes for domain processing...
+[2025-07-22 21:26:33] [DOMAINS] All required R6 class files for domain processing are present
+[2025-07-22 21:26:33] [DOMAINS] Using DomainProcessorR6 to generate domain files
+[2025-07-22 21:26:33] [DOMAINS] Found 6 unique domains
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: Verbal/Language
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: Attention/Executive
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: Motor
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: Memory
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: Visual Perception/Construction
+[2025-07-22 21:26:33] [DOMAINS] Processed domain: General Cognitive Ability
+[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Personality Disorders
+[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Psychiatric Disorders
+[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Substance Use
+[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Behavioral/Emotional/Social
+[2025-07-22 21:26:33] [DOMAINS] Processed behavioral domain: Psychosocial Problems
+[2025-07-22 21:26:33] [DOMAINS] Generated domain files:
+[2025-07-22 21:26:33] [DOMAINS]   - _02-00_behav_obs.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-05_memory_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-05_memory.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-07_motor_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-07_motor.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_attention_executive_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_behavioral_emotional_social_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_general_cognitive_ability_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_memory_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_motor_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_personality_disorders_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_psychiatric_disorders_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_psychosocial_problems_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_substance_use_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_verbal_language_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-09_visual_perception_construction_adult_text_self.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_attention_executive_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_attention_executive.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_behavioral_emotional_social_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_behavioral_emotional_social.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_general_cognitive_ability_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_general_cognitive_ability.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_personality_disorders_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_personality_disorders.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychiatric_disorders_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychiatric_disorders.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychosocial_problems_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_psychosocial_problems.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_substance_use_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_substance_use.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_verbal_language_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_verbal_language.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_visual_perception_construction_text.qmd
+[2025-07-22 21:26:33] [DOMAINS]   - _02-99_visual_perception_construction.qmd
+[2025-07-22 21:26:33] [DOMAINS] domain_generator_module.R not found. Using fallback domain generation.
+[2025-07-22 21:26:33] [DOMAINS] Using neuro2_R6_update_workflow.R

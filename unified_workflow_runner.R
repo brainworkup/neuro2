@@ -157,6 +157,43 @@ WorkflowRunner <- R6::R6Class(
         }
       }
 
+      # Copy template files from inst/quarto/templates/typst-report/ to working directory
+      log_message("Copying template files to working directory...", "SETUP")
+      template_dir <- system.file(
+        "quarto/templates/typst-report",
+        package = "neuro2"
+      )
+
+      # If running from development environment, use local path
+      if (template_dir == "") {
+        template_dir <- "inst/quarto/templates/typst-report"
+        log_message(
+          paste0("Using development template directory: ", template_dir),
+          "SETUP"
+        )
+      }
+
+      # Get list of template files
+      template_files <- list.files(
+        template_dir,
+        pattern = "\\.(qmd|yml)$",
+        full.names = TRUE
+      )
+
+      # Copy each file to working directory if it doesn't already exist
+      for (file in template_files) {
+        dest_file <- basename(file)
+        if (!file.exists(dest_file)) {
+          file.copy(file, dest_file)
+          log_message(paste0("Copied template file: ", dest_file), "SETUP")
+        } else {
+          log_message(
+            paste0("Template file already exists: ", dest_file),
+            "SETUP"
+          )
+        }
+      }
+
       # Check for R6 class files
       r6_files <- c(
         "R/ReportTemplateR6.R",
@@ -311,24 +348,50 @@ WorkflowRunner <- R6::R6Class(
                 domain <- domains_data$domain[i]
 
                 # Create a domain processor for this domain
+                # Use the configured format (default is Parquet for better performance)
+                input_format <- self$config$data$format
+                if (is.null(input_format)) {
+                  input_format <- "parquet"
+                }
+
+                input_file <- file.path(
+                  self$config$data$output_dir,
+                  paste0("neurocog.", input_format)
+                )
+
                 domain_processor <- DomainProcessorR6$new(
                   domains = domain,
                   pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
-                  input_file = file.path(
-                    self$config$data$output_dir,
-                    "neurocog.parquet"
-                  ),
+                  input_file = input_file,
                   output_dir = self$config$data$output_dir
                 )
 
                 # Process the domain and generate files
-                domain_processor$process(
-                  generate_reports = TRUE,
-                  report_types = c("self"),
-                  generate_domain_files = TRUE
+                tryCatch(
+                  {
+                    domain_processor$process(
+                      generate_reports = TRUE,
+                      report_types = c("self"),
+                      generate_domain_files = TRUE
+                    )
+                    log_message(paste0("Processed domain: ", domain), "DOMAINS")
+                  },
+                  error = function(e) {
+                    log_message(
+                      paste0(
+                        "Error processing domain: ",
+                        domain,
+                        " - ",
+                        e$message
+                      ),
+                      "ERROR"
+                    )
+                    log_message(
+                      "Will try to continue with other domains",
+                      "WARNING"
+                    )
+                  }
                 )
-
-                log_message(paste0("Processed domain: ", domain), "DOMAINS")
               }
 
               # Also check neurobehav data for additional domains
@@ -361,26 +424,52 @@ WorkflowRunner <- R6::R6Class(
                   }
 
                   # Create a domain processor for this domain
+                  # Use the configured format (default is Parquet for better performance)
+                  input_format <- self$config$data$format
+                  if (is.null(input_format)) {
+                    input_format <- "parquet"
+                  }
+
+                  input_file <- file.path(
+                    self$config$data$output_dir,
+                    paste0("neurobehav.", input_format)
+                  )
+
                   domain_processor <- DomainProcessorR6$new(
                     domains = domain,
                     pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
-                    input_file = file.path(
-                      self$config$data$output_dir,
-                      "neurobehav.parquet"
-                    ),
+                    input_file = input_file,
                     output_dir = self$config$data$output_dir
                   )
 
                   # Process the domain and generate files
-                  domain_processor$process(
-                    generate_reports = TRUE,
-                    report_types = c("self"),
-                    generate_domain_files = TRUE
-                  )
-
-                  log_message(
-                    paste0("Processed behavioral domain: ", domain),
-                    "DOMAINS"
+                  tryCatch(
+                    {
+                      domain_processor$process(
+                        generate_reports = TRUE,
+                        report_types = c("self"),
+                        generate_domain_files = TRUE
+                      )
+                      log_message(
+                        paste0("Processed behavioral domain: ", domain),
+                        "DOMAINS"
+                      )
+                    },
+                    error = function(e) {
+                      log_message(
+                        paste0(
+                          "Error processing behavioral domain: ",
+                          domain,
+                          " - ",
+                          e$message
+                        ),
+                        "ERROR"
+                      )
+                      log_message(
+                        "Will try to continue with other domains",
+                        "WARNING"
+                      )
+                    }
                   )
                 }
               }

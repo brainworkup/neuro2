@@ -92,7 +92,37 @@ DomainProcessorR6 <- R6::R6Class(
         stop("No input file specified and no data pre-loaded.")
       }
 
-      self$data <- readr::read_csv(self$input_file)
+      # Determine file extension to use appropriate reader
+      file_ext <- tools::file_ext(self$input_file)
+
+      if (file_ext == "parquet") {
+        # Check if arrow package is available
+        if (!requireNamespace("arrow", quietly = TRUE)) {
+          stop(
+            "The 'arrow' package is required to read Parquet files. Please install it with install.packages('arrow')"
+          )
+        }
+        self$data <- arrow::read_parquet(self$input_file)
+      } else if (file_ext == "feather") {
+        # Check if arrow package is available
+        if (!requireNamespace("arrow", quietly = TRUE)) {
+          stop(
+            "The 'arrow' package is required to read Feather files. Please install it with install.packages('arrow')"
+          )
+        }
+        self$data <- arrow::read_feather(self$input_file)
+      } else if (file_ext == "csv") {
+        self$data <- readr::read_csv(self$input_file)
+      } else {
+        # Default to CSV for unknown extensions
+        warning(
+          "Unknown file extension: ",
+          file_ext,
+          ". Attempting to read as CSV."
+        )
+        self$data <- readr::read_csv(self$input_file)
+      }
+
       invisible(self)
     },
 
@@ -170,22 +200,63 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Save the processed data to a CSV file.
+    #' Save the processed data to a file.
     #'
     #' @param filename Optional custom filename (default: based on pheno).
+    #' @param format Output format ("csv", "parquet", or "feather", default: determined from filename extension).
     #' @return Invisibly returns self for method chaining.
-    save_data = function(filename = NULL) {
-      if (is.null(filename)) {
-        filename <- paste0(self$pheno, ".csv")
+    save_data = function(filename = NULL, format = NULL) {
+      # Determine format from filename if not specified
+      if (is.null(format) && !is.null(filename)) {
+        format <- tools::file_ext(filename)
       }
 
-      readr::write_excel_csv(
-        self$data,
-        here::here(self$output_dir, filename),
-        na = "",
-        col_names = TRUE,
-        append = FALSE
-      )
+      # If format is still NULL, use default from config or fall back to csv
+      if (is.null(format)) {
+        format <- "parquet" # Default to parquet for better performance
+      }
+
+      # Generate filename if not provided
+      if (is.null(filename)) {
+        filename <- paste0(self$pheno, ".", format)
+      }
+
+      # Full path to output file
+      output_path <- here::here(self$output_dir, filename)
+
+      # Save based on format
+      if (format == "parquet") {
+        # Check if arrow package is available
+        if (!requireNamespace("arrow", quietly = TRUE)) {
+          warning(
+            "The 'arrow' package is required to write Parquet files. Falling back to CSV."
+          )
+          format <- "csv"
+        } else {
+          arrow::write_parquet(self$data, output_path)
+        }
+      } else if (format == "feather") {
+        # Check if arrow package is available
+        if (!requireNamespace("arrow", quietly = TRUE)) {
+          warning(
+            "The 'arrow' package is required to write Feather files. Falling back to CSV."
+          )
+          format <- "csv"
+        } else {
+          arrow::write_feather(self$data, output_path)
+        }
+      }
+
+      # Fall back to CSV if needed
+      if (format == "csv") {
+        readr::write_excel_csv(
+          self$data,
+          output_path,
+          na = "",
+          col_names = TRUE,
+          append = FALSE
+        )
+      }
 
       invisible(self)
     },
@@ -382,11 +453,38 @@ DomainProcessorR6 <- R6::R6Class(
         "pheno <- \"",
         tolower(self$pheno),
         "\"\n\n",
-        "# Read the CSV file into a data frame\n",
+        "# Read the data file into a data frame\n",
+        "file_ext <- tools::file_ext(\"",
+        self$input_file,
+        "\")\n",
+        "if (file_ext == \"parquet\") {\n",
+        "  # Check if arrow package is available\n",
+        "  if (!requireNamespace(\"arrow\", quietly = TRUE)) {\n",
+        "    stop(\"The 'arrow' package is required to read Parquet files.\")\n",
+        "  }\n",
+        "  ",
+        tolower(self$pheno),
+        " <- arrow::read_parquet(\"",
+        self$input_file,
+        "\")\n",
+        "} else if (file_ext == \"feather\") {\n",
+        "  # Check if arrow package is available\n",
+        "  if (!requireNamespace(\"arrow\", quietly = TRUE)) {\n",
+        "    stop(\"The 'arrow' package is required to read Feather files.\")\n",
+        "  }\n",
+        "  ",
+        tolower(self$pheno),
+        " <- arrow::read_feather(\"",
+        self$input_file,
+        "\")\n",
+        "} else {\n",
+        "  # Default to CSV for other formats\n",
+        "  ",
         tolower(self$pheno),
         " <- readr::read_csv(\"",
         self$input_file,
         "\")\n",
+        "}\n",
         "```\n\n"
         # ... additional content based on template
       )

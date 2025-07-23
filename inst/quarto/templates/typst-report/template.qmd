@@ -2,7 +2,6 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
-doe: {{< var doe >}}
 date_of_report: last-modified
 ---
 
@@ -11,67 +10,22 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
-# Suppress xfun::attr() deprecation warnings
+# Suppress warnings during setup
 options(warn = -1)
 
-packages <- c(
-  "dplyr",
-  "glue",
-  "gt",
-  "here",
-  "janitor",
-  "knitr",
-  "purrr",
-  "quarto",
-  "readr",
-  "readxl",
-  "rmarkdown",
-  "snakecase",
-  "stringr",
-  "tidytable",
-  "vroom",
-  "xfun",
-  "bwu",
-  "NeurotypR"
-)
-
-# Function to load packages one by one
-load_packages <- function(packages) {
-  for (pkg in packages) {
-    if (!require(pkg, character.only = TRUE)) {
-      install.packages(pkg)
-      library(pkg, character.only = TRUE)
-    }
-    message(paste("Loaded package:", pkg))
-  }
+# Source package loading function
+if (file.exists("R/load_packages.R")) {
+  source("R/load_packages.R")
+  # Load all required packages using centralized function
+  load_neuropsych_packages(verbose = FALSE)
+} else {
+  # Fallback: Load minimal required packages directly
+  library(knitr)
+  library(here)
+  library(readr)
+  library(dplyr)
+  library(gt)
 }
-
-# Call the function to load packages
-load_packages(packages)
-
-# Apply xfun::attr() deprecation fix after loading xfun
-if (requireNamespace("xfun", quietly = TRUE)) {
-  # Check if attr function exists and patch it
-  if (exists("attr", envir = asNamespace("xfun"))) {
-    tryCatch(
-      {
-        # Temporarily unlock the binding
-        unlockBinding("attr", asNamespace("xfun"))
-        # Replace with attr2
-        assign("attr", xfun::attr2, envir = asNamespace("xfun"))
-        # Lock it back
-        lockBinding("attr", asNamespace("xfun"))
-        message("Applied xfun::attr() deprecation fix")
-      },
-      error = function(e) {
-        message(
-          "Could not patch xfun::attr(), continuing with warnings suppressed"
-        )
-      }
-    )
-  }
-}
-
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -81,35 +35,35 @@ knitr::opts_knit$set(
   optipng = knitr::hook_optipng
 )
 
-# Keep warnings suppressed for the rest of the document to avoid xfun::attr issues
-# This is a temporary workaround for the xfun::attr() deprecation warning
-options(warn = -1)
-
-# Set environment variables with default values
+# Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
+
+# Note: Data loading is now handled by the domain processors
+# The NeuropsychReportSystemR6 generates domain-specific files
+# that include their own data processing
 ```
 
 ```{r}
-#| label: data-load
+#| label: data-prep
 #| include: false
 
-path_data <- here::here("data")
-path_csv <- here::here("inst", "extdata")
-NeurotypR::load_data(here::here(path_csv))
-neurocog <- readr::read_csv("data/neurocog.csv")
-neurobehav <- readr::read_csv("data/neurobehav.csv")
-neuropsych <- readr::read_csv("data/neuropsych.csv")
-validity <- readr::read_csv("data/validity.csv")
+# Data is now loaded dynamically by domain processors
+# Each domain file (_02-XX_domain.qmd) handles its own data
+# This ensures only relevant data is loaded for each domain
+
+# If global data operations are needed, they can be added here
+# For example, loading patient metadata or configuration
 ```
 
 ```{=typst}
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
 #let doe = [{{< var date_of_report >}}]
 #let patient = [{{< var patient >}}]
-// #v(2em, weak: true)
-// #show block: set par(leading: 0.65em)
+#v(2em, weak: true)
+#show block: set par(leading: 0.65em)
 #block[
+*CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
 *DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
@@ -120,16 +74,52 @@ validity <- readr::read_csv("data/validity.csv")
 
 {{< include _01-00_nse_adult.qmd >}}
 
-<!-- {{< pagebreak >}} -->
-
-
-<!-- {{< pagebreak >}} -->
-
 {{< include _02-00_behav_obs.qmd >}}
 
 # NEUROCOGNITIVE FINDINGS
 
-{{< include _include_domains.qmd >}}
+```{r}
+#| label: include-domains
+#| output: asis
+#| echo: false
+
+# Define all possible domain files in canonical order
+# Up to 14 total domains, with up to 10-12 domains per patient
+all_possible_domains <- c(
+  "_02-01_iq.qmd",
+  "_02-02_academics.qmd",
+  "_02-03_verbal.qmd",
+  "_02-04_spatial.qmd",
+  "_02-05_memory.qmd",
+  "_02-06_executive.qmd",
+  "_02-07_motor.qmd",
+  "_02-08_social.qmd",
+  "_02-09_adhd_adult.qmd",
+  "_02-09_adhd_child.qmd",
+  "_02-10_emotion_adult.qmd",
+  "_02-10_emotion_child.qmd",
+  "_02-11_adaptive.qmd",
+  "_02-12_daily_living.qmd"
+)
+
+# Check which domain files actually exist
+existing_files <- character()
+for (file in all_possible_domains) {
+  if (file.exists(file)) {
+    existing_files <- c(existing_files, file)
+  }
+}
+
+# Generate include statements for existing domain files
+if (length(existing_files) > 0) {
+  cat("<!-- Including", length(existing_files), "domain files -->\n")
+  for (file in existing_files) {
+    cat(sprintf("\n{{< include %s >}}\n", file))
+  }
+} else {
+  cat("\n*No domain files found. Please run the domain generation process.*\n")
+}
+```
 
 <!-- {{< pagebreak >}} -->
 

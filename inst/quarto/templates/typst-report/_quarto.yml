@@ -1,6 +1,6 @@
 project:
   type: default
-  title: "NeurotypR"
+  title: "neuro2"
   execute-dir: project
   render:
     - template.qmd
@@ -12,7 +12,7 @@ format:
     papersize: "us-letter"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
-    fontsize: 11pt
+    fontsize: 12pt
     number-sections: false
     number-offset: 1
     shift-heading-level-by: 0
