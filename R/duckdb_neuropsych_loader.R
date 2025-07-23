@@ -206,25 +206,23 @@ load_data_duckdb <- function(
       message("[DuckDB] Writing Parquet files...")
       for (name in dataset_names) {
         path <- file.path(output_dir, paste0(name, ".parquet"))
-        query <- sprintf(
-          "COPY (SELECT * FROM %s_final) TO '%s' (FORMAT PARQUET)",
-          name,
-          path
-        )
+        # Use arrow package directly instead of DuckDB for Parquet writing
         tryCatch(
           {
-            DBI::dbExecute(con, query)
+            arrow::write_parquet(result_list[[name]], path)
             message("[OK] Wrote: ", basename(path))
           },
           error = function(e) {
             warning(
               "Parquet write failed for ",
               basename(path),
-              ". Falling back to arrow: ",
+              ": ",
               e$message
             )
-            arrow::write_parquet(result_list[[name]], path)
-            message("[OK] Wrote (fallback): ", basename(path))
+            # Fall back to CSV if Parquet fails
+            csv_path <- file.path(output_dir, paste0(name, ".csv"))
+            readr::write_excel_csv(result_list[[name]], csv_path)
+            message("[OK] Wrote (fallback to CSV): ", basename(csv_path))
           }
         )
       }
@@ -241,12 +239,13 @@ load_data_duckdb <- function(
             message("[OK] Wrote: ", basename(path))
           },
           error = function(e) {
-            stop(
+            warning(
               "Failed to write Feather file ",
               basename(path),
               ": ",
               e$message
             )
+            # Don't stop on Feather write error, just warn
           }
         )
       }
@@ -318,16 +317,44 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
         },
         error = function(e) {
           warning("Failed to read feather file ", basename(f), ": ", e$message)
+          # Try to fall back to CSV if available
+          csv_file <- file.path(
+            dirname(dirname(f)),
+            "csv",
+            paste0(table_name, ".csv")
+          )
+          if (file.exists(csv_file)) {
+            message("Falling back to CSV file: ", basename(csv_file))
+            csv_data <- readr::read_csv(csv_file)
+            duckdb::duckdb_register(con, table_name, csv_data)
+          }
+        }
+      )
+    } else if (ext == "parquet") {
+      # For Parquet files, use arrow package instead of DuckDB's native reader
+      tryCatch(
+        {
+          parquet_data <- arrow::read_parquet(f)
+          duckdb::duckdb_register(con, table_name, parquet_data)
+        },
+        error = function(e) {
+          warning("Failed to read parquet file ", basename(f), ": ", e$message)
+          # Try to fall back to CSV if available
+          csv_file <- file.path(
+            dirname(dirname(f)),
+            "csv",
+            paste0(table_name, ".csv")
+          )
+          if (file.exists(csv_file)) {
+            message("Falling back to CSV file: ", basename(csv_file))
+            csv_data <- readr::read_csv(csv_file)
+            duckdb::duckdb_register(con, table_name, csv_data)
+          }
         }
       )
     } else {
-      # For CSV and Parquet, use DuckDB's native readers
-      reader_sql <- switch(
-        ext,
-        csv = sprintf("read_csv_auto('%s')", f),
-        parquet = sprintf("read_parquet('%s')", f),
-        stop("Unsupported file type: ", ext)
-      )
+      # For CSV, use DuckDB's native reader
+      reader_sql <- sprintf("read_csv_auto('%s')", f)
 
       DBI::dbExecute(
         con,
@@ -340,7 +367,7 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
     }
   }
 
-  # Run user’s query
+  # Run user's query
   result <- DBI::dbGetQuery(con, query, ...)
   return(result)
 }

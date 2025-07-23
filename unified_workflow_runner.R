@@ -162,7 +162,6 @@ WorkflowRunner <- R6::R6Class(
         "R/ReportTemplateR6.R",
         "R/NeuropsychResultsR6.R",
         "R/NeuropsychReportSystemR6.R",
-        "R/IQReportGeneratorR6.R",
         "R/DomainProcessorR6.R",
         "R/DotplotR6.R",
         "R/DuckDBProcessorR6.R"
