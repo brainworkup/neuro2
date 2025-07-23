@@ -1,4 +1,3 @@
-
 #' Utility functions to replace NeurotypR dependencies
 #'
 #' This file contains utility functions that replace NeurotypR functions
