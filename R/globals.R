@@ -5,6 +5,8 @@
 utils::globalVariables(c(
   ".",
   "absort",
+  "absort.x",
+  "absort.y",
   "br",
   "calc_ci_95",
   "ci_90_lo",
@@ -17,6 +19,7 @@ utils::globalVariables(c(
   "composite_name",
   "composition",
   "Completion Time (seconds)",
+  "completion_time",
   "completion_time_seconds",
   "description",
   "domain",
@@ -27,6 +30,9 @@ utils::globalVariables(c(
   "name",
   "narrow",
   "percentile",
+  "performance_level",
+  "PredictedScore",
+  "PredictedSD",
   "Raw score",
   "raw_score",
   "reliability",
@@ -34,6 +40,9 @@ utils::globalVariables(c(
   "Scaled score",
   "scaled_score",
   "score",
+  "score.x",
+  "score.y",
+  "score_type",
   "str",
   "subdomain",
   "Subtest",
@@ -80,5 +89,5 @@ utils::globalVariables(c(
   "subtest_pages"
 ))
 
-#' @importFrom utils str
+#' @importFrom utils str head
 #' @importFrom stats sd pnorm qnorm
