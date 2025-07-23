@@ -49,7 +49,7 @@ essential_files <- c(
   "_03-01_recs.qmd",
   "_03-02_signature.qmd",
   "_03-03_appendix.qmd",
-  "_include_domains.qmd"
+  "config.yml"
 )
 
 # Check each essential file

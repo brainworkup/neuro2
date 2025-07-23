@@ -370,6 +370,144 @@ WorkflowRunner <- R6::R6Class(
         }
       }
 
+      # Setup Quarto extensions
+      log_message("Setting up Quarto extensions...", "SETUP")
+
+      # First try using system.file (for installed package)
+      extensions_dir <- system.file("quarto/_extensions", package = "neuro2")
+
+      # If running from development environment, use local path
+      if (extensions_dir == "") {
+        extensions_dir <- "inst/quarto/_extensions"
+        log_message(
+          paste0("Using development extensions directory: ", extensions_dir),
+          "SETUP"
+        )
+      }
+
+      # Check if extensions directory exists
+      if (!dir.exists(extensions_dir)) {
+        log_message(
+          paste0("Extensions directory not found: ", extensions_dir),
+          "ERROR"
+        )
+        # Try alternative locations
+        alt_dirs <- c(
+          "inst/quarto/_extensions",
+          "../inst/quarto/_extensions",
+          "../../inst/quarto/_extensions"
+        )
+
+        for (alt_dir in alt_dirs) {
+          if (dir.exists(alt_dir)) {
+            extensions_dir <- alt_dir
+            log_message(
+              paste0(
+                "Found alternative extensions directory: ",
+                extensions_dir
+              ),
+              "SETUP"
+            )
+            break
+          }
+        }
+
+        if (!dir.exists(extensions_dir)) {
+          log_message(
+            "Could not find extensions directory in any location",
+            "ERROR"
+          )
+          # Continue anyway, as this might not be fatal
+        }
+      }
+
+      if (dir.exists(extensions_dir)) {
+        # Create _extensions directory in working directory if it doesn't exist
+        if (!dir.exists("_extensions")) {
+          dir.create("_extensions", recursive = TRUE, showWarnings = FALSE)
+          log_message("Created _extensions directory", "SETUP")
+        }
+
+        # Copy brainworkup directory with all extensions
+        brainworkup_dir <- file.path(extensions_dir, "brainworkup")
+        if (dir.exists(brainworkup_dir)) {
+          # Create brainworkup directory in _extensions if it doesn't exist
+          if (!dir.exists("_extensions/brainworkup")) {
+            dir.create(
+              "_extensions/brainworkup",
+              recursive = TRUE,
+              showWarnings = FALSE
+            )
+            log_message("Created _extensions/brainworkup directory", "SETUP")
+          }
+
+          # List all extension directories
+          extension_dirs <- list.dirs(
+            brainworkup_dir,
+            full.names = FALSE,
+            recursive = FALSE
+          )
+          log_message(
+            paste0(
+              "Found extensions: ",
+              paste(extension_dirs, collapse = ", ")
+            ),
+            "SETUP"
+          )
+
+          # Copy each extension directory
+          for (ext_dir in extension_dirs) {
+            src_dir <- file.path(brainworkup_dir, ext_dir)
+            dest_dir <- file.path("_extensions/brainworkup", ext_dir)
+
+            # Check if extension directory already exists
+            if (!dir.exists(dest_dir)) {
+              # Create the directory
+              dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+
+              # Copy all files from the extension directory
+              ext_files <- list.files(src_dir, full.names = TRUE)
+              for (file in ext_files) {
+                file.copy(file, dest_dir, recursive = TRUE)
+              }
+              log_message(paste0("Copied extension: ", ext_dir), "SETUP")
+            } else {
+              log_message(
+                paste0("Extension already exists: ", ext_dir),
+                "SETUP"
+              )
+            }
+          }
+
+          # Verify that the required extension exists
+          required_extension <- gsub("-typst$", "", self$config$report$format)
+          if (
+            !dir.exists(file.path(
+              "_extensions/brainworkup",
+              required_extension
+            ))
+          ) {
+            log_message(
+              paste0("Required extension not found: ", required_extension),
+              "WARNING"
+            )
+          } else {
+            log_message(
+              paste0("Required extension found: ", required_extension),
+              "SETUP"
+            )
+          }
+        } else {
+          log_message(
+            paste0(
+              "Brainworkup extensions directory not found: ",
+              brainworkup_dir
+            ),
+            "WARNING"
+          )
+        }
+      }
+
       # Check for R6 class files
       r6_files <- c(
         "R/ReportTemplateR6.R",
@@ -754,7 +892,7 @@ WorkflowRunner <- R6::R6Class(
                     {
                       # Get the appropriate output file name for this domain
                       output_file <- get_output_file(domain)
-                      
+
                       # Process the domain with the appropriate output file
                       domain_processor$process(
                         generate_reports = TRUE,
@@ -813,14 +951,20 @@ WorkflowRunner <- R6::R6Class(
 
       # Check which domain files have been generated
       domain_files_generated <- list.files(".", pattern = "_02-.*\\.qmd$")
-      log_message(paste("Domain files already generated:", paste(domain_files_generated, collapse=", ")), "DOMAINS")
-      
+      log_message(
+        paste(
+          "Domain files already generated:",
+          paste(domain_files_generated, collapse = ", ")
+        ),
+        "DOMAINS"
+      )
+
       # Check if we need to run the domain generator module
       # Only run it if essential domain files are missing
-      
+
       # Define essential domain files based on patient type
       patient_type <- determine_patient_type()
-      
+
       # Basic essential files that should always be present
       essential_files <- c(
         "_02-01_iq.qmd",
@@ -831,20 +975,36 @@ WorkflowRunner <- R6::R6Class(
         "_02-06_executive.qmd",
         "_02-07_motor.qmd"
       )
-      
+
       # Add ADHD and emotion files based on patient type
       if (patient_type == "adult") {
-        essential_files <- c(essential_files, "_02-09_adhd_adult.qmd", "_02-10_emotion_adult.qmd")
+        essential_files <- c(
+          essential_files,
+          "_02-09_adhd_adult.qmd",
+          "_02-10_emotion_adult.qmd"
+        )
       } else {
-        essential_files <- c(essential_files, "_02-09_adhd_child.qmd", "_02-10_emotion_child.qmd")
+        essential_files <- c(
+          essential_files,
+          "_02-09_adhd_child.qmd",
+          "_02-10_emotion_child.qmd"
+        )
       }
-      
+
       # Check if any essential files are missing
-      missing_files <- essential_files[!essential_files %in% domain_files_generated]
-      
+      missing_files <- essential_files[
+        !essential_files %in% domain_files_generated
+      ]
+
       if (length(missing_files) > 0) {
-        log_message(paste("Missing essential domain files:", paste(missing_files, collapse=", ")), "DOMAINS")
-        
+        log_message(
+          paste(
+            "Missing essential domain files:",
+            paste(missing_files, collapse = ", ")
+          ),
+          "DOMAINS"
+        )
+
         # Source the domain generator module as a fallback
         if (file.exists("domain_generator_module.R")) {
           log_message(

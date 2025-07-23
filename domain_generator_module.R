@@ -63,7 +63,7 @@ neurobehav_data <- read_data_file("neurobehav")
 
 if (is.null(neurocog_data) && is.null(neurobehav_data)) {
   log_message("No data available for domain generation", "ERROR")
-  return(FALSE)
+  stop("No data available for domain generation")
 }
 
 # Get unique domains
@@ -88,12 +88,12 @@ determine_patient_type <- function() {
   # Read config to get patient age
   config <- yaml::read_yaml("config.yml")
   age <- config$patient$age
-  
+
   # Default to child if age is not specified
   if (is.null(age)) {
     return("child")
   }
-  
+
   # Determine type based on age
   if (age >= 18) {
     return("adult")
@@ -126,7 +126,11 @@ if (patient_type == "adult") {
 }
 
 # Add emotion domain file based on patient type
-emotion_file <- if (patient_type == "adult") "_02-10_emotion_adult.qmd" else "_02-10_emotion_child.qmd"
+emotion_file <- if (patient_type == "adult") {
+  "_02-10_emotion_adult.qmd"
+} else {
+  "_02-10_emotion_child.qmd"
+}
 domain_files[["Behavioral/Emotional/Social"]] <- emotion_file
 
 # Add other domains
@@ -233,4 +237,4 @@ for (domain in domains) {
 }
 
 log_message("Domain generation complete", "DOMAINS")
-return(TRUE)
+# Script completed successfully
