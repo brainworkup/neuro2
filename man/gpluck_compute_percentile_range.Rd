@@ -2,48 +2,27 @@
 % Please edit documentation in R/pdf.R
 \name{gpluck_compute_percentile_range}
 \alias{gpluck_compute_percentile_range}
-\title{Compute Percentile and Range if Unknown}
+\title{Compute Percentile & Performance Range}
 \usage{
 gpluck_compute_percentile_range(
-  .x,
-  .score = NA,
-  .score_type = c("z_score", "scaled_score", "t_score", "standard_score"),
-  percentile = NA,
-  range = NA,
-  pct1 = NA,
-  pct2 = NA,
-  pct3 = NA,
-  z = NA,
-  ...
+  .data,
+  score_col,
+  score_type = c("z_score", "scaled_score", "t_score", "standard_score"),
+  keep_intermediate = FALSE
 )
 }
 \arguments{
-\item{.x}{A numeric vector.}
+\item{.data}{A data.frame/tibble.}
 
-\item{.score}{The value of scores to be calculated according to the scoring type. Default: NA}
+\item{score_col}{Unquoted name of the score column in \code{.data}.}
 
-\item{.score_type}{Type of scoring- it can be z_score, scaled_score, t_score or standard_score. Default: c("z_score", "scaled_score", "t_score", "standard_score")}
+\item{score_type}{One of "z_score", "scaled_score", "t_score", "standard_score".}
 
-\item{percentile}{Percentile of x. Default: NA}
-
-\item{range}{Difference between the highest and lowest percentiles. Default: NA}
-
-\item{pct1}{First percentile. Default: NA}
-
-\item{pct2}{Second percentile. Default: NA}
-
-\item{pct3}{Third percentile. Default: NA}
-
-\item{z}{Z-scores. Default: NA}
-
-\item{...}{Other arguments not in use.}
+\item{keep_intermediate}{Keep pct1/pct2/pct3 columns? Default FALSE.}
 }
 \value{
-Returns the score with the specified type.
+\code{.data} with added columns: z, percentile, range.
 }
 \description{
-Computes percentile, performance range from vector .x and returns the score with the specified type.
-}
-\details{
-Values are calculated from vector x according to the specified scoring type.
+Compute Percentile & Performance Range
 }

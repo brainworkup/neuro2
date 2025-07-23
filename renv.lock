@@ -3253,6 +3253,17 @@
       "Maintainer": "Yihui Xie <xie@yihui.name>",
       "Repository": "https://packagemanager.posit.co/cran/latest"
     },
+    "neuro2": {
+      "Package": "neuro2",
+      "Version": "0.1.6",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "brainworkup",
+      "RemoteRepo": "neuro2",
+      "RemoteRef": "main",
+      "RemoteSha": "7b730ef58951aa95a72e7ad66512dcfada73b1a7"
+    },
     "nlme": {
       "Package": "nlme",
       "Version": "3.1-168",

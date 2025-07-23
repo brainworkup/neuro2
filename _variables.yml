@@ -8,8 +8,8 @@ dob: "YYYY-MM-DD"
 doe: "YYYY-MM-DD"
 doe2: "YYYY-MM-DD"
 doe3: "YYYY-MM-DD"
-age: 18
-education: :"12 years"
+age: 13
+education: "12 years"
 
 # Clinician information
 clinician: "Dr. Name"
@@ -23,7 +23,7 @@ include_scores_table: true
 
 # Other variables
 case_number: ""
-first_name: Biggie
+first_name: Ethan
 last_name: Smalls
 date_of_report: "2025-01-20"
 sex: male
