@@ -57,15 +57,24 @@ process_rbans_unified <- function(
       df <- readr::read_csv(
         input_file,
         col_names = FALSE,
+        col_types = readr::cols(.default = "c"),
         show_col_types = FALSE,
-        locale = readr::locale(encoding = "UTF-16LE")
+        locale = readr::locale(encoding = "UTF-16LE"),
+        skip_empty_rows = TRUE,
+        trim_ws = TRUE,
+        na = c("", "NA", "N/A", "-")
       )
     },
     error = function(e) {
-      stop(
-        "Error reading file: ",
-        e$message,
-        "\nPlease check that the file exists and has UTF-16LE encoding."
+      # If read_csv fails with UTF-16LE, try with default encoding
+      df <- readr::read_csv(
+        input_file,
+        col_names = FALSE,
+        col_types = readr::cols(.default = "c"),
+        show_col_types = FALSE,
+        skip_empty_rows = TRUE,
+        trim_ws = TRUE,
+        na = c("", "NA", "N/A", "-")
       )
     }
   )
@@ -90,7 +99,7 @@ process_rbans_unified <- function(
     # Create a filtered data frame with the rows we want
     filtered_df <- df %>%
       dplyr::slice(start:stop) %>%
-      dplyr::filter(stringr::str_starts(X1, fixed(test_prefix)))
+      dplyr::filter(stringr::str_detect(X1, fixed(test_prefix)))
 
     # Create a temporary column for separation
     filtered_df <- filtered_df %>%
@@ -101,7 +110,9 @@ process_rbans_unified <- function(
         sep = ",",
         fill = "right"
       ) %>%
-      dplyr::select(dplyr::all_of(col_names))
+      dplyr::select(dplyr::all_of(col_names)) %>%
+      # Clean up whitespace in columns
+      dplyr::mutate(across(everything(), ~ stringr::str_trim(.)))
 
     return(filtered_df)
   }
@@ -111,81 +122,293 @@ process_rbans_unified <- function(
     cat("Extracting data sections...\n")
   }
 
-  # Improved extraction to handle the specific format of the input file
-  raw_scores <- pluck_section(
-    df,
-    "RAW SCORES",
-    "SCALED SCORES",
-    c("scale", "raw_score")
-  )
+  # Extract raw scores
+  if (debug) {
+    cat("Extracting raw scores...\n")
+  }
 
-  # Filter to keep only RBANS entries
-  raw_scores <- raw_scores %>%
-    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+  # Find the start and end of the raw scores section
+  raw_scores_section <- which(df$X1 == "RAW SCORES")
+  scaled_scores_section <- which(df$X1 == "SCALED SCORES")
+
+  if (length(raw_scores_section) > 0 && length(scaled_scores_section) > 0) {
+    # Get the raw scores section
+    start_line <- raw_scores_section[1] + 1
+    stop_line <- scaled_scores_section[1] - 1
+
+    # Extract the raw scores section
+    raw_scores_df <- df %>%
+      dplyr::slice(start_line:stop_line) %>%
+      dplyr::rename(Subtest = X1, dummy = X2, raw_score = X3) %>%
+      dplyr::select(Subtest, raw_score)
+
+    # Filter for RBANS entries
+    raw_scores <- raw_scores_df %>%
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
+      dplyr::rename(scale = Subtest) %>%
+      dplyr::mutate(
+        scale = stringr::str_remove(scale, fixed(test_prefix)),
+        scale = stringr::str_trim(scale),
+        raw_score = as.character(raw_score)
+      )
+  } else {
+    raw_scores <- tibble::tibble(scale = character(), raw_score = character())
+  }
 
   if (debug) {
     cat("Extracted", nrow(raw_scores), "raw scores\n")
   }
 
-  scaled_scores <- pluck_section(
-    df,
-    "SCALED SCORES",
-    "CONTEXTUAL EVENTS",
-    c("scale", "scaled_score")
-  )
+  # Extract scaled scores
+  if (debug) {
+    cat("Extracting scaled scores...\n")
+  }
 
-  # Filter to keep only RBANS entries
-  scaled_scores <- scaled_scores %>%
-    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+  # Find the start and end of the scaled scores section
+  contextual_events_section <- which(df$X1 == "CONTEXTUAL EVENTS")
+
+  if (
+    length(scaled_scores_section) > 0 && length(contextual_events_section) > 0
+  ) {
+    # Get the scaled scores section
+    start_line <- scaled_scores_section[1] + 1
+    stop_line <- contextual_events_section[1] - 1
+
+    # Extract the scaled scores section
+    scaled_scores_df <- df %>%
+      dplyr::slice(start_line:stop_line) %>%
+      dplyr::rename(Subtest = X1, dummy = X2, score = X3) %>%
+      dplyr::select(Subtest, score)
+
+    # Filter for RBANS entries
+    scaled_scores <- scaled_scores_df %>%
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
+      dplyr::rename(scale = Subtest) %>%
+      dplyr::mutate(
+        scale = stringr::str_remove(scale, fixed(test_prefix)),
+        scale = stringr::str_trim(scale),
+        score = as.character(score)
+      )
+  } else {
+    scaled_scores <- tibble::tibble(scale = character(), score = character())
+  }
 
   if (debug) {
     cat("Extracted", nrow(scaled_scores), "scaled scores\n")
   }
 
-  times <- pluck_section(
-    df,
-    "SUBTEST COMPLETION TIMES",
-    "RULES TRIGGERED",
-    c("scale", "completion_time")
-  )
+  # Extract completion times
+  if (debug) {
+    cat("Extracting completion times...\n")
+  }
 
-  # Filter to keep only RBANS entries
-  times <- times %>%
-    dplyr::filter(stringr::str_detect(scale, fixed(test_prefix)))
+  # Find the start and end of the completion times section
+  subtest_completion_times_section <- which(df$X1 == "SUBTEST COMPLETION TIMES")
+  rules_triggered_section <- which(df$X1 == "RULES TRIGGERED")
+
+  if (
+    length(subtest_completion_times_section) > 0 &&
+      length(rules_triggered_section) > 0
+  ) {
+    # Get the completion times section
+    start_line <- subtest_completion_times_section[1] + 1
+    stop_line <- rules_triggered_section[1] - 1
+
+    # Extract the completion times section
+    times_df <- df %>%
+      dplyr::slice(start_line:stop_line) %>%
+      dplyr::rename(Subtest = X1, dummy = X2, completion_time = X3) %>%
+      dplyr::select(Subtest, completion_time)
+
+    # Filter for RBANS entries
+    times <- times_df %>%
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
+      dplyr::rename(scale = Subtest) %>%
+      dplyr::mutate(
+        scale = stringr::str_remove(scale, fixed(test_prefix)),
+        scale = stringr::str_trim(scale),
+        completion_time = as.character(completion_time)
+      )
+  } else {
+    times <- tibble::tibble(scale = character(), completion_time = character())
+  }
 
   if (debug) {
     cat("Extracted", nrow(times), "completion times\n")
   }
 
-  # Extract composites from the Composite Score section
-  composites <- df %>%
-    dplyr::filter(stringr::str_detect(X1, "RBANS Update Form A")) %>%
-    dplyr::filter(stringr::str_detect(X1, "Index|Total Scale")) %>%
-    tidyr::separate(
-      X1,
-      into = c(
-        "scale",
-        "composite_score",
-        "percentile",
-        "ci_95_lower",
-        "ci_95_upper",
-        "ci_95_low2",
-        "ci_95_high2"
-      ),
-      sep = ",",
-      fill = "right"
-    ) %>%
-    dplyr::select(scale, composite_score, percentile, ci_95_lower, ci_95_upper)
+  # Extract composite scores
+  if (debug) {
+    cat("Extracting composite scores...\n")
+  }
+
+  # Find the start of the composite scores section
+  composite_score_section <- which(df$X1 == "Composite Score")
+
+  if (length(composite_score_section) > 0) {
+    # Get the header row and find the rows after it
+    start_line <- composite_score_section[1]
+
+    if (debug) {
+      cat("Composite score section found at row:", start_line, "\n")
+    }
+
+    # Extract the composite scores section - skip the header row (start_line + 2)
+    composites_df <- df %>%
+      dplyr::slice((start_line + 2):nrow(df)) %>%
+      dplyr::filter(stringr::str_starts(X1, fixed(test_prefix)))
+
+    if (debug) {
+      cat("Found", nrow(composites_df), "composite score rows\n")
+      if (nrow(composites_df) > 0) {
+        cat("First few composite score rows:\n")
+        print(head(composites_df))
+      }
+    }
+
+    if (nrow(composites_df) > 0) {
+      # Extract the composite scores correctly based on the file format
+      # The X3 column contains comma-separated values: percentile,ci_90_lo,ci_90_up,ci_95_lower,ci_95_upper
+      composites <- composites_df %>%
+        dplyr::rename(scale = X1, score = X2) %>%
+        tidyr::separate(
+          X3,
+          sep = ",",
+          into = c(
+            "percentile",
+            "ci_90_lo",
+            "ci_90_up",
+            "ci_95_lower",
+            "ci_95_upper"
+          ),
+          fill = "right"
+        ) %>%
+        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) %>%
+        dplyr::mutate(
+          scale = stringr::str_remove(scale, fixed(test_prefix)),
+          scale = stringr::str_trim(scale),
+          score = as.character(score),
+          percentile = as.character(percentile),
+          ci_95_lower = as.character(ci_95_lower),
+          ci_95_upper = as.character(ci_95_upper)
+        )
+    } else {
+      composites <- tibble::tibble(
+        scale = character(),
+        score = character(),
+        percentile = character(),
+        ci_95_lower = character(),
+        ci_95_upper = character()
+      )
+    }
+  } else {
+    # Fallback to searching for Index or Total Scale in the entire file
+    composites_df <- df %>%
+      dplyr::filter(
+        stringr::str_starts(X1, fixed(test_prefix)) &
+          stringr::str_detect(X1, "Index|Total Scale")
+      )
+
+    if (debug) {
+      cat("Fallback: Found", nrow(composites_df), "composite score rows\n")
+      if (nrow(composites_df) > 0) {
+        cat("Fallback: First few composite score rows:\n")
+        print(head(composites_df))
+      }
+    }
+
+    if (nrow(composites_df) > 0) {
+      # Extract the composite scores using the same approach
+      # The X3 column contains comma-separated values: percentile,ci_90_lo,ci_90_up,ci_95_lower,ci_95_upper
+      composites <- composites_df %>%
+        dplyr::rename(scale = X1, score = X2) %>%
+        tidyr::separate(
+          X3,
+          sep = ",",
+          into = c(
+            "percentile",
+            "ci_90_lo",
+            "ci_90_up",
+            "ci_95_lower",
+            "ci_95_upper"
+          ),
+          fill = "right"
+        ) %>%
+        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) %>%
+        dplyr::mutate(
+          scale = stringr::str_remove(scale, fixed(test_prefix)),
+          scale = stringr::str_trim(scale),
+          score = as.character(score),
+          percentile = as.character(percentile),
+          ci_95_lower = as.character(ci_95_lower),
+          ci_95_upper = as.character(ci_95_upper)
+        )
+    } else {
+      composites <- tibble::tibble(
+        scale = character(),
+        score = character(),
+        percentile = character(),
+        ci_95_lower = character(),
+        ci_95_upper = character()
+      )
+    }
+  }
 
   if (debug) {
     cat("Extracted", nrow(composites), "composite scores\n")
   }
 
   # 4) Combine extracted data and any manual entries
-  combined <- Reduce(
-    function(x, y) dplyr::full_join(x, y, by = "scale"),
-    list(raw_scores, scaled_scores, times, composites)
-  )
+  # First combine raw_scores, scaled_scores, and times
+  combined <- raw_scores %>%
+    dplyr::full_join(scaled_scores, by = "scale") %>%
+    dplyr::full_join(times, by = "scale")
+
+  if (debug) {
+    cat("\n=== BEFORE JOINING COMPOSITES ===\n")
+    cat("Combined data has", nrow(combined), "rows\n")
+    cat("Composites data has", nrow(composites), "rows\n")
+
+    if (nrow(composites) > 0) {
+      cat("Composite scales:\n")
+      print(composites$scale)
+
+      cat("\nComposite scores:\n")
+      print(composites$score)
+
+      cat("\nComposite percentiles:\n")
+      print(composites$percentile)
+    }
+  }
+
+  # Then join with composites, coalescing the score columns
+  # Make sure we're joining on the correct scale names
+  combined <- combined %>%
+    dplyr::full_join(composites, by = "scale") %>%
+    dplyr::mutate(score = dplyr::coalesce(score.x, score.y)) %>%
+    dplyr::select(-dplyr::any_of(c("score.x", "score.y")))
+
+  if (debug) {
+    cat("\n=== AFTER JOINING COMPOSITES ===\n")
+    cat("Combined data has", nrow(combined), "rows\n")
+
+    # Check if composite scores are in the combined data
+    composite_rows <- combined %>%
+      dplyr::filter(stringr::str_detect(scale, "Index|Total Scale"))
+
+    cat("Found", nrow(composite_rows), "composite rows in combined data\n")
+
+    if (nrow(composite_rows) > 0) {
+      cat("Composite scales in combined data:\n")
+      print(composite_rows$scale)
+
+      cat("\nComposite scores in combined data:\n")
+      print(composite_rows$score)
+
+      cat("\nComposite percentiles in combined data:\n")
+      print(composite_rows$percentile)
+    }
+  }
 
   # Add manual entries if provided
   if (!is.null(manual_entries)) {
@@ -197,14 +420,37 @@ process_rbans_unified <- function(
   # 5) Clean up scale names to match metadata
   combined <- combined %>%
     dplyr::mutate(
+      original_scale_name = scale,
       scale = stringr::str_remove(scale, fixed(test_prefix)),
-      scale = stringr::str_trim(scale)
+      scale = stringr::str_trim(scale),
+      # Add absort values based on the mapping
+      absort = dplyr::case_when(
+        scale == "List Learning" ~ "rbans_01",
+        scale == "Story Memory" ~ "rbans_02",
+        scale == "Figure Copy" ~ "rbans_03",
+        scale == "Line Orientation" ~ "rbans_04",
+        scale == "Picture Naming" ~ "rbans_05",
+        scale == "Semantic Fluency" ~ "rbans_06",
+        scale == "Digit Span" ~ "rbans_07",
+        scale == "Coding" ~ "rbans_08",
+        scale == "List Recall" ~ "rbans_09",
+        scale == "List Recognition" ~ "rbans_10",
+        scale == "Story Recall" ~ "rbans_11",
+        scale == "Figure Recall" ~ "rbans_12",
+        scale == "Immediate Memory Index (IMI)" ~ "rbans_13",
+        scale == "Visuospatial/ Constructional Index (VCI)" ~ "rbans_14",
+        scale == "Language Index (LGI)" ~ "rbans_15",
+        scale == "Attention Index (ATI)" ~ "rbans_16",
+        scale == "Delayed Memory Index (DMI)" ~ "rbans_17",
+        scale == "Total Scale (TOT)" ~ "rbans_18",
+        TRUE ~ NA_character_
+      )
     )
 
   # 6) Recompute missing percentiles from scaled_score (z = (x - 10) / 3)
   combined <- combined %>%
     dplyr::mutate(
-      z = (as.numeric(scaled_score) - 10) / 3,
+      z = (as.numeric(score) - 10) / 3,
       percentile = dplyr::coalesce(
         as.numeric(percentile),
         round(pnorm(z) * 100)
@@ -248,12 +494,13 @@ process_rbans_unified <- function(
     # Rename scales to match the expected names in the input file
     dplyr::mutate(
       scale = dplyr::case_when(
-        scale == "RBANS Total" ~ "Total Scale",
-        scale == "Attention Index" ~ "Attention Index",
-        scale == "Immediate Memory Index" ~ "Immediate Memory Index",
-        scale == "Language Index" ~ "Language Index",
-        scale == "Visuospatial Index" ~ "Visuospatial/ Constructional Index",
-        scale == "Delayed Memory Index" ~ "Delayed Memory Index",
+        scale == "RBANS Total" ~ "Total Scale (TOT)",
+        scale == "Attention Index" ~ "Attention Index (ATI)",
+        scale == "Immediate Memory Index" ~ "Immediate Memory Index (IMI)",
+        scale == "Language Index" ~ "Language Index (LGI)",
+        scale == "Visuospatial Index" ~
+          "Visuospatial/ Constructional Index (VCI)",
+        scale == "Delayed Memory Index" ~ "Delayed Memory Index (DMI)",
         scale == "Digit Span" ~ "Digit Span",
         scale == "Coding" ~ "Coding",
         scale == "List Learning" ~ "List Learning",
@@ -279,63 +526,72 @@ process_rbans_unified <- function(
   combined <- combined %>%
     dplyr::left_join(metadata, by = "scale") %>%
     # Ensure we have unique rows after joining
-    dplyr::distinct(scale, .keep_all = TRUE)
+    dplyr::distinct(scale, .keep_all = TRUE) %>%
+    # Fix absort column duplication
+    dplyr::mutate(absort = dplyr::coalesce(absort.x, absort.y)) %>%
+    dplyr::select(-dplyr::any_of(c("absort.x", "absort.y")))
 
-  # 10) Add test metadata columns
+  # 10) Add test metadata columns and fix test_type and score_type for composite scores
   combined <- combined %>%
-    dplyr::mutate(test = "rbans", test_name = "RBANS Update Form A")
+    dplyr::mutate(
+      test = "rbans",
+      test_name = "RBANS Update Form A",
+      # Set test_type and score_type for composite scores
+      test_type = dplyr::case_when(
+        stringr::str_detect(scale, "Index|Total Scale") ~ "composite",
+        TRUE ~ test_type
+      ),
+      score_type = dplyr::case_when(
+        stringr::str_detect(scale, "Index|Total Scale") ~ "standard_score",
+        TRUE ~ score_type
+      )
+    )
 
   # 11) Create a summary with performance levels
   summary_data <- combined %>%
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(composite_score) >= 130 ~
-          "Exceptionally high score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 120 ~
-          "Above average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 110 ~
-          "High average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 90 ~
-          "Average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 80 ~
-          "Low average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 70 ~
-          "Below average score",
-        score_type == "standard_score" & as.numeric(composite_score) < 70 ~
-          "Exceptionally low score",
+        score_type == "standard_score" & as.numeric(score) >= 130 ~
+          "Exceptionally High",
+        score_type == "standard_score" & as.numeric(score) >= 120 ~
+          "Above Average",
+        score_type == "standard_score" & as.numeric(score) >= 110 ~
+          "High Average",
+        score_type == "standard_score" & as.numeric(score) >= 90 ~ "Average",
+        score_type == "standard_score" & as.numeric(score) >= 80 ~
+          "Low Average",
+        score_type == "standard_score" & as.numeric(score) >= 70 ~
+          "Below Average",
+        score_type == "standard_score" & as.numeric(score) < 70 ~
+          "Exceptionally Low",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 16 ~
-          "Exceptionally high score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 14 ~
-          "Above average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 12 ~
-          "High average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 9 ~
-          "Average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 7 ~
-          "Low average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 4 ~
-          "Below average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) < 4 ~
-          "Exceptionally low score",
+        score_type == "scaled_score" & as.numeric(score) >= 16 ~
+          "Exceptionally High",
+        score_type == "scaled_score" & as.numeric(score) >= 14 ~
+          "Above Average",
+        score_type == "scaled_score" & as.numeric(score) >= 12 ~ "High Average",
+        score_type == "scaled_score" & as.numeric(score) >= 9 ~ "Average",
+        score_type == "scaled_score" & as.numeric(score) >= 7 ~ "Low Average",
+        score_type == "scaled_score" & as.numeric(score) >= 4 ~ "Below Average",
+        score_type == "scaled_score" & as.numeric(score) < 4 ~
+          "Exceptionally Low",
 
         # For percentiles
         score_type == "percentile" & as.numeric(percentile) >= 98 ~
-          "Exceptionally high score",
+          "Exceptionally High",
         score_type == "percentile" & as.numeric(percentile) >= 91 ~
-          "Above average score",
+          "Above Average",
         score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "High average score",
-        score_type == "percentile" & as.numeric(percentile) >= 25 ~
-          "Average score",
+          "High Average",
+        score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
         score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Low average score",
+          "Low Average",
         score_type == "percentile" & as.numeric(percentile) >= 2 ~
-          "Below average score",
+          "Below Average",
         score_type == "percentile" & as.numeric(percentile) < 2 ~
-          "Exceptionally low score",
+          "Exceptionally Low",
 
         TRUE ~ "Not Available"
       )
@@ -348,8 +604,7 @@ process_rbans_unified <- function(
       test_type,
       score_type,
       raw_score,
-      scaled_score,
-      composite_score,
+      score,
       percentile,
       performance_level,
       description
@@ -382,7 +637,7 @@ process_rbans_unified <- function(
     )
     cat(
       "Composites extracted:",
-      sum(!is.na(combined$composite_score[combined$test_type == "composite"])),
+      sum(!is.na(combined$score[combined$test_type == "composite"])),
       "of",
       sum(combined$test_type == "composite", na.rm = TRUE),
       "\n"
@@ -415,52 +670,46 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(composite_score) >= 130 ~
-          "Exceptionally high score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 120 ~
-          "Above average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 110 ~
-          "High average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 90 ~
-          "Average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 80 ~
-          "Low average score",
-        score_type == "standard_score" & as.numeric(composite_score) >= 70 ~
-          "Below average score",
-        score_type == "standard_score" & as.numeric(composite_score) < 70 ~
-          "Exceptionally low score",
+        score_type == "standard_score" & as.numeric(score) >= 130 ~
+          "Exceptionally High",
+        score_type == "standard_score" & as.numeric(score) >= 120 ~
+          "Above Average",
+        score_type == "standard_score" & as.numeric(score) >= 110 ~
+          "High Average",
+        score_type == "standard_score" & as.numeric(score) >= 90 ~ "Average",
+        score_type == "standard_score" & as.numeric(score) >= 80 ~
+          "Low Average",
+        score_type == "standard_score" & as.numeric(score) >= 70 ~
+          "Below Average",
+        score_type == "standard_score" & as.numeric(score) < 70 ~
+          "Exceptionally Low",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 16 ~
-          "Exceptionally high score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 14 ~
-          "Above average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 12 ~
-          "High average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 9 ~
-          "Average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 7 ~
-          "Low average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) >= 4 ~
-          "Below average score",
-        score_type == "scaled_score" & as.numeric(scaled_score) < 4 ~
-          "Exceptionally low score",
+        score_type == "scaled_score" & as.numeric(score) >= 16 ~
+          "Exceptionally High",
+        score_type == "scaled_score" & as.numeric(score) >= 14 ~
+          "Above Average",
+        score_type == "scaled_score" & as.numeric(score) >= 12 ~ "High Average",
+        score_type == "scaled_score" & as.numeric(score) >= 9 ~ "Average",
+        score_type == "scaled_score" & as.numeric(score) >= 7 ~ "Low Average",
+        score_type == "scaled_score" & as.numeric(score) >= 4 ~ "Below Average",
+        score_type == "scaled_score" & as.numeric(score) < 4 ~
+          "Exceptionally Low",
 
         # For percentiles
         score_type == "percentile" & as.numeric(percentile) >= 98 ~
-          "Exceptionally high score",
+          "Exceptionally High",
         score_type == "percentile" & as.numeric(percentile) >= 91 ~
-          "Above average score",
+          "Above Average",
         score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "High average score",
-        score_type == "percentile" & as.numeric(percentile) >= 25 ~
-          "Average score",
+          "High Average",
+        score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
         score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Low average score",
+          "Low Average",
         score_type == "percentile" & as.numeric(percentile) >= 2 ~
-          "Below average score",
+          "Below Average",
         score_type == "percentile" & as.numeric(percentile) < 2 ~
-          "Exceptionally low score",
+          "Exceptionally Low",
 
         TRUE ~ "Not Available"
       )
@@ -473,8 +722,7 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
       test_type,
       score_type,
       raw_score,
-      scaled_score,
-      composite_score,
+      score,
       percentile,
       performance_level,
       description
@@ -493,7 +741,6 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
 #' @examples
 #' \dontrun{
 #' # Basic usage with built-in metadata
-#' results <- process_rbans_unified(
 #'   input_file = "patient_rbans.csv",
 #'   patient_id = "Patient001",
 #'   output_file = "rbans_processed.csv",
