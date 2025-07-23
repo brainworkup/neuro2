@@ -1,0 +1,15 @@
+patient:
+  name: "Ethan"
+  age: 13
+  doe: "2025-07-21"
+data:
+  input_dir: data-raw/csv
+  output_dir: data
+  format: parquet
+processing:
+  use_duckdb: yes
+  parallel: yes
+report:
+  template: template.qmd
+  format: neurotyp-forensic-typst
+  output_dir: output

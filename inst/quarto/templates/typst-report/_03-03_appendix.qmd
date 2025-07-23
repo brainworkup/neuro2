@@ -1,6 +1,4 @@
-```{=typst}
-= APPENDIX
-```
+# APPENDIX
 
 <!-- {{< include _03-03a_informed_consent.qmd >}} -->
 

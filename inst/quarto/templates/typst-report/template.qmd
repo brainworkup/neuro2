@@ -2,6 +2,7 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
+doe: {{< var doe >}}
 date_of_report: last-modified
 ---
 
@@ -72,7 +73,7 @@ patient <- Sys.getenv("PATIENT")
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_adult.qmd >}}
+{{< include _01-00_nse_[name].qmd >}}
 
 {{< include _02-00_behav_obs.qmd >}}
 
