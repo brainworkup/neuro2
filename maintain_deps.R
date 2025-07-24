@@ -7,8 +7,19 @@ cat("📦 Maintaining R package dependencies...\n")
 
 # Core packages needed for the neuro2 workflow
 packages <- c(
-  'here', 'glue', 'yaml', 'R6', 'readr', 'janitor', 
-  'dplyr', 'tidyr', 'ggplot2', 'stringr', 'purrr'
+  'here',
+  'glue',
+  'yaml',
+  'R6',
+  'readr',
+  'janitor',
+  'dplyr',
+  'tidyr',
+  'ggplot2',
+  'stringr',
+  'purrr',
+  'webshot2',
+  'tikzDevice'
 )
 
 # Install packages
