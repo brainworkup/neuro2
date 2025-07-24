@@ -2,9 +2,8 @@
   title: "NEUROCOGNITIVE EXAMINATION",
   author: "Joey W. Trampush, Ph.D.",
   name: [],
-  patient: [],
   doe: [],
-  date_of_report: [],
+  patient: [],
   date: none,
   cols: 1,
   paper: "a4",
@@ -27,39 +26,33 @@
     paper: paper,
     margin: margin,
     header: none, // Start with no header
-    numbering: "1",
+    numbering: "1/1",
     number-align: center,
     columns: cols,
   )
 
   // Add conditional header using page state
-  show heading: it => {
-    // Save the current page number when a heading is encountered
-    locate(loc => {
-      if loc.page() > 1 {
-        // Only add header on pages after the first
-        place(top, dy: -10pt, block[
-          #set par(leading: 0.65em)
-          #set text(9pt)
-          #smallcaps[
-            *CONFIDENTIAL* \
-            #name \
-            #doe
-          ]
-        ])
-      }
-    })
-    it // Return the heading itself
-  }
+  set page(header: context {
+    if counter(page).get().first() > 1 {
+      // Only add header on pages after the first
+      block[
+        #set par(leading: 0.65em)
+        #set text(9pt)
+        #smallcaps[
+          *CONFIDENTIAL* \
+          #name \
+          #doe
+        ]
+      ]
+    }
+  })
 
   // align headers
   show heading.where(level: 0): set align(center)
   show heading.where(level: 1): set align(left)
 
   // Set paragraph justification and leading.
-  set par(justify: true)
-  // set par(leading: 1em)
-  set par(linebreaks: "optimized")
+  set par(justify: true, leading: 1em, linebreaks: "optimized")
 
   // Set text and body font family.
   set text(font: body-font, size: fontsize, lang: lang, region: region)
@@ -67,6 +60,9 @@
 
   // Set heading numbering.
   set heading(numbering: sectionnumbering)
+
+  // Set paragraph spacing.
+  set par(spacing: 1.75em)
 
   // Set heading font.
   show heading: set text(font: sans-font, weight: "semibold")
@@ -81,6 +77,14 @@
     }
   }
 
+  // Configure lists and links.
+  show enum: set block(above: 1em, below: 1em)
+  // show enum: set par(leading: 0.85em)
+  set enum(indent: 0em, body-indent: 0.25em, tight: false)
+
+  show list: set block(above: 1em, below: 1em)
+  // show list: set par(leading: 0.85em)
+  set list(indent: 0em, body-indent: 0.25em, marker: ([•], [--]), tight: false)
 
   show link: set text(font: body-font, fill: rgb(4, 1, 23), weight: 450)
   show link: underline

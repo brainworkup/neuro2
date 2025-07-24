@@ -2,7 +2,7 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
-doe: {{< var doe >}}
+doe: 2025-07-23
 date_of_report: last-modified
 ---
 

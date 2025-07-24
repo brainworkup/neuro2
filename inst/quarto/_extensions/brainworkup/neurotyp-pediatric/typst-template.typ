@@ -32,24 +32,20 @@
   )
 
   // Add conditional header using page state
-  show heading: it => {
-    // Save the current page number when a heading is encountered
-    locate(loc => {
-      if loc.page() > 1 {
-        // Only add header on pages after the first
-        place(top, dy: -10pt, block[
-          #set par(leading: 0.65em)
-          #set text(9pt)
-          #smallcaps[
-            *CONFIDENTIAL* \
-            #name \
-            #doe
-          ]
-        ])
-      }
-    })
-    it // Return the heading itself
-  }
+  set page(header: context {
+    if counter(page).get().first() > 1 {
+      // Only add header on pages after the first
+      block[
+        #set par(leading: 0.65em)
+        #set text(9pt)
+        #smallcaps[
+          *CONFIDENTIAL* \
+          #name \
+          #doe
+        ]
+      ]
+    }
+  })
 
   // align headers
   show heading.where(level: 0): set align(center)
@@ -66,7 +62,7 @@
   set heading(numbering: sectionnumbering)
 
   // Set paragraph spacing.
-  show par: set block(above: 1.75em, below: 1.75em)
+  set par(spacing: 1.75em)
 
   // Set heading font.
   show heading: set text(font: sans-font, weight: "semibold")
