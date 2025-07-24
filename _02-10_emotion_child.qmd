@@ -1,0 +1,34 @@
+## Personality Disorders {#sec-emotion}
+
+{{< include _02-10_emotion_text.qmd >}}
+
+```{r}
+#| label: setup-emotion
+#| include: false
+
+# Filter by domain
+domains <- c("Personality Disorders")
+
+# Target phenotype
+pheno <- "emotion"
+
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurobehav.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
+  }
+  emotion <- arrow::read_parquet("data/neurobehav.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
+  }
+  emotion <- arrow::read_feather("data/neurobehav.parquet")
+} else {
+  # Default to CSV for other formats
+  emotion <- readr::read_csv("data/neurobehav.parquet")
+}
+```
+

@@ -313,32 +313,225 @@ Ability to quickly use reasoning to identify and apply solutions to problems fel
 #| label: setup-iq
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("General Cognitive Ability")
 
 # Target phenotype
 pheno <- "iq"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_iq <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_iq$load_data()
+processor_iq$filter_by_domain()
+
+# Create the data object with original name for compatibility
+iq <- processor_iq$data
+```
+
+```{r}
+#| label: export-iq
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_iq$select_columns()
+processor_iq$save_data()
+
+# Update the original object
+iq <- processor_iq$data
+```
+
+```{r}
+#| label: data-iq
+#| include: false
+#| eval: true
+
+# Define the scales of interest
+scales <- c(
+  "Auditory Working Memory (AWMI)",
+  "Cognitive Proficiency (CPI)",
+  "Crystallized Knowledge",
+  "Fluid Reasoning (FRI)",
+  "Fluid Reasoning",
+  "Full Scale (FSIQ)",
+  "Full Scale IQ (FSIQ)",
+  "General Ability (GAI)",
+  "General Ability",
+  "General Intelligence",
+  "Global Neurocognitive Index (G)",
+  "NAB Attention Index",
+  "NAB Executive Functions Index",
+  "NAB Language Index",
+  "NAB Memory Index",
+  "NAB Spatial Index",
+  "NAB Total Index",
+  "Nonverbal (NVI)",
+  "Perceptual Reasoning (PRI)",
+  "Perceptual Reasoning",
+  "Processing Speed (PSI)",
+  "Processing Speed",
+  "RBANS Total Index",
+  "Test of Premorbid Functioning",
+  "TOPF Standard Score",
+  "Total NAB Index (T-NAB)",
+  "Verbal Comprehension (VCI)",
+  "Verbal Comprehension",
+  "Visual Perception/Construction",
+  "Visual Spatial (VSI)",
+  "Vocabulary Acquisition (VAI)",
+  "Word Reading",
+  "Working Memory (WMI)",
+  "Working Memory",
+  "Attention Index (ATT)",
+  "Language Index (LAN)",
+  "Spatial Index (SPT)",
+  "Memory Index (MEM)",
+  "Executive Functions Index (EXE)"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  iq <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  iq <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  iq <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_iq <- filter_data(data = iq, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-iq
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_iq,
+  file = "_02-01_iq_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-iq
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_iq"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_iq,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-iq-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_iq,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_iq_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{r}
+#| label: fig-iq-narrow
+#| include: false
+
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_iq,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = "fig_iq_narrow.svg"
+)
+dotplot_narrow$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "General Cognitive Ability"
+
+// Define the file name of the table
+#let file_qtbl = "table_iq.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_iq_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
 
 
 ## Academic Skills {#sec-academics}
@@ -354,32 +547,192 @@ Paper-and-pencil math calculation skills, ranging from basic operations with int
 #| label: setup-academics
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Academic Skills")
 
 # Target phenotype
 pheno <- "academics"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_academics <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_academics$load_data()
+processor_academics$filter_by_domain()
+
+# Create the data object with original name for compatibility
+academics <- processor_academics$data
+```
+
+```{r}
+#| label: export-academics
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_academics$select_columns()
+processor_academics$save_data()
+
+# Update the original object
+academics <- processor_academics$data
+```
+
+```{r}
+#| label: data-academics
+#| include: false
+#| eval: true
+
+# Define the scales of interest for academic skills
+scales <- c(
+  "Academic Fluency",
+  "Basic Reading",
+  "Math Calculation",
+  "Math Fluency",
+  "Math Problem Solving",
+  "Mathematics",
+  "Numerical Operations",
+  "Oral Reading Fluency",
+  "Pseudoword Decoding",
+  "Reading",
+  "Reading Comprehension",
+  "Reading Fluency",
+  "Sentence Comprehension",
+  "Spelling",
+  "Word Reading",
+  "Written Expression",
+  "Written Language"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  academics <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  academics <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  academics <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_academics <- filter_data(
+  data = academics,
+  domain = domains,
+  scale = scales
+)
+```
+
+```{r}
+#| label: text-academics
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_academics,
+  file = "_02-02_academics_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-academics
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_academics"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_academics,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-academics-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_academics,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_academics_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Academic Skills"
+
+// Define the file name of the table
+#let file_qtbl = "table_academics.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_academics_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Verbal/Language {#sec-verbal}
@@ -400,32 +753,192 @@ Practical knowledge and judgment of general principles and social situations fel
 #| label: setup-verbal
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Verbal/Language")
 
 # Target phenotype
 pheno <- "verbal"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_verbal <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_verbal$load_data()
+processor_verbal$filter_by_domain()
+
+# Create the data object with original name for compatibility
+verbal <- processor_verbal$data
+```
+
+```{r}
+#| label: export-verbal
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_verbal$select_columns()
+processor_verbal$save_data()
+
+# Update the original object
+verbal <- processor_verbal$data
+```
+
+```{r}
+#| label: data-verbal
+#| include: false
+#| eval: true
+
+# Define the scales of interest for verbal/language
+scales <- c(
+  "Boston Naming Test",
+  "Comprehension",
+  "Controlled Oral Word Association",
+  "COWA-FAS",
+  "Expressive Language",
+  "Expressive Vocabulary",
+  "Information",
+  "Language",
+  "Letter Fluency",
+  "Naming",
+  "Oral Expression",
+  "Phonemic Fluency",
+  "Receptive Language",
+  "Semantic Fluency",
+  "Similarities",
+  "Verbal Comprehension",
+  "Verbal Fluency",
+  "Verbal Reasoning",
+  "Vocabulary",
+  "Word Generation",
+  "Word Knowledge"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  verbal <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  verbal <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  verbal <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_verbal <- filter_data(data = verbal, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-verbal
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_verbal,
+  file = "_02-03_verbal_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-verbal
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_verbal"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_verbal,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-verbal-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_verbal,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_verbal_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Verbal/Language"
+
+// Define the file name of the table
+#let file_qtbl = "table_verbal.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_verbal_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Visual Perception/Construction {#sec-spatial}
@@ -452,32 +965,196 @@ Ethan's score on Visuospatial/Constructional Index (broad visuospatial processin
 #| label: setup-spatial
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Visual Perception/Construction")
 
 # Target phenotype
 pheno <- "spatial"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_spatial <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_spatial$load_data()
+processor_spatial$filter_by_domain()
+
+# Create the data object with original name for compatibility
+spatial <- processor_spatial$data
+```
+
+```{r}
+#| label: export-spatial
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_spatial$select_columns()
+processor_spatial$save_data()
+
+# Update the original object
+spatial <- processor_spatial$data
+```
+
+```{r}
+#| label: data-spatial
+#| include: false
+#| eval: true
+
+# Define the scales of interest for visual perception/construction
+scales <- c(
+  "Block Design",
+  "Clock Drawing",
+  "Complex Figure Copy",
+  "Figure Copy",
+  "Figure Recognition",
+  "Line Orientation",
+  "Matrix Reasoning",
+  "Perceptual Reasoning",
+  "Picture Completion",
+  "Rey Complex Figure Copy",
+  "ROCF Copy",
+  "Spatial Perception",
+  "Spatial Relations",
+  "Visual Discrimination",
+  "Visual Form Constancy",
+  "Visual Memory",
+  "Visual Motor Integration",
+  "Visual Perception",
+  "Visual Processing",
+  "Visual Puzzles",
+  "Visual Spatial",
+  "Visual-Motor Integration",
+  "Visuoconstruction",
+  "Visuomotor Precision",
+  "Visuospatial Processing"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  spatial <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  spatial <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  spatial <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_spatial <- filter_data(data = spatial, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-spatial
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_spatial,
+  file = "_02-04_spatial_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-spatial
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_spatial"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_spatial,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-spatial-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_spatial,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_spatial_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Visual Perception/Construction"
+
+// Define the file name of the table
+#let file_qtbl = "table_spatial.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_spatial_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Memory {#sec-memory}
@@ -497,32 +1174,218 @@ Ethan's score on Delayed Memory Index (long-term recall of verbal information) w
 #| label: setup-memory
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Memory")
 
 # Target phenotype
 pheno <- "memory"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_memory <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_memory$load_data()
+processor_memory$filter_by_domain()
+
+# Create the data object with original name for compatibility
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: export-memory
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_memory$select_columns()
+processor_memory$save_data()
+
+# Update the original object
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: data-memory
+#| include: false
+#| eval: true
+
+# Define the scales of interest for memory
+scales <- c(
+  "Auditory Delayed",
+  "Auditory Immediate",
+  "Auditory Memory",
+  "Auditory Recognition Delayed",
+  "Complex Figure Delayed Recall",
+  "Complex Figure Immediate Recall",
+  "Delayed Memory",
+  "Delayed Recall",
+  "Design Memory",
+  "Figure Recall",
+  "Immediate Memory",
+  "List Learning",
+  "List Recall",
+  "Long Delay Free Recall",
+  "Long-Term Memory",
+  "Memory for Names",
+  "Memory for Stories",
+  "Narrative Memory",
+  "Picture Memory",
+  "RBANS Delayed Memory Index",
+  "RBANS Immediate Memory Index",
+  "ROCF Delayed Recall",
+  "ROCF Immediate Recall",
+  "Short Delay Free Recall",
+  "Story Memory",
+  "Story Recall",
+  "Verbal Learning",
+  "Verbal Memory",
+  "Visual Delayed",
+  "Visual Immediate",
+  "Visual Memory",
+  "Working Memory"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  memory <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  memory <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  memory <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_memory <- filter_data(data = memory, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-memory
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_memory,
+  file = "_02-05_memory_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-memory
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_memory"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_memory,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-memory-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_memory,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_memory_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{r}
+#| label: fig-memory-narrow
+#| include: false
+#| eval: true
+
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_memory,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = "fig_memory_narrow.svg"
+)
+dotplot_narrow$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Memory"
+
+// Define the file name of the table
+#let file_qtbl = "table_memory.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_memory_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Attention/Executive {#sec-executive}
@@ -552,6 +1415,11 @@ Performance on a measures that requires cognitive flexibility, divided attention
 Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
 
 Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
+Ethan's score on Digit Span (attention span and auditory attention) was Average.
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
 
 
 
@@ -559,32 +1427,221 @@ Visual search speed, scanning, speed of processing, and motor speed and coordina
 #| label: setup-executive
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Attention/Executive")
 
 # Target phenotype
 pheno <- "executive"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_executive <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_executive$load_data()
+processor_executive$filter_by_domain()
+
+# Create the data object with original name for compatibility
+executive <- processor_executive$data
+```
+
+```{r}
+#| label: export-executive
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_executive$select_columns()
+processor_executive$save_data()
+
+# Update the original object
+executive <- processor_executive$data
+```
+
+```{r}
+#| label: data-executive
+#| include: false
+#| eval: true
+
+# Define the scales of interest for attention/executive
+scales <- c(
+  "Attention",
+  "Attention/Concentration",
+  "Attention/Executive Function",
+  "Auditory Attention",
+  "Cognitive Flexibility",
+  "Concept Formation",
+  "Delis-Kaplan Executive Function System",
+  "Digit Span",
+  "Divided Attention",
+  "Executive Function",
+  "Flanker Inhibitory Control",
+  "Flexibility",
+  "Inhibition",
+  "Inhibitory Control",
+  "Letter-Number Sequencing",
+  "Mental Control",
+  "Planning",
+  "Processing Speed",
+  "Response Inhibition",
+  "Selective Attention",
+  "Set Shifting",
+  "Stroop",
+  "Sustained Attention",
+  "Symbol Search",
+  "Tower",
+  "Trail Making Test",
+  "Trails A",
+  "Trails B",
+  "Verbal Fluency",
+  "Wisconsin Card Sorting Test",
+  "Working Memory"
+)
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  executive <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
   }
-  executive <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  executive <- readr::read_csv("data/neurocog.parquet")
+
+  return(data)
+}
+
+# Apply the filter function
+data_executive <- filter_data(
+  data = executive,
+  domain = domains,
+  scale = scales
+)
+```
+
+```{r}
+#| label: text-executive
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_executive,
+  file = "_02-06_executive_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-executive
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_executive"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_executive,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-executive-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_executive,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_executive_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{r}
+#| label: fig-executive-narrow
+#| include: false
+#| eval: true
+
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_executive,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = "fig_executive_narrow.svg"
+)
+dotplot_narrow$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Attention/Executive"
+
+// Define the file name of the table
+#let file_qtbl = "table_executive.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_executive_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Motor {#sec-motor}

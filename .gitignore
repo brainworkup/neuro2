@@ -103,9 +103,9 @@ template_files/Icon?
 rbans_summary.csv
 data-raw/rename_rbans.xlsx
 data-raw/index_scores.xlsx
-_02-01_iq.qmd
+# _02-01_iq.qmd
 
-_*-*_*.qmd
+# _*-*_*.qmd
 workflow_r6_update.log
 workflow.log
 _include_domains.qmd

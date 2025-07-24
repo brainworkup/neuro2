@@ -1,0 +1,34 @@
+## Motor {#sec-motor}
+
+{{< include _02-07_motor_text.qmd >}}
+
+```{r}
+#| label: setup-motor
+#| include: false
+
+# Filter by domain
+domains <- c("Motor")
+
+# Target phenotype
+pheno <- "motor"
+
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
+  }
+  motor <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
+  }
+  motor <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  motor <- readr::read_csv("data/neurocog.parquet")
+}
+```
+
