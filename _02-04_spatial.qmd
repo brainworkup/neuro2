@@ -154,7 +154,7 @@ dotplot_subdomain <- DotplotR6$new(
 dotplot_subdomain$create_plot()
 ```
 
-::: {.typst-code}
+
 ```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
@@ -184,9 +184,8 @@ dotplot_subdomain$create_plot()
   )
 }
 ```
-:::
 
-::: {.typst-code}
+
 ```{=typst}
 // Define the title of the domain
 #let title = "Visual Perception/Construction"
@@ -200,4 +199,3 @@ dotplot_subdomain$create_plot()
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
-:::
