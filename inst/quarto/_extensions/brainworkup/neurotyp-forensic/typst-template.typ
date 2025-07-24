@@ -12,8 +12,8 @@
   lang: "en",
   region: "US",
   font: (),
-  body-font: ("Libertinus Serif"),
-  sans-font: ("Libertinus Sans"),
+  body-font: "Libertinus Serif",
+  sans-font: "Libertinus Sans",
   fontsize: 11pt,
   sectionnumbering: none,
   doc,
@@ -22,26 +22,35 @@
   set document(title: title, author: author)
 
   // Set page size, margins, and header.
+  // Set up page properties
   set page(
     paper: paper,
     margin: margin,
-    header: locate(loc => if [#loc.page()] == [1] {
-      []
-    } else {
-      [
-        #set par(leading: 0.65em)
-        #set text(9pt)
-        #smallcaps[
-          *CONFIDENTIAL* \
-          #name \
-          #doe
-        ]
-      ]
-    }),
+    header: none, // Start with no header
     numbering: "1",
     number-align: center,
     columns: cols,
   )
+
+  // Add conditional header using page state
+  show heading: it => {
+    // Save the current page number when a heading is encountered
+    locate(loc => {
+      if loc.page() > 1 {
+        // Only add header on pages after the first
+        place(top, dy: -10pt, block[
+          #set par(leading: 0.65em)
+          #set text(9pt)
+          #smallcaps[
+            *CONFIDENTIAL* \
+            #name \
+            #doe
+          ]
+        ])
+      }
+    })
+    it // Return the heading itself
+  }
 
   // align headers
   show heading.where(level: 0): set align(center)
@@ -77,8 +86,8 @@
   show link: underline
 
   // Logo
-  block(figure(image("src/img/logo.png")))
-  // block(figure(image("src/img/bwu_logo.png")))
+  block(figure(image("inst/resources/img/logo.png")))
+  // block(figure(image("inst/resources/img/bwu_logo.png")))
 
   // Title row.
   align(center)[

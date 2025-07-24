@@ -53,7 +53,7 @@ patient <- Sys.getenv("PATIENT")
 #v(2em, weak: true)
 #show block: set par(leading: 0.65em)
 #block[
-*CASE NUMBER:* #case_number \
+// *CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
 *DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \

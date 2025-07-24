@@ -23,27 +23,35 @@
 
   let name = []
   let doe = []
+  // Set up page properties
   set page(
-    header: context {
-      let pageNum = counter(page).get().at(0)
-      if pageNum == 1 {
-        []
-      } else {
-        set par(leading: 0.65em)
-        set text(9pt)
-        smallcaps[
-          *CONFIDENTIAL* \
-          #name \
-          #doe
-        ]
-      }
-    },
+    header: none, // Start with no header
     numbering: "1",
     number-align: center,
   )
 
-  block(figure(image("logo.png")))
-  // #block(figure(image("src/img/logo_looka.png", width: 45%)))
+  // Add conditional header using page state
+  show heading: it => {
+    // Save the current page number when a heading is encountered
+    locate(loc => {
+      if loc.page() > 1 {
+        // Only add header on pages after the first
+        place(top, dy: -10pt, block[
+          #set par(leading: 0.65em)
+          #set text(9pt)
+          #smallcaps[
+            *CONFIDENTIAL* \
+            #name \
+            #doe
+          ]
+        ])
+      }
+    })
+    it // Return the heading itself
+  }
+
+  block(figure(image("inst/resources/img/logo.png")))
+  // #block(figure(image("inst/resources/img/logo_looka.png", width: 45%)))
 
   align(center, text(1.75em, weight: 600)[
     *NEUROCOGNITIVE EXAMINATION*
