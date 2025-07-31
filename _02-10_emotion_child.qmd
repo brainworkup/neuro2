@@ -1,4 +1,4 @@
-## Behavioral/Emotional/Social {#sec-emotion}
+## Substance Use {#sec-emotion-child}
 
 ```{r}
 #| label: setup-emotion
@@ -11,7 +11,7 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Personality Disorders")
+domains <- c("Substance Use")
 
 # Target phenotype
 pheno <- "emotion"
@@ -129,7 +129,7 @@ results_processor$process()
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_self"
+table_name <- "table_emotion_child_self"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -156,7 +156,7 @@ table_gt$save_table(tbl, dir = here::here())
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_parent"
+table_name <- "table_emotion_child_parent"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -183,7 +183,7 @@ table_gt$save_table(tbl, dir = here::here())
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_teacher"
+table_name <- "table_emotion_child_teacher"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -231,7 +231,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -262,7 +262,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -293,7 +293,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -346,6 +346,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -361,7 +369,7 @@ if (exists(plot_title_var)) {
       caption: figure.caption(
         position: bottom,
         [
-          Mood/Child Self-Report. Self report of behavioral, emotional, and social difficulties.
+          Mood/Child Self-Report. Self-report of behavioral and emotional, and social difficulties.
           ],
       ),
       placement: none,
@@ -394,6 +402,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -410,7 +426,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Parent Report. Parent reports of behavioral and emotional problems in children and adolescents.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
@@ -422,7 +438,7 @@ if (exists(plot_title_var)) {
 ```
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social--Parent"
+#let title = "Substance Use--Parent"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_parent.png"
@@ -433,7 +449,6 @@ if (exists(plot_title_var)) {
 // Call the 'domain' function with the specified title, table file name, and figure file name
 #domain(title: [#title], file_qtbl, file_fig)
 ```
-
 ### TEACHER RATINGS
 
 {{< include _02-10_emotion_child_text_teacher.qmd >}}
@@ -443,6 +458,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -459,7 +482,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Teacher Report. Teacher reports of behavioral, emotional, academic, and social difficulties.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
@@ -471,7 +494,7 @@ if (exists(plot_title_var)) {
 ```
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social--Teacher"
+#let title = "Substance Use--Teacher"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_teacher.png"

@@ -3,7 +3,7 @@
 {{< include _02-07_motor_text.qmd >}}
 
 ```{r}
-#| label: setup-motor
+#| label: setup-motor-child
 #| include: false
 
 # Source R6 classes
@@ -34,7 +34,7 @@ motor <- processor_motor$data
 ```
 
 ```{r}
-#| label: export-motor
+#| label: export-motor-child
 #| include: false
 #| eval: true
 
@@ -47,25 +47,25 @@ motor <- processor_motor$data
 ```
 
 ```{r}
-#| label: data-motor
+#| label: data-motor-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_motor object is available from the package's internal data
-if (!exists("scales_motor")) {
+# The scales_motor_child object is available from the package's internal data
+if (!exists("scales_motor_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_motor from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_motor_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_motor
+scales <- scales_motor_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {

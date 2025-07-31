@@ -3,7 +3,7 @@
 {{< include _02-02_academics_text.qmd >}}
 
 ```{r}
-#| label: setup-academics
+#| label: setup-academics-child
 #| include: false
 
 # Source R6 classes
@@ -34,7 +34,7 @@ academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: export-academics
+#| label: export-academics-child
 #| include: false
 #| eval: true
 
@@ -47,25 +47,25 @@ academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: data-academics
+#| label: data-academics-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_academics object is available from the package's internal data
-if (!exists("scales_academics")) {
+# The scales_academics_child object is available from the package's internal data
+if (!exists("scales_academics_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_academics from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_academics_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_academics
+scales <- scales_academics_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {

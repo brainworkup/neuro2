@@ -3,7 +3,7 @@
 {{< include _02-01_iq_text.qmd >}}
 
 ```{r}
-#| label: setup-iq
+#| label: setup-iq-child
 #| include: false
 
 # Source R6 classes
@@ -34,7 +34,7 @@ iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: export-iq
+#| label: export-iq-child
 #| include: false
 #| eval: true
 
@@ -47,25 +47,25 @@ iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: data-iq
+#| label: data-iq-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_iq object is available from the package's internal data
-if (!exists("scales_iq")) {
+# The scales_iq_child object is available from the package's internal data
+if (!exists("scales_iq_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_iq from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_iq_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_iq
+scales <- scales_iq_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {

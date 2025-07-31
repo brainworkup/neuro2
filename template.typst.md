@@ -478,11 +478,68 @@ Index of cognitive processing proficiency that reduces crystallized knowledge ve
 
 Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
 
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average.
+Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average.
+Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average.
+Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
 
 
 
 ```{r}
-#| label: setup-iq
+#| label: setup-iq-child
 #| include: false
 
 # Source R6 classes
@@ -513,7 +570,7 @@ iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: export-iq
+#| label: export-iq-child
 #| include: false
 #| eval: true
 
@@ -526,25 +583,25 @@ iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: data-iq
+#| label: data-iq-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_iq object is available from the package's internal data
-if (!exists("scales_iq")) {
+# The scales_iq_child object is available from the package's internal data
+if (!exists("scales_iq_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_iq from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_iq_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_iq
+scales <- scales_iq_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -734,11 +791,23 @@ Spontaneous writing fluency at the discourse level fell within the Average and r
 Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
 Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
 Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population.
+Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
+Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population.
+Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
+Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population.
+Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
+Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
 
 
 
 ```{r}
-#| label: setup-academics
+#| label: setup-academics-child
 #| include: false
 
 # Source R6 classes
@@ -769,7 +838,7 @@ academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: export-academics
+#| label: export-academics-child
 #| include: false
 #| eval: true
 
@@ -782,25 +851,25 @@ academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: data-academics
+#| label: data-academics-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_academics object is available from the package's internal data
-if (!exists("scales_academics")) {
+# The scales_academics_child object is available from the package's internal data
+if (!exists("scales_academics_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_academics from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_academics_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_academics
+scales <- scales_academics_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -1029,11 +1098,38 @@ Ethan's score on Language Index (general language processing) was Average.
 Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average.
 Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
 
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average.
+Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average.
+Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average.
+Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average.
+Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average.
+Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average.
+Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average.
+Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average.
+Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average.
+Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
 
 
 
 ```{r}
-#| label: setup-verbal
+#| label: setup-verbal-child
 #| include: false
 
 # Source R6 classes
@@ -1064,7 +1160,7 @@ verbal <- processor_verbal$data
 ```
 
 ```{r}
-#| label: export-verbal
+#| label: export-verbal-child
 #| include: false
 #| eval: true
 
@@ -1077,25 +1173,25 @@ verbal <- processor_verbal$data
 ```
 
 ```{r}
-#| label: data-verbal
+#| label: data-verbal-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_verbal object is available from the package's internal data
-if (!exists("scales_verbal")) {
+# The scales_verbal_child object is available from the package's internal data
+if (!exists("scales_verbal_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_verbal from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_verbal_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_verbal
+scales <- scales_verbal_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -1381,11 +1477,56 @@ Understanding visual-spatial relationships to construct unfamiliar geometric des
 Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
 Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
 Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average.
+General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
+Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
+Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average.
+General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
+Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
+Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average.
+General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
+Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
+Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average.
 
 
 
 ```{r}
-#| label: setup-spatial
+#| label: setup-spatial-child
 #| include: false
 
 # Source R6 classes
@@ -1416,7 +1557,7 @@ spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: export-spatial
+#| label: export-spatial-child
 #| include: false
 #| eval: true
 
@@ -1429,25 +1570,25 @@ spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: data-spatial
+#| label: data-spatial-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_spatial object is available from the package's internal data
-if (!exists("scales_spatial")) {
+# The scales_spatial_child object is available from the package's internal data
+if (!exists("scales_spatial_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_spatial from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_spatial_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_spatial
+scales <- scales_spatial_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -1667,11 +1808,35 @@ Ethan's score on List Recognition (delayed recognition of a word list) was Avera
 Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
 Ethan's score on List Recall (long-term recall of a word list) was Average.
 Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
+Ethan's score on Story Memory (expository story learning) was Above Average.
+Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
+Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average.
+Ethan's score on List Learning (word list learning) was High Average.
+Ethan's score on List Recognition (delayed recognition of a word list) was Average.
+Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
+Ethan's score on List Recall (long-term recall of a word list) was Average.
+Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
+Ethan's score on Story Memory (expository story learning) was Above Average.
+Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
+Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average.
+Ethan's score on List Learning (word list learning) was High Average.
+Ethan's score on List Recognition (delayed recognition of a word list) was Average.
+Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
+Ethan's score on List Recall (long-term recall of a word list) was Average.
+Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
+Ethan's score on Story Memory (expository story learning) was Above Average.
+Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
+Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average.
+Ethan's score on List Learning (word list learning) was High Average.
+Ethan's score on List Recognition (delayed recognition of a word list) was Average.
+Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
+Ethan's score on List Recall (long-term recall of a word list) was Average.
+Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
 
 
 
 ```{r}
-#| label: setup-memory
+#| label: setup-memory-child
 #| include: false
 
 # Source R6 classes
@@ -1702,7 +1867,7 @@ memory <- processor_memory$data
 ```
 
 ```{r}
-#| label: export-memory
+#| label: export-memory-child
 #| include: false
 #| eval: true
 
@@ -1715,25 +1880,25 @@ memory <- processor_memory$data
 ```
 
 ```{r}
-#| label: data-memory
+#| label: data-memory-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_memory object is available from the package's internal data
-if (!exists("scales_memory")) {
+# The scales_memory_child object is available from the package's internal data
+if (!exists("scales_memory_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_memory from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_memory_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_memory
+scales <- scales_memory_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -2106,11 +2271,86 @@ Performance on a measures that requires cognitive flexibility, divided attention
 Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
 
 Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
+Ethan's score on Coding (speed of information processing) was High Average.
+Ethan's score on Attention Index (general attentional and executive functioning) was High Average.
+Ethan's score on Digit Span (attention span and auditory attention) was Average.
+Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range.
+Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
+Ethan's score on Coding (speed of information processing) was High Average.
+Ethan's score on Attention Index (general attentional and executive functioning) was High Average.
+Ethan's score on Digit Span (attention span and auditory attention) was Average.
+Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range.
+Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
+Ethan's score on Coding (speed of information processing) was High Average.
+Ethan's score on Attention Index (general attentional and executive functioning) was High Average.
+Ethan's score on Digit Span (attention span and auditory attention) was Average.
+Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range.
+Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
 
 
 
 ```{r}
-#| label: setup-executive
+#| label: setup-executive-child
 #| include: false
 
 # Source R6 classes
@@ -2141,7 +2381,7 @@ executive <- processor_executive$data
 ```
 
 ```{r}
-#| label: export-executive
+#| label: export-executive-child
 #| include: false
 #| eval: true
 
@@ -2154,25 +2394,25 @@ executive <- processor_executive$data
 ```
 
 ```{r}
-#| label: data-executive
+#| label: data-executive-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_executive object is available from the package's internal data
-if (!exists("scales_executive")) {
+# The scales_executive_child object is available from the package's internal data
+if (!exists("scales_executive_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_executive from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_executive_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_executive
+scales <- scales_executive_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -2342,11 +2582,17 @@ Nondominant hand dexterity was Exceptionally Low range.
 Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
 Nondominant hand dexterity was Exceptionally Low range.
 Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
+Nondominant hand dexterity was Exceptionally Low range.
+Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
+Nondominant hand dexterity was Exceptionally Low range.
+Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
+Nondominant hand dexterity was Exceptionally Low range.
+Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
 
 
 
 ```{r}
-#| label: setup-motor
+#| label: setup-motor-child
 #| include: false
 
 # Source R6 classes
@@ -2377,7 +2623,7 @@ motor <- processor_motor$data
 ```
 
 ```{r}
-#| label: export-motor
+#| label: export-motor-child
 #| include: false
 #| eval: true
 
@@ -2390,25 +2636,25 @@ motor <- processor_motor$data
 ```
 
 ```{r}
-#| label: data-motor
+#| label: data-motor-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_motor object is available from the package's internal data
-if (!exists("scales_motor")) {
+# The scales_motor_child object is available from the package's internal data
+if (!exists("scales_motor_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_motor from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_motor_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_motor
+scales <- scales_motor_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -2556,546 +2802,7 @@ engage in activities such as writing and drawing."
 ```
 
 
-## Personality Disorders {#sec-emotion}
-
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
-Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
-Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
-Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
-Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
-Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
-Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
-Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
-Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
-Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
-Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
-Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
-Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
-Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
-Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
-Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
-Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
-Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
-Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
-Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
-Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
-Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
-Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
-Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
-Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
-Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
-Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
-Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
-Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
-Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
-Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
-Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
-Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
-Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Rule-breaking behavior was Above Average.
-Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
-Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
-Ethan's self-reported Maintain necessary levels of attention was Above Average.
-Ethan's self-reported Externalizing problems composite scale was Above Average.
-Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
-Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
-Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
-Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
-Ethan's self-reported Internalizing problems composite scale was Average.
-Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
-Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
-Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
-Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
-Ethan's self-reported Health-related problems was Low Average.
-Ethan's self-reported Overall adaptive functioning composite score was Low Average.
-Ethan's self-reported Socially adept and at ease was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
-Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
-Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
-Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
-Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
-Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
-Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
-Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
-Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
-Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
-Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
-Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
-Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
-Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
-Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
-
-
+## Substance Use {#sec-emotion-child}
 
 ```{r}
 #| label: setup-emotion
@@ -3108,7 +2815,7 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Personality Disorders")
+domains <- c("Substance Use")
 
 # Target phenotype
 pheno <- "emotion"
@@ -3182,25 +2889,51 @@ data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-emotion
+#| label: text-emotion-self
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
   data = data_emotion,
-  file = "_02-10_emotion_text.qmd"
+  file = "_02-10_emotion_child_text_self.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-emotion
+#| label: text-emotion-parent
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_emotion,
+  file = "_02-10_emotion_child_text_parent.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: text-emotion-teacher
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_emotion,
+  file = "_02-10_emotion_child_text_teacher.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-emotion-self
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion"
+table_name <- "table_emotion_self"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -3222,7 +2955,61 @@ table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
-#| label: fig-emotion-subdomain
+#| label: qtbl-emotion-parent
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_emotion_parent"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_emotion,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: qtbl-emotion-teacher
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_emotion_teacher"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_emotion,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-emotion-subdomain-self
 #| include: false
 #| eval: true
 
@@ -3231,7 +3018,7 @@ dotplot_subdomain <- DotplotR6$new(
   data = data_emotion,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_emotion_subdomain.svg")
+  filename = here::here("fig_emotion_subdomain_self.svg")
 )
 dotplot_subdomain$create_plot()
 
@@ -3248,9 +3035,72 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
+
+```{r}
+#| label: fig-emotion-subdomain-parent
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_emotion,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_emotion_subdomain_parent.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_emotion"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_emotion <- get(plot_title_var)
+} else {
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
+}
+```
+
+```{r}
+#| label: fig-emotion-subdomain-teacher
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_emotion,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_emotion_subdomain_teacher.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_emotion"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_emotion <- get(plot_title_var)
+} else {
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
+}
+```
+
 
 ```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
@@ -3291,18 +3141,791 @@ if (exists(plot_title_var)) {
   )
 }
 ```
+### SELF-REPORT
+
+Clinically Significant
+At Risk
+Normal
+Normal
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+
+
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Merriweather", size: 0.7em)
+  set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [Table],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [
+          Mood/Child Self-Report. Self-report of behavioral and emotional, and social difficulties.
+          ],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [Figure],
+      gap: 0.5em,
+    ),
+  )
+}
+```
 ```{=typst}
 // Define the title of the domain
-#let title = "Personality Disorders"
+#let title = "Substance Use--Self"
 
 // Define the file name of the table
-#let file_qtbl = "table_emotion.png"
+#let file_qtbl = "table_emotion_child.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_emotion_subdomain.svg"
+#let file_fig = "fig_emotion_child.svg"
 
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
+// Call the 'domain' function with the specified title, table file name, and figure file name
+#domain(title: [#title], file_qtbl, file_fig)
+```
+### PARENT RATINGS
+
+Clinically Significant
+At Risk
+Normal
+Normal
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+
+
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Merriweather", size: 0.7em)
+  set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [Table],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [
+          Mood/Parent Report. Parent reports of behavioral and emotional problems in children and adolescents.
+          ],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [Figure],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+```{=typst}
+// Define the title of the domain
+#let title = "Substance Use--Parent"
+
+// Define the file name of the table
+#let file_qtbl = "table_emotion_parent.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_emotion_parent.svg"
+
+// Call the 'domain' function with the specified title, table file name, and figure file name
+#domain(title: [#title], file_qtbl, file_fig)
+```
+### TEACHER RATINGS
+
+Clinically Significant
+At Risk
+Normal
+Normal
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+
+
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Merriweather", size: 0.7em)
+  set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [Table],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [
+          Mood/Teacher Report. Teacher reports of behavioral, emotional, academic, and social difficulties.
+          ],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [Figure],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+```{=typst}
+// Define the title of the domain
+#let title = "Substance Use--Teacher"
+
+// Define the file name of the table
+#let file_qtbl = "table_emotion_teacher.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_emotion_teacher.svg"
+
+// Call the 'domain' function with the specified title, table file name, and figure file name
+#domain(title: [#title], file_qtbl, file_fig)
 ```
 
 

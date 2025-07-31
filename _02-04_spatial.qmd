@@ -3,7 +3,7 @@
 {{< include _02-04_spatial_text.qmd >}}
 
 ```{r}
-#| label: setup-spatial
+#| label: setup-spatial-child
 #| include: false
 
 # Source R6 classes
@@ -34,7 +34,7 @@ spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: export-spatial
+#| label: export-spatial-child
 #| include: false
 #| eval: true
 
@@ -47,25 +47,25 @@ spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: data-spatial
+#| label: data-spatial-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_spatial object is available from the package's internal data
-if (!exists("scales_spatial")) {
+# The scales_spatial_child object is available from the package's internal data
+if (!exists("scales_spatial_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_spatial from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_spatial_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_spatial
+scales <- scales_spatial_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {

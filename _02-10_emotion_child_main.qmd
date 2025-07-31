@@ -1,7 +1,7 @@
-## Behavioral/Emotional/Social {#sec-emotion-child}
+## Substance Use {#sec-emotion-child}
 
 ```{r}
-#| label: setup-emotion-child
+#| label: setup-emotion
 #| include: false
 
 # Source R6 classes
@@ -11,7 +11,7 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Behavioral/Emotional/Social")
+domains <- c("Substance Use")
 
 # Target phenotype
 pheno <- "emotion"
@@ -32,7 +32,7 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: export-emotion-child
+#| label: export-emotion
 #| include: false
 #| eval: true
 
@@ -45,25 +45,25 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: data-emotion-child
+#| label: data-emotion
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_emotion_child object is available from the package's internal data
-if (!exists("scales_emotion_child")) {
+# The scales_emotion object is available from the package's internal data
+if (!exists("scales_emotion")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_emotion_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_emotion from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_emotion_child
+scales <- scales_emotion
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -129,7 +129,7 @@ results_processor$process()
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_self"
+table_name <- "table_emotion_child_self"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -156,7 +156,7 @@ table_gt$save_table(tbl, dir = here::here())
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_parent"
+table_name <- "table_emotion_child_parent"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -183,7 +183,7 @@ table_gt$save_table(tbl, dir = here::here())
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_teacher"
+table_name <- "table_emotion_child_teacher"
 vertical_padding <- 0
 multiline <- TRUE
 
@@ -231,7 +231,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -262,7 +262,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -293,12 +293,12 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
 
-```{=typst}
+<!-- ```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
@@ -336,7 +336,7 @@ if (exists(plot_title_var)) {
     ),
   )
 }
-```
+``` -->
 ### SELF-REPORT
 
 {{< include _02-10_emotion_child_text_self.qmd >}}
@@ -369,7 +369,7 @@ if (exists(plot_title_var)) {
       caption: figure.caption(
         position: bottom,
         [
-          Mood/Child Self-Report. Self-report of behavioral, emotional, and social difficulties.
+          Mood/Child Self-Report. Self-report of behavioral and emotional, and social difficulties.
           ],
       ),
       placement: none,
@@ -385,7 +385,7 @@ if (exists(plot_title_var)) {
 #let title = "Behavioral/Emotional/Social--Self"
 
 // Define the file name of the table
-#let file_qtbl = "table_emotion_child.png"
+#let file_qtbl = "table_emotion_child_self.png"
 
 // Define the file name of the figure
 #let file_fig = "fig_emotion_child.svg"
@@ -426,7 +426,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Parent Report. Parent reports of behavioral and emotional problems in children and adolescents.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
@@ -441,7 +441,7 @@ if (exists(plot_title_var)) {
 #let title = "Behavioral/Emotional/Social--Parent"
 
 // Define the file name of the table
-#let file_qtbl = "table_emotion_parent.png"
+#let file_qtbl = "table_emotion_child_parent.png"
 
 // Define the file name of the figure
 #let file_fig = "fig_emotion_parent.svg"
@@ -449,7 +449,6 @@ if (exists(plot_title_var)) {
 // Call the 'domain' function with the specified title, table file name, and figure file name
 #domain(title: [#title], file_qtbl, file_fig)
 ```
-
 ### TEACHER RATINGS
 
 {{< include _02-10_emotion_child_text_teacher.qmd >}}
@@ -466,7 +465,7 @@ if (exists(plot_title_var)) {
       let counter = it.counter.display(it.numbering)
       block[*#supplement #counter:* #it.body]
     }
-  }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -483,7 +482,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Teacher Report. Teacher reports of behavioral, emotional, academic, and social difficulties.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
@@ -498,7 +497,7 @@ if (exists(plot_title_var)) {
 #let title = "Behavioral/Emotional/Social--Teacher"
 
 // Define the file name of the table
-#let file_qtbl = "table_emotion_teacher.png"
+#let file_qtbl = "table_emotion_child_teacher.png"
 
 // Define the file name of the figure
 #let file_fig = "fig_emotion_teacher.svg"
