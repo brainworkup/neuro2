@@ -21,11 +21,16 @@
 #'   \item{get_scales}{Get scale names for the specified phenotype.}
 #'   \item{filter_by_test}{Filter data by test names for specific report types.}
 #'   \item{generate_report}{Generate text reports for different report types.}
+#'   \item{has_multiple_raters}{Check if domain has multiple raters (currently only emotion domain).}
+#'   \item{get_rater_types}{Get rater types for the domain (self, parent, teacher).}
+#'   \item{check_rater_data_exists}{Check if rater-specific data files exist.}
+#'   \item{generate_domain_qmd}{Generate domain QMD file with support for multi-rater domains.}
+#'   \item{generate_emotion_child_qmd}{Generate emotion child domain QMD file with multiple raters.}
 #'   \item{process}{Run the complete processing pipeline.}
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom dplyr filter select arrange desc distinct
+#' @importFrom dplyr filter select arrange desc distinct all_of
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom here here
 #' @export
@@ -404,37 +409,37 @@ DomainProcessorR6 <- R6::R6Class(
     get_default_plot_titles = function() {
       # First try to load from sysdata.rda
       plot_title_var <- paste0("plot_title_", tolower(self$pheno))
-      
+
       # Check if the plot title variable exists in the global environment
       if (exists(plot_title_var, envir = .GlobalEnv)) {
         plot_title <- get(plot_title_var, envir = .GlobalEnv)
         return(plot_title)
       }
-      
+
       # Try loading from sysdata.rda if not already available
       sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
       if (file.exists(sysdata_path)) {
         temp_env <- new.env()
         load(sysdata_path, envir = temp_env)
-        
+
         if (exists(plot_title_var, envir = temp_env)) {
           plot_title <- get(plot_title_var, envir = temp_env)
           return(plot_title)
         }
       }
-      
+
       # Try alternative path (for development)
       dev_sysdata_path <- here::here("R", "sysdata.rda")
       if (file.exists(dev_sysdata_path)) {
         temp_env <- new.env()
         load(dev_sysdata_path, envir = temp_env)
-        
+
         if (exists(plot_title_var, envir = temp_env)) {
           plot_title <- get(plot_title_var, envir = temp_env)
           return(plot_title)
         }
       }
-      
+
       # Fallback to hardcoded titles if not found in sysdata
       titles <- list(
         iq = "Intellectual and cognitive abilities represent an individual's capacity to think, reason, and solve problems.",
@@ -461,12 +466,46 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Check if domain has multiple raters.
+    #'
+    #' @return Logical indicating if domain has multiple raters.
+    has_multiple_raters = function() {
+      # Currently only emotion domain has multiple raters
+      tolower(self$pheno) == "emotion"
+    },
+
+    #' @description
+    #' Get rater types for the domain.
+    #'
+    #' @return Character vector of rater types.
+    get_rater_types = function() {
+      if (self$has_multiple_raters()) {
+        return(c("self", "parent", "teacher"))
+      } else {
+        return(NULL)
+      }
+    },
+
+    #' @description
+    #' Check if rater-specific data files exist.
+    #'
+    #' @param rater_type The rater type to check ("self", "parent", "teacher").
+    #' @return Logical indicating if rater data exists.
+    check_rater_data_exists = function(rater_type) {
+      # This is a placeholder - in practice, you'd check for specific CSV files
+      # or data columns that indicate rater-specific data
+      # For now, we'll assume data exists if the method is called
+      TRUE
+    },
+
+    #' @description
     #' Generate domain QMD file.
     #'
     #' @param domain_name Name of the domain.
     #' @param output_file Output file path (default: NULL, will generate based on domain).
+    #' @param is_child Logical indicating if this is a child version (default: FALSE).
     #' @return The path to the generated file.
-    generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
+    generate_domain_qmd = function(domain_name = NULL, output_file = NULL, is_child = FALSE) {
       # Use the first domain if domain_name not provided
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -477,13 +516,30 @@ DomainProcessorR6 <- R6::R6Class(
 
       # If no output file specified, create default name with proper domain number
       if (is.null(output_file)) {
-        output_file <- paste0(
-          "_02-",
-          domain_num,
-          "_",
-          tolower(self$pheno),
-          ".qmd"
-        )
+        if (self$has_multiple_raters() && is_child) {
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_child_main.qmd"
+          )
+        } else {
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            ".qmd"
+          )
+        }
+      }
+
+      # Check if this is a multi-rater emotion domain
+      if (self$has_multiple_raters() && is_child) {
+        # Generate special child emotion QMD with multiple raters
+        self$generate_emotion_child_qmd(domain_name, output_file)
+        return(output_file)
       }
 
       # Determine appropriate source note based on domain
@@ -506,7 +562,7 @@ DomainProcessorR6 <- R6::R6Class(
       if (is.null(source_note)) {
         source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
       }
-      
+
       # Get the plot title for this domain
       plot_title <- self$get_default_plot_titles()
 
@@ -686,7 +742,7 @@ DomainProcessorR6 <- R6::R6Class(
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
         "# Save the table using our save_table method\n",
-        "table_gt$save_table(tbl)\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
 
         # Figure block (subdomain)
@@ -703,9 +759,9 @@ DomainProcessorR6 <- R6::R6Class(
         ",\n",
         "  x = \"z_mean_subdomain\",\n",
         "  y = \"subdomain\",\n",
-        "  filename = \"fig_",
+        "  filename = here::here(\"fig_",
         tolower(self$pheno),
-        "_subdomain.svg\"\n",
+        "_subdomain.svg\")\n",
         ")\n",
         "dotplot_subdomain$create_plot()\n\n",
         "# Load plot title from sysdata.rda\n",
@@ -763,7 +819,9 @@ DomainProcessorR6 <- R6::R6Class(
         "      [#image(file_fig, width: auto)],\n",
         "      caption: figure.caption(\n",
         "        position: bottom,\n",
-        "        [`{r} plot_title_", tolower(self$pheno), "`],\n",
+        "        [`{r} plot_title_",
+        tolower(self$pheno),
+        "`],\n",
         "      ),\n",
         "      placement: none,\n",
         "      kind: \"image\",\n",
@@ -888,10 +946,438 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Generate domain files if requested
       if (generate_domain_files) {
-        self$generate_domain_qmd()
+        if (self$has_multiple_raters()) {
+          # Generate both standard and child versions for multi-rater domains
+          self$generate_domain_qmd(is_child = FALSE)  # Standard version
+          self$generate_domain_qmd(is_child = TRUE)   # Child version with raters
+        } else {
+          # Generate standard version only
+          self$generate_domain_qmd()
+        }
       }
 
       invisible(self)
+    },
+
+    #' @description
+    #' Generate emotion child domain QMD file with multiple raters.
+    #'
+    #' @param domain_name Name of the domain.
+    #' @param output_file Output file path.
+    #' @return The path to the generated file.
+    generate_emotion_child_qmd = function(domain_name, output_file) {
+      # Get the domain number for file naming
+      domain_num <- self$get_domain_number()
+      
+      # Get available rater types
+      rater_types <- self$get_rater_types()
+      
+      # Generate text files for each rater type
+      for (rater in rater_types) {
+        if (self$check_rater_data_exists(rater)) {
+          text_file <- paste0("_02-", domain_num, "_", tolower(self$pheno), "_child_text_", rater, ".qmd")
+          
+          # Generate text file for this rater
+          # This will need to filter data by rater type when implemented
+          results_processor <- NeuropsychResultsR6$new(
+            data = self$data,
+            file = text_file
+          )
+          results_processor$process()
+        }
+      }
+      
+      # Start building QMD content
+      qmd_content <- paste0(
+        "## ",
+        domain_name,
+        " {#sec-",
+        tolower(self$pheno),
+        "}\n\n",
+        
+        # Setup block
+        "```{r}\n",
+        "#| label: setup-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n\n",
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGT_Modified.R\")\n\n",
+        "# Filter by domain\n",
+        "domains <- c(\"",
+        domain_name,
+        "\")\n\n",
+        "# Target phenotype\n",
+        "pheno <- \"",
+        tolower(self$pheno),
+        "\"\n\n",
+        "# Create R6 processor\n",
+        "processor_",
+        tolower(self$pheno),
+        " <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        self$input_file,
+        "\"\n",
+        ")\n\n",
+        "# Load and process data\n",
+        "processor_",
+        tolower(self$pheno),
+        "$load_data()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$filter_by_domain()\n\n",
+        "# Create the data object with original name for compatibility\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n",
+        "```\n\n",
+        
+        # Export block
+        "```{r}\n",
+        "#| label: export-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Process and export data using R6\n",
+        "processor_",
+        tolower(self$pheno),
+        "$select_columns()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$save_data()\n\n",
+        "# Update the original object\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n",
+        "```\n\n",
+        
+        # Data block
+        "```{r}\n",
+        "#| label: data-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Load internal data to get standardized scale names\n",
+        "# The scales_",
+        tolower(self$pheno),
+        " object is available from the package's internal data\n",
+        "if (!exists(\"scales_",
+        tolower(self$pheno),
+        "\")) {\n",
+        "  # Load from sysdata.rda\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  } else {\n",
+        "    stop(\n",
+        "      \"Could not load scales_",
+        tolower(self$pheno),
+        " from sysdata.rda. Please ensure the internal data file exists.\"\n",
+        "    )\n",
+        "  }\n",
+        "}\n\n",
+        "scales <- scales_",
+        tolower(self$pheno),
+        "\n\n",
+        "# Filter the data directly without using NeurotypR\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+        "# Apply the filter function\n",
+        "data_",
+        tolower(self$pheno),
+        " <- filter_data(data = ",
+        tolower(self$pheno),
+        ", domain = domains, scale = scales)\n",
+        "```\n\n"
+      )
+      
+      # Add text generation blocks for each rater
+      for (rater in rater_types) {
+        if (self$check_rater_data_exists(rater)) {
+          qmd_content <- paste0(
+            qmd_content,
+            "```{r}\n",
+            "#| label: text-",
+            tolower(self$pheno),
+            "-",
+            rater,
+            "\n",
+            "#| cache: true\n",
+            "#| include: false\n\n",
+            "# Generate text using R6 class\n",
+            "results_processor <- NeuropsychResultsR6$new(\n",
+            "  data = data_",
+            tolower(self$pheno),
+            ",\n",
+            "  file = \"_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_child_text_",
+            rater,
+            ".qmd\"\n",
+            ")\n",
+            "results_processor$process()\n",
+            "```\n\n"
+          )
+        }
+      }
+      
+      # Add table blocks for each rater
+      for (rater in rater_types) {
+        if (self$check_rater_data_exists(rater)) {
+          qmd_content <- paste0(
+            qmd_content,
+            "```{r}\n",
+            "#| label: qtbl-",
+            tolower(self$pheno),
+            "-",
+            rater,
+            "\n",
+            "#| include: false\n",
+            "#| eval: true\n\n",
+            "# Table parameters\n",
+            "table_name <- \"table_",
+            tolower(self$pheno),
+            "_",
+            rater,
+            "\"\n",
+            "vertical_padding <- 0\n",
+            "multiline <- TRUE\n\n",
+            "# Create table using our modified TableGT_Modified R6 class\n",
+            "table_gt <- TableGT_Modified$new(\n",
+            "  data = data_",
+            tolower(self$pheno),
+            ",\n",
+            "  pheno = pheno,\n",
+            "  table_name = table_name,\n",
+            "  vertical_padding = vertical_padding,\n",
+            "  source_note = \"T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\",\n",
+            "  multiline = multiline\n",
+            ")\n\n",
+            "# Get the table object without automatic saving\n",
+            "tbl <- table_gt$build_table()\n\n",
+            "# Save the table using our save_table method\n",
+            "table_gt$save_table(tbl, dir = here::here())\n",
+            "```\n\n"
+          )
+        }
+      }
+      
+      # Add figure blocks for each rater
+      for (rater in rater_types) {
+        if (self$check_rater_data_exists(rater)) {
+          qmd_content <- paste0(
+            qmd_content,
+            "```{r}\n",
+            "#| label: fig-",
+            tolower(self$pheno),
+            "-subdomain-",
+            rater,
+            "\n",
+            "#| include: false\n",
+            "#| eval: true\n\n",
+            "# Create subdomain plot using R6 DotplotR6\n",
+            "dotplot_subdomain <- DotplotR6$new(\n",
+            "  data = data_",
+            tolower(self$pheno),
+            ",\n",
+            "  x = \"z_mean_subdomain\",\n",
+            "  y = \"subdomain\",\n",
+            "  filename = here::here(\"fig_",
+            tolower(self$pheno),
+            "_subdomain_",
+            rater,
+            ".svg\")\n",
+            ")\n",
+            "dotplot_subdomain$create_plot()\n\n",
+            "# Load plot title from sysdata.rda\n",
+            "plot_title_var <- \"plot_title_",
+            tolower(self$pheno),
+            "\"\n",
+            "if (!exists(plot_title_var)) {\n",
+            "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+            "  if (file.exists(sysdata_path)) {\n",
+            "    load(sysdata_path)\n",
+            "  }\n",
+            "}\n\n",
+            "# Get the plot title or use default\n",
+            "if (exists(plot_title_var)) {\n",
+            "  plot_title_",
+            tolower(self$pheno),
+            " <- get(plot_title_var)\n",
+            "} else {\n",
+            "  plot_title_",
+            tolower(self$pheno),
+            " <- \"This section presents results from the ",
+            domain_name,
+            " domain assessment.\"\n",
+            "}\n",
+            "```\n\n"
+          )
+        }
+      }
+      
+      # Add initial typst domain function
+      qmd_content <- paste0(
+        qmd_content,
+        "\n```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_",
+        tolower(self$pheno),
+        "`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n"
+      )
+      
+      # Add sections for each rater
+      rater_sections <- list(
+        self = list(
+          title = "SELF-REPORT",
+          caption = "Self report of behavioral, emotional, and social difficulties."
+        ),
+        parent = list(
+          title = "PARENT RATINGS",
+          caption = "Parent reports of behavioral and emotional problems in children and adolescents."
+        ),
+        teacher = list(
+          title = "TEACHER RATINGS",
+          caption = "Teacher reports of behavioral, emotional, academic, and social difficulties."
+        )
+      )
+      
+      for (rater in rater_types) {
+        if (self$check_rater_data_exists(rater)) {
+          section <- rater_sections[[rater]]
+          
+          qmd_content <- paste0(
+            qmd_content,
+            "### ",
+            section$title,
+            "\n\n",
+            "{{< include _02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_child_text_",
+            rater,
+            ".qmd >}}\n\n",
+            "```{=typst}\n",
+            "// Define a function to create a domain with a title, a table, and a figure\n",
+            "#let domain(title: none, file_qtbl, file_fig) = {\n",
+            "  let font = (font: \"Merriweather\", size: 0.7em)\n",
+            "  set text(..font)\n",
+            "  pad(top: 0.5em)[]\n",
+            "  grid(\n",
+            "    columns: (50%, 50%),\n",
+            "    gutter: 8pt,\n",
+            "    figure(\n",
+            "      [#image(file_qtbl)],\n",
+            "      caption: figure.caption(position: top, [#title]),\n",
+            "      kind: \"qtbl\",\n",
+            "      supplement: [Table],\n",
+            "    ),\n",
+            "    figure(\n",
+            "      [#image(file_fig, width: auto)],\n",
+            "      caption: figure.caption(\n",
+            "        position: bottom,\n",
+            "        [\n",
+            "          Mood/",
+            toupper(substr(rater, 1, 1)), substr(rater, 2, nchar(rater)),
+            " ",
+            ifelse(rater == "self", "Self-Report. ", "Report. "),
+            section$caption,
+            "\n",
+            "          ],\n",
+            "      ),\n",
+            "      placement: none,\n",
+            "      kind: \"image\",\n",
+            "      supplement: [Figure],\n",
+            "      gap: 0.5em,\n",
+            "    ),\n",
+            "  )\n",
+            "}\n",
+            "```\n",
+            "```{=typst}\n",
+            "// Define the title of the domain\n",
+            "#let title = \"",
+            domain_name,
+            "--",
+            paste0(toupper(substr(rater, 1, 1)), substr(rater, 2, nchar(rater))),
+            "\"\n\n",
+            "// Define the file name of the table\n",
+            "#let file_qtbl = \"table_",
+            tolower(self$pheno),
+            "_",
+            ifelse(rater == "self", "child", rater),
+            ".png\"\n\n",
+            "// Define the file name of the figure\n",
+            "#let file_fig = \"fig_",
+            tolower(self$pheno),
+            "_",
+            ifelse(rater == "self", "child", rater),
+            ".svg\"\n\n",
+            "// Call the 'domain' function with the specified title, table file name, and figure file name\n",
+            "#domain(title: [#title], file_qtbl, file_fig)\n",
+            "```\n"
+          )
+        }
+      }
+      
+      # Write to file
+      cat(qmd_content, file = output_file)
+      
+      return(output_file)
     }
   )
 )

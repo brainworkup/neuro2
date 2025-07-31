@@ -1,3 +1,103 @@
+# Safe sysdata update -----------------------------------------------------
+
+library(usethis)
+
+# Safe way to update sysdata.rda without overwriting existing variables
+# This addresses the issue mentioned about create_sysdata.R overwriting the entire file
+source("R/safe_sysdata_update_fixed.R")
+
+# Example usage for your create_sysdata.R script:
+# Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
+# You would use:
+
+# Example 1: Only add new objects, never overwrite existing ones
+safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  add_only = TRUE
+)
+
+# Example 2: Only overwrite specific objects
+safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  dots = dots,  # This exists in the file
+  overwrite = c("dots")  # Only allow overwriting 'dots'
+)
+
+# Example 3: Update create_sysdata.R to use this function
+# For the scales data
+safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  scales_verbal = scales_verbal,
+  scales_spatial = scales_spatial,
+  scales_memory = scales_memory,
+  scales_memory_order = scales_memory_order,
+  scales_executive = scales_executive,
+  scales_motor = scales_motor,
+  scales_social = scales_social,
+  scales_adhd_adult = scales_adhd_adult,
+  scales_adhd_child = scales_adhd_child,
+  scales_emotion_adult = scales_emotion_adult,
+  scales_emotion_child = scales_emotion_child,
+  scales_adaptive = scales_adaptive,
+  scales_daily_living = scales_daily_living,
+  scales_all = scales_all,
+  overwrite = c(
+    "scales_iq",
+    "scales_academics",
+    "scales_verbal",
+    "scales_spatial",
+    "scales_memory",
+    "scales_memory_order",
+    "scales_executive",
+    "scales_motor",
+    "scales_social",
+    "scales_adhd_adult",
+    "scales_adhd_child",
+    "scales_emotion_adult",
+    "scales_emotion_child",
+    "scales_adaptive",
+    "scales_daily_living",
+    "scales_all"
+  )
+)
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_neurocognition = plot_title_neurocognition,
+  plot_title_iq = plot_title_iq,
+  plot_title_academics = plot_title_academics,
+  plot_title_verbal = plot_title_verbal,
+  plot_title_spatial = plot_title_spatial,
+  plot_title_memory = plot_title_memory,
+  plot_title_executive = plot_title_executive,
+  plot_title_motor = plot_title_motor,
+  plot_title_social = plot_title_social,
+  plot_title_adhd_child = plot_title_adhd_child,
+  plot_title_adhd_adult = plot_title_adhd_adult,
+  plot_title_emotion_adult = plot_title_emotion_adult,
+  plot_title_emotion_adult = plot_title_emotion_child,
+  plot_title_adaptive = plot_title_adaptive,
+  plot_title_daily_living = plot_title_daily_living,
+  overwrite = c(
+    "plot_title_neurocognition",
+    "plot_title_iq",
+    "plot_title_academics",
+    "plot_title_verbal",
+    "plot_title_spatial",
+    "plot_title_memory",
+    "plot_title_executive",
+    "plot_title_motor",
+    "plot_title_social",
+    "plot_title_adhd_adult",
+    "plot_title_emotion_adult",
+    "plot_title_adaptive",
+    "plot_title_daily_living"
+  )
+)
+
 # Scales ------------------------------------------------------------------
 
 #' @name scales_iq
@@ -1288,6 +1388,17 @@ self-regulatory skills and have some common subprocesses; therefore, it is
 common to treat them together, or even to refer to both processes when talking
 about one or the other."
 
+#' Child Emotional and Behavioral Plot Title
+#'
+#' @description
+#' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
+#'
+#' @docType data
+#' @name plot_title_emotion_child
+#' @format A character string
+#' @keywords internal data
+plot_title_emotion_child <- "Mood/Behavioral Reports. Self-, parent-, and teacher-reports of behavioral, emotional, and social difficulties."
+
 #' Adult Emotional and Behavioral Plot Title
 #'
 #' @description
@@ -1340,7 +1451,9 @@ safe_use_data_internal(
   plot_title_executive = plot_title_executive,
   plot_title_motor = plot_title_motor,
   plot_title_social = plot_title_social,
+  plot_title_adhd_child = plot_title_adhd_child,
   plot_title_adhd_adult = plot_title_adhd_adult,
+  plot_title_emotion_child = plot_title_emotion_child,
   plot_title_emotion_adult = plot_title_emotion_adult,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
@@ -1410,41 +1523,29 @@ domain_social <- "Social Cognition"
 #' @title Adult ADHD Domain
 #' @description A character string label representing the adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to adult ADHD symptoms.
 #' @keywords data internal
-domain_adhd_adult <- "ADHD"
+domain_adhd_adult <- "ADHD Adult"
 
 #' @name domain_adhd_child
 #' @docType data
 #' @title Child ADHD Domain
 #' @description A character string label representing the child attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to child ADHD symptoms.
 #' @keywords data internal
-domain_adhd_child <- "ADHD"
+domain_adhd_child <- "ADHD Child"
 
 #' @name domain_emotion_adult
 #' @docType data
 #' @title Adult Emotional and Behavioral Domain
 #' @description A character vector of labels representing the adult emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
 #' @keywords data internal
-domain_emotion_adult <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Behavioral/Emotional/Social",
-  "Emotional/Behavioral/Personality"
-)
+domain_emotion_adult <- "Emotional/Behavioral/Personality"
+
 #' @name domain_emotion_child
 #' @docType data
 #' @title Child Emotional and Behavioral Domain
 #' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
 #' @keywords data internal
-domain_emotion_child <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Behavioral/Emotional/Social",
-  "Emotional/Behavioral/Personality"
-)
+domain_emotion_child <- "Behavioral/Emotional/Social"
+
 #' @name domain_adaptive
 #' @docType data
 #' @title Adaptive Functioning Domain
@@ -1480,7 +1581,23 @@ safe_use_data_internal(
   add_only = TRUE
 )
 
-# CSV lookup tables -------------------------------------------------------
+# Example 2: Only overwrite specific objects
+safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  dots = dots,  # This exists in the file
+  overwrite = c("dots")  # Only allow overwriting 'dots'
+)
+
+safe_use_data_internal(
+  domain_adhd_adult = domain_adhd_adult,
+  domain_adhd_child = domain_adhd_child,
+  domain_emotion_adult = domain_emotion_adult,
+  domain_emotion_child = domain_emotion_child,
+  overwrite = c("domain_adhd_adult", "domain_adhd_child", "domain_emotion_adult", "domain_emotion_child")
+)
+
+# Lookup table - Neuropsych scales---------------------------------------------
 
 #' @name lookup_neuropsych_scales
 #' @docType data
@@ -1498,109 +1615,7 @@ lookup_neuropsych_scales <- readr::read_csv(
 )
 # usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
 
-# Safe sysdata update -----------------------------------------------------
-
-source("R/safe_sysdata_update_fixed.R")
-# Safe way to update sysdata.rda without overwriting existing variables
-# This addresses the issue mentioned about create_sysdata.R overwriting the entire file
-
-library(usethis)
-
-# Example usage for your create_sysdata.R script:
-# Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
-# You would use:
-
-# Example 1: Only add new objects, never overwrite existing ones
-safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  add_only = TRUE
-)
-
-# Example 2: Only overwrite specific objects
-# safe_use_data_internal(
-#   scales_iq = scales_iq,
-#   scales_academics = scales_academics,
-#   dots = dots,  # This exists in the file
-#   overwrite = c("dots")  # Only allow overwriting 'dots'
-# )
-
-# Example 3: Update create_sysdata.R to use this function
-# At the end of your create_sysdata.R, replace the usethis::use_data() calls with:
-#
-# source("safe_sysdata_update_fixed.R")  # Note: Use the fixed version
-#
-# For the scales data
-safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  scales_verbal = scales_verbal,
-  scales_spatial = scales_spatial,
-  scales_memory = scales_memory,
-  scales_memory_order = scales_memory_order,
-  scales_executive = scales_executive,
-  scales_motor = scales_motor,
-  scales_social = scales_social,
-  scales_adhd_adult = scales_adhd_adult,
-  scales_adhd_child = scales_adhd_child,
-  scales_emotion_adult = scales_emotion_adult,
-  scales_emotion_child = scales_emotion_child,
-  scales_adaptive = scales_adaptive,
-  scales_daily_living = scales_daily_living,
-  scales_all = scales_all,
-  overwrite = c(
-    "scales_iq",
-    "scales_academics",
-    "scales_verbal",
-    "scales_spatial",
-    "scales_memory",
-    "scales_memory_order",
-    "scales_executive",
-    "scales_motor",
-    "scales_social",
-    "scales_adhd_adult",
-    "scales_adhd_child",
-    "scales_emotion_adult",
-    "scales_emotion_child",
-    "scales_adaptive",
-    "scales_daily_living",
-    "scales_all"
-  )
-)
-
-# For the plot titles
-safe_use_data_internal(
-  plot_title_neurocognition = plot_title_neurocognition,
-  plot_title_iq = plot_title_iq,
-  plot_title_academics = plot_title_academics,
-  plot_title_verbal = plot_title_verbal,
-  plot_title_spatial = plot_title_spatial,
-  plot_title_memory = plot_title_memory,
-  plot_title_executive = plot_title_executive,
-  plot_title_motor = plot_title_motor,
-  plot_title_social = plot_title_social,
-  plot_title_adhd_adult = plot_title_adhd_adult,
-  plot_title_emotion_adult = plot_title_emotion_adult,
-  plot_title_adaptive = plot_title_adaptive,
-  plot_title_daily_living = plot_title_daily_living,
-  overwrite = c(
-    "plot_title_neurocognition",
-    "plot_title_iq",
-    "plot_title_academics",
-    "plot_title_verbal",
-    "plot_title_spatial",
-    "plot_title_memory",
-    "plot_title_executive",
-    "plot_title_motor",
-    "plot_title_social",
-    "plot_title_adhd_adult",
-    "plot_title_emotion_adult",
-    "plot_title_adaptive",
-    "plot_title_daily_living"
-  )
-)
-
-# Test score ranges lookup ------------------------------------------------
+# Lookup table - Test score ranges ---------------------------------------
 
 # Lookup score ranges
 #' @name lookup_score_ranges

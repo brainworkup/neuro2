@@ -1,18 +1,23 @@
 # SUMMARY/IMPRESSION {#sec-sirf}
 
+{{< include _03-00_sirf_text.qmd >}}
+
 ```{r}
 #| label: setup-sirf
 #| include: false
-patient <- "Ethan"
-# Source R6 classes in the correct order
-source("R/ReportTemplateR6.R") # Must be sourced first as NeuropsychReportSystemR6 depends on it
-source("R/NeuropsychResultsR6.R") # Also needed by NeuropsychReportSystemR6
-source("R/DomainProcessorR6.R") # Also needed by NeuropsychReportSystemR6
+
+# Load arrow package for parquet file support
+library(arrow)
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/ReportTemplateR6.R")
 source("R/NeuropsychReportSystemR6.R")
 source("R/DotplotR6.R")
 
-# Load all domain data
+# Load all domain data from parquet files
 neurocog <- arrow::read_parquet("data/neurocog.parquet")
+neurobehav <- arrow::read_parquet("data/neurobehav.parquet")
 
 # Define domain variables explicitly to avoid the "object not found" error
 domain_iq <- "General Cognitive Ability"
@@ -57,12 +62,12 @@ report_system <- NeuropsychReportSystemR6$new(
 
 # Create overall summary plot
 domain_summary <- neurocog |>
-  dplyr::group_by(domain) |>
-  dplyr::summarize(
+  group_by(domain) |>
+  summarise(
     mean_z = mean(z, na.rm = TRUE),
     mean_percentile = mean(percentile, na.rm = TRUE)
   ) |>
-  dplyr::filter(!is.na(mean_z))
+  filter(!is.na(mean_z))
 
 # Create plot using R6 DotplotR6
 overall_plot <- DotplotR6$new(
@@ -74,27 +79,4 @@ overall_plot <- DotplotR6$new(
   point_size = 8
 )
 overall_plot$create_plot()
-```
-
-```{=typst}
-#let domain(file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  figure(
-    [#image(file_fig, width: 85%)],
-    placement: none,
-    caption: figure.caption(
-      position: bottom,
-      [Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-scores have a mean of 0 and a standard deviation of 1.],
-    ),
-    kind: "image",
-    supplement: [Figure],
-    gap: 0.5em,
-  )
-}
-```
-
-```{=typst}
-#let file_fig = "fig_sirf_overall.svg"
-#domain(file_fig)
 ```

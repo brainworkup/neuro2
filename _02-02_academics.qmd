@@ -123,7 +123,7 @@ table_gt <- TableGT_Modified$new(
 tbl <- table_gt$build_table()
 
 # Save the table using our save_table method
-table_gt$save_table(tbl)
+table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
@@ -136,9 +136,25 @@ dotplot_subdomain <- DotplotR6$new(
   data = data_academics,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = "fig_academics_subdomain.svg"
+  filename = here::here("fig_academics_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_academics"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_academics <- get(plot_title_var)
+} else {
+  plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
+}
 ```
 
 ```{=typst}
@@ -155,6 +171,7 @@ dotplot_subdomain$create_plot()
       block[*#supplement #counter:* #it.body]
     }
   }
+
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -169,7 +186,7 @@ dotplot_subdomain$create_plot()
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+        [`{r} plot_title_academics`],
       ),
       placement: none,
       kind: "image",
@@ -179,7 +196,6 @@ dotplot_subdomain$create_plot()
   )
 }
 ```
-
 ```{=typst}
 // Define the title of the domain
 #let title = "Academic Skills"
@@ -192,3 +208,4 @@ dotplot_subdomain$create_plot()
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
+```

@@ -169,110 +169,111 @@
     )
 }
 
-
-
-#let article(
-  title: none,
-  subtitle: none,
-  authors: none,
+#let report(
+  title: "NEUROCOGNITIVE EXAMINATION",
+  author: "Joey W. Trampush, Ph.D.",
+  name: [],
+  doe: [],
+  patient: [],
   date: none,
-  abstract: none,
-  abstract-title: none,
   cols: 1,
-  margin: (x: 1.25in, y: 1.25in),
-  paper: "us-letter",
+  paper: "a4",
+  margin: (x: 25mm, y: 30mm),
   lang: "en",
   region: "US",
-  font: "libertinus serif",
+  font: (),
+  body-font: "Libertinus Serif",
+  sans-font: "Libertinus Sans",
   fontsize: 11pt,
-  title-size: 1.5em,
-  subtitle-size: 1.25em,
-  heading-family: "libertinus serif",
-  heading-weight: "bold",
-  heading-style: "normal",
-  heading-color: black,
-  heading-line-height: 0.65em,
   sectionnumbering: none,
-  pagenumbering: "1",
-  toc: false,
-  toc_title: none,
-  toc_depth: none,
-  toc_indent: 1.5em,
   doc,
 ) = {
+  // Metadata
+  set document(title: title, author: author)
+
+  // Set page size, margins, and header.
+  // Set up page properties
   set page(
     paper: paper,
     margin: margin,
-    numbering: pagenumbering,
+    header: none, // Start with no header
+    numbering: "1/1",
+    number-align: center,
+    columns: cols,
   )
-  set par(justify: true)
-  set text(lang: lang,
-           region: region,
-           font: font,
-           size: fontsize)
+
+  // Add conditional header using page state
+  set page(header: context {
+    if counter(page).get().first() > 1 {
+      // Only add header on pages after the first
+      block[
+        #set par(leading: 0.65em)
+        #set text(9pt)
+        #smallcaps[
+          *CONFIDENTIAL* \
+          #name \
+          #doe
+        ]
+      ]
+    }
+  })
+
+  // align headers
+  show heading.where(level: 0): set align(center)
+  show heading.where(level: 1): set align(left)
+
+  // Set paragraph justification and leading.
+  set par(justify: true, leading: 1em, linebreaks: "optimized")
+
+  // Set text and body font family.
+  set text(font: body-font, size: fontsize, lang: lang, region: region)
+  show math.equation: set text(weight: 400)
+
+  // Set heading numbering.
   set heading(numbering: sectionnumbering)
-  if title != none {
-    align(center)[#block(inset: 2em)[
-      #set par(leading: heading-line-height)
-      #if (heading-family != none or heading-weight != "bold" or heading-style != "normal"
-           or heading-color != black) {
-        set text(font: heading-family, weight: heading-weight, style: heading-style, fill: heading-color)
-        text(size: title-size)[#title]
-        if subtitle != none {
-          parbreak()
-          text(size: subtitle-size)[#subtitle]
-        }
-      } else {
-        text(weight: "bold", size: title-size)[#title]
-        if subtitle != none {
-          parbreak()
-          text(weight: "bold", size: subtitle-size)[#subtitle]
-        }
-      }
-    ]]
+
+  // Set paragraph spacing.
+  set par(spacing: 1.75em)
+
+  // Set heading font.
+  show heading: set text(font: sans-font, weight: "semibold")
+
+  // Set run-in subheadings, starting at level 4.
+  show heading: it => {
+    if it.level > 3 {
+      parbreak()
+      text(1em, style: "italic", weight: "regular", it.body + ":")
+    } else {
+      it
+    }
   }
 
-  if authors != none {
-    let count = authors.len()
-    let ncols = calc.min(count, 3)
-    grid(
-      columns: (1fr,) * ncols,
-      row-gutter: 1.5em,
-      ..authors.map(author =>
-          align(center)[
-            #author.name \
-            #author.affiliation \
-            #author.email
-          ]
-      )
-    )
-  }
+  // Configure lists and links.
+  show enum: set block(above: 1em, below: 1em)
+  // show enum: set par(leading: 0.85em)
+  set enum(indent: 0em, body-indent: 0.25em, tight: false)
+
+  show list: set block(above: 1em, below: 1em)
+  // show list: set par(leading: 0.85em)
+  set list(indent: 0em, body-indent: 0.25em, marker: ([•], [--]), tight: false)
+
+  show link: set text(font: body-font, fill: rgb(4, 1, 23), weight: 450)
+  show link: underline
+
+  // Logo
+  block(figure(image("inst/resources/img/logo.png")))
+  // block(figure(image("inst/resources/img/bwu_logo.png")))
+
+  // Title row.
+  align(center)[
+    #block(text(font: sans-font, weight: 600, 1.75em, title))
+    #v(0em, weak: true)
+  ]
 
   if date != none {
     align(center)[#block(inset: 1em)[
-      #date
-    ]]
-  }
-
-  if abstract != none {
-    block(inset: 2em)[
-    #text(weight: "semibold")[#abstract-title] #h(1em) #abstract
-    ]
-  }
-
-  if toc {
-    let title = if toc_title == none {
-      auto
-    } else {
-      toc_title
-    }
-    block(above: 0em, below: 2em)[
-    #outline(
-      title: toc_title,
-      depth: toc_depth,
-      indent: toc_indent
-    );
-    ]
+        #date
+      ]]
   }
 
   if cols == 1 {
@@ -282,18 +283,15 @@
   }
 }
 
-#set table(
-  inset: 6pt,
-  stroke: none
-)
-
-#show: doc => article(
-  title: [NEUROCOGNITIVE EXAMINATION],
-  pagenumbering: "1",
-  toc_title: [Table of contents],
-  toc_depth: 3,
-  cols: 1,
-  doc,
+#show: report.with(
+  title: "NEUROCOGNITIVE EXAMINATION",
+  name: [Smalls, Biggie],
+  doe: [2025-07-23],
+  patient: [Biggie],
+  paper: "us-letter",
+  body-font: ("IBM Plex Serif"),
+  sans-font: ("IBM Plex Sans"),
+  fontsize: 12pt,
 )
 
 #let name = [Smalls, Biggie]
@@ -536,6 +534,149 @@ General intellectual functioning that minimizes expressive language demands fell
 Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
 
 Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average. Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
 
 Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
 
@@ -559,39 +700,224 @@ Ability to quickly use reasoning to identify and apply solutions to problems fel
 #| label: setup-iq
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("General Cognitive Ability")
 
 # Target phenotype
 pheno <- "iq"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_iq <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_iq$load_data()
+processor_iq$filter_by_domain()
+
+# Create the data object with original name for compatibility
+iq <- processor_iq$data
+```
+
+```{r}
+#| label: export-iq
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_iq$select_columns()
+processor_iq$save_data()
+
+# Update the original object
+iq <- processor_iq$data
+```
+
+```{r}
+#| label: data-iq
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_iq object is available from the package's internal data
+if (!exists("scales_iq")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_iq from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  iq <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_iq
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  iq <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_iq <- filter_data(data = iq, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-iq
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_iq,
+  file = "_02-01_iq_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-iq
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_iq"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_iq,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-iq-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_iq,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_iq_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_iq"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_iq <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  iq <- readr::read_csv("data/neurocog.parquet")
+  plot_title_iq <- "Premorbid Ability is an estimate of an individual's
+intellectual functioning prior to known or suspected onset of brain disease or
+dysfunction. General Ability is the overall skill to reason, solve problems,
+and gain useful knowledge. Crystallized Knowledge involves understanding the
+world through language and reasoning. Fluid Reasoning is the logical analysis
+and solution of new problems, identifying underlying patterns, and applying
+logic."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_iq`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "General Cognitive Ability"
+
+// Define the file name of the table
+#let file_qtbl = "table_iq.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_iq_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Academic Skills
 <sec-academics>
-Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population. Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population. Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population. Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
 
 ```{r}
 #| label: setup-academics
 #| include: false
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
 
 # Filter by domain
 domains <- c("Academic Skills")
@@ -599,26 +925,193 @@ domains <- c("Academic Skills")
 # Target phenotype
 pheno <- "academics"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_academics <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_academics$load_data()
+processor_academics$filter_by_domain()
+
+# Create the data object with original name for compatibility
+academics <- processor_academics$data
+```
+
+```{r}
+#| label: export-academics
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_academics$select_columns()
+processor_academics$save_data()
+
+# Update the original object
+academics <- processor_academics$data
+```
+
+```{r}
+#| label: data-academics
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_academics object is available from the package's internal data
+if (!exists("scales_academics")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_academics from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  academics <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_academics
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  academics <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_academics <- filter_data(data = academics, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-academics
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_academics,
+  file = "_02-02_academics_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-academics
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_academics"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_academics,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-academics-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_academics,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_academics_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_academics"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_academics <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  academics <- readr::read_csv("data/neurocog.parquet")
+  plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_academics`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Academic Skills"
+
+// Define the file name of the table
+#let file_qtbl = "table_academics.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_academics_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Verbal/Language
 <sec-verbal>
 Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
@@ -631,7 +1124,43 @@ Verbal concept formation and abstract reasoning fell within the Above Average an
 
 Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
 
-Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average. Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average. Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average. Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
 
 Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
 
@@ -643,32 +1172,208 @@ Ethan's score on Language Index (general language processing) was Average. Ethan
 #| label: setup-verbal
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Verbal/Language")
 
 # Target phenotype
 pheno <- "verbal"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_verbal <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_verbal$load_data()
+processor_verbal$filter_by_domain()
+
+# Create the data object with original name for compatibility
+verbal <- processor_verbal$data
+```
+
+```{r}
+#| label: export-verbal
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_verbal$select_columns()
+processor_verbal$save_data()
+
+# Update the original object
+verbal <- processor_verbal$data
+```
+
+```{r}
+#| label: data-verbal
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_verbal object is available from the package's internal data
+if (!exists("scales_verbal")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_verbal from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  verbal <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_verbal
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  verbal <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_verbal <- filter_data(data = verbal, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-verbal
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_verbal,
+  file = "_02-03_verbal_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-verbal
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_verbal"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_verbal,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-verbal-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_verbal,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_verbal_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_verbal"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_verbal <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  verbal <- readr::read_csv("data/neurocog.parquet")
+  plot_title_verbal <- "Verbal and language functioning refers to the ability to
+access and apply acquired word knowledge, to verbalize meaningful concepts, to
+understand complex multistep instructions, to think about verbal information,
+and to express oneself using words."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_verbal`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Verbal/Language"
+
+// Define the file name of the table
+#let file_qtbl = "table_verbal.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_verbal_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Visual Perception/Construction
 <sec-spatial>
 General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
@@ -683,13 +1388,91 @@ Understanding visual-spatial relationships to construct unfamiliar geometric des
 
 Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
 
-Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
 
 Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
 
 Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
 
-Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average. Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average. Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average. General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
 
 Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
 
@@ -707,39 +1490,222 @@ Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average
 #| label: setup-spatial
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Visual Perception/Construction")
 
 # Target phenotype
 pheno <- "spatial"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_spatial <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_spatial$load_data()
+processor_spatial$filter_by_domain()
+
+# Create the data object with original name for compatibility
+spatial <- processor_spatial$data
+```
+
+```{r}
+#| label: export-spatial
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_spatial$select_columns()
+processor_spatial$save_data()
+
+# Update the original object
+spatial <- processor_spatial$data
+```
+
+```{r}
+#| label: data-spatial
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_spatial object is available from the package's internal data
+if (!exists("scales_spatial")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_spatial from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  spatial <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_spatial
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  spatial <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_spatial <- filter_data(data = spatial, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-spatial
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_spatial,
+  file = "_02-04_spatial_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-spatial
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_spatial"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_spatial,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-spatial-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_spatial,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_spatial_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_spatial"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_spatial <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  spatial <- readr::read_csv("data/neurocog.parquet")
+  plot_title_spatial <- "Perception, construction, and visuospatial processing
+refer to abilities such as mentally visualizing how objects should look from
+different angles, visualizing how to put objects together so that they fit
+correctly, and being able to accurately and efficiently copy and/or reproduce
+visual-spatial information onto paper."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_spatial`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Visual Perception/Construction"
+
+// Define the file name of the table
+#let file_qtbl = "table_spatial.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_spatial_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Memory
 <sec-memory>
-Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
+Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Story Memory (expository story learning) was Above Average. Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average. Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average. Ethan's score on List Learning (word list learning) was High Average. Ethan's score on List Recognition (delayed recognition of a word list) was Average. Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average. Ethan's score on List Recall (long-term recall of a word list) was Average. Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
 
 ```{r}
 #| label: setup-memory
 #| include: false
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
 
 # Filter by domain
 domains <- c("Memory")
@@ -747,26 +1713,193 @@ domains <- c("Memory")
 # Target phenotype
 pheno <- "memory"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_memory <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_memory$load_data()
+processor_memory$filter_by_domain()
+
+# Create the data object with original name for compatibility
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: export-memory
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_memory$select_columns()
+processor_memory$save_data()
+
+# Update the original object
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: data-memory
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_memory object is available from the package's internal data
+if (!exists("scales_memory")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_memory from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  memory <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_memory
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  memory <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_memory <- filter_data(data = memory, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-memory
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_memory,
+  file = "_02-05_memory_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-memory
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_memory"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_memory,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-memory-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_memory,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_memory_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_memory"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_memory <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  memory <- readr::read_csv("data/neurocog.parquet")
+  plot_title_memory <- "Learning and memory refer to the rate and ease with which new information (e.g., facts, stories, lists, faces, names) can be encoded, stored, and later recalled from long-term memory."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_memory`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Memory"
+
+// Define the file name of the table
+#let file_qtbl = "table_memory.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_memory_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Attention/Executive
 <sec-executive>
 Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
@@ -789,11 +1922,147 @@ Visual-perceptual decision-making speed fell within the Low Average and ranked a
 
 Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
 
-Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Digit Span (attention span and auditory attention) was Average. Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
 
 Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
 
-Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range. Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range. Ethan's score on Coding (speed of information processing) was High Average. Ethan's score on Attention Index (general attentional and executive functioning) was High Average. Ethan's score on Digit Span (attention span and auditory attention) was Average. Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
 
 Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
 
@@ -819,39 +2088,222 @@ Visual search speed, scanning, speed of processing, and motor speed and coordina
 #| label: setup-executive
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Attention/Executive")
 
 # Target phenotype
 pheno <- "executive"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_executive <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_executive$load_data()
+processor_executive$filter_by_domain()
+
+# Create the data object with original name for compatibility
+executive <- processor_executive$data
+```
+
+```{r}
+#| label: export-executive
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_executive$select_columns()
+processor_executive$save_data()
+
+# Update the original object
+executive <- processor_executive$data
+```
+
+```{r}
+#| label: data-executive
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_executive object is available from the package's internal data
+if (!exists("scales_executive")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_executive from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  executive <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_executive
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  executive <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_executive <- filter_data(data = executive, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-executive
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_executive,
+  file = "_02-06_executive_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-executive
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_executive"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_executive,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-executive-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_executive,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_executive_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_executive"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_executive <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  executive <- readr::read_csv("data/neurocog.parquet")
+  plot_title_executive <- "Attentional and executive functions underlie most, if
+not all, domains of cognitive performance. These are behaviors and skills that
+allow individuals to successfully carry-out instrumental and social activities,
+academic work, engage with others effectively, problem solve, and successfully
+interact with the environment to get needs met."
 }
 ```
 
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_executive`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Attention/Executive"
+
+// Define the file name of the table
+#let file_qtbl = "table_executive.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_executive_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 == Motor
 <sec-motor>
-Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
+Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range. Nondominant hand dexterity was Exceptionally Low range. Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
 
 ```{r}
 #| label: setup-motor
 #| include: false
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
 
 # Filter by domain
 domains <- c("Motor")
@@ -859,79 +2311,404 @@ domains <- c("Motor")
 # Target phenotype
 pheno <- "motor"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_motor <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_motor$load_data()
+processor_motor$filter_by_domain()
+
+# Create the data object with original name for compatibility
+motor <- processor_motor$data
+```
+
+```{r}
+#| label: export-motor
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_motor$select_columns()
+processor_motor$save_data()
+
+# Update the original object
+motor <- processor_motor$data
+```
+
+```{r}
+#| label: data-motor
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_motor object is available from the package's internal data
+if (!exists("scales_motor")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_motor from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  motor <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_motor
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  motor <- arrow::read_feather("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_motor <- filter_data(data = motor, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-motor
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_motor,
+  file = "_02-07_motor_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-motor
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_motor"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_motor,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-motor-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_motor,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_motor_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_motor"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_motor <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  motor <- readr::read_csv("data/neurocog.parquet")
+  plot_title_motor <- "Sensorimotor tasks refer to the capacity to control hand
+movements quickly, smoothly, and with adequate precision, which are required to
+engage in activities such as writing and drawing."
 }
 ```
 
-== Psychosocial Problems
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_motor`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+// Define the title of the domain
+#let title = "Motor"
+
+// Define the file name of the table
+#let file_qtbl = "table_motor.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_motor_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+== Personality Disorders
 <sec-emotion>
-Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average. Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average. Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average. Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average. Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average. Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average. Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average. Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average. Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average. Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average. Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average. Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average. Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average. Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average. Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average. Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average. Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average. Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average. Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average. Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average. Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average. Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average. Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average. Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average. Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average. Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average. Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average. Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average. Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average. Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average. Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average. Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average. Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average. Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average. Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average. Ethan's self-reported Rule-breaking behavior was Above Average. Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average. Ethan's self-reported Behavioral symptoms index composite scale was Above Average. Ethan's self-reported Maintain necessary levels of attention was Above Average. Ethan's self-reported Externalizing problems composite scale was Above Average. Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average. Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average. Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average. Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average. Ethan's self-reported Internalizing problems composite scale was Average. Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average. Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average. Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average. Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average. Ethan's self-reported Health-related problems was Low Average. Ethan's self-reported Overall adaptive functioning composite score was Low Average. Ethan's self-reported Socially adept and at ease was Below Average. Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average. Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average. Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average. Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average. Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average. Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average. Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average. Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average. Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average. Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average. Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average. Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average. Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average. Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average. Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
 
 ```{r}
 #| label: setup-emotion
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
-domains <- c("Psychosocial Problems")
+domains <- c("Personality Disorders")
 
 # Target phenotype
 pheno <- "emotion"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurobehav.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_emotion <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurobehav.parquet"
+)
+
+# Load and process data
+processor_emotion$load_data()
+processor_emotion$filter_by_domain()
+
+# Create the data object with original name for compatibility
+emotion <- processor_emotion$data
+```
+
+```{r}
+#| label: export-emotion
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_emotion$select_columns()
+processor_emotion$save_data()
+
+# Update the original object
+emotion <- processor_emotion$data
+```
+
+```{r}
+#| label: data-emotion
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_emotion object is available from the package's internal data
+if (!exists("scales_emotion")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_emotion from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  emotion <- arrow::read_parquet("data/neurobehav.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_emotion
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  emotion <- arrow::read_feather("data/neurobehav.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-emotion
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_emotion,
+  file = "_02-10_emotion_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-emotion
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_emotion"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_emotion,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-emotion-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_emotion,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_emotion_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_emotion"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_emotion <- get(plot_title_var)
 } else {
-  # Default to CSV for other formats
-  emotion <- readr::read_csv("data/neurobehav.parquet")
+  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
 }
 ```
 
-= SUMMARY/IMPRESSION
-<sec-sirf>
-#let domain(file_fig) = {
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
-  figure(
-    [#image(file_fig, width: 85%)],
-    placement: none,
-    caption: figure.caption(
-      position: bottom,
-      [Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-scores have a mean of 0 and a standard deviation of 1.],
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
     ),
-    kind: "image",
-    supplement: [Figure],
-    gap: 0.5em,
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_emotion`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
   )
 }
-#let file_fig = "fig_sirf_overall.svg"
-#domain(file_fig)
+// Define the title of the domain
+#let title = "Personality Disorders"
+
+// Define the file name of the table
+#let file_qtbl = "table_emotion.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_emotion_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+= SUMMARY/IMPRESSION
+<sec-sirf>
 == Overall Evaluation Interpretation
 <overall-evaluation-interpretation>
 Neuropsychological evaluation revealed a pattern of cognitive strengths and weaknesses characterized by below-average overall neuropsychological functioning. Notable strengths emerged in visuoperceptual processing and visuoconstructional abilities, where performance reached the high average range for focused spatial tasks. The patient demonstrated average capabilities in basic judgment, decision-making, and orientation to person, place, time, and situation.
@@ -944,6 +2721,38 @@ Neuropsychological evaluation revealed a pattern of cognitive strengths and weak
 
 == Mental Health Diversion: Contextual Analysis and Interpretation
 <mental-health-diversion-contextual-analysis-and-interpretation>
+#emph[\1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?]
+
+Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5.
+
+#emph[\2. Were any mental disorders a motivating, causal, or contributing factor to the defendant's involvement in the commission of the offense?]
+
+Yes, causal.
+
+#emph[\3. If any mental disorders were significant factors in the commission of the offense, would the defendant's symptoms of those mental disorders respond to treatment?]
+
+Yes. The defendant's symptoms related to cognitive impairment and mood problems would respond well to treatment.
+
+#emph[\4. Does the defendant agree to comply with treatment as a condition of diversion?]
+
+Yes, the defendant agreed to comply with treatment as a condition of diversion.
+
+#emph[\5. Would the defendant pose an unreasonable risk of danger to public safety (under the meaning of California Penal Code 1001.36), if treated in the community?]
+
+The defendant would not pose "an unreasonable risk of danger to public safety" under the meaning of California Penal Code 1001.36, if treated in the community.
+
+== Overall Evaluation Interpretation
+<overall-evaluation-interpretation-1>
+Neuropsychological evaluation revealed a pattern of cognitive strengths and weaknesses characterized by below-average overall neuropsychological functioning. Notable strengths emerged in visuoperceptual processing and visuoconstructional abilities, where performance reached the high average range for focused spatial tasks. The patient demonstrated average capabilities in basic judgment, decision-making, and orientation to person, place, time, and situation.
+
+== Diagnostic Impression
+<diagnostic-impression-1>
+- 294.11 (F02.81) Major Neurocognitive Disorder Due to Another Medical Condition, Moderate, With behavioral disturbance
+- 8A68.4 Generalized tonic-clonic seizure
+- V61.10 (Z63.0) Relational Problems
+
+== Mental Health Diversion: Contextual Analysis and Interpretation
+<mental-health-diversion-contextual-analysis-and-interpretation-1>
 #emph[\1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?]
 
 Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5.
@@ -1055,7 +2864,7 @@ CA License No. PSY29212
 = APPENDIX
 == Test Selection Procedures
 <test-selection-procedures>
-Neuropsychological tests are performance-based, and cognitive performance is summarized above. Cultural considerations were made in selecting measures, interpreting results, and making diagnostic impressions and recommendations. Test scores are reported in comparison to same-age and sex/gender peers, with labels (e.g., Below Average, Average, Above Average; @guilmetteAmericanAcademyClinical2020), intended to be descriptive, not diagnostic. Standardized scores provide important context, but do not alone lead to accurate diagnosis or treatment recommendations.
+Neuropsychological tests are performance-based, and cognitive performance is summarized above. Cultural considerations were made in selecting measures, interpreting results, and making diagnostic impressions and recommendations. Test scores are reported in comparison to same-age and sex/gender peers, with labels (e.g., Below Average, Average, Above Average; (Guilmette et al., 2020)), intended to be descriptive, not diagnostic. Standardized scores provide important context, but do not alone lead to accurate diagnosis or treatment recommendations.
 
 == Conversion of Test Scores
 <conversion-of-test-scores>
@@ -1089,7 +2898,12 @@ Neuropsychological tests are performance-based, and cognitive performance is sum
 |Below average score|70 – 79|30 – 36|4 – 6|-2 – -1.4|2 – 8|
 |Exceptionally low score|< 70|< 30|< 4|< -2|< 2|
 ]
+#block[
+#block[
+Guilmette, T. J., Sweet, J. J., Hebben, N., Koltai, D., Mahone, M. E., Spiegler, B. J., Stucky, K., Westerveld, M., & Conference Participants. (2020). American Academy of Clinical Neuropsychology consensus conference statement on uniform labeling of performance test scores. #emph[The Clinical Neuropsychologist];, #emph[34];(3), 437--453. #link("https://doi.org/10.1080/13854046.2020.1722244")
 
+] <ref-guilmetteAmericanAcademyClinical2020>
+] <refs>
 
 
 

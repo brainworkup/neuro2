@@ -1,7 +1,7 @@
-## Behavioral/Emotional/Social {#sec-emotion}
+## Behavioral/Emotional/Social {#sec-emotion-child}
 
 ```{r}
-#| label: setup-emotion
+#| label: setup-emotion-child
 #| include: false
 
 # Source R6 classes
@@ -11,7 +11,7 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Personality Disorders")
+domains <- c("Behavioral/Emotional/Social")
 
 # Target phenotype
 pheno <- "emotion"
@@ -32,7 +32,7 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: export-emotion
+#| label: export-emotion-child
 #| include: false
 #| eval: true
 
@@ -45,25 +45,25 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: data-emotion
+#| label: data-emotion-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_emotion object is available from the package's internal data
-if (!exists("scales_emotion")) {
+# The scales_emotion_child object is available from the package's internal data
+if (!exists("scales_emotion_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_emotion from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_emotion_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_emotion
+scales <- scales_emotion_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -346,6 +346,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -394,6 +402,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -443,6 +459,14 @@ if (exists(plot_title_var)) {
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Merriweather", size: 0.7em)
   set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),

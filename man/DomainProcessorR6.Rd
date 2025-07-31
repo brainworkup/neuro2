@@ -23,6 +23,11 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item{get_scales}{Get scale names for the specified phenotype.}
 \item{filter_by_test}{Filter data by test names for specific report types.}
 \item{generate_report}{Generate text reports for different report types.}
+\item{has_multiple_raters}{Check if domain has multiple raters (currently only emotion domain).}
+\item{get_rater_types}{Get rater types for the domain (self, parent, teacher).}
+\item{check_rater_data_exists}{Check if rater-specific data files exist.}
+\item{generate_domain_qmd}{Generate domain QMD file with support for multi-rater domains.}
+\item{generate_emotion_child_qmd}{Generate emotion child domain QMD file with multiple raters.}
 \item{process}{Run the complete processing pipeline.}
 }
 }
@@ -60,9 +65,13 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-get_domain_number}{\code{DomainProcessorR6$get_domain_number()}}
 \item \href{#method-DomainProcessorR6-get_default_scales}{\code{DomainProcessorR6$get_default_scales()}}
 \item \href{#method-DomainProcessorR6-get_default_plot_titles}{\code{DomainProcessorR6$get_default_plot_titles()}}
+\item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
+\item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
+\item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
 }
 }
@@ -259,12 +268,62 @@ A string containing the default title for domain plots.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-has_multiple_raters"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-has_multiple_raters}{}}}
+\subsection{Method \code{has_multiple_raters()}}{
+Check if domain has multiple raters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$has_multiple_raters()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Logical indicating if domain has multiple raters.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_rater_types"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_types}{}}}
+\subsection{Method \code{get_rater_types()}}{
+Get rater types for the domain.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_types()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Character vector of rater types.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-check_rater_data_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-check_rater_data_exists}{}}}
+\subsection{Method \code{check_rater_data_exists()}}{
+Check if rater-specific data files exist.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$check_rater_data_exists(rater_type)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{rater_type}}{The rater type to check ("self", "parent", "teacher").}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Logical indicating if rater data exists.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
 Generate domain QMD file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(domain_name = NULL, output_file = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(
+  domain_name = NULL,
+  output_file = NULL,
+  is_child = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -273,6 +332,8 @@ Generate domain QMD file.
 \item{\code{domain_name}}{Name of the domain.}
 
 \item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
+
+\item{\code{is_child}}{Logical indicating if this is a child version (default: FALSE).}
 }
 \if{html}{\out{</div>}}
 }
@@ -334,6 +395,28 @@ Run the complete processing pipeline.
 }
 \subsection{Returns}{
 Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_child_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_child_qmd}{}}}
+\subsection{Method \code{generate_emotion_child_qmd()}}{
+Generate emotion child domain QMD file with multiple raters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
 }
 }
 \if{html}{\out{<hr>}}
