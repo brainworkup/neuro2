@@ -1,7 +1,7 @@
-## Substance Use {#sec-emotion-child}
+## Behavioral/Emotional/Social {#sec-emotion-child}
 
 ```{r}
-#| label: setup-emotion
+#| label: setup-emotion-child
 #| include: false
 
 # Source R6 classes
@@ -11,7 +11,13 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Substance Use")
+domains <- c(
+  "Behavioral/Emotional/Social",
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems"
+)
 
 # Target phenotype
 pheno <- "emotion"
@@ -29,12 +35,6 @@ processor_emotion$filter_by_domain()
 
 # Create the data object with original name for compatibility
 emotion <- processor_emotion$data
-```
-
-```{r}
-#| label: export-emotion
-#| include: false
-#| eval: true
 
 # Process and export data using R6
 processor_emotion$select_columns()
@@ -42,28 +42,22 @@ processor_emotion$save_data()
 
 # Update the original object
 emotion <- processor_emotion$data
-```
-
-```{r}
-#| label: data-emotion
-#| include: false
-#| eval: true
 
 # Load internal data to get standardized scale names
 # The scales_emotion object is available from the package's internal data
-if (!exists("scales_emotion")) {
+if (!exists("scales_emotion_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_emotion from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_emotion_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_emotion
+scales <- scales_emotion_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -85,39 +79,55 @@ data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-emotion-self
+#| label: text-emotion-child-self
 #| cache: true
 #| include: false
 
+data_emotion_self <- data_emotion |>
+  dplyr::filter(test %in% c("pai_a", "basc3_srp_adolescent", "basc3_srp_child"))
+
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_emotion,
+  data = data_emotion_self,
   file = "_02-10_emotion_child_text_self.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: text-emotion-parent
+#| label: text-emotion-child-parent
 #| cache: true
 #| include: false
 
+data_emotion_parent <- data_emotion |>
+  dplyr::filter(
+    test %in%
+      c("basc3_prs_adolescent", "basc3_prs_child", "basc3_prs_preschool")
+  )
+
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_emotion,
+  data = data_emotion_parent,
   file = "_02-10_emotion_child_text_parent.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: text-emotion-teacher
+#| label: text-emotion-child-teacher
 #| cache: true
 #| include: false
+#| eval: false
+
+data_emotion_teacher <- data_emotion |>
+  dplyr::filter(
+    test %in%
+      c("basc3_trs_adolescent", "basc3_trs_child", "basc3_trs_preschool")
+  )
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_emotion,
+  data = data_emotion_teacher,
   file = "_02-10_emotion_child_text_teacher.qmd"
 )
 results_processor$process()
@@ -135,7 +145,7 @@ multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_emotion,
+  data = data_emotion_self,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -162,7 +172,7 @@ multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_emotion,
+  data = data_emotion_parent,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -180,7 +190,7 @@ table_gt$save_table(tbl, dir = here::here())
 ```{r}
 #| label: qtbl-emotion-teacher
 #| include: false
-#| eval: true
+#| eval: false
 
 # Table parameters
 table_name <- "table_emotion_child_teacher"
@@ -189,7 +199,7 @@ multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_emotion,
+  data = data_emotion_teacher,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -211,7 +221,7 @@ table_gt$save_table(tbl, dir = here::here())
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_emotion,
+  data = data_emotion_self,
   x = "z_mean_subdomain",
   y = "subdomain",
   filename = here::here("fig_emotion_subdomain_self.svg")
@@ -219,7 +229,7 @@ dotplot_subdomain <- DotplotR6$new(
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_emotion"
+plot_title_var <- "plot_title_emotion_child_self"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -229,9 +239,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion <- get(plot_title_var)
+  plot_title_emotion_child_self <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
+  plot_title_emotion_child_self <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -242,7 +252,7 @@ if (exists(plot_title_var)) {
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_emotion,
+  data = data_emotion_parent,
   x = "z_mean_subdomain",
   y = "subdomain",
   filename = here::here("fig_emotion_subdomain_parent.svg")
@@ -250,7 +260,7 @@ dotplot_subdomain <- DotplotR6$new(
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_emotion"
+plot_title_var <- "plot_title_emotion_child_parent"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -260,20 +270,20 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion <- get(plot_title_var)
+  plot_title_emotion_child_parent <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
+  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
 ```{r}
 #| label: fig-emotion-subdomain-teacher
 #| include: false
-#| eval: true
+#| eval: false
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_emotion,
+  data = data_emotion_teacher,
   x = "z_mean_subdomain",
   y = "subdomain",
   filename = here::here("fig_emotion_subdomain_teacher.svg")
@@ -281,7 +291,7 @@ dotplot_subdomain <- DotplotR6$new(
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_emotion"
+plot_title_var <- "plot_title_emotion_child_teacher"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -291,19 +301,21 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion <- get(plot_title_var)
+  plot_title_emotion_child_teacheracher <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Substance Use domain assessment."
+  plot_title_emotion_child_tea <- "This section presents teacher-rated results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
+### SELF-REPORT
 
-<!-- ```{=typst}
+{{< include _02-10_emotion_child_text_self.qmd >}}
+
+```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
-
   // Make all figure labels (Table X:, Figure X:) bold
   show figure.caption: it => {
     context {
@@ -312,7 +324,6 @@ if (exists(plot_title_var)) {
       block[*#supplement #counter:* #it.body]
     }
   }
-
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -327,7 +338,119 @@ if (exists(plot_title_var)) {
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_emotion`],
+        [`{r} plot_title_emotion_child_self`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Behavioral/Emotional/Social"
+
+// Define the file name of the table
+#let file_qtbl = "table_emotion_child_self.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_emotion_subdomain_self.svg"
+
+// Call the 'domain' function with the specified title, table file name, and figure file name
+#domain(title: [#title], file_qtbl, file_fig)
+```
+
+### PARENT RATINGS
+
+{{< include _02-10_emotion_child_text_parent.qmd >}}
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_emotion_child_parent`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Behavioral/Emotional/Social"
+
+// Define the file name of the table
+#let file_qtbl = "table_emotion_child_parent.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_emotion_subdomain_parent.svg"
+
+// Call the 'domain' function with the specified title, table file name, and figure file name
+#domain(title: [#title], file_qtbl, file_fig)
+```
+
+<!-- ### TEACHER RATINGS -->
+
+<!-- {{< include _02-10_emotion_child_text_teacher.qmd >}} -->
+
+<!-- ```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_emotion_child_teacher`],
       ),
       placement: none,
       kind: "image",
@@ -337,171 +460,17 @@ if (exists(plot_title_var)) {
   )
 }
 ``` -->
-### SELF-REPORT
 
-{{< include _02-10_emotion_child_text_self.qmd >}}
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Merriweather", size: 0.7em)
-  set text(..font)
-  // Make all figure labels (Table X:, Figure X:) bold
-  show figure.caption: it => {
-    context {
-      let supplement = it.supplement
-      let counter = it.counter.display(it.numbering)
-      block[*#supplement #counter:* #it.body]
-    }
-  }  
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [Table],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [
-          Mood/Child Self-Report. Self-report of behavioral and emotional, and social difficulties.
-          ],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [Figure],
-      gap: 0.5em,
-    ),
-  )
-}
-```
-```{=typst}
+<!-- ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social--Self"
-
-// Define the file name of the table
-#let file_qtbl = "table_emotion_child_self.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_emotion_child.svg"
-
-// Call the 'domain' function with the specified title, table file name, and figure file name
-#domain(title: [#title], file_qtbl, file_fig)
-```
-### PARENT RATINGS
-
-{{< include _02-10_emotion_child_text_parent.qmd >}}
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Merriweather", size: 0.7em)
-  set text(..font)
-  // Make all figure labels (Table X:, Figure X:) bold
-  show figure.caption: it => {
-    context {
-      let supplement = it.supplement
-      let counter = it.counter.display(it.numbering)
-      block[*#supplement #counter:* #it.body]
-    }
-  }  
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [Table],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [
-          Mood/Parent Report. Parent reports of behavioral and emotional problems in children and adolescents.
-          ],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [Figure],
-      gap: 0.5em,
-    ),
-  )
-}
-```
-```{=typst}
-// Define the title of the domain
-#let title = "Behavioral/Emotional/Social--Parent"
-
-// Define the file name of the table
-#let file_qtbl = "table_emotion_child_parent.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_emotion_parent.svg"
-
-// Call the 'domain' function with the specified title, table file name, and figure file name
-#domain(title: [#title], file_qtbl, file_fig)
-```
-### TEACHER RATINGS
-
-{{< include _02-10_emotion_child_text_teacher.qmd >}}
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Merriweather", size: 0.7em)
-  set text(..font)
-  // Make all figure labels (Table X:, Figure X:) bold
-  show figure.caption: it => {
-    context {
-      let supplement = it.supplement
-      let counter = it.counter.display(it.numbering)
-      block[*#supplement #counter:* #it.body]
-    }
-  }  
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [Table],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [
-          Mood/Teacher Report. Teacher reports of behavioral, emotional, academic, and social difficulties.
-          ],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [Figure],
-      gap: 0.5em,
-    ),
-  )
-}
-```
-```{=typst}
-// Define the title of the domain
-#let title = "Behavioral/Emotional/Social--Teacher"
+#let title = "Behavioral/Emotional/Social"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_teacher.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_emotion_teacher.svg"
+#let file_fig = "fig_emotion_subdomain_teacher.svg"
 
 // Call the 'domain' function with the specified title, table file name, and figure file name
 #domain(title: [#title], file_qtbl, file_fig)
-```
+``` -->

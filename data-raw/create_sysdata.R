@@ -78,7 +78,7 @@ safe_use_data_internal(
   plot_title_adhd_child = plot_title_adhd_child,
   plot_title_adhd_adult = plot_title_adhd_adult,
   plot_title_emotion_adult = plot_title_emotion_adult,
-  plot_title_emotion_adult = plot_title_emotion_child,
+  plot_title_emotion_child = plot_title_emotion_child,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
   overwrite = c(
@@ -92,7 +92,9 @@ safe_use_data_internal(
     "plot_title_motor",
     "plot_title_social",
     "plot_title_adhd_adult",
+    "plot_title_adhd_child",
     "plot_title_emotion_adult",
+    "plot_title_emotion_child",
     "plot_title_adaptive",
     "plot_title_daily_living"
   )
@@ -944,6 +946,9 @@ scales_adhd_child <- c(
   "ADHD Index"
 )
 
+
+## Emotion --------------------------------------------------------
+
 #' @name scales_emotion_adult
 #' @docType data
 #' @title Adult Emotional and Behavioral Scales
@@ -1133,6 +1138,9 @@ scales_emotion_child <- c(
   "Withdrawal"
 )
 
+
+## Adaptive ----------------------------------------------------------------
+
 #' @name scales_adaptive
 #' @docType data
 #' @title Adaptive Behavior Scales
@@ -1270,7 +1278,6 @@ safe_use_data_internal(
   )
 )
 
-
 #' Academic Achievement Plot Title
 #'
 #' @description
@@ -1388,16 +1395,91 @@ self-regulatory skills and have some common subprocesses; therefore, it is
 common to treat them together, or even to refer to both processes when talking
 about one or the other."
 
-#' Child Emotional and Behavioral Plot Title
+#' Child ADHD and Attention Plot Title
+#'
+#' @description
+#' Descriptive text for child ADHD domain plots explaining attention and
+#' executive functions as multidimensional, overlapping concepts.
+#'
+#' @docType data
+#' @name plot_title_adhd_child
+#' @format A character string
+#' @keywords internal data
+plot_title_adhd_child <- "Attention and executive functions are multidimensional
+concepts that contain several related processes. Both concepts require
+self-regulatory skills and have some common subprocesses; therefore, it is
+common to treat them together, or even to refer to both processes when talking
+about one or the other."
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_adhd_child = plot_title_adhd_child,
+  overwrite = c(
+    "plot_title_adhd_child"
+  )
+)
+
+## Emotion child ------------------------------------------------------
+
+#' Child Emotional and Behavioral Plot Title - Self
 #'
 #' @description
 #' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
 #'
 #' @docType data
-#' @name plot_title_emotion_child
+#' @name plot_title_emotion_child_self
 #' @format A character string
 #' @keywords internal data
-plot_title_emotion_child <- "Mood/Behavioral Reports. Self-, parent-, and teacher-reports of behavioral, emotional, and social difficulties."
+plot_title_emotion_child_self <- "Mood, Behavioral, and Social-Emotional Reports. Self-reports of behavioral, emotional, and social difficulties."
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_emotion_child_self = plot_title_emotion_child_self,
+  overwrite = c(
+    "plot_title_emotion_child_self",
+    add_only = TRUE
+  )
+)
+
+#' Child Emotional and Behavioral Plot Title - Parent
+#'
+#' @description
+#' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
+#'
+#' @docType data
+#' @name plot_title_emotion_child_parent
+#' @format A character string
+#' @keywords internal data
+plot_title_emotion_child_parent <- "Mood, Behavioral, and Social-Emotional Reports. Parent reports of behavioral, emotional, and social difficulties."
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_emotion_child_parent = plot_title_emotion_child_parent,
+  overwrite = c(
+    "plot_title_emotion_child_parent"
+  )
+)
+
+#' Child Emotional and Behavioral Plot Title - Teacher
+#'
+#' @description
+#' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
+#'
+#' @docType data
+#' @name plot_title_emotion_child_teacher
+#' @format A character string
+#' @keywords internal data
+plot_title_emotion_child_teacher <- "Mood, Behavioral, and Social-Emotional Reports. Teacher reports of behavioral, emotional, and social difficulties."
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
+  overwrite = c(
+    "plot_title_emotion_child_teacher"
+  )
+)
+
+## Emotion adult -----------------------------------------------------------
 
 #' Adult Emotional and Behavioral Plot Title
 #'
@@ -1409,8 +1491,9 @@ plot_title_emotion_child <- "Mood/Behavioral Reports. Self-, parent-, and teache
 #' @name plot_title_emotion_adult
 #' @format A character string
 #' @keywords internal data
-plot_title_emotion_adult <- "Emotional, behavioral, and personality scores
-collapsed across broad domains of functioning."
+plot_title_emotion_adult <- "Emotional, behavioral, and personality scores collapsed across broad domains of functioning."
+
+## Adaptive ----------------------------------------------------
 
 #' Adaptive Functioning Plot Title
 #'
@@ -1427,6 +1510,9 @@ collection of conceptual, social, and practical skills that enable individuals
 to function independently and meet the demands of everyday life. These skills
 include things like communication, self-care, home living, social skills, and
 community use."
+
+
+## Daily living ------------------------------------------------------------
 
 #' Daily Living Functions Plot Title
 #'
@@ -1453,7 +1539,9 @@ safe_use_data_internal(
   plot_title_social = plot_title_social,
   plot_title_adhd_child = plot_title_adhd_child,
   plot_title_adhd_adult = plot_title_adhd_adult,
-  plot_title_emotion_child = plot_title_emotion_child,
+  plot_title_emotion_child_self = plot_title_emotion_child_self,
+  plot_title_emotion_child_parent = plot_title_emotion_child_parent,
+  plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
   plot_title_emotion_adult = plot_title_emotion_adult,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
@@ -1597,7 +1685,7 @@ safe_use_data_internal(
   overwrite = c("domain_adhd_adult", "domain_adhd_child", "domain_emotion_adult", "domain_emotion_child")
 )
 
-# Lookup table - Neuropsych scales---------------------------------------------
+# Lookup tables ---------------------------------------------
 
 #' @name lookup_neuropsych_scales
 #' @docType data
@@ -1613,9 +1701,13 @@ safe_use_data_internal(
 lookup_neuropsych_scales <- readr::read_csv(
   "~/Dropbox/neuropsych_lookup_table.csv"
 )
-# usethis::use_data(lookup_table, internal = TRUE, overwrite = TRUE)
+#usethis::use_data(lookup_neuropsych_scales, internal = TRUE, overwrite = TRUE)
 
-# Lookup table - Test score ranges ---------------------------------------
+# For other data
+safe_use_data_internal(
+  lookup_neuropsych_scales = lookup_neuropsych_scales,
+   overwrite = c("lookup_neuropsych_scales")
+)
 
 # Lookup score ranges
 #' @name lookup_score_ranges
@@ -1641,7 +1733,6 @@ safe_use_data_internal(
   # lookup_score_conversions = lookup_score_conversions,
   overwrite = c("lookup_neuropsych_scales")
 )
-
 
 # Normative test data -----------------------------------------------------
 #' @name categories

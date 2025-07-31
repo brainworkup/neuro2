@@ -212,6 +212,7 @@ dotplot_narrow$create_plot()
   )
 }
 ```
+
 ```{=typst}
 // Define the title of the domain
 #let title = "General Cognitive Ability"
@@ -221,6 +222,20 @@ dotplot_narrow$create_plot()
 
 // Define the file name of the figure
 #let file_fig = "fig_iq_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "General Cognitive Ability"
+
+// Define the file name of the table
+#let file_qtbl = "table_iq.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_iq_narrow.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)

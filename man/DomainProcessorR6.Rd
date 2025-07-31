@@ -23,11 +23,13 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item{get_scales}{Get scale names for the specified phenotype.}
 \item{filter_by_test}{Filter data by test names for specific report types.}
 \item{generate_report}{Generate text reports for different report types.}
-\item{has_multiple_raters}{Check if domain has multiple raters (currently only emotion domain).}
-\item{get_rater_types}{Get rater types for the domain (self, parent, teacher).}
+\item{has_multiple_raters}{Check if domain has multiple raters (emotion and ADHD domains).}
+\item{detect_emotion_type}{Detect if this is a child or adult emotion domain.}
+\item{get_rater_types}{Get rater types for the domain (emotion child: self/parent/teacher; emotion adult: self only; ADHD: self/observer).}
 \item{check_rater_data_exists}{Check if rater-specific data files exist.}
 \item{generate_domain_qmd}{Generate domain QMD file with support for multi-rater domains.}
 \item{generate_emotion_child_qmd}{Generate emotion child domain QMD file with multiple raters.}
+\item{generate_emotion_adult_qmd}{Generate emotion adult domain QMD file with observer ratings.}
 \item{process}{Run the complete processing pipeline.}
 }
 }
@@ -66,12 +68,14 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-get_default_scales}{\code{DomainProcessorR6$get_default_scales()}}
 \item \href{#method-DomainProcessorR6-get_default_plot_titles}{\code{DomainProcessorR6$get_default_plot_titles()}}
 \item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
+\item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
 \item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
 }
 }
@@ -281,6 +285,19 @@ Logical indicating if domain has multiple raters.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-detect_emotion_type"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-detect_emotion_type}{}}}
+\subsection{Method \code{detect_emotion_type()}}{
+Detect if this is a child or adult emotion domain.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$detect_emotion_type()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Character string: "child", "adult", or NULL if not emotion domain.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-get_rater_types"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_types}{}}}
 \subsection{Method \code{get_rater_types()}}{
@@ -305,7 +322,7 @@ Check if rater-specific data files exist.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{rater_type}}{The rater type to check ("self", "parent", "teacher").}
+\item{\code{rater_type}}{The rater type to check ("self", "parent", "teacher", "observer").}
 }
 \if{html}{\out{</div>}}
 }
@@ -404,6 +421,28 @@ Invisibly returns self for method chaining.
 Generate emotion child domain QMD file with multiple raters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_adult_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_adult_qmd}{}}}
+\subsection{Method \code{generate_emotion_adult_qmd()}}{
+Generate emotion adult domain QMD file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_adult_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
