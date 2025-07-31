@@ -51,48 +51,22 @@ iq <- processor_iq$data
 #| include: false
 #| eval: true
 
-# Define the scales of interest
-scales <- c(
-  "Auditory Working Memory (AWMI)",
-  "Cognitive Proficiency (CPI)",
-  "Crystallized Knowledge",
-  "Fluid Reasoning (FRI)",
-  "Fluid Reasoning",
-  "Full Scale (FSIQ)",
-  "Full Scale IQ (FSIQ)",
-  "General Ability (GAI)",
-  "General Ability",
-  "General Intelligence",
-  "Global Neurocognitive Index (G)",
-  "NAB Attention Index",
-  "NAB Executive Functions Index",
-  "NAB Language Index",
-  "NAB Memory Index",
-  "NAB Spatial Index",
-  "NAB Total Index",
-  "Nonverbal (NVI)",
-  "Perceptual Reasoning (PRI)",
-  "Perceptual Reasoning",
-  "Processing Speed (PSI)",
-  "Processing Speed",
-  "RBANS Total Index",
-  "Test of Premorbid Functioning",
-  "TOPF Standard Score",
-  "Total NAB Index (T-NAB)",
-  "Verbal Comprehension (VCI)",
-  "Verbal Comprehension",
-  "Visual Perception/Construction",
-  "Visual Spatial (VSI)",
-  "Vocabulary Acquisition (VAI)",
-  "Word Reading",
-  "Working Memory (WMI)",
-  "Working Memory",
-  "Attention Index (ATT)",
-  "Language Index (LAN)",
-  "Spatial Index (SPT)",
-  "Memory Index (MEM)",
-  "Executive Functions Index (EXE)"
-)
+# Load internal data to get standardized scale names
+# The scales_iq object is available from the package's internal data
+# This ensures we always use the standardized 39 "g" scales
+if (!exists("scales_iq")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_iq from sysdata.rda. Please ensure the internal data file exists."
+    )
+  }
+}
+
+scales <- scales_iq
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -158,50 +132,31 @@ table_gt$save_table(tbl)
 #| include: false
 #| eval: true
 
-hawaii <- c(
-  "#8C0172",
-  "#8D126A",
-  "#8F1E62",
-  "#912859",
-  "#923152",
-  "#94394C",
-  "#944245",
-  "#964B3F",
-  "#965339",
-  "#995D33",
-  "#9A652E",
-  "#9B6F28",
-  "#9B7922",
-  "#9D841D",
-  "#9C901B",
-  "#9A9B1E",
-  "#97A727",
-  "#91B135",
-  "#8ABB46",
-  "#81C359",
-  "#7AC86B",
-  "#71CF7E",
-  "#69D592",
-  "#62DBA5",
-  "#5FE1B9",
-  "#61E6CC",
-  "#6EEADD",
-  "#82EFEB",
-  "#9AF1F6",
-  "#B2F2FD"
-)
-
-colors <- hawaii
-
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
   data = data_iq,
   x = "z_mean_subdomain",
   y = "subdomain",
-  colors = colors,
   filename = "fig_iq_subdomain.svg"
 )
 dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_iq"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_iq <- get(plot_title_var)
+} else {
+  plot_title_iq <- "General intelligence/general cognitive ability ..."
+}
+
 ```
 
 ```{r}
@@ -223,6 +178,16 @@ dotplot_narrow$create_plot()
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
+
+ // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -237,7 +202,7 @@ dotplot_narrow$create_plot()
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+        [`{r} plot_title_iq` #footnote[All scores in these figures have been standardized as z-scores.]],
       ),
       placement: none,
       kind: "image",

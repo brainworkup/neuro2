@@ -273,32 +273,32 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Try to load scales from internal data based on phenotype
       scale_var_name <- paste0("scales_", tolower(self$pheno))
-      
+
       # Check if the scale variable exists in the package's internal data
       if (exists(scale_var_name, envir = .GlobalEnv)) {
         scales <- get(scale_var_name, envir = .GlobalEnv)
         return(scales)
       }
-      
+
       # Try loading from sysdata.rda if not already available
       sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
       if (file.exists(sysdata_path)) {
         # Load into a temporary environment to avoid polluting global env
         temp_env <- new.env()
         load(sysdata_path, envir = temp_env)
-        
+
         if (exists(scale_var_name, envir = temp_env)) {
           scales <- get(scale_var_name, envir = temp_env)
           return(scales)
         }
       }
-      
+
       # If still not found, try alternative path (for development)
       dev_sysdata_path <- here::here("R", "sysdata.rda")
       if (file.exists(dev_sysdata_path)) {
         temp_env <- new.env()
         load(dev_sysdata_path, envir = temp_env)
-        
+
         if (exists(scale_var_name, envir = temp_env)) {
           scales <- get(scale_var_name, envir = temp_env)
           return(scales)
@@ -402,6 +402,40 @@ DomainProcessorR6 <- R6::R6Class(
     #'
     #' @return A string containing the default title for domain plots.
     get_default_plot_titles = function() {
+      # First try to load from sysdata.rda
+      plot_title_var <- paste0("plot_title_", tolower(self$pheno))
+      
+      # Check if the plot title variable exists in the global environment
+      if (exists(plot_title_var, envir = .GlobalEnv)) {
+        plot_title <- get(plot_title_var, envir = .GlobalEnv)
+        return(plot_title)
+      }
+      
+      # Try loading from sysdata.rda if not already available
+      sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
+      if (file.exists(sysdata_path)) {
+        temp_env <- new.env()
+        load(sysdata_path, envir = temp_env)
+        
+        if (exists(plot_title_var, envir = temp_env)) {
+          plot_title <- get(plot_title_var, envir = temp_env)
+          return(plot_title)
+        }
+      }
+      
+      # Try alternative path (for development)
+      dev_sysdata_path <- here::here("R", "sysdata.rda")
+      if (file.exists(dev_sysdata_path)) {
+        temp_env <- new.env()
+        load(dev_sysdata_path, envir = temp_env)
+        
+        if (exists(plot_title_var, envir = temp_env)) {
+          plot_title <- get(plot_title_var, envir = temp_env)
+          return(plot_title)
+        }
+      }
+      
+      # Fallback to hardcoded titles if not found in sysdata
       titles <- list(
         iq = "Intellectual and cognitive abilities represent an individual's capacity to think, reason, and solve problems.",
         academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
@@ -452,14 +486,31 @@ DomainProcessorR6 <- R6::R6Class(
         )
       }
 
-      # Process data for this domain if not already processed
-      if (is.null(self$data)) {
-        self$load_data()
-        self$filter_by_domain()
-        self$select_columns()
-      }
+      # Determine appropriate source note based on domain
+      source_notes <- list(
+        iq = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        academics = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        verbal = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        spatial = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        memory = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        executive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        motor = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        social = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        adhd = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+        emotion = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+        adaptive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+        daily_living = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+      )
 
-      # Generate QMD content
+      source_note <- source_notes[[tolower(self$pheno)]]
+      if (is.null(source_note)) {
+        source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+      }
+      
+      # Get the plot title for this domain
+      plot_title <- self$get_default_plot_titles()
+
+      # Generate complete QMD content following IQ template
       qmd_content <- paste0(
         "## ",
         domain_name,
@@ -471,11 +522,18 @@ DomainProcessorR6 <- R6::R6Class(
         "_",
         tolower(self$pheno),
         "_text.qmd >}}\n\n",
+
+        # Setup block
         "```{r}\n",
         "#| label: setup-",
         tolower(self$pheno),
         "\n",
         "#| include: false\n\n",
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGT_Modified.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\"",
         domain_name,
@@ -484,40 +542,254 @@ DomainProcessorR6 <- R6::R6Class(
         "pheno <- \"",
         tolower(self$pheno),
         "\"\n\n",
-        "# Read the data file into a data frame\n",
-        "file_ext <- tools::file_ext(\"",
-        self$input_file,
-        "\")\n",
-        "if (file_ext == \"parquet\") {\n",
-        "  # Check if arrow package is available\n",
-        "  if (!requireNamespace(\"arrow\", quietly = TRUE)) {\n",
-        "    stop(\"The 'arrow' package is required to read Parquet files.\")\n",
-        "  }\n",
-        "  ",
+        "# Create R6 processor\n",
+        "processor_",
         tolower(self$pheno),
-        " <- arrow::read_parquet(\"",
+        " <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
         self$input_file,
-        "\")\n",
-        "} else if (file_ext == \"feather\") {\n",
-        "  # Check if arrow package is available\n",
-        "  if (!requireNamespace(\"arrow\", quietly = TRUE)) {\n",
-        "    stop(\"The 'arrow' package is required to read Feather files.\")\n",
-        "  }\n",
-        "  ",
+        "\"\n",
+        ")\n\n",
+        "# Load and process data\n",
+        "processor_",
         tolower(self$pheno),
-        " <- arrow::read_feather(\"",
-        self$input_file,
-        "\")\n",
+        "$load_data()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$filter_by_domain()\n\n",
+        "# Create the data object with original name for compatibility\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n",
+        "```\n\n",
+
+        # Export block
+        "```{r}\n",
+        "#| label: export-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Process and export data using R6\n",
+        "processor_",
+        tolower(self$pheno),
+        "$select_columns()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$save_data()\n\n",
+        "# Update the original object\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n",
+        "```\n\n",
+
+        # Data block with dynamic scale loading
+        "```{r}\n",
+        "#| label: data-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Load internal data to get standardized scale names\n",
+        "# The scales_",
+        tolower(self$pheno),
+        " object is available from the package's internal data\n",
+        "if (!exists(\"scales_",
+        tolower(self$pheno),
+        "\")) {\n",
+        "  # Load from sysdata.rda\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  } else {\n",
+        "    stop(\n",
+        "      \"Could not load scales_",
+        tolower(self$pheno),
+        " from sysdata.rda. Please ensure the internal data file exists.\"\n",
+        "    )\n",
+        "  }\n",
+        "}\n\n",
+        "scales <- scales_",
+        tolower(self$pheno),
+        "\n\n",
+        "# Filter the data directly without using NeurotypR\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+        "# Apply the filter function\n",
+        "data_",
+        tolower(self$pheno),
+        " <- filter_data(data = ",
+        tolower(self$pheno),
+        ", domain = domains, scale = scales)\n",
+        "```\n\n",
+
+        # Text generation block
+        "```{r}\n",
+        "#| label: text-",
+        tolower(self$pheno),
+        "\n",
+        "#| cache: true\n",
+        "#| include: false\n\n",
+        "# Generate text using R6 class\n",
+        "results_processor <- NeuropsychResultsR6$new(\n",
+        "  data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "  file = \"_02-",
+        domain_num,
+        "_",
+        tolower(self$pheno),
+        "_text.qmd\"\n",
+        ")\n",
+        "results_processor$process()\n",
+        "```\n\n",
+
+        # Table block
+        "```{r}\n",
+        "#| label: qtbl-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Table parameters\n",
+        "table_name <- \"table_",
+        tolower(self$pheno),
+        "\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+        "# Create table using our modified TableGT_Modified R6 class\n",
+        "table_gt <- TableGT_Modified$new(\n",
+        "  data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = \"",
+        source_note,
+        "\",\n",
+        "  multiline = multiline\n",
+        ")\n\n",
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl)\n",
+        "```\n\n",
+
+        # Figure block (subdomain)
+        "```{r}\n",
+        "#| label: fig-",
+        tolower(self$pheno),
+        "-subdomain\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "dotplot_subdomain <- DotplotR6$new(\n",
+        "  data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "  x = \"z_mean_subdomain\",\n",
+        "  y = \"subdomain\",\n",
+        "  filename = \"fig_",
+        tolower(self$pheno),
+        "_subdomain.svg\"\n",
+        ")\n",
+        "dotplot_subdomain$create_plot()\n\n",
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_",
+        tolower(self$pheno),
+        "\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_",
+        tolower(self$pheno),
+        " <- get(plot_title_var)\n",
         "} else {\n",
-        "  # Default to CSV for other formats\n",
-        "  ",
+        "  plot_title_",
         tolower(self$pheno),
-        " <- readr::read_csv(\"",
-        self$input_file,
-        "\")\n",
+        " <- \"",
+        plot_title,
+        "\"\n",
         "}\n",
-        "```\n\n"
-        # ... additional content based on template
+        "```\n\n",
+
+        # Typst layout code
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n",
+        "\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n",
+        "\n",
+
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_", tolower(self$pheno), "`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_",
+        tolower(self$pheno),
+        ".png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_",
+        tolower(self$pheno),
+        "_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```"
       )
 
       # Write to file

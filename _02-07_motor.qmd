@@ -6,29 +6,189 @@
 #| label: setup-motor
 #| include: false
 
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_Modified.R")
+
 # Filter by domain
 domains <- c("Motor")
 
 # Target phenotype
 pheno <- "motor"
 
-# Read the data file into a data frame
-file_ext <- tools::file_ext("data/neurocog.parquet")
-if (file_ext == "parquet") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Parquet files.")
+# Create R6 processor
+processor_motor <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_motor$load_data()
+processor_motor$filter_by_domain()
+
+# Create the data object with original name for compatibility
+motor <- processor_motor$data
+```
+
+```{r}
+#| label: export-motor
+#| include: false
+#| eval: true
+
+# Process and export data using R6
+processor_motor$select_columns()
+processor_motor$save_data()
+
+# Update the original object
+motor <- processor_motor$data
+```
+
+```{r}
+#| label: data-motor
+#| include: false
+#| eval: true
+
+# Load internal data to get standardized scale names
+# The scales_motor object is available from the package's internal data
+if (!exists("scales_motor")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_motor from sysdata.rda. Please ensure the internal data file exists."
+    )
   }
-  motor <- arrow::read_parquet("data/neurocog.parquet")
-} else if (file_ext == "feather") {
-  # Check if arrow package is available
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("The 'arrow' package is required to read Feather files.")
+}
+
+scales <- scales_motor
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
   }
-  motor <- arrow::read_feather("data/neurocog.parquet")
-} else {
-  # Default to CSV for other formats
-  motor <- readr::read_csv("data/neurocog.parquet")
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_motor <- filter_data(data = motor, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-motor
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_motor,
+  file = "_02-07_motor_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-motor
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_motor"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Create table using our modified TableGT_Modified R6 class
+table_gt <- TableGT_Modified$new(
+  data = data_motor,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+  multiline = multiline
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl)
+```
+
+```{r}
+#| label: fig-motor-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_motor,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = "fig_motor_subdomain.svg"
+)
+dotplot_subdomain$create_plot()
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
 }
 ```
 
+```{=typst}
+// Define the title of the domain
+#let title = "Motor"
+
+// Define the file name of the table
+#let file_qtbl = "table_motor.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_motor_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)

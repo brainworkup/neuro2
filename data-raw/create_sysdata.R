@@ -1153,13 +1153,23 @@ plot_title_neurocognition <- "Neurocognitive Index evaluates cognitive functioni
 #' @name plot_title_iq
 #' @format A character string
 #' @keywords internal data
-plot_title_iq <- "_Premorbid Ability_ is an estimate of an individual's
+plot_title_iq <- "Premorbid Ability is an estimate of an individual's
 intellectual functioning prior to known or suspected onset of brain disease or
-dysfunction. _General Ability_ is the overall skill to reason, solve problems,
-and gain useful knowledge. _Crystallized Knowledge_ involves understanding the
-world through language and reasoning. _Fluid Reasoning_ is the logical analysis
+dysfunction. General Ability is the overall skill to reason, solve problems,
+and gain useful knowledge. Crystallized Knowledge involves understanding the
+world through language and reasoning. Fluid Reasoning is the logical analysis
 and solution of new problems, identifying underlying patterns, and applying
 logic."
+
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_iq = plot_title_iq,
+  overwrite = c(
+    "plot_title_iq"
+  )
+)
+
 
 #' Academic Achievement Plot Title
 #'
@@ -1171,7 +1181,7 @@ logic."
 #' @name plot_title_academics
 #' @format A character string
 #' @keywords internal data
-plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability_ consists of three interrelated abilities: decoding, comprehension, and fluency. _Writing ability_ can be described in terms of spelling, grammar, expression of ideas, and writing fluency. _Math ability_ can be described in terms of calculation skills, applied problem solving, and math fluency."
+plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
 
 #' Verbal and Language Functioning Plot Title
 #'
@@ -1317,7 +1327,7 @@ community use."
 #' @name plot_title_daily_living
 #' @format A character string
 #' @keywords internal data
-plot_title_daily_living <- "_Daily Living_ tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence."
+plot_title_daily_living <- "Daily Living tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence."
 
 # Using safe_use_data_internal instead of usethis::use_data
 safe_use_data_internal(

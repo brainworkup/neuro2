@@ -1,9 +1,9 @@
-## Visual Perception/Construction {#sec-spatial}
+## Verbal/Language {#sec-verbal}
 
-{{< include _02-04_spatial_text.qmd >}}
+{{< include _02-03_verbal_text.qmd >}}
 
 ```{r}
-#| label: setup-spatial
+#| label: setup-verbal
 #| include: false
 
 # Source R6 classes
@@ -13,59 +13,59 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Visual Perception/Construction")
+domains <- c("Verbal/Language")
 
 # Target phenotype
-pheno <- "spatial"
+pheno <- "verbal"
 
 # Create R6 processor
-processor_spatial <- DomainProcessorR6$new(
+processor_verbal <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_spatial$load_data()
-processor_spatial$filter_by_domain()
+processor_verbal$load_data()
+processor_verbal$filter_by_domain()
 
 # Create the data object with original name for compatibility
-spatial <- processor_spatial$data
+verbal <- processor_verbal$data
 ```
 
 ```{r}
-#| label: export-spatial
+#| label: export-verbal
 #| include: false
 #| eval: true
 
 # Process and export data using R6
-processor_spatial$select_columns()
-processor_spatial$save_data()
+processor_verbal$select_columns()
+processor_verbal$save_data()
 
 # Update the original object
-spatial <- processor_spatial$data
+verbal <- processor_verbal$data
 ```
 
 ```{r}
-#| label: data-spatial
+#| label: data-verbal
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_spatial object is available from the package's internal data
-if (!exists("scales_spatial")) {
+# The scales_verbal object is available from the package's internal data
+if (!exists("scales_verbal")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_spatial from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_verbal from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_spatial
+scales <- scales_verbal
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -83,35 +83,35 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_spatial <- filter_data(data = spatial, domain = domains, scale = scales)
+data_verbal <- filter_data(data = verbal, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-spatial
+#| label: text-verbal
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_spatial,
-  file = "_02-04_spatial_text.qmd"
+  data = data_verbal,
+  file = "_02-03_verbal_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-spatial
+#| label: qtbl-verbal
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_spatial"
+table_name <- "table_verbal"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_spatial,
+  data = data_verbal,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -127,18 +127,34 @@ table_gt$save_table(tbl)
 ```
 
 ```{r}
-#| label: fig-spatial-subdomain
+#| label: fig-verbal-subdomain
 #| include: false
 #| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_spatial,
+  data = data_verbal,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = "fig_spatial_subdomain.svg"
+  filename = "fig_verbal_subdomain.svg"
 )
 dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_verbal"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_verbal <- get(plot_title_var)
+} else {
+  plot_title_verbal <- "Verbal and language functioning refers to the ability to access and apply acquired word knowledge."
+}
 ```
 
 ```{=typst}
@@ -155,6 +171,7 @@ dotplot_subdomain$create_plot()
       block[*#supplement #counter:* #it.body]
     }
   }
+
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -169,7 +186,7 @@ dotplot_subdomain$create_plot()
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
+        [`{r} plot_title_verbal`],
       ),
       placement: none,
       kind: "image",
@@ -182,13 +199,14 @@ dotplot_subdomain$create_plot()
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Visual Perception/Construction"
+#let title = "Verbal/Language"
 
 // Define the file name of the table
-#let file_qtbl = "table_spatial.png"
+#let file_qtbl = "table_verbal.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_spatial_subdomain.svg"
+#let file_fig = "fig_verbal_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
+```
