@@ -44,8 +44,7 @@ library(tidyr)
 library(vroom)
 library(xfun)
 library(yaml)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Export PAI CSV file from PARiConnect
@@ -67,8 +66,8 @@ test <- params$test
 test_name <- params$test_name
 # file <- file.path(file.choose())
 file <- file.path(params$file)
-saveRDS(file, "pai.rds")
-# file <- readRDS("pai.rds")
+saveRDS(file, "pai_a.rds")
+# file <- readRDS("pai_a.rds")
 ```
 
 ## Import PAI CSV file from PARiConnect
@@ -228,7 +227,7 @@ df_clinical <- df_clinical |> dplyr::slice(
 ```{r mutate}
 # TODO: Probably delete pai df
 pai <-
-  NeurotypR::gpluck_make_columns(
+  gpluck_make_columns(
     data = pai,
     raw_score = "",
     range = "",
@@ -252,7 +251,7 @@ pai <-
 
 
 df_clinical <-
-  NeurotypR::gpluck_make_columns(
+  gpluck_make_columns(
     data = df_clinical,
     raw_score = "",
     range = "",
@@ -275,7 +274,7 @@ df_clinical <-
   )
 
 df_validity <-
-  NeurotypR::gpluck_make_columns(
+  gpluck_make_columns(
     data = df_validity,
     raw_score = "",
     range = "",
@@ -301,11 +300,11 @@ df_validity <-
 ## Rating Scale score ranges
 
 ```{r ranges}
-df_clinical <- NeurotypR::gpluck_make_score_ranges(
+df_clinical <- gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
 )
-df_validity <- NeurotypR::gpluck_make_score_ranges(
+df_validity <- gpluck_make_score_ranges(
   table = df_validity,
   test_type = "symptom_validity"
 )
@@ -679,7 +678,7 @@ df_validity <-
 #   pai |>
 #   dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
 
-df <-
+df_clinical <-
   df_clinical |>
   dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
 
@@ -693,21 +692,21 @@ df_validity <-
 ```{r writeout}
 # readr::write_csv(
 #   pai,
-#   here::here("data", "pai.csv"),
+#   here::here("data-csv", "csv", "pai_a.csv"),
 #   col_names = TRUE,
 #   na = ""
 # )
 
 readr::write_excel_csv(
   df_clinical,
-  here::here("data", "csv", "pai_clinical.csv"),
+  here::here("data-csv", "csv", "pai_a_clinical.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_excel_csv(
   df_validity,
-  here::here("data", "csv", "pai_validity.csv"),
+  here::here("data", "csv", "pai_a_validity.csv"),
   col_names = TRUE,
   na = ""
 )
@@ -738,6 +737,6 @@ pai_text_squished <-
 pai_text_squished
 
 # save
-readr::write_lines(pai_text_squished, here::here("pai_text_squished.md"), sep = "\n")
-readr::write_lines(pai_text_squished, here::here("pai_text_squished.txt"), sep = "\n")
+readr::write_lines(pai_text_squished, here::here("pai_a_text_squished.md"), sep = "\n")
+readr::write_lines(pai_text_squished, here::here("pai_a_text_squished.txt"), sep = "\n")
 ```

@@ -1,7 +1,7 @@
 ## Behavioral/Emotional/Social {#sec-emotion-child}
 
 ```{r}
-#| label: setup-emotion-child
+#| label: setup-emotion
 #| include: false
 
 # Source R6 classes
@@ -20,7 +20,7 @@ pheno <- "emotion"
 processor_emotion <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
-  input_file = "data/neurobehav.parquet"
+  input_file = ""
 )
 
 # Load and process data
@@ -32,7 +32,7 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: export-emotion-child
+#| label: export-emotion
 #| include: false
 #| eval: true
 
@@ -45,25 +45,25 @@ emotion <- processor_emotion$data
 ```
 
 ```{r}
-#| label: data-emotion-child
+#| label: data-emotion
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_emotion_child object is available from the package's internal data
-if (!exists("scales_emotion_child")) {
+# The scales_emotion object is available from the package's internal data
+if (!exists("scales_emotion")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_emotion_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_emotion from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_emotion_child
+scales <- scales_emotion
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -231,7 +231,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -262,7 +262,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -293,7 +293,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_emotion <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -369,7 +369,7 @@ if (exists(plot_title_var)) {
       caption: figure.caption(
         position: bottom,
         [
-          Mood/Child Self-Report. Self-report of behavioral, emotional, and social difficulties.
+          Mood/Child Self-Report. Self-report of behavioral and emotional, and social difficulties.
           ],
       ),
       placement: none,
@@ -426,7 +426,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Parent Report. Parent reports of behavioral and emotional problems in children and adolescents.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
@@ -449,7 +449,6 @@ if (exists(plot_title_var)) {
 // Call the 'domain' function with the specified title, table file name, and figure file name
 #domain(title: [#title], file_qtbl, file_fig)
 ```
-
 ### TEACHER RATINGS
 
 {{< include _02-10_emotion_child_text_teacher.qmd >}}
@@ -466,7 +465,7 @@ if (exists(plot_title_var)) {
       let counter = it.counter.display(it.numbering)
       block[*#supplement #counter:* #it.body]
     }
-  }
+  }  
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -483,7 +482,7 @@ if (exists(plot_title_var)) {
         position: bottom,
         [
           Mood/Teacher Report. Teacher reports of behavioral, emotional, academic, and social difficulties.
-                  ],
+          ],
       ),
       placement: none,
       kind: "image",
