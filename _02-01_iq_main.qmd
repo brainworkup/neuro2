@@ -1,9 +1,9 @@
-## ADHD {#sec-adhd_adult}
+## General Cognitive Ability {#sec-iq}
 
-{{< include _02-09_adhd_adult_text.qmd >}}
+{{< include _02-01_iq_text.qmd >}}
 
 ```{r}
-#| label: setup-adhd_adult
+#| label: setup-iq
 #| include: false
 
 # Source R6 classes
@@ -13,64 +13,86 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("ADHD")
+domains <- c("General Cognitive Ability")
 
 # Target phenotype
-pheno <- "adhd_adult"
+pheno <- "iq"
 
 # Create R6 processor
-processor_adhd_adult <- DomainProcessorR6$new(
+processor_iq <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
-  input_file = "data/neurobehav.parquet" # Note: Using neurobehav instead of neurocog
+  input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_adhd_adult$load_data()
-processor_adhd_adult$filter_by_domain()
+processor_iq$load_data()
+processor_iq$filter_by_domain()
 
 # Create the data object with original name for compatibility
-adhd_adult <- processor_adhd_adult$data
+iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: export-adhd_adult
+#| label: export-iq
 #| include: false
 #| eval: true
 
 # Process and export data using R6
-processor_adhd_adult$select_columns()
-processor_adhd_adult$save_data()
+processor_iq$select_columns()
+processor_iq$save_data()
 
 # Update the original object
-adhd_adult <- processor_adhd_adult$data
+iq <- processor_iq$data
 ```
 
 ```{r}
-#| label: data-adhd_adult
+#| label: data-iq
 #| include: false
 #| eval: true
 
-# Load internal data to get standardized scale names
-# The scales_adhd_adult object is available from the package's internal data
-# This ensures we always use the standardized 44 ADHD scales
-if (!exists("scales_adhd_adult")) {
-  # Load from sysdata.rda
-  sysdata_path <- here::here("R", "sysdata.rda")
-  if (file.exists(sysdata_path)) {
-    load(sysdata_path)
-  } else {
-    stop("Could not load scales_adhd_adult from sysdata.rda. Please ensure the internal data file exists.")
-  }
-}
-
-# Use the standardized scales from internal data
-# This provides all 44 ADHD-related scales including:
-# - BROWN EF/A scales (Activation, Focus, Effort, Emotion, Memory, Action)
-# - CAARS scales (various ADHD indices and symptom scales)
-# - CEFI scales (executive function scales)
-# - And other standardized ADHD assessment scales
-scales <- scales_adhd_adult
+# Define the scales of interest
+scales <- c(
+  "Auditory Working Memory (AWMI)",
+  "Cognitive Proficiency (CPI)",
+  "Crystallized Knowledge",
+  "Fluid Reasoning (FRI)",
+  "Fluid Reasoning",
+  "Full Scale (FSIQ)",
+  "Full Scale IQ (FSIQ)",
+  "General Ability (GAI)",
+  "General Ability",
+  "General Intelligence",
+  "Global Neurocognitive Index (G)",
+  "NAB Attention Index",
+  "NAB Executive Functions Index",
+  "NAB Language Index",
+  "NAB Memory Index",
+  "NAB Spatial Index",
+  "NAB Total Index",
+  "Nonverbal (NVI)",
+  "Perceptual Reasoning (PRI)",
+  "Perceptual Reasoning",
+  "Processing Speed (PSI)",
+  "Processing Speed",
+  "RBANS Total Index",
+  "Test of Premorbid Functioning",
+  "TOPF Standard Score",
+  "Total NAB Index (T-NAB)",
+  "Verbal Comprehension (VCI)",
+  "Verbal Comprehension",
+  "Visual Perception/Construction",
+  "Visual Spatial (VSI)",
+  "Vocabulary Acquisition (VAI)",
+  "Word Reading",
+  "Working Memory (WMI)",
+  "Working Memory",
+  "Attention Index (ATT)",
+  "Language Index (LAN)",
+  "Spatial Index (SPT)",
+  "Memory Index (MEM)",
+  "Executive Functions Index (EXE)"
+)
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -88,43 +110,39 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_adhd_adult <- filter_data(
-  data = adhd_adult,
-  domain = domains,
-  scale = scales
-)
+data_iq <- filter_data(data = iq, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-adhd_adult
+#| label: text-iq
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_adhd_adult,
-  file = "_02-09_adhd_adult_text.qmd"
+  data = data_iq,
+  file = "_02-01_iq_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-adhd_adult
+#| label: qtbl-iq
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_adhd_adult"
+table_name <- "table_iq"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_adhd_adult,
+  data = data_iq,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]", # Note: Changed to T-score
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
 
@@ -136,29 +154,70 @@ table_gt$save_table(tbl)
 ```
 
 ```{r}
-#| label: fig-adhd_adult-subdomain
+#| label: fig-iq-subdomain
 #| include: false
 #| eval: true
 
+hawaii <- c(
+  "#8C0172",
+  "#8D126A",
+  "#8F1E62",
+  "#912859",
+  "#923152",
+  "#94394C",
+  "#944245",
+  "#964B3F",
+  "#965339",
+  "#995D33",
+  "#9A652E",
+  "#9B6F28",
+  "#9B7922",
+  "#9D841D",
+  "#9C901B",
+  "#9A9B1E",
+  "#97A727",
+  "#91B135",
+  "#8ABB46",
+  "#81C359",
+  "#7AC86B",
+  "#71CF7E",
+  "#69D592",
+  "#62DBA5",
+  "#5FE1B9",
+  "#61E6CC",
+  "#6EEADD",
+  "#82EFEB",
+  "#9AF1F6",
+  "#B2F2FD"
+)
+
+colors <- hawaii
+
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_adhd_adult,
+  data = data_iq,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = "fig_adhd_adult_subdomain.svg"
+  colors = colors,
+  filename = "fig_iq_subdomain.svg"
 )
 dotplot_subdomain$create_plot()
 ```
 
-### Self-Report
+```{r}
+#| label: fig-iq-narrow
+#| include: false
 
-{{< include _02-09_adhd_adult_text_self.qmd >}}
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_iq,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = "fig_iq_narrow.svg"
+)
+dotplot_narrow$create_plot()
+```
 
-### Observer Report
-
-{{< include _02-09_adhd_adult_text_observer.qmd >}}
-
-::: {.typst-code}
 ```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
@@ -188,20 +247,16 @@ dotplot_subdomain$create_plot()
   )
 }
 ```
-:::
-
-::: {.typst-code}
 ```{=typst}
 // Define the title of the domain
-#let title = "ADHD"
+#let title = "General Cognitive Ability"
 
 // Define the file name of the table
-#let file_qtbl = "table_adhd_adult.png"
+#let file_qtbl = "table_iq.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_adhd_adult_subdomain.svg"
+#let file_fig = "fig_iq_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
-:::

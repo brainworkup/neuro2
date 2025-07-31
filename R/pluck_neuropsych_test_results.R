@@ -1583,9 +1583,6 @@ process_rbans_unified <- function(
     }
   }
 
-  # Import required packages
-  `%>%` <- dplyr::`%>%`
-
   # Print debug info
   if (debug) {
     cat("=== RBANS Unified Processor ===\n")
@@ -1646,20 +1643,15 @@ process_rbans_unified <- function(
     }
 
     # Create a filtered data frame with the rows we want
-    filtered_df <- df %>%
-      dplyr::slice(start:stop) %>%
+    filtered_df <- df |>
+      dplyr::slice(start:stop) |>
       dplyr::filter(stringr::str_detect(X1, fixed(test_prefix)))
 
     # Create a temporary column for separation
-    filtered_df <- filtered_df %>%
-      dplyr::mutate(tmp = X1) %>%
-      tidyr::separate(
-        .data$tmp,
-        into = col_names,
-        sep = ",",
-        fill = "right"
-      ) %>%
-      dplyr::select(dplyr::all_of(col_names)) %>%
+    filtered_df <- filtered_df |>
+      dplyr::mutate(tmp = X1) |>
+      tidyr::separate(.data$tmp, into = col_names, sep = ",", fill = "right") |>
+      dplyr::select(dplyr::all_of(col_names)) |>
       # Clean up whitespace in columns
       dplyr::mutate(across(everything(), ~ stringr::str_trim(.)))
 
@@ -1686,15 +1678,15 @@ process_rbans_unified <- function(
     stop_line <- scaled_scores_section[1] - 1
 
     # Extract the raw scores section
-    raw_scores_df <- df %>%
-      dplyr::slice(start_line:stop_line) %>%
-      dplyr::rename(Subtest = X1, dummy = X2, raw_score = X3) %>%
+    raw_scores_df <- df |>
+      dplyr::slice(start_line:stop_line) |>
+      dplyr::rename(Subtest = X1, dummy = X2, raw_score = X3) |>
       dplyr::select(Subtest, raw_score)
 
     # Filter for RBANS entries
-    raw_scores <- raw_scores_df %>%
-      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
-      dplyr::rename(scale = Subtest) %>%
+    raw_scores <- raw_scores_df |>
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) |>
+      dplyr::rename(scale = Subtest) |>
       dplyr::mutate(
         scale = stringr::str_remove(scale, fixed(test_prefix)),
         scale = stringr::str_trim(scale),
@@ -1724,15 +1716,15 @@ process_rbans_unified <- function(
     stop_line <- contextual_events_section[1] - 1
 
     # Extract the scaled scores section
-    scaled_scores_df <- df %>%
-      dplyr::slice(start_line:stop_line) %>%
-      dplyr::rename(Subtest = X1, dummy = X2, score = X3) %>%
+    scaled_scores_df <- df |>
+      dplyr::slice(start_line:stop_line) |>
+      dplyr::rename(Subtest = X1, dummy = X2, score = X3) |>
       dplyr::select(Subtest, score)
 
     # Filter for RBANS entries
-    scaled_scores <- scaled_scores_df %>%
-      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
-      dplyr::rename(scale = Subtest) %>%
+    scaled_scores <- scaled_scores_df |>
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) |>
+      dplyr::rename(scale = Subtest) |>
       dplyr::mutate(
         scale = stringr::str_remove(scale, fixed(test_prefix)),
         scale = stringr::str_trim(scale),
@@ -1764,15 +1756,15 @@ process_rbans_unified <- function(
     stop_line <- rules_triggered_section[1] - 1
 
     # Extract the completion times section
-    times_df <- df %>%
-      dplyr::slice(start_line:stop_line) %>%
-      dplyr::rename(Subtest = X1, dummy = X2, completion_time = X3) %>%
+    times_df <- df |>
+      dplyr::slice(start_line:stop_line) |>
+      dplyr::rename(Subtest = X1, dummy = X2, completion_time = X3) |>
       dplyr::select(Subtest, completion_time)
 
     # Filter for RBANS entries
-    times <- times_df %>%
-      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) %>%
-      dplyr::rename(scale = Subtest) %>%
+    times <- times_df |>
+      dplyr::filter(stringr::str_starts(Subtest, fixed(test_prefix))) |>
+      dplyr::rename(scale = Subtest) |>
       dplyr::mutate(
         scale = stringr::str_remove(scale, fixed(test_prefix)),
         scale = stringr::str_trim(scale),
@@ -1803,8 +1795,8 @@ process_rbans_unified <- function(
     }
 
     # Extract the composite scores section - skip the header row (start_line + 2)
-    composites_df <- df %>%
-      dplyr::slice((start_line + 2):nrow(df)) %>%
+    composites_df <- df |>
+      dplyr::slice((start_line + 2):nrow(df)) |>
       dplyr::filter(stringr::str_starts(X1, fixed(test_prefix)))
 
     if (debug) {
@@ -1818,8 +1810,8 @@ process_rbans_unified <- function(
     if (nrow(composites_df) > 0) {
       # Extract the composite scores correctly based on the file format
       # The X3 column contains comma-separated values: percentile,ci_90_lo,ci_90_up,ci_95_lower,ci_95_upper
-      composites <- composites_df %>%
-        dplyr::rename(scale = X1, score = X2) %>%
+      composites <- composites_df |>
+        dplyr::rename(scale = X1, score = X2) |>
         tidyr::separate(
           X3,
           sep = ",",
@@ -1831,8 +1823,8 @@ process_rbans_unified <- function(
             "ci_95_upper"
           ),
           fill = "right"
-        ) %>%
-        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) %>%
+        ) |>
+        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) |>
         dplyr::mutate(
           scale = stringr::str_remove(scale, fixed(test_prefix)),
           scale = stringr::str_trim(scale),
@@ -1852,7 +1844,7 @@ process_rbans_unified <- function(
     }
   } else {
     # Fallback to searching for Index or Total Scale in the entire file
-    composites_df <- df %>%
+    composites_df <- df |>
       dplyr::filter(
         stringr::str_starts(X1, fixed(test_prefix)) &
           stringr::str_detect(X1, "Index|Total Scale")
@@ -1869,8 +1861,8 @@ process_rbans_unified <- function(
     if (nrow(composites_df) > 0) {
       # Extract the composite scores using the same approach
       # The X3 column contains comma-separated values: percentile,ci_90_lo,ci_90_up,ci_95_lower,ci_95_upper
-      composites <- composites_df %>%
-        dplyr::rename(scale = X1, score = X2) %>%
+      composites <- composites_df |>
+        dplyr::rename(scale = X1, score = X2) |>
         tidyr::separate(
           X3,
           sep = ",",
@@ -1882,8 +1874,8 @@ process_rbans_unified <- function(
             "ci_95_upper"
           ),
           fill = "right"
-        ) %>%
-        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) %>%
+        ) |>
+        dplyr::select(scale, score, percentile, ci_95_lower, ci_95_upper) |>
         dplyr::mutate(
           scale = stringr::str_remove(scale, fixed(test_prefix)),
           scale = stringr::str_trim(scale),
@@ -1909,8 +1901,8 @@ process_rbans_unified <- function(
 
   # 4) Combine extracted data and any manual entries
   # First combine raw_scores, scaled_scores, and times
-  combined <- raw_scores %>%
-    dplyr::full_join(scaled_scores, by = "scale") %>%
+  combined <- raw_scores |>
+    dplyr::full_join(scaled_scores, by = "scale") |>
     dplyr::full_join(times, by = "scale")
 
   if (debug) {
@@ -1932,9 +1924,9 @@ process_rbans_unified <- function(
 
   # Then join with composites, coalescing the score columns
   # Make sure we're joining on the correct scale names
-  combined <- combined %>%
-    dplyr::full_join(composites, by = "scale") %>%
-    dplyr::mutate(score = dplyr::coalesce(score.x, score.y)) %>%
+  combined <- combined |>
+    dplyr::full_join(composites, by = "scale") |>
+    dplyr::mutate(score = dplyr::coalesce(score.x, score.y)) |>
     dplyr::select(-dplyr::any_of(c("score.x", "score.y")))
 
   if (debug) {
@@ -1942,7 +1934,7 @@ process_rbans_unified <- function(
     cat("Combined data has", nrow(combined), "rows\n")
 
     # Check if composite scores are in the combined data
-    composite_rows <- combined %>%
+    composite_rows <- combined |>
       dplyr::filter(stringr::str_detect(scale, "Index|Total Scale"))
 
     cat("Found", nrow(composite_rows), "composite rows in combined data\n")
@@ -1961,13 +1953,13 @@ process_rbans_unified <- function(
 
   # Add manual entries if provided
   if (!is.null(manual_entries)) {
-    combined <- combined %>%
-      dplyr::bind_rows(manual_entries) %>%
+    combined <- combined |>
+      dplyr::bind_rows(manual_entries) |>
       dplyr::distinct(scale, .keep_all = TRUE)
   }
 
   # 5) Clean up scale names to match metadata
-  combined <- combined %>%
+  combined <- combined |>
     dplyr::mutate(
       original_scale_name = scale,
       scale = stringr::str_remove(scale, fixed(test_prefix)),
@@ -1997,20 +1989,20 @@ process_rbans_unified <- function(
     )
 
   # 6) Recompute missing percentiles from scaled_score (z = (x - 10) / 3)
-  combined <- combined %>%
+  combined <- combined |>
     dplyr::mutate(
       z = (as.numeric(score) - 10) / 3,
       percentile = dplyr::coalesce(
         as.numeric(percentile),
         round(pnorm(z) * 100)
       )
-    ) %>%
+    ) |>
     dplyr::select(-z)
 
   # 7) Apply manual percentile overrides
   if (!is.null(manual_percentiles)) {
     for (scale_name in names(manual_percentiles)) {
-      combined <- combined %>%
+      combined <- combined |>
         dplyr::mutate(
           percentile = dplyr::if_else(
             scale == scale_name,
@@ -2038,8 +2030,8 @@ process_rbans_unified <- function(
   }
 
   # Filter the lookup table for RBANS entries and rename scales according to the provided mapping
-  metadata <- lookup_neuropsych_scales %>%
-    dplyr::filter(test == "rbans") %>%
+  metadata <- lookup_neuropsych_scales |>
+    dplyr::filter(test == "rbans") |>
     # Rename scales to match the expected names in the input file
     dplyr::mutate(
       scale = dplyr::case_when(
@@ -2067,21 +2059,21 @@ process_rbans_unified <- function(
     )
 
   # 9) Ensure metadata has unique scale values
-  metadata <- metadata %>%
-    dplyr::group_by(scale) %>%
-    dplyr::slice(1) %>%
+  metadata <- metadata |>
+    dplyr::group_by(scale) |>
+    dplyr::slice(1) |>
     dplyr::ungroup()
 
-  combined <- combined %>%
-    dplyr::left_join(metadata, by = "scale") %>%
+  combined <- combined |>
+    dplyr::left_join(metadata, by = "scale") |>
     # Ensure we have unique rows after joining
-    dplyr::distinct(scale, .keep_all = TRUE) %>%
+    dplyr::distinct(scale, .keep_all = TRUE) |>
     # Fix absort column duplication
-    dplyr::mutate(absort = dplyr::coalesce(absort.x, absort.y)) %>%
+    dplyr::mutate(absort = dplyr::coalesce(absort.x, absort.y)) |>
     dplyr::select(-dplyr::any_of(c("absort.x", "absort.y")))
 
   # 10) Add test metadata columns and fix test_type and score_type for composite scores
-  combined <- combined %>%
+  combined <- combined |>
     dplyr::mutate(
       test = "rbans",
       test_name = "RBANS Update Form A",
@@ -2097,7 +2089,7 @@ process_rbans_unified <- function(
     )
 
   # 11) Create a summary with performance levels
-  summary_data <- combined %>%
+  summary_data <- combined |>
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
@@ -2144,7 +2136,7 @@ process_rbans_unified <- function(
 
         TRUE ~ "Not Available"
       )
-    ) %>%
+    ) |>
     dplyr::select(
       scale,
       test_name,
@@ -2212,10 +2204,10 @@ process_rbans_unified <- function(
 #' @export
 create_rbans_summary <- function(rbans_data, output_file = NULL) {
   # Ensure we have unique rows by scale before creating summary
-  rbans_data <- rbans_data %>% dplyr::distinct(scale, .keep_all = TRUE)
+  rbans_data <- rbans_data |> dplyr::distinct(scale, .keep_all = TRUE)
 
   # Create summary with performance levels
-  summary_report <- rbans_data %>%
+  summary_report <- rbans_data |>
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
@@ -2262,7 +2254,7 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
 
         TRUE ~ "Not Available"
       )
-    ) %>%
+    ) |>
     dplyr::select(
       scale,
       test_name,

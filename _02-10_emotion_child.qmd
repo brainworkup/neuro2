@@ -1,4 +1,4 @@
-## Personality Disorders {#sec-emotion}
+## Psychosocial Problems {#sec-emotion}
 
 {{< include _02-10_emotion_text.qmd >}}
 
@@ -7,7 +7,7 @@
 #| include: false
 
 # Filter by domain
-domains <- c("Personality Disorders")
+domains <- c("Psychosocial Problems")
 
 # Target phenotype
 pheno <- "emotion"

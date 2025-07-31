@@ -39,7 +39,7 @@ r6_files <- c(
   "R/DrilldownR6.R",
   "R/DuckDBProcessorR6.R",
   "R/ReportUtilitiesR6.R",
-  "R/TableGT.R",
+  "R/TableGT_Modified.R",
   "R/TemplateContentManagerR6.R"
 )
 
@@ -271,7 +271,7 @@ if (length(csv_files) == 0) {
 # Check only for essential template files that should already exist
 # Other template files will be copied by the WorkflowRunner later
 qmd_files <- c(
-  "template.qmd"  # Only check for the main template file
+  "template.qmd" # Only check for the main template file
 )
 
 message("\nChecking for essential template files...")
@@ -280,7 +280,9 @@ for (file in qmd_files) {
     message(paste0("✓ Found template file: ", file))
   } else {
     message(paste0("⚠️ Essential template file not found: ", file))
-    message("  This file is required and should be created before running the workflow.")
+    message(
+      "  This file is required and should be created before running the workflow."
+    )
   }
 }
 

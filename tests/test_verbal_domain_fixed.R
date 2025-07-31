@@ -16,7 +16,7 @@ library(duckdb)
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT.R")
+source("R/TableGT_Modified.R")
 
 cat("Testing Verbal/Language Domain Processing\n")
 cat("=========================================\n\n")
@@ -105,9 +105,9 @@ processor_verbal$data <- processor_verbal$data %>% select(all_of(existing_cols))
 cat("   ✓ Data processed with", ncol(processor_verbal$data), "columns\n\n")
 
 # Test 3: Generate table
-cat("3. Generating table with TableGT...\n")
+cat("3. Generating table with TableGT_Modified...\n")
 
-table_gt <- TableGT$new(
+table_gt <- TableGT_Modified$new(
   data = processor_verbal$data,
   pheno = "verbal",
   table_name = "test_verbal_table",

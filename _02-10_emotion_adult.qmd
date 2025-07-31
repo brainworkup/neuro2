@@ -132,7 +132,7 @@ table_name <- "table_emotion_adult"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using our modified TableGT R6 class
+# Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
   data = data_emotion_adult,
   pheno = pheno,

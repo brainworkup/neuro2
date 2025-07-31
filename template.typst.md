@@ -306,6 +306,25 @@ Index of cognitive processing proficiency that reduces crystallized knowledge ve
 
 Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
 
+Verbal Comprehension (i.e., the ability to verbalize meaningful concepts, think about verbal information, and express oneself using words) fell within the High Average and ranked at the 88th percentile. This indicates performance as good as or better than 88% of same-age peers from the general population.
+
+A subset of intellectual functioning with reduced influences of working memory and processing speed fell within the Average and ranked at the 61th percentile. This indicates performance as good as or better than 61% of same-age peers from the general population.
+
+Ethan's score on RBANS Total Index (composite indicator of general cognitive functioning) was Average.
+Fluid Reasoning (i.e., the ability to use reasoning to identify and apply solutions to problems) fell within the Average and ranked at the 42th percentile. This indicates performance as good as or better than 42% of same-age peers from the general population.
+
+General intellectual ability fell within the Average and ranked at the 39th percentile. This indicates performance as good as or better than 39% of same-age peers from the general population.
+
+The patient's ability to evaluate visual details understand spatial relations among objects and construct geometric design using models fell within the Low Average and ranked at the 23th percentile. This indicates performance as good as or better than 23% of same-age peers from the general population.
+
+Working memory (i.e., the ability to consciously register maintain and manipulate auditory and visual information) fell within the Low Average and ranked at the 21th percentile. This indicates performance as good as or better than 21% of same-age peers from the general population.
+
+General intellectual functioning that minimizes expressive language demands fell within the Low Average and ranked at the 19th percentile. This indicates performance as good as or better than 19% of same-age peers from the general population.
+
+Index of cognitive processing proficiency that reduces crystallized knowledge verbal reasoning and fluid reasoning demands fell within the Below Average and ranked at the 8th percentile. This indicates performance as good as or better than 8% of same-age peers from the general population.
+
+Ability to quickly use reasoning to identify and apply solutions to problems fell within the Below Average and ranked at the 6th percentile. This indicates performance as good as or better than 6% of same-age peers from the general population.
+
 
 
 
@@ -313,229 +332,43 @@ Ability to quickly use reasoning to identify and apply solutions to problems fel
 #| label: setup-iq
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("General Cognitive Ability")
 
 # Target phenotype
 pheno <- "iq"
 
-# Create R6 processor
-processor_iq <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_iq$load_data()
-processor_iq$filter_by_domain()
-
-# Create the data object with original name for compatibility
-iq <- processor_iq$data
-```
-
-```{r}
-#| label: export-iq
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_iq$select_columns()
-processor_iq$save_data()
-
-# Update the original object
-iq <- processor_iq$data
-```
-
-```{r}
-#| label: data-iq
-#| include: false
-#| eval: true
-
-# Define the scales of interest
-scales <- c(
-  "Auditory Working Memory (AWMI)",
-  "Cognitive Proficiency (CPI)",
-  "Crystallized Knowledge",
-  "Fluid Reasoning (FRI)",
-  "Fluid Reasoning",
-  "Full Scale (FSIQ)",
-  "Full Scale IQ (FSIQ)",
-  "General Ability (GAI)",
-  "General Ability",
-  "General Intelligence",
-  "Global Neurocognitive Index (G)",
-  "NAB Attention Index",
-  "NAB Executive Functions Index",
-  "NAB Language Index",
-  "NAB Memory Index",
-  "NAB Spatial Index",
-  "NAB Total Index",
-  "Nonverbal (NVI)",
-  "Perceptual Reasoning (PRI)",
-  "Perceptual Reasoning",
-  "Processing Speed (PSI)",
-  "Processing Speed",
-  "RBANS Total Index",
-  "Test of Premorbid Functioning",
-  "TOPF Standard Score",
-  "Total NAB Index (T-NAB)",
-  "Verbal Comprehension (VCI)",
-  "Verbal Comprehension",
-  "Visual Perception/Construction",
-  "Visual Spatial (VSI)",
-  "Vocabulary Acquisition (VAI)",
-  "Word Reading",
-  "Working Memory (WMI)",
-  "Working Memory",
-  "Attention Index (ATT)",
-  "Language Index (LAN)",
-  "Spatial Index (SPT)",
-  "Memory Index (MEM)",
-  "Executive Functions Index (EXE)"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  iq <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_iq <- filter_data(data = iq, domain = domains, scale = scales)
-```
-
-```{r}
-#| label: text-iq
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_iq,
-  file = "_02-01_iq_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-iq
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_iq"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_iq,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-iq-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_iq,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_iq_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{r}
-#| label: fig-iq-narrow
-#| include: false
-
-# Create narrow plot using R6 DotplotR6
-dotplot_narrow <- DotplotR6$new(
-  data = data_iq,
-  x = "z_mean_narrow",
-  y = "narrow",
-  filename = "fig_iq_narrow.svg"
-)
-dotplot_narrow$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  iq <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  iq <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "General Cognitive Ability"
-
-// Define the file name of the table
-#let file_qtbl = "table_iq.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_iq_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
-```
 
 
 ## Academic Skills {#sec-academics}
 
+Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population.
+Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
+Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
+Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
+Paper-and-pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
 Spontaneous writing fluency at the discourse level fell within the Average and ranked at the 42th percentile, indicating performance as good as or better than 42% of same-age peers from the general population.
 Written spelling of words from dictations fell within the Low Average and ranked at the 14th percentile, indicating performance as good as or better than 14% of same-age peers from the general population.
 Single word reading/decoding of a list of regular and irregular words fell within the Low Average and ranked at the 12th percentile, indicating performance as good as or better than 12% of same-age peers from the general population.
@@ -547,195 +380,51 @@ Paper-and-pencil math calculation skills, ranging from basic operations with int
 #| label: setup-academics
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("Academic Skills")
 
 # Target phenotype
 pheno <- "academics"
 
-# Create R6 processor
-processor_academics <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_academics$load_data()
-processor_academics$filter_by_domain()
-
-# Create the data object with original name for compatibility
-academics <- processor_academics$data
-```
-
-```{r}
-#| label: export-academics
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_academics$select_columns()
-processor_academics$save_data()
-
-# Update the original object
-academics <- processor_academics$data
-```
-
-```{r}
-#| label: data-academics
-#| include: false
-#| eval: true
-
-# Define the scales of interest for academic skills
-scales <- c(
-  "Academic Fluency",
-  "Basic Reading",
-  "Math Calculation",
-  "Math Fluency",
-  "Math Problem Solving",
-  "Mathematics",
-  "Numerical Operations",
-  "Oral Reading Fluency",
-  "Pseudoword Decoding",
-  "Reading",
-  "Reading Comprehension",
-  "Reading Fluency",
-  "Sentence Comprehension",
-  "Spelling",
-  "Word Reading",
-  "Written Expression",
-  "Written Language"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  academics <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_academics <- filter_data(
-  data = academics,
-  domain = domains,
-  scale = scales
-)
-```
-
-```{r}
-#| label: text-academics
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_academics,
-  file = "_02-02_academics_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-academics
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_academics"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_academics,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-academics-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_academics,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_academics_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  academics <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  academics <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "Academic Skills"
-
-// Define the file name of the table
-#let file_qtbl = "table_academics.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_academics_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Verbal/Language {#sec-verbal}
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average.
+Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Ethan's score on Language Index (general language processing) was Average.
+Ethan's score on Picture Naming (confrontation naming/expressive vocabulary) was Average.
+Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
+
+Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
+
+Ethan's score on Semantic Fluency (semantic word fluency/generativity) was High Average.
+Verbal concept formation and word knowledge fell within the High Average and ranked at the 84th percentile. This indicates performance as good as or better than 84% of same-age peers from the general population.
+
+Practical knowledge and judgment of general principles and social situations fell within the Average and ranked at the 25th percentile. This indicates performance as good as or better than 25% of same-age peers from the general population.
 
 Verbal concept formation and abstract reasoning fell within the Above Average and ranked at the 91th percentile. This indicates performance as good as or better than 91% of same-age peers from the general population.
 
@@ -753,196 +442,59 @@ Practical knowledge and judgment of general principles and social situations fel
 #| label: setup-verbal
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("Verbal/Language")
 
 # Target phenotype
 pheno <- "verbal"
 
-# Create R6 processor
-processor_verbal <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_verbal$load_data()
-processor_verbal$filter_by_domain()
-
-# Create the data object with original name for compatibility
-verbal <- processor_verbal$data
-```
-
-```{r}
-#| label: export-verbal
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_verbal$select_columns()
-processor_verbal$save_data()
-
-# Update the original object
-verbal <- processor_verbal$data
-```
-
-```{r}
-#| label: data-verbal
-#| include: false
-#| eval: true
-
-# Define the scales of interest for verbal/language
-scales <- c(
-  "Boston Naming Test",
-  "Comprehension",
-  "Controlled Oral Word Association",
-  "COWA-FAS",
-  "Expressive Language",
-  "Expressive Vocabulary",
-  "Information",
-  "Language",
-  "Letter Fluency",
-  "Naming",
-  "Oral Expression",
-  "Phonemic Fluency",
-  "Receptive Language",
-  "Semantic Fluency",
-  "Similarities",
-  "Verbal Comprehension",
-  "Verbal Fluency",
-  "Verbal Reasoning",
-  "Vocabulary",
-  "Word Generation",
-  "Word Knowledge"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  verbal <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_verbal <- filter_data(data = verbal, domain = domains, scale = scales)
-```
-
-```{r}
-#| label: text-verbal
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_verbal,
-  file = "_02-03_verbal_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-verbal
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_verbal"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_verbal,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-verbal-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_verbal,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_verbal_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  verbal <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  verbal <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "Verbal/Language"
-
-// Define the file name of the table
-#let file_qtbl = "table_verbal.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_verbal_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Visual Perception/Construction {#sec-spatial}
 
+General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
+
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model (untimed) fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
+Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
+Ethan's score on Visuospatial/Constructional Index (broad visuospatial processing) was Below Average.
+A measure of visual-perceptual reasoning and mental transformation abilities that requires examinees to solve visual puzzles within a time limit fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Inductive reasoning and nonverbal problem-solving fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Understanding visual-spatial relationships to construct unfamiliar geometric designs from a model fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Ethan's score on Figure Copy (copy of a complex abstract figure) was Low Average.
+Ethan's score on Line Orientation (basic perception of visual stimuli) was Low Average.
 General sequential (deductive) reasoning and quantitative reasoning fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
 
 Fluid and inductive reasoning and conceptual thinking fell within the Average and ranked at the 50th percentile. This indicates performance as good as or better than 50% of same-age peers from the general population.
@@ -965,200 +517,49 @@ Ethan's score on Visuospatial/Constructional Index (broad visuospatial processin
 #| label: setup-spatial
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("Visual Perception/Construction")
 
 # Target phenotype
 pheno <- "spatial"
 
-# Create R6 processor
-processor_spatial <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_spatial$load_data()
-processor_spatial$filter_by_domain()
-
-# Create the data object with original name for compatibility
-spatial <- processor_spatial$data
-```
-
-```{r}
-#| label: export-spatial
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_spatial$select_columns()
-processor_spatial$save_data()
-
-# Update the original object
-spatial <- processor_spatial$data
-```
-
-```{r}
-#| label: data-spatial
-#| include: false
-#| eval: true
-
-# Define the scales of interest for visual perception/construction
-scales <- c(
-  "Block Design",
-  "Clock Drawing",
-  "Complex Figure Copy",
-  "Figure Copy",
-  "Figure Recognition",
-  "Line Orientation",
-  "Matrix Reasoning",
-  "Perceptual Reasoning",
-  "Picture Completion",
-  "Rey Complex Figure Copy",
-  "ROCF Copy",
-  "Spatial Perception",
-  "Spatial Relations",
-  "Visual Discrimination",
-  "Visual Form Constancy",
-  "Visual Memory",
-  "Visual Motor Integration",
-  "Visual Perception",
-  "Visual Processing",
-  "Visual Puzzles",
-  "Visual Spatial",
-  "Visual-Motor Integration",
-  "Visuoconstruction",
-  "Visuomotor Precision",
-  "Visuospatial Processing"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  spatial <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_spatial <- filter_data(data = spatial, domain = domains, scale = scales)
-```
-
-```{r}
-#| label: text-spatial
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_spatial,
-  file = "_02-04_spatial_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-spatial
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_spatial"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_spatial,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-spatial-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_spatial,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_spatial_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  spatial <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  spatial <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "Visual Perception/Construction"
-
-// Define the file name of the table
-#let file_qtbl = "table_spatial.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_spatial_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Memory {#sec-memory}
 
+Ethan's score on Story Memory (expository story learning) was Above Average.
+Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
+Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average.
+Ethan's score on List Learning (word list learning) was High Average.
+Ethan's score on List Recognition (delayed recognition of a word list) was Average.
+Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
+Ethan's score on List Recall (long-term recall of a word list) was Average.
+Ethan's score on Delayed Memory Index (long-term recall of verbal information) was Low Average.
+Ethan's score on Story Memory (expository story learning) was Above Average.
+Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
+Ethan's score on List Learning (word list learning) was High Average.
+Ethan's score on Figure Recall (long-term recall and reconstruction of a complex abstract figure) was Average.
+Ethan's score on List Recall (long-term recall of a word list) was Average.
 Ethan's score on Story Memory (expository story learning) was Above Average.
 Ethan's score on Story Recall (long-term recall of a detailed story) was Above Average.
 Ethan's score on Immediate Memory Index (composite verbal learning of a word list and a logical story) was Above Average.
@@ -1174,218 +575,32 @@ Ethan's score on Delayed Memory Index (long-term recall of verbal information) w
 #| label: setup-memory
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("Memory")
 
 # Target phenotype
 pheno <- "memory"
 
-# Create R6 processor
-processor_memory <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_memory$load_data()
-processor_memory$filter_by_domain()
-
-# Create the data object with original name for compatibility
-memory <- processor_memory$data
-```
-
-```{r}
-#| label: export-memory
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_memory$select_columns()
-processor_memory$save_data()
-
-# Update the original object
-memory <- processor_memory$data
-```
-
-```{r}
-#| label: data-memory
-#| include: false
-#| eval: true
-
-# Define the scales of interest for memory
-scales <- c(
-  "Auditory Delayed",
-  "Auditory Immediate",
-  "Auditory Memory",
-  "Auditory Recognition Delayed",
-  "Complex Figure Delayed Recall",
-  "Complex Figure Immediate Recall",
-  "Delayed Memory",
-  "Delayed Recall",
-  "Design Memory",
-  "Figure Recall",
-  "Immediate Memory",
-  "List Learning",
-  "List Recall",
-  "Long Delay Free Recall",
-  "Long-Term Memory",
-  "Memory for Names",
-  "Memory for Stories",
-  "Narrative Memory",
-  "Picture Memory",
-  "RBANS Delayed Memory Index",
-  "RBANS Immediate Memory Index",
-  "ROCF Delayed Recall",
-  "ROCF Immediate Recall",
-  "Short Delay Free Recall",
-  "Story Memory",
-  "Story Recall",
-  "Verbal Learning",
-  "Verbal Memory",
-  "Visual Delayed",
-  "Visual Immediate",
-  "Visual Memory",
-  "Working Memory"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  memory <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_memory <- filter_data(data = memory, domain = domains, scale = scales)
-```
-
-```{r}
-#| label: text-memory
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_memory,
-  file = "_02-05_memory_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-memory
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_memory"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_memory,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-memory-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_memory,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_memory_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{r}
-#| label: fig-memory-narrow
-#| include: false
-#| eval: true
-
-# Create narrow plot using R6 DotplotR6
-dotplot_narrow <- DotplotR6$new(
-  data = data_memory,
-  x = "z_mean_narrow",
-  y = "narrow",
-  filename = "fig_memory_narrow.svg"
-)
-dotplot_narrow$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  memory <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  memory <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "Memory"
-
-// Define the file name of the table
-#let file_qtbl = "table_memory.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_memory_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Attention/Executive {#sec-executive}
@@ -1420,6 +635,31 @@ Registering, maintaining, and manipulating auditory information fell within the 
 
 Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
 
+Ethan's score on Coding (speed of information processing) was High Average.
+Ethan's score on Attention Index (general attentional and executive functioning) was High Average.
+Ethan's score on Digit Span (attention span and auditory attention) was Average.
+Maintenance and resequencing of progressively lengthier sets of pictures in spatial working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Selective attention and attentional fluency on a cancellation task fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Auditory attentional capacity, or how much information can be processed at once fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+A measure of both attentional capacity and working memory fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (random) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Rate of test taking, perceptual speed, visual discrimination, and visual attention scanning (structured) fell within the Average and ranked at the 37th percentile. This indicates performance as good as or better than 37% of same-age peers from the general population.
+
+Registering, maintaining, and manipulating auditory information fell within the Low Average and ranked at the 16th percentile. This indicates performance as good as or better than 16% of same-age peers from the general population.
+
+Efficiency of psychomotor speed, visual scanning ability, and visual-motor coordination fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Visual-perceptual decision-making speed fell within the Low Average and ranked at the 9th percentile. This indicates performance as good as or better than 9% of same-age peers from the general population.
+
+Performance on a measures that requires cognitive flexibility, divided attention, visual search, and the ability to shift cognitive sets between number and letter sequences fell within the Below Average range.
+Maintenance and resequencing of progressively lengthier number strings in working memory fell within the Below Average and ranked at the 2nd percentile. This indicates performance as good as or better than 2% of same-age peers from the general population.
+
+Visual search speed, scanning, speed of processing, and motor speed and coordination on Part A of the Trail Making Test fell within the Exceptionally Low range.
 
 
 
@@ -1427,225 +667,38 @@ Visual-perceptual decision-making speed fell within the Low Average and ranked a
 #| label: setup-executive
 #| include: false
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
-
 # Filter by domain
 domains <- c("Attention/Executive")
 
 # Target phenotype
 pheno <- "executive"
 
-# Create R6 processor
-processor_executive <- DomainProcessorR6$new(
-  domains = domains,
-  pheno = pheno,
-  input_file = "data/neurocog.parquet"
-)
-
-# Load and process data
-processor_executive$load_data()
-processor_executive$filter_by_domain()
-
-# Create the data object with original name for compatibility
-executive <- processor_executive$data
-```
-
-```{r}
-#| label: export-executive
-#| include: false
-#| eval: true
-
-# Process and export data using R6
-processor_executive$select_columns()
-processor_executive$save_data()
-
-# Update the original object
-executive <- processor_executive$data
-```
-
-```{r}
-#| label: data-executive
-#| include: false
-#| eval: true
-
-# Define the scales of interest for attention/executive
-scales <- c(
-  "Attention",
-  "Attention/Concentration",
-  "Attention/Executive Function",
-  "Auditory Attention",
-  "Cognitive Flexibility",
-  "Concept Formation",
-  "Delis-Kaplan Executive Function System",
-  "Digit Span",
-  "Divided Attention",
-  "Executive Function",
-  "Flanker Inhibitory Control",
-  "Flexibility",
-  "Inhibition",
-  "Inhibitory Control",
-  "Letter-Number Sequencing",
-  "Mental Control",
-  "Planning",
-  "Processing Speed",
-  "Response Inhibition",
-  "Selective Attention",
-  "Set Shifting",
-  "Stroop",
-  "Sustained Attention",
-  "Symbol Search",
-  "Tower",
-  "Trail Making Test",
-  "Trails A",
-  "Trails B",
-  "Verbal Fluency",
-  "Wisconsin Card Sorting Test",
-  "Working Memory"
-)
-
-# Filter the data directly without using NeurotypR
-filter_data <- function(data, domain, scale) {
-  # Filter by domain if provided
-  if (!is.null(domain)) {
-    data <- data[data$domain %in% domain, ]
+# Read the data file into a data frame
+file_ext <- tools::file_ext("data/neurocog.parquet")
+if (file_ext == "parquet") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Parquet files.")
   }
-
-  # Filter by scale if provided
-  if (!is.null(scale)) {
-    data <- data[data$scale %in% scale, ]
+  executive <- arrow::read_parquet("data/neurocog.parquet")
+} else if (file_ext == "feather") {
+  # Check if arrow package is available
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("The 'arrow' package is required to read Feather files.")
   }
-
-  return(data)
-}
-
-# Apply the filter function
-data_executive <- filter_data(
-  data = executive,
-  domain = domains,
-  scale = scales
-)
-```
-
-```{r}
-#| label: text-executive
-#| cache: true
-#| include: false
-
-# Generate text using R6 class
-results_processor <- NeuropsychResultsR6$new(
-  data = data_executive,
-  file = "_02-06_executive_text.qmd"
-)
-results_processor$process()
-```
-
-```{r}
-#| label: qtbl-executive
-#| include: false
-#| eval: true
-
-# Table parameters
-table_name <- "table_executive"
-vertical_padding <- 0
-multiline <- TRUE
-
-# Create table using our modified TableGT R6 class
-table_gt <- TableGT_Modified$new(
-  data = data_executive,
-  pheno = pheno,
-  table_name = table_name,
-  vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
-)
-
-# Get the table object without automatic saving
-tbl <- table_gt$build_table()
-
-# Save the table using our save_table method
-table_gt$save_table(tbl)
-```
-
-```{r}
-#| label: fig-executive-subdomain
-#| include: false
-#| eval: true
-
-# Create subdomain plot using R6 DotplotR6
-dotplot_subdomain <- DotplotR6$new(
-  data = data_executive,
-  x = "z_mean_subdomain",
-  y = "subdomain",
-  filename = "fig_executive_subdomain.svg"
-)
-dotplot_subdomain$create_plot()
-```
-
-```{r}
-#| label: fig-executive-narrow
-#| include: false
-#| eval: true
-
-# Create narrow plot using R6 DotplotR6
-dotplot_narrow <- DotplotR6$new(
-  data = data_executive,
-  x = "z_mean_narrow",
-  y = "narrow",
-  filename = "fig_executive_narrow.svg"
-)
-dotplot_narrow$create_plot()
-```
-
-```{=typst}
-// Define a function to create a domain with a title, a table, and a figure
-#let domain(title: none, file_qtbl, file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
-  pad(top: 0.5em)[]
-  grid(
-    columns: (50%, 50%),
-    gutter: 8pt,
-    figure(
-      [#image(file_qtbl)],
-      caption: figure.caption(position: top, [#title]),
-      kind: "qtbl",
-      supplement: [*Table*],
-    ),
-    figure(
-      [#image(file_fig, width: auto)],
-      caption: figure.caption(
-        position: bottom,
-        [Performance across cognitive domains. #footnote[All scores in these figures have been standardized as z-scores.]],
-      ),
-      placement: none,
-      kind: "image",
-      supplement: [*Figure*],
-      gap: 0.5em,
-    ),
-  )
+  executive <- arrow::read_feather("data/neurocog.parquet")
+} else {
+  # Default to CSV for other formats
+  executive <- readr::read_csv("data/neurocog.parquet")
 }
 ```
 
-```{=typst}
-// Define the title of the domain
-#let title = "Attention/Executive"
-
-// Define the file name of the table
-#let file_qtbl = "table_executive.png"
-
-// Define the file name of the figure
-#let file_fig = "fig_executive_subdomain.svg"
-
-// The title is appended with ' Scores'
-#domain(title: [#title Scores], file_qtbl, file_fig)
 
 
 ## Motor {#sec-motor}
 
+Nondominant hand dexterity was Exceptionally Low range.
+Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
 Nondominant hand dexterity was Exceptionally Low range.
 Fine-motor dexterity (dominant hand) fell within the Exceptionally Low range.
 
@@ -1683,7 +736,7 @@ if (file_ext == "parquet") {
 
 
 
-## Personality Disorders {#sec-emotion}
+## Psychosocial Problems {#sec-emotion}
 
 Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
 Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
@@ -1752,6 +805,73 @@ Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that 
 Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
 Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
 Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's score on Grandiosity (person may have little capacity to recognize personal limitations, to the point where one is not able to think clearly about one's capabilities) was High Average.
+Ethan's score on Obsessive-Compulsive (scores marked rigidity and significant ruminative concerns) was Average.
+Ethan's score on Anxiety-Related Disorders (reflecting multiple anxiety-disorder diagnoses and broad impairment associated with anxiety) was Average.
+Ethan's score on Traumatic Stress (trauma (single or multiple) is the overriding focus of the person's life) was Average.
+Ethan's score on Affective (D) (elevations suggest sadness, a loss of interest in normal activities and a loss if one's sense of pleasure in things that were previously enjoyed) was Average.
+Ethan's score on Physical Aggression (suggest that losses of temper are more common and that the person is prone to more physical displays of anger, perhaps breaking objects or engaging in physical confrontations) was Average.
+Ethan's score on Persecution (suggest an individual who is quick to feel that they are being treated inequitably and easily believes that there is concerted effort among others to undermine their best interests) was Average.
+Ethan's score on Phobias (indicate impairing phobic behaviors, with avoidance of the feared object or situation) was Average.
+Ethan's score on Mania (scores are associated with disorders such as mania, hypomania, or cyclothymia) was Average.
+Ethan's score on Verbal Aggression (reflects a person who is assertive and not intimidated by confrontation and, toward the upper end of this range, he may be verbally aggressive) was Average.
+Ethan's score on Conversion (moderate elevations may be seen in neurological disorders with CNS impairment involving sensorimotor problems, MS, CVA/stroke, or neuropsychological associated with chronic alcoholism) was Low Average.
+Ethan's score on Hypervigilance (suggest a person who is pragmatic and skeptical in relationships) was Low Average.
+Ethan's score on Health Concerns (elevations indicate a poor health may be a major component of the self-image, with the person accustomed to being in the patient role) was Low Average.
+Ethan's score on Suicidal Ideation (scores are typically of an individual who is seen in clinical settings) was Low Average.
+Ethan's score on Social Detachment (reflects a person who neither desires nor enjoys the meaning to personal relationships) was Low Average.
+Ethan's score on Somatic Complaints (degree of concern about physical functioning and health matters and the extent of perceived impairment arising from somatic symptoms) was Low Average.
+Ethan's score on Somatization (high scorers describe general lethargy and malaise, and the presentation is one of complaintiveness and dissatisfaction) was Low Average.
+Ethan's score on Cognitive (D) (a higher scorer is likely to report feeling hopeless and as having failed at most important life tasks) was Low Average.
+Ethan's score on Irritability (person is very volatile in response to frustration and his judgment in such situations may be poor) was Low Average.
+Ethan's score on Aggression (scores are indicative of an individual who may be seen as impatient, irritable, and quick-tempered) was Low Average.
+Ethan's score on Cognitive (A) (elevations indicate worry and concern about current (often uncontrollable) issues that compromise the person's ability to concentrate and attend) was Low Average.
+Ethan's score on Physiological (A) (high scorers my not psychologically experience themselves as anxious, but show physiological signs that most people associate with anxiety) was Low Average.
+Ethan's score on Depression (person feels hopeless, discouraged and useless) was Low Average.
+Ethan's score on Paranoia (individuals are likely to be overtly suspicious and hostile) was Low Average.
+Ethan's score on Thought Disorder (suggest problems in concentration and decision-making) was Low Average.
+Ethan's score on Activity Level (this activity level renders the person confused and difficult to understand) was Low Average.
+Ethan's score on Resentment (increasing tendency to attribute any misfortunes to the neglect of others and to discredit the successes of others as being the result of luck or favoritism) was Low Average.
+Ethan's score on Psychotic Experiences (person may strike others as peculiar and eccentric) was Low Average.
+Ethan's score on Anxiety (reflecting a generalized impairment associated with anxiety) was Below Average.
+Ethan's score on Affective (A) (high scorers experience a great deal of tension, have difficulty with relaxing and tend to be easily fatigued as a result of high-perceived stress) was Below Average.
+Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
+Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
+Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
+Ethan's score on Antisocial Behaviors (scores suggest a history of difficulties with authority and with social convention) was Average.
+Ethan's score on Egocentricity (suggest a person who tends to be self-centered and pragmatic in interaction with others) was Average.
+Ethan's score on Antisocial Features (individuals are likely to be impulsive and hostile, perhaps with a history of reckless and/or antisocial acts) was Average.
+Ethan's score on Negative Relationships (person is likely to be bitter and resentful about the way past relationships have gone) was Average.
+Ethan's score on Stimulus-Seeking (patient is likely to manifest behavior that is reckless and potentially dangerous to himself and/or those around him) was Average.
+Ethan's score on Self-Harm (reflect levels of impulsivity and recklessness that become more hazardous as scores rise) was Average.
+Ethan's score on Borderline Features (behaviors typically associated with borderline personality disorder) was Low Average.
+Ethan's score on Identity Problems (suggest uncertainty about major life issues and difficulties in developing and maintaining a sense of purpose) was Low Average.
+Ethan's score on Affective Instability (a propensity to experience a particular negative affect (anxiety, depression, or anger is the typical response)) was Low Average.
+Ethan's score on Alcohol Problems (are indicative of an individual who may drink regularly and may have experienced some adverse consequences as a result) was Average.
+Ethan's score on Drug Problems (scores are indicative of a person who may use drugs on a fairly regular basis and may have experienced some adverse consequences as a result) was Average.
+Ethan's self-reported Rule-breaking behavior was Above Average.
+Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
+Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
+Ethan's self-reported Maintain necessary levels of attention was Above Average.
+Ethan's self-reported Externalizing problems composite scale was Above Average.
+Ethan's self-reported Avoid social situations and appears to be capable of developing and maintaining friendships with others was Above Average.
+Ethan's self-reported Ratings of aggressive behavior and to act aggressively was High Average.
+Ethan's self-reported Tendency to be overly active, rush through work or activities, and act without thinking was High Average.
+Ethan's self-reported Excessive feelings of unhappiness, sadness, or stress was High Average.
+Ethan's self-reported Internalizing problems composite scale was Average.
+Ethan's self-reported Able to adequately perform simple daily tasks in a safe and efficient manner was Average.
+Ethan's self-reported Tendency to be nervous, fearful, or worried about real or imagined problems was Average.
+Ethan's self-reported Exhibits appropriate expressive and receptive communication skills and displays a strong ability to seek out and find new information independently was Low Average.
+Ethan's self-reported Adaptation to most situations and able to quickly recover from situations that are difficult was Low Average.
+Ethan's self-reported Health-related problems was Low Average.
+Ethan's self-reported Overall adaptive functioning composite score was Low Average.
+Ethan's self-reported Socially adept and at ease was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's score on Warmth (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to tolerate close attachment but also capable of maintaining some distance in relationships as needed) was Average.
+Ethan's score on Treatment Rejection (average scores suggest a person who acknowledges major difficulties in their functioning, and perceives an acute need for help in dealing with these problems) was Average.
+Ethan's score on Dominance (average scores reflect an individual who is likely to be able to adapt to different interpersonal situations, by being able to both take and relinquish control in these relationships as needed) was Average.
+Ethan's score on Stress (individuals may be experiencing a moderate degree of stress as a result of difficulties in some major life area) was Low Average.
+Ethan's score on Nonsupport (social relationships are perceived as offering little support - family relationships may be either distant or combative, whereas friends are generally seen as unavailable or not helpful when needed) was Low Average.
 
 
 
@@ -1760,7 +880,7 @@ Ethan's score on Affective Instability (a propensity to experience a particular 
 #| include: false
 
 # Filter by domain
-domains <- c("Personality Disorders")
+domains <- c("Psychosocial Problems")
 
 # Target phenotype
 pheno <- "emotion"

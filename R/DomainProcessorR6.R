@@ -271,9 +271,42 @@ DomainProcessorR6 <- R6::R6Class(
         return(self$scale_source)
       }
 
-      # If no scale_source was provided and we've reached this point,
-      # return an empty vector - the calling code should handle this appropriately
-      # This simplifies the design by removing dynamic lookups based on naming conventions
+      # Try to load scales from internal data based on phenotype
+      scale_var_name <- paste0("scales_", tolower(self$pheno))
+      
+      # Check if the scale variable exists in the package's internal data
+      if (exists(scale_var_name, envir = .GlobalEnv)) {
+        scales <- get(scale_var_name, envir = .GlobalEnv)
+        return(scales)
+      }
+      
+      # Try loading from sysdata.rda if not already available
+      sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
+      if (file.exists(sysdata_path)) {
+        # Load into a temporary environment to avoid polluting global env
+        temp_env <- new.env()
+        load(sysdata_path, envir = temp_env)
+        
+        if (exists(scale_var_name, envir = temp_env)) {
+          scales <- get(scale_var_name, envir = temp_env)
+          return(scales)
+        }
+      }
+      
+      # If still not found, try alternative path (for development)
+      dev_sysdata_path <- here::here("R", "sysdata.rda")
+      if (file.exists(dev_sysdata_path)) {
+        temp_env <- new.env()
+        load(dev_sysdata_path, envir = temp_env)
+        
+        if (exists(scale_var_name, envir = temp_env)) {
+          scales <- get(scale_var_name, envir = temp_env)
+          return(scales)
+        }
+      }
+
+      # If no scales found, return an empty vector
+      # The calling code should handle this appropriately
       return(character(0))
     },
 

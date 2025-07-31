@@ -571,6 +571,20 @@ score_tmtB <- function(age, raw_score) {
   )
 
   # Build age-by-age norms for 4–15, override at anchors
+  ages_df <- tibble::tibble(age = 4:15) |>
+    dplyr::mutate(
+      # Create PS_eq and SD_eq columns with equation results
+      PS_eq = pred_score_eq(.data$age),
+      SD_eq = pred_sd_eq(.data$age)
+    ) |>
+    dplyr::left_join(anchors, by = "age") |>
+    dplyr::mutate(
+      # Use coalesce to fill in values from equations if not in anchors
+      PredictedScore = dplyr::coalesce(.data$PredictedScore, .data$PS_eq),
+      PredictedSD = dplyr::coalesce(.data$PredictedSD, .data$SD_eq)
+    ) |>
+    dplyr::select(age, PredictedScore, PredictedSD)
+  # Build age-by-age norms for 4–15, override at anchors
   ages_B_df <- tibble::tibble(age = 4:15) |>
     dplyr::mutate(
       # Create PS_eq and SD_eq columns with equation results
@@ -585,6 +599,29 @@ score_tmtB <- function(age, raw_score) {
     ) |>
     dplyr::select(age, PredictedScore, PredictedSD)
 
+  # Aggregate into broader child age-ranges
+  child_norms <- tibble::tribble(
+    ~AgeMin,
+    ~AgeMax,
+    4,
+    7,
+    8,
+    10,
+    11,
+    13,
+    14,
+    15
+  ) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      PredictedScore = mean(ages_df$PredictedScore[
+        ages_df$age >= .data$AgeMin & ages_df$age <= .data$AgeMax
+      ]),
+      PredictedSD = mean(ages_df$PredictedSD[
+        ages_df$age >= .data$AgeMin & ages_df$age <= .data$AgeMax
+      ])
+    ) |>
+    dplyr::ungroup()
   # Aggregate into broader child age-ranges
   child_norms_B <- tibble::tribble(
     ~AgeMin,
@@ -609,6 +646,11 @@ score_tmtB <- function(age, raw_score) {
     ) |>
     dplyr::ungroup()
 
+  # Combine child and adult norms
+  norms <- dplyr::bind_rows(adult_norms, child_norms)
+
+  # Find the appropriate normative row
+  norm_row <- norms |> dplyr::filter(norms$AgeMin <= age, age <= norms$AgeMax)
   # Combine child and adult norms
   norms <- dplyr::bind_rows(adult_norms_B, child_norms_B)
 
