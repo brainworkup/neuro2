@@ -1,4 +1,4 @@
-## Substance Use {#sec-emotion-child}
+## Behavioral/Emotional/Social {#sec-emotion-child}
 
 ```{r}
 #| label: setup-emotion-child
@@ -9,11 +9,14 @@ source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
-source("R/score_type_utils.R")
 
 # Filter by domain
 domains <- c(
-  "Substance Use"
+  "Behavioral/Emotional/Social",
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems"
 )
 
 # Target phenotype
@@ -41,7 +44,7 @@ processor_emotion$save_data()
 emotion <- processor_emotion$data
 
 # Load internal data to get standardized scale names
-# The scales_emotion_child object is available from the package's internal data
+# The scales_emotion object is available from the package's internal data
 if (!exists("scales_emotion_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
@@ -114,7 +117,7 @@ results_processor$process()
 #| label: text-emotion-child-teacher
 #| cache: true
 #| include: false
-#| eval: false
+#| eval: true
 
 data_emotion_teacher <- data_emotion |>
   dplyr::filter(
@@ -140,62 +143,14 @@ table_name <- "table_emotion_child_self"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Get score types from the lookup table
-score_type_map <- get_score_types_from_lookup(data_emotion_self)
-
-# Create a list of test names grouped by score type
-score_types_list <- list()
-
-# Process the score type map to group tests by score type
-for (test_name in names(score_type_map)) {
-  types <- score_type_map[[test_name]]
-  for (type in types) {
-    if (!type %in% names(score_types_list)) {
-      score_types_list[[type]] <- character(0)
-    }
-    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
-  }
-}
-
-# Get unique score types present
-unique_score_types <- names(score_types_list)
-
-# Define the score type footnotes
-fn_list <- list()
-if ("t_score" %in% unique_score_types) {
-  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-}
-if ("scaled_score" %in% unique_score_types) {
-  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
-}
-if ("standard_score" %in% unique_score_types) {
-  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
-}
-
-# Create groups based on test names that use each score type
-grp_list <- score_types_list
-
-# Define which groups support which score types (for dynamic footnotes)
-dynamic_grp <- score_types_list
-
-# Default source note if no score types are found
-if (length(fn_list) == 0) {
-  source_note <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-} else {
-  source_note <- NULL # No general source note when using footnotes
-}
-
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
   data = data_emotion_self,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = source_note,
-  multiline = multiline,
-  fn_list = fn_list,
-  grp_list = grp_list,
-  dynamic_grp = dynamic_grp
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
 )
 
 # Get the table object without automatic saving
@@ -215,62 +170,14 @@ table_name <- "table_emotion_child_parent"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Get score types from the lookup table
-score_type_map <- get_score_types_from_lookup(data_emotion_parent)
-
-# Create a list of test names grouped by score type
-score_types_list <- list()
-
-# Process the score type map to group tests by score type
-for (test_name in names(score_type_map)) {
-  types <- score_type_map[[test_name]]
-  for (type in types) {
-    if (!type %in% names(score_types_list)) {
-      score_types_list[[type]] <- character(0)
-    }
-    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
-  }
-}
-
-# Get unique score types present
-unique_score_types <- names(score_types_list)
-
-# Define the score type footnotes
-fn_list <- list()
-if ("t_score" %in% unique_score_types) {
-  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-}
-if ("scaled_score" %in% unique_score_types) {
-  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
-}
-if ("standard_score" %in% unique_score_types) {
-  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
-}
-
-# Create groups based on test names that use each score type
-grp_list <- score_types_list
-
-# Define which groups support which score types (for dynamic footnotes)
-dynamic_grp <- score_types_list
-
-# Default source note if no score types are found
-if (length(fn_list) == 0) {
-  source_note <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-} else {
-  source_note <- NULL # No general source note when using footnotes
-}
-
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
   data = data_emotion_parent,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = source_note,
-  multiline = multiline,
-  fn_list = fn_list,
-  grp_list = grp_list,
-  dynamic_grp = dynamic_grp
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
 )
 
 # Get the table object without automatic saving
@@ -283,57 +190,12 @@ table_gt$save_table(tbl, dir = here::here())
 ```{r}
 #| label: qtbl-emotion-teacher
 #| include: false
-#| eval: false
+#| eval: true
 
 # Table parameters
 table_name <- "table_emotion_child_teacher"
 vertical_padding <- 0
 multiline <- TRUE
-
-# Get score types from the lookup table
-score_type_map <- get_score_types_from_lookup(data_emotion_teacher)
-
-# Create a list of test names grouped by score type
-score_types_list <- list()
-
-# Process the score type map to group tests by score type
-for (test_name in names(score_type_map)) {
-  types <- score_type_map[[test_name]]
-  for (type in types) {
-    if (!type %in% names(score_types_list)) {
-      score_types_list[[type]] <- character(0)
-    }
-    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
-  }
-}
-
-# Get unique score types present
-unique_score_types <- names(score_types_list)
-
-# Define the score type footnotes
-fn_list <- list()
-if ("t_score" %in% unique_score_types) {
-  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-}
-if ("scaled_score" %in% unique_score_types) {
-  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
-}
-if ("standard_score" %in% unique_score_types) {
-  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
-}
-
-# Create groups based on test names that use each score type
-grp_list <- score_types_list
-
-# Define which groups support which score types (for dynamic footnotes)
-dynamic_grp <- score_types_list
-
-# Default source note if no score types are found
-if (length(fn_list) == 0) {
-  source_note <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
-} else {
-  source_note <- NULL # No general source note when using footnotes
-}
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
@@ -341,11 +203,8 @@ table_gt <- TableGT_Modified$new(
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = source_note,
-  multiline = multiline,
-  fn_list = fn_list,
-  grp_list = grp_list,
-  dynamic_grp = dynamic_grp
+  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  multiline = multiline
 )
 
 # Get the table object without automatic saving
@@ -382,7 +241,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_self <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_self <- "This section presents results from the Substance Use domain assessment."
+  plot_title_emotion_child_self <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -413,14 +272,14 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_parent <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Substance Use domain assessment."
+  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
 ```{r}
 #| label: fig-emotion-subdomain-teacher
 #| include: false
-#| eval: false
+#| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
@@ -442,9 +301,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion_child_teacher <- get(plot_title_var)
+  plot_title_emotion_child_teacheracher <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_teacher <- "This section presents teacher-rated results from the Substance Use domain assessment."
+  plot_title_emotion_child_tea <- "This section presents teacher-rated results from the Behavioral/Emotional/Social domain assessment."
 }
 ```
 
@@ -492,7 +351,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Substance Use"
+#let title = "Behavioral/Emotional/Social"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_self.png"
@@ -548,7 +407,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Substance Use"
+#let title = "Behavioral/Emotional/Social"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_parent.png"
@@ -560,11 +419,11 @@ if (exists(plot_title_var)) {
 #domain(title: [#title], file_qtbl, file_fig)
 ```
 
-<!-- ### TEACHER RATINGS -->
+### TEACHER RATINGS
 
-<!-- {{< include _02-10_emotion_child_text_teacher.qmd >}} -->
+{{< include _02-10_emotion_child_text_teacher.qmd >}}
 
-<!-- ```{=typst}
+```{=typst}
 // Define a function to create a domain with a title, a table, and a figure
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
@@ -600,11 +459,11 @@ if (exists(plot_title_var)) {
     ),
   )
 }
-``` -->
+```
 
-<!-- ```{=typst}
+```{=typst}
 // Define the title of the domain
-#let title = "Substance Use"
+#let title = "Behavioral/Emotional/Social"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_teacher.png"
@@ -614,4 +473,4 @@ if (exists(plot_title_var)) {
 
 // Call the 'domain' function with the specified title, table file name, and figure file name
 #domain(title: [#title], file_qtbl, file_fig)
-``` -->
+```
