@@ -10,7 +10,7 @@ _02-05_memory_text.qmd
 _02-05_memory.qmd
 _02-06_executive_text.qmd
 _02-06_executive.qmd
-_*-*_*.pdf
+# _*-*_*.pdf
 _arxiv
 _arxiv/
 _arxiv/batch_processor.r
@@ -137,6 +137,6 @@ table_iq.pdf
 _02-03_verbal_main.pdf
 _02-03_verbal.pdf
 _02-01_iq_text.qmd
-table_*.pdf
+# table_*.pdf
 table_*.png
 _*-*_*_files

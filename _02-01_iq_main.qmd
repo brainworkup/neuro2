@@ -31,12 +31,6 @@ processor_iq$filter_by_domain()
 
 # Create the data object with original name for compatibility
 iq <- processor_iq$data
-```
-
-```{r}
-#| label: export-iq
-#| include: false
-#| eval: true
 
 # Process and export data using R6
 processor_iq$select_columns()
@@ -44,12 +38,6 @@ processor_iq$save_data()
 
 # Update the original object
 iq <- processor_iq$data
-```
-
-```{r}
-#| label: data-iq
-#| include: false
-#| eval: true
 
 # Load internal data to get standardized scale names
 # The scales_iq object is available from the package's internal data

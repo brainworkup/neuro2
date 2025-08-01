@@ -11,6 +11,7 @@ source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
+source("R/score_type_utils.R")
 
 # Filter by domain
 domains <- c("Attention/Executive")
@@ -90,12 +91,56 @@ results_processor$process()
 ```{r}
 #| label: qtbl-executive
 #| include: false
-#| eval: true
 
 # Table parameters
 table_name <- "table_executive"
 vertical_padding <- 0
 multiline <- TRUE
+
+# Get score types from the lookup table
+score_type_map <- get_score_types_from_lookup(data_executive)
+
+# Create a list of test names grouped by score type
+score_types_list <- list()
+
+# Process the score type map to group tests by score type
+for (test_name in names(score_type_map)) {
+  types <- score_type_map[[test_name]]
+  for (type in types) {
+    if (!type %in% names(score_types_list)) {
+      score_types_list[[type]] <- character(0)
+    }
+    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+  }
+}
+
+# Get unique score types present
+unique_score_types <- names(score_types_list)
+
+# Define the score type footnotes
+fn_list <- list()
+if ("t_score" %in% unique_score_types) {
+  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+}
+if ("scaled_score" %in% unique_score_types) {
+  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+}
+if ("standard_score" %in% unique_score_types) {
+  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+}
+
+# Create groups based on test names that use each score type
+grp_list <- score_types_list
+
+# Define which groups support which score types (for dynamic footnotes)
+dynamic_grp <- score_types_list
+
+# Default source note if no score types are found
+if (length(fn_list) == 0) {
+  source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+} else {
+  source_note <- NULL  # No general source note when using footnotes
+}
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
@@ -103,8 +148,11 @@ table_gt <- TableGT_Modified$new(
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
+  source_note = source_note,
+  multiline = multiline,
+  fn_list = fn_list,
+  grp_list = grp_list,
+  dynamic_grp = dynamic_grp
 )
 
 # Get the table object without automatic saving
@@ -141,11 +189,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_executive <- get(plot_title_var)
 } else {
-  plot_title_executive <- "Attentional and executive functions underlie most, if
-not all, domains of cognitive performance. These are behaviors and skills that
-allow individuals to successfully carry-out instrumental and social activities,
-academic work, engage with others effectively, problem solve, and successfully
-interact with the environment to get needs met."
+  plot_title_executive <- "Attentional and executive functions underlie most, if not all, domains of cognitive performance. These are behaviors and skills that allow individuals to successfully carry-out instrumental and social activities, academic work, engage with others effectively, problem solve, and successfully interact with the environment to get needs met."
 }
 ```
 
