@@ -42,19 +42,19 @@ executive <- processor_executive$data
 
 # Load internal data to get standardized scale names
 # The scales_executive_child object is available from the package's internal data
-if (!exists("scales_executive_child")) {
+if (!exists("scales_executive")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_executive_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_executive from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_executive_child
+scales <- scales_executive
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -139,7 +139,7 @@ dynamic_grp <- score_types_list
 if (length(fn_list) == 0) {
   source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
 } else {
-  source_note <- NULL  # No general source note when using footnotes
+  source_note <- NULL # No general source note when using footnotes
 }
 
 # Create table using our modified TableGT_Modified R6 class
@@ -175,6 +175,37 @@ dotplot_subdomain <- DotplotR6$new(
   filename = here::here("fig_executive_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_executive"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_executive <- get(plot_title_var)
+} else {
+  plot_title_executive <- "Attentional and executive functions underlie most, if not all, domains of cognitive performance. These are behaviors and skills that allow individuals to successfully carry-out instrumental and social activities, academic work, engage with others effectively, problem solve, and successfully interact with the environment to get needs met."
+}
+```
+
+```{r}
+#| label: fig-executive-narrow
+#| include: false
+#| eval: true
+
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_executive,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = here::here("fig_executive_narrow.svg")
+)
+dotplot_narrow$create_plot()
 
 # Load plot title from sysdata.rda
 plot_title_var <- "plot_title_executive"
@@ -232,6 +263,7 @@ if (exists(plot_title_var)) {
   )
 }
 ```
+
 ```{=typst}
 // Define the title of the domain
 #let title = "Attention/Executive"
@@ -241,6 +273,20 @@ if (exists(plot_title_var)) {
 
 // Define the file name of the figure
 #let file_fig = "fig_executive_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Attention/Executive"
+
+// Define the file name of the table
+#let file_qtbl = "table_executive.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_executive_narrow.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
