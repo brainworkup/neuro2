@@ -51,6 +51,8 @@ This class is identical to TableGT but removes the automatic saving in the build
 \item{\code{vertical_padding}}{Numeric scale for vertical padding in the table.}
 
 \item{\code{multiline}}{Logical; whether footnotes should wrap onto multiple lines.}
+
+\item{\code{row_score_type_map}}{A named list mapping test batteries to their scale-specific score types.}
 }
 \if{html}{\out{</div>}}
 }
@@ -83,7 +85,8 @@ Initialize a new TableGT_Modified object with configuration and data.
   grp_list = list(),
   dynamic_grp = NULL,
   vertical_padding = NULL,
-  multiline = TRUE
+  multiline = TRUE,
+  row_score_type_map = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -117,6 +120,8 @@ Initialize a new TableGT_Modified object with configuration and data.
 \item{\code{vertical_padding}}{Numeric scale to control padding.}
 
 \item{\code{multiline}}{Logical; whether to use multiline footnotes.}
+
+\item{\code{row_score_type_map}}{Named list mapping test batteries to their scale-specific score types.}
 }
 \if{html}{\out{</div>}}
 }

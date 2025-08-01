@@ -1636,7 +1636,7 @@ domain_emotion_adult <- c("Emotional/Behavioral/Personality", "Psychiatric Sympt
 #' @title Child Emotional and Behavioral Domain
 #' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
 #' @keywords data internal
-domain_emotion_child <- "Behavioral/Emotional/Social"
+domain_emotion_child <- c("Behavioral/Emotional/Social","Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
 
 #' @name domain_adaptive
 #' @docType data
