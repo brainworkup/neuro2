@@ -140,3 +140,12 @@ _02-01_iq_text.qmd
 # table_*.pdf
 table_*.png
 _*-*_*_files
+_02-04_spatial_text.qmd
+_02-04_spatial.qmd
+.gitignore
+_02-07_motor_text.qmd
+_02-10_emotion_child.qmd
+_02-07_motor.qmd
+_02-02_academics.qmd
+_02-02_academics_text.qmd
+_02-01_iq.qmd

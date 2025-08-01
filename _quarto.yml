@@ -51,7 +51,7 @@ format:
     papersize: "us-letter"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
-    fontsize: 12pt
+    fontsize: 11pt
     number-sections: false
     number-offset: 1
     citeproc: true

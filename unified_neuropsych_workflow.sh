@@ -200,27 +200,42 @@ if ! command -v quarto &> /dev/null; then
     exit 1
 fi
 
-print_step "Rendering PDF with Typst..."
+# Get format from config.yml if it exists, otherwise use default
+if [ -f "$CONFIG_FILE" ]; then
+    REPORT_FORMAT=$(grep -A 5 "^report:" "$CONFIG_FILE" | grep "format:" | awk '{print $2}' | tr -d '"')
+    if [ -n "$REPORT_FORMAT" ]; then
+        print_step "Rendering with format: $REPORT_FORMAT"
+    fi
+fi
 
-if quarto render template.qmd --to typst-pdf; then
-    print_success "PDF report generated successfully!"
-    
-    if [ -f "template.pdf" ]; then
-        echo "📄 Final report: template.pdf"
+# If no format found in config, let Quarto use the default from _quarto.yml
+if [ -n "$REPORT_FORMAT" ]; then
+    if quarto render template.qmd --to "$REPORT_FORMAT"; then
+        print_success "Report generated successfully!"
+    else
+        print_error "Report rendering failed with format: $REPORT_FORMAT"
+        echo "Please check template.qmd for errors"
     fi
 else
-    print_warning "PDF rendering failed, trying HTML format..."
+    # Use default format from _quarto.yml
+    print_step "Rendering with default format from _quarto.yml..."
     
-    if quarto render template.qmd --to html; then
-        print_success "HTML report generated successfully!"
-        
-        if [ -f "template.html" ]; then
-            echo "🌐 Final report: template.html"
-        fi
+    if quarto render template.qmd; then
+        print_success "Report generated successfully!"
     else
         print_error "Report rendering failed"
         echo "Please check template.qmd for errors"
     fi
+fi
+
+# Check for generated output files
+if [ -f "template.pdf" ]; then
+    echo "📄 Final report: template.pdf"
+elif [ -f "template.html" ]; then
+    echo "🌐 Final report: template.html"
+elif [ -f "template.typ" ]; then
+    echo "📝 Typst file generated: template.typ"
+    echo "Note: You may need to compile the .typ file separately if PDF generation didn't complete"
 fi
 
 echo

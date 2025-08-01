@@ -11,22 +11,22 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
-# # Suppress warnings during setup
-options(warn = -1)
+# Suppress warnings during setup
+# options(warn = -1)
 
 # Source package loading function
-if (file.exists("R/load_packages.R")) {
-  source("R/load_packages.R")
-  # Load all required packages using centralized function
-  load_neuropsych_packages(verbose = FALSE)
-} else {
-  # Fallback: Load minimal required packages directly
-  library(knitr)
-  library(here)
-  library(readr)
-  library(dplyr)
-  library(gt)
-}
+# if (file.exists("R/load_packages.R")) {
+#   source("R/load_packages.R")
+#   # Load all required packages using centralized function
+#   load_neuropsych_packages(verbose = FALSE)
+# } else {
+#   # Fallback: Load minimal required packages directly
+#   library(knitr)
+#   library(here)
+#   library(readr)
+#   library(dplyr)
+#   library(gt)
+# }
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -39,10 +39,6 @@ knitr::opts_knit$set(
 # Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
-
-# Note: Data loading is now handled by the domain processors
-# The NeuropsychReportSystemR6 generates domain-specific files
-# that include their own data processing
 ```
 
 

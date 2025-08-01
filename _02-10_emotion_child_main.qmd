@@ -1,4 +1,4 @@
-## Behavioral/Emotional/Social {#sec-emotion-child}
+## Substance Use {#sec-emotion-child}
 
 ```{r}
 #| label: setup-emotion-child
@@ -12,11 +12,7 @@ source("R/TableGT_Modified.R")
 
 # Filter by domain
 domains <- c(
-  "Behavioral/Emotional/Social",
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems"
+  "Substance Use"
 )
 
 # Target phenotype
@@ -44,7 +40,7 @@ processor_emotion$save_data()
 emotion <- processor_emotion$data
 
 # Load internal data to get standardized scale names
-# The scales_emotion object is available from the package's internal data
+# The scales_emotion_child object is available from the package's internal data
 if (!exists("scales_emotion_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
@@ -241,7 +237,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_self <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_self <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_self <- "This section presents results from the Substance Use domain assessment."
 }
 ```
 
@@ -272,7 +268,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_parent <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Substance Use domain assessment."
 }
 ```
 
@@ -301,9 +297,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion_child_teacheracher <- get(plot_title_var)
+  plot_title_emotion_child_teacher <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_tea <- "This section presents teacher-rated results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_teacher <- "This section presents teacher-rated results from the Substance Use domain assessment."
 }
 ```
 
@@ -351,7 +347,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Substance Use"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_self.png"
@@ -407,7 +403,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Substance Use"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_parent.png"
@@ -463,7 +459,7 @@ if (exists(plot_title_var)) {
 
 <!-- ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Substance Use"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_teacher.png"

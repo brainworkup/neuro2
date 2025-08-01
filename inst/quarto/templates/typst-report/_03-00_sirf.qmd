@@ -11,8 +11,21 @@ source("R/DomainProcessorR6.R") # Also needed by NeuropsychReportSystemR6
 source("R/NeuropsychReportSystemR6.R")
 source("R/DotplotR6.R")
 
+# Function to read data in available format
+read_data <- function(base_path) {
+  if (file.exists(paste0(base_path, ".parquet"))) {
+    return(arrow::read_parquet(paste0(base_path, ".parquet")))
+  } else if (file.exists(paste0(base_path, ".csv"))) {
+    return(readr::read_csv(paste0(base_path, ".csv")))
+  } else if (file.exists(paste0(base_path, ".feather"))) {
+    return(arrow::read_feather(paste0(base_path, ".feather")))
+  } else {
+    stop(paste("No data file found for", base_path))
+  }
+}
+
 # Load all domain data
-neurocog <- arrow::read_parquet("data/neurocog.parquet")
+neurocog <- read_data("data/neurocog")
 
 # Define domain variables explicitly to avoid the "object not found" error
 domain_iq <- "General Cognitive Ability"

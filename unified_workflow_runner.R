@@ -154,7 +154,7 @@ if (!file.exists(config_file)) {
     data = list(
       input_dir = "data-raw/csv",
       output_dir = "data",
-      format = "parquet"
+      format = "all"
     ),
     processing = list(use_duckdb = TRUE, parallel = TRUE),
     report = list(
@@ -664,8 +664,17 @@ WorkflowRunner <- R6::R6Class(
                 # Create a domain processor for this domain
                 # Use the configured format (default is Parquet for better performance)
                 input_format <- self$config$data$format
-                if (is.null(input_format)) {
-                  input_format <- "parquet"
+                if (is.null(input_format) || input_format == "all") {
+                  # If format is "all", check which format exists
+                  if (file.exists(file.path(self$config$data$output_dir, "neurocog.parquet"))) {
+                    input_format <- "parquet"
+                  } else if (file.exists(file.path(self$config$data$output_dir, "neurocog.csv"))) {
+                    input_format <- "csv"
+                  } else if (file.exists(file.path(self$config$data$output_dir, "neurocog.feather"))) {
+                    input_format <- "feather"
+                  } else {
+                    input_format <- "parquet" # fallback
+                  }
                 }
 
                 input_file <- file.path(
@@ -878,8 +887,17 @@ WorkflowRunner <- R6::R6Class(
                   # Create a domain processor for this domain
                   # Use the configured format (default is Parquet for better performance)
                   input_format <- self$config$data$format
-                  if (is.null(input_format)) {
-                    input_format <- "parquet"
+                  if (is.null(input_format) || input_format == "all") {
+                    # If format is "all", check which format exists
+                    if (file.exists(file.path(self$config$data$output_dir, "neurobehav.parquet"))) {
+                      input_format <- "parquet"
+                    } else if (file.exists(file.path(self$config$data$output_dir, "neurobehav.csv"))) {
+                      input_format <- "csv"
+                    } else if (file.exists(file.path(self$config$data$output_dir, "neurobehav.feather"))) {
+                      input_format <- "feather"
+                    } else {
+                      input_format <- "parquet" # fallback
+                    }
                   }
 
                   input_file <- file.path(

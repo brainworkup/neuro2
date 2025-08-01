@@ -6,12 +6,7 @@
 #| label: setup-sirf
 #| include: false
 
-# Load arrow package for parquet file support
-library(arrow)
-
 # Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/ReportTemplateR6.R")
 source("R/NeuropsychReportSystemR6.R")
 source("R/DotplotR6.R")
 
@@ -30,35 +25,37 @@ read_data <- function(base_path) {
 
 # Load all domain data
 neurocog <- read_data("data/neurocog")
+neurobehav <- read_data("data/neurobehav")
 
-# # Define domain variables explicitly to avoid the "object not found" error
-# domain_iq <- "General Cognitive Ability"
-# domain_academics <- "Academic Skills"
-# domain_verbal <- "Verbal/Language"
-# domain_spatial <- "Visual Perception/Construction"
-# domain_memory <- "Memory"
-# domain_executive <- "Attention/Executive"
-# domain_motor <- "Motor"
-# domain_social <- "Social Cognition"
-# domain_adhd_adult <- "ADHD Adult"
-# domain_adhd_child <- "ADHD Child"
-# domain_emotion_adult <- c(
-#   "Psychiatric Disorders",
-#   "Personality Disorders",
-#   "Substance Use",
-#   "Psychosocial Problems",
-#   "Behavioral/Emotional/Social",
-#   "Emotional/Behavioral/Personality"
-# )
-# domain_emotion_child <- c(
-#   "Psychiatric Disorders",
-#   "Personality Disorders",
-#   "Substance Use",
-#   "Psychosocial Problems",
-#   "Behavioral/Emotional/Social"
-# )
-# domain_adaptive <- "Adaptive Functioning"
-# domain_daily_living <- "Daily Living"
+# Define domain variables explicitly to avoid the "object not found" error
+domain_iq <- "General Cognitive Ability"
+domain_academics <- "Academic Skills"
+domain_verbal <- "Verbal/Language"
+domain_spatial <- "Visual Perception/Construction"
+domain_memory <- "Memory"
+domain_executive <- "Attention/Executive"
+domain_motor <- "Motor"
+domain_social <- "Social Cognition"
+domain_adhd_adult <- "ADHD"
+domain_adhd_child <- "ADHD"
+domain_emotion_adult <- c(
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems",
+  "Behavioral/Emotional/Social",
+  "Emotional/Behavioral/Personality"
+)
+domain_emotion_child <- c(
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems",
+  "Behavioral/Emotional/Social",
+  "Emotional/Behavioral/Personality"
+)
+domain_adaptive <- "Adaptive Functioning"
+domain_daily_living <- "Daily Living"
 
 # Create report system for overall summary
 report_system <- NeuropsychReportSystemR6$new(
@@ -73,12 +70,12 @@ report_system <- NeuropsychReportSystemR6$new(
 
 # Create overall summary plot
 domain_summary <- neurocog |>
-  dplyr::group_by(domain) |>
-  dplyr::summarize(
+  group_by(domain) |>
+  summarise(
     mean_z = mean(z, na.rm = TRUE),
     mean_percentile = mean(percentile, na.rm = TRUE)
   ) |>
-  dplyr::filter(!is.na(mean_z))
+  filter(!is.na(mean_z))
 
 # Create plot using R6 DotplotR6
 overall_plot <- DotplotR6$new(
