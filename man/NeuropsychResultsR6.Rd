@@ -65,7 +65,7 @@ A new NeuropsychResultsR6 object
 \if{html}{\out{<a id="method-NeuropsychResultsR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-process}{}}}
 \subsection{Method \code{process()}}{
-Sort the data by percentile, remove duplicates, convert to text, and append to file.
+Sort the data by percentile, remove duplicates, convert to text, and write to file as proper QMD content.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$process()}\if{html}{\out{</div>}}
 }

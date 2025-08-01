@@ -1105,14 +1105,38 @@ DomainProcessorR6 <- R6::R6Class(
 
       # If no output file specified, create default name with proper domain number
       if (is.null(output_file)) {
-        # Always use the simplified naming convention
-        output_file <- paste0(
-          "_02-",
-          domain_num,
-          "_",
-          tolower(self$pheno),
-          "_text.qmd"
-        )
+        # Check if this is emotion child domain - always use child naming
+        if (tolower(self$pheno) == "emotion" && self$detect_emotion_type() == "child") {
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_child_text_",
+            report_type,
+            ".qmd"
+          )
+        } else if (self$has_multiple_raters() && report_type != "self") {
+          # For other multi-rater domains (like ADHD), just add report_type
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_text_",
+            report_type,
+            ".qmd"
+          )
+        } else {
+          # Standard naming for single-rater domains
+          output_file <- paste0(
+            "_02-",
+            domain_num,
+            "_",
+            tolower(self$pheno),
+            "_text.qmd"
+          )
+        }
       }
 
       # Process data for this domain if not already processed
