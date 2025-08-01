@@ -16,7 +16,7 @@ library(duckdb)
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
+source("R/TableGT_ModifiedR6.R")
 
 cat("Testing Verbal/Language Domain Processing\n")
 cat("=========================================\n\n")
@@ -29,7 +29,7 @@ con <- DBI::dbConnect(duckdb::duckdb())
 # Query verbal domain data directly from parquet
 verbal_data <- DBI::dbGetQuery(
   con,
-  "SELECT * FROM read_parquet('data/neurocog.parquet') 
+  "SELECT * FROM read_parquet('data/neurocog.parquet')
    WHERE domain = 'Verbal/Language'"
 )
 
@@ -105,9 +105,9 @@ processor_verbal$data <- processor_verbal$data %>% select(all_of(existing_cols))
 cat("   ✓ Data processed with", ncol(processor_verbal$data), "columns\n\n")
 
 # Test 3: Generate table
-cat("3. Generating table with TableGT_Modified...\n")
+cat("3. Generating table with TableGT_ModifiedR6...\n")
 
-table_gt <- TableGT_Modified$new(
+table_gt <- TableGT_ModifiedR6$new(
   data = processor_verbal$data,
   pheno = "verbal",
   table_name = "test_verbal_table",

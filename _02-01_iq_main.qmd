@@ -10,7 +10,7 @@
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
+source("R/TableGT_ModifiedR6.R")
 source("R/score_type_utils.R")
 
 # Filter by domain
@@ -143,8 +143,8 @@ if (length(fn_list) == 0) {
   source_note <- NULL # No general source note when using footnotes
 }
 
-# Create table using our modified TableGT_Modified R6 class
-table_gt <- TableGT_Modified$new(
+# Create table using our modified TableGT_ModifiedR6 R6 class
+table_gt <- TableGT_ModifiedR6$new(
   data = data_iq,
   pheno = pheno,
   table_name = table_name,

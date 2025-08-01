@@ -7,7 +7,7 @@ library(here)
 source(here::here("R/DomainProcessorR6.R"))
 source(here::here("R/NeuropsychResultsR6.R"))
 source(here::here("R/DotplotR6.R"))
-source(here::here("R/TableGT_Modified.R"))
+source(here::here("R/TableGT_ModifiedR6.R"))
 
 # Test 1: Verify sysdata.rda loads correctly
 cat("=== Test 1: Loading sysdata.rda ===\n")
@@ -32,7 +32,7 @@ scales_from_processor <- test_processor$get_scales()
 if (length(scales_from_processor) > 0) {
   cat("✓ DomainProcessorR6 loaded scales automatically\n")
   cat(paste("  Found", length(scales_from_processor), "scales\n"))
-  
+
   # Compare with expected scales
   if (identical(scales_from_processor, scales_adhd_adult)) {
     cat("✓ Loaded scales match expected scales_adhd_adult\n")
@@ -85,7 +85,13 @@ print(head(scales, 10))
 
 cat("\n=== All tests completed ===\n")
 cat("\nSummary:\n")
-cat("- scales_adhd_adult contains", length(scales_adhd_adult), "standardized scale names\n")
+cat(
+  "- scales_adhd_adult contains",
+  length(scales_adhd_adult),
+  "standardized scale names\n"
+)
 cat("- DomainProcessorR6 can automatically load scales based on phenotype\n")
 cat("- ADHD document now uses standardized scales instead of hardcoded list\n")
-cat("- The system maintains backward compatibility with scale_source parameter\n")
+cat(
+  "- The system maintains backward compatibility with scale_source parameter\n"
+)

@@ -26,7 +26,7 @@ source("R/DotplotR6.R")
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/ReportTemplateR6.R")
-source("R/ReportTemplateR6.R")
+source("R/TableGT_ModifiedR6R6.R")
 
 message("🚀 R6-BASED UPDATE WORKFLOW")
 message("===========================\n")

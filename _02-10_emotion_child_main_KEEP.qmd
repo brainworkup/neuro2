@@ -8,7 +8,7 @@
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT_Modified.R")
+source("R/TableGT_ModifiedR6.R")
 
 # Filter by domain
 domains <- c(
@@ -143,8 +143,8 @@ table_name <- "table_emotion_child_self"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using our modified TableGT_Modified R6 class
-table_gt <- TableGT_Modified$new(
+# Create table using our modified TableGT_ModifiedR6 R6 class
+table_gt <- TableGT_ModifiedR6$new(
   data = data_emotion_self,
   pheno = pheno,
   table_name = table_name,
@@ -170,8 +170,8 @@ table_name <- "table_emotion_child_parent"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using our modified TableGT_Modified R6 class
-table_gt <- TableGT_Modified$new(
+# Create table using our modified TableGT_ModifiedR6 R6 class
+table_gt <- TableGT_ModifiedR6$new(
   data = data_emotion_parent,
   pheno = pheno,
   table_name = table_name,
@@ -197,8 +197,8 @@ table_name <- "table_emotion_child_teacher"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using our modified TableGT_Modified R6 class
-table_gt <- TableGT_Modified$new(
+# Create table using our modified TableGT_ModifiedR6 R6 class
+table_gt <- TableGT_ModifiedR6$new(
   data = data_emotion_teacher,
   pheno = pheno,
   table_name = table_name,

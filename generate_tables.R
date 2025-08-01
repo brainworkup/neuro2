@@ -14,13 +14,13 @@ suppressPackageStartupMessages({
 load("R/sysdata.rda")
 
 # Source the modified TableGT class
-source("R/TableGT_Modified.R")
+source("R/TableGT_ModifiedR6.R")
 source("R/score_type_utils.R")
 
 # Create a simple function to generate table for a domain
 generate_domain_table <- function(pheno, domain_name) {
   message(paste0("\nGenerating table for ", domain_name, "..."))
-  
+
   # Read the data
   data_file <- paste0("data/", pheno, ".csv")
   if (!file.exists(data_file)) {
@@ -34,23 +34,23 @@ generate_domain_table <- function(pheno, domain_name) {
   } else {
     data <- read_csv(data_file, show_col_types = FALSE)
   }
-  
+
   if (nrow(data) == 0) {
     message(paste0("  - No data available for ", pheno))
     return(NULL)
   }
-  
+
   # Table parameters
   table_name <- paste0("table_", pheno)
   vertical_padding <- 0
   multiline <- TRUE
-  
+
   # Get score types from the lookup table
   score_type_map <- get_score_types_from_lookup(data)
-  
+
   # Create a list of test names grouped by score type
   score_types_list <- list()
-  
+
   # Process the score type map to group tests by score type
   for (test_name in names(score_type_map)) {
     types <- score_type_map[[test_name]]
@@ -61,10 +61,10 @@ generate_domain_table <- function(pheno, domain_name) {
       score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
     }
   }
-  
+
   # Get unique score types present
   unique_score_types <- names(score_types_list)
-  
+
   # Define the score type footnotes
   fn_list <- list()
   if ("t_score" %in% unique_score_types) {
@@ -76,13 +76,13 @@ generate_domain_table <- function(pheno, domain_name) {
   if ("standard_score" %in% unique_score_types) {
     fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
   }
-  
+
   # Create groups based on test names that use each score type
   grp_list <- score_types_list
-  
+
   # Define which groups support which score types (for dynamic footnotes)
   dynamic_grp <- score_types_list
-  
+
   # Default source note if no score types are found
   if (length(fn_list) == 0) {
     # Determine default based on pheno
@@ -90,9 +90,9 @@ generate_domain_table <- function(pheno, domain_name) {
   } else {
     source_note <- NULL # No general source note when using footnotes
   }
-  
-  # Create table using our modified TableGT_Modified R6 class
-  table_gt <- TableGT_Modified$new(
+
+  # Create table using our modified TableGT_ModifiedR6 R6 class
+  table_gt <- TableGT_ModifiedR6$new(
     data = data,
     pheno = pheno,
     table_name = table_name,
@@ -103,13 +103,13 @@ generate_domain_table <- function(pheno, domain_name) {
     grp_list = grp_list,
     dynamic_grp = dynamic_grp
   )
-  
+
   # Get the table object
   tbl <- table_gt$build_table()
-  
+
   # Save the table
   table_gt$save_table(tbl, dir = here())
-  
+
   message(paste0("  - Created ", table_name, ".png"))
   return(table_name)
 }

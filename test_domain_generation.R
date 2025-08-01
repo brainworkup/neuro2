@@ -6,7 +6,7 @@ library(here)
 source(here::here("R/DomainProcessorR6.R"))
 source(here::here("R/NeuropsychResultsR6.R"))
 source(here::here("R/DotplotR6.R"))
-source(here::here("R/TableGT_Modified.R"))
+source(here::here("R/TableGT_ModifiedR6.R"))
 
 # Test generating a complete domain file
 cat("=== Testing Domain Generation ===\n")
@@ -61,7 +61,7 @@ cat("\n--- Test 4: Verify Complete File Generation ---\n")
 test_file <- "_02-05_memory.qmd"
 if (file.exists(test_file)) {
   content <- readLines(test_file)
-  
+
   # Check for key sections
   has_setup <- any(grepl("label: setup-memory", content))
   has_export <- any(grepl("label: export-memory", content))
@@ -70,7 +70,7 @@ if (file.exists(test_file)) {
   has_table <- any(grepl("label: qtbl-memory", content))
   has_figure <- any(grepl("label: fig-memory", content))
   has_typst <- any(grepl("typst", content))
-  
+
   cat("File completeness check:\n")
   cat("  Setup block:", ifelse(has_setup, "✓", "✗"), "\n")
   cat("  Export block:", ifelse(has_export, "✓", "✗"), "\n")
@@ -79,7 +79,7 @@ if (file.exists(test_file)) {
   cat("  Table block:", ifelse(has_table, "✓", "✗"), "\n")
   cat("  Figure block:", ifelse(has_figure, "✓", "✗"), "\n")
   cat("  Typst layout:", ifelse(has_typst, "✓", "✗"), "\n")
-  
+
   # Check for scale loading
   has_scale_loading <- any(grepl("scales_memory", content))
   cat("  Dynamic scale loading:", ifelse(has_scale_loading, "✓", "✗"), "\n")
@@ -94,10 +94,14 @@ if (file.exists(adhd_file)) {
   content <- readLines(adhd_file)
   has_scale_loading <- any(grepl("scales_adhd_adult", content))
   has_hardcoded <- any(grepl("CAARS ADHD Index", content)) # Look for old hardcoded scale
-  
+
   cat("ADHD file check:\n")
   cat("  Uses scales_adhd_adult:", ifelse(has_scale_loading, "✓", "✗"), "\n")
-  cat("  Has hardcoded scales:", ifelse(has_hardcoded, "✗ (bad)", "✓ (good)"), "\n")
+  cat(
+    "  Has hardcoded scales:",
+    ifelse(has_hardcoded, "✗ (bad)", "✓ (good)"),
+    "\n"
+  )
 }
 
 # Check academics file
@@ -106,7 +110,7 @@ if (file.exists(academics_file)) {
   content <- readLines(academics_file)
   has_scale_loading <- any(grepl("scales_academics", content))
   has_r6_classes <- any(grepl("DomainProcessorR6", content))
-  
+
   cat("\nAcademics file check:\n")
   cat("  Uses scales_academics:", ifelse(has_scale_loading, "✓", "✗"), "\n")
   cat("  Uses R6 classes:", ifelse(has_r6_classes, "✓", "✗"), "\n")
