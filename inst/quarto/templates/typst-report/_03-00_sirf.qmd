@@ -32,33 +32,33 @@ read_data <- function(base_path) {
 neurocog <- read_data("data/neurocog")
 
 # # Define domain variables explicitly to avoid the "object not found" error
-# domain_iq <- "General Cognitive Ability"
-# domain_academics <- "Academic Skills"
-# domain_verbal <- "Verbal/Language"
-# domain_spatial <- "Visual Perception/Construction"
-# domain_memory <- "Memory"
-# domain_executive <- "Attention/Executive"
-# domain_motor <- "Motor"
-# domain_social <- "Social Cognition"
-# domain_adhd_adult <- "ADHD Adult"
-# domain_adhd_child <- "ADHD Child"
-# domain_emotion_adult <- c(
-#   "Psychiatric Disorders",
-#   "Personality Disorders",
-#   "Substance Use",
-#   "Psychosocial Problems",
-#   "Behavioral/Emotional/Social",
-#   "Emotional/Behavioral/Personality"
-# )
-# domain_emotion_child <- c(
-#   "Psychiatric Disorders",
-#   "Personality Disorders",
-#   "Substance Use",
-#   "Psychosocial Problems",
-#   "Behavioral/Emotional/Social"
-# )
-# domain_adaptive <- "Adaptive Functioning"
-# domain_daily_living <- "Daily Living"
+domain_iq <- "General Cognitive Ability"
+domain_academics <- "Academic Skills"
+domain_verbal <- "Verbal/Language"
+domain_spatial <- "Visual Perception/Construction"
+domain_memory <- "Memory"
+domain_executive <- "Attention/Executive"
+domain_motor <- "Motor"
+domain_social <- "Social Cognition"
+domain_adhd_adult <- "ADHD Adult"
+domain_adhd_child <- "ADHD Child"
+domain_emotion_adult <- c(
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems",
+  "Behavioral/Emotional/Social",
+  "Emotional/Behavioral/Personality"
+)
+domain_emotion_child <- c(
+  "Psychiatric Disorders",
+  "Personality Disorders",
+  "Substance Use",
+  "Psychosocial Problems",
+  "Behavioral/Emotional/Social"
+)
+domain_adaptive <- "Adaptive Functioning"
+domain_daily_living <- "Daily Living"
 
 # Create report system for overall summary
 report_system <- NeuropsychReportSystemR6$new(
