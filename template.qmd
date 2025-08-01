@@ -11,6 +11,23 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
+# # Suppress warnings during setup
+options(warn = -1)
+
+# # Source package loading function
+if (file.exists("R/load_packages.R")) {
+  source("R/load_packages.R")
+  # Load all required packages using centralized function
+  load_neuropsych_packages(verbose = FALSE)
+} else {
+  # Fallback: Load minimal required packages directly
+  library(knitr)
+  library(here)
+  library(readr)
+  library(dplyr)
+  library(gt)
+  library(arrow)
+}
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -31,8 +48,8 @@ patient <- Sys.getenv("PATIENT")
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
 #let doe = [{{< var date_of_report >}}]
 #let patient = [{{< var patient >}}]
-#v(2em, weak: true)
-#show block: set par(leading: 0.65em)
+// #v(2em, weak: true)
+// #show block: set par(leading: 0.65em)
 #block[
 *CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \

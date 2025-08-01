@@ -1,5 +1,0 @@
-<summary>
-
-Self-report data for behavioral/emotional/social assessment will be generated based on the assessment results.
-
-</summary>

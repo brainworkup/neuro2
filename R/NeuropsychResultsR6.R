@@ -35,7 +35,7 @@ NeuropsychResultsR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Sort the data by percentile, remove duplicates, convert to text, and append to file.
+    #' Sort the data by percentile, remove duplicates, convert to text, and write to file as proper QMD content.
     #'
     #' @return Invisibly returns NULL after writing to the file.
     process = function() {
@@ -44,12 +44,31 @@ NeuropsychResultsR6 <- R6::R6Class(
         dplyr::arrange(dplyr::desc(percentile)) |>
         dplyr::distinct(.keep_all = FALSE)
 
-      # Convert the data to text and append to the file
+      # Create proper QMD content with summary tags
+      if (nrow(sorted_data) > 0) {
+        qmd_content <- c(
+          "<summary>",
+          "",
+          paste0(sorted_data$result),
+          "",
+          "</summary>"
+        )
+      } else {
+        qmd_content <- c(
+          "<summary>",
+          "",
+          "No data available for this domain.",
+          "",
+          "</summary>"
+        )
+      }
+
+      # Write the QMD content to file (overwrite, don't append)
       cat(
-        paste0(sorted_data$result),
+        qmd_content,
         file = self$file,
         sep = "\n",
-        append = TRUE
+        append = FALSE
       )
 
       invisible(NULL)

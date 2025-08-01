@@ -282,6 +282,10 @@ if (patient_type == "child") {
       processor$filter_by_domain()
       
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
+        
         # Generate child-specific emotion file
         generated_file <- processor$generate_domain_qmd(is_child = TRUE)
         log_message(paste("Generated:", generated_file), "DOMAINS")
@@ -311,6 +315,10 @@ if (patient_type == "child") {
       processor$filter_by_domain()
       
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
+        
         # Generate child-specific ADHD file
         generated_file <- processor$generate_domain_qmd(is_child = TRUE)
         log_message(paste("Generated:", generated_file), "DOMAINS")
@@ -337,6 +345,10 @@ if (patient_type == "child") {
       processor$filter_by_domain()
       
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
+        
         # Generate adult-specific emotion file
         generated_file <- processor$generate_domain_qmd(is_child = FALSE)
         log_message(paste("Generated:", generated_file), "DOMAINS")
@@ -361,6 +373,10 @@ if (patient_type == "child") {
       processor$filter_by_domain()
       
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
+        
         # Generate adult-specific ADHD file
         generated_file <- processor$generate_domain_qmd(is_child = FALSE)
         log_message(paste("Generated:", generated_file), "DOMAINS")
