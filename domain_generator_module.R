@@ -13,7 +13,7 @@ log_message <- function(message, type = "INFO") {
 log_message("Starting domain generation module", "DOMAINS")
 
 # Load required packages
-required_packages <- c("dplyr", "readr", "arrow", "yaml")
+required_packages <- c("dplyr", "readr", "arrow", "yaml", "R6", "here", "gt", "ggplot2")
 for (pkg in required_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     log_message(paste("Installing package:", pkg), "DOMAINS")
@@ -21,6 +21,13 @@ for (pkg in required_packages) {
   }
   library(pkg, character.only = TRUE, quietly = TRUE)
 }
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_ModifiedR6.R")
+source("R/score_type_utils.R")
 
 # Load configuration
 config <- yaml::read_yaml("config.yml")
@@ -106,134 +113,195 @@ determine_patient_type <- function() {
 patient_type <- determine_patient_type()
 log_message(paste("Determined patient type:", patient_type), "DOMAINS")
 
-# Map domains to file names based on patient type
-domain_files <- list(
-  "General Cognitive Ability" = "_02-01_iq.qmd",
-  "Academic Skills" = "_02-02_academics.qmd",
-  "Verbal/Language" = "_02-03_verbal.qmd",
-  "Visual Perception/Construction" = "_02-04_spatial.qmd",
-  "Memory" = "_02-05_memory.qmd",
-  "Attention/Executive" = "_02-06_executive.qmd",
-  "Motor" = "_02-07_motor.qmd",
-  "Social Cognition" = "_02-08_social.qmd"
+# Map domains to phenotypes and file names
+domain_config <- list(
+  "General Cognitive Ability" = list(
+    pheno = "iq",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Academic Skills" = list(
+    pheno = "academics",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Verbal/Language" = list(
+    pheno = "verbal",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Visual Perception/Construction" = list(
+    pheno = "spatial",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Memory" = list(
+    pheno = "memory",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Attention/Executive" = list(
+    pheno = "executive",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Motor" = list(
+    pheno = "motor",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Social Cognition" = list(
+    pheno = "social",
+    input_file = "data/neurocog.parquet"
+  ),
+  "ADHD" = list(
+    pheno = "adhd",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Emotional/Behavioral/Personality" = list(
+    pheno = "emotion",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Adaptive Functioning" = list(
+    pheno = "adaptive",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Daily Living" = list(
+    pheno = "daily_living",
+    input_file = "data/neurobehav.parquet"
+  )
 )
 
-# Add ADHD domain file based on patient type
-if (patient_type == "adult") {
-  domain_files[["ADHD"]] <- "_02-09_adhd_adult.qmd"
-} else {
-  domain_files[["ADHD"]] <- "_02-09_adhd_child.qmd"
-}
-
-# Add emotion domain file based on patient type
-emotion_file <- if (patient_type == "adult") {
-  "_02-10_emotion_adult.qmd"
-} else {
-  "_02-10_emotion_child.qmd"
-}
-domain_files[["Behavioral/Emotional/Social"]] <- emotion_file
-
-# Add other domains
-domain_files[["Adaptive Functioning"]] <- "_02-11_adaptive.qmd"
-domain_files[["Daily Living"]] <- "_02-12_daily_living.qmd"
-
-# Map all behavioral domains to the emotion file
-domain_files[["Psychiatric Disorders"]] <- emotion_file
-domain_files[["Psychosocial Problems"]] <- emotion_file
-domain_files[["Substance Use"]] <- emotion_file
-domain_files[["Personality Disorders"]] <- emotion_file
-
-# Create a basic template for each domain
-domain_template <- '---
-title: "{domain}"
----
-
-# {domain}
-
-```{r}
-#| label: {label}-setup
-#| include: false
-
-# Load domain data
-domain_data <- NULL
-if (file.exists("data/neurocog.parquet")) {
-  neurocog <- arrow::read_parquet("data/neurocog.parquet")
-  domain_data <- neurocog |> dplyr::filter(domain == "{domain}")
-} else if (file.exists("data/neurocog.feather")) {
-  neurocog <- arrow::read_feather("data/neurocog.feather")
-  domain_data <- neurocog |> dplyr::filter(domain == "{domain}")
-} else if (file.exists("data/neurocog.csv")) {
-  neurocog <- readr::read_csv("data/neurocog.csv", show_col_types = FALSE)
-  domain_data <- neurocog |> dplyr::filter(domain == "{domain}")
-}
-
-# Check if we have behavioral data
-behav_data <- NULL
-if (file.exists("data/neurobehav.parquet")) {
-  neurobehav <- arrow::read_parquet("data/neurobehav.parquet")
-  behav_data <- neurobehav |> dplyr::filter(domain == "{domain}")
-} else if (file.exists("data/neurobehav.feather")) {
-  neurobehav <- arrow::read_feather("data/neurobehav.feather")
-  behav_data <- neurobehav |> dplyr::filter(domain == "{domain}")
-} else if (file.exists("data/neurobehav.csv")) {
-  neurobehav <- readr::read_csv("data/neurobehav.csv", show_col_types = FALSE)
-  behav_data <- neurobehav |> dplyr::filter(domain == "{domain}")
-}
-```
-
-## Summary
-
-This section provides a summary of {domain} assessment results.
-
-```{r}
-#| label: {label}-table
-#| echo: false
-
-if (!is.null(domain_data) && nrow(domain_data) > 0) {
-  domain_data |>
-    dplyr::select(test, scale, score, percentile, range) |>
-    knitr::kable()
-}
-
-if (!is.null(behav_data) && nrow(behav_data) > 0) {
-  behav_data |>
-    dplyr::select(test, scale, score, percentile, range) |>
-    knitr::kable()
-}
-```
-
-## Interpretation
-
-The {domain} assessment results indicate...
-
-'
-
-# Generate domain files
+# Generate domain files using R6 class
 for (domain in domains) {
-  # Get the file name for this domain
-  file_name <- domain_files[[domain]]
-
-  # If no specific file name is defined, create a generic one
-  if (is.null(file_name)) {
-    # Create a safe file name from the domain
-    safe_name <- tolower(gsub("[^a-zA-Z0-9]", "_", domain))
-    file_name <- paste0("_02-", safe_name, ".qmd")
+  # Get config for this domain
+  config <- domain_config[[domain]]
+  
+  if (is.null(config)) {
+    log_message(paste("No configuration found for domain:", domain), "WARNING")
+    
+    # Try to map behavioral domains to emotion
+    if (domain %in% c("Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")) {
+      config <- list(
+        pheno = "emotion",
+        input_file = "data/neurobehav.parquet"
+      )
+    } else {
+      next
+    }
   }
-
-  # Create a label from the domain
-  label <- tolower(gsub("[^a-zA-Z0-9]", "_", domain))
-
-  # Fill in the template
-  content <- gsub("\\{domain\\}", domain, domain_template)
-  content <- gsub("\\{label\\}", label, content)
-
-  # Write the file
-  if (!file.exists(file_name)) {
-    log_message(paste("Creating domain file:", file_name), "DOMAINS")
-    writeLines(content, file_name)
-  } else {
-    log_message(paste("Domain file already exists:", file_name), "DOMAINS")
+  
+  # Determine input file
+  input_file <- config$input_file
+  
+  # Check if the input file exists with different formats
+  if (!file.exists(input_file)) {
+    # Try other formats
+    base_name <- gsub("\\.(parquet|feather|csv)$", "", input_file)
+    
+    if (file.exists(paste0(base_name, ".parquet"))) {
+      input_file <- paste0(base_name, ".parquet")
+    } else if (file.exists(paste0(base_name, ".feather"))) {
+      input_file <- paste0(base_name, ".feather")
+    } else if (file.exists(paste0(base_name, ".csv"))) {
+      input_file <- paste0(base_name, ".csv")
+    } else {
+      log_message(paste("Input file not found for domain:", domain), "WARNING")
+      next
+    }
   }
+  
+  # Create processor
+  tryCatch({
+    log_message(paste("Processing domain:", domain), "DOMAINS")
+    
+    processor <- DomainProcessorR6$new(
+      domains = domain,
+      pheno = config$pheno,
+      input_file = input_file
+    )
+    
+    # Load and process data
+    processor$load_data()
+    processor$filter_by_domain()
+    
+    # Check if we have data for this domain
+    if (is.null(processor$data) || nrow(processor$data) == 0) {
+      log_message(paste("No data found for domain:", domain), "WARNING")
+      next
+    }
+    
+    # Generate domain QMD file
+    generated_file <- processor$generate_domain_qmd()
+    log_message(paste("Generated:", generated_file), "DOMAINS")
+    
+    # Also generate text file
+    processor$generate_domain_text_qmd()
+    
+  }, error = function(e) {
+    log_message(paste("Error processing domain", domain, ":", e$message), "ERROR")
+  })
+}
+
+# Special handling for multi-rater domains (emotion and ADHD)
+# Generate child-specific files if patient is a child
+if (patient_type == "child") {
+  # Generate emotion child files
+  if ("Behavioral/Emotional/Social" %in% domains) {
+    tryCatch({
+      log_message("Processing emotion domain for child", "DOMAINS")
+      
+      processor <- DomainProcessorR6$new(
+        domains = "Behavioral/Emotional/Social",
+        pheno = "emotion",
+        input_file = "data/neurobehav.parquet"
+      )
+      
+      processor$load_data()
+      processor$filter_by_domain()
+      
+      if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Generate child-specific emotion file
+        generated_file <- processor$generate_domain_qmd(is_child = TRUE)
+        log_message(paste("Generated:", generated_file), "DOMAINS")
+        
+        # Generate rater-specific text files
+        processor$generate_domain_text_qmd(report_type = "self")
+        processor$generate_domain_text_qmd(report_type = "parent")
+        processor$generate_domain_text_qmd(report_type = "teacher")
+      }
+    }, error = function(e) {
+      log_message(paste("Error processing emotion child domain:", e$message), "ERROR")
+    })
+  }
+  
+  # Generate ADHD child files
+  if ("ADHD" %in% domains) {
+    tryCatch({
+      log_message("Processing ADHD domain for child", "DOMAINS")
+      
+      processor <- DomainProcessorR6$new(
+        domains = "ADHD",
+        pheno = "adhd",
+        input_file = "data/neurobehav.parquet"
+      )
+      
+      processor$load_data()
+      processor$filter_by_domain()
+      
+      if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Generate child-specific ADHD file
+        generated_file <- processor$generate_domain_qmd(is_child = TRUE)
+        log_message(paste("Generated:", generated_file), "DOMAINS")
+      }
+    }, error = function(e) {
+      log_message(paste("Error processing ADHD child domain:", e$message), "ERROR")
+    })
+  }
+}
+
+# List generated files
+log_message("Listing generated domain files:", "DOMAINS")
+domain_files <- list.files(".", pattern = "^_02-[0-9]+_.*\\.qmd$")
+for (file in domain_files) {
+  log_message(paste("  -", file), "DOMAINS")
 }
 
 log_message("Domain generation complete", "DOMAINS")

@@ -1,0 +1,254 @@
+## Social Cognition {#sec-social}
+
+{{< include _02-08_social_text.qmd >}}
+
+```{r}
+#| label: setup-social
+#| include: false
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGT_ModifiedR6.R")
+source("R/score_type_utils.R")
+
+# Filter by domain
+domains <- c("Social Cognition")
+
+# Target phenotype
+pheno <- "social"
+
+# Create R6 processor
+processor_social <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/neurocog.parquet"
+)
+
+# Load and process data
+processor_social$load_data()
+processor_social$filter_by_domain()
+
+# Create the data object with original name for compatibility
+social <- processor_social$data
+
+# Process and export data using R6
+processor_social$select_columns()
+processor_social$save_data()
+
+# Update the original object
+social <- processor_social$data
+
+# Load internal data to get standardized scale names
+# The scales_social object is available from the package's internal data
+if (!exists("scales_social")) {
+  # Load from sysdata.rda
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  } else {
+    stop(
+      "Could not load scales_social from sysdata.rda. Please ensure the internal data file exists."
+    )
+  }
+}
+
+scales <- scales_social
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
+  }
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_social <- filter_data(data = social, domain = domains, scale = scales)
+```
+```{r}
+#| label: text-social
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_social,
+  file = "_02-08_social_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-social
+#| include: false
+#| eval: true
+
+# Table parameters
+table_name <- "table_social"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Get score types from the lookup table
+score_type_map <- get_score_types_from_lookup(data_social)
+
+# Create a list of test names grouped by score type
+score_types_list <- list()
+
+# Process the score type map to group tests by score type
+for (test_name in names(score_type_map)) {
+  types <- score_type_map[[test_name]]
+  for (type in types) {
+    if (!type %in% names(score_types_list)) {
+      score_types_list[[type]] <- character(0)
+    }
+    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+  }
+}
+
+# Get unique score types present
+unique_score_types <- names(score_types_list)
+
+# Define the score type footnotes
+fn_list <- list()
+if ("t_score" %in% unique_score_types) {
+  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+}
+if ("scaled_score" %in% unique_score_types) {
+  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+}
+if ("standard_score" %in% unique_score_types) {
+  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+}
+
+# Create groups based on test names that use each score type
+grp_list <- score_types_list
+
+# Define which groups support which score types (for dynamic footnotes)
+dynamic_grp <- score_types_list
+
+# Default source note if no score types are found
+if (length(fn_list) == 0) {
+  # Determine default based on pheno
+  source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+} else {
+  source_note <- NULL # No general source note when using footnotes
+}
+
+# Create table using our modified TableGT_ModifiedR6 R6 class
+table_gt <- TableGT_ModifiedR6$new(
+  data = data_social,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = source_note,
+  multiline = multiline,
+  fn_list = fn_list,
+  grp_list = grp_list,
+  dynamic_grp = dynamic_grp
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-social-subdomain
+#| include: false
+#| eval: true
+
+# Create subdomain plot using R6 DotplotR6
+dotplot_subdomain <- DotplotR6$new(
+  data = data_social,
+  x = "z_mean_subdomain",
+  y = "subdomain",
+  filename = here::here("fig_social_subdomain.svg")
+)
+dotplot_subdomain$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_social"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_social <- get(plot_title_var)
+} else {
+  plot_title_social <- "Social cognition and autism spectrum disorder (ASD)
+measures are used to gauge aspects of social-emotional processing and social
+aptitude (sometimes referred to as _emotional intelligence_), which are
+important facets of how individuals process social information about other
+children, adults, groups, and social contexts."
+}
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_social`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Social Cognition"
+
+// Define the file name of the table
+#let file_qtbl = "table_social.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_social_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
