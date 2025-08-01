@@ -1,7 +1,5 @@
 # SUMMARY/IMPRESSION {#sec-sirf}
 
-{{< include _03-00_sirf_text.qmd >}}
-
 ```{r}
 #| label: setup-sirf
 #| include: false

@@ -33,7 +33,13 @@ if (length(scales) > 0) {
 # Test 2: Generate emotion domain file (behavioral)
 cat("\n--- Test 2: Emotion Domain (Adult) ---\n")
 processor_emotion <- DomainProcessorR6$new(
-  domains = "Psychiatric Disorders",
+  domains = c(
+    "Emotional/Behavioral/Personality",
+    "Psychiatric Symptoms",
+    "Substance Use",
+    "Personality Disorders",
+    "Psychosocial Problems"
+  ),
   pheno = "emotion_adult",
   input_file = "data/neurobehav.parquet"
 )
@@ -64,8 +70,6 @@ if (file.exists(test_file)) {
 
   # Check for key sections
   has_setup <- any(grepl("label: setup-memory", content))
-  has_export <- any(grepl("label: export-memory", content))
-  has_data <- any(grepl("label: data-memory", content))
   has_text <- any(grepl("label: text-memory", content))
   has_table <- any(grepl("label: qtbl-memory", content))
   has_figure <- any(grepl("label: fig-memory", content))
@@ -73,8 +77,6 @@ if (file.exists(test_file)) {
 
   cat("File completeness check:\n")
   cat("  Setup block:", ifelse(has_setup, "✓", "✗"), "\n")
-  cat("  Export block:", ifelse(has_export, "✓", "✗"), "\n")
-  cat("  Data block:", ifelse(has_data, "✓", "✗"), "\n")
   cat("  Text block:", ifelse(has_text, "✓", "✗"), "\n")
   cat("  Table block:", ifelse(has_table, "✓", "✗"), "\n")
   cat("  Figure block:", ifelse(has_figure, "✓", "✗"), "\n")

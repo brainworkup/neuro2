@@ -30,9 +30,9 @@ format:
   neurotyp-forensic-typst:
     keep-typ: true
     keep-md: true
-    papersize: "a4"
-    bodyfont: "Equity B OTF"
-    sansfont: "Work Sans"
+    papersize: "us-letter"
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
     fontsize: 12pt
     number-sections: false
     number-offset: 1

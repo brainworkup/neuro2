@@ -164,3 +164,7 @@ _*.bak
 *.bak
 _extensions/brainworkup/neurotyp-*/typst-template.pdf
 table_*.pdf
+template_forensic.pdf
+_02-99_emotion_adult_text.qmd
+_02-99_emotion_adult.qmd
+template_pediatric.pdf

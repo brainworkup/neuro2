@@ -1,4 +1,4 @@
-## Behavioral/Emotional/Social {#sec-emotion-child}
+## Psychosocial Problems {#sec-emotion-child}
 
 ```{r}
 #| label: setup-emotion
@@ -13,7 +13,7 @@ source("R/score_type_utils.R")
 
 # Filter by domain
 domains <- c(
-  "Behavioral/Emotional/Social"
+  "Psychosocial Problems"
 )
 
 # Target phenotype
@@ -389,7 +389,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_self <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_self <- "This section presents results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_self <- "This section presents results from the Psychosocial Problems domain assessment."
 }
 ```
 
@@ -420,7 +420,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_parent <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_parent <- "This section presents parent-rating results from the Psychosocial Problems domain assessment."
 }
 ```
 
@@ -451,7 +451,7 @@ if (!exists(plot_title_var)) {
 if (exists(plot_title_var)) {
   plot_title_emotion_child_teacher <- get(plot_title_var)
 } else {
-  plot_title_emotion_child_teacher <- "This section presents teacher-rated results from the Behavioral/Emotional/Social domain assessment."
+  plot_title_emotion_child_teacher <- "This section presents teacher-rated results from the Psychosocial Problems domain assessment."
 }
 ```
 
@@ -499,7 +499,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Psychosocial Problems"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_self.png"
@@ -555,7 +555,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Psychosocial Problems"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_parent.png"
@@ -611,7 +611,7 @@ if (exists(plot_title_var)) {
 
 <!-- ```{=typst}
 // Define the title of the domain
-#let title = "Behavioral/Emotional/Social"
+#let title = "Psychosocial Problems"
 
 // Define the file name of the table
 #let file_qtbl = "table_emotion_child_teacher.png"
