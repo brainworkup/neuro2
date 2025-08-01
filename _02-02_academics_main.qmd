@@ -3,7 +3,7 @@
 {{< include _02-02_academics_text.qmd >}}
 
 ```{r}
-#| label: setup-academics-child
+#| label: setup-academics
 #| include: false
 
 # Source R6 classes
@@ -32,12 +32,6 @@ processor_academics$filter_by_domain()
 
 # Create the data object with original name for compatibility
 academics <- processor_academics$data
-```
-
-```{r}
-#| label: export-academics-child
-#| include: false
-#| eval: true
 
 # Process and export data using R6
 processor_academics$select_columns()
@@ -45,28 +39,22 @@ processor_academics$save_data()
 
 # Update the original object
 academics <- processor_academics$data
-```
-
-```{r}
-#| label: data-academics-child
-#| include: false
-#| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_academics_child object is available from the package's internal data
-if (!exists("scales_academics_child")) {
+# The scales_academics object is available from the package's internal data
+if (!exists("scales_academics")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_academics_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_academics from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_academics_child
+scales <- scales_academics
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -86,7 +74,6 @@ filter_data <- function(data, domain, scale) {
 # Apply the filter function
 data_academics <- filter_data(data = academics, domain = domains, scale = scales)
 ```
-
 ```{r}
 #| label: text-academics
 #| cache: true
@@ -110,14 +97,63 @@ table_name <- "table_academics"
 vertical_padding <- 0
 multiline <- TRUE
 
+# Get score types from the lookup table
+score_type_map <- get_score_types_from_lookup(data_academics)
+
+# Create a list of test names grouped by score type
+score_types_list <- list()
+
+# Process the score type map to group tests by score type
+for (test_name in names(score_type_map)) {
+  types <- score_type_map[[test_name]]
+  for (type in types) {
+    if (!type %in% names(score_types_list)) {
+      score_types_list[[type]] <- character(0)
+    }
+    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+  }
+}
+
+# Get unique score types present
+unique_score_types <- names(score_types_list)
+
+# Define the score type footnotes
+fn_list <- list()
+if ("t_score" %in% unique_score_types) {
+  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+}
+if ("scaled_score" %in% unique_score_types) {
+  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+}
+if ("standard_score" %in% unique_score_types) {
+  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+}
+
+# Create groups based on test names that use each score type
+grp_list <- score_types_list
+
+# Define which groups support which score types (for dynamic footnotes)
+dynamic_grp <- score_types_list
+
+# Default source note if no score types are found
+if (length(fn_list) == 0) {
+  # Determine default based on pheno
+  source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+} else {
+  source_note <- NULL # No general source note when using footnotes
+}
+
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
   data = data_academics,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-  multiline = multiline
+  source_note = source_note,
+  multiline = multiline,
+  fn_list = fn_list,
+  grp_list = grp_list,
+  dynamic_grp = dynamic_grp
 )
 
 # Get the table object without automatic saving
@@ -149,12 +185,29 @@ if (!exists(plot_title_var)) {
     load(sysdata_path)
   }
 }
+```
 
-# Get the plot title or use default
-if (exists(plot_title_var)) {
-  plot_title_academics <- get(plot_title_var)
-} else {
-  plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
+```{r}
+#| label: fig-academics-narrow
+#| include: false
+#| eval: true
+
+# Create narrow plot using R6 DotplotR6
+dotplot_narrow <- DotplotR6$new(
+  data = data_academics,
+  x = "z_mean_narrow",
+  y = "narrow",
+  filename = here::here("fig_academics_narrow.svg")
+)
+dotplot_narrow$create_plot()
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_academics"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
 }
 ```
 
@@ -197,6 +250,7 @@ if (exists(plot_title_var)) {
   )
 }
 ```
+
 ```{=typst}
 // Define the title of the domain
 #let title = "Academic Skills"
@@ -206,6 +260,20 @@ if (exists(plot_title_var)) {
 
 // Define the file name of the figure
 #let file_fig = "fig_academics_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Academic Skills"
+
+// Define the file name of the table
+#let file_qtbl = "table_academics.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_academics_narrow.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
