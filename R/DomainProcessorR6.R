@@ -1079,6 +1079,9 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Also generate the text file
       self$generate_domain_text_qmd(domain_name)
+      
+      # Generate table PNG file
+      self$generate_domain_table(domain_name)
 
       return(output_file)
     },
@@ -1993,6 +1996,9 @@ DomainProcessorR6 <- R6::R6Class(
       # Write to file
       cat(qmd_content, file = output_file)
 
+      # Generate tables for each rater type
+      self$generate_emotion_child_tables()
+
       return(output_file)
     },
 
@@ -2349,9 +2355,299 @@ DomainProcessorR6 <- R6::R6Class(
       )
       results_processor$process()
 
+      # Generate table for adult emotion
+      self$generate_domain_table(domain_name)
+
       # Adult emotion only uses self-report, no observer text file needed
 
       return(output_file)
+    },
+
+    #' @description
+    #' Generate table PNG file for the domain.
+    #'
+    #' @param domain_name Name of the domain.
+    #' @return Invisibly returns self for method chaining.
+    generate_domain_table = function(domain_name = NULL) {
+      # Use the first domain if domain_name not provided
+      if (is.null(domain_name)) {
+        domain_name <- self$domains[1]
+      }
+
+      # Process data for this domain if not already processed
+      if (is.null(self$data)) {
+        self$load_data()
+        self$filter_by_domain()
+        self$select_columns()
+      }
+
+      # Get scales for filtering
+      scales <- self$get_scales()
+      
+      # Filter the data
+      filtered_data <- self$data
+      if (length(scales) > 0) {
+        filtered_data <- filtered_data[filtered_data$scale %in% scales, ]
+      }
+
+      # Check if we have data
+      if (nrow(filtered_data) == 0) {
+        message("No data available for table generation for ", domain_name)
+        return(invisible(self))
+      }
+
+      # Table parameters
+      table_name <- paste0("table_", tolower(self$pheno))
+      vertical_padding <- 0
+      multiline <- TRUE
+
+      tryCatch({
+        # Load score type utils
+        if (!exists("get_score_types_from_lookup")) {
+          source("R/score_type_utils.R")
+        }
+
+        # Get score types from the lookup table
+        score_type_map <- get_score_types_from_lookup(filtered_data)
+
+        # Create a list of test names grouped by score type
+        score_types_list <- list()
+
+        # Process the score type map to group tests by score type
+        for (test_name in names(score_type_map)) {
+          types <- score_type_map[[test_name]]
+          for (type in types) {
+            if (!type %in% names(score_types_list)) {
+              score_types_list[[type]] <- character(0)
+            }
+            score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+          }
+        }
+
+        # Get unique score types present
+        unique_score_types <- names(score_types_list)
+
+        # Define the score type footnotes
+        fn_list <- list()
+        if ("t_score" %in% unique_score_types) {
+          fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+        }
+        if ("scaled_score" %in% unique_score_types) {
+          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+        }
+        if ("standard_score" %in% unique_score_types) {
+          fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        }
+
+        # Create groups based on test names that use each score type
+        grp_list <- score_types_list
+
+        # Define which groups support which score types (for dynamic footnotes)
+        dynamic_grp <- score_types_list
+
+        # Determine source note based on domain
+        source_notes <- list(
+          iq = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          academics = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          verbal = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          spatial = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          memory = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          executive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          motor = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          social = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          adhd = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+          emotion = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+          adaptive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
+          daily_living = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        )
+
+        # Default source note if no score types are found
+        if (length(fn_list) == 0) {
+          source_note <- source_notes[[tolower(self$pheno)]]
+          if (is.null(source_note)) {
+            source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          }
+        } else {
+          source_note <- NULL # No general source note when using footnotes
+        }
+
+        # Create table using our modified TableGT_ModifiedR6 R6 class
+        table_gt <- TableGT_ModifiedR6$new(
+          data = filtered_data,
+          pheno = tolower(self$pheno),
+          table_name = table_name,
+          vertical_padding = vertical_padding,
+          source_note = source_note,
+          multiline = multiline,
+          fn_list = fn_list,
+          grp_list = grp_list,
+          dynamic_grp = dynamic_grp
+        )
+
+        # Get the table object without automatic saving
+        tbl <- table_gt$build_table()
+
+        # Save the table using our save_table method
+        table_gt$save_table(tbl, dir = here::here())
+
+        message("Generated table: ", table_name, ".png")
+
+      }, error = function(e) {
+        message("Error generating table for ", domain_name, ": ", e$message)
+      })
+
+      return(invisible(self))
+    },
+
+    #' @description
+    #' Generate tables for emotion child domain with multiple raters.
+    #'
+    #' @return Invisibly returns self for method chaining.
+    generate_emotion_child_tables = function() {
+      # Process data for this domain if not already processed
+      if (is.null(self$data)) {
+        self$load_data()
+        self$filter_by_domain()
+        self$select_columns()
+      }
+
+      # Get scales for filtering
+      scales <- self$get_scales()
+      
+      # Filter the data
+      filtered_data <- self$data
+      if (length(scales) > 0) {
+        filtered_data <- filtered_data[filtered_data$scale %in% scales, ]
+      }
+
+      # Check if we have data
+      if (nrow(filtered_data) == 0) {
+        message("No data available for emotion child table generation")
+        return(invisible(self))
+      }
+
+      # Generate self-report table
+      tryCatch({
+        self_data <- filtered_data[filtered_data$test %in% c("pai_adol", "basc3_srp_adolescent", "basc3_srp_child"), ]
+        if (nrow(self_data) > 0) {
+          self$generate_rater_table(self_data, "self")
+        }
+      }, error = function(e) {
+        message("Error generating self-report table: ", e$message)
+      })
+
+      # Generate parent-report table
+      tryCatch({
+        parent_data <- filtered_data[filtered_data$test %in% c("basc3_prs_adolescent", "basc3_prs_child", "basc3_prs_preschool"), ]
+        if (nrow(parent_data) > 0) {
+          self$generate_rater_table(parent_data, "parent")
+        }
+      }, error = function(e) {
+        message("Error generating parent-report table: ", e$message)
+      })
+
+      # Generate teacher-report table
+      tryCatch({
+        teacher_data <- filtered_data[filtered_data$test %in% c("basc3_trs_adolescent", "basc3_trs_child", "basc3_trs_preschool"), ]
+        if (nrow(teacher_data) > 0) {
+          self$generate_rater_table(teacher_data, "teacher")
+        }
+      }, error = function(e) {
+        message("Error generating teacher-report table: ", e$message)
+      })
+
+      return(invisible(self))
+    },
+
+    #' @description
+    #' Generate a table for a specific rater type.
+    #'
+    #' @param data The filtered data for this rater.
+    #' @param rater_type The rater type ("self", "parent", "teacher").
+    #' @return Invisibly returns self for method chaining.
+    generate_rater_table = function(data, rater_type) {
+      # Table parameters
+      table_name <- paste0("table_", tolower(self$pheno), "_child_", rater_type)
+      vertical_padding <- 0
+      multiline <- TRUE
+
+      tryCatch({
+        # Load score type utils
+        if (!exists("get_score_types_from_lookup")) {
+          source("R/score_type_utils.R")
+        }
+
+        # Get score types from the lookup table
+        score_type_map <- get_score_types_from_lookup(data)
+
+        # Create a list of test names grouped by score type
+        score_types_list <- list()
+
+        # Process the score type map to group tests by score type
+        for (test_name in names(score_type_map)) {
+          types <- score_type_map[[test_name]]
+          for (type in types) {
+            if (!type %in% names(score_types_list)) {
+              score_types_list[[type]] <- character(0)
+            }
+            score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+          }
+        }
+
+        # Get unique score types present
+        unique_score_types <- names(score_types_list)
+
+        # Define the score type footnotes
+        fn_list <- list()
+        if ("t_score" %in% unique_score_types) {
+          fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+        }
+        if ("scaled_score" %in% unique_score_types) {
+          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+        }
+        if ("standard_score" %in% unique_score_types) {
+          fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        }
+
+        # Create groups based on test names that use each score type
+        grp_list <- score_types_list
+
+        # Define which groups support which score types (for dynamic footnotes)
+        dynamic_grp <- score_types_list
+
+        # Default source note if no score types are found
+        if (length(fn_list) == 0) {
+          source_note <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+        } else {
+          source_note <- NULL # No general source note when using footnotes
+        }
+
+        # Create table using our modified TableGT_ModifiedR6 R6 class
+        table_gt <- TableGT_ModifiedR6$new(
+          data = data,
+          pheno = tolower(self$pheno),
+          table_name = table_name,
+          vertical_padding = vertical_padding,
+          source_note = source_note,
+          multiline = multiline,
+          fn_list = fn_list,
+          grp_list = grp_list,
+          dynamic_grp = dynamic_grp
+        )
+
+        # Get the table object without automatic saving
+        tbl <- table_gt$build_table()
+
+        # Save the table using our save_table method
+        table_gt$save_table(tbl, dir = here::here())
+
+        message("Generated table: ", table_name, ".png")
+
+      }, error = function(e) {
+        message("Error generating table for ", rater_type, ": ", e$message)
+      })
+
+      return(invisible(self))
     }
   )
 )

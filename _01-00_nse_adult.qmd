@@ -8,7 +8,7 @@
 • Concerns of parent, caregiver, teacher, or examinee (if applicable)
 • Previous diagnoses, disabilities, or medical concerns -->
 
-{{< var first_name >}} {{< var last_name >}} is a {{< var age >}}-year-old, {{< var handedness >}}right-handed research assistant with {{< var education >}} years of education, including a B.A. in Hustling from the University of Biggie. {{< var he_she_cap >}} was referred in order to determine the nature and extent of neurocognitive sequelae emerging from a history of attention-deficit/hyperactivity disorder (ADHD).
+{{< var first_name >}} {{< var last_name >}} is a {{< var age >}}-year-old, {{< var handedness >}}right-handed research assistant with {{< var education >}} years of education, including a B.A. in rapping from the University of Brooklyn. {{< var he_she_cap >}} was referred in order to determine the nature and extent of neurocognitive sequelae emerging from a history of attention-deficit/hyperactivity disorder (ADHD).
 
 The purpose of the current evaluation is {{< var dx1 >}}, {{< var dx2 >}}, and {{< var dx3 >}}. This report is based on a review of available medical records and information gathered across multiple days of evaluation. Treatment planning and plans for test accommodations were discussed with {{< var first_name >}} during the feedback visit on the final day of the examination.
 
@@ -16,12 +16,12 @@ The purpose of the current evaluation is {{< var dx1 >}}, {{< var dx2 >}}, and {
 
 <!-- **Information to Include in Background Information Section**
 Provide pertinent information that has been obtained from all sources, including the referral source, family members, examinee, teachers, medical records, and so on. Do not include needless details or gossip. Following are examples of information that should be included:
-• Current family dynamics (spouse, children, siblings, etc.) 
+• Current family dynamics (spouse, children, siblings, etc.)
 • Medical and psychiatric history
 • Developmental history
 • Educational history (note any special services)
-• Employment history (for adults) 
-• Previous therapeutic intervention 
+• Employment history (for adults)
+• Previous therapeutic intervention
 • Current stressors
 • Summary of past evaluations -->
 

@@ -2,7 +2,6 @@
 
 <!-- adult -->
 
-```{=typst}
 - Comprehensive Neuropsychiatric Symptom and History Interview
 - Conners' Adult ADHD Diagnostic Interview for DSM-IV, Part I: History (CAADID Part 1)
 - Conners' Adult ADHD Diagnostic Interview for DSM-IV, Part II: Symptoms? (CAADID Part 2)
@@ -74,9 +73,9 @@
   - Judgment
 - Hare Psychopathy Checklist, Revised (PCL-R)
 - Personality Assessment Inventory (PAI)
-```
+
 <!-- child -->
-```{=typst}
+
 - Comprehensive Neurodevelopmental Symptom and History Interview
 - Behavioral Assessment System for Children, 3rd ed, Structured Developmental History (BASC-3 SDH)
 - Kiddie-SADS
@@ -143,5 +142,5 @@
   - Behavioral Rating Scale
   - Word Fluency
   - Unstructured Task
-- Personality Assessment Inventory, Adolescent (PAI-A)
-```
+- Personality Assessment Inventory, Adolescent (PAI Adolescent)
+
