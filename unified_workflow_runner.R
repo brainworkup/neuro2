@@ -43,7 +43,12 @@ print_colored("")
 
 # Check for essential template files before starting
 print_colored("Checking for essential template files...", "blue")
-essential_files <- c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
+essential_files <- c(
+  "template.qmd",
+  "_quarto.yml",
+  "_variables.yml",
+  "config.yml"
+)
 missing_files <- character()
 
 for (file in essential_files) {
@@ -142,7 +147,7 @@ if (!file.exists(config_file)) {
   # Check if config.yml exists in template directory before creating default
   template_dir <- "inst/quarto/templates/typst-report"
   template_config_file <- file.path(template_dir, "config.yml")
-  
+
   if (file.exists(template_config_file)) {
     log_message(
       "Configuration file not found. Copying from template directory.",
@@ -162,7 +167,7 @@ if (!file.exists(config_file)) {
 
     default_config <- list(
       patient = list(
-        name = "Patient Name",
+        name = "Biggie",
         age = 35,
         doe = format(Sys.Date(), "%Y-%m-%d")
       ),
@@ -358,7 +363,12 @@ WorkflowRunner <- R6::R6Class(
       }
 
       # Verify essential files exist after copying
-      essential_files <- c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
+      essential_files <- c(
+        "template.qmd",
+        "_quarto.yml",
+        "_variables.yml",
+        "config.yml"
+      )
       missing_files <- character()
 
       for (file in essential_files) {
@@ -682,11 +692,26 @@ WorkflowRunner <- R6::R6Class(
                 input_format <- self$config$data$format
                 if (is.null(input_format) || input_format == "all") {
                   # If format is "all", check which format exists
-                  if (file.exists(file.path(self$config$data$output_dir, "neurocog.parquet"))) {
+                  if (
+                    file.exists(file.path(
+                      self$config$data$output_dir,
+                      "neurocog.parquet"
+                    ))
+                  ) {
                     input_format <- "parquet"
-                  } else if (file.exists(file.path(self$config$data$output_dir, "neurocog.csv"))) {
+                  } else if (
+                    file.exists(file.path(
+                      self$config$data$output_dir,
+                      "neurocog.csv"
+                    ))
+                  ) {
                     input_format <- "csv"
-                  } else if (file.exists(file.path(self$config$data$output_dir, "neurocog.feather"))) {
+                  } else if (
+                    file.exists(file.path(
+                      self$config$data$output_dir,
+                      "neurocog.feather"
+                    ))
+                  ) {
                     input_format <- "feather"
                   } else {
                     input_format <- "parquet" # fallback
@@ -847,8 +872,17 @@ WorkflowRunner <- R6::R6Class(
                       generate_domain_files = TRUE
                     )
                     # If needed, rename the generated file to match the expected output file
-                    generated_file <- paste0("_02-", domain_processor$get_domain_number(), "_", tolower(domain_processor$pheno), ".qmd")
-                    if (generated_file != output_file_name && file.exists(generated_file)) {
+                    generated_file <- paste0(
+                      "_02-",
+                      domain_processor$get_domain_number(),
+                      "_",
+                      tolower(domain_processor$pheno),
+                      ".qmd"
+                    )
+                    if (
+                      generated_file != output_file_name &&
+                        file.exists(generated_file)
+                    ) {
                       file.rename(generated_file, output_file_name)
                     }
                     log_message(paste0("Processed domain: ", domain), "DOMAINS")
@@ -905,11 +939,26 @@ WorkflowRunner <- R6::R6Class(
                   input_format <- self$config$data$format
                   if (is.null(input_format) || input_format == "all") {
                     # If format is "all", check which format exists
-                    if (file.exists(file.path(self$config$data$output_dir, "neurobehav.parquet"))) {
+                    if (
+                      file.exists(file.path(
+                        self$config$data$output_dir,
+                        "neurobehav.parquet"
+                      ))
+                    ) {
                       input_format <- "parquet"
-                    } else if (file.exists(file.path(self$config$data$output_dir, "neurobehav.csv"))) {
+                    } else if (
+                      file.exists(file.path(
+                        self$config$data$output_dir,
+                        "neurobehav.csv"
+                      ))
+                    ) {
                       input_format <- "csv"
-                    } else if (file.exists(file.path(self$config$data$output_dir, "neurobehav.feather"))) {
+                    } else if (
+                      file.exists(file.path(
+                        self$config$data$output_dir,
+                        "neurobehav.feather"
+                      ))
+                    ) {
                       input_format <- "feather"
                     } else {
                       input_format <- "parquet" # fallback
@@ -944,8 +993,17 @@ WorkflowRunner <- R6::R6Class(
                         generate_domain_files = TRUE
                       )
                       # If needed, rename the generated file to match the expected output file
-                      generated_file <- paste0("_02-", domain_processor$get_domain_number(), "_", tolower(domain_processor$pheno), ".qmd")
-                      if (generated_file != output_file_name && file.exists(generated_file)) {
+                      generated_file <- paste0(
+                        "_02-",
+                        domain_processor$get_domain_number(),
+                        "_",
+                        tolower(domain_processor$pheno),
+                        ".qmd"
+                      )
+                      if (
+                        generated_file != output_file_name &&
+                          file.exists(generated_file)
+                      ) {
                         file.rename(generated_file, output_file_name)
                       }
                       log_message(
