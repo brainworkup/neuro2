@@ -2,7 +2,7 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
-doe: {{< var doe >}}
+doe: "YYYY-MM-DD"
 date_of_report: last-modified
 ---
 
@@ -26,6 +26,7 @@ if (file.exists("R/load_packages.R")) {
   library(readr)
   library(dplyr)
   library(gt)
+  library(arrow)
 }
 # Set knitr options
 knitr::opts_knit$set(
@@ -43,11 +44,12 @@ patient <- Sys.getenv("PATIENT")
 
 
 ```{=typst}
+#let case_number = [{{< var case_number >}}]
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
 #let doe = [{{< var date_of_report >}}]
 #let patient = [{{< var patient >}}]
-#v(2em, weak: true)
-#show block: set par(leading: 0.65em)
+// #v(2em, weak: true)
+// #show block: set par(leading: 0.65em)
 #block[
 *CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \

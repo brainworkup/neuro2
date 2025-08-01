@@ -554,8 +554,6 @@ WorkflowRunnerR6 <- R6::R6Class(
         "R/DrilldownR6.R",
         "R/DuckDBProcessorR6.R",
         "R/TableGT_ModifiedR6.R",
-        "R/ReportGeneratorR6.R",
-        "WorkflowRunnerR6",
         "R/ReportUtilitiesR6.R",
         "R/TemplateContentManagerR6.R"
       )
@@ -718,7 +716,7 @@ WorkflowRunnerR6 <- R6::R6Class(
               )
 
               # Process each domain
-              for (i in seq_len(domains_data)) {
+              for (i in seq_len(nrow(domains_data))) {
                 domain <- domains_data$domain[i]
 
                 # Create a domain processor for this domain
@@ -943,7 +941,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                 )
 
                 # Process behavioral domains
-                for (i in seq_len(behav_domains_data)) {
+                for (i in seq_len(nrow(behav_domains_data))) {
                   domain <- behav_domains_data$domain[i]
 
                   # Skip if already processed

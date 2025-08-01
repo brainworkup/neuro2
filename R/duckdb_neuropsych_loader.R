@@ -315,6 +315,13 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
       tryCatch(
         {
           feather_data <- arrow::read_feather(f)
+          # Try to unregister existing table first to avoid conflicts
+          tryCatch(
+            duckdb::duckdb_unregister(con, table_name),
+            error = function(e) {
+              # Ignore error if table doesn't exist
+            }
+          )
           duckdb::duckdb_register(con, table_name, feather_data)
         },
         error = function(e) {
@@ -328,6 +335,13 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
           if (file.exists(csv_file)) {
             message("Falling back to CSV file: ", basename(csv_file))
             csv_data <- readr::read_csv(csv_file)
+            # Try to unregister existing table first
+            tryCatch(
+              duckdb::duckdb_unregister(con, table_name),
+              error = function(e) {
+                # Ignore error if table doesn't exist
+              }
+            )
             duckdb::duckdb_register(con, table_name, csv_data)
           }
         }
@@ -337,6 +351,13 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
       tryCatch(
         {
           parquet_data <- arrow::read_parquet(f)
+          # Try to unregister existing table first to avoid conflicts
+          tryCatch(
+            duckdb::duckdb_unregister(con, table_name),
+            error = function(e) {
+              # Ignore error if table doesn't exist
+            }
+          )
           duckdb::duckdb_register(con, table_name, parquet_data)
         },
         error = function(e) {
@@ -350,6 +371,13 @@ query_neuropsych <- function(query, data_dir = "data", ...) {
           if (file.exists(csv_file)) {
             message("Falling back to CSV file: ", basename(csv_file))
             csv_data <- readr::read_csv(csv_file)
+            # Try to unregister existing table first
+            tryCatch(
+              duckdb::duckdb_unregister(con, table_name),
+              error = function(e) {
+                # Ignore error if table doesn't exist
+              }
+            )
             duckdb::duckdb_register(con, table_name, csv_data)
           }
         }

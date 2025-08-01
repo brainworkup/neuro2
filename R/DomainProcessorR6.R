@@ -620,7 +620,7 @@ DomainProcessorR6 <- R6::R6Class(
             domain_num,
             "_",
             tolower(self$pheno),
-            "_child_main.qmd"
+            "_child.qmd"
           )
         } else {
           output_file <- paste0(
@@ -645,7 +645,7 @@ DomainProcessorR6 <- R6::R6Class(
               domain_num,
               "_",
               tolower(self$pheno),
-              "_child_main.qmd"
+              "_child.qmd"
             )
           }
           # Generate special child emotion QMD with multiple raters
@@ -659,7 +659,7 @@ DomainProcessorR6 <- R6::R6Class(
               domain_num,
               "_",
               tolower(self$pheno),
-              "_adult_main.qmd"
+              "_adult.qmd"
             )
           }
           # Generate special adult emotion QMD
