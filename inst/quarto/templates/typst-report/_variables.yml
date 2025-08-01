@@ -22,7 +22,7 @@ include_recommendations: true
 include_scores_table: true
 
 # Other variables
-case_number: 123456
+case_number: "123456"
 first_name: Biggie
 last_name: Smalls
 date_of_report: "2025-01-20"
