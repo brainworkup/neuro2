@@ -36,11 +36,24 @@ if (exists("log_message")) {
 }
 
 # Process the data using DuckDB
-load_data_duckdb(
-  file_path = config$data$input_dir,
-  output_dir = config$data$output_dir,
-  output_format = config$data$format
-)
+# Temporarily set warn option to prevent warnings from becoming errors
+old_warn <- getOption("warn")
+options(warn = 1)  # Print warnings as they occur but don't convert to errors
+
+tryCatch({
+  load_data_duckdb(
+    file_path = config$data$input_dir,
+    output_dir = config$data$output_dir,
+    output_format = config$data$format
+  )
+}, error = function(e) {
+  # Restore warning option before re-throwing
+  options(warn = old_warn)
+  stop(e)
+}, finally = {
+  # Always restore the original warning option
+  options(warn = old_warn)
+})
 
 # Log completion
 if (exists("log_message")) {

@@ -69,7 +69,9 @@ load_data_duckdb <- function(
 
     for (col in numeric_cols) {
       if (col %in% names(df)) {
-        df[[col]] <- as.numeric(df[[col]])
+        # Use suppressWarnings to prevent "NAs introduced by coercion" warning
+        # This is expected when some values can't be converted to numeric
+        df[[col]] <- suppressWarnings(as.numeric(df[[col]]))
       }
     }
 
