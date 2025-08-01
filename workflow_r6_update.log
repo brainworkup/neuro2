@@ -114,3 +114,14 @@
 [2025-07-23 01:51:52] [WORKFLOW] Step 4: Generating final report...
 [2025-07-23 01:51:52] [REPORT] report_generator_module.R not found. Using Quarto directly.
 [2025-07-23 01:51:52] [REPORT] Rendering template.qmd with Quarto
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-01_iq.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-02_academics.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-03_verbal.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-04_spatial.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-05_memory.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Updated _02-06_executive.qmd with R6 classes
+[2025-07-31 23:31:20] [DOMAINS] Created placeholder for _02-09_adhd_adult.qmd
+[2025-07-31 23:31:20] [DOMAINS] Created placeholder for _02-09_adhd_adult_text.qmd
+[2025-07-31 23:31:20] [DOMAINS] Created placeholder for _02-10_emotion_adult.qmd
+[2025-07-31 23:31:20] [DOMAINS] Created placeholder for _02-10_emotion_adult_text.qmd
+[2025-07-31 23:31:20] [DOMAINS] Updated _03-00_sirf.qmd with R6 classes

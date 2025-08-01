@@ -5,17 +5,14 @@ project:
   render:
     - template.qmd
 
-metadata-files:
-  - _variables.yml
-
 format:
   neurotyp-adult-typst:
     keep-typ: true
     keep-md: true
-    papersize: "a4"
-    bodyfont: "Source Serif 4"
-    sansfont: "Source Sans 3"
-    fontsize: 11pt
+    papersize: "us-letter"
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
+    fontsize: 12pt
     number-sections: false
     number-offset: 1
     shift-heading-level-by: 0
@@ -51,7 +48,7 @@ format:
     papersize: "us-letter"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
-    fontsize: 11pt
+    fontsize: 12pt
     number-sections: false
     number-offset: 1
     citeproc: true
