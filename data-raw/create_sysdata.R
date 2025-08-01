@@ -1615,21 +1615,21 @@ domain_social <- "Social Cognition"
 #' @title Adult ADHD Domain
 #' @description A character string label representing the adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to adult ADHD symptoms.
 #' @keywords data internal
-domain_adhd_adult <- "ADHD Adult"
+domain_adhd_adult <- "ADHD"
 
 #' @name domain_adhd_child
 #' @docType data
 #' @title Child ADHD Domain
 #' @description A character string label representing the child attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to child ADHD symptoms.
 #' @keywords data internal
-domain_adhd_child <- "ADHD Child"
+domain_adhd_child <- "ADHD"
 
 #' @name domain_emotion_adult
 #' @docType data
 #' @title Adult Emotional and Behavioral Domain
 #' @description A character vector of labels representing the adult emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
 #' @keywords data internal
-domain_emotion_adult <- "Emotional/Behavioral/Personality"
+domain_emotion_adult <- c("Emotional/Behavioral/Personality", "Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
 
 #' @name domain_emotion_child
 #' @docType data
@@ -1688,7 +1688,10 @@ safe_use_data_internal(
   domain_emotion_child = domain_emotion_child,
   overwrite = c("domain_adhd_adult", "domain_adhd_child", "domain_emotion_adult", "domain_emotion_child")
 )
-
+safe_use_data_internal(
+  domain_emotion_adult = domain_emotion_adult,
+  overwrite = c("domain_emotion_adult")
+)
 # Lookup tables ---------------------------------------------
 
 #' @name lookup_neuropsych_scales

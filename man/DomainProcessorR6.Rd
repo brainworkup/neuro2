@@ -2,35 +2,33 @@
 % Please edit documentation in R/DomainProcessorR6.R
 \name{DomainProcessorR6}
 \alias{DomainProcessorR6}
-\title{DomainProcessorR6 Class}
+\title{Simplified DomainProcessorR6 Class}
 \description{
-DomainProcessorR6 Class
+Simplified DomainProcessorR6 Class
 
-DomainProcessorR6 Class
+Simplified DomainProcessorR6 Class
 }
 \details{
-An R6 class that encapsulates a complete data processing pipeline for neuropsychological domains.
-This class handles loading data, filtering by domain, processing, and outputting results in various formats.
+A streamlined R6 class for processing neuropsychological domain data.
+Uses a systematic lookup table approach instead of hardcoded logic.
 }
 \section{Methods}{
 
 \describe{
-\item{initialize}{Initialize a new DomainProcessorR6 object with configuration parameters.}
-\item{load_data}{Load data from the specified input file.}
-\item{filter_by_domain}{Filter data to include only the specified domains.}
-\item{select_columns}{Select relevant columns from the data.}
-\item{save_data}{Save the processed data to a CSV file.}
-\item{get_scales}{Get scale names for the specified phenotype.}
-\item{filter_by_test}{Filter data by test names for specific report types.}
-\item{generate_report}{Generate text reports for different report types.}
-\item{has_multiple_raters}{Check if domain has multiple raters (emotion and ADHD domains).}
-\item{detect_emotion_type}{Detect if this is a child or adult emotion domain.}
-\item{get_rater_types}{Get rater types for the domain (emotion child: self/parent/teacher; emotion adult: self only; ADHD: self/observer).}
-\item{check_rater_data_exists}{Check if rater-specific data files exist.}
-\item{generate_domain_qmd}{Generate domain QMD file with support for multi-rater domains.}
-\item{generate_emotion_child_qmd}{Generate emotion child domain QMD file with multiple raters.}
-\item{generate_emotion_adult_qmd}{Generate emotion adult domain QMD file with observer ratings.}
-\item{process}{Run the complete processing pipeline.}
+\item{\code{initialize(domains, pheno, input_file, output_dir, age_group, test_lookup_file)}}{Initialize the processor.}
+\item{\code{load_test_lookup(file)}}{Load the test lookup table from CSV.}
+\item{\code{get_available_raters()}}{Get available raters for the configured domains.}
+\item{\code{get_tests_for_rater(rater)}}{Get tests for a specific rater.}
+\item{\code{has_multiple_raters()}}{Check if domain has multiple raters.}
+\item{\code{load_data()}}{Load and filter data from file.}
+\item{\code{filter_by_domain()}}{Filter data by configured domains.}
+\item{\code{filter_by_rater(rater)}}{Filter data by specific rater.}
+\item{\code{select_columns()}}{Select relevant columns from data.}
+\item{\code{save_data(filename, format)}}{Save processed data to file.}
+\item{\code{generate_simple_domain_qmd(output_file)}}{Generate QMD file for single-rater domain.}
+\item{\code{generate_multi_rater_domain_qmd(output_file)}}{Generate QMD file for multi-rater domain.}
+\item{\code{get_domain_number()}}{Get domain number for file naming.}
+\item{\code{process(generate_qmd)}}{Main processing pipeline.}
 }
 }
 
@@ -41,15 +39,15 @@ This class handles loading data, filtering by domain, processing, and outputting
 
 \item{\code{pheno}}{Target phenotype identifier string.}
 
-\item{\code{input_file}}{Path to the input CSV file (neurocog.csv, neurobehav.csv, or validity.csv).}
+\item{\code{input_file}}{Path to the input data file.}
 
-\item{\code{output_dir}}{Directory where output files will be saved (default: "data").}
-
-\item{\code{scale_source}}{Source of scales information (default: NULL, will use package internal data).}
-
-\item{\code{test_filters}}{List of test filters for different report types (default: NULL).}
+\item{\code{output_dir}}{Directory where output files will be saved.}
 
 \item{\code{data}}{The loaded and processed data.}
+
+\item{\code{test_lookup}}{Lookup table for tests, raters, and age groups.}
+
+\item{\code{age_group}}{Age group for processing ("adult" or "child").}
 }
 \if{html}{\out{</div>}}
 }
@@ -57,25 +55,19 @@ This class handles loading data, filtering by domain, processing, and outputting
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-DomainProcessorR6-new}{\code{DomainProcessorR6$new()}}
+\item \href{#method-DomainProcessorR6-load_test_lookup}{\code{DomainProcessorR6$load_test_lookup()}}
+\item \href{#method-DomainProcessorR6-get_available_raters}{\code{DomainProcessorR6$get_available_raters()}}
+\item \href{#method-DomainProcessorR6-get_tests_for_rater}{\code{DomainProcessorR6$get_tests_for_rater()}}
+\item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
 \item \href{#method-DomainProcessorR6-load_data}{\code{DomainProcessorR6$load_data()}}
 \item \href{#method-DomainProcessorR6-filter_by_domain}{\code{DomainProcessorR6$filter_by_domain()}}
+\item \href{#method-DomainProcessorR6-filter_by_rater}{\code{DomainProcessorR6$filter_by_rater()}}
 \item \href{#method-DomainProcessorR6-select_columns}{\code{DomainProcessorR6$select_columns()}}
 \item \href{#method-DomainProcessorR6-save_data}{\code{DomainProcessorR6$save_data()}}
-\item \href{#method-DomainProcessorR6-get_scales}{\code{DomainProcessorR6$get_scales()}}
-\item \href{#method-DomainProcessorR6-filter_by_test}{\code{DomainProcessorR6$filter_by_test()}}
-\item \href{#method-DomainProcessorR6-generate_report}{\code{DomainProcessorR6$generate_report()}}
+\item \href{#method-DomainProcessorR6-generate_simple_domain_qmd}{\code{DomainProcessorR6$generate_simple_domain_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_multi_rater_domain_qmd}{\code{DomainProcessorR6$generate_multi_rater_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-get_domain_number}{\code{DomainProcessorR6$get_domain_number()}}
-\item \href{#method-DomainProcessorR6-get_default_scales}{\code{DomainProcessorR6$get_default_scales()}}
-\item \href{#method-DomainProcessorR6-get_default_plot_titles}{\code{DomainProcessorR6$get_default_plot_titles()}}
-\item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
-\item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
-\item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
-\item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
-\item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
-\item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
-\item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
-\item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
 }
 }
@@ -83,15 +75,15 @@ This class handles loading data, filtering by domain, processing, and outputting
 \if{html}{\out{<a id="method-DomainProcessorR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a new DomainProcessorR6 object with configuration parameters.
+Initialize the processor
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$new(
   domains,
   pheno,
   input_file,
   output_dir = "data",
-  scale_source = NULL,
-  test_filters = NULL
+  age_group = "adult",
+  test_lookup_file = "test_testname_rater.csv"
 )}\if{html}{\out{</div>}}
 }
 
@@ -102,13 +94,13 @@ Initialize a new DomainProcessorR6 object with configuration parameters.
 
 \item{\code{pheno}}{Target phenotype identifier string.}
 
-\item{\code{input_file}}{Path to the input CSV file (neurocog.csv, neurobehav.csv, or validity.csv).}
+\item{\code{input_file}}{Path to the input data file.}
 
-\item{\code{output_dir}}{Directory where output files will be saved (default: "data").}
+\item{\code{output_dir}}{Directory where output files will be saved.}
 
-\item{\code{scale_source}}{Source of scales information (default: NULL, will use package internal data).}
+\item{\code{age_group}}{Age group for processing ("adult" or "child").}
 
-\item{\code{test_filters}}{List of test filters for different report types (default: NULL).}
+\item{\code{test_lookup_file}}{Path to the test lookup CSV file.}
 }
 \if{html}{\out{</div>}}
 }
@@ -117,345 +109,223 @@ A new DomainProcessorR6 object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-load_data"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-load_data}{}}}
-\subsection{Method \code{load_data()}}{
-Load data from the specified input file.
+\if{html}{\out{<a id="method-DomainProcessorR6-load_test_lookup"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-load_test_lookup}{}}}
+\subsection{Method \code{load_test_lookup()}}{
+Load the test lookup table from CSV
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$load_data()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Invisibly returns self for method chaining.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-filter_by_domain"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-filter_by_domain}{}}}
-\subsection{Method \code{filter_by_domain()}}{
-Filter data to include only the specified domains.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_domain()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Invisibly returns self for method chaining.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-select_columns"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-select_columns}{}}}
-\subsection{Method \code{select_columns()}}{
-Select relevant columns from the data.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$select_columns()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Invisibly returns self for method chaining.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-save_data"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-save_data}{}}}
-\subsection{Method \code{save_data()}}{
-Save the processed data to a file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$save_data(filename = NULL, format = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$load_test_lookup(file = "test_testname_rater.csv")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filename}}{Optional custom filename (default: based on pheno).}
-
-\item{\code{format}}{Output format ("csv", "parquet", or "feather", default: determined from filename extension).}
+\item{\code{file}}{Path to the test lookup CSV file.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisibly returns self for method chaining.
+invisible(self)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-get_scales"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_scales}{}}}
-\subsection{Method \code{get_scales()}}{
-Get scale names for the specified phenotype.
+\if{html}{\out{<a id="method-DomainProcessorR6-get_available_raters"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_available_raters}{}}}
+\subsection{Method \code{get_available_raters()}}{
+Get available raters for this domain
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_scales()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_available_raters()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-A vector of scale names.
+Character vector of available raters
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-filter_by_test"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-filter_by_test}{}}}
-\subsection{Method \code{filter_by_test()}}{
-Filter data by test names for specific report types.
+\if{html}{\out{<a id="method-DomainProcessorR6-get_tests_for_rater"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_tests_for_rater}{}}}
+\subsection{Method \code{get_tests_for_rater()}}{
+Get tests for a specific rater
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_test(report_type = "self")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_tests_for_rater(rater)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{report_type}}{Type of report to filter for ("self", "observer", "performance").}
+\item{\code{rater}}{The rater type (e.g., "self", "parent", "teacher", "observer").}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A filtered data frame.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_report"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_report}{}}}
-\subsection{Method \code{generate_report()}}{
-Generate text reports for different report types.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_report(report_type = "self", output_file = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{report_type}}{Type of report to generate ("self", "observer", "performance").}
-
-\item{\code{output_file}}{Output file path for the report.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns self for method chaining.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-get_domain_number"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_domain_number}{}}}
-\subsection{Method \code{get_domain_number()}}{
-Generate the domain number from phenotype for file naming.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_domain_number()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A two-digit string representing the domain number.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-get_default_scales"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_default_scales}{}}}
-\subsection{Method \code{get_default_scales()}}{
-Get default scales for domain.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_default_scales()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A vector of scale names appropriate for the domain.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-get_default_plot_titles"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_default_plot_titles}{}}}
-\subsection{Method \code{get_default_plot_titles()}}{
-Get default plot titles for domain.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_default_plot_titles()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A string containing the default title for domain plots.
+Character vector of test names
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-has_multiple_raters"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-has_multiple_raters}{}}}
 \subsection{Method \code{has_multiple_raters()}}{
-Check if domain has multiple raters.
+Check if domain has multiple raters
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$has_multiple_raters()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Logical indicating if domain has multiple raters.
+Logical value indicating if multiple raters exist
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-detect_emotion_type"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-detect_emotion_type}{}}}
-\subsection{Method \code{detect_emotion_type()}}{
-Detect if this is a child or adult emotion domain.
+\if{html}{\out{<a id="method-DomainProcessorR6-load_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-load_data}{}}}
+\subsection{Method \code{load_data()}}{
+Load and filter data
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$detect_emotion_type()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$load_data()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Character string: "child", "adult", or NULL if not emotion domain.
+invisible(self)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-get_rater_types"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_types}{}}}
-\subsection{Method \code{get_rater_types()}}{
-Get rater types for the domain.
+\if{html}{\out{<a id="method-DomainProcessorR6-filter_by_domain"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-filter_by_domain}{}}}
+\subsection{Method \code{filter_by_domain()}}{
+Filter data by domain
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_types()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_domain()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Character vector of rater types.
+invisible(self)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-check_rater_data_exists"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-check_rater_data_exists}{}}}
-\subsection{Method \code{check_rater_data_exists()}}{
-Check if rater-specific data files exist.
+\if{html}{\out{<a id="method-DomainProcessorR6-filter_by_rater"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-filter_by_rater}{}}}
+\subsection{Method \code{filter_by_rater()}}{
+Filter data by rater (using test lookup)
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$check_rater_data_exists(rater_type)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$filter_by_rater(rater)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{rater_type}}{The rater type to check ("self", "parent", "teacher", "observer").}
+\item{\code{rater}}{The rater type to filter by.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Logical indicating if rater data exists.
+Filtered data frame
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
-\subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file.
+\if{html}{\out{<a id="method-DomainProcessorR6-select_columns"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-select_columns}{}}}
+\subsection{Method \code{select_columns()}}{
+Select relevant columns
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(
-  domain_name = NULL,
-  output_file = NULL,
-  is_child = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$select_columns()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+invisible(self)
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-save_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-save_data}{}}}
+\subsection{Method \code{save_data()}}{
+Save processed data
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$save_data(filename = NULL, format = "csv")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{domain_name}}{Name of the domain.}
+\item{\code{filename}}{Optional filename for output.}
 
-\item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
-
-\item{\code{is_child}}{Logical indicating if this is a child version (default: FALSE).}
+\item{\code{format}}{Output format ("csv" or "parquet").}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The path to the generated file.
+invisible(self)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd}{}}}
-\subsection{Method \code{generate_domain_text_qmd()}}{
-Generate domain text QMD file.
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_simple_domain_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_simple_domain_qmd}{}}}
+\subsection{Method \code{generate_simple_domain_qmd()}}{
+Generate QMD file for single-rater domain
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd(
-  domain_name = NULL,
-  output_file = NULL,
-  report_type = "self"
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_simple_domain_qmd(output_file = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{domain_name}}{Name of the domain.}
-
-\item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
-
-\item{\code{report_type}}{Type of report to generate (default: "self").}
+\item{\code{output_file}}{Optional output file path.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The path to the generated file.
+The path to the generated file
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_multi_rater_domain_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_multi_rater_domain_qmd}{}}}
+\subsection{Method \code{generate_multi_rater_domain_qmd()}}{
+Generate QMD file for multi-rater domain
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_multi_rater_domain_qmd(output_file = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{output_file}}{Optional output file path.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_domain_number"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_domain_number}{}}}
+\subsection{Method \code{get_domain_number()}}{
+Get domain number for file naming
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_domain_number()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Character string with domain number
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-process}{}}}
 \subsection{Method \code{process()}}{
-Run the complete processing pipeline.
+Main processing pipeline
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$process(
-  generate_reports = TRUE,
-  report_types = c("self"),
-  generate_domain_files = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$process(generate_qmd = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{generate_reports}}{Whether to generate text reports (default: TRUE).}
-
-\item{\code{report_types}}{Vector of report types to generate (default: c("self")).}
-
-\item{\code{generate_domain_files}}{Whether to generate domain QMD files (default: FALSE).}
+\item{\code{generate_qmd}}{Whether to generate QMD files.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisibly returns self for method chaining.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_child_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_child_qmd}{}}}
-\subsection{Method \code{generate_emotion_child_qmd()}}{
-Generate emotion child domain QMD file with multiple raters.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain.}
-
-\item{\code{output_file}}{Output file path.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The path to the generated file.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_adult_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_adult_qmd}{}}}
-\subsection{Method \code{generate_emotion_adult_qmd()}}{
-Generate emotion adult domain QMD file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_adult_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain.}
-
-\item{\code{output_file}}{Output file path.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The path to the generated file.
+invisible(self)
 }
 }
 \if{html}{\out{<hr>}}

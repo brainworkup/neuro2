@@ -41,7 +41,7 @@ processor_executive$save_data()
 executive <- processor_executive$data
 
 # Load internal data to get standardized scale names
-# The scales_executive_child object is available from the package's internal data
+# The scales_executive object is available from the package's internal data
 if (!exists("scales_executive")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")

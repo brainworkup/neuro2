@@ -1,124 +1,134 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-08-01 00:49:56.510063 
+Date: 2025-08-01 02:32:37.17317 
 
-[2025-08-01 00:49:56] [CONFIG] Loading configuration from: config.yml
-[2025-08-01 00:49:56] [CONFIG] Configuration file not found. Copying from template directory.
-[2025-08-01 00:49:56] [CONFIG] Copied template configuration file: config.yml
-[2025-08-01 00:49:56] [CONFIG] Configuration loaded successfully
-[2025-08-01 00:49:56] [CONFIG] Patient: Biggie
-[2025-08-01 00:49:56] [CONFIG] Age: 13
-[2025-08-01 00:49:56] [CONFIG] DOE: 2025-07-21
-[2025-08-01 00:49:57] [INFO] Initialized WorkflowRunner for patient: Biggie
-[2025-08-01 00:49:57] [WORKFLOW] Starting unified workflow for patient: Biggie
-[2025-08-01 00:49:57] [WORKFLOW] Step 1: Setting up environment...
-[2025-08-01 00:49:57] [SETUP] Running setup_environment.R
-[2025-08-01 00:49:57] [SETUP] Copying template files to working directory...
-[2025-08-01 00:49:57] [SETUP] Listing files in template directory: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report
-[2025-08-01 00:49:57] [SETUP] Directory contents: _00-00_tests.qmd, _01-00_nse_adult.qmd, _01-00_nse_forensic.qmd, _01-00_nse_pediatric.qmd, _01-00_nse_referral.qmd, _02-00_behav_obs.qmd, _03-00_dsm5_icd10_dx.qmd, _03-00_sirf_text.qmd, _03-00_sirf.qmd, _03-01_recs.qmd, _03-02_signature.qmd, _03-03_appendix.qmd, _03-03a_informed_consent.qmd, _03-03b_examiner_qualifications.qmd, _quarto.yml, _variables.yml, template.qmd
-[2025-08-01 00:49:57] [SETUP] Found 17 template files
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_00-00_tests.qmd -> _00-00_tests.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _00-00_tests.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_adult.qmd -> _01-00_nse_adult.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _01-00_nse_adult.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_forensic.qmd -> _01-00_nse_forensic.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _01-00_nse_forensic.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_pediatric.qmd -> _01-00_nse_pediatric.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _01-00_nse_pediatric.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_referral.qmd -> _01-00_nse_referral.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _01-00_nse_referral.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_02-00_behav_obs.qmd -> _02-00_behav_obs.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _02-00_behav_obs.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_dsm5_icd10_dx.qmd -> _03-00_dsm5_icd10_dx.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-00_dsm5_icd10_dx.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_sirf_text.qmd -> _03-00_sirf_text.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-00_sirf_text.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_sirf.qmd -> _03-00_sirf.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-00_sirf.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-01_recs.qmd -> _03-01_recs.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-01_recs.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-02_signature.qmd -> _03-02_signature.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-02_signature.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03_appendix.qmd -> _03-03_appendix.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-03_appendix.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03a_informed_consent.qmd -> _03-03a_informed_consent.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-03a_informed_consent.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03b_examiner_qualifications.qmd -> _03-03b_examiner_qualifications.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: _03-03b_examiner_qualifications.qmd
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_quarto.yml -> _quarto.yml
-[2025-08-01 00:49:57] [SETUP] Copied template file: _quarto.yml
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_variables.yml -> _variables.yml
-[2025-08-01 00:49:57] [SETUP] Copied template file: _variables.yml
-[2025-08-01 00:49:57] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/template.qmd -> template.qmd
-[2025-08-01 00:49:57] [SETUP] Copied template file: template.qmd
-[2025-08-01 00:49:57] [SETUP] Setting up Quarto extensions...
-[2025-08-01 00:49:57] [SETUP] Found extensions: neurotyp-adult, neurotyp-forensic, neurotyp-pediatric
-[2025-08-01 00:49:57] [SETUP] Extension already exists: neurotyp-adult
-[2025-08-01 00:49:57] [SETUP] Extension already exists: neurotyp-forensic
-[2025-08-01 00:49:57] [SETUP] Extension already exists: neurotyp-pediatric
-[2025-08-01 00:49:57] [SETUP] Required extension found: neurotyp-forensic
-[2025-08-01 00:49:57] [SETUP] All required R6 class files are present
-[2025-08-01 00:49:57] [SETUP] Found 9 CSV files in data-raw/csv
-[2025-08-01 00:49:57] [SETUP] Environment setup complete
-[2025-08-01 00:49:57] [WORKFLOW] Step 2: Processing data...
-[2025-08-01 00:49:57] [DATA] Running data_processor_module.R
-[2025-08-01 00:49:57] [DATA] Starting data processing with DuckDB
-[2025-08-01 00:49:57] [DATA] Data processing completed successfully
-[2025-08-01 00:49:57] [DATA] Data processing complete
-[2025-08-01 00:49:57] [WORKFLOW] Step 3: Generating domain files...
-[2025-08-01 00:49:57] [DOMAINS] Checking for required R6 classes for domain processing...
-[2025-08-01 00:49:57] [DOMAINS] All required R6 class files for domain processing are present
-[2025-08-01 00:49:57] [DOMAINS] Using DomainProcessorR6 to generate domain files
-[2025-08-01 00:49:57] [DOMAINS] Found 7 unique domains
-[2025-08-01 00:49:57] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:57] [DOMAINS] Processed domain: Motor
-[2025-08-01 00:49:57] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: Memory
-[2025-08-01 00:49:58] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: Visual Perception/Construction
-[2025-08-01 00:49:58] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: General Cognitive Ability
-[2025-08-01 00:49:58] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: Academic Skills
-[2025-08-01 00:49:58] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: Verbal/Language
-[2025-08-01 00:49:58] [DOMAINS] Determined patient type: child
-[2025-08-01 00:49:58] [DOMAINS] Processed domain: Attention/Executive
-[2025-08-01 00:49:58] [DOMAINS] Processed behavioral domain: Personality Disorders
-[2025-08-01 00:49:58] [DOMAINS] Processed behavioral domain: Psychiatric Disorders
-[2025-08-01 00:49:58] [DOMAINS] Processed behavioral domain: Substance Use
-[2025-08-01 00:49:58] [DOMAINS] Processed behavioral domain: Behavioral/Emotional/Social
-[2025-08-01 00:49:58] [DOMAINS] Processed behavioral domain: Psychosocial Problems
-[2025-08-01 00:49:58] [DOMAINS] Generated domain files:
-[2025-08-01 00:49:58] [DOMAINS]   - _02-00_behav_obs.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-01_iq_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-01_iq_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-01_iq.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-02_academics_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-02_academics_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-02_academics.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-03_verbal_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-03_verbal_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-03_verbal.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-04_spatial_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-04_spatial_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-04_spatial.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-05_memory_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-05_memory_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-05_memory.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-06_executive_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-06_executive_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-06_executive.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-07_motor_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-07_motor_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-07_motor.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-09_adhd_adult_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-09_adhd_adult.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_adult_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_adult_text.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_adult.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_child_main_KEEP.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_child_main.qmd
-[2025-08-01 00:49:58] [DOMAINS]   - _02-10_emotion_child.qmd
-[2025-08-01 00:49:58] [DOMAINS] Domain files already generated: _02-00_behav_obs.qmd, _02-01_iq_main.qmd, _02-01_iq_text.qmd, _02-01_iq.qmd, _02-02_academics_main.qmd, _02-02_academics_text.qmd, _02-02_academics.qmd, _02-03_verbal_main.qmd, _02-03_verbal_text.qmd, _02-03_verbal.qmd, _02-04_spatial_main.qmd, _02-04_spatial_text.qmd, _02-04_spatial.qmd, _02-05_memory_main.qmd, _02-05_memory_text.qmd, _02-05_memory.qmd, _02-06_executive_main.qmd, _02-06_executive_text.qmd, _02-06_executive.qmd, _02-07_motor_main.qmd, _02-07_motor_text.qmd, _02-07_motor.qmd, _02-09_adhd_adult_text.qmd, _02-09_adhd_adult.qmd, _02-10_emotion_adult_main.qmd, _02-10_emotion_adult_text.qmd, _02-10_emotion_adult.qmd, _02-10_emotion_child_main_KEEP.qmd, _02-10_emotion_child_main.qmd, _02-10_emotion_child.qmd
-[2025-08-01 00:49:58] [DOMAINS] Missing essential domain files: _02-09_adhd_child.qmd
-[2025-08-01 00:49:58] [DOMAINS] Running domain_generator_module.R to generate missing files
+[2025-08-01 02:32:37] [CONFIG] Loading configuration from: config.yml
+[2025-08-01 02:32:37] [CONFIG] Configuration loaded successfully
+[2025-08-01 02:32:37] [CONFIG] Patient: Biggie
+[2025-08-01 02:32:37] [CONFIG] Age: 13
+[2025-08-01 02:32:37] [CONFIG] DOE: 2025-07-21
+[2025-08-01 02:32:37] [INFO] Initialized WorkflowRunner for patient: Biggie
+[2025-08-01 02:32:37] [WORKFLOW] Starting unified workflow for patient: Biggie
+[2025-08-01 02:32:37] [WORKFLOW] Step 1: Setting up environment...
+[2025-08-01 02:32:37] [SETUP] Running setup_environment.R
+[2025-08-01 02:32:38] [SETUP] Copying template files to working directory...
+[2025-08-01 02:32:38] [SETUP] Listing files in template directory: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report
+[2025-08-01 02:32:38] [SETUP] Directory contents: _00-00_tests.qmd, _01-00_nse_adult.qmd, _01-00_nse_forensic.qmd, _01-00_nse_pediatric.qmd, _01-00_nse_referral.qmd, _02-00_behav_obs.qmd, _03-00_dsm5_icd10_dx.qmd, _03-00_sirf_text.qmd, _03-00_sirf.qmd, _03-01_recs.qmd, _03-02_signature.qmd, _03-03_appendix.qmd, _03-03a_informed_consent.qmd, _03-03b_examiner_qualifications.qmd, _quarto.yml, _variables.yml, template.qmd
+[2025-08-01 02:32:38] [SETUP] Found 17 template files
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_00-00_tests.qmd -> _00-00_tests.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _00-00_tests.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_adult.qmd -> _01-00_nse_adult.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _01-00_nse_adult.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_forensic.qmd -> _01-00_nse_forensic.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _01-00_nse_forensic.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_pediatric.qmd -> _01-00_nse_pediatric.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _01-00_nse_pediatric.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_01-00_nse_referral.qmd -> _01-00_nse_referral.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _01-00_nse_referral.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_02-00_behav_obs.qmd -> _02-00_behav_obs.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _02-00_behav_obs.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_dsm5_icd10_dx.qmd -> _03-00_dsm5_icd10_dx.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-00_dsm5_icd10_dx.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_sirf_text.qmd -> _03-00_sirf_text.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-00_sirf_text.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-00_sirf.qmd -> _03-00_sirf.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-00_sirf.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-01_recs.qmd -> _03-01_recs.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-01_recs.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-02_signature.qmd -> _03-02_signature.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-02_signature.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03_appendix.qmd -> _03-03_appendix.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-03_appendix.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03a_informed_consent.qmd -> _03-03a_informed_consent.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-03a_informed_consent.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_03-03b_examiner_qualifications.qmd -> _03-03b_examiner_qualifications.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _03-03b_examiner_qualifications.qmd
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_quarto.yml -> _quarto.yml
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _quarto.yml
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/_variables.yml -> _variables.yml
+[2025-08-01 02:32:38] [SETUP] Template file already exists: _variables.yml
+[2025-08-01 02:32:38] [SETUP] Processing template file: /Users/joey/Library/Caches/org.R-project.R/R/renv/library/neuro2-315d20af/macos/R-4.5/aarch64-apple-darwin20/neuro2/quarto/templates/typst-report/template.qmd -> template.qmd
+[2025-08-01 02:32:38] [SETUP] Template file already exists: template.qmd
+[2025-08-01 02:32:38] [SETUP] Setting up Quarto extensions...
+[2025-08-01 02:32:38] [SETUP] Found extensions: neurotyp-adult, neurotyp-forensic, neurotyp-pediatric
+[2025-08-01 02:32:38] [SETUP] Extension already exists: neurotyp-adult
+[2025-08-01 02:32:38] [SETUP] Extension already exists: neurotyp-forensic
+[2025-08-01 02:32:38] [SETUP] Extension already exists: neurotyp-pediatric
+[2025-08-01 02:32:38] [SETUP] Required extension found: neurotyp-forensic
+[2025-08-01 02:32:38] [SETUP] All required R6 class files are present
+[2025-08-01 02:32:38] [SETUP] Found 9 CSV files in data-raw/csv
+[2025-08-01 02:32:38] [SETUP] Environment setup complete
+[2025-08-01 02:32:38] [WORKFLOW] Step 2: Processing data...
+[2025-08-01 02:32:38] [DATA] Running data_processor_module.R
+[2025-08-01 02:32:38] [DATA] Starting data processing with DuckDB
+[2025-08-01 02:32:38] [DATA] Data processing completed successfully
+[2025-08-01 02:32:38] [DATA] Data processing complete
+[2025-08-01 02:32:38] [WORKFLOW] Step 3: Generating domain files...
+[2025-08-01 02:32:38] [DOMAINS] Checking for required R6 classes for domain processing...
+[2025-08-01 02:32:38] [DOMAINS] All required R6 class files for domain processing are present
+[2025-08-01 02:32:38] [DOMAINS] Using DomainProcessorR6 to generate domain files
+[2025-08-01 02:32:38] [DOMAINS] Found 7 unique domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Verbal/Language - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Motor - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Memory - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Visual Perception/Construction - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: General Cognitive Ability - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Academic Skills - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Determined patient type: child
+[2025-08-01 02:32:38] [ERROR] Error processing domain: Attention/Executive - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [ERROR] Error processing behavioral domain: Psychiatric Disorders - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [ERROR] Error processing behavioral domain: Substance Use - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [ERROR] Error processing behavioral domain: Behavioral/Emotional/Social - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [ERROR] Error processing behavioral domain: Psychosocial Problems - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [ERROR] Error processing behavioral domain: Personality Disorders - unused arguments (generate_reports = TRUE, report_types = c("self"), generate_domain_files = TRUE)
+[2025-08-01 02:32:38] [WARNING] Will try to continue with other domains
+[2025-08-01 02:32:38] [DOMAINS] Generated domain files:
+[2025-08-01 02:32:38] [DOMAINS]   - _02-00_behav_obs.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-01_iq_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-01_iq_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-01_iq.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-02_academics_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-02_academics_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-02_academics.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-03_verbal_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-03_verbal_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-03_verbal.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-04_spatial_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-04_spatial_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-04_spatial.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-05_memory_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-05_memory_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-05_memory.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-06_executive_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-06_executive_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-06_executive.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-07_motor_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-07_motor_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-07_motor.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-09_adhd_adult_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-09_adhd_adult.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_adult_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_adult_text.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_adult.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_child_main_KEEP.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_child_main.qmd
+[2025-08-01 02:32:38] [DOMAINS]   - _02-10_emotion_child.qmd
+[2025-08-01 02:32:38] [DOMAINS] Domain files already generated: _02-00_behav_obs.qmd, _02-01_iq_main.qmd, _02-01_iq_text.qmd, _02-01_iq.qmd, _02-02_academics_main.qmd, _02-02_academics_text.qmd, _02-02_academics.qmd, _02-03_verbal_main.qmd, _02-03_verbal_text.qmd, _02-03_verbal.qmd, _02-04_spatial_main.qmd, _02-04_spatial_text.qmd, _02-04_spatial.qmd, _02-05_memory_main.qmd, _02-05_memory_text.qmd, _02-05_memory.qmd, _02-06_executive_main.qmd, _02-06_executive_text.qmd, _02-06_executive.qmd, _02-07_motor_main.qmd, _02-07_motor_text.qmd, _02-07_motor.qmd, _02-09_adhd_adult_text.qmd, _02-09_adhd_adult.qmd, _02-10_emotion_adult_main.qmd, _02-10_emotion_adult_text.qmd, _02-10_emotion_adult.qmd, _02-10_emotion_child_main_KEEP.qmd, _02-10_emotion_child_main.qmd, _02-10_emotion_child.qmd
+[2025-08-01 02:32:38] [DOMAINS] Missing essential domain files: _02-09_adhd_child.qmd
+[2025-08-01 02:32:38] [DOMAINS] Running domain_generator_module.R to generate missing files

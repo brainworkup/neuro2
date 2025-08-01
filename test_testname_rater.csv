@@ -1,0 +1,39 @@
+﻿test,test_name,rater,domain,age_group
+caars_observer,CAARS Observer,observer,ADHD,adult
+caars2_observer,CAARS-2 Observer,observer,ADHD,adult
+cefi_observer,CEFI Observer,observer,ADHD,adult
+caars_self,CAARS Self,self,ADHD,adult
+caars2_self,CAARS-2 Self,self,ADHD,adult
+cefi_self,CEFI Self,self,ADHD,adult
+pai,PAI,self,Psychiatric Disorders,adult
+pai,PAI,self,Personality Disorders,adult
+pai,PAI,self,Substance Use,adult
+pai,PAI,self,Symptom Validity,adult
+pai,PAI,self,Psychosocial Problems,adult
+pai,PAI,self,ADHD,adult
+abas3_parent,ABAS-3 Parent,parent,Adaptive Functioning,child
+basc3_prs_adolescent,BASC-3 PRS Adolescent,parent,Behavioral/Emotional/Social,child
+basc3_prs_child,BASC-3 PRS Child,parent,Behavioral/Emotional/Social,child
+basc3_prs_preschool,BASC-3 PRS Preschool,parent,Behavioral/Emotional/Social,child
+cefi_parent_5-18,CEFI Parent,parent,ADHD,child
+conners4_parent,Conners-4 Parent,parent,ADHD,child
+rsi,Rating Scale of Impairment,parent,Behavioral/Emotional/Social,child
+basc3_srp_adolescent,BASC-3 SRP Adolescent,self,Behavioral/Emotional/Social,child
+basc3_srp_child,BASC-3 SRP Child,self,Behavioral/Emotional/Social,child
+cefi_self_12-18,CEFI Self 12-18,self,ADHD,child
+conners4_self,Conners-4 Self,self,ADHD,child
+pai_adol,PAI Adolescent,self,Psychiatric Disorders,child
+pai_adol,PAI Adolescent,self,Personality Disorders,child
+pai_adol,PAI Adolescent,self,Substance Use,child
+pai_adol,PAI Adolescent,self,Psychosocial Problems,child
+pai_adol,PAI Adolescent,self,Symptom Validity,child
+basc3_trs_adolescent,BASC-3 TRS Adolescent,teacher,Behavioral/Emotional/Social,child
+basc3_trs_child,BASC-3 TRS Child,teacher,Behavioral/Emotional/Social,child
+basc3_trs_preschool,BASC-3 TRS Preschool,teacher,Behavioral/Emotional/Social,child
+cefi_teacher_5-18,CEFI Teacher,teacher,ADHD,child
+conners4_teacher,Conners-4 Teacher,teacher,ADHD,child
+brown_efa_observer,Brown EF/A Observer,observer,ADHD,child/adult
+abas3_self,ABAS-3 Self,self,Adaptive Functioning,child/adult
+bai,BAI,self,Behavioral/Emotional/Social,child/adult
+bdi2,BDI-2,self,Behavioral/Emotional/Social,child/adult
+brown_efa_self,Brown EF/A Self,self,ADHD,child/adult
