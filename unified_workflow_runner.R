@@ -718,6 +718,23 @@ WorkflowRunnerR6 <- R6::R6Class(
               # Process each domain
               for (i in seq_len(nrow(domains_data))) {
                 domain <- domains_data$domain[i]
+                
+                # Skip individual emotion domains - they should be processed together
+                emotion_domains <- c(
+                  "Behavioral/Emotional/Social",
+                  "Substance Use",
+                  "Psychosocial Problems",
+                  "Psychiatric Disorders",
+                  "Personality Disorders"
+                )
+                
+                if (domain %in% emotion_domains) {
+                  log_message(
+                    paste0("Skipping individual emotion domain: ", domain, " (will be processed as consolidated emotion)"),
+                    "DOMAINS"
+                  )
+                  next
+                }
 
                 # Create a domain processor for this domain
                 # Use the configured format (default is Parquet for better performance)
@@ -946,6 +963,23 @@ WorkflowRunnerR6 <- R6::R6Class(
 
                   # Skip if already processed
                   if (domain %in% domains_data$domain) {
+                    next
+                  }
+                  
+                  # Skip individual emotion domains - they should be processed together
+                  emotion_domains <- c(
+                    "Behavioral/Emotional/Social",
+                    "Substance Use",
+                    "Psychosocial Problems",
+                    "Psychiatric Disorders",
+                    "Personality Disorders"
+                  )
+                  
+                  if (domain %in% emotion_domains) {
+                    log_message(
+                      paste0("Skipping individual emotion domain: ", domain, " (will be processed as consolidated emotion)"),
+                      "DOMAINS"
+                    )
                     next
                   }
 
