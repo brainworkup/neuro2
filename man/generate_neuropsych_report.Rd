@@ -7,10 +7,10 @@
 generate_neuropsych_report(
   variables = NULL,
   template_dir = "inst/quarto/_extensions/brainworkup",
-  output_dir = ".",
+  output_dir = "output",
   domains = NULL,
   data_paths = NULL,
-  output_file = "report_template.qmd",
+  output_file = "template.qmd",
   render = TRUE,
   output_format = "neurotypr-adult-typst"
 )

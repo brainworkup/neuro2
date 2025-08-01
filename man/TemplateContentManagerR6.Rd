@@ -19,7 +19,7 @@ The class categorizes template files into domains:
 \item Tests (_00*): Test descriptions and administration details
 \item NSE (Neurobehavioral Status Exam) (_01*): Clinical interview and behavioral observations
 \item Domains (_02*): Cognitive domain assessments (memory, attention, etc.)
-\item Conclusions (_03*): Summary, diagnostic impressions, and recommendations
+\item SIRF (_03*): Summary, diagnostic impressions, and recommendations
 }
 }
 \examples{
@@ -138,12 +138,12 @@ their filename prefixes:
 \item tests: Files starting with "_00" (test descriptions)
 \item nse: Files starting with "_01" (neurobehavioral status exam)
 \item domains: Files starting with "_02" (cognitive domains)
-\item conclusions: Files starting with "_03" (conclusions and recommendations)
+\item sirf: Files starting with "_03" (summary/conclusions and recommendations)
 }
 }
 
 \subsection{Returns}{
-A list with four named elements (tests, nse, domains, conclusions),
+A list with four named elements (tests, nse, domains, sirf),
 each containing character vectors of filenames
 }
 }

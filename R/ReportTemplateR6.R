@@ -69,7 +69,7 @@ ReportTemplateR6 <- R6::R6Class(
         } else {
           self$variables <- list(
             version = "0.1.0",
-            patient = "Patient Name",
+            patient = "Biggie",
             first_name = "First",
             last_name = "Last",
             dob = format(Sys.Date() - 365 * 30, "%Y-%m-%d"), # 30 years ago
@@ -110,9 +110,10 @@ ReportTemplateR6 <- R6::R6Class(
       # Set default data paths if not provided
       if (is.null(data_paths)) {
         self$data_paths <- list(
-          neurocog = "data-raw/neurocog.csv",
-          neurobehav = "data-raw/neurobehav.csv"
-          # neuropsych.csv doesn't exist in our project
+          neurocog = "data/neurocog.parquet",
+          neurobehav = "data/neurobehav.parquet",
+          neuropsych = "data/neuropsych.parquet",
+          validity = "data/validity.parquet"
         )
       } else {
         self$data_paths <- data_paths
@@ -136,9 +137,7 @@ ReportTemplateR6 <- R6::R6Class(
           "stringr",
           "tidytable",
           "vroom",
-          "xfun",
-          "NeurotypR",
-          "NeurotypR"
+          "xfun"
         )
       } else {
         self$packages <- packages
@@ -496,10 +495,10 @@ ReportTemplateR6 <- R6::R6Class(
 generate_neuropsych_report <- function(
   variables = NULL,
   template_dir = "inst/quarto/_extensions/brainworkup",
-  output_dir = ".",
+  output_dir = "output",
   domains = NULL,
   data_paths = NULL,
-  output_file = "report_template.qmd",
+  output_file = "template.qmd",
   render = TRUE,
   output_format = "neurotypr-adult-typst"
 ) {

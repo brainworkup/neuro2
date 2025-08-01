@@ -39,10 +39,6 @@ knitr::opts_knit$set(
 # Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
-
-# Note: Data loading is now handled by the domain processors
-# The NeuropsychReportSystemR6 generates domain-specific files
-# that include their own data processing
 ```
 
 
@@ -62,7 +58,7 @@ patient <- Sys.getenv("PATIENT")
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_[type of eval].qmd >}}
+{{< include _01-00_nse_adult/forensic/pediatric.qmd >}}
 
 {{< include _02-00_behav_obs.qmd >}}
 

@@ -16,7 +16,7 @@
 #'   \item Tests (_00*): Test descriptions and administration details
 #'   \item NSE (Neurobehavioral Status Exam) (_01*): Clinical interview and behavioral observations
 #'   \item Domains (_02*): Cognitive domain assessments (memory, attention, etc.)
-#'   \item Conclusions (_03*): Summary, diagnostic impressions, and recommendations
+#'   \item SIRF (_03*): Summary, diagnostic impressions, and recommendations
 #' }
 #'
 #' @examples
@@ -107,10 +107,10 @@ TemplateContentManagerR6 <- R6::R6Class(
     #'   \item tests: Files starting with "_00" (test descriptions)
     #'   \item nse: Files starting with "_01" (neurobehavioral status exam)
     #'   \item domains: Files starting with "_02" (cognitive domains)
-    #'   \item conclusions: Files starting with "_03" (conclusions and recommendations)
+    #'   \item sirf: Files starting with "_03" (summary/conclusions and recommendations)
     #' }
     #'
-    #' @return A list with four named elements (tests, nse, domains, conclusions),
+    #' @return A list with four named elements (tests, nse, domains, sirf),
     #'   each containing character vectors of filenames
     get_available_domains = function() {
       # Return list of available domains grouped by type
@@ -118,7 +118,7 @@ TemplateContentManagerR6 <- R6::R6Class(
         tests = grep("^_00", self$content_files, value = TRUE),
         nse = grep("^_01", self$content_files, value = TRUE),
         domains = grep("^_02", self$content_files, value = TRUE),
-        conclusions = grep("^_03", self$content_files, value = TRUE)
+        sirf = grep("^_03", self$content_files, value = TRUE)
       )
       return(sections)
     }
