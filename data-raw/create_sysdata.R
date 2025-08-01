@@ -102,6 +102,10 @@ safe_use_data_internal(
 
 # Scales ------------------------------------------------------------------
 
+
+## IQ ----------------------------------------------------------------------
+
+
 #' @name scales_iq
 #' @docType data
 #' @title Intelligence and Cognitive Ability Scales
