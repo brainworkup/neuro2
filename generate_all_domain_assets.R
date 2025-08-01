@@ -159,51 +159,36 @@ generate_domain_assets <- function(
   cat("\n")
 }
 
-# Process all domains
-domains_config <- list(
+# Get unique domains from the lookup table
+unique_domains <- unique(lookup_neuropsych_scales$domain)
+
+# Dynamically create the domain configuration and required variables
+domains_config <- lapply(unique_domains, function(domain) {
+  # Create a clean 'pheno' name
+  pheno <- tolower(gsub("[ /]", "_", domain))
+  pheno <- gsub("[^a-zA-Z0-9_]", "", pheno)
+
+  # Create and assign the scales variable
+  scales_var_name <- paste0("scales_", pheno)
+  domain_scales <- lookup_neuropsych_scales[
+    lookup_neuropsych_scales$domain == domain,
+    "scale",
+    drop = TRUE
+  ]
+  assign(scales_var_name, domain_scales, envir = .GlobalEnv)
+
+  # Create and assign the plot title variable
+  plot_title_var_name <- paste0("plot_title_", pheno)
+  plot_title <- paste(domain, "Subdomain Scores")
+  assign(plot_title_var_name, plot_title, envir = .GlobalEnv)
+
   list(
-    domain_name = "General Cognitive Ability",
-    pheno = "iq",
-    scales_var = "scales_iq",
-    plot_title_var = "plot_title_iq"
-  ),
-  list(
-    domain_name = "Academic Skills",
-    pheno = "academics",
-    scales_var = "scales_academics",
-    plot_title_var = "plot_title_academics"
-  ),
-  list(
-    domain_name = "Verbal/Language",
-    pheno = "verbal",
-    scales_var = "scales_verbal",
-    plot_title_var = "plot_title_verbal"
-  ),
-  list(
-    domain_name = "Visual Perception/Construction",
-    pheno = "spatial",
-    scales_var = "scales_spatial",
-    plot_title_var = "plot_title_spatial"
-  ),
-  list(
-    domain_name = "Memory",
-    pheno = "memory",
-    scales_var = "scales_memory",
-    plot_title_var = "plot_title_memory"
-  ),
-  list(
-    domain_name = "Attention/Executive",
-    pheno = "executive",
-    scales_var = "scales_executive",
-    plot_title_var = "plot_title_executive"
-  ),
-  list(
-    domain_name = "Motor",
-    pheno = "motor",
-    scales_var = "scales_motor",
-    plot_title_var = "plot_title_motor"
+    domain_name = domain,
+    pheno = pheno,
+    scales_var = scales_var_name,
+    plot_title_var = plot_title_var_name
   )
-)
+})
 
 # Generate assets for each domain
 for (config in domains_config) {

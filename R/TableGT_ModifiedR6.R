@@ -35,7 +35,7 @@
 #'   cells_row_groups
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue glue_collapse
-TableGT_ModifiedR6R6 <- R6::R6Class(
+TableGT_ModifiedR6 <- R6::R6Class(
   classname = "TableGT_ModifiedR6",
   public = list(
     data = NULL,

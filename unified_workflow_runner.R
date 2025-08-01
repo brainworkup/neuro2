@@ -328,7 +328,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         "SETUP"
       )
 
-      # Copy each file to working directory if it doesn't already exist
+      # Copy each file to working directory - always use fresh versions from inst
       for (file in template_files) {
         dest_file <- basename(file)
         
@@ -346,28 +346,27 @@ WorkflowRunnerR6 <- R6::R6Class(
           "SETUP"
         )
 
-        if (!file.exists(dest_file)) {
-          # Check if source file exists
-          if (!file.exists(file)) {
-            log_message(paste0("Source file does not exist: ", file), "ERROR")
-            next
-          }
+        # Check if source file exists
+        if (!file.exists(file)) {
+          log_message(paste0("Source file does not exist: ", file), "ERROR")
+          next
+        }
 
-          # Try to copy the file
-          copy_result <- file.copy(file, dest_file)
-
-          if (copy_result) {
-            log_message(paste0("Copied template file: ", dest_file), "SETUP")
-          } else {
-            log_message(
-              paste0("Failed to copy template file: ", dest_file),
-              "ERROR"
-            )
-          }
+        # Back up existing files before overwriting
+        if (file.exists(dest_file)) {
+          backup_file <- paste0(dest_file, ".", format(Sys.time(), "%Y%m%d_%H%M%S"), ".bak")
+          file.copy(dest_file, backup_file)
+          log_message(paste0("Backed up existing file to: ", backup_file), "SETUP")
+        }
+        
+        # Always copy the latest version from inst
+        copy_result <- file.copy(file, dest_file, overwrite = TRUE)
+        if (copy_result) {
+          log_message(paste0("Updated template file: ", dest_file), "SETUP")
         } else {
           log_message(
-            paste0("Template file already exists: ", dest_file),
-            "SETUP"
+            paste0("Failed to update template file: ", dest_file),
+            "ERROR"
           )
         }
       }
@@ -491,28 +490,29 @@ WorkflowRunnerR6 <- R6::R6Class(
             "SETUP"
           )
 
-          # Copy each extension directory
+          # Copy each extension directory - always use fresh versions from inst
           for (ext_dir in extension_dirs) {
             src_dir <- file.path(brainworkup_dir, ext_dir)
             dest_dir <- file.path("_extensions/brainworkup", ext_dir)
 
-            # Check if extension directory already exists
-            if (!dir.exists(dest_dir)) {
-              # Create the directory
-              dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
-
-              # Copy all files from the extension directory
-              ext_files <- list.files(src_dir, full.names = TRUE)
-              for (file in ext_files) {
-                file.copy(file, dest_dir, recursive = TRUE)
-              }
-              log_message(paste0("Copied extension: ", ext_dir), "SETUP")
-            } else {
+            # Remove existing extension directory to ensure fresh copy
+            if (dir.exists(dest_dir)) {
               log_message(
-                paste0("Extension already exists: ", ext_dir),
+                paste0("Removing existing extension directory: ", ext_dir),
                 "SETUP"
               )
+              unlink(dest_dir, recursive = TRUE)
             }
+
+            # Create the directory
+            dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+
+            # Copy all files from the extension directory
+            ext_files <- list.files(src_dir, full.names = TRUE)
+            for (file in ext_files) {
+              file.copy(file, dest_dir, recursive = TRUE)
+            }
+            log_message(paste0("Copied fresh extension: ", ext_dir), "SETUP")
           }
 
           # Verify that the required extension exists
@@ -638,6 +638,24 @@ WorkflowRunnerR6 <- R6::R6Class(
     generate_domains = function() {
       log_message("Step 3: Generating domain files...", "WORKFLOW")
 
+      # Function to determine patient type (adult or child) based on age
+      determine_patient_type <- function() {
+        # Get patient age from config
+        age <- self$config$patient$age
+
+        # Default to child if age is not specified
+        if (is.null(age)) {
+          return("child")
+        }
+
+        # Determine type based on age
+        if (age >= 18) {
+          return("adult")
+        } else {
+          return("child")
+        }
+      }
+
       # Check for required R6 classes
       log_message(
         "Checking for required R6 classes for domain processing...",
@@ -738,24 +756,6 @@ WorkflowRunnerR6 <- R6::R6Class(
                   self$config$data$output_dir,
                   paste0("neurocog.", input_format)
                 )
-
-                # Function to determine patient type (adult or child) based on age
-                determine_patient_type <- function() {
-                  # Get patient age from config
-                  age <- self$config$patient$age
-
-                  # Default to child if age is not specified
-                  if (is.null(age)) {
-                    return("child")
-                  }
-
-                  # Determine type based on age
-                  if (age >= 18) {
-                    return("adult")
-                  } else {
-                    return("child")
-                  }
-                }
 
                 # Get patient type
                 patient_type <- determine_patient_type()
