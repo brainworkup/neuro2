@@ -331,6 +331,16 @@ WorkflowRunnerR6 <- R6::R6Class(
       # Copy each file to working directory if it doesn't already exist
       for (file in template_files) {
         dest_file <- basename(file)
+        
+        # Skip _03-01_recommendations.qmd as it's an old/stale file
+        if (dest_file == "_03-01_recommendations.qmd") {
+          log_message(
+            paste0("Skipping old/stale template file: ", dest_file),
+            "SETUP"
+          )
+          next
+        }
+        
         log_message(
           paste0("Processing template file: ", file, " -> ", dest_file),
           "SETUP"
@@ -1293,7 +1303,7 @@ WorkflowRunnerR6 <- R6::R6Class(
 )
 
 # Create and run the workflow
-workflow <- WorkflowRunner$new(config)
+workflow <- WorkflowRunnerR6$new(config)
 result <- workflow$run_workflow()
 
 # Print summary
