@@ -2,7 +2,7 @@
 title: "Import CSV file from PAI-Adolescent"
 params:
   patient: Biggie
-  test: pai_a
+  test: pai_adol
   test_name: PAI-A
   file:
     label: "Upload the PAI-A PDF file"
@@ -66,8 +66,8 @@ test <- params$test
 test_name <- params$test_name
 # file <- file.path(file.choose())
 file <- file.path(params$file)
-saveRDS(file, "pai_a.rds")
-# file <- readRDS("pai_a.rds")
+saveRDS(file, "pai_adol.rds")
+# file <- readRDS("pai_adol.rds")
 ```
 
 ## Import PAI CSV file from PARiConnect
@@ -692,7 +692,7 @@ df_validity <-
 ```{r writeout}
 # readr::write_csv(
 #   pai,
-#   here::here("data-csv", "csv", "pai_a.csv"),
+#   here::here("data-csv", "csv", "pai_adol.csv"),
 #   col_names = TRUE,
 #   na = ""
 # )

@@ -1,0 +1,5 @@
+<summary>
+
+Parent ratings for behavioral/emotional/social assessment will be generated based on the assessment results.
+
+</summary>

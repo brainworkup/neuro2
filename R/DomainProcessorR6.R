@@ -566,7 +566,7 @@ DomainProcessorR6 <- R6::R6Class(
         self = c(
           "basc3_prs_child.csv",
           "basc3_prs_adolescent.csv",
-          "pai_a.csv"
+          "pai_adol.csv"
         ),
         parent = c("basc3_prs_parent.csv", "cbcl.csv"),
         teacher = c("basc3_prs_teacher.csv", "trf.csv"),
@@ -1320,7 +1320,7 @@ DomainProcessorR6 <- R6::R6Class(
         "_self <- data_",
         tolower(self$pheno),
         " |>\n",
-        "  dplyr::filter(test %in% c(\"pai_a\", \"basc3_srp_adolescent\", \"basc3_srp_child\"))\n\n",
+        "  dplyr::filter(test %in% c(\"pai_adol\", \"basc3_srp_adolescent\", \"basc3_srp_child\"))\n\n",
         "# Generate text using R6 class\n",
         "results_processor <- NeuropsychResultsR6$new(\n",
         "  data = data_",

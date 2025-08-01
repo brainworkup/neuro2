@@ -1,82 +1,98 @@
 NEURO2 UNIFIED WORKFLOW LOG
-Date: 2025-08-01 13:04:08.667194 
+Date: 2025-08-01 14:00:03.90498 
 
-[2025-08-01 13:04:09] [CONFIG] Loading configuration from: config.yml
-[2025-08-01 13:04:09] [CONFIG] Configuration file not found. Copying from template directory.
-[2025-08-01 13:04:09] [CONFIG] Copied template configuration file: config.yml
-[2025-08-01 13:04:09] [CONFIG] Configuration loaded successfully
-[2025-08-01 13:04:09] [CONFIG] Patient: Biggie
-[2025-08-01 13:04:09] [CONFIG] Age: 13
-[2025-08-01 13:04:09] [CONFIG] DOE: 2025-07-21
-[2025-08-01 13:04:09] [INFO] Initialized WorkflowRunner for patient: Biggie
-[2025-08-01 13:04:09] [WORKFLOW] Starting unified workflow for patient: Biggie
-[2025-08-01 13:04:09] [WORKFLOW] Step 1: Setting up environment...
-[2025-08-01 13:04:09] [SETUP] Running setup_environment.R
-[2025-08-01 13:04:09] [SETUP] Copying template files to working directory...
-[2025-08-01 13:04:09] [SETUP] Listing files in template directory: /Users/joey/.R/neuro2/quarto/templates/typst-report
-[2025-08-01 13:04:09] [SETUP] Directory contents: _00-00_tests.qmd, _01-00_nse_adult.qmd, _01-00_nse_forensic.qmd, _01-00_nse_pediatric.qmd, _01-00_nse_referral.qmd, _02-00_behav_obs.qmd, _03-00_dsm5_icd10_dx.qmd, _03-00_sirf_text.qmd, _03-00_sirf.qmd, _03-01_recs.qmd, _03-02_signature.qmd, _03-03_appendix.qmd, _03-03a_informed_consent.qmd, _03-03b_examiner_qualifications.qmd, _quarto.yml, _variables.yml, config.yml, template.qmd
-[2025-08-01 13:04:09] [SETUP] Found 18 template files
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_00-00_tests.qmd -> _00-00_tests.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _00-00_tests.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_adult.qmd -> _01-00_nse_adult.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _01-00_nse_adult.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_forensic.qmd -> _01-00_nse_forensic.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _01-00_nse_forensic.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_pediatric.qmd -> _01-00_nse_pediatric.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _01-00_nse_pediatric.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_referral.qmd -> _01-00_nse_referral.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _01-00_nse_referral.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_02-00_behav_obs.qmd -> _02-00_behav_obs.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _02-00_behav_obs.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_dsm5_icd10_dx.qmd -> _03-00_dsm5_icd10_dx.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-00_dsm5_icd10_dx.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_sirf_text.qmd -> _03-00_sirf_text.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-00_sirf_text.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_sirf.qmd -> _03-00_sirf.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-00_sirf.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-01_recs.qmd -> _03-01_recs.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-01_recs.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-02_signature.qmd -> _03-02_signature.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-02_signature.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03_appendix.qmd -> _03-03_appendix.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-03_appendix.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03a_informed_consent.qmd -> _03-03a_informed_consent.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-03a_informed_consent.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03b_examiner_qualifications.qmd -> _03-03b_examiner_qualifications.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: _03-03b_examiner_qualifications.qmd
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_quarto.yml -> _quarto.yml
-[2025-08-01 13:04:09] [SETUP] Updated template file: _quarto.yml
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_variables.yml -> _variables.yml
-[2025-08-01 13:04:09] [SETUP] Updated template file: _variables.yml
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/config.yml -> config.yml
-[2025-08-01 13:04:09] [SETUP] Backed up existing file to: config.yml.20250801_130409.bak
-[2025-08-01 13:04:09] [SETUP] Updated template file: config.yml
-[2025-08-01 13:04:09] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/template.qmd -> template.qmd
-[2025-08-01 13:04:09] [SETUP] Updated template file: template.qmd
-[2025-08-01 13:04:09] [SETUP] Setting up Quarto extensions...
-[2025-08-01 13:04:09] [SETUP] Created _extensions directory
-[2025-08-01 13:04:09] [SETUP] Created _extensions/brainworkup directory
-[2025-08-01 13:04:09] [SETUP] Found extensions: neurotyp-adult, neurotyp-forensic, neurotyp-pediatric
-[2025-08-01 13:04:09] [SETUP] Copied fresh extension: neurotyp-adult
-[2025-08-01 13:04:09] [SETUP] Copied fresh extension: neurotyp-forensic
-[2025-08-01 13:04:09] [SETUP] Copied fresh extension: neurotyp-pediatric
-[2025-08-01 13:04:09] [SETUP] Required extension found: neurotyp-forensic
-[2025-08-01 13:04:09] [WARNING] Some R6 class files are missing:
-[2025-08-01 13:04:09] [WARNING]   - R/ReportGeneratorR6.R
-[2025-08-01 13:04:09] [WARNING]   - WorkflowRunnerR6
-[2025-08-01 13:04:09] [SETUP] Found 9 CSV files in data-raw/csv
-[2025-08-01 13:04:09] [SETUP] Environment setup complete
-[2025-08-01 13:04:09] [WORKFLOW] Step 2: Processing data...
-[2025-08-01 13:04:09] [DATA] Running data_processor_module.R
-[2025-08-01 13:04:09] [DATA] Starting data processing with DuckDB
-[2025-08-01 13:04:10] [DATA] Data processing completed successfully
-[2025-08-01 13:04:10] [DATA] Data processing complete
-[2025-08-01 13:04:10] [WORKFLOW] Step 3: Generating domain files...
-[2025-08-01 13:04:10] [DOMAINS] Checking for required R6 classes for domain processing...
-[2025-08-01 13:04:10] [DOMAINS] All required R6 class files for domain processing are present
-[2025-08-01 13:04:10] [DOMAINS] Using DomainProcessorR6 to generate domain files
-[2025-08-01 13:04:10] [ERROR] Error processing domains: (converted from warning) Failed to read parquet file neurobehav.parquet: rapi_register_df: Failed to register data frame: {"exception_type":"Catalog","exception_message":"Failed to create view 'neurobehav': View with name \"neurobehav\" already exists!","name":"neurobehav","error_subtype":"ENTRY_ALREADY_EXISTS","type":"View"}
-[2025-08-01 13:04:10] [WARNING] Will use fallback domain generation method
-[2025-08-01 13:04:10] [DOMAINS] Domain files already generated: _02-00_behav_obs.qmd
-[2025-08-01 13:04:10] [DOMAINS] Missing essential domain files: _02-01_iq.qmd, _02-02_academics.qmd, _02-03_verbal.qmd, _02-04_spatial.qmd, _02-05_memory.qmd, _02-06_executive.qmd, _02-07_motor.qmd, _02-09_adhd_child.qmd, _02-10_emotion_child.qmd
-[2025-08-01 13:04:10] [DOMAINS] Running domain_generator_module.R to generate missing files
+[2025-08-01 14:00:04] [CONFIG] Loading configuration from: config.yml
+[2025-08-01 14:00:04] [CONFIG] Configuration loaded successfully
+[2025-08-01 14:00:04] [CONFIG] Patient: Biggie
+[2025-08-01 14:00:04] [CONFIG] Age: 13
+[2025-08-01 14:00:04] [CONFIG] DOE: 2025-07-21
+[2025-08-01 14:00:04] [INFO] Initialized WorkflowRunner for patient: Biggie
+[2025-08-01 14:00:04] [WORKFLOW] Starting unified workflow for patient: Biggie
+[2025-08-01 14:00:04] [WORKFLOW] Step 1: Setting up environment...
+[2025-08-01 14:00:04] [SETUP] Running setup_environment.R
+[2025-08-01 14:00:04] [SETUP] Copying template files to working directory...
+[2025-08-01 14:00:04] [SETUP] Listing files in template directory: /Users/joey/.R/neuro2/quarto/templates/typst-report
+[2025-08-01 14:00:04] [SETUP] Directory contents: _00-00_tests.qmd, _01-00_nse_adult.qmd, _01-00_nse_forensic.qmd, _01-00_nse_pediatric.qmd, _01-00_nse_referral.qmd, _02-00_behav_obs.qmd, _03-00_dsm5_icd10_dx.qmd, _03-00_sirf_text.qmd, _03-00_sirf.qmd, _03-01_recs.qmd, _03-02_signature.qmd, _03-03_appendix.qmd, _03-03a_informed_consent.qmd, _03-03b_examiner_qualifications.qmd, _quarto.yml, _variables.yml, config.yml, template.qmd
+[2025-08-01 14:00:04] [SETUP] Found 18 template files
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_00-00_tests.qmd -> _00-00_tests.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _00-00_tests.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _00-00_tests.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_adult.qmd -> _01-00_nse_adult.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _01-00_nse_adult.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _01-00_nse_adult.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_forensic.qmd -> _01-00_nse_forensic.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _01-00_nse_forensic.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _01-00_nse_forensic.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_pediatric.qmd -> _01-00_nse_pediatric.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _01-00_nse_pediatric.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _01-00_nse_pediatric.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_01-00_nse_referral.qmd -> _01-00_nse_referral.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _01-00_nse_referral.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _01-00_nse_referral.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_02-00_behav_obs.qmd -> _02-00_behav_obs.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _02-00_behav_obs.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _02-00_behav_obs.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_dsm5_icd10_dx.qmd -> _03-00_dsm5_icd10_dx.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-00_dsm5_icd10_dx.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-00_dsm5_icd10_dx.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_sirf_text.qmd -> _03-00_sirf_text.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-00_sirf_text.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-00_sirf_text.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-00_sirf.qmd -> _03-00_sirf.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-00_sirf.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-00_sirf.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-01_recs.qmd -> _03-01_recs.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-01_recs.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-01_recs.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-02_signature.qmd -> _03-02_signature.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-02_signature.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-02_signature.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03_appendix.qmd -> _03-03_appendix.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-03_appendix.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-03_appendix.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03a_informed_consent.qmd -> _03-03a_informed_consent.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-03a_informed_consent.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-03a_informed_consent.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_03-03b_examiner_qualifications.qmd -> _03-03b_examiner_qualifications.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _03-03b_examiner_qualifications.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _03-03b_examiner_qualifications.qmd
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_quarto.yml -> _quarto.yml
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _quarto.yml.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _quarto.yml
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/_variables.yml -> _variables.yml
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: _variables.yml.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: _variables.yml
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/config.yml -> config.yml
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: config.yml.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: config.yml
+[2025-08-01 14:00:04] [SETUP] Processing template file: /Users/joey/.R/neuro2/quarto/templates/typst-report/template.qmd -> template.qmd
+[2025-08-01 14:00:04] [SETUP] Backed up existing file to: template.qmd.20250801_140004.bak
+[2025-08-01 14:00:04] [SETUP] Updated template file: template.qmd
+[2025-08-01 14:00:04] [SETUP] Setting up Quarto extensions...
+[2025-08-01 14:00:04] [SETUP] Found extensions: neurotyp-adult, neurotyp-forensic, neurotyp-pediatric
+[2025-08-01 14:00:04] [SETUP] Removing existing extension directory: neurotyp-adult
+[2025-08-01 14:00:04] [SETUP] Copied fresh extension: neurotyp-adult
+[2025-08-01 14:00:04] [SETUP] Removing existing extension directory: neurotyp-forensic
+[2025-08-01 14:00:04] [SETUP] Copied fresh extension: neurotyp-forensic
+[2025-08-01 14:00:04] [SETUP] Removing existing extension directory: neurotyp-pediatric
+[2025-08-01 14:00:04] [SETUP] Copied fresh extension: neurotyp-pediatric
+[2025-08-01 14:00:04] [SETUP] Required extension found: neurotyp-forensic
+[2025-08-01 14:00:04] [WARNING] Some R6 class files are missing:
+[2025-08-01 14:00:04] [WARNING]   - R/ReportGeneratorR6.R
+[2025-08-01 14:00:04] [WARNING]   - WorkflowRunnerR6
+[2025-08-01 14:00:04] [SETUP] Found 9 CSV files in data-raw/csv
+[2025-08-01 14:00:04] [SETUP] Environment setup complete
+[2025-08-01 14:00:04] [WORKFLOW] Step 2: Processing data...
+[2025-08-01 14:00:04] [DATA] Running data_processor_module.R
+[2025-08-01 14:00:04] [DATA] Starting data processing with DuckDB
+[2025-08-01 14:00:05] [DATA] Data processing completed successfully
+[2025-08-01 14:00:05] [DATA] Data processing complete
+[2025-08-01 14:00:05] [WORKFLOW] Step 3: Generating domain files...
+[2025-08-01 14:00:05] [DOMAINS] Checking for required R6 classes for domain processing...
+[2025-08-01 14:00:05] [DOMAINS] All required R6 class files for domain processing are present
+[2025-08-01 14:00:05] [DOMAINS] Using DomainProcessorR6 to generate domain files
+[2025-08-01 14:00:05] [ERROR] Error processing domains: (converted from warning) Failed to read parquet file neurobehav.parquet: rapi_register_df: Failed to register data frame: {"exception_type":"Catalog","exception_message":"Failed to create view 'neurobehav': View with name \"neurobehav\" already exists!","name":"neurobehav","error_subtype":"ENTRY_ALREADY_EXISTS","type":"View"}
+[2025-08-01 14:00:05] [WARNING] Will use fallback domain generation method
+[2025-08-01 14:00:05] [DOMAINS] Domain files already generated: _02-00_behav_obs.qmd, _02-01_iq_text.qmd, _02-01_iq.qmd, _02-02_academics_text.qmd, _02-02_academics.qmd, _02-03_verbal_text.qmd, _02-03_verbal.qmd, _02-04_spatial_text.qmd, _02-04_spatial.qmd, _02-05_memory_text.qmd, _02-05_memory.qmd, _02-06_executive_text.qmd, _02-06_executive.qmd, _02-07_motor_text.qmd, _02-07_motor.qmd, _02-08_social_text.qmd, _02-08_social.qmd, _02-10_emotion_child_main.qmd, _02-10_emotion_child_text_parent.qmd, _02-10_emotion_child_text_self.qmd, _02-10_emotion_child.qmd, _02-10_emotion_text.qmd, _02-10_emotion.qmd, _02-11_adaptive_text.qmd, _02-11_adaptive.qmd, _02-12_daily_living_text.qmd, _02-12_daily_living.qmd
+[2025-08-01 14:00:05] [DOMAINS] Missing essential domain files: _02-09_adhd_child.qmd
+[2025-08-01 14:00:05] [DOMAINS] Running domain_generator_module.R to generate missing files

@@ -160,3 +160,7 @@ _03-03b_examiner_qualifications.qmd
 Rplots.pdf
 _02-09_adhd_text.qmd
 _02-09_adhd.qmd
+_*.bak
+*.bak
+_extensions/brainworkup/neurotyp-*/typst-template.pdf
+table_*.pdf

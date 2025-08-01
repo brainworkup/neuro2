@@ -1,7 +1,7 @@
 ---
 title: NEUROCOGNITIVE EXAMINATION
-patient: Ethan
-name: Smalls, Ethan
+patient: Biggie
+name: Smalls, Biggie
 doe: "YYYY-MM-DD"
 date_of_report: last-modified
 ---
