@@ -15,18 +15,19 @@ date_of_report: last-modified
 # options(warn = -1)
 
 # Source package loading function
-# if (file.exists("R/load_packages.R")) {
-#   source("R/load_packages.R")
-#   # Load all required packages using centralized function
-#   load_neuropsych_packages(verbose = FALSE)
-# } else {
-#   # Fallback: Load minimal required packages directly
-#   library(knitr)
-#   library(here)
-#   library(readr)
-#   library(dplyr)
-#   library(gt)
-# }
+if (file.exists("R/load_packages.R")) {
+  source("R/load_packages.R")
+  # Load all required packages using centralized function
+  load_neuropsych_packages(verbose = FALSE)
+} else {
+  # Fallback: Load minimal required packages directly
+  library(knitr)
+  library(here)
+  library(readr)
+  library(dplyr)
+  library(gt)
+  library(arrow)
+}
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,

@@ -91,3 +91,26 @@ overall_plot <- DotplotR6$new(
 )
 overall_plot$create_plot()
 ```
+
+```{=typst}
+#let domain(file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+  figure(
+    [#image(file_fig, width: 85%)],
+    placement: none,
+    caption: figure.caption(
+      position: bottom,
+      [Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-scores have a mean of 0 and a standard deviation of 1.],
+    ),
+    kind: "image",
+    supplement: [Figure],
+    gap: 0.5em,
+  )
+}
+```
+
+```{=typst}
+#let file_fig = "fig_sirf_overall.svg"
+#domain(file_fig)
+```
