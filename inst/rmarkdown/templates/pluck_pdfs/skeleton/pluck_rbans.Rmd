@@ -638,7 +638,7 @@ rbans <- gpluck_make_columns(
 # Ensure scale column is character type
 if (!is.null(rbans$scale)) {
   rbans$scale <- as.character(rbans$scale)
-  
+
   # Check for any list or complex objects in scale column
   if (any(sapply(rbans$scale, function(x) !is.atomic(x) || length(x) > 1))) {
     # Convert any problematic values to character
@@ -672,8 +672,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Verbal/Language",
       is.character(scale) & scale == "Semantic Fluency" ~ "Verbal/Language",
       is.character(scale) & scale == "Attention Index" ~ "Attention/Executive",
-      is.character(scale) & scale == "Digit Span" ~ "Attention/Executive",
-      is.character(scale) & scale == "Coding" ~ "Attention/Executive",
+      is.character(scale) & scale == "RBANS RBANS Digit Span" ~ "Attention/Executive",
+      is.character(scale) & scale == "RBANS RBANS Coding" ~ "Attention/Executive",
       is.character(scale) & scale == "Delayed Memory Index" ~ "Memory",
       is.character(scale) & scale == "List Recall" ~ "Memory",
       is.character(scale) & scale == "List Recognition" ~ "Memory",
@@ -703,8 +703,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Retrieval",
       is.character(scale) & scale == "Semantic Fluency" ~ "Fluency",
       is.character(scale) & scale == "Attention Index" ~ "Neuropsychological Functioning",
-      is.character(scale) & scale == "Digit Span" ~ "Attention",
-      is.character(scale) & scale == "Coding" ~ "Processing Speed",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "Attention",
+      is.character(scale) & scale == "RBANS Coding" ~ "Processing Speed",
       is.character(scale) & scale == "Delayed Memory Index" ~ "Neuropsychological Functioning",
       is.character(scale) & scale == "List Recall" ~ "Delayed Recall",
       is.character(scale) & scale == "List Recognition" ~ "Recognition Memory",
@@ -734,8 +734,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Naming",
       is.character(scale) & scale == "Semantic Fluency" ~ "Semantic Fluency",
       is.character(scale) & scale == "Attention Index" ~ "RBANS Attention Index",
-      is.character(scale) & scale == "Digit Span" ~ "Attention Span",
-      is.character(scale) & scale == "Coding" ~ "Cognitive Efficiency",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "Attention Span",
+      is.character(scale) & scale == "RBANS Coding" ~ "Cognitive Efficiency",
       is.character(scale) & scale == "Delayed Memory Index" ~ "RBANS Memory Index",
       is.character(scale) & scale == "List Recall" ~ "Word-List Learning",
       is.character(scale) & scale == "List Recognition" ~ "Recognition Memory",
@@ -764,8 +764,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Untimed",
       is.character(scale) & scale == "Semantic Fluency" ~ "Timed",
       is.character(scale) & scale == "Attention Index" ~ "",
-      is.character(scale) & scale == "Digit Span" ~ "Untimed",
-      is.character(scale) & scale == "Coding" ~ "Timed",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "Untimed",
+      is.character(scale) & scale == "RBANS Coding" ~ "Timed",
       is.character(scale) & scale == "Delayed Memory Index" ~ "Untimed",
       is.character(scale) & scale == "List Recall" ~ "Untimed",
       is.character(scale) & scale == "List Recognition" ~ "Untimed",
@@ -794,8 +794,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Verbal",
       is.character(scale) & scale == "Semantic Fluency" ~ "Verbal",
       is.character(scale) & scale == "Attention Index" ~ "",
-      is.character(scale) & scale == "Digit Span" ~ "Verbal",
-      is.character(scale) & scale == "Coding" ~ "Nonverbal",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "Verbal",
+      is.character(scale) & scale == "RBANS Coding" ~ "Nonverbal",
       is.character(scale) & scale == "Delayed Memory Index" ~ "",
       is.character(scale) & scale == "List Recall" ~ "Verbal",
       is.character(scale) & scale == "List Recognition" ~ "Verbal",
@@ -824,8 +824,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "Knowledge",
       is.character(scale) & scale == "Semantic Fluency" ~ "Sequential",
       is.character(scale) & scale == "Attention Index" ~ "Attention",
-      is.character(scale) & scale == "Digit Span" ~ "Attention",
-      is.character(scale) & scale == "Coding" ~ "Planning",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "Attention",
+      is.character(scale) & scale == "RBANS Coding" ~ "Planning",
       is.character(scale) & scale == "Delayed Memory Index" ~ "",
       is.character(scale) & scale == "List Recall" ~ "Sequential",
       is.character(scale) & scale == "List Recognition" ~ "Sequential",
@@ -854,8 +854,8 @@ rbans <-
       is.character(scale) & scale == "Picture Naming" ~ "percentile",
       is.character(scale) & scale == "Semantic Fluency" ~ "scaled_score",
       is.character(scale) & scale == "Attention Index" ~ "standard_score",
-      is.character(scale) & scale == "Digit Span" ~ "scaled_score",
-      is.character(scale) & scale == "Coding" ~ "scaled_score",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "scaled_score",
+      is.character(scale) & scale == "RBANS Coding" ~ "scaled_score",
       is.character(scale) & scale == "Delayed Memory Index" ~ "standard_score",
       is.character(scale) & scale == "List Recall" ~ "percentile",
       is.character(scale) & scale == "List Recognition" ~ "percentile",
@@ -888,8 +888,8 @@ rbans <-
       is.character(scale) & scale == "Semantic Fluency" ~ "semantic word fluency/generativity",
       is.character(scale) & scale == "Attention Index" ~
         "general attentional and executive functioning",
-      is.character(scale) & scale == "Digit Span" ~ "attention span and auditory attention",
-      is.character(scale) & scale == "Coding" ~ "speed of information processing",
+      is.character(scale) & scale == "RBANS Digit Span" ~ "attention span and auditory attention",
+      is.character(scale) & scale == "RBANS Coding" ~ "speed of information processing",
       is.character(scale) & scale == "Delayed Memory Index" ~
         "long-term recall of verbal information",
       is.character(scale) & scale == "List Recall" ~ "long-term recall of a word list",
