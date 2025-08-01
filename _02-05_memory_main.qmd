@@ -1,9 +1,9 @@
-## Emotional/Behavioral/Personality {#sec-emotion-adult}
+## Memory {#sec-memory}
 
-{{< include _02-10_emotion_adult_text.qmd >}}
+{{< include _02-05_memory_text.qmd >}}
 
 ```{r}
-#| label: setup-emotion-adult
+#| label: setup-memory-child
 #| include: false
 
 # Source R6 classes
@@ -13,47 +13,59 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Emotional/Behavioral/Personality")
+domains <- c("Memory")
 
 # Target phenotype
-pheno <- "emotion"
+pheno <- "memory"
 
 # Create R6 processor
-processor_emotion <- DomainProcessorR6$new(
+processor_memory <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
-  input_file = "data/neurobehav.parquet"
+  input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_emotion$load_data()
-processor_emotion$filter_by_domain()
+processor_memory$load_data()
+processor_memory$filter_by_domain()
 
 # Create the data object with original name for compatibility
-emotion <- processor_emotion$data
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: export-memory-child
+#| include: false
+#| eval: true
 
 # Process and export data using R6
-processor_emotion$select_columns()
-processor_emotion$save_data()
+processor_memory$select_columns()
+processor_memory$save_data()
 
 # Update the original object
-emotion <- processor_emotion$data
+memory <- processor_memory$data
+```
+
+```{r}
+#| label: data-memory-child
+#| include: false
+#| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_emotion_adult object is available from the package's internal data
-if (!exists("scales_emotion_adult")) {
+# The scales_memory_child object is available from the package's internal data
+if (!exists("scales_memory_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_emotion_adult from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_memory_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_emotion_adult
+scales <- scales_memory_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -71,40 +83,39 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)
+data_memory <- filter_data(data = memory, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-emotion-adult
+#| label: text-memory
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_emotion,
-  file = "_02-10_emotion_adult_text.qmd"
+  data = data_memory,
+  file = "_02-05_memory_text.qmd"
 )
 results_processor$process()
 ```
 
-
 ```{r}
-#| label: qtbl-emotion-adult
+#| label: qtbl-memory
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_emotion_adult"
+table_name <- "table_memory"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_emotion,
+  data = data_memory,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
-  source_note = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
+  source_note = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
   multiline = multiline
 )
 
@@ -115,23 +126,22 @@ tbl <- table_gt$build_table()
 table_gt$save_table(tbl, dir = here::here())
 ```
 
-
 ```{r}
-#| label: fig-emotion-adult-subdomain
+#| label: fig-memory-subdomain
 #| include: false
 #| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_emotion,
+  data = data_memory,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_emotion_adult_subdomain.svg")
+  filename = here::here("fig_memory_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_emotion_adult"
+plot_title_var <- "plot_title_memory"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -141,9 +151,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_emotion <- get(plot_title_var)
+  plot_title_memory <- get(plot_title_var)
 } else {
-  plot_title_emotion <- "This section presents results from the Personality Disorders domain assessment."
+  plot_title_memory <- "Learning and memory refer to the rate and ease with which new information (e.g., facts, stories, lists, faces, names) can be encoded, stored, and later recalled from long-term memory."
 }
 ```
 
@@ -176,7 +186,7 @@ if (exists(plot_title_var)) {
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_emotion_adult`],
+        [`{r} plot_title_memory`],
       ),
       placement: none,
       kind: "image",
@@ -186,17 +196,16 @@ if (exists(plot_title_var)) {
   )
 }
 ```
-
 ```{=typst}
 // Define the title of the domain
-#let title = "Emotional/Behavioral/Personality"
+#let title = "Memory"
 
 // Define the file name of the table
-#let file_qtbl = "table_emotion_adult.png"
+#let file_qtbl = "table_memory.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_emotion_adult_subdomain.svg"
+#let file_fig = "fig_memory_subdomain.svg"
 
-// Call the 'domain' function with the specified title, table file name, and figure file name
-#domain(title: [#title], file_qtbl, file_fig)
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
 ```

@@ -1,9 +1,9 @@
-## Motor {#sec-motor}
+## Visual Perception/Construction {#sec-spatial}
 
-{{< include _02-07_motor_text.qmd >}}
+{{< include _02-04_spatial_text.qmd >}}
 
 ```{r}
-#| label: setup-motor-child
+#| label: setup-spatial-child
 #| include: false
 
 # Source R6 classes
@@ -13,59 +13,59 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Motor")
+domains <- c("Visual Perception/Construction")
 
 # Target phenotype
-pheno <- "motor"
+pheno <- "spatial"
 
 # Create R6 processor
-processor_motor <- DomainProcessorR6$new(
+processor_spatial <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_motor$load_data()
-processor_motor$filter_by_domain()
+processor_spatial$load_data()
+processor_spatial$filter_by_domain()
 
 # Create the data object with original name for compatibility
-motor <- processor_motor$data
+spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: export-motor-child
+#| label: export-spatial-child
 #| include: false
 #| eval: true
 
 # Process and export data using R6
-processor_motor$select_columns()
-processor_motor$save_data()
+processor_spatial$select_columns()
+processor_spatial$save_data()
 
 # Update the original object
-motor <- processor_motor$data
+spatial <- processor_spatial$data
 ```
 
 ```{r}
-#| label: data-motor-child
+#| label: data-spatial-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_motor_child object is available from the package's internal data
-if (!exists("scales_motor_child")) {
+# The scales_spatial_child object is available from the package's internal data
+if (!exists("scales_spatial_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_motor_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_spatial_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_motor_child
+scales <- scales_spatial_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -83,35 +83,35 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_motor <- filter_data(data = motor, domain = domains, scale = scales)
+data_spatial <- filter_data(data = spatial, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-motor
+#| label: text-spatial
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_motor,
-  file = "_02-07_motor_text.qmd"
+  data = data_spatial,
+  file = "_02-04_spatial_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-motor
+#| label: qtbl-spatial
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_motor"
+table_name <- "table_spatial"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_motor,
+  data = data_spatial,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -127,21 +127,21 @@ table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
-#| label: fig-motor-subdomain
+#| label: fig-spatial-subdomain
 #| include: false
 #| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_motor,
+  data = data_spatial,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_motor_subdomain.svg")
+  filename = here::here("fig_spatial_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_motor"
+plot_title_var <- "plot_title_spatial"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -151,11 +151,13 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_motor <- get(plot_title_var)
+  plot_title_spatial <- get(plot_title_var)
 } else {
-  plot_title_motor <- "Sensorimotor tasks refer to the capacity to control hand
-movements quickly, smoothly, and with adequate precision, which are required to
-engage in activities such as writing and drawing."
+  plot_title_spatial <- "Perception, construction, and visuospatial processing
+refer to abilities such as mentally visualizing how objects should look from
+different angles, visualizing how to put objects together so that they fit
+correctly, and being able to accurately and efficiently copy and/or reproduce
+visual-spatial information onto paper."
 }
 ```
 
@@ -188,7 +190,7 @@ engage in activities such as writing and drawing."
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_motor`],
+        [`{r} plot_title_spatial`],
       ),
       placement: none,
       kind: "image",
@@ -200,13 +202,13 @@ engage in activities such as writing and drawing."
 ```
 ```{=typst}
 // Define the title of the domain
-#let title = "Motor"
+#let title = "Visual Perception/Construction"
 
 // Define the file name of the table
-#let file_qtbl = "table_motor.png"
+#let file_qtbl = "table_spatial.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_motor_subdomain.svg"
+#let file_fig = "fig_spatial_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)

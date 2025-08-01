@@ -1,9 +1,9 @@
-## Academic Skills {#sec-academics}
+## Attention/Executive {#sec-executive}
 
-{{< include _02-02_academics_text.qmd >}}
+{{< include _02-06_executive_text.qmd >}}
 
 ```{r}
-#| label: setup-academics-child
+#| label: setup-executive-child
 #| include: false
 
 # Source R6 classes
@@ -13,59 +13,47 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("Academic Skills")
+domains <- c("Attention/Executive")
 
 # Target phenotype
-pheno <- "academics"
+pheno <- "executive"
 
 # Create R6 processor
-processor_academics <- DomainProcessorR6$new(
+processor_executive <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_academics$load_data()
-processor_academics$filter_by_domain()
+processor_executive$load_data()
+processor_executive$filter_by_domain()
 
 # Create the data object with original name for compatibility
-academics <- processor_academics$data
-```
-
-```{r}
-#| label: export-academics-child
-#| include: false
-#| eval: true
+executive <- processor_executive$data
 
 # Process and export data using R6
-processor_academics$select_columns()
-processor_academics$save_data()
+processor_executive$select_columns()
+processor_executive$save_data()
 
 # Update the original object
-academics <- processor_academics$data
-```
-
-```{r}
-#| label: data-academics-child
-#| include: false
-#| eval: true
+executive <- processor_executive$data
 
 # Load internal data to get standardized scale names
-# The scales_academics_child object is available from the package's internal data
-if (!exists("scales_academics_child")) {
+# The scales_executive_child object is available from the package's internal data
+if (!exists("scales_executive_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_academics_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_executive_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_academics_child
+scales <- scales_executive_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -83,35 +71,35 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_academics <- filter_data(data = academics, domain = domains, scale = scales)
+data_executive <- filter_data(data = executive, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-academics
+#| label: text-executive
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_academics,
-  file = "_02-02_academics_text.qmd"
+  data = data_executive,
+  file = "_02-06_executive_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-academics
+#| label: qtbl-executive
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_academics"
+table_name <- "table_executive"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_academics,
+  data = data_executive,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -127,21 +115,21 @@ table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
-#| label: fig-academics-subdomain
+#| label: fig-executive-subdomain
 #| include: false
 #| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_academics,
+  data = data_executive,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_academics_subdomain.svg")
+  filename = here::here("fig_executive_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_academics"
+plot_title_var <- "plot_title_executive"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -151,9 +139,13 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_academics <- get(plot_title_var)
+  plot_title_executive <- get(plot_title_var)
 } else {
-  plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
+  plot_title_executive <- "Attentional and executive functions underlie most, if
+not all, domains of cognitive performance. These are behaviors and skills that
+allow individuals to successfully carry-out instrumental and social activities,
+academic work, engage with others effectively, problem solve, and successfully
+interact with the environment to get needs met."
 }
 ```
 
@@ -186,7 +178,7 @@ if (exists(plot_title_var)) {
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_academics`],
+        [`{r} plot_title_executive`],
       ),
       placement: none,
       kind: "image",
@@ -198,13 +190,13 @@ if (exists(plot_title_var)) {
 ```
 ```{=typst}
 // Define the title of the domain
-#let title = "Academic Skills"
+#let title = "Attention/Executive"
 
 // Define the file name of the table
-#let file_qtbl = "table_academics.png"
+#let file_qtbl = "table_executive.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_academics_subdomain.svg"
+#let file_fig = "fig_executive_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)

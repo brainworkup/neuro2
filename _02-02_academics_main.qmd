@@ -1,9 +1,9 @@
-## General Cognitive Ability {#sec-iq}
+## Academic Skills {#sec-academics}
 
-{{< include _02-01_iq_text.qmd >}}
+{{< include _02-02_academics_text.qmd >}}
 
 ```{r}
-#| label: setup-iq-child
+#| label: setup-academics-child
 #| include: false
 
 # Source R6 classes
@@ -13,59 +13,59 @@ source("R/DotplotR6.R")
 source("R/TableGT_Modified.R")
 
 # Filter by domain
-domains <- c("General Cognitive Ability")
+domains <- c("Academic Skills")
 
 # Target phenotype
-pheno <- "iq"
+pheno <- "academics"
 
 # Create R6 processor
-processor_iq <- DomainProcessorR6$new(
+processor_academics <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"
 )
 
 # Load and process data
-processor_iq$load_data()
-processor_iq$filter_by_domain()
+processor_academics$load_data()
+processor_academics$filter_by_domain()
 
 # Create the data object with original name for compatibility
-iq <- processor_iq$data
+academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: export-iq-child
+#| label: export-academics-child
 #| include: false
 #| eval: true
 
 # Process and export data using R6
-processor_iq$select_columns()
-processor_iq$save_data()
+processor_academics$select_columns()
+processor_academics$save_data()
 
 # Update the original object
-iq <- processor_iq$data
+academics <- processor_academics$data
 ```
 
 ```{r}
-#| label: data-iq-child
+#| label: data-academics-child
 #| include: false
 #| eval: true
 
 # Load internal data to get standardized scale names
-# The scales_iq_child object is available from the package's internal data
-if (!exists("scales_iq_child")) {
+# The scales_academics_child object is available from the package's internal data
+if (!exists("scales_academics_child")) {
   # Load from sysdata.rda
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
     load(sysdata_path)
   } else {
     stop(
-      "Could not load scales_iq_child from sysdata.rda. Please ensure the internal data file exists."
+      "Could not load scales_academics_child from sysdata.rda. Please ensure the internal data file exists."
     )
   }
 }
 
-scales <- scales_iq_child
+scales <- scales_academics_child
 
 # Filter the data directly without using NeurotypR
 filter_data <- function(data, domain, scale) {
@@ -83,35 +83,35 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_iq <- filter_data(data = iq, domain = domains, scale = scales)
+data_academics <- filter_data(data = academics, domain = domains, scale = scales)
 ```
 
 ```{r}
-#| label: text-iq
+#| label: text-academics
 #| cache: true
 #| include: false
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_iq,
-  file = "_02-01_iq_text.qmd"
+  data = data_academics,
+  file = "_02-02_academics_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-iq
+#| label: qtbl-academics
 #| include: false
 #| eval: true
 
 # Table parameters
-table_name <- "table_iq"
+table_name <- "table_academics"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Create table using our modified TableGT_Modified R6 class
 table_gt <- TableGT_Modified$new(
-  data = data_iq,
+  data = data_academics,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -127,21 +127,21 @@ table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
-#| label: fig-iq-subdomain
+#| label: fig-academics-subdomain
 #| include: false
 #| eval: true
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_iq,
+  data = data_academics,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_iq_subdomain.svg")
+  filename = here::here("fig_academics_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_iq"
+plot_title_var <- "plot_title_academics"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -151,15 +151,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_iq <- get(plot_title_var)
+  plot_title_academics <- get(plot_title_var)
 } else {
-  plot_title_iq <- "Premorbid Ability is an estimate of an individual's
-intellectual functioning prior to known or suspected onset of brain disease or
-dysfunction. General Ability is the overall skill to reason, solve problems,
-and gain useful knowledge. Crystallized Knowledge involves understanding the
-world through language and reasoning. Fluid Reasoning is the logical analysis
-and solution of new problems, identifying underlying patterns, and applying
-logic."
+  plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
 }
 ```
 
@@ -192,7 +186,7 @@ logic."
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_iq`],
+        [`{r} plot_title_academics`],
       ),
       placement: none,
       kind: "image",
@@ -204,13 +198,13 @@ logic."
 ```
 ```{=typst}
 // Define the title of the domain
-#let title = "General Cognitive Ability"
+#let title = "Academic Skills"
 
 // Define the file name of the table
-#let file_qtbl = "table_iq.png"
+#let file_qtbl = "table_academics.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_iq_subdomain.svg"
+#let file_fig = "fig_academics_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
