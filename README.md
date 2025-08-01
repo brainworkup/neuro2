@@ -5,9 +5,11 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/brainworkup/neuro2/workflows/R-CMD-check/badge.svg)](https://github.com/brainworkup/neuro2/actions)
+<!-- [![R-CMD-check](https://github.com/brainworkup/neuro2/workflows/R-CMD-check/badge.svg)](https://github.com/brainworkup/neuro2/actions) -->
+
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
 <!-- badges: end -->
 
 ## Overview
@@ -60,13 +62,13 @@ install.packages(c(
   "dplyr", "tidyr", "ggplot2", "stringr", "here", "glue", "yaml", "quarto ","gt", "gtExtras", "janitor", "R6", "readr", "readxl",
   "DBI", "duckdb", "arrow", "webshot2"
 ))
-```KJx
+```
 
 ## 🏃 Quick Start
 
 ### Option 1: Unified Workflow Scripts (Recommended)
 
-```bash
+``` bash
 # Interactive shell workflow (with guided prompts)
 ./unified_neuropsych_workflow.sh "Patient Name"
 
@@ -94,7 +96,7 @@ load_data_duckdb(
 # 2. Generate a neuropsychological report
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
-    patient = "John Doe",
+    patient = "Biggie Smalls",
     domains = c("General Cognitive Ability", "Memory", "Attention/Executive"),
     data_files = list(
       neurocog = "data/neurocog.parquet",
@@ -117,7 +119,7 @@ report_system$run_workflow()
     ├── R/                 # R6 classes and functions
     │   ├── DomainProcessorR6.R      # Domain data processing
     │   ├── NeuropsychReportSystemR6.R # Report orchestration
-    │   ├── TableGT_Modified.R                # Table generation
+    │   ├── TableGT.R                # Table generation
     │   ├── DotplotR6.R             # Visualization
     │   └── duckdb_neuropsych_loader.R # Data loading
     ├── inst/              # Package resources
@@ -141,7 +143,7 @@ Orchestrates the entire report generation workflow:
 # Create report system with configuration
 report_system <- NeuropsychReportSystemR6$new(
   config = list(
-    patient = "Jane Smith",
+    patient = "Biggie",
     domains = c("Memory", "Verbal/Language", "Attention/Executive")
   )
 )
@@ -165,13 +167,13 @@ processor <- DomainProcessorR6$new(
 processor$process()  # Runs complete pipeline
 ```
 
-### TableGT_Modified
+### TableGT
 
 Creates publication-quality tables:
 
 ``` r
 # Generate a formatted table
-table <- TableGT_Modified$new(
+table <- TableGT$new(
   data = domain_data,
   pheno = "memory",
   table_name = "table_memory"
@@ -232,7 +234,7 @@ query_neuropsych(
 Edit `_variables.yml`:
 
 ``` yaml
-patient: "John Doe"
+patient: "Biggie Smalls"
 age: 45
 sex: "male"
 education: 16
@@ -265,7 +267,7 @@ memory_data <- query_neuropsych(
 )
 
 # Create custom table
-table_gt <- TableGT_Modified$new(
+table_gt <- TableGT$new(
   data = memory_data,
   pheno = "memory",
   table_name = "custom_memory_table"
@@ -349,11 +351,11 @@ This project is licensed under the MIT License - see the
 If you use this package in your work, please cite:
 
     Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System.
-    R package version 0.2.2. https://github.com/brainworkup/neuro2
+    R package version 0.1.8 https://github.com/brainworkup/neuro2
 
 ## 📧 Contact
 
-- **Author**: Joey Trampush
+- **Author**: Joey Trampush, PhD
 - **Email**: <joey.trampush@brainworkup.org>
 - **Issues**: [GitHub
   Issues](https://github.com/brainworkup/neuro2/issues)
