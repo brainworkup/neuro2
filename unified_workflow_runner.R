@@ -201,8 +201,8 @@ log_message(paste0("Age: ", config$patient$age), "CONFIG")
 log_message(paste0("DOE: ", config$patient$doe), "CONFIG")
 
 # Create the main workflow class
-WorkflowRunner <- R6::R6Class(
-  "WorkflowRunner",
+WorkflowRunnerR6 <- R6::R6Class(
+  "WorkflowRunnerR6",
 
   public = list(
     # Properties
@@ -541,7 +541,13 @@ WorkflowRunner <- R6::R6Class(
         "R/NeuropsychReportSystemR6.R",
         "R/DomainProcessorR6.R",
         "R/DotplotR6.R",
-        "R/DuckDBProcessorR6.R"
+        "R/DrilldownR6.R",
+        "R/DuckDBProcessorR6.R",
+        "R/TableGT_ModifiedR6.R",
+        "R/ReportGeneratorR6.R",
+        "WorkflowRunnerR6",
+        "R/ReportUtilitiesR6.R",
+        "R/TemplateContentManagerR6.R"
       )
 
       missing_files <- r6_files[!file.exists(r6_files)]
@@ -684,7 +690,7 @@ WorkflowRunner <- R6::R6Class(
               )
 
               # Process each domain
-              for (i in 1:nrow(domains_data)) {
+              for (i in seq_len(domains_data)) {
                 domain <- domains_data$domain[i]
 
                 # Create a domain processor for this domain
@@ -767,7 +773,8 @@ WorkflowRunner <- R6::R6Class(
                     "Substance Use",
                     "Psychosocial Problems",
                     "Psychiatric Disorders",
-                    "Personality Disorders"
+                    "Personality Disorders",
+                    "Emotional/Behavioral/Personality"
                   )
 
                   if (domain_name %in% emotion_domains) {
@@ -926,7 +933,7 @@ WorkflowRunner <- R6::R6Class(
                 )
 
                 # Process behavioral domains
-                for (i in 1:nrow(behav_domains_data)) {
+                for (i in seq_len(behav_domains_data)) {
                   domain <- behav_domains_data$domain[i]
 
                   # Skip if already processed
