@@ -2,7 +2,7 @@
 title: NEUROCOGNITIVE EXAMINATION
 patient: Biggie
 name: Smalls, Biggie
-doe: 2025-07-23
+doe: {{< var doe >}}
 date_of_report: last-modified
 ---
 
@@ -11,10 +11,10 @@ date_of_report: last-modified
 #| include: false
 #| cache: false
 
-# Suppress warnings during setup
-# options(warn = -1)
+# # Suppress warnings during setup
+options(warn = -1)
 
-# Source package loading function
+# # Source package loading function
 if (file.exists("R/load_packages.R")) {
   source("R/load_packages.R")
   # Load all required packages using centralized function
@@ -26,7 +26,6 @@ if (file.exists("R/load_packages.R")) {
   library(readr)
   library(dplyr)
   library(gt)
-  library(arrow)
 }
 # Set knitr options
 knitr::opts_knit$set(
@@ -50,7 +49,7 @@ patient <- Sys.getenv("PATIENT")
 #v(2em, weak: true)
 #show block: set par(leading: 0.65em)
 #block[
-// *CASE NUMBER:* #case_number \
+*CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
 *DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
@@ -59,7 +58,7 @@ patient <- Sys.getenv("PATIENT")
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_pediatric.qmd >}}
+{{< include _01-00_nse_forensic.qmd >}}
 
 {{< include _02-00_behav_obs.qmd >}}
 

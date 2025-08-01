@@ -6,14 +6,30 @@
 #| label: setup-sirf
 #| include: false
 
-# Load arrow package for parquet file support
+# Load required packages
 library(arrow)
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/ReportTemplateR6.R")
-source("R/NeuropsychReportSystemR6.R")
-source("R/DotplotR6.R")
+# Try to load neuro2 package, if not available, source R6 classes directly
+if ("neuro2" %in% rownames(installed.packages())) {
+  library(neuro2)
+} else {
+  # When running from development, find the R directory
+  r_dir <- if (dir.exists("R")) {
+    "R"
+  } else if (dir.exists("../../../R")) {
+    "../../../R"  # From inst/quarto/templates/typst-report/
+  } else if (dir.exists("../../../../R")) {
+    "../../../../R"  # Alternative path
+  } else {
+    stop("Cannot find R directory with R6 class files")
+  }
+  
+  # Source R6 classes
+  source(file.path(r_dir, "DomainProcessorR6.R"))
+  source(file.path(r_dir, "ReportTemplateR6.R"))
+  source(file.path(r_dir, "NeuropsychReportSystemR6.R"))
+  source(file.path(r_dir, "DotplotR6.R"))
+}
 
 # Function to read data in available format
 read_data <- function(base_path) {
