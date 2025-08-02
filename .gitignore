@@ -177,3 +177,6 @@ _02-00_behav_obs.qmd
 _02-10_emotion_child_text_*.qmd
 _03-00_dsm5_icd10_dx.qmd
 template.qmd
+config.yml
+_quarto.yml
+*.log
