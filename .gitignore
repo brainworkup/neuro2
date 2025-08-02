@@ -182,3 +182,4 @@ _quarto.yml
 *.log
 _*-*_*.pdf
 _*-*_*_text.pdf
+_*_*.rmarkdown
