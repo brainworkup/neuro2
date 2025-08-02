@@ -331,7 +331,7 @@ WorkflowRunnerR6 <- R6::R6Class(
       # Copy each file to working directory - always use fresh versions from inst
       for (file in template_files) {
         dest_file <- basename(file)
-        
+
         # Skip _03-01_recommendations.qmd as it's an old/stale file
         if (dest_file == "_03-01_recommendations.qmd") {
           log_message(
@@ -340,7 +340,7 @@ WorkflowRunnerR6 <- R6::R6Class(
           )
           next
         }
-        
+
         log_message(
           paste0("Processing template file: ", file, " -> ", dest_file),
           "SETUP"
@@ -354,11 +354,19 @@ WorkflowRunnerR6 <- R6::R6Class(
 
         # Back up existing files before overwriting
         if (file.exists(dest_file)) {
-          backup_file <- paste0(dest_file, ".", format(Sys.time(), "%Y%m%d_%H%M%S"), ".bak")
+          backup_file <- paste0(
+            dest_file,
+            ".",
+            format(Sys.time(), "%Y%m%d_%H%M%S"),
+            ".bak"
+          )
           file.copy(dest_file, backup_file)
-          log_message(paste0("Backed up existing file to: ", backup_file), "SETUP")
+          log_message(
+            paste0("Backed up existing file to: ", backup_file),
+            "SETUP"
+          )
         }
-        
+
         # Always copy the latest version from inst
         copy_result <- file.copy(file, dest_file, overwrite = TRUE)
         if (copy_result) {
@@ -720,7 +728,7 @@ WorkflowRunnerR6 <- R6::R6Class(
               # Process each domain
               for (i in seq_len(nrow(domains_data))) {
                 domain <- domains_data$domain[i]
-                
+
                 # Skip individual emotion domains - they should be processed together
                 emotion_domains <- c(
                   "Behavioral/Emotional/Social",
@@ -729,10 +737,14 @@ WorkflowRunnerR6 <- R6::R6Class(
                   "Psychiatric Disorders",
                   "Personality Disorders"
                 )
-                
+
                 if (domain %in% emotion_domains) {
                   log_message(
-                    paste0("Skipping individual emotion domain: ", domain, " (will be processed as consolidated emotion)"),
+                    paste0(
+                      "Skipping individual emotion domain: ",
+                      domain,
+                      " (will be processed as consolidated emotion)"
+                    ),
                     "DOMAINS"
                   )
                   next
@@ -967,7 +979,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                   if (domain %in% domains_data$domain) {
                     next
                   }
-                  
+
                   # Skip individual emotion domains - they should be processed together
                   emotion_domains <- c(
                     "Behavioral/Emotional/Social",
@@ -976,10 +988,14 @@ WorkflowRunnerR6 <- R6::R6Class(
                     "Psychiatric Disorders",
                     "Personality Disorders"
                   )
-                  
+
                   if (domain %in% emotion_domains) {
                     log_message(
-                      paste0("Skipping individual emotion domain: ", domain, " (will be processed as consolidated emotion)"),
+                      paste0(
+                        "Skipping individual emotion domain: ",
+                        domain,
+                        " (will be processed as consolidated emotion)"
+                      ),
                       "DOMAINS"
                     )
                     next
@@ -1088,6 +1104,27 @@ WorkflowRunnerR6 <- R6::R6Class(
                 for (file in domain_files) {
                   log_message(paste0("  - ", file), "DOMAINS")
                 }
+                
+                # NEW: Render each domain file to generate required figures/SVGs
+                log_message("Rendering domain files to generate figures...", "DOMAINS")
+                for (domain_file in domain_files) {
+                  tryCatch({
+                    log_message(paste0("Rendering ", domain_file, " to typst..."), "DOMAINS")
+                    
+                    # Use system command to render with typst (more reliable)
+                    render_cmd <- paste("quarto render", domain_file, "--to typst")
+                    result <- system(render_cmd, intern = TRUE, ignore.stdout = FALSE, ignore.stderr = FALSE)
+                    
+                    log_message(paste0("Successfully rendered ", domain_file), "DOMAINS")
+                  }, error = function(e) {
+                    log_message(
+                      paste0("Warning: Could not render ", domain_file, " - ", e$message),
+                      "WARNING"
+                    )
+                    # Continue with other files even if one fails
+                  })
+                }
+                log_message("Domain file rendering complete", "DOMAINS")
               } else {
                 log_message("No domain files were generated", "WARNING")
               }
@@ -1125,12 +1162,12 @@ WorkflowRunnerR6 <- R6::R6Class(
       # Basic essential files that should always be present
       essential_files <- c(
         "_02-01_iq.qmd",
-        "_02-02_academics.qmd",
+        # "_02-02_academics.qmd",
         "_02-03_verbal.qmd",
         "_02-04_spatial.qmd",
         "_02-05_memory.qmd",
-        "_02-06_executive.qmd",
-        "_02-07_motor.qmd"
+        "_02-06_executive.qmd"
+        # "_02-07_motor.qmd"
       )
 
       # Add ADHD and emotion files based on patient type
@@ -1189,6 +1226,30 @@ WorkflowRunnerR6 <- R6::R6Class(
           "All essential domain files already generated, skipping domain_generator_module.R",
           "DOMAINS"
         )
+      }
+
+      # Final check: render any generated domain files to create required figures
+      final_domain_files <- list.files(".", pattern = "_02-.*\\.qmd$")
+      if (length(final_domain_files) > 0) {
+        log_message("Final step: Rendering all domain files to generate figures...", "DOMAINS")
+        for (domain_file in final_domain_files) {
+          tryCatch({
+            log_message(paste0("Rendering ", domain_file, " to typst..."), "DOMAINS")
+            
+            # Use system command to render with typst (more reliable)
+            render_cmd <- paste("quarto render", domain_file, "--to typst")
+            result <- system(render_cmd, intern = TRUE, ignore.stdout = FALSE, ignore.stderr = FALSE)
+            
+            log_message(paste0("Successfully rendered ", domain_file), "DOMAINS")
+          }, error = function(e) {
+            log_message(
+              paste0("Warning: Could not render ", domain_file, " - ", e$message),
+              "WARNING"
+            )
+            # Continue with other files even if one fails
+          })
+        }
+        log_message("All domain file rendering complete", "DOMAINS")
       }
 
       log_message("Domain generation complete", "DOMAINS")
