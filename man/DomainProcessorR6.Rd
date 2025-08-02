@@ -76,6 +76,9 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_domain_table}{\code{DomainProcessorR6$generate_domain_table()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_child_tables}{\code{DomainProcessorR6$generate_emotion_child_tables()}}
+\item \href{#method-DomainProcessorR6-generate_rater_table}{\code{DomainProcessorR6$generate_rater_table()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
 }
 }
@@ -456,6 +459,61 @@ Generate emotion adult domain QMD file.
 }
 \subsection{Returns}{
 The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_table"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_table}{}}}
+\subsection{Method \code{generate_domain_table()}}{
+Generate table PNG file for the domain.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_table(domain_name = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_child_tables"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_child_tables}{}}}
+\subsection{Method \code{generate_emotion_child_tables()}}{
+Generate tables for emotion child domain with multiple raters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_tables()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_rater_table"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_rater_table}{}}}
+\subsection{Method \code{generate_rater_table()}}{
+Generate a table for a specific rater type.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_rater_table(data, rater_type)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data}}{The filtered data for this rater.}
+
+\item{\code{rater_type}}{The rater type ("self", "parent", "teacher").}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
