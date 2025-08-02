@@ -416,9 +416,7 @@ safe_select <- function(df, cols, warn = TRUE) {
   missing_cols <- setdiff(cols, names(df))
 
   if (length(missing_cols) > 0 && warn) {
-    cli::cli_alert_warning(
-      "Columns not found: {.field {missing_cols}}"
-    )
+    cli::cli_alert_warning("Columns not found: {.field {missing_cols}}")
   }
 
   df[existing_cols]
@@ -477,10 +475,47 @@ batch_process <- function(items, fn, batch_size = 100) {
   cli::cli_progress_done()
 
   if (length(errors) > 0) {
-    cli::cli_alert_warning(
-      "Completed with {length(errors)} error{?s}"
-    )
+    cli::cli_alert_warning("Completed with {length(errors)} error{?s}")
   }
 
   list(results = results, errors = errors)
+}
+
+#' Utility functions to replace NeurotypR dependencies
+#'
+#' This file contains utility functions that replace NeurotypR functions
+#' used in the neuro2 package.
+
+#' Filter data by domain and scale
+#'
+#' @param data Data frame to filter
+#' @param domain Domain(s) to filter by
+#' @param scale Scale(s) to filter by
+#' @return Filtered data frame
+#' @export
+filter_data <- function(data, domain = NULL, scale = NULL) {
+  if (is.null(data)) {
+    message("Data is NULL. Cannot filter.")
+    return(NULL)
+  }
+
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    if ("domain" %in% colnames(data)) {
+      data <- data[data$domain %in% domain, ]
+    } else {
+      message("Column 'domain' not found in data. Skipping domain filtering.")
+    }
+  }
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    if ("scale" %in% colnames(data)) {
+      data <- data[data$scale %in% scale, ]
+    } else {
+      message("Column 'scale' not found in data. Skipping scale filtering.")
+    }
+  }
+
+  return(data)
 }
