@@ -19,7 +19,6 @@ knitr::opts_knit$set(
   crop = knitr::hook_pdfcrop,
   optipng = knitr::hook_optipng
 )
-knitr::opts_chunk$set(echo = FALSE)
 
 # Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
@@ -52,8 +51,6 @@ patient <- Sys.getenv("PATIENT")
 
 ```{r}
 #| label: include-domains
-#| output: asis
-#| echo: false
 
 # Define all possible domain files in canonical order
 # Up to 14 total domains, with up to 10-12 domains per patient
