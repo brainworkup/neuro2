@@ -1069,8 +1069,11 @@ DomainProcessorR6 <- R6::R6Class(
         }
       )
 
-      # Write to file
+      # Write QMD to file
       cat(qmd_content, file = output_file)
+      # Immediately render this domain file for side-effects (tables, plots, text)
+      message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
+      system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
 
       # Also generate the text file
       self$generate_domain_text_qmd(domain_name)
@@ -2001,8 +2004,11 @@ DomainProcessorR6 <- R6::R6Class(
         "``` -->"
       )
 
-      # Write to file
+      # Write QMD to file
       cat(qmd_content, file = output_file)
+      # Immediately render this domain file
+      message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
+      system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
 
       # Generate tables for each rater type
       self$generate_emotion_child_tables()
@@ -2352,8 +2358,11 @@ DomainProcessorR6 <- R6::R6Class(
         # Adult emotion only uses self-report, no observer section
       )
 
-      # Write to file
+      # Write QMD to file
       cat(qmd_content, file = output_file)
+      # Immediately render this domain file
+      message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
+      system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
 
       # Generate text files
       text_file <- paste0(

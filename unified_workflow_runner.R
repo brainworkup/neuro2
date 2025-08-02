@@ -1228,30 +1228,6 @@ WorkflowRunnerR6 <- R6::R6Class(
         )
       }
 
-      # Final check: render any generated domain files to create required figures
-      final_domain_files <- list.files(".", pattern = "_02-.*\\.qmd$")
-      if (length(final_domain_files) > 0) {
-        log_message("Final step: Rendering all domain files to generate figures...", "DOMAINS")
-        for (domain_file in final_domain_files) {
-          tryCatch({
-            log_message(paste0("Rendering ", domain_file, " to typst..."), "DOMAINS")
-            
-            # Use system command to render with typst (more reliable)
-            render_cmd <- paste("quarto render", domain_file, "--to typst")
-            result <- system(render_cmd, intern = TRUE, ignore.stdout = FALSE, ignore.stderr = FALSE)
-            
-            log_message(paste0("Successfully rendered ", domain_file), "DOMAINS")
-          }, error = function(e) {
-            log_message(
-              paste0("Warning: Could not render ", domain_file, " - ", e$message),
-              "WARNING"
-            )
-            # Continue with other files even if one fails
-          })
-        }
-        log_message("All domain file rendering complete", "DOMAINS")
-      }
-
       log_message("Domain generation complete", "DOMAINS")
       return(TRUE)
     },

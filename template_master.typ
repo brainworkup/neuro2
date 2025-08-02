@@ -307,8 +307,8 @@
 #let name = [Smalls, Biggie]
 #let doe = [2025-01-20]
 #let patient = [Biggie]
-// #v(2em, weak: true)
-// #show block: set par(leading: 0.65em)
+#v(2em, weak: true)
+#show block: set par(leading: 0.65em)
 #block[
   // *CASE NUMBER:* #case_number \
   *PATIENT NAME:* #name \
@@ -1229,7 +1229,9 @@ context, but do not alone lead to accurate diagnosis or treatment recommendation
   #block[
     Guilmette, T. J., Sweet, J. J., Hebben, N., Koltai, D., Mahone, M. E., Spiegler, B. J., Stucky, K., Westerveld, M.,
     & Conference Participants. (2020). American Academy of Clinical Neuropsychology consensus conference statement on
-    uniform labeling of performance test scores. #emph[The Clinical Neuropsychologist];, #emph[34];(3), 437--453. #link("https://doi.org/10.1080/13854046.2020.1722244")
+    uniform labeling of performance test scores. #emph[The Clinical Neuropsychologist];, #emph[34];(3), 437--453. #link(
+      "https://doi.org/10.1080/13854046.2020.1722244",
+    )
 
   ] <ref-guilmetteAmericanAcademyClinical2020>
 ] <refs>
