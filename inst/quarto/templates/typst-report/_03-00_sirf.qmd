@@ -115,9 +115,7 @@ overall_plot$create_plot()
     gap: 0.5em,
   )
 }
-```
 
-```{=typst}
 #let file_fig = "fig_sirf_overall.svg"
 #domain(file_fig)
 ```

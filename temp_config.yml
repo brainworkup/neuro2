@@ -1,0 +1,8 @@
+data:
+  input_dir: my_data
+variables:
+  patient: John Doe
+  age: 25.0
+  first_name: John
+  last_name: Doe
+  date_of_report: '2025-08-02'
