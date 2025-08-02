@@ -180,3 +180,5 @@ template.qmd
 config.yml
 _quarto.yml
 *.log
+_*-*_*.pdf
+_*-*_*_text.pdf
