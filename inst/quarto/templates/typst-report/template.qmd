@@ -19,6 +19,7 @@ knitr::opts_knit$set(
   crop = knitr::hook_pdfcrop,
   optipng = knitr::hook_optipng
 )
+knitr::opts_chunk$set(echo = FALSE)
 
 # Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")

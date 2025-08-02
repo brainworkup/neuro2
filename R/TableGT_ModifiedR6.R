@@ -158,10 +158,22 @@ TableGT_ModifiedR6 <- R6::R6Class(
       # This ensures that tests are assigned to the correct score type groups
 
       # Create a comprehensive mapping of test names to their correct score types using lookup_neuropsych_scales
-      # Load the lookup_neuropsych_scales data from sysdata.rda if it's not already in the environment
-      if (!exists("lookup_neuropsych_scales")) {
-        # Use silent=TRUE to suppress warnings about duplicate objects
-        data(lookup_neuropsych_scales, envir = environment(), package = "neuro2", silent = TRUE)
+      # The lookup_neuropsych_scales data is stored in R/sysdata.rda and should be automatically available
+      # If it's not available in the current environment, try to access it from the package namespace
+      if (!exists("lookup_neuropsych_scales", envir = environment())) {
+        if (exists("lookup_neuropsych_scales", envir = asNamespace("neuro2"))) {
+          lookup_neuropsych_scales <- get("lookup_neuropsych_scales", envir = asNamespace("neuro2"))
+        } else {
+          # Fallback: try to load from sysdata.rda directly
+          sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
+          if (sysdata_path != "" && file.exists(sysdata_path)) {
+            temp_env <- new.env()
+            load(sysdata_path, envir = temp_env)
+            if (exists("lookup_neuropsych_scales", envir = temp_env)) {
+              lookup_neuropsych_scales <- get("lookup_neuropsych_scales", envir = temp_env)
+            }
+          }
+        }
       }
       
       # Initialize the test_score_type_map
