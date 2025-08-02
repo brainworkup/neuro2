@@ -100,22 +100,47 @@ tryCatch({
 })
 
 # Check if report was generated
-report_file <- gsub("\\.qmd$", ".pdf", template_file)
+# Handle both .qmd and .typ template files
+if (grepl("\\.qmd$", template_file)) {
+  report_file <- gsub("\\.qmd$", ".pdf", template_file)
+} else if (grepl("\\.typ$", template_file)) {
+  report_file <- gsub("\\.typ$", ".pdf", template_file)
+} else {
+  # For other file types, assume PDF output with same base name
+  report_file <- paste0(tools::file_path_sans_ext(template_file), ".pdf")
+}
+
+# Check if the PDF was generated
 if (file.exists(report_file)) {
   log_message(
     paste0("Report generated successfully: ", report_file),
     "REPORT"
   )
 } else {
-  report_file <- gsub("\\.qmd$", ".html", template_file)
+  # Try other formats
+  if (grepl("\\.qmd$", template_file)) {
+    report_file <- gsub("\\.qmd$", ".html", template_file)
+  } else if (grepl("\\.typ$", template_file)) {
+    report_file <- gsub("\\.typ$", ".html", template_file)
+  } else {
+    report_file <- paste0(tools::file_path_sans_ext(template_file), ".html")
+  }
+  
   if (file.exists(report_file)) {
     log_message(
       paste0("Report generated successfully: ", report_file),
       "REPORT"
     )
   } else {
-    # Check for other possible output formats
-    report_file <- gsub("\\.qmd$", ".docx", template_file)
+    # Check for DOCX format
+    if (grepl("\\.qmd$", template_file)) {
+      report_file <- gsub("\\.qmd$", ".docx", template_file)
+    } else if (grepl("\\.typ$", template_file)) {
+      report_file <- gsub("\\.typ$", ".docx", template_file)
+    } else {
+      report_file <- paste0(tools::file_path_sans_ext(template_file), ".docx")
+    }
+    
     if (file.exists(report_file)) {
       log_message(
         paste0("Report generated successfully: ", report_file),
@@ -123,6 +148,7 @@ if (file.exists(report_file)) {
       )
     } else {
       log_message("Report generation failed - no output file found", "ERROR")
+      log_message(paste0("Looked for PDF/HTML/DOCX outputs from: ", template_file), "ERROR")
       stop("Report generation failed")
     }
   }

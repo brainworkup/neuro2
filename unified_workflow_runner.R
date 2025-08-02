@@ -1264,6 +1264,9 @@ WorkflowRunnerR6 <- R6::R6Class(
       if (file.exists("report_generator_module.R")) {
         log_message("Running report_generator_module.R", "REPORT")
         source("report_generator_module.R")
+        # If report_generator_module.R exists and runs, trust its result
+        # The module handles all the report generation logic
+        return(TRUE)
       } else {
         log_message(
           "report_generator_module.R not found. Using Quarto directly.",

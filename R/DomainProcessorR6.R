@@ -710,7 +710,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-",
         tolower(self$pheno),
         "\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "# Source R6 classes\n",
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
@@ -760,27 +761,17 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "$data\n\n",
         "# Load internal data to get standardized scale names\n",
-        "# The scales_",
-        tolower(self$pheno),
-        " object is available from the package's internal data\n",
-        "if (!exists(\"scales_",
-        tolower(self$pheno),
-        "\")) {\n",
-        "  # Load from sysdata.rda\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
         "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
-        "  if (file.exists(sysdata_path)) {\n",
-        "    load(sysdata_path)\n",
-        "  } else {\n",
-        "    stop(\n",
-        "      \"Could not load scales_",
-        tolower(self$pheno),
-        " from sysdata.rda. Please ensure the internal data file exists.\"\n",
-        "    )\n",
-        "  }\n",
+        "  if (file.exists(sysdata_path)) { load(sysdata_path, envir = .GlobalEnv) }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\"Scale variable '\", scale_var_name, \"' not found. Using empty vector.\"))\n",
+        "  scales <- character(0)\n",
         "}\n\n",
-        "scales <- scales_",
-        tolower(self$pheno),
-        "\n\n",
         "# Filter the data directly without using NeurotypR\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
@@ -807,7 +798,8 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "\n",
         "#| cache: true\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "# Generate text using R6 class\n",
         "results_processor <- NeuropsychResultsR6$new(\n",
         "  data = data_",
@@ -828,6 +820,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Table parameters\n",
         "table_name <- \"table_",
@@ -903,6 +896,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-subdomain\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -948,6 +942,7 @@ DomainProcessorR6 <- R6::R6Class(
             tolower(self$pheno),
             "-narrow\n",
             "#| include: false\n",
+            "#| echo: false\n",
             "#| eval: true\n\n",
             "# Create narrow plot using R6 DotplotR6\n",
             "dotplot_narrow <- DotplotR6$new(\n",
@@ -1079,7 +1074,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Also generate the text file
       self$generate_domain_text_qmd(domain_name)
-      
+
       # Generate table PNG file
       self$generate_domain_table(domain_name)
 
@@ -1109,7 +1104,10 @@ DomainProcessorR6 <- R6::R6Class(
       # If no output file specified, create default name with proper domain number
       if (is.null(output_file)) {
         # Check if this is emotion child domain - always use child naming
-        if (tolower(self$pheno) == "emotion" && self$detect_emotion_type() == "child") {
+        if (
+          tolower(self$pheno) == "emotion" &&
+            self$detect_emotion_type() == "child"
+        ) {
           output_file <- paste0(
             "_02-",
             domain_num,
@@ -1242,7 +1240,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-",
         tolower(self$pheno),
         "\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "# Source R6 classes\n",
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
@@ -1341,7 +1340,8 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-child-self\n",
         "#| cache: true\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "data_",
         tolower(self$pheno),
         "_self <- data_",
@@ -1371,7 +1371,8 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-child-parent\n",
         "#| cache: true\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "data_",
         tolower(self$pheno),
         "_parent <- data_",
@@ -1405,6 +1406,7 @@ DomainProcessorR6 <- R6::R6Class(
         "-child-teacher\n",
         "#| cache: true\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: false\n\n",
         "data_",
         tolower(self$pheno),
@@ -1439,6 +1441,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-self\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Table parameters\n",
         "table_name <- \"table_",
@@ -1514,6 +1517,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-parent\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Table parameters\n",
         "table_name <- \"table_",
@@ -1589,6 +1593,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-teacher\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: false\n\n",
         "# Table parameters\n",
         "table_name <- \"table_",
@@ -1665,6 +1670,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-subdomain-self\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -1711,6 +1717,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-subdomain-parent\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -1757,6 +1764,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-subdomain-teacher\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: false\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -2031,7 +2039,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-",
         tolower(self$pheno),
         "-adult\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "# Source R6 classes\n",
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
@@ -2076,6 +2085,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-adult\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Process and export data using R6\n",
         "processor_",
@@ -2097,6 +2107,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-adult\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Load internal data to get standardized scale names\n",
         "# The scales_",
@@ -2146,7 +2157,8 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-adult\n",
         "#| cache: true\n",
-        "#| include: false\n\n",
+        "#| include: false\n",
+        "#| echo: false\n\n",
         "# Generate text using R6 class\n",
         "results_processor <- NeuropsychResultsR6$new(\n",
         "  data = data_",
@@ -2167,6 +2179,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-adult\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Table parameters\n",
         "table_name <- \"table_",
@@ -2239,6 +2252,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "-adult-subdomain\n",
         "#| include: false\n",
+        "#| echo: false\n",
         "#| eval: true\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -2383,7 +2397,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Get scales for filtering
       scales <- self$get_scales()
-      
+
       # Filter the data
       filtered_data <- self$data
       if (length(scales) > 0) {
@@ -2401,100 +2415,105 @@ DomainProcessorR6 <- R6::R6Class(
       vertical_padding <- 0
       multiline <- TRUE
 
-      tryCatch({
-        # Load score type utils
-        if (!exists("get_score_types_from_lookup")) {
-          source("R/score_type_utils.R")
-        }
+      tryCatch(
+        {
+          # Load score type utils
+          if (!exists("get_score_types_from_lookup")) {
+            source("R/score_type_utils.R")
+          }
 
-        # Get score types from the lookup table
-        score_type_map <- get_score_types_from_lookup(filtered_data)
+          # Get score types from the lookup table
+          score_type_map <- get_score_types_from_lookup(filtered_data)
 
-        # Create a list of test names grouped by score type
-        score_types_list <- list()
+          # Create a list of test names grouped by score type
+          score_types_list <- list()
 
-        # Process the score type map to group tests by score type
-        for (test_name in names(score_type_map)) {
-          types <- score_type_map[[test_name]]
-          for (type in types) {
-            if (!type %in% names(score_types_list)) {
-              score_types_list[[type]] <- character(0)
+          # Process the score type map to group tests by score type
+          for (test_name in names(score_type_map)) {
+            types <- score_type_map[[test_name]]
+            for (type in types) {
+              if (!type %in% names(score_types_list)) {
+                score_types_list[[type]] <- character(0)
+              }
+              score_types_list[[type]] <- unique(c(
+                score_types_list[[type]],
+                test_name
+              ))
             }
-            score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
           }
-        }
 
-        # Get unique score types present
-        unique_score_types <- names(score_types_list)
+          # Get unique score types present
+          unique_score_types <- names(score_types_list)
 
-        # Define the score type footnotes
-        fn_list <- list()
-        if ("t_score" %in% unique_score_types) {
-          fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
-        }
-        if ("scaled_score" %in% unique_score_types) {
-          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
-        }
-        if ("standard_score" %in% unique_score_types) {
-          fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-        }
-
-        # Create groups based on test names that use each score type
-        grp_list <- score_types_list
-
-        # Define which groups support which score types (for dynamic footnotes)
-        dynamic_grp <- score_types_list
-
-        # Determine source note based on domain
-        source_notes <- list(
-          iq = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          academics = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          verbal = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          spatial = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          memory = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          executive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          motor = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          social = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          adhd = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
-          emotion = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
-          adaptive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
-          daily_living = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-        )
-
-        # Default source note if no score types are found
-        if (length(fn_list) == 0) {
-          source_note <- source_notes[[tolower(self$pheno)]]
-          if (is.null(source_note)) {
-            source_note <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          # Define the score type footnotes
+          fn_list <- list()
+          if ("t_score" %in% unique_score_types) {
+            fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
           }
-        } else {
-          source_note <- NULL # No general source note when using footnotes
+          if ("scaled_score" %in% unique_score_types) {
+            fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+          }
+          if ("standard_score" %in% unique_score_types) {
+            fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          }
+
+          # Create groups based on test names that use each score type
+          grp_list <- score_types_list
+
+          # Define which groups support which score types (for dynamic footnotes)
+          dynamic_grp <- score_types_list
+
+          # Determine source note based on domain
+          source_notes <- list(
+            iq = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            academics = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            verbal = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            spatial = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            memory = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            executive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            motor = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            social = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            adhd = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+            emotion = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+            adaptive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+            daily_living = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          )
+
+          # Default source note if no score types are found
+          if (length(fn_list) == 0) {
+            source_note <- source_notes[[tolower(self$pheno)]]
+            if (is.null(source_note)) {
+              source_note <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+            }
+          } else {
+            source_note <- NULL # No general source note when using footnotes
+          }
+
+          # Create table using our modified TableGT_ModifiedR6 R6 class
+          table_gt <- TableGT_ModifiedR6$new(
+            data = filtered_data,
+            pheno = tolower(self$pheno),
+            table_name = table_name,
+            vertical_padding = vertical_padding,
+            source_note = source_note,
+            multiline = multiline,
+            fn_list = fn_list,
+            grp_list = grp_list,
+            dynamic_grp = dynamic_grp
+          )
+
+          # Get the table object without automatic saving
+          tbl <- table_gt$build_table()
+
+          # Save the table using our save_table method
+          table_gt$save_table(tbl, dir = here::here())
+
+          message("Generated table: ", table_name, ".png")
+        },
+        error = function(e) {
+          message("Error generating table for ", domain_name, ": ", e$message)
         }
-
-        # Create table using our modified TableGT_ModifiedR6 R6 class
-        table_gt <- TableGT_ModifiedR6$new(
-          data = filtered_data,
-          pheno = tolower(self$pheno),
-          table_name = table_name,
-          vertical_padding = vertical_padding,
-          source_note = source_note,
-          multiline = multiline,
-          fn_list = fn_list,
-          grp_list = grp_list,
-          dynamic_grp = dynamic_grp
-        )
-
-        # Get the table object without automatic saving
-        tbl <- table_gt$build_table()
-
-        # Save the table using our save_table method
-        table_gt$save_table(tbl, dir = here::here())
-
-        message("Generated table: ", table_name, ".png")
-
-      }, error = function(e) {
-        message("Error generating table for ", domain_name, ": ", e$message)
-      })
+      )
 
       return(invisible(self))
     },
@@ -2513,7 +2532,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Get scales for filtering
       scales <- self$get_scales()
-      
+
       # Filter the data
       filtered_data <- self$data
       if (length(scales) > 0) {
@@ -2527,34 +2546,60 @@ DomainProcessorR6 <- R6::R6Class(
       }
 
       # Generate self-report table
-      tryCatch({
-        self_data <- filtered_data[filtered_data$test %in% c("pai_adol", "basc3_srp_adolescent", "basc3_srp_child"), ]
-        if (nrow(self_data) > 0) {
-          self$generate_rater_table(self_data, "self")
+      tryCatch(
+        {
+          self_data <- filtered_data[
+            filtered_data$test %in%
+              c("pai_adol", "basc3_srp_adolescent", "basc3_srp_child"),
+          ]
+          if (nrow(self_data) > 0) {
+            self$generate_rater_table(self_data, "self")
+          }
+        },
+        error = function(e) {
+          message("Error generating self-report table: ", e$message)
         }
-      }, error = function(e) {
-        message("Error generating self-report table: ", e$message)
-      })
+      )
 
       # Generate parent-report table
-      tryCatch({
-        parent_data <- filtered_data[filtered_data$test %in% c("basc3_prs_adolescent", "basc3_prs_child", "basc3_prs_preschool"), ]
-        if (nrow(parent_data) > 0) {
-          self$generate_rater_table(parent_data, "parent")
+      tryCatch(
+        {
+          parent_data <- filtered_data[
+            filtered_data$test %in%
+              c(
+                "basc3_prs_adolescent",
+                "basc3_prs_child",
+                "basc3_prs_preschool"
+              ),
+          ]
+          if (nrow(parent_data) > 0) {
+            self$generate_rater_table(parent_data, "parent")
+          }
+        },
+        error = function(e) {
+          message("Error generating parent-report table: ", e$message)
         }
-      }, error = function(e) {
-        message("Error generating parent-report table: ", e$message)
-      })
+      )
 
       # Generate teacher-report table
-      tryCatch({
-        teacher_data <- filtered_data[filtered_data$test %in% c("basc3_trs_adolescent", "basc3_trs_child", "basc3_trs_preschool"), ]
-        if (nrow(teacher_data) > 0) {
-          self$generate_rater_table(teacher_data, "teacher")
+      tryCatch(
+        {
+          teacher_data <- filtered_data[
+            filtered_data$test %in%
+              c(
+                "basc3_trs_adolescent",
+                "basc3_trs_child",
+                "basc3_trs_preschool"
+              ),
+          ]
+          if (nrow(teacher_data) > 0) {
+            self$generate_rater_table(teacher_data, "teacher")
+          }
+        },
+        error = function(e) {
+          message("Error generating teacher-report table: ", e$message)
         }
-      }, error = function(e) {
-        message("Error generating teacher-report table: ", e$message)
-      })
+      )
 
       return(invisible(self))
     },
@@ -2571,81 +2616,86 @@ DomainProcessorR6 <- R6::R6Class(
       vertical_padding <- 0
       multiline <- TRUE
 
-      tryCatch({
-        # Load score type utils
-        if (!exists("get_score_types_from_lookup")) {
-          source("R/score_type_utils.R")
-        }
-
-        # Get score types from the lookup table
-        score_type_map <- get_score_types_from_lookup(data)
-
-        # Create a list of test names grouped by score type
-        score_types_list <- list()
-
-        # Process the score type map to group tests by score type
-        for (test_name in names(score_type_map)) {
-          types <- score_type_map[[test_name]]
-          for (type in types) {
-            if (!type %in% names(score_types_list)) {
-              score_types_list[[type]] <- character(0)
-            }
-            score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+      tryCatch(
+        {
+          # Load score type utils
+          if (!exists("get_score_types_from_lookup")) {
+            source("R/score_type_utils.R")
           }
+
+          # Get score types from the lookup table
+          score_type_map <- get_score_types_from_lookup(data)
+
+          # Create a list of test names grouped by score type
+          score_types_list <- list()
+
+          # Process the score type map to group tests by score type
+          for (test_name in names(score_type_map)) {
+            types <- score_type_map[[test_name]]
+            for (type in types) {
+              if (!type %in% names(score_types_list)) {
+                score_types_list[[type]] <- character(0)
+              }
+              score_types_list[[type]] <- unique(c(
+                score_types_list[[type]],
+                test_name
+              ))
+            }
+          }
+
+          # Get unique score types present
+          unique_score_types <- names(score_types_list)
+
+          # Define the score type footnotes
+          fn_list <- list()
+          if ("t_score" %in% unique_score_types) {
+            fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
+          }
+          if ("scaled_score" %in% unique_score_types) {
+            fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+          }
+          if ("standard_score" %in% unique_score_types) {
+            fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+          }
+
+          # Create groups based on test names that use each score type
+          grp_list <- score_types_list
+
+          # Define which groups support which score types (for dynamic footnotes)
+          dynamic_grp <- score_types_list
+
+          # Default source note if no score types are found
+          if (length(fn_list) == 0) {
+            source_note <- "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
+          } else {
+            source_note <- NULL # No general source note when using footnotes
+          }
+
+          # Create table using our modified TableGT_ModifiedR6 R6 class
+          table_gt <- TableGT_ModifiedR6$new(
+            data = data,
+            pheno = tolower(self$pheno),
+            table_name = table_name,
+            vertical_padding = vertical_padding,
+            source_note = source_note,
+            multiline = multiline,
+            fn_list = fn_list,
+            grp_list = grp_list,
+            dynamic_grp = dynamic_grp
+          )
+
+          # Get the table object without automatic saving
+          tbl <- table_gt$build_table()
+
+          # Save the table using our save_table method
+          table_gt$save_table(tbl, dir = here::here())
+
+          message("Generated table: ", table_name, ".png")
+        },
+        error = function(e) {
+          message("Error generating table for ", rater_type, ": ", e$message)
         }
-
-        # Get unique score types present
-        unique_score_types <- names(score_types_list)
-
-        # Define the score type footnotes
-        fn_list <- list()
-        if ("t_score" %in% unique_score_types) {
-          fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
-        }
-        if ("scaled_score" %in% unique_score_types) {
-          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
-        }
-        if ("standard_score" %in% unique_score_types) {
-          fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-        }
-
-        # Create groups based on test names that use each score type
-        grp_list <- score_types_list
-
-        # Define which groups support which score types (for dynamic footnotes)
-        dynamic_grp <- score_types_list
-
-        # Default source note if no score types are found
-        if (length(fn_list) == 0) {
-          source_note <- "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
-        } else {
-          source_note <- NULL # No general source note when using footnotes
-        }
-
-        # Create table using our modified TableGT_ModifiedR6 R6 class
-        table_gt <- TableGT_ModifiedR6$new(
-          data = data,
-          pheno = tolower(self$pheno),
-          table_name = table_name,
-          vertical_padding = vertical_padding,
-          source_note = source_note,
-          multiline = multiline,
-          fn_list = fn_list,
-          grp_list = grp_list,
-          dynamic_grp = dynamic_grp
-        )
-
-        # Get the table object without automatic saving
-        tbl <- table_gt$build_table()
-
-        # Save the table using our save_table method
-        table_gt$save_table(tbl, dir = here::here())
-
-        message("Generated table: ", table_name, ".png")
-
-      }, error = function(e) {
-        message("Error generating table for ", rater_type, ": ", e$message)
-      })
+      )
 
       return(invisible(self))
     }
