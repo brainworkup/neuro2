@@ -16,10 +16,10 @@
 get_source_note_by_score_type <- function(data, default_note = NULL) {
   # Define the score type footnotes
   score_type_notes <- list(
-    t_score = "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-    scaled_score = "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]",
-    standard_score = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-    z_score = "z-score: Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰]"
+    t_score = "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+    scaled_score = "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]",
+    standard_score = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+    z_score = "z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]"
   )
 
   # Check if data has score_type column
@@ -79,10 +79,10 @@ get_source_note_by_score_type <- function(data, default_note = NULL) {
 #' @export
 get_all_score_type_notes <- function() {
   list(
-    t_score = gt::md("T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"),
-    scaled_score = gt::md("Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"),
-    standard_score = gt::md("Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"),
-    z_score = gt::md("z-score: Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰]")
+    t_score = gt::md("T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"),
+    scaled_score = gt::md("Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"),
+    standard_score = gt::md("Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"),
+    z_score = gt::md("z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]")
   )
 }
 

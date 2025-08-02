@@ -484,7 +484,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             ]] <- if ("standard_score" %in% names(self$fn_list)) {
               self$fn_list[["standard_score"]]
             } else {
-              "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+              "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
             }
           }
 
@@ -496,7 +496,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             ]] <- if ("scaled_score" %in% names(self$fn_list)) {
               self$fn_list[["scaled_score"]]
             } else {
-              "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+              "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
             }
           }
 
@@ -710,7 +710,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             ]] <- if ("standard_score" %in% names(self$fn_list)) {
               self$fn_list[["standard_score"]]
             } else {
-              "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+              "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
             }
             self$grp_list[[standard_fn_id]] <- battery
 
@@ -738,7 +738,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             ]] <- if ("scaled_score" %in% names(self$fn_list)) {
               self$fn_list[["scaled_score"]]
             } else {
-              "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+              "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
             }
             self$grp_list[[scaled_fn_id]] <- battery
 

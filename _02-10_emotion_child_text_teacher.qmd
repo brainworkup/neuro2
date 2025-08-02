@@ -1,6 +1,4 @@
-<summary>
-
-Ethan's self-reported Rule-breaking behavior was Above Average.
+<summary>Ethan's self-reported Rule-breaking behavior was Above Average.
 Ethan's self-reported Demonstration of clear, logical thought patterns and a general awareness of surroundings was Above Average.
 Ethan's self-reported Behavioral symptoms index composite scale was Above Average.
 Ethan's self-reported Maintain necessary levels of attention was Above Average.
@@ -66,6 +64,6 @@ Ethan's score on Affective (A) (high scorers experience a great deal of tension,
 Ethan's score on Physiological (D) (elevations suggest a change in level of physical functioning, typically with a disturbance in sleep pattern, a decrease in energy and level of sexual interest and a loss of appetite and/or weight loss) was Below Average.
 Ethan's score on Schizophrenia (associated with an active schizophrenic episode) was Below Average.
 Ethan's score on Aggressive Attitude (suggest an individual who is easily angered and frustrated; others may perceive him as hostile and readily provoked) was Below Average.
-Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.
+Ethan's self-reported Creative, works well under pressure, and/or can effectively unite others to work together was Below Average.</summary>
 
-</summary>
+±‰

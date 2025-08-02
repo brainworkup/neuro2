@@ -670,23 +670,23 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Determine appropriate source note based on domain
       source_notes <- list(
-        iq = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        academics = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        verbal = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        spatial = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        memory = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        executive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        motor = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        social = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        adhd = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-        emotion = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-        adaptive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        daily_living = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        iq = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        academics = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        verbal = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        spatial = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        memory = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        executive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        motor = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        social = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        adhd = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+        emotion = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+        adaptive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+        daily_living = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
       )
 
       source_note <- source_notes[[tolower(self$pheno)]]
       if (is.null(source_note)) {
-        source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+        source_note <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
       }
 
       # Get the plot title for this domain
@@ -856,13 +856,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
@@ -1467,13 +1467,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
@@ -1481,7 +1481,7 @@ DomainProcessorR6 <- R6::R6Class(
         "dynamic_grp <- score_types_list\n\n",
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
-        "  source_note <- \"T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  source_note <- \"T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -1542,13 +1542,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
@@ -1556,7 +1556,7 @@ DomainProcessorR6 <- R6::R6Class(
         "dynamic_grp <- score_types_list\n\n",
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
-        "  source_note <- \"T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  source_note <- \"T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -1617,13 +1617,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
@@ -1631,7 +1631,7 @@ DomainProcessorR6 <- R6::R6Class(
         "dynamic_grp <- score_types_list\n\n",
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
-        "  source_note <- \"T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  source_note <- \"T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -2195,13 +2195,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
@@ -2209,7 +2209,7 @@ DomainProcessorR6 <- R6::R6Class(
         "dynamic_grp <- score_types_list\n\n",
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
-        "  source_note <- \"T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  source_note <- \"T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -2430,13 +2430,13 @@ DomainProcessorR6 <- R6::R6Class(
         # Define the score type footnotes
         fn_list <- list()
         if ("t_score" %in% unique_score_types) {
-          fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+          fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
         }
         if ("scaled_score" %in% unique_score_types) {
-          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
         }
         if ("standard_score" %in% unique_score_types) {
-          fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
         }
 
         # Create groups based on test names that use each score type
@@ -2447,25 +2447,25 @@ DomainProcessorR6 <- R6::R6Class(
 
         # Determine source note based on domain
         source_notes <- list(
-          iq = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          academics = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          verbal = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          spatial = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          memory = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          executive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          motor = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          social = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          adhd = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-          emotion = "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-          adaptive = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-          daily_living = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          iq = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          academics = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          verbal = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          spatial = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          memory = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          executive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          motor = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          social = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          adhd = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+          emotion = "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]",
+          adaptive = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]",
+          daily_living = "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
         )
 
         # Default source note if no score types are found
         if (length(fn_list) == 0) {
           source_note <- source_notes[[tolower(self$pheno)]]
           if (is.null(source_note)) {
-            source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+            source_note <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
           }
         } else {
           source_note <- NULL # No general source note when using footnotes
@@ -2600,13 +2600,13 @@ DomainProcessorR6 <- R6::R6Class(
         # Define the score type footnotes
         fn_list <- list()
         if ("t_score" %in% unique_score_types) {
-          fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+          fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
         }
         if ("scaled_score" %in% unique_score_types) {
-          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+          fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
         }
         if ("standard_score" %in% unique_score_types) {
-          fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+          fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
         }
 
         # Create groups based on test names that use each score type
@@ -2617,7 +2617,7 @@ DomainProcessorR6 <- R6::R6Class(
 
         # Default source note if no score types are found
         if (length(fn_list) == 0) {
-          source_note <- "T-score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+          source_note <- "T-score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
         } else {
           source_note <- NULL # No general source note when using footnotes
         }
