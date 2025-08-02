@@ -129,31 +129,31 @@ else
 fi
 
 # Ask about PDF extraction
-print_step "Step 4: PDF Data Extraction"
-echo "Available extraction templates:"
-echo "  - pluck_wisc5.Rmd (WISC-V Child Intelligence)"
-echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)" 
-echo "  - pluck_rbans.Rmd (RBANS)"
-echo "  - pluck_wiat4.Rmd (WIAT-4 Achievement)"
-echo "  - pluck_ktea3.Rmd (KTEA-3 Achievement)"
-echo "  - pluck_caars2.Rmd (CAARS-2 ADHD)"
-echo "  - And more in inst/rmarkdown/templates/pluck_pdfs/skeleton/"
-echo
+# print_step "Step 4: PDF Data Extraction"
+# echo "Available extraction templates:"
+# echo "  - pluck_wisc5.Rmd (WISC-V Child Intelligence)"
+# echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)" 
+# echo "  - pluck_rbans.Rmd (RBANS)"
+# echo "  - pluck_wiat4.Rmd (WIAT-4 Achievement)"
+# echo "  - pluck_ktea3.Rmd (KTEA-3 Achievement)"
+# echo "  - pluck_caars2.Rmd (CAARS-2 ADHD)"
+# echo "  - And more in inst/rmarkdown/templates/pluck_pdfs/skeleton/"
+# echo
 
-read -p "Do you want to run PDF extraction templates? (y/n): " run_extraction
+# read -p "Do you want to run PDF extraction templates? (y/n): " run_extraction
 
-if [[ $run_extraction =~ ^[Yy]$ ]]; then
-    print_warning "Manual step required:"
-    echo "1. Open appropriate .Rmd template in inst/rmarkdown/templates/pluck_pdfs/skeleton/"
-    echo "2. Update patient name in params section"
-    echo "3. Run file.choose() to select PDF"
-    echo "4. Knit the document to generate CSV files"
-    echo "5. Move generated CSV files to data-raw/csv/"
-    echo
-    read -p "Press Enter when PDF extraction is complete..."
-else
-    print_warning "Skipping PDF extraction - ensure CSV files are in data-raw/csv/"
-fi
+# if [[ $run_extraction =~ ^[Yy]$ ]]; then
+#     print_warning "Manual step required:"
+#     echo "1. Open appropriate .Rmd template in inst/rmarkdown/templates/pluck_pdfs/skeleton/"
+#     echo "2. Update patient name in params section"
+#     echo "3. Run file.choose() to select PDF"
+#     echo "4. Knit the document to generate CSV files"
+#     echo "5. Move generated CSV files to data-raw/csv/"
+#     echo
+#     read -p "Press Enter when PDF extraction is complete..."
+# else
+#     print_warning "Skipping PDF extraction - ensure CSV files are in data-raw/csv/"
+# fi
 
 # Run the unified workflow
 print_step "Step 5: Running unified workflow..."

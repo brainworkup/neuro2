@@ -1071,15 +1071,14 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Write QMD to file
       cat(qmd_content, file = output_file)
+
+      # Generate the text file and table before rendering the main QMD
+      self$generate_domain_text_qmd(domain_name)
+      self$generate_domain_table(domain_name)
+
       # Immediately render this domain file for side-effects (tables, plots, text)
       message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
       system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
-
-      # Also generate the text file
-      self$generate_domain_text_qmd(domain_name)
-
-      # Generate table PNG file
-      self$generate_domain_table(domain_name)
 
       return(output_file)
     },
@@ -2006,12 +2005,13 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Write QMD to file
       cat(qmd_content, file = output_file)
+
+      # Generate tables for each rater type before rendering
+      self$generate_emotion_child_tables()
+
       # Immediately render this domain file
       message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
       system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
-
-      # Generate tables for each rater type
-      self$generate_emotion_child_tables()
 
       return(output_file)
     },
@@ -2360,11 +2360,8 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Write QMD to file
       cat(qmd_content, file = output_file)
-      # Immediately render this domain file
-      message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
-      system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
 
-      # Generate text files
+      # Generate text and table files before rendering
       text_file <- paste0(
         "_02-",
         domain_num,
@@ -2377,9 +2374,11 @@ DomainProcessorR6 <- R6::R6Class(
         file = text_file
       )
       results_processor$process()
-
-      # Generate table for adult emotion
       self$generate_domain_table(domain_name)
+
+      # Immediately render this domain file
+      message(paste0("[DOMAINS] Rendering ", output_file, " to typst..."))
+      system(paste("quarto render", output_file, "--to typst"), intern = TRUE)
 
       # Adult emotion only uses self-report, no observer text file needed
 
