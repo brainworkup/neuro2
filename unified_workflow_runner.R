@@ -695,6 +695,8 @@ WorkflowRunnerR6 <- R6::R6Class(
           # Load the R6 classes
           source("R/NeuropsychResultsR6.R")
           source("R/DomainProcessorR6.R")
+          source("R/TableGT_ModifiedR6.R")
+          source("R/DotplotR6.R")
 
           # Get all unique domains from the neurocog data
           tryCatch(
