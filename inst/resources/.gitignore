@@ -1,4 +1,3 @@
 # Placeholder file to satisfy R CMD check
 # This directory is for compiled code, but this package currently doesn't use any.
-*
 !.gitignore
