@@ -169,3 +169,11 @@ _02-99_emotion_adult_text.qmd
 _02-99_emotion_adult.qmd
 template_pediatric.pdf
 _02-10_emotion_text.qmd
+
+
+_00-00_tests.qmd
+_01-00_nse_*.qmd
+_02-00_behav_obs.qmd
+_02-10_emotion_child_text_*.qmd
+_03-00_dsm5_icd10_dx.qmd
+template.qmd
