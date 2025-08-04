@@ -1,7 +1,19 @@
 #' ConfigManagerR6 Class
 #'
-#' Centralized configuration management for neuro2 package
-#' Consolidates settings from YAML files, environment variables, and defaults
+#' @title Configuration Manager for neuro2 Package
+#' @description Centralized configuration management for neuro2 package.
+#'   Consolidates settings from YAML files, environment variables, and defaults.
+#'
+#' @field config List containing all configuration settings
+#'
+#' @param config_file Path to configuration YAML file (optional)
+#' @param variables_file Path to variables YAML file (default: "_variables.yml")
+#' @param base Base configuration list
+#' @param override Configuration list to override base settings
+#' @param path Dot-separated path to the configuration value
+#' @param value Value to set
+#' @param default Default value if path not found
+#' @param file Path to save the configuration file
 #'
 #' @export
 ConfigManagerR6 <- R6::R6Class(
@@ -9,6 +21,7 @@ ConfigManagerR6 <- R6::R6Class(
   public = list(
     config = NULL,
     
+    #' @noRd
     initialize = function(config_file = NULL, variables_file = "_variables.yml") {
       # Load base configuration
       self$config <- self$load_default_config()
@@ -31,6 +44,7 @@ ConfigManagerR6 <- R6::R6Class(
       self$validate_config()
     },
     
+    #' @noRd
     load_default_config = function() {
       list(
         # Data processing
@@ -75,11 +89,13 @@ ConfigManagerR6 <- R6::R6Class(
       )
     },
     
+    #' @noRd
     merge_configs = function(base, override) {
       # Deep merge of nested lists
       modifyList(base, override, keep.null = TRUE)
     },
     
+    #' @noRd
     apply_env_overrides = function() {
       # Check for common environment variables
       env_vars <- list(
@@ -97,6 +113,7 @@ ConfigManagerR6 <- R6::R6Class(
       }
     },
     
+    #' @noRd
     set_nested_value = function(path, value) {
       path_parts <- strsplit(path, "\\.")[[1]]
       current <- self$config
@@ -122,6 +139,7 @@ ConfigManagerR6 <- R6::R6Class(
       }
     },
     
+    #' @noRd
     validate_config = function() {
       # Check required directories exist or can be created
       dirs_to_check <- c(
@@ -146,6 +164,7 @@ ConfigManagerR6 <- R6::R6Class(
       }
     },
     
+    #' @noRd
     get = function(path, default = NULL) {
       path_parts <- strsplit(path, "\\.")[[1]]
       current <- self$config
@@ -161,11 +180,13 @@ ConfigManagerR6 <- R6::R6Class(
       current
     },
     
+    #' @noRd
     set = function(path, value) {
       self$set_nested_value(path, value)
       invisible(self)
     },
     
+    #' @noRd
     save_config = function(file = "neuro2_config.yml") {
       yaml::write_yaml(self$config, file)
       if (self$config$processing$verbose) {

@@ -1,7 +1,8 @@
 #' Neuro2MainR6 Class
 #'
-#' Streamlined main orchestrator for neuropsychological report generation
-#' Provides a simple, user-friendly interface that handles complexity internally
+#' @title Main Orchestrator for Neuropsychological Reports
+#' @description Streamlined main orchestrator for neuropsychological report generation.
+#'   Provides a simple, user-friendly interface that handles complexity internally.
 #'
 #' @field config Configuration manager object
 #' @field error_handler Error handler object
@@ -9,25 +10,33 @@
 #' @field processors List of domain processors
 #' @field status Status tracking list
 #'
+#' @param config_file Path to configuration file
+#' @param variables_file Path to variables file
+#' @param verbose Whether to show verbose output
+#' @param data_dir Directory containing data files
+#' @param use_duckdb Whether to use DuckDB for data loading
+#' @param output_format Output format for processed data
+#' @param domains Vector of domain identifiers
+#' @param age_group Age group ("adult" or "child")
+#' @param include_multi_rater Whether to include multi-rater processors
+#' @param processor Domain processor instance
+#' @param domain_key Domain identifier
+#' @param rater Rater type
+#' @param template Template file to use
+#' @param output_file Output filename
+#' @param format Output format
+#' @param load_data Whether to load data
+#' @param generate_report Whether to generate report
+#'
 #' @export
 Neuro2MainR6 <- R6::R6Class(
   classname = "Neuro2MainR6",
   public = list(
-    #' @field config Configuration manager object
     config = NULL,
-    #' @field error_handler Error handler object
     error_handler = NULL,
-    #' @field factory Domain processor factory object
     factory = NULL,
-    #' @field processors List of domain processors
     processors = NULL,
-    #' @field status Status tracking list
     status = NULL,
-    
-    #' Initialize main orchestrator
-    #' @param config_file Path to configuration file
-    #' @param variables_file Path to variables file
-    #' @param verbose Whether to show verbose output
     initialize = function(config_file = "config.yml", 
                          variables_file = "_variables.yml",
                          verbose = NULL) {
@@ -59,8 +68,6 @@ Neuro2MainR6 <- R6::R6Class(
       self$setup()
     },
     
-    #' Set up the orchestrator environment
-    #' @return Invisibly returns self
     setup = function() {
       if (self$config$get("processing.verbose", TRUE)) {
         cli::cli_h1("Neuro2 Report System")
@@ -74,8 +81,6 @@ Neuro2MainR6 <- R6::R6Class(
       invisible(self)
     },
     
-    #' Check and set up required directories
-    #' @return TRUE if environment is ready
     check_environment = function() {
       checks <- list(
         data_dir = self$config$get("data.input_dir"),
@@ -116,12 +121,7 @@ Neuro2MainR6 <- R6::R6Class(
       invisible(all_good)
     },
     
-    #' Load neuropsychological data
-    #' @param data_dir Directory containing data files
-    #' @param use_duckdb Whether to use DuckDB for data loading
-    #' @param output_format Output format for processed data
-    #' @return Invisibly returns self
-    load_data = function(data_dir = NULL, use_duckdb = NULL, 
+    load_data = function(data_dir = NULL, use_duckdb = NULL,
                         output_format = NULL) {
       
       # Use config defaults if not specified

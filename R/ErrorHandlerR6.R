@@ -1,7 +1,26 @@
 #' ErrorHandlerR6 Class
 #'
-#' Centralized error handling and user feedback system
-#' Provides consistent error reporting with helpful suggestions
+#' @title Centralized Error Handling System
+#' @description Centralized error handling and user feedback system.
+#'   Provides consistent error reporting with helpful suggestions.
+#'
+#' @field config Configuration object for error handling
+#' @field error_log List containing logged errors
+#'
+#' @param config Configuration object (optional)
+#' @param expr Expression to execute
+#' @param context Context description for errors
+#' @param fallback Value to return on error
+#' @param silent Whether to suppress error messages
+#' @param error Error object to handle
+#' @param warning Warning object to handle
+#' @param message Error message text
+#' @param error_info Structured error information
+#' @param n Number of recent errors to return
+#' @param file_path Path to check
+#' @param data Data frame to check
+#' @param required_cols Vector of required column names
+#' @param package Package name to check
 #'
 #' @export
 ErrorHandlerR6 <- R6::R6Class(

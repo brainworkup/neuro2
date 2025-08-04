@@ -2,10 +2,22 @@
 % Please edit documentation in R/ErrorHandlerR6.R
 \name{ErrorHandlerR6}
 \alias{ErrorHandlerR6}
-\title{ErrorHandlerR6 Class}
+\title{Centralized Error Handling System}
 \description{
-Centralized error handling and user feedback system
-Provides consistent error reporting with helpful suggestions
+Centralized error handling and user feedback system.
+Provides consistent error reporting with helpful suggestions.
+}
+\details{
+ErrorHandlerR6 Class
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{config}}{Configuration object for error handling}
+
+\item{\code{error_log}}{List containing logged errors}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -32,6 +44,13 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$new(config = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{config}}{Configuration object (optional)}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-safe_execute"></a>}}
@@ -46,6 +65,19 @@ Provides consistent error reporting with helpful suggestions
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expr}}{Expression to execute}
+
+\item{\code{context}}{Context description for errors}
+
+\item{\code{fallback}}{Value to return on error}
+
+\item{\code{silent}}{Whether to suppress error messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-handle_error"></a>}}
@@ -55,6 +87,17 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$handle_error(error, context = "operation", silent = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{error}}{Error object to handle}
+
+\item{\code{context}}{Context description for errors}
+
+\item{\code{silent}}{Whether to suppress error messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-handle_warning"></a>}}
@@ -64,6 +107,17 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$handle_warning(warning, context = "operation", silent = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{warning}}{Warning object to handle}
+
+\item{\code{context}}{Context description for errors}
+
+\item{\code{silent}}{Whether to suppress error messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-get_error_suggestions"></a>}}
@@ -73,6 +127,15 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$get_error_suggestions(message, context)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{message}}{Error message text}
+
+\item{\code{context}}{Context description for errors}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-display_error"></a>}}
@@ -82,6 +145,13 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$display_error(error_info)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{error_info}}{Structured error information}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-get_recent_errors"></a>}}
@@ -91,6 +161,13 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$get_recent_errors(n = 5)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{n}}{Number of recent errors to return}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-clear_log"></a>}}
@@ -109,6 +186,15 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$check_file_exists(file_path, context = "file_check")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file_path}}{Path to check}
+
+\item{\code{context}}{Context description for errors}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-check_required_columns"></a>}}
@@ -122,6 +208,17 @@ Provides consistent error reporting with helpful suggestions
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data}}{Data frame to check}
+
+\item{\code{required_cols}}{Vector of required column names}
+
+\item{\code{context}}{Context description for errors}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-check_package_available"></a>}}
@@ -131,6 +228,15 @@ Provides consistent error reporting with helpful suggestions
 \if{html}{\out{<div class="r">}}\preformatted{ErrorHandlerR6$check_package_available(package, context = "package_check")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{package}}{Package name to check}
+
+\item{\code{context}}{Context description for errors}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ErrorHandlerR6-clone"></a>}}

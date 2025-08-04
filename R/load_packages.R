@@ -14,8 +14,7 @@ load_neuropsych_packages <- function(verbose = TRUE) {
     "here",      # For path management
     "readr",     # For reading CSV if needed
     "dplyr",     # For data manipulation
-    "gt",        # For tables
-    "neuro2"     # For R6 classes and report generation
+    "gt"         # For tables
   )
   
   # Load packages

@@ -184,3 +184,5 @@ _*-*_*.pdf
 _*-*_*_text.pdf
 _*_*.rmarkdown
 template_master.pdf
+hx_term*.txt
+output/template copy.pdf

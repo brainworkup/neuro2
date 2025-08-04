@@ -2,10 +2,26 @@
 % Please edit documentation in R/PackageManagerR6.R
 \name{PackageManagerR6}
 \alias{PackageManagerR6}
-\title{PackageManagerR6 Class}
+\title{Package Manager for neuro2}
 \description{
-Enhanced package management for neuro2
-Handles dependency installation, loading, and version checking
+Enhanced package management for neuro2.
+Handles dependency installation, loading, and version checking.
+}
+\details{
+PackageManagerR6 Class
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{required_packages}}{List of required package groups}
+
+\item{\code{optional_packages}}{List of optional package groups}
+
+\item{\code{loaded_packages}}{Character vector of successfully loaded packages}
+
+\item{\code{failed_packages}}{Character vector of packages that failed to load}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -44,6 +60,17 @@ Handles dependency installation, loading, and version checking
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{install_missing}}{Whether to install missing packages}
+
+\item{\code{include_optional}}{Whether to check optional packages}
+
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-check_package_group"></a>}}
@@ -58,6 +85,19 @@ Handles dependency installation, loading, and version checking
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{packages}}{Vector of package names to check or load}
+
+\item{\code{install_missing}}{Whether to install missing packages}
+
+\item{\code{required}}{Whether these packages are required}
+
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-check_single_package"></a>}}
@@ -71,6 +111,17 @@ Handles dependency installation, loading, and version checking
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pkg}}{Package name to check}
+
+\item{\code{install_missing}}{Whether to install missing packages}
+
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-load_packages"></a>}}
@@ -80,6 +131,15 @@ Handles dependency installation, loading, and version checking
 \if{html}{\out{<div class="r">}}\preformatted{PackageManagerR6$load_packages(packages = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{packages}}{Vector of package names to check or load}
+
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-show_summary"></a>}}
@@ -107,6 +167,13 @@ Handles dependency installation, loading, and version checking
 \if{html}{\out{<div class="r">}}\preformatted{PackageManagerR6$install_missing_packages(verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-check_conflicts"></a>}}
@@ -116,6 +183,13 @@ Handles dependency installation, loading, and version checking
 \if{html}{\out{<div class="r">}}\preformatted{PackageManagerR6$check_conflicts(verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{verbose}}{Whether to show progress messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-create_package_loading_script"></a>}}
@@ -125,6 +199,13 @@ Handles dependency installation, loading, and version checking
 \if{html}{\out{<div class="r">}}\preformatted{PackageManagerR6$create_package_loading_script(file = "load_packages.R")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file}}{Path to save the loading script}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PackageManagerR6-clone"></a>}}

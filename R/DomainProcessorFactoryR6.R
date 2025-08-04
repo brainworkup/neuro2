@@ -1,7 +1,23 @@
 #' DomainProcessorFactoryR6 Class
 #'
-#' Factory class for creating domain processors with smart defaults
-#' Simplifies initialization and reduces code duplication
+#' @title Factory for Creating Domain Processors
+#' @description Factory class for creating domain processors with smart defaults.
+#'   Simplifies initialization and reduces code duplication.
+#'
+#' @field config Configuration object for the factory
+#' @field error_handler Error handler instance for managing errors
+#' @field registry Registry of available domain configurations
+#'
+#' @param config Configuration object (optional)
+#' @param error_handler Error handler instance (optional)
+#' @param domain_key Domain identifier (e.g., "iq", "academics")
+#' @param age_group Age group ("adult" or "child")
+#' @param rater Rater type ("self", "observer", "parent", "teacher")
+#' @param custom_config Custom configuration to override defaults
+#' @param domain_info Domain information from registry
+#' @param data_source Data source identifier
+#' @param domain_keys Vector of domain identifiers
+#' @param include_multi_rater Whether to create multi-rater processors
 #'
 #' @export
 DomainProcessorFactoryR6 <- R6::R6Class(
@@ -11,12 +27,14 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     error_handler = NULL,
     registry = NULL,
     
+    #' @noRd
     initialize = function(config = NULL, error_handler = NULL) {
       self$config <- config %||% get_config()
       self$error_handler <- error_handler %||% get_error_handler(self$config)
       self$registry <- self$build_domain_registry()
     },
     
+    #' @noRd
     build_domain_registry = function() {
       list(
         # Cognitive domains - use neurocog data
@@ -193,6 +211,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(processor)
     },
     
+    #' @noRd
     create_multi_processor = function(domain_key, age_group = "adult") {
       domain_info <- self$registry[[domain_key]]
       
@@ -227,6 +246,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(processors)
     },
     
+    #' @noRd
     get_available_raters = function(domain_info, age_group) {
       if (is.null(domain_info$raters)) {
         return("self")  # Default
@@ -245,6 +265,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return("self")
     },
     
+    #' @noRd
     get_input_file = function(data_source) {
       # Map data source to file path
       data_paths <- self$config$get("data", list())
@@ -264,7 +285,8 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(file_path)
     },
     
-    batch_create = function(domain_keys, age_group = "adult", 
+    #' @noRd
+    batch_create = function(domain_keys, age_group = "adult",
                            include_multi_rater = TRUE) {
       
       if (self$config$get("processing.verbose", TRUE)) {
@@ -309,6 +331,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(processors)
     },
     
+    #' @noRd
     get_registry_info = function() {
       # Return summary of available domains
       info <- data.frame(
@@ -325,6 +348,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(info)
     },
     
+    #' @noRd
     validate_domain_data = function(domain_key) {
       domain_info <- self$registry[[domain_key]]
       if (is.null(domain_info)) {
