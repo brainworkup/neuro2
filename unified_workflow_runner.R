@@ -168,7 +168,7 @@ if (!file.exists(config_file)) {
     default_config <- list(
       patient = list(
         name = "Biggie",
-        age = 35,
+        age = 21,
         doe = format(Sys.Date(), "%Y-%m-%d")
       ),
       data = list(
@@ -264,37 +264,23 @@ WorkflowRunnerR6 <- R6::R6Class(
         )
       }
 
-      # Check if template directory exists
-      if (!dir.exists(template_dir)) {
-        log_message(
-          paste0("Template directory not found: ", template_dir),
-          "ERROR"
-        )
-        # Try alternative locations
-        alt_dirs <- c(
+      # Check if template directory exists using helper function
+      template_dir <- private$find_directory(
+        template_dir,
+        c(
           "inst/quarto/templates/typst-report",
           "../inst/quarto/templates/typst-report",
           "../../inst/quarto/templates/typst-report"
+        ),
+        "template"
+      )
+      
+      if (is.null(template_dir)) {
+        log_message(
+          "Could not find template directory in any location",
+          "ERROR"
         )
-
-        for (alt_dir in alt_dirs) {
-          if (dir.exists(alt_dir)) {
-            template_dir <- alt_dir
-            log_message(
-              paste0("Found alternative template directory: ", template_dir),
-              "SETUP"
-            )
-            break
-          }
-        }
-
-        if (!dir.exists(template_dir)) {
-          log_message(
-            "Could not find template directory in any location",
-            "ERROR"
-          )
-          return(FALSE)
-        }
+        return(FALSE)
       }
 
       # List files in the template directory
@@ -428,40 +414,23 @@ WorkflowRunnerR6 <- R6::R6Class(
         )
       }
 
-      # Check if extensions directory exists
-      if (!dir.exists(extensions_dir)) {
-        log_message(
-          paste0("Extensions directory not found: ", extensions_dir),
-          "ERROR"
-        )
-        # Try alternative locations
-        alt_dirs <- c(
+      # Check if extensions directory exists using helper function
+      extensions_dir <- private$find_directory(
+        extensions_dir,
+        c(
           "inst/quarto/_extensions",
           "../inst/quarto/_extensions",
           "../../inst/quarto/_extensions"
+        ),
+        "extensions"
+      )
+      
+      if (is.null(extensions_dir)) {
+        log_message(
+          "Could not find extensions directory in any location",
+          "WARNING"
         )
-
-        for (alt_dir in alt_dirs) {
-          if (dir.exists(alt_dir)) {
-            extensions_dir <- alt_dir
-            log_message(
-              paste0(
-                "Found alternative extensions directory: ",
-                extensions_dir
-              ),
-              "SETUP"
-            )
-            break
-          }
-        }
-
-        if (!dir.exists(extensions_dir)) {
-          log_message(
-            "Could not find extensions directory in any location",
-            "ERROR"
-          )
-          # Continue anyway, as this might not be fatal
-        }
+        # Continue anyway, as this might not be fatal
       }
 
       if (dir.exists(extensions_dir)) {
@@ -718,41 +687,68 @@ WorkflowRunnerR6 <- R6::R6Class(
                 "Using DomainProcessorR6 to generate domain files",
                 "DOMAINS"
               )
-
+    
               # Get the list of domains from the data
               domains_data <- query_neuropsych(
                 "SELECT DISTINCT domain FROM neurocog WHERE domain IS NOT NULL",
                 self$config$data$output_dir
               )
-
+    
               log_message(
                 paste0("Found ", nrow(domains_data), " unique domains"),
                 "DOMAINS"
               )
-
+    
+              # Track processed domains to avoid duplicates
+              processed_domains <- character()
+              emotion_processed <- FALSE
+              
               # Process each domain
               for (i in seq_len(nrow(domains_data))) {
                 domain <- domains_data$domain[i]
-
+    
+                # Skip if already processed
+                if (domain %in% processed_domains) {
+                  log_message(
+                    paste0("Skipping already processed domain: ", domain),
+                    "DOMAINS"
+                  )
+                  next
+                }
+                
                 # Skip individual emotion domains - they should be processed together
                 emotion_domains <- c(
                   "Behavioral/Emotional/Social",
                   "Substance Use",
                   "Psychosocial Problems",
                   "Psychiatric Disorders",
-                  "Personality Disorders"
+                  "Personality Disorders",
+                  "Emotional/Behavioral/Personality"
                 )
-
+    
                 if (domain %in% emotion_domains) {
-                  log_message(
-                    paste0(
-                      "Skipping individual emotion domain: ",
-                      domain,
-                      " (will be processed as consolidated emotion)"
-                    ),
-                    "DOMAINS"
-                  )
-                  next
+                  if (!emotion_processed) {
+                    log_message(
+                      "Processing consolidated emotion domain",
+                      "DOMAINS"
+                    )
+                    # Process all emotion domains together
+                    emotion_processed <- TRUE
+                    # Mark all emotion domains as processed
+                    processed_domains <- c(processed_domains, emotion_domains)
+                    # Continue with processing emotion as single consolidated domain
+                    domain <- "Behavioral/Emotional/Social"  # Use primary emotion domain name
+                  } else {
+                    log_message(
+                      paste0(
+                        "Skipping individual emotion domain: ",
+                        domain,
+                        " (already processed as consolidated emotion)"
+                      ),
+                      "DOMAINS"
+                    )
+                    next
+                  }
                 }
 
                 # Create a domain processor for this domain
@@ -981,7 +977,11 @@ WorkflowRunnerR6 <- R6::R6Class(
                   domain <- behav_domains_data$domain[i]
 
                   # Skip if already processed
-                  if (domain %in% domains_data$domain) {
+                  if (domain %in% processed_domains || domain %in% domains_data$domain) {
+                    log_message(
+                      paste0("Skipping already processed behavioral domain: ", domain),
+                      "DOMAINS"
+                    )
                     next
                   }
 
@@ -991,19 +991,30 @@ WorkflowRunnerR6 <- R6::R6Class(
                     "Substance Use",
                     "Psychosocial Problems",
                     "Psychiatric Disorders",
-                    "Personality Disorders"
+                    "Personality Disorders",
+                    "Emotional/Behavioral/Personality"
                   )
 
                   if (domain %in% emotion_domains) {
-                    log_message(
-                      paste0(
-                        "Skipping individual emotion domain: ",
-                        domain,
-                        " (will be processed as consolidated emotion)"
-                      ),
-                      "DOMAINS"
-                    )
-                    next
+                    if (!emotion_processed) {
+                      log_message(
+                        "Processing consolidated emotion domain from neurobehav",
+                        "DOMAINS"
+                      )
+                      emotion_processed <- TRUE
+                      processed_domains <- c(processed_domains, emotion_domains)
+                      domain <- "Behavioral/Emotional/Social"
+                    } else {
+                      log_message(
+                        paste0(
+                          "Skipping individual emotion domain: ",
+                          domain,
+                          " (already processed as consolidated emotion)"
+                        ),
+                        "DOMAINS"
+                      )
+                      next
+                    }
                   }
 
                   # Create a domain processor for this domain
@@ -1078,6 +1089,9 @@ WorkflowRunnerR6 <- R6::R6Class(
                       ) {
                         file.rename(generated_file, output_file_name)
                       }
+                      
+                      # Mark domain as processed
+                      processed_domains <- c(processed_domains, domain)
                       log_message(
                         paste0("Processed behavioral domain: ", domain),
                         "DOMAINS"
@@ -1403,6 +1417,39 @@ WorkflowRunnerR6 <- R6::R6Class(
 
       log_message("Workflow completed successfully", "WORKFLOW")
       return(TRUE)
+    }
+  ),
+  
+  private = list(
+    # Helper function to find directory in multiple locations
+    find_directory = function(primary_dir, alternative_dirs, dir_type = "directory") {
+      # Check primary directory first
+      if (dir.exists(primary_dir)) {
+        return(primary_dir)
+      }
+      
+      log_message(
+        paste0(private$capitalize(dir_type), " directory not found: ", primary_dir),
+        "WARNING"
+      )
+      
+      # Try alternative locations
+      for (alt_dir in alternative_dirs) {
+        if (dir.exists(alt_dir)) {
+          log_message(
+            paste0("Found alternative ", dir_type, " directory: ", alt_dir),
+            "SETUP"
+          )
+          return(alt_dir)
+        }
+      }
+      
+      return(NULL)
+    },
+    
+    # Helper to capitalize first letter
+    capitalize = function(str) {
+      paste0(toupper(substring(str, 1, 1)), substring(str, 2))
     }
   )
 )

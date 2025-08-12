@@ -79,10 +79,18 @@ get_source_note_by_score_type <- function(data, default_note = NULL) {
 #' @export
 get_all_score_type_notes <- function() {
   list(
-    t_score = gt::md("T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"),
-    scaled_score = gt::md("Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"),
-    standard_score = gt::md("Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"),
-    z_score = gt::md("z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]")
+    t_score = gt::md(
+      "T score: Mean = 50 [50th\u2030], SD ± 10 [16th\u2030, 84th\u2030]"
+    ),
+    scaled_score = gt::md(
+      "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+    ),
+    standard_score = gt::md(
+      "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+    ),
+    z_score = gt::md(
+      "z-score: Mean = 0 [50th\u2030], SD ± 1 [16th\u2030, 84th\u2030]"
+    )
   )
 }
 
@@ -149,53 +157,53 @@ get_score_types_from_lookup <- function(data) {
       }
     }
   }
-  
-  # Special handling for WISC-V subtests which should only be scaled scores
-  wisc_subtests <- c("Similarities", "Vocabulary", "Comprehension")
-  
-  # Log the current state for debugging
-  message("Before WISC-V fix, score_type_map contains:")
-  for (name in names(score_type_map)) {
-    message(sprintf("  %s: %s", name, paste(score_type_map[[name]], collapse = ", ")))
-  }
-  
-  # Apply fix for WISC-V subtests - case insensitive matching
-  for (test_name in names(score_type_map)) {
-    # Check if this is a WISC-V subtest (case insensitive)
-    is_wisc_subtest <- FALSE
-    for (subtest in wisc_subtests) {
-      if (tolower(test_name) == tolower(subtest)) {
-        is_wisc_subtest <- TRUE
-        break
-      }
-    }
-    
-    # If it's a WISC-V subtest, ensure it only has scaled_score
-    if (is_wisc_subtest) {
-      message(sprintf("Found WISC-V subtest: %s with score types: %s",
-                     test_name, paste(score_type_map[[test_name]], collapse = ", ")))
-      
-      # Force it to be only scaled_score, regardless of what was in the lookup table
-      score_type_map[[test_name]] <- "scaled_score"
-      
-      message(sprintf("  After fix: %s", paste(score_type_map[[test_name]], collapse = ", ")))
-    }
-  }
-  
-  # Also fix for 'WISC-V' as a test name if it exists
-  if ("WISC-V" %in% names(score_type_map)) {
-    for (subtest in wisc_subtests) {
-      if (subtest %in% names(score_type_map)) {
-        score_type_map[[subtest]] <- "scaled_score"
-      }
-    }
-  }
-  
-  # Log the final state
-  message("After WISC-V fix, score_type_map contains:")
-  for (name in names(score_type_map)) {
-    message(sprintf("  %s: %s", name, paste(score_type_map[[name]], collapse = ", ")))
-  }
+
+  # # Special handling for WISC-V subtests which should only be scaled scores
+  # wisc_subtests <- c("Similarities", "Vocabulary", "Comprehension")
+
+  # # Log the current state for debugging
+  # message("Before WISC-V fix, score_type_map contains:")
+  # for (name in names(score_type_map)) {
+  #   message(sprintf("  %s: %s", name, paste(score_type_map[[name]], collapse = ", ")))
+  # }
+
+  # # Apply fix for WISC-V subtests - case insensitive matching
+  # for (test_name in names(score_type_map)) {
+  #   # Check if this is a WISC-V subtest (case insensitive)
+  #   is_wisc_subtest <- FALSE
+  #   for (subtest in wisc_subtests) {
+  #     if (tolower(test_name) == tolower(subtest)) {
+  #       is_wisc_subtest <- TRUE
+  #       break
+  #     }
+  #   }
+
+  #   # If it's a WISC-V subtest, ensure it only has scaled_score
+  #   if (is_wisc_subtest) {
+  #     message(sprintf("Found WISC-V subtest: %s with score types: %s",
+  #                    test_name, paste(score_type_map[[test_name]], collapse = ", ")))
+
+  #     # Force it to be only scaled_score, regardless of what was in the lookup table
+  #     score_type_map[[test_name]] <- "scaled_score"
+
+  #     message(sprintf("  After fix: %s", paste(score_type_map[[test_name]], collapse = ", ")))
+  #   }
+  # }
+
+  # # Also fix for 'WISC-V' as a test name if it exists
+  # if ("WISC-V" %in% names(score_type_map)) {
+  #   for (subtest in wisc_subtests) {
+  #     if (subtest %in% names(score_type_map)) {
+  #       score_type_map[[subtest]] <- "scaled_score"
+  #     }
+  #   }
+  # }
+
+  # # Log the final state
+  # message("After WISC-V fix, score_type_map contains:")
+  # for (name in names(score_type_map)) {
+  #   message(sprintf("  %s: %s", name, paste(score_type_map[[name]], collapse = ", ")))
+  # }
 
   return(score_type_map)
 }
@@ -241,16 +249,18 @@ get_score_type_by_test_scale <- function(test, scale, test_name = NULL) {
   }
 
   if (is.null(lookup_table)) {
-    return("standard_score")  # Default
+    return("standard_score") # Default
   }
 
   # Try to find exact match
   if (!is.null(test_name)) {
-    match <- lookup_table[lookup_table$test_name == test_name &
-                         lookup_table$scale == scale, ]
+    match <- lookup_table[
+      lookup_table$test_name == test_name & lookup_table$scale == scale,
+    ]
   } else {
-    match <- lookup_table[lookup_table$test == test &
-                         lookup_table$scale == scale, ]
+    match <- lookup_table[
+      lookup_table$test == test & lookup_table$scale == scale,
+    ]
   }
 
   if (nrow(match) > 0 && !is.na(match$score_type[1])) {

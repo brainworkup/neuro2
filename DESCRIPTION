@@ -1,7 +1,7 @@
 Type: Package
 Package: neuro2
 Title: Quarto + Typst Report Generator
-Version: 0.1.9
+Version: 0.1.10
 Authors@R:
     person("Joey", "Trampush", , "joey.trampush@brainworkup.org", role = c("aut", "cre"))
 Author: Joey Trampush [aut, cre]

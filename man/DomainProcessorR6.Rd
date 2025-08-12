@@ -25,11 +25,11 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item{generate_report}{Generate text reports for different report types.}
 \item{has_multiple_raters}{Check if domain has multiple raters (emotion and ADHD domains).}
 \item{detect_emotion_type}{Detect if this is a child or adult emotion domain.}
-\item{get_rater_types}{Get rater types for the domain (emotion child: self/parent/teacher; emotion adult: self only; ADHD: self/observer).}
+\item{get_rater_types}{Get rater types for the domain (emotion child: self/parent/teacher; emotion adult: self only; ADHD adult: self/observer; ADHD child: self/parent/teacher).}
 \item{check_rater_data_exists}{Check if rater-specific data files exist.}
 \item{generate_domain_qmd}{Generate domain QMD file with support for multi-rater domains.}
 \item{generate_emotion_child_qmd}{Generate emotion child domain QMD file with multiple raters.}
-\item{generate_emotion_adult_qmd}{Generate emotion adult domain QMD file with observer ratings.}
+\item{generate_emotion_adult_qmd}{Generate emotion adult domain QMD file.}
 \item{process}{Run the complete processing pipeline.}
 }
 }
@@ -74,6 +74,10 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
+\item \href{#method-DomainProcessorR6-generate_adhd_adult_qmd}{\code{DomainProcessorR6$generate_adhd_adult_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_adhd_child_qmd}{\code{DomainProcessorR6$generate_adhd_child_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_adhd_adult_text_files}{\code{DomainProcessorR6$generate_adhd_adult_text_files()}}
+\item \href{#method-DomainProcessorR6-generate_adhd_child_text_files}{\code{DomainProcessorR6$generate_adhd_child_text_files()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_table}{\code{DomainProcessorR6$generate_domain_table()}}
@@ -205,7 +209,7 @@ Filter data by test names for specific report types.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{report_type}}{Type of report to filter for ("self", "observer", "performance").}
+\item{\code{report_type}}{Type of report to filter for ("self", "parent", "teacher", "observer").}
 }
 \if{html}{\out{</div>}}
 }
@@ -225,7 +229,7 @@ Generate text reports for different report types.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{report_type}}{Type of report to generate ("self", "observer", "performance").}
+\item{\code{report_type}}{Type of report to generate ("self", "parent", "teacher", "observer").}
 
 \item{\code{output_file}}{Output file path for the report.}
 }
@@ -413,6 +417,76 @@ Run the complete processing pipeline.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_adhd_adult_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_adhd_adult_qmd}{}}}
+\subsection{Method \code{generate_adhd_adult_qmd()}}{
+Generate ADHD adult domain QMD file with self and observer reports.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_adhd_adult_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_adhd_child_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_adhd_child_qmd}{}}}
+\subsection{Method \code{generate_adhd_child_qmd()}}{
+Generate ADHD child domain QMD file with self, parent, and teacher reports.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_adhd_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_adhd_adult_text_files"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_adhd_adult_text_files}{}}}
+\subsection{Method \code{generate_adhd_adult_text_files()}}{
+Generate ADHD adult text files for self and observer reports.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_adhd_adult_text_files()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Invisibly returns self for method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_adhd_child_text_files"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_adhd_child_text_files}{}}}
+\subsection{Method \code{generate_adhd_child_text_files()}}{
+Generate ADHD child text files for self, parent, and teacher reports.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_adhd_child_text_files()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 Invisibly returns self for method chaining.
 }
