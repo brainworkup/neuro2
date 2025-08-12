@@ -25,7 +25,6 @@ Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
 ```
 
-
 ```{=typst}
 #let case_number = [{{< var case_number >}}]
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
@@ -53,7 +52,7 @@ patient <- Sys.getenv("PATIENT")
 #| label: include-domains
 #| echo: false
 #| warning: false
-#| messages: false
+#| error: false
 
 # Define all possible domain files in canonical order
 # Up to 14 total domains, with up to 10-12 domains per patient
