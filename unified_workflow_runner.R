@@ -521,7 +521,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         }
       }
 
-      # Check for R6 class files
+      # Check for R6 class files (removed DuckDBProcessorR6.R - not needed for domain processing)
       r6_files <- c(
         "R/ReportTemplateR6.R",
         "R/NeuropsychResultsR6.R",
@@ -529,7 +529,6 @@ WorkflowRunnerR6 <- R6::R6Class(
         "R/DomainProcessorR6.R",
         "R/DotplotR6.R",
         "R/DrilldownR6.R",
-        "R/DuckDBProcessorR6.R",
         "R/TableGT_ModifiedR6.R",
         "R/ReportUtilitiesR6.R",
         "R/TemplateContentManagerR6.R"

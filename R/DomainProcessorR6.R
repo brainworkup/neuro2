@@ -99,36 +99,98 @@ DomainProcessorR6 <- R6::R6Class(
         stop("No input file specified and no data pre-loaded.")
       }
 
+      # Check if input file exists
+      if (!file.exists(self$input_file)) {
+        stop("Input file does not exist: ", self$input_file)
+      }
+
       # Determine file extension to use appropriate reader
       file_ext <- tools::file_ext(self$input_file)
 
-      if (file_ext == "parquet") {
-        # Check if arrow package is available
-        if (!requireNamespace("arrow", quietly = TRUE)) {
-          stop(
-            "The 'arrow' package is required to read Parquet files. Please install it with install.packages('arrow')"
+      # Try to read the file with proper error handling and fallbacks
+      tryCatch({
+        if (file_ext == "parquet") {
+          # Check if arrow package is available
+          if (!requireNamespace("arrow", quietly = TRUE)) {
+            stop(
+              "The 'arrow' package is required to read Parquet files. Please install it with install.packages('arrow')"
+            )
+          }
+          message("Reading parquet file: ", self$input_file)
+          self$data <- arrow::read_parquet(self$input_file)
+        } else if (file_ext == "feather") {
+          # Check if arrow package is available
+          if (!requireNamespace("arrow", quietly = TRUE)) {
+            stop(
+              "The 'arrow' package is required to read Feather files. Please install it with install.packages('arrow')"
+            )
+          }
+          message("Reading feather file: ", self$input_file)
+          self$data <- arrow::read_feather(self$input_file)
+        } else if (file_ext == "csv") {
+          message("Reading CSV file: ", self$input_file)
+          self$data <- readr::read_csv(self$input_file, show_col_types = FALSE)
+        } else {
+          # Default to CSV for unknown extensions
+          warning(
+            "Unknown file extension: ",
+            file_ext,
+            ". Attempting to read as CSV."
           )
+          message("Reading as CSV file: ", self$input_file)
+          self$data <- readr::read_csv(self$input_file, show_col_types = FALSE)
         }
-        self$data <- arrow::read_parquet(self$input_file)
-      } else if (file_ext == "feather") {
-        # Check if arrow package is available
-        if (!requireNamespace("arrow", quietly = TRUE)) {
-          stop(
-            "The 'arrow' package is required to read Feather files. Please install it with install.packages('arrow')"
-          )
-        }
-        self$data <- arrow::read_feather(self$input_file)
-      } else if (file_ext == "csv") {
-        self$data <- readr::read_csv(self$input_file)
-      } else {
-        # Default to CSV for unknown extensions
-        warning(
-          "Unknown file extension: ",
-          file_ext,
-          ". Attempting to read as CSV."
+        
+        message("Successfully loaded data with ", nrow(self$data), " rows and ", ncol(self$data), " columns")
+        
+      }, error = function(e) {
+        # If primary format fails, try alternative formats
+        message("Error reading ", file_ext, " file: ", e$message)
+        
+        # Try alternative file formats in the same directory
+        base_path <- tools::file_path_sans_ext(self$input_file)
+        alternative_files <- c(
+          paste0(base_path, ".csv"),
+          paste0(base_path, ".parquet"),
+          paste0(base_path, ".feather")
         )
-        self$data <- readr::read_csv(self$input_file)
-      }
+        
+        # Remove the original file from alternatives
+        alternative_files <- alternative_files[alternative_files != self$input_file]
+        
+        success <- FALSE
+        for (alt_file in alternative_files) {
+          if (file.exists(alt_file)) {
+            message("Trying alternative file: ", alt_file)
+            alt_ext <- tools::file_ext(alt_file)
+            
+            tryCatch({
+              if (alt_ext == "csv") {
+                self$data <- readr::read_csv(alt_file, show_col_types = FALSE)
+                success <- TRUE
+                message("Successfully loaded alternative CSV file")
+                break
+              } else if (alt_ext == "parquet" && requireNamespace("arrow", quietly = TRUE)) {
+                self$data <- arrow::read_parquet(alt_file)
+                success <- TRUE
+                message("Successfully loaded alternative parquet file")
+                break
+              } else if (alt_ext == "feather" && requireNamespace("arrow", quietly = TRUE)) {
+                self$data <- arrow::read_feather(alt_file)
+                success <- TRUE
+                message("Successfully loaded alternative feather file")
+                break
+              }
+            }, error = function(e2) {
+              message("Alternative file also failed: ", e2$message)
+            })
+          }
+        }
+        
+        if (!success) {
+          stop("Failed to load data from ", self$input_file, " and no working alternatives found. Original error: ", e$message)
+        }
+      })
 
       invisible(self)
     },
