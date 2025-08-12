@@ -54,7 +54,7 @@ ConfigManagerR6 <- R6::R6Class(
         data = list(
           input_dir = "data-raw/csv",
           output_dir = "data",
-          formats = c("csv", "parquet"),
+          formats = c("csv", "parquet", "arrow"),
           use_duckdb = TRUE
         ),
 
