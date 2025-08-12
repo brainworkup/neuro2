@@ -57,7 +57,7 @@ if (file.exists(template_file)) {
   # Check if the file exists in the template directory
   template_dir <- "inst/quarto/templates/typst-report"
   alt_template_path <- file.path(template_dir, template_file)
-  
+
   if (file.exists(alt_template_path)) {
     log_message(
       paste0("Template found in template directory: ", alt_template_path),
@@ -65,7 +65,7 @@ if (file.exists(template_file)) {
     )
     log_message("Copying template file to working directory...", "REPORT")
     file.copy(alt_template_path, template_file)
-    
+
     if (file.exists(template_file)) {
       log_message("Template file copied successfully", "REPORT")
     } else {
@@ -83,21 +83,21 @@ if (file.exists(template_file)) {
 }
 
 # Render the report
-log_message(
-  paste0("Rendering ", template_file, " with Quarto"),
-  "REPORT"
-)
+log_message(paste0("Rendering ", template_file, " with Quarto"), "REPORT")
 
-tryCatch({
-  quarto::quarto_render(
-    input = template_file,
-    output_format = config$report$format
-  )
-  log_message("Quarto rendering completed", "REPORT")
-}, error = function(e) {
-  log_message(paste0("Error during Quarto rendering: ", e$message), "ERROR")
-  stop(e)
-})
+tryCatch(
+  {
+    quarto::quarto_render(
+      input = template_file,
+      output_format = config$report$format
+    )
+    log_message("Quarto rendering completed", "REPORT")
+  },
+  error = function(e) {
+    log_message(paste0("Error during Quarto rendering: ", e$message), "ERROR")
+    stop(e)
+  }
+)
 
 # Check if report was generated
 # Handle both .qmd and .typ template files
@@ -112,10 +112,7 @@ if (grepl("\\.qmd$", template_file)) {
 
 # Check if the PDF was generated
 if (file.exists(report_file)) {
-  log_message(
-    paste0("Report generated successfully: ", report_file),
-    "REPORT"
-  )
+  log_message(paste0("Report generated successfully: ", report_file), "REPORT")
 } else {
   # Try other formats
   if (grepl("\\.qmd$", template_file)) {
@@ -125,7 +122,7 @@ if (file.exists(report_file)) {
   } else {
     report_file <- paste0(tools::file_path_sans_ext(template_file), ".html")
   }
-  
+
   if (file.exists(report_file)) {
     log_message(
       paste0("Report generated successfully: ", report_file),
@@ -140,7 +137,7 @@ if (file.exists(report_file)) {
     } else {
       report_file <- paste0(tools::file_path_sans_ext(template_file), ".docx")
     }
-    
+
     if (file.exists(report_file)) {
       log_message(
         paste0("Report generated successfully: ", report_file),
@@ -148,23 +145,30 @@ if (file.exists(report_file)) {
       )
     } else {
       log_message("Report generation failed - no output file found", "ERROR")
-      log_message(paste0("Looked for PDF/HTML/DOCX outputs from: ", template_file), "ERROR")
+      log_message(
+        paste0("Looked for PDF/HTML/DOCX outputs from: ", template_file),
+        "ERROR"
+      )
       stop("Report generation failed")
     }
   }
 }
 
 # Move report to output directory if specified
-if (!is.null(config$report$output_dir) && 
-    config$report$output_dir != "." && 
-    config$report$output_dir != "") {
-  
+if (
+  !is.null(config$report$output_dir) &&
+    config$report$output_dir != "." &&
+    config$report$output_dir != ""
+) {
   # Create output directory if it doesn't exist
   if (!dir.exists(config$report$output_dir)) {
     dir.create(config$report$output_dir, recursive = TRUE, showWarnings = FALSE)
-    log_message(paste0("Created output directory: ", config$report$output_dir), "REPORT")
+    log_message(
+      paste0("Created output directory: ", config$report$output_dir),
+      "REPORT"
+    )
   }
-  
+
   # Move the report file
   dest_file <- file.path(config$report$output_dir, basename(report_file))
   if (file.copy(report_file, dest_file, overwrite = TRUE)) {
