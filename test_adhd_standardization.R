@@ -7,7 +7,7 @@ library(here)
 source(here::here("R/DomainProcessorR6.R"))
 source(here::here("R/NeuropsychResultsR6.R"))
 source(here::here("R/DotplotR6.R"))
-source(here::here("R/TableGT_ModifiedR6.R"))
+source(here::here("R/TableGTR6.R"))
 
 # Test 1: Verify sysdata.rda loads correctly
 cat("=== Test 1: Loading sysdata.rda ===\n")

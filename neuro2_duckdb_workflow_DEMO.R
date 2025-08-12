@@ -53,7 +53,7 @@ r6_files <- c(
   "R/DomainProcessorR6.R",
   "R/DuckDBProcessorR6.R",
   "R/NeuropsychResultsR6.R",
-  "R/TableGT_ModifiedR6.R",
+  "R/TableGTR6.R",
   "R/DotplotR6.R"
 )
 

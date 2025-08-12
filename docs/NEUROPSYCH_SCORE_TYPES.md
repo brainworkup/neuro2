@@ -15,7 +15,7 @@ It's critical that each test is associated with the correct score type in report
 
 ## Implementation
 
-The score type mapping is implemented in the `TableGT_ModifiedR6` class in `R/TableGT_ModifiedR6.R`. The class uses two complementary approaches to ensure correct score type assignments:
+The score type mapping is implemented in the `TableGTR6` class in `R/TableGTR6.R`. The class uses two complementary approaches to ensure correct score type assignments:
 
 1. **Test-level mapping**: A comprehensive mapping of test names to their correct score types, which is used to preprocess the groupings before footnotes are added. This works well for tests that have a single score type.
 
@@ -107,7 +107,7 @@ Several neuropsychological test batteries contain both subtests and composite/in
 When adding new neuropsychological tests to the system:
 
 1. Identify the correct standardized score type for the test (scaled, standard, T-score, or z-score)
-2. Open `R/TableGT_ModifiedR6.R` and locate the `test_score_type_map` list in the `build_table` method
+2. Open `R/TableGTR6.R` and locate the `test_score_type_map` list in the `build_table` method
 3. Add the test name to the appropriate score type category in the mapping
 4. Follow the existing naming patterns and group related tests together
 5. Keep the mapping alphabetized within each category for readability

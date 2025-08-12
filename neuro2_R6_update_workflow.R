@@ -26,7 +26,7 @@ source("R/DotplotR6.R")
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/ReportTemplateR6.R")
-source("R/TableGT_ModifiedR6.R")
+source("R/TableGTR6.R")
 
 message("🚀 R6-BASED UPDATE WORKFLOW")
 message("===========================\n")
@@ -167,7 +167,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "# Source R6 classes\n",
     "source(\"R/DomainProcessorR6.R\")\n",
     "source(\"R/NeuropsychResultsR6.R\")\n",
-    "source(\"R/TableGT_ModifiedR6.R\")\n",
+    "source(\"R/TableGTR6.R\")\n",
     "source(\"R/DotplotR6.R\")\n\n",
     "# Filter by domain\n",
     "domains <- c(\"",
@@ -293,7 +293,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "```\n\n"
   )
 
-  # Add table generation using R6 TableGT_ModifiedR6
+  # Add table generation using R6 TableGTR6
   qmd_content <- paste0(
     qmd_content,
     "```{r}\n",
@@ -309,8 +309,8 @@ update_domain_file_with_r6 <- function(domain_info) {
     "vertical_padding <- 0\n",
     "multiline <- TRUE\n",
     "source_note <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n\n",
-    "# Create table using R6 TableGT_ModifiedR6 class\n",
-    "table_gt <- TableGT_ModifiedR6$new(\n",
+    "# Create table using R6 TableGTR6 class\n",
+    "table_gt <- TableGTR6$new(\n",
     "  data = data_",
     domain_info$obj_name,
     ",\n",

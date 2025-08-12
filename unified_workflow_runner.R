@@ -565,7 +565,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         "R/DomainProcessorR6.R",
         "R/DotplotR6.R",
         "R/DrilldownR6.R",
-        "R/TableGT_ModifiedR6.R",
+        "R/TableGTR6.R",
         "R/ReportUtilitiesR6.R",
         "R/TemplateContentManagerR6.R"
       )
@@ -675,7 +675,7 @@ WorkflowRunnerR6 <- R6::R6Class(
       r6_domain_files <- c(
         "R/NeuropsychResultsR6.R",
         "R/DomainProcessorR6.R",
-        "R/TableGT_ModifiedR6.R",
+        "R/TableGTR6.R",
         "R/DotplotR6.R"
       )
 
@@ -712,7 +712,7 @@ WorkflowRunnerR6 <- R6::R6Class(
           # Load the R6 classes
           source("R/NeuropsychResultsR6.R")
           source("R/DomainProcessorR6.R")
-          source("R/TableGT_ModifiedR6.R")
+          source("R/TableGTR6.R")
           source("R/DotplotR6.R")
 
           # Get all unique domains from the neurocog data

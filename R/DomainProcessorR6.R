@@ -709,10 +709,16 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Get the domain number for file naming
       domain_num <- self$get_domain_number()
-      
+
       # Generate default output filename if not provided
       if (is.null(output_file)) {
-        output_file <- paste0("_02-", domain_num, "_", tolower(self$pheno), ".qmd")
+        output_file <- paste0(
+          "_02-",
+          domain_num,
+          "_",
+          tolower(self$pheno),
+          ".qmd"
+        )
       }
 
       # Check if this is ADHD domain
@@ -808,7 +814,7 @@ DomainProcessorR6 <- R6::R6Class(
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGT_ModifiedR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
         "source(\"R/score_type_utils.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -959,8 +965,8 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-        "# Create table using our modified TableGT_ModifiedR6 R6 class\n",
-        "table_gt <- TableGT_ModifiedR6$new(\n",
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
         "  data = data_",
         tolower(self$pheno),
         ",\n",
@@ -1365,7 +1371,7 @@ DomainProcessorR6 <- R6::R6Class(
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGT_ModifiedR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
         "source(\"R/score_type_utils.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -1446,7 +1452,7 @@ DomainProcessorR6 <- R6::R6Class(
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGT_ModifiedR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
         "source(\"R/score_type_utils.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -1607,7 +1613,7 @@ DomainProcessorR6 <- R6::R6Class(
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGT_ModifiedR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
         "source(\"R/score_type_utils.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\n",
@@ -1863,8 +1869,8 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-        "# Create table using our modified TableGT_ModifiedR6 R6 class\n",
-        "table_gt <- TableGT_ModifiedR6$new(\n",
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
         "  data = data_",
         tolower(self$pheno),
         "_self,\n",
@@ -1938,8 +1944,8 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-        "# Create table using our modified TableGT_ModifiedR6 R6 class\n",
-        "table_gt <- TableGT_ModifiedR6$new(\n",
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
         "  data = data_",
         tolower(self$pheno),
         "_parent,\n",
@@ -2013,8 +2019,8 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-        "# Create table using our modified TableGT_ModifiedR6 R6 class\n",
-        "table_gt <- TableGT_ModifiedR6$new(\n",
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
         "  data = data_",
         tolower(self$pheno),
         "_teacher,\n",
@@ -2429,7 +2435,7 @@ DomainProcessorR6 <- R6::R6Class(
         "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGT_ModifiedR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
         "source(\"R/score_type_utils.R\")\n\n",
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -2607,8 +2613,8 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-        "# Create table using our modified TableGT_ModifiedR6 R6 class\n",
-        "table_gt <- TableGT_ModifiedR6$new(\n",
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
         "  data = data_",
         tolower(self$pheno),
         ",\n",
@@ -2743,7 +2749,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "_adult_text.qmd"
       )
-      
+
       # Check if we have data before trying to process
       if (!is.null(self$data) && nrow(self$data) > 0) {
         results_processor <- NeuropsychResultsR6$new(
@@ -2887,8 +2893,8 @@ DomainProcessorR6 <- R6::R6Class(
             source_note <- NULL # No general source note when using footnotes
           }
 
-          # Create table using our modified TableGT_ModifiedR6 R6 class
-          table_gt <- TableGT_ModifiedR6$new(
+          # Create table using our modified TableGTR6 R6 class
+          table_gt <- TableGTR6$new(
             data = filtered_data,
             pheno = tolower(self$pheno),
             table_name = table_name,
@@ -3069,8 +3075,8 @@ DomainProcessorR6 <- R6::R6Class(
             source_note <- NULL # No general source note when using footnotes
           }
 
-          # Create table using our modified TableGT_ModifiedR6 R6 class
-          table_gt <- TableGT_ModifiedR6$new(
+          # Create table using our modified TableGTR6 R6 class
+          table_gt <- TableGTR6$new(
             data = data,
             pheno = tolower(self$pheno),
             table_name = table_name,

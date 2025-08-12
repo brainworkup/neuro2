@@ -12,7 +12,7 @@ library(ggplot2)
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT_ModifiedR6.R")
+source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 
 cat("Generating all domain table and figure files...\n\n")
@@ -115,7 +115,7 @@ generate_domain_assets <- function(
   }
 
   # Create table
-  table_gt <- TableGT_ModifiedR6$new(
+  table_gt <- TableGTR6$new(
     data = filtered_data,
     pheno = pheno,
     table_name = table_name,

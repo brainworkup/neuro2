@@ -11,7 +11,7 @@ library(arrow)
 
 # Source the R6 classes
 source("R/DomainProcessorR6.R")
-source("R/TableGT_ModifiedR6.R")
+source("R/TableGTR6.R")
 
 # Load data
 iq <- arrow::read_parquet("data/neurocog.parquet")
@@ -33,8 +33,8 @@ table_name <- "table_iq"
 vertical_padding <- 0
 multiline <- TRUE
 
-# Create table using our modified TableGT_ModifiedR6 R6 class
-table_gt <- TableGT_ModifiedR6$new(
+# Create table using our modified TableGTR6 R6 class
+table_gt <- TableGTR6$new(
   data = data_iq,
   pheno = "iq",
   table_name = table_name,

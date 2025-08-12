@@ -1,4 +1,4 @@
-#' TableGT_ModifiedR6 R6 Class
+#' TableGTR6 R6 Class
 #'
 #' A modified version of the TableGT R6 class that doesn't automatically save the table.
 #' This class is identical to TableGT but removes the automatic saving in the build_table() method.
@@ -21,7 +21,7 @@
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{initialize}{Initialize a new TableGT_ModifiedR6 object with configuration and data.}
+#'   \item{initialize}{Initialize a new TableGTR6 object with configuration and data.}
 #'   \item{build_table}{Construct and return the formatted `gt` table, without saving.}
 #'   \item{save_table}{Save the table to PNG and PDF files.}
 #' }
@@ -35,8 +35,8 @@
 #'   cells_row_groups
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue glue_collapse
-TableGT_ModifiedR6 <- R6::R6Class(
-  classname = "TableGT_ModifiedR6",
+TableGTR6 <- R6::R6Class(
+  classname = "TableGTR6",
   public = list(
     data = NULL,
     pheno = NULL,
@@ -55,7 +55,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
     row_score_type_map = NULL,
 
     #' @description
-    #' Initialize a new TableGT_ModifiedR6 object with configuration and data.
+    #' Initialize a new TableGTR6 object with configuration and data.
     #'
     #' @param data A data frame to use in table generation.
     #' @param pheno A string specifying the phenotype identifier.
@@ -73,7 +73,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
     #' @param multiline Logical; whether to use multiline footnotes.
     #' @param row_score_type_map Named list mapping test batteries to their scale-specific score types.
     #'
-    #' @return A new TableGT_ModifiedR6 object
+    #' @return A new TableGTR6 object
     initialize = function(
       data,
       pheno = NULL,
@@ -162,7 +162,10 @@ TableGT_ModifiedR6 <- R6::R6Class(
       # If it's not available in the current environment, try to access it from the package namespace
       if (!exists("lookup_neuropsych_scales", envir = environment())) {
         if (exists("lookup_neuropsych_scales", envir = asNamespace("neuro2"))) {
-          lookup_neuropsych_scales <- get("lookup_neuropsych_scales", envir = asNamespace("neuro2"))
+          lookup_neuropsych_scales <- get(
+            "lookup_neuropsych_scales",
+            envir = asNamespace("neuro2")
+          )
         } else {
           # Fallback: try to load from sysdata.rda directly
           sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
@@ -170,7 +173,10 @@ TableGT_ModifiedR6 <- R6::R6Class(
             temp_env <- new.env()
             load(sysdata_path, envir = temp_env)
             if (exists("lookup_neuropsych_scales", envir = temp_env)) {
-              lookup_neuropsych_scales <- get("lookup_neuropsych_scales", envir = temp_env)
+              lookup_neuropsych_scales <- get(
+                "lookup_neuropsych_scales",
+                envir = temp_env
+              )
             }
           }
         }
@@ -190,33 +196,51 @@ TableGT_ModifiedR6 <- R6::R6Class(
 
       # Extract unique test names and scales from lookup_neuropsych_scales
       if (exists("lookup_neuropsych_scales")) {
-        message("Using lookup_neuropsych_scales from sysdata.rda for score type mapping")
+        message(
+          "Using lookup_neuropsych_scales from sysdata.rda for score type mapping"
+        )
 
         # Get unique score types
         score_types <- unique(lookup_neuropsych_scales$score_type)
-        message(paste0("Found score types: ", paste(score_types, collapse = ", ")))
+        message(paste0(
+          "Found score types: ",
+          paste(score_types, collapse = ", ")
+        ))
 
         # For each score type, find all the tests and scales that use that score type
         for (score_type in score_types) {
           # Get rows with this score type
-          rows <- lookup_neuropsych_scales[lookup_neuropsych_scales$score_type == score_type, ]
+          rows <- lookup_neuropsych_scales[
+            lookup_neuropsych_scales$score_type == score_type,
+          ]
 
           # Extract unique test names and scales
           tests <- unique(c(rows$test_name, rows$test, rows$scale))
-          tests <- tests[!is.na(tests)]  # Remove NA values
+          tests <- tests[!is.na(tests)] # Remove NA values
 
           # Add to the mapping
           if (score_type %in% names(test_score_type_map)) {
-            test_score_type_map[[score_type]] <- unique(c(test_score_type_map[[score_type]], tests))
+            test_score_type_map[[score_type]] <- unique(c(
+              test_score_type_map[[score_type]],
+              tests
+            ))
           } else {
             test_score_type_map[[score_type]] <- tests
           }
 
-          message(paste0("Added ", length(tests), " tests/scales to ", score_type, " mapping"))
+          message(paste0(
+            "Added ",
+            length(tests),
+            " tests/scales to ",
+            score_type,
+            " mapping"
+          ))
         }
       } else {
         # Fallback to a minimal set of mappings if lookup_neuropsych_scales is not available
-        message("Warning: lookup_neuropsych_scales not found, using minimal hardcoded mappings")
+        message(
+          "Warning: lookup_neuropsych_scales not found, using minimal hardcoded mappings"
+        )
 
         # Minimal hardcoded mappings for critical tests
         test_score_type_map <- list(
@@ -491,9 +515,9 @@ TableGT_ModifiedR6 <- R6::R6Class(
           if (length(standard_score_scales) > 0) {
             self$grp_list[[group_key_standard]] <- battery
             # Use the standard_score footnote if it exists, otherwise use a default
-            self$fn_list[[
-              group_key_standard
-            ]] <- if ("standard_score" %in% names(self$fn_list)) {
+            self$fn_list[[group_key_standard]] <- if (
+              "standard_score" %in% names(self$fn_list)
+            ) {
               self$fn_list[["standard_score"]]
             } else {
               "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
@@ -503,9 +527,9 @@ TableGT_ModifiedR6 <- R6::R6Class(
           if (length(scaled_score_scales) > 0) {
             self$grp_list[[group_key_scaled]] <- battery
             # Use the scaled_score footnote if it exists, otherwise use a default
-            self$fn_list[[
-              group_key_scaled
-            ]] <- if ("scaled_score" %in% names(self$fn_list)) {
+            self$fn_list[[group_key_scaled]] <- if (
+              "scaled_score" %in% names(self$fn_list)
+            ) {
               self$fn_list[["scaled_score"]]
             } else {
               "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
@@ -717,9 +741,9 @@ TableGT_ModifiedR6 <- R6::R6Class(
 
             # Add standard score footnote for this battery
             standard_fn_id <- paste0(tolower(battery), "_standard")
-            self$fn_list[[
-              standard_fn_id
-            ]] <- if ("standard_score" %in% names(self$fn_list)) {
+            self$fn_list[[standard_fn_id]] <- if (
+              "standard_score" %in% names(self$fn_list)
+            ) {
               self$fn_list[["standard_score"]]
             } else {
               "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
@@ -745,9 +769,9 @@ TableGT_ModifiedR6 <- R6::R6Class(
 
             # Add scaled score footnote for this battery
             scaled_fn_id <- paste0(tolower(battery), "_scaled")
-            self$fn_list[[
-              scaled_fn_id
-            ]] <- if ("scaled_score" %in% names(self$fn_list)) {
+            self$fn_list[[scaled_fn_id]] <- if (
+              "scaled_score" %in% names(self$fn_list)
+            ) {
               self$fn_list[["scaled_score"]]
             } else {
               "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"

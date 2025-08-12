@@ -10,7 +10,7 @@ library(R6)
 source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
-source("R/TableGT_ModifiedR6.R")
+source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 
 cat("Generating domain files using R6 classes...\n\n")
@@ -236,13 +236,13 @@ remaining_domains <- list(
     domain = "Adaptive Functioning",
     pheno = "adaptive",
     file = "_02-11_adaptive.qmd",
-    input_file = "data/neurobehav.parquet"  # Adaptive comes from neurobehav
+    input_file = "data/neurobehav.parquet" # Adaptive comes from neurobehav
   ),
   list(
     domain = "Daily Living",
     pheno = "daily_living",
     file = "_02-12_daily_living.qmd",
-    input_file = "data/neurocog.parquet"  # Daily Living comes from neurocog
+    input_file = "data/neurocog.parquet" # Daily Living comes from neurocog
   )
 )
 
@@ -252,7 +252,7 @@ for (dom in remaining_domains) {
       processor <- DomainProcessorR6$new(
         domains = dom$domain,
         pheno = dom$pheno,
-        input_file = dom$input_file  # Use the specific input file for each domain
+        input_file = dom$input_file # Use the specific input file for each domain
       )
       processor$data <- data.frame(
         domain = character(0),

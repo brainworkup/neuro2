@@ -14,7 +14,7 @@ suppressPackageStartupMessages({
 load("R/sysdata.rda")
 
 # Source the modified TableGT class
-source("R/TableGT_ModifiedR6.R")
+source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 
 # Create a simple function to generate table for a domain
@@ -91,8 +91,8 @@ generate_domain_table <- function(pheno, domain_name) {
     source_note <- NULL # No general source note when using footnotes
   }
 
-  # Create table using our modified TableGT_ModifiedR6 R6 class
-  table_gt <- TableGT_ModifiedR6$new(
+  # Create table using our modified TableGTR6 R6 class
+  table_gt <- TableGTR6$new(
     data = data,
     pheno = pheno,
     table_name = table_name,

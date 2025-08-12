@@ -81,7 +81,7 @@ test_r6_classes <- function() {
     "R/DotplotR6.R",
     "R/DrilldownR6.R",
     "R/DuckDBProcessorR6.R",
-    "R/TableGT_ModifiedR6.R",
+    "R/TableGTR6.R",
     "R/ReportUtilitiesR6.R",
     "R/TemplateContentManagerR6.R"
   )
