@@ -1158,7 +1158,11 @@ DomainProcessorR6 <- R6::R6Class(
       self$generate_domain_table(domain_name)
 
       # Note: Rendering will be done by unified_workflow_runner.R to avoid duplication
-      message(paste0("[DOMAINS] Generated ", output_file, " (rendering deferred to workflow runner)"))
+      message(paste0(
+        "[DOMAINS] Generated ",
+        output_file,
+        " (rendering deferred to workflow runner)"
+      ))
 
       return(output_file)
     },
@@ -1386,7 +1390,11 @@ DomainProcessorR6 <- R6::R6Class(
       cat(qmd_content, file = output_file)
 
       # Note: Rendering will be done by unified_workflow_runner.R to avoid duplication
-      message(paste0("[DOMAINS] Generated ", output_file, " (rendering deferred to workflow runner)"))
+      message(paste0(
+        "[DOMAINS] Generated ",
+        output_file,
+        " (rendering deferred to workflow runner)"
+      ))
 
       return(output_file)
     },
@@ -1463,7 +1471,11 @@ DomainProcessorR6 <- R6::R6Class(
       cat(qmd_content, file = output_file)
 
       # Note: Rendering will be done by unified_workflow_runner.R to avoid duplication
-      message(paste0("[DOMAINS] Generated ", output_file, " (rendering deferred to workflow runner)"))
+      message(paste0(
+        "[DOMAINS] Generated ",
+        output_file,
+        " (rendering deferred to workflow runner)"
+      ))
 
       return(output_file)
     },
@@ -2114,8 +2126,7 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: fig-",
         tolower(self$pheno),
         "-subdomain-teacher\n",
-        "#| include: false\n\n",
-
+        "#| include: false\n",
         "#| eval: false\n\n",
         "# Create subdomain plot using R6 DotplotR6\n",
         "dotplot_subdomain <- DotplotR6$new(\n",
@@ -2365,7 +2376,11 @@ DomainProcessorR6 <- R6::R6Class(
       self$generate_emotion_child_tables()
 
       # Note: Rendering will be done by unified_workflow_runner.R to avoid duplication
-      message(paste0("[DOMAINS] Generated ", output_file, " (rendering deferred to workflow runner)"))
+      message(paste0(
+        "[DOMAINS] Generated ",
+        output_file,
+        " (rendering deferred to workflow runner)"
+      ))
 
       return(output_file)
     },
@@ -2727,7 +2742,11 @@ DomainProcessorR6 <- R6::R6Class(
       self$generate_domain_table(domain_name)
 
       # Note: Rendering will be done by unified_workflow_runner.R to avoid duplication
-      message(paste0("[DOMAINS] Generated ", output_file, " (rendering deferred to workflow runner)"))
+      message(paste0(
+        "[DOMAINS] Generated ",
+        output_file,
+        " (rendering deferred to workflow runner)"
+      ))
 
       # Adult emotion only uses self-report, no observer text file needed
 
