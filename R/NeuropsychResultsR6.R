@@ -46,22 +46,13 @@ NeuropsychResultsR6 <- R6::R6Class(
 
       # Create proper QMD content without HTML tags that could cause parsing issues
       if (nrow(sorted_data) > 0) {
-        qmd_content <- c(
-          paste0(sorted_data$result)
-        )
+        qmd_content <- c(paste0(sorted_data$result))
       } else {
-        qmd_content <- c(
-          "No data available for this domain."
-        )
+        qmd_content <- c("No data available for this domain.")
       }
 
       # Write the QMD content to file (overwrite, don't append)
-      cat(
-        qmd_content,
-        file = self$file,
-        sep = "\n",
-        append = FALSE
-      )
+      cat(qmd_content, file = self$file, sep = "\n", append = FALSE)
 
       invisible(NULL)
     }
@@ -82,11 +73,7 @@ NeuropsychResultsR6 <- R6::R6Class(
 #' @rdname cat_neuropsych_results
 cat_neuropsych_results <- function(data, file, ...) {
   # Create a NeuropsychResultsR6 object and process the data
-  results_obj <- NeuropsychResultsR6$new(
-    data = data,
-    file = file,
-    ...
-  )
+  results_obj <- NeuropsychResultsR6$new(data = data, file = file, ...)
 
   results_obj$process()
 

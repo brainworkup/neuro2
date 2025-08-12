@@ -63,6 +63,11 @@ domain_configs <- list(
     input_file = "data/neurobehav.parquet"
   ),
   list(
+    domain_name = "Behavioral/Emotional/Social",
+    pheno = "emotion",
+    input_file = "data/neurobehav.parquet"
+  ),
+  list(
     domain_name = "Emotional/Behavioral/Personality",
     pheno = "emotion",
     input_file = "data/neurobehav.parquet"
@@ -184,9 +189,10 @@ tryCatch(
       range = character(0),
       stringsAsFactors = FALSE
     )
-    processor$generate_emotion_adult_qmd(
-      "Emotional/Behavioral/Personality",
-      "_02-10_emotion_adult.qmd"
+    # Use the standard generate_domain_qmd method which handles emotion adult properly
+    generated_file <- processor$generate_domain_qmd(
+      domain_name = "Emotional/Behavioral/Personality",
+      output_file = "_02-10_emotion_adult.qmd"
     )
     cat("  ✓ Generated _02-10_emotion_adult.qmd\n")
   },
@@ -212,9 +218,10 @@ tryCatch(
       range = character(0),
       stringsAsFactors = FALSE
     )
-    processor$generate_emotion_child_qmd(
-      "Behavioral/Emotional/Social",
-      "_02-10_emotion_child.qmd"
+    # Use the standard generate_domain_qmd method which handles emotion child properly
+    generated_file <- processor$generate_domain_qmd(
+      domain_name = "Behavioral/Emotional/Social",
+      output_file = "_02-10_emotion_child.qmd"
     )
     cat("  ✓ Generated _02-10_emotion_child.qmd\n")
   },
@@ -228,12 +235,14 @@ remaining_domains <- list(
   list(
     domain = "Adaptive Functioning",
     pheno = "adaptive",
-    file = "_02-11_adaptive.qmd"
+    file = "_02-11_adaptive.qmd",
+    input_file = "data/neurobehav.parquet"  # Adaptive comes from neurobehav
   ),
   list(
     domain = "Daily Living",
     pheno = "daily_living",
-    file = "_02-12_daily_living.qmd"
+    file = "_02-12_daily_living.qmd",
+    input_file = "data/neurocog.parquet"  # Daily Living comes from neurocog
   )
 )
 
@@ -243,7 +252,7 @@ for (dom in remaining_domains) {
       processor <- DomainProcessorR6$new(
         domains = dom$domain,
         pheno = dom$pheno,
-        input_file = "data/neurobehav.parquet"
+        input_file = dom$input_file  # Use the specific input file for each domain
       )
       processor$data <- data.frame(
         domain = character(0),

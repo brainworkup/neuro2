@@ -50,9 +50,6 @@ patient <- Sys.getenv("PATIENT")
 
 ```{r}
 #| label: include-domains
-#| echo: false
-#| warning: false
-#| error: false
 
 # Define all possible domain files in canonical order
 # Up to 14 total domains, with up to 10-12 domains per patient
