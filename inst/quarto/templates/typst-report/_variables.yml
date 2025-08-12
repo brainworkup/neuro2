@@ -12,9 +12,9 @@ age: 18
 education: "12 years"
 
 # Clinician information
-clinician: "Dr. Name"
-clinic_name: "Clinic Name"
-clinic_address: "Address"
+clinician: "Joey Trampush, Ph.D."
+clinic_name: "Brainworkup Neuropsychology, LLC"
+clinic_address: "123 Brain St, Suite 456, Neuro City, NY 12345"
 
 # Report options
 include_summary: true

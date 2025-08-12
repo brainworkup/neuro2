@@ -668,7 +668,12 @@ WorkflowRunnerR6 <- R6::R6Class(
         "DOMAINS"
       )
 
-      r6_domain_files <- c("R/NeuropsychResultsR6.R", "R/DomainProcessorR6.R")
+      r6_domain_files <- c(
+        "R/NeuropsychResultsR6.R",
+        "R/DomainProcessorR6.R",
+        "R/TableGT_ModifiedR6.R",
+        "R/DotplotR6.R"
+      )
 
       missing_r6_files <- r6_domain_files[!file.exists(r6_domain_files)]
       if (length(missing_r6_files) > 0) {
@@ -701,10 +706,10 @@ WorkflowRunnerR6 <- R6::R6Class(
           log_message("No neurocog data files found", "DOMAINS")
         } else {
           # Load the R6 classes
-          source("R/NeuropsychResultsR6.R")
           source("R/DomainProcessorR6.R")
-          source("R/TableGT_ModifiedR6.R")
           source("R/DotplotR6.R")
+          source("R/NeuropsychResultsR6.R")
+          source("R/TableGT_ModifiedR6.R")
 
           # Get all unique domains from the neurocog data
           tryCatch(
@@ -1104,25 +1109,51 @@ WorkflowRunnerR6 <- R6::R6Class(
                 for (file in domain_files) {
                   log_message(paste0("  - ", file), "DOMAINS")
                 }
-                
+
                 # NEW: Render each domain file to generate required figures/SVGs
-                log_message("Rendering domain files to generate figures...", "DOMAINS")
+                log_message(
+                  "Rendering domain files to generate figures...",
+                  "DOMAINS"
+                )
                 for (domain_file in domain_files) {
-                  tryCatch({
-                    log_message(paste0("Rendering ", domain_file, " to typst..."), "DOMAINS")
-                    
-                    # Use system command to render with typst (more reliable)
-                    render_cmd <- paste("quarto render", domain_file, "--to typst")
-                    result <- system(render_cmd, intern = TRUE, ignore.stdout = FALSE, ignore.stderr = FALSE)
-                    
-                    log_message(paste0("Successfully rendered ", domain_file), "DOMAINS")
-                  }, error = function(e) {
-                    log_message(
-                      paste0("Warning: Could not render ", domain_file, " - ", e$message),
-                      "WARNING"
-                    )
-                    # Continue with other files even if one fails
-                  })
+                  tryCatch(
+                    {
+                      log_message(
+                        paste0("Rendering ", domain_file, " to typst..."),
+                        "DOMAINS"
+                      )
+
+                      # Use system command to render with typst (more reliable)
+                      render_cmd <- paste(
+                        "quarto render",
+                        domain_file,
+                        "--to typst"
+                      )
+                      result <- system(
+                        render_cmd,
+                        intern = TRUE,
+                        ignore.stdout = FALSE,
+                        ignore.stderr = FALSE
+                      )
+
+                      log_message(
+                        paste0("Successfully rendered ", domain_file),
+                        "DOMAINS"
+                      )
+                    },
+                    error = function(e) {
+                      log_message(
+                        paste0(
+                          "Warning: Could not render ",
+                          domain_file,
+                          " - ",
+                          e$message
+                        ),
+                        "WARNING"
+                      )
+                      # Continue with other files even if one fails
+                    }
+                  )
                 }
                 log_message("Domain file rendering complete", "DOMAINS")
               } else {
@@ -1162,12 +1193,12 @@ WorkflowRunnerR6 <- R6::R6Class(
       # Basic essential files that should always be present
       essential_files <- c(
         "_02-01_iq.qmd",
-        # "_02-02_academics.qmd",
+        "_02-02_academics.qmd",
         "_02-03_verbal.qmd",
         "_02-04_spatial.qmd",
         "_02-05_memory.qmd",
-        "_02-06_executive.qmd"
-        # "_02-07_motor.qmd"
+        "_02-06_executive.qmd",
+        "_02-07_motor.qmd"
       )
 
       # Add ADHD and emotion files based on patient type

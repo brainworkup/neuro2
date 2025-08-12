@@ -53,6 +53,7 @@ r6_files <- c(
   "R/DomainProcessorR6.R",
   "R/DuckDBProcessorR6.R",
   "R/NeuropsychResultsR6.R",
+  "R/TableGT_ModifiedR6.R",
   "R/DotplotR6.R"
 )
 
@@ -175,17 +176,6 @@ if (!is.null(ddb)) {
         }
       )
     }
-
-    # Process IQ domain with specific scales
-    iq_scales <- c(
-      "Full Scale (FSIQ)",
-      "Full Scale IQ (FSIQ)",
-      "General Ability (GAI)",
-      "Verbal Comprehension (VCI)",
-      "Perceptual Reasoning (PRI)",
-      "Working Memory (WMI)",
-      "Processing Speed (PSI)"
-    )
 
     iq_data <- process_domain_duckdb(
       domain_name = "General Cognitive Ability",
