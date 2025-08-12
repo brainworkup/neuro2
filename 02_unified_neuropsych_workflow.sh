@@ -88,7 +88,7 @@ csv_count=$(find data-raw/csv -name "*.csv" | wc -l)
 if [ $csv_count -eq 0 ]; then
     print_warning "No CSV files found in data-raw/csv/"
     echo "Please add your test data CSV files to data-raw/csv/ directory"
-    
+
     read -p "Do you want to continue anyway? (y/n): " continue_anyway
     if [[ ! $continue_anyway =~ ^[Yy]$ ]]; then
         exit 1
@@ -121,7 +121,7 @@ if [ -f "$CONFIG_FILE" ]; then
     { print; }
     END { if (!patient_updated) print "patient:\n  name: \"" patient_name "\"\n  age: 35\n  doe: \"" strftime("%Y-%m-%d") "\""; }
     ' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    
+
     print_success "Updated patient name in $CONFIG_FILE"
 else
     # R script will create the config file
@@ -132,7 +132,7 @@ fi
 # print_step "Step 4: PDF Data Extraction"
 # echo "Available extraction templates:"
 # echo "  - pluck_wisc5.Rmd (WISC-V Child Intelligence)"
-# echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)" 
+# echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)"
 # echo "  - pluck_rbans.Rmd (RBANS)"
 # echo "  - pluck_wiat4.Rmd (WIAT-4 Achievement)"
 # echo "  - pluck_ktea3.Rmd (KTEA-3 Achievement)"
@@ -184,7 +184,7 @@ print_warning "MANUAL STEP REQUIRED:"
 echo "Please add your clinical summary and recommendations to template.qmd"
 echo "Sections to complete:"
 echo "  - Clinical summary and interpretation"
-echo "  - Diagnostic impressions" 
+echo "  - Diagnostic impressions"
 echo "  - Recommendations for treatment/intervention"
 echo "  - Follow-up suggestions"
 echo
@@ -219,7 +219,7 @@ if [ -n "$REPORT_FORMAT" ]; then
 else
     # Use default format from _quarto.yml
     print_step "Rendering with default format from _quarto.yml..."
-    
+
     if quarto render template.qmd; then
         print_success "Report generated successfully!"
     else

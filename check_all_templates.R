@@ -38,18 +38,20 @@ print_colored(
 
 # Define essential template files
 essential_files <- c(
-  "template.qmd",
-  "_quarto.yml",
-  "_variables.yml",
   "_00-00_tests.qmd",
   "_01-00_nse_adult.qmd",
+  "_01-00_nse_pediatric.qmd",
+  "_01-00_nse_forensic.qmd",
   "_02-00_behav_obs.qmd",
-  "_03-00_sirf.qmd",
   "_03-00_sirf_text.qmd",
+  "_03-00_sirf.qmd",
   "_03-01_recs.qmd",
   "_03-02_signature.qmd",
   "_03-03_appendix.qmd",
-  "config.yml"
+  "_quarto.yml",
+  "_variables.yml",
+  "config.yml",
+  "template.qmd"
 )
 
 # Check each essential file
@@ -87,8 +89,7 @@ domain_files <- c(
   "_02-04_spatial.qmd",
   "_02-05_memory.qmd",
   "_02-06_executive.qmd",
-  "_02-07_motor.qmd",
-  "_02-09_adhd_adult.qmd"
+  "_02-07_motor.qmd"
 )
 
 for (file in domain_files) {
