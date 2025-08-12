@@ -1,4 +1,4 @@
-#' DuckDB Data Processor
+#' DuckDBDataProcessor Class
 #'
 #' @description
 #' An R6 class that provides an efficient data processing pipeline for
@@ -19,16 +19,32 @@
 #' @field db_path Database file path
 #' @field tables Registered tables
 #' @field data_paths Data file paths
+#' @field available_extensions Character vector of available DuckDB extensions
+#'
+#' @param db_path Path to the DuckDB database file (default: ":memory:")
+#' @param data_dir Directory containing data files (default: "data")
+#' @param auto_register Automatically register CSV files (default: TRUE)
+#' @param file_path Path to the data file
+#' @param table_name Name for the table (default: based on filename)
+#' @param options Additional CSV reading options
+#' @param pattern File pattern to match (default: "*.csv")
+#' @param formats Character vector of formats to register
+#' @param output_path Path for the output Parquet file
+#' @param compression Compression algorithm (default: "zstd")
+#' @param query SQL query string
+#' @param params Named list of parameters for parameterized queries
+#' @param statement SQL statement string
+#' @param domain Domain name to process
+#' @param data_type Type of data ("neurocog", "neurobehav", or "validity")
+#' @param scales Optional vector of scales to include
+#' @param group_vars Vector of grouping variables
+#' @param processor_class R6 class to use (default: DomainProcessorR6)
+#' @param include_all Whether to include all domains
 #'
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize(db_path = ":memory:", data_dir = "data", auto_register = TRUE)}}{
 #'     Initialize a new DuckDBProcessorR6 object.
-#'     \itemize{
-#'       \item \code{db_path}: Path to the DuckDB database file (default: ":memory:")
-#'       \item \code{data_dir}: Directory containing data files (default: "data")
-#'       \item \code{auto_register}: Automatically register CSV files (default: TRUE)
-#'     }
 #'   }
 #'   \item{\code{connect()}}{
 #'     Create or reconnect to the DuckDB database.
@@ -38,95 +54,42 @@
 #'   }
 #'   \item{\code{register_csv(file_path, table_name = NULL, options = NULL)}}{
 #'     Register a CSV file as a virtual table.
-#'     \itemize{
-#'       \item \code{file_path}: Path to the CSV file
-#'       \item \code{table_name}: Name for the table (default: based on filename)
-#'       \item \code{options}: Additional CSV reading options
-#'     }
 #'   }
 #'   \item{\code{register_parquet(file_path, table_name = NULL)}}{
 #'     Register a Parquet file as a virtual table.
-#'     \itemize{
-#'       \item \code{file_path}: Path to the Parquet file
-#'       \item \code{table_name}: Name for the table (default: based on filename)
-#'     }
 #'   }
 #'   \item{\code{register_arrow(file_path, table_name = NULL)}}{
 #'     Register an Arrow/Feather file as a virtual table.
-#'     \itemize{
-#'       \item \code{file_path}: Path to the Arrow/Feather file
-#'       \item \code{table_name}: Name for the table (default: based on filename)
-#'     }
 #'   }
 #'   \item{\code{register_all_csvs(data_dir = "data", pattern = "*.csv")}}{
 #'     Register all CSV files in a directory.
-#'     \itemize{
-#'       \item \code{data_dir}: Directory containing CSV files
-#'       \item \code{pattern}: File pattern to match (default: "*.csv")
-#'     }
 #'   }
 #'   \item{\code{register_all_files(data_dir = "data", formats = c("parquet", "arrow", "csv"))}}{
 #'     Register all data files in a directory.
-#'     \itemize{
-#'       \item \code{data_dir}: Directory containing data files
-#'       \item \code{formats}: Character vector of formats to register
-#'     }
 #'   }
 #'   \item{\code{export_to_parquet(table_name, output_path, compression = "zstd")}}{
 #'     Export data to Parquet format.
-#'     \itemize{
-#'       \item \code{table_name}: Name of the table to export
-#'       \item \code{output_path}: Path for the output Parquet file
-#'       \item \code{compression}: Compression algorithm (default: "zstd")
-#'     }
 #'   }
 #'   \item{\code{query(query, params = NULL)}}{
 #'     Execute a SQL query and return results.
-#'     \itemize{
-#'       \item \code{query}: SQL query string
-#'       \item \code{params}: Named list of parameters for parameterized queries
-#'     }
 #'   }
 #'   \item{\code{execute(statement, params = NULL)}}{
 #'     Execute a SQL statement that doesn't return results.
-#'     \itemize{
-#'       \item \code{statement}: SQL statement string
-#'       \item \code{params}: Named list of parameters for parameterized statements
-#'     }
 #'   }
 #'   \item{\code{query_lazy(table_name)}}{
 #'     Create a lazy reference to a table for dplyr operations.
-#'     \itemize{
-#'       \item \code{table_name}: Name of the table
-#'     }
 #'   }
 #'   \item{\code{process_domain(domain, data_type = "neurocog", scales = NULL)}}{
 #'     Process a specific domain using SQL.
-#'     \itemize{
-#'       \item \code{domain}: Domain name to process
-#'       \item \code{data_type}: Type of data ("neurocog", "neurobehav", or "validity")
-#'       \item \code{scales}: Optional vector of scales to include
-#'     }
 #'   }
 #'   \item{\code{calculate_z_stats(table_name, group_vars)}}{
 #'     Calculate z-score statistics.
-#'     \itemize{
-#'       \item \code{table_name}: Table to process
-#'       \item \code{group_vars}: Vector of grouping variables
-#'     }
 #'   }
 #'   \item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6")}}{
 #'     Export query results to standard R6 processors.
-#'     \itemize{
-#'       \item \code{domain}: Domain to export
-#'       \item \code{processor_class}: R6 class to use (default: DomainProcessorR6)
-#'     }
 #'   }
 #'   \item{\code{get_domain_summary(include_all = TRUE)}}{
 #'     Get domain summary statistics using SQL.
-#'     \itemize{
-#'       \item \code{include_all}: Whether to include all domains
-#'     }
 #'   }
 #'   \item{\code{create_indexes()}}{
 #'     Create optimized indexes for faster queries.

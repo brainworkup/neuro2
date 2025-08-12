@@ -46,18 +46,21 @@ template_file <- config$report$template
 log_message(paste0("Using template file: ", template_file), "REPORT")
 log_message(paste0("Current working directory: ", getwd()), "REPORT")
 
-# Check if template file exists
-if (file.exists(template_file)) {
-  log_message(paste0("Template file found: ", template_file), "REPORT")
-  # Get file info for additional verification
-  file_info <- file.info(template_file)
-  log_message(paste0("File size: ", file_info$size, " bytes"), "REPORT")
-  log_message(paste0("Last modified: ", file_info$mtime), "REPORT")
-} else {
+# Helper function to ensure template file exists (for standalone usage)
+ensure_template_file <- function(template_file) {
+  if (file.exists(template_file)) {
+    log_message(paste0("Template file found: ", template_file), "REPORT")
+    # Get file info for additional verification
+    file_info <- file.info(template_file)
+    log_message(paste0("File size: ", file_info$size, " bytes"), "REPORT")
+    log_message(paste0("Last modified: ", file_info$mtime), "REPORT")
+    return(TRUE)
+  }
+  
   # Check if the file exists in the template directory
   template_dir <- "inst/quarto/templates/typst-report"
   alt_template_path <- file.path(template_dir, template_file)
-
+  
   if (file.exists(alt_template_path)) {
     log_message(
       paste0("Template found in template directory: ", alt_template_path),
@@ -65,21 +68,27 @@ if (file.exists(template_file)) {
     )
     log_message("Copying template file to working directory...", "REPORT")
     file.copy(alt_template_path, template_file)
-
+    
     if (file.exists(template_file)) {
       log_message("Template file copied successfully", "REPORT")
+      return(TRUE)
     } else {
       log_message(
         paste0("Failed to copy template file from: ", alt_template_path),
         "ERROR"
       )
-      stop("Template file copy failed")
+      return(FALSE)
     }
   } else {
     log_message(paste0("Template file not found: ", template_file), "ERROR")
     log_message(paste0("Also checked: ", alt_template_path), "ERROR")
-    stop("Template file not found")
+    return(FALSE)
   }
+}
+
+# Ensure template file exists
+if (!ensure_template_file(template_file)) {
+  stop("Template file not found")
 }
 
 # Render the report

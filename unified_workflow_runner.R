@@ -1294,59 +1294,10 @@ WorkflowRunnerR6 <- R6::R6Class(
           "REPORT"
         )
 
-        # Check if template.qmd exists with detailed logging
+        # Ensure template file exists using helper function
         template_file <- self$config$report$template
-        log_message(
-          paste0("Checking for template file: ", template_file),
-          "REPORT"
-        )
-        log_message(paste0("Current working directory: ", getwd()), "REPORT")
-
-        if (file.exists(template_file)) {
-          log_message(paste0("Template file found: ", template_file), "REPORT")
-          # Get file info for additional verification
-          file_info <- file.info(template_file)
-          log_message(paste0("File size: ", file_info$size, " bytes"), "REPORT")
-          log_message(paste0("Last modified: ", file_info$mtime), "REPORT")
-        } else {
-          # Check if the file exists in the template directory
-          template_dir <- "inst/quarto/templates/typst-report"
-          alt_template_path <- file.path(template_dir, template_file)
-
-          if (file.exists(alt_template_path)) {
-            log_message(
-              paste0(
-                "Template found in template directory: ",
-                alt_template_path
-              ),
-              "REPORT"
-            )
-            log_message(
-              "Copying template file to working directory...",
-              "REPORT"
-            )
-            file.copy(alt_template_path, template_file)
-
-            if (file.exists(template_file)) {
-              log_message("Template file copied successfully", "REPORT")
-            } else {
-              log_message(
-                paste0(
-                  "Failed to copy template file from: ",
-                  alt_template_path
-                ),
-                "ERROR"
-              )
-              return(FALSE)
-            }
-          } else {
-            log_message(
-              paste0("Template file not found: ", template_file),
-              "ERROR"
-            )
-            log_message(paste0("Also checked: ", alt_template_path), "ERROR")
-            return(FALSE)
-          }
+        if (!private$ensure_template_file(template_file, "REPORT")) {
+          return(FALSE)
         }
 
         # Render the report
@@ -1445,6 +1396,65 @@ WorkflowRunnerR6 <- R6::R6Class(
       }
       
       return(NULL)
+    },
+    
+    # Helper function to ensure template file exists
+    # Consolidates template file checking and copying logic
+    ensure_template_file = function(template_file, log_type = "INFO") {
+      log_message(
+        paste0("Checking for template file: ", template_file),
+        log_type
+      )
+      log_message(paste0("Current working directory: ", getwd()), log_type)
+      
+      if (file.exists(template_file)) {
+        log_message(paste0("Template file found: ", template_file), log_type)
+        # Get file info for additional verification
+        file_info <- file.info(template_file)
+        log_message(paste0("File size: ", file_info$size, " bytes"), log_type)
+        log_message(paste0("Last modified: ", file_info$mtime), log_type)
+        return(TRUE)
+      }
+      
+      # Check if the file exists in the template directory
+      template_dir <- "inst/quarto/templates/typst-report"
+      alt_template_path <- file.path(template_dir, template_file)
+      
+      if (file.exists(alt_template_path)) {
+        log_message(
+          paste0(
+            "Template found in template directory: ",
+            alt_template_path
+          ),
+          log_type
+        )
+        log_message(
+          "Copying template file to working directory...",
+          log_type
+        )
+        file.copy(alt_template_path, template_file)
+        
+        if (file.exists(template_file)) {
+          log_message("Template file copied successfully", log_type)
+          return(TRUE)
+        } else {
+          log_message(
+            paste0(
+              "Failed to copy template file from: ",
+              alt_template_path
+            ),
+            "ERROR"
+          )
+          return(FALSE)
+        }
+      } else {
+        log_message(
+          paste0("Template file not found: ", template_file),
+          "ERROR"
+        )
+        log_message(paste0("Also checked: ", alt_template_path), "ERROR")
+        return(FALSE)
+      }
     },
     
     # Helper to capitalize first letter
