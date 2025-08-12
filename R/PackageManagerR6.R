@@ -4,18 +4,13 @@
 #' @description Enhanced package management for neuro2.
 #'   Handles dependency installation, loading, and version checking.
 #'
+#' @docType class
+#' @format An R6 class object
+#'
 #' @field required_packages List of required package groups
 #' @field optional_packages List of optional package groups
 #' @field loaded_packages Character vector of successfully loaded packages
 #' @field failed_packages Character vector of packages that failed to load
-#'
-#' @param install_missing Whether to install missing packages
-#' @param include_optional Whether to check optional packages
-#' @param verbose Whether to show progress messages
-#' @param packages Vector of package names to check or load
-#' @param required Whether these packages are required
-#' @param pkg Package name to check
-#' @param file Path to save the loading script
 #'
 #' @export
 PackageManagerR6 <- R6::R6Class(

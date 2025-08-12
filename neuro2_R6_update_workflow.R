@@ -7,7 +7,7 @@
 # Clear workspace and load packages
 rm(list = ls())
 
-packages <- c("tidyverse", "here", "glue", "yaml", "quarto", "R6")
+packages <- c("tidyverse", "here", "glue", "yaml", "quarto", "R6", "neuro2")
 invisible(lapply(packages, library, character.only = TRUE))
 
 # Function to log messages
@@ -31,6 +31,9 @@ source("R/TableGT_ModifiedR6.R")
 message("🚀 R6-BASED UPDATE WORKFLOW")
 message("===========================\n")
 
+# Load internal package data from sysdata.rda
+load("R/sysdata.rda")
+
 # Define domain mappings with correct phenotypes and file numbers
 domain_mappings <- list(
   list(
@@ -38,96 +41,63 @@ domain_mappings <- list(
     pheno = "iq",
     file_num = "01",
     obj_name = "iq",
-    scales = c(
-      "Auditory Working Memory (AWMI)",
-      "Cognitive Proficiency (CPI)",
-      "Crystallized Knowledge",
-      "Fluid Reasoning (FRI)",
-      "Fluid Reasoning",
-      "Full Scale (FSIQ)",
-      "Full Scale IQ (FSIQ)",
-      "General Ability (GAI)",
-      "General Ability",
-      "General Intelligence",
-      "Global Neurocognitive Index (G)",
-      "NAB Attention Index",
-      "NAB Executive Functions Index",
-      "NAB Language Index",
-      "NAB Memory Index",
-      "NAB Spatial Index",
-      "NAB Total Index",
-      "Nonverbal (NVI)",
-      "Perceptual Reasoning (PRI)",
-      "Perceptual Reasoning",
-      "Processing Speed (PSI)",
-      "Processing Speed",
-      "RBANS Total Index",
-      "Test of Premorbid Functioning",
-      "TOPF Standard Score",
-      "Total NAB Index (T-NAB)",
-      "Verbal Comprehension (VCI)",
-      "Verbal Comprehension",
-      "Visual Perception/Construction",
-      "Visual Spatial (VSI)",
-      "Vocabulary Acquisition (VAI)",
-      "Word Reading",
-      "Working Memory (WMI)",
-      "Working Memory",
-      "Attention Index (ATT)",
-      "Language Index (LAN)",
-      "Spatial Index (SPT)",
-      "Memory Index (MEM)",
-      "Executive Functions Index (EXE)"
-    )
+    scales = scales_iq
   ),
   list(
     domain = "Academic Skills",
     pheno = "academics",
     file_num = "02",
     obj_name = "academics",
-    scales = NULL # Will be defined based on existing file
+    scales = scales_academics
   ),
   list(
     domain = "Verbal/Language",
     pheno = "verbal",
     file_num = "03",
     obj_name = "verbal",
-    scales = NULL
+    scales = scales_verbal
   ),
   list(
     domain = "Visual Perception/Construction",
     pheno = "spatial",
     file_num = "04",
     obj_name = "spatial",
-    scales = NULL
+    scales = scales_spatial
   ),
   list(
     domain = "Memory",
     pheno = "memory",
     file_num = "05",
     obj_name = "memory",
-    scales = NULL
+    scales = scales_memory
   ),
   list(
     domain = "Attention/Executive",
     pheno = "executive",
     file_num = "06",
     obj_name = "executive",
-    scales = NULL
+    scales = scales_executive
   ),
   list(
     domain = "ADHD",
-    pheno = "adhd_adult",
+    pheno = "adhd_child",
     file_num = "09",
-    obj_name = "adhd_adult",
-    scales = NULL
+    obj_name = "adhd_child",
+    scales = scales_adhd_child
   ),
   list(
     domain = "Emotional/Behavioral/Personality",
     pheno = "emotion_adult",
     file_num = "10",
     obj_name = "emotion_adult",
-    scales = NULL
+    scales = scales_emotion_adult
+  ),
+  list(
+    domain = "Behavioral/Emotional/Social",
+    pheno = "emotion_child",
+    file_num = "10",
+    obj_name = "emotion_child",
+    scales = scales_emotion_child
   )
 )
 
@@ -197,6 +167,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "# Source R6 classes\n",
     "source(\"R/DomainProcessorR6.R\")\n",
     "source(\"R/NeuropsychResultsR6.R\")\n",
+    "source(\"R/TableGT_ModifiedR6.R\")\n",
     "source(\"R/DotplotR6.R\")\n\n",
     "# Filter by domain\n",
     "domains <- c(\"",
@@ -269,10 +240,10 @@ update_domain_file_with_r6 <- function(domain_info) {
       scales_str,
       "\n",
       ")\n\n",
-      "# Filter the data using NeurotypR\n",
+      "# Filter the data\n",
       "data_",
       domain_info$obj_name,
-      " <- NeurotypR::filter_data(\n",
+      " <- filter_data(\n",
       "  data = ",
       domain_info$obj_name,
       ",\n",
@@ -322,36 +293,37 @@ update_domain_file_with_r6 <- function(domain_info) {
     "```\n\n"
   )
 
-  # Add table generation (keeping existing structure)
+  # Add table generation using R6 TableGT_ModifiedR6
   qmd_content <- paste0(
     qmd_content,
     "```{r}\n",
     "#| label: qtbl-",
     domain_info$pheno,
     "\n",
-    "#| dev: tikz\n",
-    "#| fig-process: pdf2png\n",
     "#| include: false\n",
     "#| eval: true\n\n",
-    "# Set the default engine for tikz\n",
-    "options(tikzDefaultEngine = \"xetex\")\n\n",
     "# Table parameters\n",
     "table_name <- \"table_",
     domain_info$pheno,
     "\"\n",
     "vertical_padding <- 0\n",
-    "multiline <- TRUE\n\n",
-    "# Create table using NeurotypR\n",
-    "NeurotypR::tbl_gt(\n",
+    "multiline <- TRUE\n",
+    "source_note <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n\n",
+    "# Create table using R6 TableGT_ModifiedR6 class\n",
+    "table_gt <- TableGT_ModifiedR6$new(\n",
     "  data = data_",
     domain_info$obj_name,
     ",\n",
     "  pheno = pheno,\n",
     "  table_name = table_name,\n",
     "  vertical_padding = vertical_padding,\n",
-    "  source_note = \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\",\n",
+    "  source_note = source_note,\n",
     "  multiline = multiline\n",
-    ")\n",
+    ")\n\n",
+    "# Build the table\n",
+    "tbl <- table_gt$build_table()\n\n",
+    "# Save the table\n",
+    "table_gt$save_table(tbl, dir = here::here())\n",
     "```\n\n"
   )
 
@@ -568,7 +540,7 @@ update_sirf_with_r6 <- function() {
     "# Create overall summary plot\n",
     "domain_summary <- neurocog |>\n",
     "  group_by(domain) |>\n",
-    "  summarise(\n",
+    "  summarize(\n",
     "    mean_z = mean(z, na.rm = TRUE),\n",
     "    mean_percentile = mean(percentile, na.rm = TRUE)\n",
     "  ) |>\n",

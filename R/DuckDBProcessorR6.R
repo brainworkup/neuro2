@@ -1,48 +1,48 @@
-#' DuckDBProcessorR6 Class
+#' DuckDB Data Processor
 #'
-#' An R6 class that provides efficient data processing using DuckDB for neuropsychological data.
-#' This class enables SQL-based querying without loading entire datasets into memory.
+#' @description
+#' An R6 class that provides an efficient data processing pipeline for
+#' neuropsychological data using the DuckDB database engine. It allows for
+#' SQL-based querying and processing of large datasets without loading them
+#' entirely into memory, which is ideal for performance and scalability.
 #'
-#' @field con DuckDB connection object
-#' @field db_path Path to the DuckDB database file (default: in-memory)
-#' @field tables List of registered tables in the database
-#' @field data_paths List of paths to data files
+#' @details
+#' The `DuckDBProcessorR6` class handles the connection to a DuckDB database
+#' (either in-memory or file-based), registration of data files (CSV, Parquet,
+#' Arrow/Feather) as virtual tables, and execution of SQL queries. It is
+#' designed to integrate seamlessly with other R6-based components in this
+#' package.
 #'
-#' @section Methods:
-#' \describe{
-#'   \item{initialize}{Initialize a new DuckDBProcessorR6 object with database connection.}
-#'   \item{connect}{Create or reconnect to the DuckDB database.}
-#'   \item{disconnect}{Close the database connection.}
-#'   \item{register_csv}{Register a CSV file as a virtual table.}
-#'   \item{register_all_csvs}{Register all CSV files in a directory.}
-#'   \item{query}{Execute a SQL query and return results.}
-#'   \item{query_lazy}{Create a lazy reference to a table for dplyr operations.}
-#'   \item{process_domain}{Process a specific domain using SQL.}
-#'   \item{calculate_z_stats}{Calculate z-score statistics using SQL.}
-#'   \item{export_to_r6}{Export query results to standard R6 processors.}
-#' }
+#' @docType class
+#' @format An R6 class object
+#'
+#' @field con Database connection object
+#' @field db_path Database file path
+#' @field tables Registered tables
+#' @field data_paths Data file paths
 #'
 #' @importFrom R6 R6Class
 #' @importFrom DBI dbConnect dbDisconnect dbGetQuery dbExecute
-#' @importFrom duckdb duckdb
+#' @importFrom duckdb duckdb duckdb_register_arrow
 #' @importFrom dplyr tbl collect
+#' @importFrom arrow read_feather as_arrow_table
+#'
 #' @export
 DuckDBProcessorR6 <- R6::R6Class(
   classname = "DuckDBProcessorR6",
   public = list(
+    # Database connection object
     con = NULL,
+    # Database file path
     db_path = NULL,
+    # Registered tables
     tables = NULL,
+    # Data file paths
     data_paths = NULL,
+    # Available extensions
+    available_extensions = NULL,
 
-    #' @description
-    #' Initialize a new DuckDBProcessorR6 object with database connection.
-    #'
-    #' @param db_path Path to DuckDB database file (default: ":memory:" for in-memory)
-    #' @param data_dir Directory containing CSV files (default: "data")
-    #' @param auto_register Whether to automatically register all CSVs (default: TRUE)
-    #'
-    #' @return A new DuckDBProcessorR6 object
+    # Initialize a new DuckDBProcessorR6 object
     initialize = function(
       db_path = ":memory:",
       data_dir = "data",
@@ -50,6 +50,7 @@ DuckDBProcessorR6 <- R6::R6Class(
     ) {
       self$db_path <- db_path
       self$tables <- list()
+      self$available_extensions <- character(0)
       self$data_paths <- list(
         neurocog = file.path(data_dir, "neurocog.csv"),
         neurobehav = file.path(data_dir, "neurobehav.csv"),
@@ -57,7 +58,7 @@ DuckDBProcessorR6 <- R6::R6Class(
         neuropsych = file.path(data_dir, "neuropsych.csv")
       )
 
-      # Connect to database
+      # Connect to database with robust extension handling
       self$connect()
 
       # Auto-register CSV files if requested
@@ -66,48 +67,82 @@ DuckDBProcessorR6 <- R6::R6Class(
       }
     },
 
-    #' @description
-    #' Create or reconnect to the DuckDB database.
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Create or reconnect to the DuckDB database
     connect = function() {
       if (!is.null(self$con)) {
         self$disconnect()
       }
 
       self$con <- DBI::dbConnect(duckdb::duckdb(), self$db_path)
+      self$available_extensions <- character(0)
 
-      # Set up useful extensions
-      DBI::dbExecute(self$con, "INSTALL 'feather'")
-      DBI::dbExecute(self$con, "LOAD 'feather'")
+      # Get DuckDB version for extension compatibility
+      version_info <- private$get_duckdb_version()
+      message(paste("🦆 DuckDB version:", version_info$version))
+      message(paste("🖥️  Platform:", version_info$platform))
 
-      # Install parquet extension
-      DBI::dbExecute(self$con, "INSTALL 'parquet'")
-      DBI::dbExecute(self$con, "LOAD 'parquet'")
+      # Define extensions with platform/version compatibility
+      extensions <- list(
+        list(
+          name = "parquet",
+          required = TRUE,
+          description = "Parquet file format support"
+        ),
+        list(
+          name = "fts",
+          required = FALSE,
+          description = "Full-text search capabilities"
+        ),
+        list(
+          name = "json",
+          required = FALSE,
+          description = "JSON processing functions"
+        )
+      )
+
+      # Try to install and load extensions with fallback
+      for (ext in extensions) {
+        success <- private$install_extension_safe(
+          ext$name,
+          required = ext$required,
+          description = ext$description
+        )
+
+        if (success) {
+          self$available_extensions <- c(self$available_extensions, ext$name)
+        }
+      }
+
+      # Special handling for feather/arrow - use alternative approach
+      feather_success <- private$setup_arrow_support()
+      if (feather_success) {
+        message("✅ Arrow/Feather support configured via R arrow package")
+      }
+
+      # Report available extensions
+      if (length(self$available_extensions) > 0) {
+        message(
+          "✅ Available extensions:",
+          paste(self$available_extensions, collapse = ", ")
+        )
+      } else {
+        message("⚠️  No extensions loaded - basic functionality only")
+      }
 
       invisible(self)
     },
 
-    #' @description
-    #' Close the database connection.
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Close the database connection
     disconnect = function() {
       if (!is.null(self$con)) {
         DBI::dbDisconnect(self$con, shutdown = TRUE)
         self$con <- NULL
+        self$available_extensions <- character(0)
       }
       invisible(self)
     },
 
-    #' @description
-    #' Register a CSV file as a virtual table in DuckDB.
-    #'
-    #' @param file_path Path to the CSV file
-    #' @param table_name Name for the table (default: based on filename)
-    #' @param options Additional CSV reading options
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Register a CSV file as a virtual table
     register_csv = function(file_path, table_name = NULL, options = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
@@ -127,7 +162,7 @@ DuckDBProcessorR6 <- R6::R6Class(
         )
       }
 
-      # Create view from CSV
+      # Create view from CSV with error handling
       query <- sprintf(
         "CREATE OR REPLACE VIEW %s AS SELECT * FROM read_csv_auto('%s'%s)",
         table_name,
@@ -135,24 +170,35 @@ DuckDBProcessorR6 <- R6::R6Class(
         option_str
       )
 
-      DBI::dbExecute(self$con, query)
-      self$tables[[table_name]] <- file_path
-
-      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
+      tryCatch(
+        {
+          DBI::dbExecute(self$con, query)
+          self$tables[[table_name]] <- file_path
+          message(paste(
+            "✅ Registered",
+            table_name,
+            "from",
+            basename(file_path)
+          ))
+        },
+        error = function(e) {
+          warning(paste("Failed to register", table_name, ":", e$message))
+        }
+      )
 
       invisible(self)
     },
 
-    #' @description
-    #' Register a Parquet file as a virtual table in DuckDB.
-    #'
-    #' @param file_path Path to the Parquet file
-    #' @param table_name Name for the table (default: based on filename)
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Register a Parquet file as a virtual table
     register_parquet = function(file_path, table_name = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
+      }
+
+      # Check if parquet extension is available
+      if (!"parquet" %in% self$available_extensions) {
+        warning("Parquet extension not available - falling back to CSV")
+        return(self$register_csv(file_path, table_name))
       }
 
       # Generate table name from file if not provided
@@ -160,38 +206,47 @@ DuckDBProcessorR6 <- R6::R6Class(
         table_name <- tools::file_path_sans_ext(basename(file_path))
       }
 
-      # Create view from Parquet
+      # Create view from Parquet with error handling
       query <- sprintf(
         "CREATE OR REPLACE VIEW %s AS SELECT * FROM read_parquet('%s')",
         table_name,
         file_path
       )
 
-      DBI::dbExecute(self$con, query)
-      self$tables[[table_name]] <- file_path
-
-      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
+      tryCatch(
+        {
+          DBI::dbExecute(self$con, query)
+          self$tables[[table_name]] <- file_path
+          message(paste(
+            "✅ Registered",
+            table_name,
+            "from",
+            basename(file_path)
+          ))
+        },
+        error = function(e) {
+          warning(paste(
+            "Failed to register Parquet file",
+            table_name,
+            ":",
+            e$message
+          ))
+          # Try CSV fallback if available
+          csv_path <- sub("\\.parquet$", ".csv", file_path, ignore.case = TRUE)
+          if (file.exists(csv_path)) {
+            message("🔄 Attempting CSV fallback...")
+            self$register_csv(csv_path, table_name)
+          }
+        }
+      )
 
       invisible(self)
     },
 
-    #' @description
-    #' Register an Arrow/Feather file as a virtual table in DuckDB.
-    #'
-    #' @param file_path Path to the Arrow/Feather file
-    #' @param table_name Name for the table (default: based on filename)
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Register an Arrow/Feather file as a virtual table
     register_arrow = function(file_path, table_name = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
-      }
-
-      # Check if arrow package is available
-      if (!requireNamespace("arrow", quietly = TRUE)) {
-        stop(
-          "The 'arrow' package is required to read Arrow/Feather files. Please install it with: install.packages('arrow')"
-        )
       }
 
       # Generate table name from file if not provided
@@ -199,24 +254,32 @@ DuckDBProcessorR6 <- R6::R6Class(
         table_name <- tools::file_path_sans_ext(basename(file_path))
       }
 
-      # Read Arrow table and register it directly
-      arrow_table <- arrow::read_feather(file_path)
-      duckdb::duckdb_register_arrow(self$con, table_name, arrow_table)
+      # Try Arrow package approach (recommended)
+      success <- private$register_arrow_via_r(file_path, table_name)
 
-      self$tables[[table_name]] <- file_path
-
-      message(paste("[OK] Registered", table_name, "from", basename(file_path)))
+      if (!success) {
+        # Fallback to CSV if available
+        csv_path <- sub(
+          "\\.(arrow|feather)$",
+          ".csv",
+          file_path,
+          ignore.case = TRUE
+        )
+        if (file.exists(csv_path)) {
+          message("🔄 Arrow registration failed, using CSV fallback...")
+          self$register_csv(csv_path, table_name)
+        } else {
+          warning(paste(
+            "Failed to register Arrow file and no CSV fallback available:",
+            file_path
+          ))
+        }
+      }
 
       invisible(self)
     },
 
-    #' @description
-    #' Register all CSV files in a directory.
-    #'
-    #' @param data_dir Directory containing CSV files
-    #' @param pattern File pattern to match (default: "*.csv")
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Register all CSV files in a directory
     register_all_csvs = function(data_dir = "data", pattern = "*.csv") {
       csv_files <- list.files(data_dir, pattern = pattern, full.names = TRUE)
 
@@ -227,42 +290,31 @@ DuckDBProcessorR6 <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description
-    #' Register all data files in a directory (CSV, Parquet, and Arrow).
-    #'
-    #' @param data_dir Directory containing data files
-    #' @param formats Character vector of formats to register (default: c("csv", "parquet", "arrow"))
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Register all data files in a directory
     register_all_files = function(
       data_dir = "data",
-      formats = c("csv", "parquet", "arrow")
+      formats = c("parquet", "arrow", "csv")
     ) {
-      # Register CSV files
-      if ("csv" %in% formats) {
-        csv_files <- list.files(
-          data_dir,
-          pattern = "\\.csv$",
-          full.names = TRUE
-        )
-        for (file in csv_files) {
-          self$register_csv(file)
-        }
-      }
+      # Priority order: Parquet (fastest) -> Arrow -> CSV (slowest)
+      registered_tables <- character(0)
 
-      # Register Parquet files
-      if ("parquet" %in% formats) {
+      # Register Parquet files first (highest priority)
+      if ("parquet" %in% formats && "parquet" %in% self$available_extensions) {
         parquet_files <- list.files(
           data_dir,
           pattern = "\\.parquet$",
           full.names = TRUE
         )
         for (file in parquet_files) {
-          self$register_parquet(file)
+          table_name <- tools::file_path_sans_ext(basename(file))
+          if (!table_name %in% registered_tables) {
+            self$register_parquet(file)
+            registered_tables <- c(registered_tables, table_name)
+          }
         }
       }
 
-      # Register Arrow/Feather files
+      # Register Arrow/Feather files (second priority)
       if ("arrow" %in% formats) {
         arrow_files <- list.files(
           data_dir,
@@ -270,21 +322,34 @@ DuckDBProcessorR6 <- R6::R6Class(
           full.names = TRUE
         )
         for (file in arrow_files) {
-          self$register_arrow(file)
+          table_name <- tools::file_path_sans_ext(basename(file))
+          if (!table_name %in% registered_tables) {
+            self$register_arrow(file)
+            registered_tables <- c(registered_tables, table_name)
+          }
+        }
+      }
+
+      # Register CSV files last (fallback)
+      if ("csv" %in% formats) {
+        csv_files <- list.files(
+          data_dir,
+          pattern = "\\.csv$",
+          full.names = TRUE
+        )
+        for (file in csv_files) {
+          table_name <- tools::file_path_sans_ext(basename(file))
+          if (!table_name %in% registered_tables) {
+            self$register_csv(file)
+            registered_tables <- c(registered_tables, table_name)
+          }
         }
       }
 
       invisible(self)
     },
 
-    #' @description
-    #' Export data to Parquet format using DuckDB.
-    #'
-    #' @param table_name Name of the table to export
-    #' @param output_path Path for the output Parquet file
-    #' @param compression Compression algorithm (default: "zstd")
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Export data to Parquet format
     export_to_parquet = function(
       table_name,
       output_path,
@@ -294,6 +359,10 @@ DuckDBProcessorR6 <- R6::R6Class(
         stop("Table not found: ", table_name)
       }
 
+      if (!"parquet" %in% self$available_extensions) {
+        stop("Parquet extension not available")
+      }
+
       query <- sprintf(
         "COPY %s TO '%s' (FORMAT PARQUET, COMPRESSION %s)",
         table_name,
@@ -301,60 +370,68 @@ DuckDBProcessorR6 <- R6::R6Class(
         compression
       )
 
-      DBI::dbExecute(self$con, query)
-      message(paste("[OK] Exported", table_name, "to", output_path))
+      tryCatch(
+        {
+          DBI::dbExecute(self$con, query)
+          message(paste("✅ Exported", table_name, "to", output_path))
+        },
+        error = function(e) {
+          warning(paste("Failed to export to Parquet:", e$message))
+        }
+      )
 
       invisible(self)
     },
 
-    #' @description
-    #' Execute a SQL query and return results.
-    #'
-    #' @param query SQL query string
-    #' @param params Named list of parameters for parameterized queries
-    #'
-    #' @return Query results as a data frame
+    # Execute a SQL query and return results
     query = function(query, params = NULL) {
       if (is.null(self$con)) {
         stop("No database connection. Call connect() first.")
       }
 
-      if (!is.null(params)) {
-        result <- DBI::dbGetQuery(self$con, query, params = params)
-      } else {
-        result <- DBI::dbGetQuery(self$con, query)
-      }
-
-      return(result)
+      tryCatch(
+        {
+          if (!is.null(params)) {
+            result <- DBI::dbGetQuery(self$con, query, params = params)
+          } else {
+            result <- DBI::dbGetQuery(self$con, query)
+          }
+          return(result)
+        },
+        error = function(e) {
+          stop(paste("Query failed:", e$message, "\nQuery:", query))
+        }
+      )
     },
 
-    #' @description
-    #' Execute a SQL statement that doesn't return results (CREATE, DROP, etc.).
-    #'
-    #' @param statement SQL statement string
-    #' @param params Named list of parameters for parameterized statements
-    #'
-    #' @return Number of rows affected (invisibly)
+    # Execute a SQL statement that doesn't return results
     execute = function(statement, params = NULL) {
       if (is.null(self$con)) {
         stop("No database connection. Call connect() first.")
       }
 
-      if (!is.null(params)) {
-        result <- DBI::dbExecute(self$con, statement, params = params)
-      } else {
-        result <- DBI::dbExecute(self$con, statement)
-      }
-
-      invisible(result)
+      tryCatch(
+        {
+          if (!is.null(params)) {
+            result <- DBI::dbExecute(self$con, statement, params = params)
+          } else {
+            result <- DBI::dbExecute(self$con, statement)
+          }
+          invisible(result)
+        },
+        error = function(e) {
+          warning(paste(
+            "Statement execution failed:",
+            e$message,
+            "\nStatement:",
+            statement
+          ))
+          invisible(NA)
+        }
+      )
     },
 
-    #' @description
-    #' Create a lazy reference to a table for dplyr operations.
-    #'
-    #' @param table_name Name of the table
-    #'
-    #' @return A dplyr tbl object
+    # Create a lazy reference to a table for dplyr operations
     query_lazy = function(table_name) {
       if (!table_name %in% names(self$tables)) {
         stop("Table not found: ", table_name)
@@ -363,14 +440,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(dplyr::tbl(self$con, table_name))
     },
 
-    #' @description
-    #' Process a specific domain using SQL.
-    #'
-    #' @param domain Domain name to process
-    #' @param data_type Type of data ("neurocog", "neurobehav", or "validity")
-    #' @param scales Optional vector of scales to include
-    #'
-    #' @return Processed data for the domain
+    # Process a specific domain using SQL
     process_domain = function(domain, data_type = "neurocog", scales = NULL) {
       # Base query
       base_query <- sprintf(
@@ -391,13 +461,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(self$query(base_query))
     },
 
-    #' @description
-    #' Calculate z-score statistics using SQL (optimized for DuckDB).
-    #'
-    #' @param table_name Table to process
-    #' @param group_vars Vector of grouping variables
-    #'
-    #' @return Data with calculated z-score statistics
+    # Calculate z-score statistics
     calculate_z_stats = function(table_name, group_vars) {
       # For complex z-score calculations, export to R and use the tidy_data function
       data <- self$query(sprintf(
@@ -411,13 +475,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(result)
     },
 
-    #' @description
-    #' Export query results to standard R6 processors.
-    #'
-    #' @param domain Domain to export
-    #' @param processor_class R6 class to use (default: DomainProcessorR6)
-    #'
-    #' @return An R6 processor object with the data
+    # Export query results to standard R6 processors
     export_to_r6 = function(domain, processor_class = "DomainProcessorR6") {
       # Query the domain data
       data <- self$process_domain(domain)
@@ -461,12 +519,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(processor)
     },
 
-    #' @description
-    #' Get domain summary statistics using SQL.
-    #'
-    #' @param include_all Whether to include all domains (default: TRUE)
-    #'
-    #' @return Summary statistics by domain
+    # Get domain summary statistics using SQL
     get_domain_summary = function(include_all = TRUE) {
       query <- "
         SELECT
@@ -486,10 +539,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(self$query(query))
     },
 
-    #' @description
-    #' Create optimized indexes for faster queries.
-    #'
-    #' @return Invisibly returns self for method chaining.
+    # Create optimized indexes for faster queries
     create_indexes = function() {
       # Create indexes on commonly queried columns
       indexes <- c(
@@ -501,7 +551,7 @@ DuckDBProcessorR6 <- R6::R6Class(
       )
 
       for (idx in indexes) {
-        tryCatch(DBI::dbExecute(self$con, idx), error = function(e) {
+        tryCatch(self$execute(idx), error = function(e) {
           # Indexes might fail on views, which is okay
           NULL
         })
@@ -510,46 +560,185 @@ DuckDBProcessorR6 <- R6::R6Class(
       invisible(self)
     }
   ),
+
   private = list(
-    # Finalize method to ensure connection is closed
+    # Finalizer method (now in private section as per R6 2.4.0)
     finalize = function() {
       self$disconnect()
+    },
+
+    # Get DuckDB version and platform information
+    get_duckdb_version = function() {
+      tryCatch(
+        {
+          version_result <- DBI::dbGetQuery(self$con, "SELECT version()")
+          version_string <- version_result[[1]][1]
+
+          # Extract version number
+          version_match <- regmatches(
+            version_string,
+            regexpr("v[0-9.]+", version_string)
+          )
+          version <- if (length(version_match) > 0) version_match else "unknown"
+
+          # Determine platform
+          platform <- paste(
+            Sys.info()["sysname"],
+            Sys.info()["machine"],
+            sep = "_"
+          )
+          platform <- tolower(gsub(" ", "_", platform))
+
+          return(list(
+            version = version,
+            platform = platform,
+            full = version_string
+          ))
+        },
+        error = function(e) {
+          return(list(
+            version = "unknown",
+            platform = "unknown",
+            full = "unknown"
+          ))
+        }
+      )
+    },
+
+    # Safely install and load a DuckDB extension
+    install_extension_safe = function(
+      ext_name,
+      required = FALSE,
+      description = ""
+    ) {
+      tryCatch(
+        {
+          # Try to install the extension
+          DBI::dbExecute(self$con, paste0("INSTALL '", ext_name, "'"))
+
+          # Try to load the extension
+          DBI::dbExecute(self$con, paste0("LOAD '", ext_name, "'"))
+
+          message(paste("✅", ext_name, "extension loaded successfully"))
+          if (nzchar(description)) {
+            message(paste("   →", description))
+          }
+          return(TRUE)
+        },
+        error = function(e) {
+          if (required) {
+            warning(paste(
+              "Required extension",
+              ext_name,
+              "failed to load:",
+              e$message
+            ))
+          } else {
+            message(paste(
+              "⚠️  Optional extension",
+              ext_name,
+              "not available:",
+              e$message
+            ))
+          }
+          return(FALSE)
+        }
+      )
+    },
+
+    # Set up Arrow/Feather support using R arrow package
+    setup_arrow_support = function() {
+      # Check if arrow package is available
+      if (!requireNamespace("arrow", quietly = TRUE)) {
+        message(
+          "ℹ️  Arrow package not available - install with: install.packages('arrow')"
+        )
+        return(FALSE)
+      }
+
+      # Test arrow functionality
+      tryCatch(
+        {
+          # Create a small test table to verify arrow integration works
+          test_data <- data.frame(test_col = 1:3)
+          arrow_table <- arrow::as_arrow_table(test_data)
+          duckdb::duckdb_register_arrow(self$con, "arrow_test", arrow_table)
+
+          # Clean up test table
+          DBI::dbExecute(self$con, "DROP VIEW IF EXISTS arrow_test")
+
+          return(TRUE)
+        },
+        error = function(e) {
+          message("⚠️  Arrow integration test failed:", e$message)
+          return(FALSE)
+        }
+      )
+    },
+
+    # Register Arrow file using R arrow package
+    register_arrow_via_r = function(file_path, table_name) {
+      # Check if arrow package is available
+      if (!requireNamespace("arrow", quietly = TRUE)) {
+        return(FALSE)
+      }
+
+      tryCatch(
+        {
+          # Read Arrow table using R package
+          arrow_table <- arrow::read_feather(file_path)
+
+          # Register with DuckDB
+          duckdb::duckdb_register_arrow(self$con, table_name, arrow_table)
+
+          self$tables[[table_name]] <- file_path
+          message(paste(
+            "✅ Registered",
+            table_name,
+            "from",
+            basename(file_path),
+            "(via R arrow)"
+          ))
+
+          return(TRUE)
+        },
+        error = function(e) {
+          message(paste("Failed to register Arrow file via R:", e$message))
+          return(FALSE)
+        }
+      )
     }
   )
 )
 
-#' Process neuropsych data using DuckDB (Function Wrapper)
+#' Process neuropsych data using DuckDB
 #'
 #' This function provides a high-level interface to DuckDB processing.
 #'
 #' @param data_dir Directory containing CSV files
-#' @param domain Domain to process (optional)
-#' @param output_format Format for output ("data.frame", "r6", or "lazy")
+#' @param domain Domain to process
+#' @param output_dir Directory for output files
+#' @return Processed data
 #'
-#' @return Processed data in the specified format
 #' @export
 process_with_duckdb <- function(
   data_dir = "data",
   domain = NULL,
-  output_format = "data.frame"
+  output_dir = "output"
 ) {
   # Create processor
-  ddb <- DuckDBProcessorR6$new(data_dir = data_dir)
+  processor <- DuckDBProcessorR6$new(data_dir = data_dir)
 
-  # Process based on request
+  # Process specific domain if provided
   if (!is.null(domain)) {
-    result <- ddb$process_domain(domain)
+    result <- processor$process_domain(domain)
   } else {
-    result <- ddb$get_domain_summary()
-  }
-
-  # Format output
-  if (output_format == "r6" && !is.null(domain)) {
-    result <- ddb$export_to_r6(domain)
+    # Get domain summary
+    result <- processor$get_domain_summary()
   }
 
   # Clean up
-  ddb$disconnect()
+  processor$disconnect()
 
   return(result)
 }

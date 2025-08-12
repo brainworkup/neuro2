@@ -200,7 +200,7 @@ pegboard_dominant_hand <- function(age, raw_score) {
   predicted_sd <- round(predicted_sd, digits = 2)
 
   return(paste0(
-    "GPT Dominant Hand: ",
+    "GPT Dominant Hand T-score: ",
     t_score,
     ", z-Score = ",
     z_score,
@@ -272,7 +272,7 @@ pegboard_nondominant_hand <- function(age, raw_score) {
   predicted_sd <- round(predicted_sd, digits = 2)
 
   return(paste0(
-    "GPT NonDominant Hand: ",
+    "GPT NonDominant Hand T-score: ",
     t_score,
     ", z-Score = ",
     z_score,
