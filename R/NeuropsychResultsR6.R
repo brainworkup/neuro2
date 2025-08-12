@@ -44,22 +44,14 @@ NeuropsychResultsR6 <- R6::R6Class(
         dplyr::arrange(dplyr::desc(percentile)) |>
         dplyr::distinct(.keep_all = FALSE)
 
-      # Create proper QMD content with summary tags
+      # Create proper QMD content without HTML tags that could cause parsing issues
       if (nrow(sorted_data) > 0) {
         qmd_content <- c(
-          "<summary>",
-          "",
-          paste0(sorted_data$result),
-          "",
-          "</summary>"
+          paste0(sorted_data$result)
         )
       } else {
         qmd_content <- c(
-          "<summary>",
-          "",
-          "No data available for this domain.",
-          "",
-          "</summary>"
+          "No data available for this domain."
         )
       }
 
