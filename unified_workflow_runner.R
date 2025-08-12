@@ -200,6 +200,42 @@ log_message(paste0("Patient: ", config$patient$name), "CONFIG")
 log_message(paste0("Age: ", config$patient$age), "CONFIG")
 log_message(paste0("DOE: ", config$patient$doe), "CONFIG")
 
+# Helper function to load data from different formats without DuckDB
+load_neuropsych_data <- function(data_dir) {
+  # Check for different file formats
+  parquet_file <- file.path(data_dir, "neurocog.parquet")
+  csv_file <- file.path(data_dir, "neurocog.csv")
+  feather_file <- file.path(data_dir, "neurocog.feather")
+
+  if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
+    return(arrow::read_parquet(parquet_file))
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
+    return(arrow::read_feather(feather_file))
+  } else if (file.exists(csv_file)) {
+    return(readr::read_csv(csv_file, show_col_types = FALSE))
+  } else {
+    return(NULL)
+  }
+}
+
+# Helper function to get domains from data without DuckDB
+get_domains_from_data <- function(data_dir) {
+  neurocog_data <- load_neuropsych_data(data_dir)
+  if (is.null(neurocog_data)) {
+    return(data.frame(domain = character(0)))
+  }
+
+  if ("domain" %in% names(neurocog_data)) {
+    unique_domains <- unique(neurocog_data$domain)
+    unique_domains <- unique_domains[!is.na(unique_domains)]
+    return(data.frame(domain = unique_domains))
+  }
+
+  return(data.frame(domain = character(0)))
+}
+
 # Create the main workflow class
 WorkflowRunnerR6 <- R6::R6Class(
   "WorkflowRunnerR6",
@@ -274,7 +310,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         ),
         "template"
       )
-      
+
       if (is.null(template_dir)) {
         log_message(
           "Could not find template directory in any location",
@@ -424,7 +460,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         ),
         "extensions"
       )
-      
+
       if (is.null(extensions_dir)) {
         log_message(
           "Could not find extensions directory in any location",
@@ -686,26 +722,26 @@ WorkflowRunnerR6 <- R6::R6Class(
                 "Using DomainProcessorR6 to generate domain files",
                 "DOMAINS"
               )
-    
+
               # Get the list of domains from the data
               domains_data <- query_neuropsych(
                 "SELECT DISTINCT domain FROM neurocog WHERE domain IS NOT NULL",
                 self$config$data$output_dir
               )
-    
+
               log_message(
                 paste0("Found ", nrow(domains_data), " unique domains"),
                 "DOMAINS"
               )
-    
+
               # Track processed domains to avoid duplicates
               processed_domains <- character()
               emotion_processed <- FALSE
-              
+
               # Process each domain
               for (i in seq_len(nrow(domains_data))) {
                 domain <- domains_data$domain[i]
-    
+
                 # Skip if already processed
                 if (domain %in% processed_domains) {
                   log_message(
@@ -714,7 +750,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                   )
                   next
                 }
-                
+
                 # Skip individual emotion domains - they should be processed together
                 emotion_domains <- c(
                   "Behavioral/Emotional/Social",
@@ -724,7 +760,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                   "Personality Disorders",
                   "Emotional/Behavioral/Personality"
                 )
-    
+
                 if (domain %in% emotion_domains) {
                   if (!emotion_processed) {
                     log_message(
@@ -736,7 +772,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                     # Mark all emotion domains as processed
                     processed_domains <- c(processed_domains, emotion_domains)
                     # Continue with processing emotion as single consolidated domain
-                    domain <- "Behavioral/Emotional/Social"  # Use primary emotion domain name
+                    domain <- "Behavioral/Emotional/Social" # Use primary emotion domain name
                   } else {
                     log_message(
                       paste0(
@@ -976,9 +1012,16 @@ WorkflowRunnerR6 <- R6::R6Class(
                   domain <- behav_domains_data$domain[i]
 
                   # Skip if already processed
-                  if (domain %in% processed_domains || domain %in% domains_data$domain) {
+                  if (
+                    domain %in%
+                      processed_domains ||
+                      domain %in% domains_data$domain
+                  ) {
                     log_message(
-                      paste0("Skipping already processed behavioral domain: ", domain),
+                      paste0(
+                        "Skipping already processed behavioral domain: ",
+                        domain
+                      ),
                       "DOMAINS"
                     )
                     next
@@ -1088,7 +1131,7 @@ WorkflowRunnerR6 <- R6::R6Class(
                       ) {
                         file.rename(generated_file, output_file_name)
                       }
-                      
+
                       # Mark domain as processed
                       processed_domains <- c(processed_domains, domain)
                       log_message(
@@ -1369,20 +1412,28 @@ WorkflowRunnerR6 <- R6::R6Class(
       return(TRUE)
     }
   ),
-  
+
   private = list(
     # Helper function to find directory in multiple locations
-    find_directory = function(primary_dir, alternative_dirs, dir_type = "directory") {
+    find_directory = function(
+      primary_dir,
+      alternative_dirs,
+      dir_type = "directory"
+    ) {
       # Check primary directory first
       if (dir.exists(primary_dir)) {
         return(primary_dir)
       }
-      
+
       log_message(
-        paste0(private$capitalize(dir_type), " directory not found: ", primary_dir),
+        paste0(
+          private$capitalize(dir_type),
+          " directory not found: ",
+          primary_dir
+        ),
         "WARNING"
       )
-      
+
       # Try alternative locations
       for (alt_dir in alternative_dirs) {
         if (dir.exists(alt_dir)) {
@@ -1393,10 +1444,10 @@ WorkflowRunnerR6 <- R6::R6Class(
           return(alt_dir)
         }
       }
-      
+
       return(NULL)
     },
-    
+
     # Helper function to ensure template file exists
     # Consolidates template file checking and copying logic
     ensure_template_file = function(template_file, log_type = "INFO") {
@@ -1405,7 +1456,7 @@ WorkflowRunnerR6 <- R6::R6Class(
         log_type
       )
       log_message(paste0("Current working directory: ", getwd()), log_type)
-      
+
       if (file.exists(template_file)) {
         log_message(paste0("Template file found: ", template_file), log_type)
         # Get file info for additional verification
@@ -1414,48 +1465,36 @@ WorkflowRunnerR6 <- R6::R6Class(
         log_message(paste0("Last modified: ", file_info$mtime), log_type)
         return(TRUE)
       }
-      
+
       # Check if the file exists in the template directory
       template_dir <- "inst/quarto/templates/typst-report"
       alt_template_path <- file.path(template_dir, template_file)
-      
+
       if (file.exists(alt_template_path)) {
         log_message(
-          paste0(
-            "Template found in template directory: ",
-            alt_template_path
-          ),
+          paste0("Template found in template directory: ", alt_template_path),
           log_type
         )
-        log_message(
-          "Copying template file to working directory...",
-          log_type
-        )
+        log_message("Copying template file to working directory...", log_type)
         file.copy(alt_template_path, template_file)
-        
+
         if (file.exists(template_file)) {
           log_message("Template file copied successfully", log_type)
           return(TRUE)
         } else {
           log_message(
-            paste0(
-              "Failed to copy template file from: ",
-              alt_template_path
-            ),
+            paste0("Failed to copy template file from: ", alt_template_path),
             "ERROR"
           )
           return(FALSE)
         }
       } else {
-        log_message(
-          paste0("Template file not found: ", template_file),
-          "ERROR"
-        )
+        log_message(paste0("Template file not found: ", template_file), "ERROR")
         log_message(paste0("Also checked: ", alt_template_path), "ERROR")
         return(FALSE)
       }
     },
-    
+
     # Helper to capitalize first letter
     capitalize = function(str) {
       paste0(toupper(substring(str, 1, 1)), substring(str, 2))
