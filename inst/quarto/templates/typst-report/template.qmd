@@ -25,6 +25,19 @@ Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
 ```
 
+```{r}
+#| label: generate-all-figures
+#| include: false
+#| echo: false
+
+# This chunk runs first and generates all needed figures
+# without rendering the domain files to Typst
+
+source("generate_all_domain_assets.R")
+# This script should generate your .svg and .png files
+# without rendering the .qmd files to Typst
+```
+
 ```{=typst}
 #let case_number = [{{< var case_number >}}]
 #let name = [{{< var last_name >}}, {{< var first_name >}}]

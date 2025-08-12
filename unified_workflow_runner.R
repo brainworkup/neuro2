@@ -374,8 +374,13 @@ WorkflowRunnerR6 <- R6::R6Class(
           next
         }
 
-        # Back up existing files before overwriting
-        if (file.exists(dest_file)) {
+        # Skip backing up domain-specific QMD files (they are generated, not templates)
+        # Only back up main template files that might have user modifications
+        should_backup <- dest_file %in%
+          c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
+
+        # Back up existing files before overwriting (only for main template files)
+        if (file.exists(dest_file) && should_backup) {
           backup_file <- paste0(
             dest_file,
             ".",
@@ -1165,53 +1170,6 @@ WorkflowRunnerR6 <- R6::R6Class(
                 for (file in domain_files) {
                   log_message(paste0("  - ", file), "DOMAINS")
                 }
-
-                # NEW: Render each domain file to generate required figures/SVGs
-                log_message(
-                  "Rendering domain files to generate figures...",
-                  "DOMAINS"
-                )
-                for (domain_file in domain_files) {
-                  tryCatch(
-                    {
-                      log_message(
-                        paste0("Rendering ", domain_file, " to typst..."),
-                        "DOMAINS"
-                      )
-
-                      # Use system command to render with typst (more reliable)
-                      render_cmd <- paste(
-                        "quarto render",
-                        domain_file,
-                        "--to typst"
-                      )
-                      result <- system(
-                        render_cmd,
-                        intern = TRUE,
-                        ignore.stdout = FALSE,
-                        ignore.stderr = FALSE
-                      )
-
-                      log_message(
-                        paste0("Successfully rendered ", domain_file),
-                        "DOMAINS"
-                      )
-                    },
-                    error = function(e) {
-                      log_message(
-                        paste0(
-                          "Warning: Could not render ",
-                          domain_file,
-                          " - ",
-                          e$message
-                        ),
-                        "WARNING"
-                      )
-                      # Continue with other files even if one fails
-                    }
-                  )
-                }
-                log_message("Domain file rendering complete", "DOMAINS")
               } else {
                 log_message("No domain files were generated", "WARNING")
               }

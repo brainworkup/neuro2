@@ -248,11 +248,13 @@ if [ -d "data" ]; then
     find data -type f -exec basename {} \; | sed 's/^/   📊 /'
 fi
 
-domain_files=$(find . -name "_02-*_*.qmd" | wc -l)
+# Count domain files excluding timestamped files and backup files
+domain_files=$(find . -name "_02-*_*.qmd" ! -name "*_[0-9]*_[0-9]*.qmd" ! -name "*.bak" | wc -l)
 if [ $domain_files -gt 0 ]; then
     echo
     echo "Generated domain sections:"
-    find . -name "_02-*_*.qmd" -exec basename {} \; | sed 's/^/   📝 /'
+    # List domain files excluding timestamped files and backup files
+    find . -name "_02-*_*.qmd" ! -name "*_[0-9]*_[0-9]*.qmd" ! -name "*.bak" -exec basename {} \; | sort | uniq | sed 's/^/   📝 /'
 fi
 
 echo
