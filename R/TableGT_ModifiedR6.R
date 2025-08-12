@@ -175,7 +175,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
           }
         }
       }
-      
+
       # Initialize the test_score_type_map
       test_score_type_map <- list(
         "scaled_score" = character(0),
@@ -187,37 +187,37 @@ TableGT_ModifiedR6 <- R6::R6Class(
         "base_rate" = character(0),
         "percent_mastery" = character(0)
       )
-      
+
       # Extract unique test names and scales from lookup_neuropsych_scales
       if (exists("lookup_neuropsych_scales")) {
         message("Using lookup_neuropsych_scales from sysdata.rda for score type mapping")
-        
+
         # Get unique score types
         score_types <- unique(lookup_neuropsych_scales$score_type)
         message(paste0("Found score types: ", paste(score_types, collapse = ", ")))
-        
+
         # For each score type, find all the tests and scales that use that score type
         for (score_type in score_types) {
           # Get rows with this score type
           rows <- lookup_neuropsych_scales[lookup_neuropsych_scales$score_type == score_type, ]
-          
+
           # Extract unique test names and scales
           tests <- unique(c(rows$test_name, rows$test, rows$scale))
           tests <- tests[!is.na(tests)]  # Remove NA values
-          
+
           # Add to the mapping
           if (score_type %in% names(test_score_type_map)) {
             test_score_type_map[[score_type]] <- unique(c(test_score_type_map[[score_type]], tests))
           } else {
             test_score_type_map[[score_type]] <- tests
           }
-          
+
           message(paste0("Added ", length(tests), " tests/scales to ", score_type, " mapping"))
         }
       } else {
         # Fallback to a minimal set of mappings if lookup_neuropsych_scales is not available
         message("Warning: lookup_neuropsych_scales not found, using minimal hardcoded mappings")
-        
+
         # Minimal hardcoded mappings for critical tests
         test_score_type_map <- list(
           # Scaled score tests (mean=10, SD=3)
@@ -236,7 +236,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             "Letter-Number Sequencing",
             "Coding",
             "Symbol Search",
-            
+
             # RBANS subtests (not Index scores)
             "Digit Span",
             "Coding",
@@ -251,7 +251,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             "Story Recall",
             "Figure Recall"
           ),
-          
+
           # Standard score tests (mean=100, SD=15)
           "standard_score" = c(
             # IQ and Index Scores
@@ -270,7 +270,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             "Visual Memory Index",
             "Immediate Memory Index",
             "Delayed Memory Index",
-            
+
             # RBANS Index scores (not subtests)
             "RBANS Total Index",
             "Immediate Memory Index",
@@ -279,7 +279,7 @@ TableGT_ModifiedR6 <- R6::R6Class(
             "Attention Index",
             "Delayed Memory Index"
           ),
-          
+
           # T-score tests (mean=50, SD=10)
           "t_score" = c(
             # Behavior Ratings

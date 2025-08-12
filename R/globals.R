@@ -85,5 +85,7 @@ utils::globalVariables(c(
   "V2",
   "col2_paren",
   "index_pages",
-  "subtest_pages"
+  "subtest_pages",
+  "`%>%`",
+  "rater"
 ))

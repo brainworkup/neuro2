@@ -20,42 +20,45 @@ ConfigManagerR6 <- R6::R6Class(
   classname = "ConfigManagerR6",
   public = list(
     config = NULL,
-    
+
     #' @noRd
-    initialize = function(config_file = NULL, variables_file = "_variables.yml") {
+    initialize = function(
+      config_file = NULL,
+      variables_file = "_variables.yml"
+    ) {
       # Load base configuration
       self$config <- self$load_default_config()
-      
+
       # Override with YAML files if they exist
       if (!is.null(config_file) && file.exists(config_file)) {
         user_config <- yaml::read_yaml(config_file)
         self$config <- self$merge_configs(self$config, user_config)
       }
-      
+
       if (file.exists(variables_file)) {
         variables <- yaml::read_yaml(variables_file)
         self$config$variables <- variables
       }
-      
+
       # Override with environment variables
       self$apply_env_overrides()
-      
+
       # Validate configuration
       self$validate_config()
     },
-    
+
     #' @noRd
     load_default_config = function() {
       list(
         # Data processing
         data = list(
           input_dir = "data-raw/csv",
-          output_dir = "data", 
+          output_dir = "data",
           formats = c("csv", "parquet"),
           use_duckdb = TRUE
         ),
-        
-        # Report generation  
+
+        # Report generation
         report = list(
           template_dir = "inst/quarto/_extensions/brainworkup",
           output_dir = "output",
@@ -63,15 +66,25 @@ ConfigManagerR6 <- R6::R6Class(
           include_validity = TRUE,
           include_plots = TRUE
         ),
-        
+
         # Domain configuration
         domains = list(
-          enabled = c("iq", "academics", "verbal", "spatial", "memory", 
-                     "executive", "motor", "social", "adhd", "emotion"),
+          enabled = c(
+            "iq",
+            "academics",
+            "verbal",
+            "spatial",
+            "memory",
+            "executive",
+            "motor",
+            "social",
+            "adhd",
+            "emotion"
+          ),
           multi_rater = c("adhd", "emotion"),
           age_variants = c("adhd", "emotion")
         ),
-        
+
         # Processing options
         processing = list(
           parallel = FALSE,
@@ -79,7 +92,7 @@ ConfigManagerR6 <- R6::R6Class(
           verbose = TRUE,
           error_on_missing = FALSE
         ),
-        
+
         # Default variables
         variables = list(
           patient = "Unknown",
@@ -88,13 +101,13 @@ ConfigManagerR6 <- R6::R6Class(
         )
       )
     },
-    
+
     #' @noRd
     merge_configs = function(base, override) {
       # Deep merge of nested lists
       modifyList(base, override, keep.null = TRUE)
     },
-    
+
     #' @noRd
     apply_env_overrides = function() {
       # Check for common environment variables
@@ -104,7 +117,7 @@ ConfigManagerR6 <- R6::R6Class(
         NEURO2_OUTPUT_DIR = "data.output_dir",
         NEURO2_VERBOSE = "processing.verbose"
       )
-      
+
       for (env_var in names(env_vars)) {
         value <- Sys.getenv(env_var)
         if (nchar(value) > 0) {
@@ -112,12 +125,12 @@ ConfigManagerR6 <- R6::R6Class(
         }
       }
     },
-    
+
     #' @noRd
     set_nested_value = function(path, value) {
       path_parts <- strsplit(path, "\\.")[[1]]
       current <- self$config
-      
+
       # Navigate to parent
       for (i in seq_len(length(path_parts) - 1)) {
         if (!path_parts[i] %in% names(current)) {
@@ -125,7 +138,7 @@ ConfigManagerR6 <- R6::R6Class(
         }
         current <- current[[path_parts[i]]]
       }
-      
+
       # Set value (with type conversion)
       final_key <- path_parts[length(path_parts)]
       if (value %in% c("TRUE", "true")) {
@@ -138,7 +151,7 @@ ConfigManagerR6 <- R6::R6Class(
         current[[final_key]] <- value
       }
     },
-    
+
     #' @noRd
     validate_config = function() {
       # Check required directories exist or can be created
@@ -147,7 +160,7 @@ ConfigManagerR6 <- R6::R6Class(
         self$config$data$output_dir,
         self$config$report$output_dir
       )
-      
+
       for (dir in dirs_to_check) {
         if (!dir.exists(dir)) {
           if (self$config$processing$verbose) {
@@ -156,19 +169,21 @@ ConfigManagerR6 <- R6::R6Class(
           dir.create(dir, recursive = TRUE, showWarnings = FALSE)
         }
       }
-      
+
       # Validate patient information
-      if (is.null(self$config$variables$patient) || 
-          self$config$variables$patient == "Unknown") {
+      if (
+        is.null(self$config$variables$patient) ||
+          self$config$variables$patient == "Unknown"
+      ) {
         warning("Patient name not set. Using 'Unknown'.")
       }
     },
-    
+
     #' @noRd
     get = function(path, default = NULL) {
       path_parts <- strsplit(path, "\\.")[[1]]
       current <- self$config
-      
+
       for (part in path_parts) {
         if (part %in% names(current)) {
           current <- current[[part]]
@@ -176,16 +191,16 @@ ConfigManagerR6 <- R6::R6Class(
           return(default)
         }
       }
-      
+
       current
     },
-    
+
     #' @noRd
     set = function(path, value) {
       self$set_nested_value(path, value)
       invisible(self)
     },
-    
+
     #' @noRd
     save_config = function(file = "neuro2_config.yml") {
       yaml::write_yaml(self$config, file)
