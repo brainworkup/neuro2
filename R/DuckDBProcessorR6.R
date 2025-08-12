@@ -608,7 +608,7 @@ DuckDBProcessorR6 <- R6::R6Class(
           "motor" = "motor",
           "social_cognition" = "social",
           "adhd" = "adhd",
-          "emotional/personality" = "emotion",
+          "emotional/behavioral/personality" = "emotion",
           "adaptive_behavior" = "adaptive"
         )
 
