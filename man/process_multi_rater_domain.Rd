@@ -4,7 +4,13 @@
 \alias{process_multi_rater_domain}
 \title{Process a multi-rater domain}
 \usage{
-process_multi_rater_domain(domain_name, data_file, age_group = "adult")
+process_multi_rater_domain(
+  domain_name,
+  data_file,
+  age_group = "adult",
+  raters = NULL,
+  config = NULL
+)
 }
 \arguments{
 \item{domain_name}{Domain name}
@@ -12,9 +18,13 @@ process_multi_rater_domain(domain_name, data_file, age_group = "adult")
 \item{data_file}{Path to data file}
 
 \item{age_group}{Age group ("adult" or "child")}
+
+\item{raters}{Specific raters to process (NULL for all available)}
+
+\item{config}{Optional configuration}
 }
 \value{
-A DomainProcessorR6 object
+A list of DomainProcessorR6 objects by rater
 }
 \description{
 Process a multi-rater domain

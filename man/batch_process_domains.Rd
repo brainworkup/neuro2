@@ -2,20 +2,33 @@
 % Please edit documentation in R/domain_processor_utils.R
 \name{batch_process_domains}
 \alias{batch_process_domains}
-\title{Batch process multiple domains}
+\title{Batch process multiple domains with progress reporting}
 \usage{
-batch_process_domains(domains, data_file, age_group = "adult")
+batch_process_domains(
+  domains,
+  data_file,
+  age_group = "adult",
+  parallel = FALSE,
+  progress = TRUE,
+  config = NULL
+)
 }
 \arguments{
-\item{domains}{Vector of domain names}
+\item{domains}{Vector of domain names or keys}
 
 \item{data_file}{Path to data file}
 
 \item{age_group}{Age group}
+
+\item{parallel}{Whether to process in parallel}
+
+\item{progress}{Whether to show progress}
+
+\item{config}{Optional configuration}
 }
 \value{
-A list of DomainProcessorR6 objects
+A list of processor results
 }
 \description{
-Batch process multiple domains
+Batch process multiple domains with progress reporting
 }

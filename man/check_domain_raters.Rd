@@ -2,24 +2,20 @@
 % Please edit documentation in R/domain_processor_utils.R
 \name{check_domain_raters}
 \alias{check_domain_raters}
-\title{Check what raters are available for a specific domain and age group}
+\title{Check available raters for a domain and age group}
 \usage{
-check_domain_raters(
-  domain_name,
-  age_group = "adult",
-  test_lookup_file = "test_testname_rater.csv"
-)
+check_domain_raters(domain_name, age_group = "adult", test_lookup_file = NULL)
 }
 \arguments{
 \item{domain_name}{Domain name}
 
 \item{age_group}{Age group}
 
-\item{test_lookup_file}{Path to test lookup file}
+\item{test_lookup_file}{Path to test lookup file (optional)}
 }
 \value{
-A data frame with rater summary information
+A data frame with rater information
 }
 \description{
-Check what raters are available for a specific domain and age group
+Check available raters for a domain and age group
 }

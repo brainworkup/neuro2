@@ -2,16 +2,18 @@
 % Please edit documentation in R/domain_processor_utils.R
 \name{get_domain_info}
 \alias{get_domain_info}
-\title{Get domain information from the lookup table}
+\title{Get domain information from test lookup or registry}
 \usage{
-get_domain_info(test_lookup_file = "test_testname_rater.csv")
+get_domain_info(test_lookup_file = NULL, use_factory = TRUE)
 }
 \arguments{
-\item{test_lookup_file}{Path to test lookup file}
+\item{test_lookup_file}{Path to test lookup file (optional)}
+
+\item{use_factory}{Whether to use factory registry}
 }
 \value{
 A data frame with domain summary information
 }
 \description{
-Get domain information from the lookup table
+Get domain information from test lookup or registry
 }

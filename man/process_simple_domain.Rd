@@ -2,9 +2,15 @@
 % Please edit documentation in R/domain_processor_utils.R
 \name{process_simple_domain}
 \alias{process_simple_domain}
-\title{Process a simple domain (single rater)}
+\title{Process a simple single-rater domain}
 \usage{
-process_simple_domain(domain_name, data_file, age_group = "adult")
+process_simple_domain(
+  domain_name,
+  data_file,
+  age_group = "adult",
+  output_dir = "output",
+  config = NULL
+)
 }
 \arguments{
 \item{domain_name}{Domain name}
@@ -12,10 +18,14 @@ process_simple_domain(domain_name, data_file, age_group = "adult")
 \item{data_file}{Path to data file}
 
 \item{age_group}{Age group ("adult" or "child")}
+
+\item{output_dir}{Output directory for generated files}
+
+\item{config}{Optional configuration}
 }
 \value{
-A DomainProcessorR6 object
+A DomainProcessorR6 object or NULL on error
 }
 \description{
-Process a simple domain (single rater)
+Process a simple single-rater domain
 }
