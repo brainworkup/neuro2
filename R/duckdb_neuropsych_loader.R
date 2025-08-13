@@ -477,7 +477,6 @@ get_example_queries <- function() {
       ORDER BY percentile DESC
     "
   )
-
   return(queries)
 }
 

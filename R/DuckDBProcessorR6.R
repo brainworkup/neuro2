@@ -555,7 +555,7 @@ DuckDBProcessorR6 <- R6::R6Class(
         )
         result <- data %>%
           dplyr::group_by(!!!syms(group_vars)) %>%
-          dplyr::summarise(
+          dplyr::summarize(
             mean_z = mean(z, na.rm = TRUE),
             sd_z = sd(z, na.rm = TRUE),
             n = n(),

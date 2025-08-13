@@ -92,7 +92,7 @@ get_domain_info <- function(test_lookup_file = "test_testname_rater.csv") {
   # Summarize by domain
   domain_summary <- lookup %>%
     dplyr::group_by(domain) %>%
-    dplyr::summarise(
+    dplyr::summarize(
       raters = paste(unique(rater), collapse = ", "),
       age_groups = paste(unique(age_group), collapse = ", "),
       test_count = dplyr::n(),
@@ -136,7 +136,7 @@ check_domain_raters <- function(
 
   rater_summary <- available_tests %>%
     dplyr::group_by(rater) %>%
-    dplyr::summarise(
+    dplyr::summarize(
       tests = paste(test, collapse = ", "),
       test_count = dplyr::n(),
       .groups = "drop"

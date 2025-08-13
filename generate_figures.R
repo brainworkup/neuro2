@@ -18,7 +18,7 @@ source("R/DotplotR6.R")
 # Create a simple function to generate figures for a domain
 generate_domain_figures <- function(pheno, domain_name) {
   message(paste0("\nGenerating figures for ", domain_name, "..."))
-  
+
   # Read the data
   data_file <- paste0("data/", pheno, ".csv")
   if (!file.exists(data_file)) {
@@ -32,12 +32,12 @@ generate_domain_figures <- function(pheno, domain_name) {
   } else {
     data <- readr::read_csv(data_file, show_col_types = FALSE)
   }
-  
+
   if (nrow(data) == 0) {
     message(paste0("  - No data available for ", pheno))
     return(NULL)
   }
-  
+
   # Check if z-score columns exist, if not add them
   if (!"z_mean_subdomain" %in% names(data)) {
     # Convert percentile to z-scores
@@ -48,10 +48,10 @@ generate_domain_figures <- function(pheno, domain_name) {
         z_mean_narrow = z
       )
   }
-  
+
   # Create subdomain figure
   subdomain_file <- paste0("fig_", pheno, "_subdomain.svg")
-  
+
   # Check if subdomain column exists
   if ("subdomain" %in% names(data) && length(unique(data$subdomain)) > 0) {
     dotplot_subdomain <- DotplotR6$new(
@@ -68,15 +68,17 @@ generate_domain_figures <- function(pheno, domain_name) {
       geom_point(size = 5) +
       theme_minimal() +
       labs(title = paste(domain_name, "Scores"))
-    
+
     ggsave(subdomain_file, p, width = 8, height = 6, dpi = 300)
     message(paste0("  - Created placeholder ", subdomain_file))
   }
-  
+
   # Create narrow figure for domains that use it
-  if (pheno %in% c("iq", "memory", "executive")) {
+  if (
+    pheno %in% c("iq", "academics", "verbal", "memory", "executive", "motor")
+  ) {
     narrow_file <- paste0("fig_", pheno, "_narrow.svg")
-    
+
     if ("narrow" %in% names(data) && length(unique(data$narrow)) > 0) {
       dotplot_narrow <- DotplotR6$new(
         data = data,
@@ -88,7 +90,7 @@ generate_domain_figures <- function(pheno, domain_name) {
       message(paste0("  - Created ", narrow_file))
     }
   }
-  
+
   return(subdomain_file)
 }
 

@@ -5,9 +5,9 @@
 #' @return Returns a numeric value of the T-score for the Rey Complex Figure, Copy trial.
 #' @details This function takes the raw score and age of a participant and calculates the Rey Complex Figure, Copy trial T-score using the formula provided by \emph{Manly et al. (2000)}. It also returns the predicted score and standard deviation for the trial.
 #' @references Manly, J.J., Schinka, J.A., & Guerrero, L. (2000). Normative Data on the Rey Complex Figure Test in Older Adults. Archives of Clinical Neuropsychology, 15(7), 613-621.
-#' @rdname rocft_copy_t_score
+#' @rdname rocft_copy
 #' @export
-rocft_copy_t_score <- function(age, raw_score) {
+rocft_copy <- function(age, raw_score) {
   MIN_AGE <- 16
   MAX_AGE <- 89
 
@@ -75,9 +75,9 @@ rocft_copy_t_score <- function(age, raw_score) {
 #' @return Returns a numeric value of the T-score for the Rey Complex Figure, Copy trial.
 #' @details This function takes the raw score and age of a participant and calculates the Rey Complex Figure, Copy trial T-score using the formula provided by \emph{Manly et al. (2000)}. It also returns the predicted score and standard deviation for the trial.
 #' @references Manly, J.J., Schinka, J.A., & Guerrero, L. (2000). Normative Data on the Rey Complex Figure Test in Older Adults. Archives of Clinical Neuropsychology, 15(7), 613-621.
-#' @rdname rocft_recall_t_score
+#' @rdname rocft_recall
 #' @export
-rocft_recall_t_score <- function(age, raw_score) {
+rocft_recall <- function(age, raw_score) {
   MIN_AGE <- 16
   MAX_AGE <- 89
 
@@ -146,9 +146,9 @@ rocft_recall_t_score <- function(age, raw_score) {
 #' @param age A numeric value of the age of the participant. Must be between 16 and 89 years old.
 #' @param raw_score A numeric value of the raw score from the Rey Complex Figure, Copy trial.
 #' @return Returns a numeric value of the T-score for the Rey Complex Figure, Copy trial.
-#' @rdname pegboard_dominant_hand
+#' @rdname pegboard_dominant
 #' @export
-pegboard_dominant_hand <- function(age, raw_score) {
+pegboard_dominant <- function(age, raw_score) {
   MIN_AGE <- 20
   MAX_AGE <- 64
 
@@ -216,9 +216,9 @@ pegboard_dominant_hand <- function(age, raw_score) {
 #' @param age A numeric value of the age of the participant. Must be between 16 and 89 years old.
 #' @param raw_score A numeric value of the raw score from the GPT nondom.
 #' @return Returns a numeric value of the T-score for the GPT nondom hand trial.
-#' @rdname pegboard_nondominant_hand
+#' @rdname pegboard_nondominant
 #' @export
-pegboard_nondominant_hand <- function(age, raw_score) {
+pegboard_nondominant <- function(age, raw_score) {
   MIN_AGE <- 20
   MAX_AGE <- 64
 
@@ -302,9 +302,10 @@ pegboard_nondominant_hand <- function(age, raw_score) {
 #' * \code{z_score}: Reversed z-score: (mean - raw) / sd.
 #' * \code{t_score}: Reversed t-score: 50 + 10 * z-score.
 #' * \code{percentile}: Percentile rank (pnorm(z) * 100).
+#' @rdname tmt_a
 #' @export
 #'
-score_tmtA <- function(age, raw_score) {
+tmt_a <- function(age, raw_score) {
   #--- Adult norms (Appendix 4M) ---#
   adult_norms <- tibble::tribble(
     ~AgeMin,
@@ -480,9 +481,10 @@ score_tmtA <- function(age, raw_score) {
 #' * \code{z_score}: Reversed z-score: (mean - raw) / sd.
 #' * \code{t_score}: Reversed t-score: 50 + 10 * z-score.
 #' * \code{percentile}: Percentile rank (pnorm(z) * 100).
+#' @rdname tmt_b
 #' @export
 #'
-score_tmtB <- function(age, raw_score) {
+tmt_b <- function(age, raw_score) {
   #--- Adult norms for TMT-B (Appendix 4M) ---#
   adult_norms_B <- tibble::tribble(
     ~AgeMin,

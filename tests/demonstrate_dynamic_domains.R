@@ -55,7 +55,7 @@ extract_domains_from_data <- function(data_dir = "data-raw/csv/") {
 
   domains_by_file <- all_domains %>%
     group_by(file) %>%
-    summarise(domains = paste(domain, collapse = ", "))
+    summarize(domains = paste(domain, collapse = ", "))
 
   print(domains_by_file)
 

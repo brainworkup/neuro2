@@ -116,7 +116,7 @@ processor$process(generate_domain_files = TRUE)
 # Simple, explicit instantiation
 processor <- DomainProcessorR6$new(
   domains = "Behavioral/Emotional/Social",
-  pheno = "behavioral_emotional_social",
+  pheno = "emotion",
   input_file = "neurobehav.csv", 
   age_group = "child"  # Explicit, not guessed
 )
