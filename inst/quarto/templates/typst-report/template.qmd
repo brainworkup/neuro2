@@ -55,42 +55,21 @@ patient <- Sys.getenv("PATIENT")
 #| output: asis
 #| echo: false
 
-# Define all possible domain files in canonical order
-# Up to 14 total domains, with up to 10-12 domains per patient
-all_possible_domains <- c(
-  "_02-01_iq.qmd",
-  "_02-02_academics.qmd",
-  "_02-03_verbal.qmd",
-  "_02-04_spatial.qmd",
-  "_02-05_memory.qmd",
-  "_02-06_executive.qmd",
-  "_02-07_motor.qmd",
-  "_02-08_social.qmd",
-  "_02-09_adhd_adult.qmd",
-  "_02-09_adhd_child.qmd",
-  "_02-10_emotion_adult.qmd",
-  "_02-10_emotion_child.qmd",
-  "_02-11_adaptive.qmd",
-  "_02-12_daily_living.qmd"
-)
+# Only include files that were actually generated
+domain_files <- list.files(pattern = "^_02-[0-9]+_.*\\.qmd$", full.names = FALSE)
 
-# Check which domain files actually exist and include them
-existing_files <- character()
-for (file in all_possible_domains) {
-  # Check if the output file exists (pre-processed version without R code)
-  output_file <- gsub("\\.qmd$", "_output.qmd", file)
-  if (file.exists(output_file)) {
-    existing_files <- c(existing_files, output_file)
-  } else if (file.exists(file)) {
-    # Fall back to original file if output doesn't exist
-    existing_files <- c(existing_files, file)
-  }
-}
+# Remove backup files and timestamped files
+domain_files <- domain_files[!grepl("_[0-9]+_[0-9]+\\.qmd$", domain_files)]
+domain_files <- domain_files[!grepl("\\.bak$", domain_files)]
 
-# Generate include statements for existing domain files
-if (length(existing_files) > 0) {
-  cat("<!-- Including", length(existing_files), "domain files -->\n")
-  for (file in existing_files) {
+# Sort the files numerically
+if (length(domain_files) > 0) {
+  # Extract the numeric part for sorting
+  domain_numbers <- as.numeric(gsub("^_02-([0-9]+)_.*", "\\1", domain_files))
+  domain_files <- domain_files[order(domain_numbers)]
+
+  cat("<!-- Including", length(domain_files), "domain files -->\n")
+  for (file in domain_files) {
     cat(sprintf("\n{{< include %s >}}\n", file))
   }
 } else {

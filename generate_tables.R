@@ -77,9 +77,6 @@ generate_domain_table <- function(pheno, domain_name) {
     fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
   }
 
-  # Create groups based on test names that use each score type
-  grp_list <- score_types_list
-
   # Define which groups support which score types (for dynamic footnotes)
   dynamic_grp <- score_types_list
 
@@ -103,7 +100,7 @@ generate_domain_table <- function(pheno, domain_name) {
     grp_list = grp_list,
     dynamic_grp = dynamic_grp
   )
-
+    grp_list = score_types_list,
   # Get the table object
   tbl <- table_gt$build_table()
 
@@ -126,17 +123,28 @@ domains_to_process <- list(
   list(pheno = "emotion", domain = "Behavioral/Emotional/Social")
 )
 
-message("Generating tables for all domains...")
-generated_tables <- list()
+  list(pheno = "emotion", domain = "Behavioral/Emotional/Social"),
+  list(pheno = "adaptive", domain = "Adaptive Functioning")
+)enerated_tables <- list()
 
 for (domain_info in domains_to_process) {
   table_name <- generate_domain_table(domain_info$pheno, domain_info$domain)
-  if (!is.null(table_name)) {
-    generated_tables[[domain_info$pheno]] <- table_name
+for (domain_info in domains_to_process) {
+  # Check if the data file exists before attempting to generate tables
+  data_file <- paste0("data/", domain_info$pheno, ".csv")
+  if (!file.exists(data_file)) {
+    data_file <- paste0("data/", domain_info$pheno, ".parquet")
   }
-}
-
-# List generated files
+  
+  if (file.exists(data_file)) {
+    table_name <- generate_domain_table(domain_info$pheno, domain_info$domain)
+    if (!is.null(table_name)) {
+      generated_tables[[domain_info$pheno]] <- table_name
+    }
+  } else {
+    message(paste0("\nSkipping ", domain_info$domain, " - no data file exists"))
+  }
+} List generated files
 message("\n✅ Table generation complete!")
 message("\nGenerated files:")
 table_files <- list.files(pattern = "^table_.*\\.png$", full.names = FALSE)

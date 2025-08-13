@@ -102,16 +102,30 @@ domains_to_process <- list(
   list(pheno = "spatial", domain = "Visual Perception/Construction"),
   list(pheno = "memory", domain = "Memory"),
   list(pheno = "executive", domain = "Attention/Executive"),
-  list(pheno = "motor", domain = "Motor")
+  list(pheno = "emotion", domain = "Motor"),
+  list(pheno = "adaptive", domain = "Adaptive Functioning")
 )
 
 message("Generating figures for all domains...")
 generated_figures <- list()
 
 for (domain_info in domains_to_process) {
-  figure_name <- generate_domain_figures(domain_info$pheno, domain_info$domain)
-  if (!is.null(figure_name)) {
-    generated_figures[[domain_info$pheno]] <- figure_name
+  # Check if the data file exists before attempting to generate figures
+  data_file <- paste0("data/", domain_info$pheno, ".csv")
+  if (!file.exists(data_file)) {
+    data_file <- paste0("data/", domain_info$pheno, ".parquet")
+  }
+
+  if (file.exists(data_file)) {
+    figure_name <- generate_domain_figures(
+      domain_info$pheno,
+      domain_info$domain
+    )
+    if (!is.null(figure_name)) {
+      generated_figures[[domain_info$pheno]] <- figure_name
+    }
+  } else {
+    message(paste0("\nSkipping ", domain_info$domain, " - no data file exists"))
   }
 }
 

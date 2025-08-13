@@ -12,6 +12,13 @@ log_message <- function(message, type = "INFO") {
 
 log_message("Starting domain generation module", "DOMAINS")
 
+# Source validation module
+if (file.exists("validate_domain_data.R")) {
+  source("validate_domain_data.R")
+} else {
+  log_message("Warning: validate_domain_data.R not found, proceeding without validation", "WARNING")
+}
+
 # Load required packages
 required_packages <- c(
   "dplyr",
@@ -75,22 +82,33 @@ read_data_file <- function(base_name, format = data_format) {
 
 # Read the neurocog and neurobehav data
 neurocog_data <- read_data_file("neurocog")
-neurobehav_data <- read_data_file("neurobehav")
+# Function to determine patient type (adult or child) based on age
+determine_patient_type <- function() {
+  # Read config to get patient age
+  config <- yaml::read_yaml("config.yml")
+  age <- config$patient$age
 
-if (is.null(neurocog_data) && is.null(neurobehav_data)) {
-  log_message("No data available for domain generation", "ERROR")
-  stop("No data available for domain generation")
+  # Default to child if age is not specified
+  if (is.null(age)) {
+    return("child")
+  }
+
+  # Determine type based on age
+  if (age >= 18) {
+    return("adult")
+  } else {
+    return("child")
+  }
+
+  if (!is.null(neurobehav_data) && "domain" %in% names(neurobehav_data)) {
+    behav_domains <- unique(neurobehav_data$domain)
+    behav_domains <- behav_domains[!is.na(behav_domains)]
+    domains <- c(domains, behav_domains)
+  }
+
+  domains <- unique(domains)
+  log_message(paste("Found", length(domains), "unique domains"), "DOMAINS")
 }
-
-# Get unique domains
-domains <- character()
-if (!is.null(neurocog_data) && "domain" %in% names(neurocog_data)) {
-  cog_domains <- unique(neurocog_data$domain)
-  cog_domains <- cog_domains[!is.na(cog_domains)]
-  domains <- c(domains, cog_domains)
-}
-
-if (!is.null(neurobehav_data) && "domain" %in% names(neurobehav_data)) {
   behav_domains <- unique(neurobehav_data$domain)
   behav_domains <- behav_domains[!is.na(behav_domains)]
   domains <- c(domains, behav_domains)
@@ -190,72 +208,201 @@ emotion_domains <- c(
   "Behavioral/Emotional/Social",
   "Emotional/Behavioral/Personality",
   "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems"
-)
-
-# Generate domain files using R6 class
-for (domain in domains) {
-  # Skip emotion-related domains - they will be processed together in the special handling section
-  if (domain %in% emotion_domains) {
-    log_message(
-      paste(
-        "Skipping individual processing of emotion domain:",
-        domain,
-        "- will be processed in consolidated section"
-      ),
-      "DOMAINS"
-    )
-    next
-  }
-
-  # Get config for this domain
-  config <- domain_config[[domain]]
-
-  if (is.null(config)) {
-    log_message(paste("No configuration found for domain:", domain), "WARNING")
-    next
-  }
-
-  # Determine input file
-  input_file <- config$input_file
-
-  # Check if the input file exists with different formats
-  if (!file.exists(input_file)) {
-    # Try other formats
-    base_name <- gsub("\\.(parquet|feather|csv)$", "", input_file)
-
-    if (file.exists(paste0(base_name, ".parquet"))) {
-      input_file <- paste0(base_name, ".parquet")
-    } else if (file.exists(paste0(base_name, ".feather"))) {
-      input_file <- paste0(base_name, ".feather")
-    } else if (file.exists(paste0(base_name, ".csv"))) {
-      input_file <- paste0(base_name, ".csv")
-    } else {
-      log_message(paste("Input file not found for domain:", domain), "WARNING")
+# Process domains based on validation results if available
+if (exists("valid_domains") && is.list(valid_domains)) {
+  # Use validated domains
+  for (domain_name in names(valid_domains)) {
+    # Skip consolidated emotion domain for now
+    if (domain_name == "Emotion_Consolidated") {
+      continue
+    }
+    
+    domain_info <- valid_domains[[domain_name]]
+    config <- domain_config[[domain_name]]
+    
+    if (is.null(config)) {
+      log_message(paste("No configuration found for domain:", domain_name), "WARNING")
       next
     }
-  }
-
-  # Create processor
-  tryCatch(
-    {
-      log_message(paste("Processing domain:", domain), "DOMAINS")
-
-      processor <- DomainProcessorR6$new(
-        domains = domain,
-        pheno = config$pheno,
-        input_file = input_file
+    
+    # Skip emotion-related domains - they will be processed together
+    if (domain_name %in% emotion_domains) {
+      log_message(
+        paste(
+          "Skipping individual processing of emotion domain:",
+          domain_name,
+          "- will be processed in consolidated section"
+        ),
+        "DOMAINS"
       )
+      next
+    }
+    
+    # Determine input file
+    input_file <- config$input_file
+    
+    # Check if the input file exists with different formats
+    if (!file.exists(input_file)) {
+      # Try other formats
+      base_name <- gsub("\\.(parquet|feather|csv)$", "", input_file)
+      
+      if (file.exists(paste0(base_name, ".parquet"))) {
+        input_file <- paste0(base_name, ".parquet")
+      } else if (file.exists(paste0(base_name, ".feather"))) {
+        input_file <- paste0(base_name, ".feather")
+      } else if (file.exists(paste0(base_name, ".csv"))) {
+        input_file <- paste0(base_name, ".csv")
+      } else {
+        log_message(paste("Input file not found for domain:", domain_name), "WARNING")
+        next
+      }
+    }
+    
+    # Create processor
+    tryCatch(
+      {
+        log_message(paste("Processing validated domain:", domain_name), "DOMAINS")
+        
+        processor <- DomainProcessorR6$new(
+          domains = domain_name,
+          pheno = config$pheno,
+          input_file = input_file
+        )
+        
+        # Load and process data
+        processor$load_data()
+        processor$filter_by_domain()
+        
+        # Check if we have data for this domain
+        if (is.null(processor$data) || nrow(processor$data) == 0) {
+          log_message(paste("No data found for domain:", domain_name), "WARNING")
+          next
+        }
+        
+        # Generate domain QMD file
+        generated_file <- processor$generate_domain_qmd()
+        log_message(paste("Generated:", generated_file), "DOMAINS")
+        
+        # Also generate text file
+        processor$generate_domain_text_qmd()
+      },
+      error = function(e) {
+        log_message(
+          paste("Error processing domain", domain_name, ":", e$message),
+          "ERROR"
+        )
+      }
+    )
+  }
+} else {
+  # Original logic (fallback)
+  # Generate domain files using R6 class
+  for (domain in domains) {
+    # Skip emotion-related domains - they will be processed together in the special handling section
+    if (domain %in% emotion_domains) {
+      log_message(
+# Special handling for multi-rater domains (emotion and ADHD)
+# Check if we should process emotion domains
+should_process_emotion <- FALSE
+emotion_domains_to_process <- character()
 
-      # Load and process data
-      processor$load_data()
-      processor$filter_by_domain()
+if (exists("valid_domains") && "Emotion_Consolidated" %in% names(valid_domains)) {
+  should_process_emotion <- TRUE
+  emotion_domains_to_process <- valid_domains[["Emotion_Consolidated"]]$domains
+} else {
+  # Check the traditional way
+  emotion_domains_present <- intersect(domains, emotion_domains)
+  
+  # Check if any emotion domains have data
+  emotion_has_data <- FALSE
+  for (emotion_domain in emotion_domains_present) {
+    if (check_domain_has_data(emotion_domain, neurobehav_data)) {
+      emotion_has_data <- TRUE
+      emotion_domains_to_process <- c(emotion_domains_to_process, emotion_domain)
+    }
+  }
+  
+  should_process_emotion <- length(emotion_domains_to_process) > 0 && emotion_has_data
+}
+        processor <- DomainProcessorR6$new(
+          domains = emotion_domains_to_process,
+          pheno = "emotion",
+          input_file = "data/neurobehav.parquet"
+        )uld_process_emotion) {
+    }
 
-      # Check if we have data for this domain
-      if (is.null(processor$data) || nrow(processor$data) == 0) {
-        log_message(paste("No data found for domain:", domain), "WARNING")
+    # Determine input file
+    input_file <- config$input_file
+
+    # Check if the input file exists with different formats
+    if (!file.exists(input_file)) {
+      # Try other formats
+      base_name <- gsub("\\.(parquet|feather|csv)$", "", input_file)
+
+      if (file.exists(paste0(base_name, ".parquet"))) {
+        input_file <- paste0(base_name, ".parquet")
+      } else if (file.exists(paste0(base_name, ".feather"))) {
+          # Generate rater-specific text files only if data exists
+          if (processor$check_rater_data_exists("self")) {
+            processor$generate_domain_text_qmd(report_type = "self")
+          }
+          if (processor$check_rater_data_exists("parent")) {
+            processor$generate_domain_text_qmd(report_type = "parent")
+          }
+          if (processor$check_rater_data_exists("teacher")) {
+            processor$generate_domain_text_qmd(report_type = "teacher")
+          }
+        log_message(paste("Input file not found for domain:", domain), "WARNING")
+        next
+      }
+    }
+
+  # Generate ADHD child files
+  adhd_should_process <- FALSE
+  if (exists("valid_domains") && "ADHD" %in% names(valid_domains)) {
+    adhd_should_process <- TRUE
+  } else {
+    adhd_should_process <- "ADHD" %in% domains && check_domain_has_data("ADHD", neurobehav_data)
+  }
+  
+  if (adhd_should_process) {
+    if (grepl("neurocog", input_file)) {
+      has_data <- check_domain_has_data(domain, neurocog_data)
+    } else if (grepl("neurobehav", input_file)) {
+      has_data <- check_domain_has_data(domain, neurobehav_data)
+    }
+    
+    if (!has_data) {
+      log_message(paste("No data found for domain:", domain, "- skipping file generation"), "WARNING")
+      next
+    }
+
+    # Create processor
+    tryCatch(
+      {
+        log_message(paste("Processing domain:", domain), "DOMAINS")
+
+        processor <- DomainProcessorR6$new(
+          domains = domain,
+          pheno = config$pheno,
+          input_file = input_file
+        )
+
+        # Load and process data
+        processor$load_data()
+} else {
+  # Generate adult-specific files
+  # Generate emotion adult files if emotion domains should be processed
+  if (should_process_emotion) {
+      error = function(e) {
+        log_message(
+          paste("Error processing domain", domain, ":", e$message),
+          "ERROR"
+        )
+      }
+    )
+  }
+}       log_message(paste("No data found for domain:", domain), "WARNING")
         next
       }
 
@@ -280,11 +427,28 @@ for (domain in domains) {
 if (patient_type == "child") {
   # Generate emotion child files if any emotion domains are present
   emotion_domains_present <- intersect(domains, emotion_domains)
-  if (length(emotion_domains_present) > 0) {
+  
+  # Check if any emotion domains have data
+  emotion_has_data <- FALSE
+  for (emotion_domain in emotion_domains_present) {
+    if (check_domain_has_data(emotion_domain, neurobehav_data)) {
+      emotion_has_data <- TRUE
+      break
+    }
+  }
+  
+  if (length(emotion_domains_present) > 0 && emotion_has_data) {
     tryCatch(
       {
-        log_message(
-          "Processing consolidated emotion domain for child",
+  # Generate ADHD adult files
+  adhd_should_process <- FALSE
+  if (exists("valid_domains") && "ADHD" %in% names(valid_domains)) {
+    adhd_should_process <- TRUE
+  } else {
+    adhd_should_process <- "ADHD" %in% domains && check_domain_has_data("ADHD", neurobehav_data)
+  }
+  
+  if (adhd_should_process) {
           "DOMAINS"
         )
 
@@ -322,7 +486,7 @@ if (patient_type == "child") {
   }
 
   # Generate ADHD child files
-  if ("ADHD" %in% domains) {
+  if ("ADHD" %in% domains && check_domain_has_data("ADHD", neurobehav_data)) {
     tryCatch(
       {
         log_message("Processing ADHD domain for child", "DOMAINS")
@@ -358,7 +522,17 @@ if (patient_type == "child") {
   # Generate adult-specific files
   # Generate emotion adult files if any emotion domains are present
   emotion_domains_present <- intersect(domains, emotion_domains)
-  if (length(emotion_domains_present) > 0) {
+  
+  # Check if any emotion domains have data
+  emotion_has_data <- FALSE
+  for (emotion_domain in emotion_domains_present) {
+    if (check_domain_has_data(emotion_domain, neurobehav_data)) {
+      emotion_has_data <- TRUE
+      break
+    }
+  }
+  
+  if (length(emotion_domains_present) > 0 && emotion_has_data) {
     tryCatch(
       {
         log_message(
@@ -395,7 +569,7 @@ if (patient_type == "child") {
   }
 
   # Generate ADHD adult files
-  if ("ADHD" %in% domains) {
+  if ("ADHD" %in% domains && check_domain_has_data("ADHD", neurobehav_data)) {
     tryCatch(
       {
         log_message("Processing ADHD domain for adult", "DOMAINS")

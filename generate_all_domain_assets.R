@@ -4,7 +4,7 @@
 
 # Ensure warnings are not converted to errors
 old_warn <- getOption("warn")
-options(warn = 1)  # Print warnings as they occur but don't convert to errors
+options(warn = 1) # Print warnings as they occur but don't convert to errors
 
 # Load required libraries
 library(here)
@@ -48,7 +48,7 @@ generate_domain_assets <- function(
   scales <- get(scales_var_name, envir = .GlobalEnv)
 
   # Determine input file based on domain
-  input_file <- if (pheno %in% c("emotion", "adhd", "social")) {
+  input_file <- if (pheno %in% c("emotion", "adhd")) {
     "data/neurobehav.parquet"
   } else {
     "data/neurocog.parquet"
@@ -285,7 +285,12 @@ domains_config <- list(
     scales_var = "scales_emotion_child",
     plot_title_var = "plot_title_emotion_child_self",
     informant_type = "self",
-    test_filter = c("pai_adol", "pai_adol_clinical", "basc3_srp_adolescent", "basc3_srp_child")
+    test_filter = c(
+      "pai_adol",
+      "pai_adol_clinical",
+      "basc3_srp_adolescent",
+      "basc3_srp_child"
+    )
   ),
   # Emotion child domain - parent report
   list(
@@ -294,7 +299,11 @@ domains_config <- list(
     scales_var = "scales_emotion_child",
     plot_title_var = "plot_title_emotion_child_parent",
     informant_type = "parent",
-    test_filter = c("basc3_prs_adolescent", "basc3_prs_child", "basc3_prs_preschool")
+    test_filter = c(
+      "basc3_prs_adolescent",
+      "basc3_prs_child",
+      "basc3_prs_preschool"
+    )
   ),
   list(
     domain_name = "Social Cognition",
@@ -321,7 +330,9 @@ for (config in domains_config) {
       cat(paste0(
         "  ✗ Error processing ",
         config$pheno,
-        if (!is.null(config$informant_type)) paste0(" (", config$informant_type, ")"),
+        if (!is.null(config$informant_type)) {
+          paste0(" (", config$informant_type, ")")
+        },
         ": ",
         e$message,
         "\n\n"
