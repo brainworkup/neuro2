@@ -2,6 +2,10 @@
 
 # Script to generate all missing domain table and figure files
 
+# Ensure warnings are not converted to errors
+old_warn <- getOption("warn")
+options(warn = 1)  # Print warnings as they occur but don't convert to errors
+
 # Load required libraries
 library(here)
 library(dplyr)
@@ -362,3 +366,6 @@ if (length(svg_files) > 0) {
     cat(paste0("  - ", f, "\n"))
   }
 }
+
+# Restore original warning setting
+options(warn = old_warn)

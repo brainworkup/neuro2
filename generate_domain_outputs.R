@@ -3,6 +3,10 @@
 # This script processes domain .qmd files and creates clean versions
 # with only the output content (no R code blocks)
 
+# Ensure warnings are not converted to errors
+old_warn <- getOption("warn")
+options(warn = 1)  # Print warnings as they occur but don't convert to errors
+
 library(knitr)
 library(here)
 
@@ -110,3 +114,6 @@ for (file in domain_files) {
 }
 
 cat("Domain output processing complete.\n")
+
+# Restore original warning setting
+options(warn = old_warn)

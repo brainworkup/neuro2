@@ -122,7 +122,8 @@ domains_to_process <- list(
   list(pheno = "spatial", domain = "Visual Perception/Construction"),
   list(pheno = "memory", domain = "Memory"),
   list(pheno = "executive", domain = "Attention/Executive"),
-  list(pheno = "motor", domain = "Motor")
+  list(pheno = "motor", domain = "Motor"),
+  list(pheno = "emotion", domain = "Behavioral/Emotional/Social")
 )
 
 message("Generating tables for all domains...")

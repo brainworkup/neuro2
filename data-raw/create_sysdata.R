@@ -1282,6 +1282,9 @@ safe_use_data_internal(
   )
 )
 
+
+## Academics ---------------------------------------------------------------
+
 #' Academic Achievement Plot Title
 #'
 #' @description
@@ -1292,7 +1295,15 @@ safe_use_data_internal(
 #' @name plot_title_academics
 #' @format A character string
 #' @keywords internal data
-plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. _Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
+plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
+
+# For the plot titles
+safe_use_data_internal(
+  plot_title_academics = plot_title_academics,
+  overwrite = c(
+    "plot_title_academics"
+  )
+)
 
 #' Verbal and Language Functioning Plot Title
 #'

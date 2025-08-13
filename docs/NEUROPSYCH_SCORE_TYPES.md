@@ -34,20 +34,20 @@ The current test-to-score-type mappings are:
 ### Scaled Score Tests (Mean=10, SD=3)
 
 #### WISC-V / WAIS-IV / WPPSI-IV Subtests
-- WISC-V, Similarities, Vocabulary, Comprehension
+- Similarities, Vocabulary, Comprehension
 - Block Design, Visual Puzzles, Matrix Reasoning
 - Figure Weights, Picture Concepts, Digit Span
 - Letter-Number Sequencing, Coding, Symbol Search
 - Cancellation
 
 #### WMS Subtests
-- WMS-IV, Logical Memory, Verbal Paired Associates
+- Logical Memory, Verbal Paired Associates
 - Designs, Visual Reproduction, Spatial Addition
 - Symbol Span, Logical Memory II, Verbal Paired Associates II
 - Designs II, Visual Reproduction II
 
 #### D-KEFS Subtests
-- D-KEFS, Trail Making, Verbal Fluency, Design Fluency
+- Trail Making, Verbal Fluency, Design Fluency
 - Color-Word Interference, Tower, Word Context
 - Proverb, Twenty Questions
 
@@ -60,7 +60,7 @@ The current test-to-score-type mappings are:
 - Quantitative Reasoning (QRI)
 
 #### Academic Achievement Tests
-- WIAT-III, Oral Reading Fluency, Reading Comprehension
+- Oral Reading Fluency, Reading Comprehension
 - Math Problem Solving, Numerical Operations, Word Reading
 - Pseudoword Decoding, Oral Expression, Listening Comprehension
 - Written Expression, Spelling, Essay Composition
@@ -89,15 +89,12 @@ Several neuropsychological test batteries contain both subtests and composite/in
 ### T-Score Tests (Mean=50, SD=10)
 
 #### Behavior Ratings
-- BRIEF, BASC, Conners, CBCL, SCL-90-R
+- BASC-3, Conners, Brown EF/A
 - Beck Depression Inventory, Beck Anxiety Inventory
-- Global Severity Index, Positive Symptom Total
-- Positive Symptom Distress Index, Somatization, Obsessive-Compulsive
-- Interpersonal Sensitivity, Depression, Anxiety, Hostility
-- Phobic Anxiety, Paranoid Ideation, Psychoticism
+- PAI
 
 #### Executive Function Measures
-- WCST, Perseverative Errors, Nonperseverative Errors
+- Perseverative Errors, Nonperseverative Errors
 - Categories Completed, Trials to First Category
 - Failure to Maintain Set, Learning to Learn
 - Trail Making Test, TMT Part A, TMT Part B
@@ -119,19 +116,19 @@ test_score_type_map <- list(
   # Scaled score tests (mean=10, SD=3)
   "scaled_score" = c(
     # Existing tests...
-    
+
     # Add your new scaled score tests here
     "NEW-TEST-NAME", "New Subtest 1", "New Subtest 2"
   ),
-  
+
   # Standard score tests (mean=100, SD=15)
   "standard_score" = c(
     # Existing tests...
-    
+
     # Add your new standard score tests here
     "NEW-STANDARD-TEST", "New Standard Subtest 1"
   ),
-  
+
   # Other score types...
 )
 ```

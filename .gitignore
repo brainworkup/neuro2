@@ -189,3 +189,13 @@ heads_MainOrchestrator_vs_Neuro2MainR6.txt
 data-raw/csv/test_data.csv
 _02-02_academics_output.qmd
 _02-*_*_output.qmd
+R/TableGTR6.R
+_02-08_social.qmd
+_02-09_adhd_adult_text_observer.qmd
+_02-08_social_text.qmd
+_02-09_adhd_adult_text_self.qmd
+_02-09_adhd_adult.qmd
+_02-11_adaptive_text.qmd
+_02-11_adaptive.qmd
+_02-12_daily_living_text.qmd
+_02-12_daily_living.qmd

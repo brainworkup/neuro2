@@ -2,6 +2,10 @@
 # NOT GREAT SO FAR
 # Script to generate proper domain files using DomainProcessorR6
 
+# Ensure warnings are not converted to errors
+old_warn <- getOption("warn")
+options(warn = 1)  # Print warnings as they occur but don't convert to errors
+
 # Load required libraries
 library(here)
 library(R6)
@@ -273,3 +277,6 @@ for (dom in remaining_domains) {
 }
 
 cat("\nDomain file generation complete!\n")
+
+# Restore original warning setting
+options(warn = old_warn)

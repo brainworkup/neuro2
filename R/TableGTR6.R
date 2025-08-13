@@ -300,11 +300,9 @@ TableGTR6 <- R6::R6Class(
           "standard_score" = c(
             # IQ and Index Scores
             "Full Scale (FSIQ)",
-            "Full Scale IQ",
+            "Full Scale IQ (FSIQ)",
             "Verbal Comprehension (VCI)",
-            "Verbal Comprehension Index",
             "Perceptual Reasoning (PRI)",
-            "Perceptual Reasoning Index",
             "Working Memory (WMI)",
             "Working Memory Index",
             "Processing Speed (PSI)",
@@ -314,11 +312,8 @@ TableGTR6 <- R6::R6Class(
             "Cognitive Proficiency (CPI)",
             "Cognitive Proficiency Index",
             "Visual Spatial (VSI)",
-            "Visual Spatial Index",
             "Fluid Reasoning (FRI)",
-            "Fluid Reasoning Index",
             "Quantitative Reasoning (QRI)",
-            "Quantitative Reasoning Index",
 
             # RBANS Index scores (not subtests)
             "RBANS Total Index",
@@ -332,16 +327,18 @@ TableGTR6 <- R6::R6Class(
 
           # T-score tests (mean=50, SD=10)
           "t_score" = c(
-            "BASC3",
             "BASC-3",
             "Conners",
-            "Conners-3",
+            "Conners-4",
             "Beck Depression Inventory",
             "BDI",
             "Beck Anxiety Inventory",
             "BAI",
-            "BRIEF",
-            "BRIEF-2"
+            "Trail Making Test",
+            "ROCFT",
+            "Rey-Osterrieth Complex Figure",
+            "Grooved Pegboard",
+            "NIH EXAMINER"
           )
         )
       }

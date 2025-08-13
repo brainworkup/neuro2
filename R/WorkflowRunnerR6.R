@@ -21,7 +21,8 @@ WorkflowRunnerR6 <- R6::R6Class(
       
       log_message(
         paste0("Initialized WorkflowRunner for patient: ", self$patient_name),
-        log_file = self$log_file
+        "INFO",
+        self$log_file
       )
     },
     
@@ -49,7 +50,7 @@ WorkflowRunnerR6 <- R6::R6Class(
     # Step 4: Generate report
     generate_report = function() {
       source("R/workflow_report_generator.R")
-      log_message("Step 4: Generating final report...", "WORKFLOW", self$log_file)
+      log_message("Step 4: Generating final report...", "WORKFLOW")
       return(generate_workflow_report(self$config))
     },
     
