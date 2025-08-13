@@ -165,7 +165,7 @@ domain_config <- list(
   ),
   "Daily Living" = list(
     pheno = "daily_living",
-    input_file = "data/neurobehav.parquet"
+    input_file = "data/neurocog.parquet"
   ),
   "Psychiatric Disorders" = list(
     pheno = "emotion",

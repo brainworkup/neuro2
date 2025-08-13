@@ -3,7 +3,7 @@
 \docType{class}
 \name{DuckDBProcessorR6}
 \alias{DuckDBProcessorR6}
-\title{DuckDBDataProcessor Class}
+\title{DuckDBProcessorR6 Class}
 \format{
 An R6 class object
 }

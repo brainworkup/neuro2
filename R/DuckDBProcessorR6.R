@@ -1,4 +1,4 @@
-#' DuckDBDataProcessor Class
+#' DuckDBProcessorR6 Class
 #'
 #' @description
 #' An R6 class that provides an efficient data processing pipeline for
@@ -127,10 +127,10 @@ DuckDBProcessorR6 <- R6::R6Class(
       self$tables <- list()
       self$available_extensions <- character(0)
       self$data_paths <- list(
-        neurocog = file.path(data_dir, "neurocog.csv"),
-        neurobehav = file.path(data_dir, "neurobehav.csv"),
-        validity = file.path(data_dir, "validity.csv"),
-        neuropsych = file.path(data_dir, "neuropsych.csv")
+        neurocog = file.path(data_dir, "neurocog.parquet"),
+        neurobehav = file.path(data_dir, "neurobehav.parquet"),
+        validity = file.path(data_dir, "validity.parquet"),
+        neuropsych = file.path(data_dir, "neuropsych.parquet")
       )
 
       # Connect to database with robust extension handling
@@ -544,8 +544,24 @@ DuckDBProcessorR6 <- R6::R6Class(
         table_name
       ))
 
-      # Use the existing calculate_z_stats function from tidy_data.R
-      result <- calculate_z_stats(data, group_vars)
+      # Check if calculate_z_stats function exists
+      if (exists("calculate_z_stats", mode = "function")) {
+        # Use the existing calculate_z_stats function from tidy_data.R
+        result <- calculate_z_stats(data, group_vars)
+      } else {
+        # Basic implementation if the function doesn't exist
+        warning(
+          "calculate_z_stats function not found. Using basic calculation."
+        )
+        result <- data %>%
+          dplyr::group_by(!!!syms(group_vars)) %>%
+          dplyr::summarise(
+            mean_z = mean(z, na.rm = TRUE),
+            sd_z = sd(z, na.rm = TRUE),
+            n = n(),
+            .groups = "drop"
+          )
+      }
 
       return(result)
     },
@@ -557,38 +573,50 @@ DuckDBProcessorR6 <- R6::R6Class(
 
       # Create processor
       if (processor_class == "DomainProcessorR6") {
-        # Create a clean phenotype name from domain
-        pheno <- tolower(gsub(" ", "_", domain))
-
         # Map common domains to their expected phenotype names
         pheno_map <- c(
-          "general_cognitive_ability" = "iq",
-          "memory" = "memory",
-          "attention/executive" = "executive",
-          "verbal/language" = "verbal",
-          "visuospatial" = "spatial",
-          "academic_skills" = "academics",
-          "motor" = "motor",
-          "social_cognition" = "social",
-          "adhd" = "adhd",
-          "emotional/behavioral/personality" = "emotion",
-          "adaptive_behavior" = "adaptive"
+          "General Cognitive Ability" = "iq",
+          "Academic Skills" = "academics",
+          "Verbal/Language" = "verbal",
+          "Visual Perception/Construction" = "spatial",
+          "Memory" = "memory",
+          "Attention/Executive" = "executive",
+          "Motor" = "motor",
+          "Social Cognition" = "social",
+          "ADHD" = "adhd",
+          "Psychiatric Disorders" = "emotion",
+          "Personality Disorders" = "emotion",
+          "Substance Use" = "emotion",
+          "Psychosocial Problems" = "emotion",
+          "Emotional/Behavioral/Personality" = "emotion",
+          "Behavioral/Emotional/Social" = "emotion",
+          "Adaptive Functioning" = "adaptive",
+          "Daily Living" = "daily_living"
         )
 
-        # Use mapped name if available
-        if (pheno %in% names(pheno_map)) {
-          pheno <- pheno_map[pheno]
+        # Use mapped name if available, otherwise create from domain
+        if (domain %in% names(pheno_map)) {
+          pheno <- pheno_map[[domain]]
+        } else {
+          # Create a clean phenotype name from domain
+          pheno <- tolower(gsub(" ", "_", domain))
         }
 
-        processor <- DomainProcessorR6$new(
-          domains = domain,
-          pheno = pheno,
-          input_file = "data/neurocog.csv", # Set a default for compatibility
-          output_dir = "data"
-        )
+        # Check if DomainProcessorR6 class exists
+        if (exists("DomainProcessorR6")) {
+          processor <- DomainProcessorR6$new(
+            domains = domain,
+            pheno = pheno,
+            input_file = "data/neurocog.csv", # Set a default for compatibility
+            output_dir = "data"
+          )
 
-        # Inject the queried data
-        processor$data <- data
+          # Inject the queried data
+          processor$data <- data
+        } else {
+          warning("DomainProcessorR6 class not found. Returning raw data.")
+          processor <- list(data = data, domain = domain, pheno = pheno)
+        }
       }
 
       return(processor)
@@ -696,7 +724,7 @@ DuckDBProcessorR6 <- R6::R6Class(
 
           message(paste("✅", ext_name, "extension loaded successfully"))
           if (nzchar(description)) {
-            message(paste("   →", description))
+            message(paste("   ↳", description))
           }
           return(TRUE)
         },

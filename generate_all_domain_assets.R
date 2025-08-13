@@ -30,18 +30,31 @@ generate_domain_assets <- function(
   domain_name,
   pheno,
   scales_var_name,
-  plot_title_var_name
+  plot_title_var_name,
+  informant_type = NULL,
+  test_filter = NULL
 ) {
-  cat(paste0("Processing ", pheno, " domain...\n"))
+  if (!is.null(informant_type)) {
+    cat(paste0("Processing ", pheno, " domain (", informant_type, ")...\n"))
+  } else {
+    cat(paste0("Processing ", pheno, " domain...\n"))
+  }
 
   # Get scales for this domain
   scales <- get(scales_var_name, envir = .GlobalEnv)
+
+  # Determine input file based on domain
+  input_file <- if (pheno %in% c("emotion", "adhd", "social")) {
+    "data/neurobehav.parquet"
+  } else {
+    "data/neurocog.parquet"
+  }
 
   # Create R6 processor
   processor <- DomainProcessorR6$new(
     domains = domain_name,
     pheno = pheno,
-    input_file = "data/neurocog.parquet"
+    input_file = input_file
   )
 
   # Load and process data
@@ -70,8 +83,17 @@ generate_domain_assets <- function(
     scale = scales
   )
 
+  # Apply test filter if provided (for emotion domain informant types)
+  if (!is.null(test_filter)) {
+    filtered_data <- filtered_data[filtered_data$test %in% test_filter, ]
+  }
+
   # Generate the table
-  table_name <- paste0("table_", pheno)
+  table_name <- if (!is.null(informant_type)) {
+    paste0("table_", pheno, "_child_", informant_type)
+  } else {
+    paste0("table_", pheno)
+  }
 
   # Get score types from the lookup table
   score_type_map <- get_score_types_from_lookup(filtered_data)
@@ -138,7 +160,11 @@ generate_domain_assets <- function(
   }
 
   # Generate the figure
-  fig_name <- paste0("fig_", pheno, "_subdomain.svg")
+  fig_name <- if (!is.null(informant_type)) {
+    paste0("fig_", pheno, "_subdomain_", informant_type, ".svg")
+  } else {
+    paste0("fig_", pheno, "_subdomain.svg")
+  }
 
   # Create subdomain plot
   dotplot_subdomain <- DotplotR6$new(
@@ -154,6 +180,27 @@ generate_domain_assets <- function(
     cat(paste0("  ✓ ", fig_name, " generated\n"))
   } else {
     cat(paste0("  ✗ Failed to generate ", fig_name, "\n"))
+  }
+
+  # Generate the narrow figure only if not emotion child domain
+  if (is.null(informant_type)) {
+    fig_name <- paste0("fig_", pheno, "_narrow.svg")
+
+    # Create narrow plot
+    dotplot_narrow <- DotplotR6$new(
+      data = filtered_data,
+      x = "z_mean_narrow",
+      y = "narrow",
+      filename = here::here(fig_name)
+    )
+
+    dotplot_narrow$create_plot()
+
+    if (file.exists(fig_name)) {
+      cat(paste0("  ✓ ", fig_name, " generated\n"))
+    } else {
+      cat(paste0("  ✗ Failed to generate ", fig_name, "\n"))
+    }
   }
 
   cat("\n")
@@ -227,22 +274,23 @@ domains_config <- list(
     scales_var = "scales_emotion_adult",
     plot_title_var = "plot_title_emotion_adult"
   ),
+  # Emotion child domain - self report
   list(
-    domain_name = c(
-      "Behavioral/Emotional/Social",
-      "Psychiatric Symptoms",
-      "Substance Use",
-      "Personality Disorders",
-      "Psychosocial Problems"
-    ),
+    domain_name = "Behavioral/Emotional/Social",
     pheno = "emotion",
     scales_var = "scales_emotion_child",
-    plot_title_var = c(
-      "plot_title_emotion_child",
-      "plot_title_emotion_child_parent",
-      "plot_title_emotion_child_self",
-      "plot_title_emotion_child_teacher"
-    )
+    plot_title_var = "plot_title_emotion_child_self",
+    informant_type = "self",
+    test_filter = c("pai_adol", "pai_adol_clinical", "basc3_srp_adolescent", "basc3_srp_child")
+  ),
+  # Emotion child domain - parent report
+  list(
+    domain_name = "Behavioral/Emotional/Social",
+    pheno = "emotion",
+    scales_var = "scales_emotion_child",
+    plot_title_var = "plot_title_emotion_child_parent",
+    informant_type = "parent",
+    test_filter = c("basc3_prs_adolescent", "basc3_prs_child", "basc3_prs_preschool")
   ),
   list(
     domain_name = "Social Cognition",
@@ -260,13 +308,16 @@ for (config in domains_config) {
         domain_name = config$domain_name,
         pheno = config$pheno,
         scales_var_name = config$scales_var,
-        plot_title_var_name = config$plot_title_var
+        plot_title_var_name = config$plot_title_var,
+        informant_type = config$informant_type,
+        test_filter = config$test_filter
       )
     },
     error = function(e) {
       cat(paste0(
         "  ✗ Error processing ",
         config$pheno,
+        if (!is.null(config$informant_type)) paste0(" (", config$informant_type, ")"),
         ": ",
         e$message,
         "\n\n"

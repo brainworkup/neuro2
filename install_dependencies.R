@@ -181,7 +181,7 @@ if (length(failed_packages) == 0) {
   cat("\nNext steps:\n")
   cat("  1. Run: renv::snapshot(prompt = FALSE) to update renv.lock\n")
   cat("  2. Test the workflow: source('test_data_processing.R')\n")
-  cat("  3. Generate a report: source('neuro2_r6_update_workflow.R')\n")
+  cat("  3. Generate a report: source('neuro2_R6_update_workflow.R')\n")
 } else {
   cat("\n✗", length(failed_packages), "packages failed to install:\n")
   cat("  ", paste(failed_packages, collapse = ", "), "\n")
@@ -225,13 +225,13 @@ load_neuropsych_packages <- function(verbose = TRUE) {
     "dplyr",     # For data manipulation
     "gt"         # For tables
   )
-  
+
   # Load packages
   for (pkg in required_packages) {
     if (verbose) message("Loading ", pkg, "...")
     library(pkg, character.only = TRUE)
   }
-  
+
   if (verbose) message("All packages loaded successfully!")
   invisible(NULL)
 }

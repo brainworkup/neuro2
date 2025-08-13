@@ -47,14 +47,13 @@ domain_memory <- "Memory"
 domain_executive <- "Attention/Executive"
 domain_motor <- "Motor"
 domain_social <- "Social Cognition"
-domain_adhd_adult <- "ADHD Adult"
-domain_adhd_child <- "ADHD Child"
+domain_adhd_adult <- "ADHD"
+domain_adhd_child <- "ADHD"
 domain_emotion_adult <- c(
   "Psychiatric Disorders",
   "Personality Disorders",
   "Substance Use",
   "Psychosocial Problems",
-  "Behavioral/Emotional/Social",
   "Emotional/Behavioral/Personality"
 )
 domain_emotion_child <- c(
