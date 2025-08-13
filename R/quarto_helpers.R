@@ -6,7 +6,7 @@ safe_readLines <- function(con, n = -1L, ok = TRUE, warn = FALSE, encoding = "un
   old_warn <- getOption("warn")
   options(warn = -1)
   on.exit(options(warn = old_warn))
-  
+
   # Call the original readLines
   readLines(con = con, n = n, ok = ok, warn = warn, encoding = encoding, skipNul = skipNul)
 }

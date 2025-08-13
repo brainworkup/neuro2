@@ -3,6 +3,7 @@ project:
   title: "neuro2"
   execute-dir: project
   pre-render:
+    - R/quarto_helpers.R
     - generate_domain_files.R
     - generate_all_domain_assets.R
     - generate_domain_outputs.R
