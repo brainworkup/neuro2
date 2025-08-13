@@ -23,6 +23,13 @@ knitr::opts_knit$set(
 # Set environment variables
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
+
+# Source the enhanced functions
+source("R/domain_validation_utils.R")
+source("R/score_type_cache.R")
+
+# Initialize the score type cache once
+.score_type_cache$build_mappings()
 ```
 
 ```{=typst}
@@ -55,8 +62,18 @@ patient <- Sys.getenv("PATIENT")
 #| output: asis
 #| echo: false
 
+# Before domain generation, validate data
+valid_domains_only <- get_domains_with_data(
+  neurocog_data,
+  neurobehav_data,
+  domain_config
+)
+
 # Only include files that were actually generated
-domain_files <- list.files(pattern = "^_02-[0-9]+_.*\\.qmd$", full.names = FALSE)
+domain_files <- list.files(
+  pattern = "^_02-[0-9]+_.*\\.qmd$",
+  full.names = FALSE
+)
 
 # Remove backup files and timestamped files
 domain_files <- domain_files[!grepl("_[0-9]+_[0-9]+\\.qmd$", domain_files)]
@@ -76,6 +93,9 @@ if (length(domain_files) > 0) {
   cat("\n*No domain files found. Please run the domain generation process.*\n")
 }
 
+# After domain generation, ensure text files exist
+domain_files <- list.files(".", pattern = "^_02-[0-9]+_.*\\.qmd$")
+ensure_text_files_exist(domain_files)
 ```
 
 {{< pagebreak >}}

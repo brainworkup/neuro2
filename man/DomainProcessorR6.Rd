@@ -72,7 +72,13 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
-\item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_domain_text_qmd_fixed}{\code{DomainProcessorR6$generate_domain_text_qmd_fixed()}}
+\item \href{#method-DomainProcessorR6-check_rater_data_exists_fixed}{\code{DomainProcessorR6$check_rater_data_exists_fixed()}}
+\item \href{#method-DomainProcessorR6-generate_text_content}{\code{DomainProcessorR6$generate_text_content()}}
+\item \href{#method-DomainProcessorR6-generate_adhd_text_content}{\code{DomainProcessorR6$generate_adhd_text_content()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_text_content}{\code{DomainProcessorR6$generate_emotion_text_content()}}
+\item \href{#method-DomainProcessorR6-generate_generic_text_content}{\code{DomainProcessorR6$generate_generic_text_content()}}
+\item \href{#method-DomainProcessorR6-ensure_text_files_exist}{\code{DomainProcessorR6$ensure_text_files_exist()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_adult_qmd}{\code{DomainProcessorR6$generate_adhd_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_child_qmd}{\code{DomainProcessorR6$generate_adhd_child_qmd()}}
@@ -363,34 +369,80 @@ Generate domain QMD file.
 }
 \subsection{Returns}{
 The path to the generated file.
+Fixed Text File Generation for DomainProcessorR6
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd}{}}}
-\subsection{Method \code{generate_domain_text_qmd()}}{
-Generate domain text QMD file.
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd_fixed"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd_fixed}{}}}
+\subsection{Method \code{generate_domain_text_qmd_fixed()}}{
+Enhanced method to generate domain text files with proper validation
+Ensure All Required Text Files Exist
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd(
-  domain_name = NULL,
-  output_file = NULL,
-  report_type = "self"
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd_fixed(report_type = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-check_rater_data_exists_fixed"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-check_rater_data_exists_fixed}{}}}
+\subsection{Method \code{check_rater_data_exists_fixed()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$check_rater_data_exists_fixed(rater)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_text_content"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_text_content}{}}}
+\subsection{Method \code{generate_text_content()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_text_content(report_type = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_adhd_text_content"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_adhd_text_content}{}}}
+\subsection{Method \code{generate_adhd_text_content()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_adhd_text_content(report_type)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_text_content"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_text_content}{}}}
+\subsection{Method \code{generate_emotion_text_content()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_text_content(report_type)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_generic_text_content"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_generic_text_content}{}}}
+\subsection{Method \code{generate_generic_text_content()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_generic_text_content(report_type)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-ensure_text_files_exist"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-ensure_text_files_exist}{}}}
+\subsection{Method \code{ensure_text_files_exist()}}{
+Creates placeholder text files for any missing required files
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$ensure_text_files_exist(domain_files)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{domain_name}}{Name of the domain.}
-
-\item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
-
-\item{\code{report_type}}{Type of report to generate (default: "self").}
+\item{\code{domain_files}}{Vector of domain QMD files that might reference text files}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The path to the generated file.
 }
 }
 \if{html}{\out{<hr>}}
