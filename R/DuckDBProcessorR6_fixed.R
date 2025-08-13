@@ -118,6 +118,12 @@ DuckDBProcessorR6 <- R6::R6Class(
     available_extensions = NULL,
 
     # Initialize a new DuckDBProcessorR6 object
+    #' @description Constructor. Create a new DuckDBProcessorR6 instance and optionally auto-register data files.
+    #' @param db_path Path to the DuckDB database file. Use ":memory:" for in-memory DB.
+    #' @param data_dir Directory containing data files to register.
+    #' @param auto_register If TRUE, attempt to auto-register supported data files from `data_dir`.
+    #' @return A new DuckDBProcessorR6 object (invisible).
+
     initialize = function(
       db_path = ":memory:",
       data_dir = "data",
@@ -143,6 +149,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create or reconnect to the DuckDB database
+    #' @description Open (or re-open) a DuckDB connection based on `db_path` and set up extensions.
+    #' @return Invisibly returns `self` after establishing a connection.
+
     connect = function() {
       if (!is.null(self$con)) {
         self$disconnect()
@@ -208,6 +217,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Close the database connection
+    #' @description Close the open DuckDB connection if present.
+    #' @return Invisibly returns `self`.
+
     disconnect = function() {
       if (!is.null(self$con)) {
         DBI::dbDisconnect(self$con, shutdown = TRUE)
@@ -218,6 +230,12 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register a CSV file as a virtual table
+    #' @description Register a CSV file as a virtual table for SQL access.
+    #' @param file_path Path to the CSV file.
+    #' @param table_name Optional table name. If NULL, derived from filename.
+    #' @param options Named list of DuckDB CSV reader options (e.g., header, delim).
+    #' @return The name of the registered table (character).
+
     register_csv = function(file_path, table_name = NULL, options = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
@@ -265,6 +283,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register a Parquet file as a virtual table
+    #' @description Register a Parquet file as a virtual table for SQL access.
+    #' @param file_path Path to the Parquet file.
+    #' @param table_name Optional table name. If NULL, derived from filename.
+    #' @return The name of the registered table (character).
+
     register_parquet = function(file_path, table_name = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
@@ -319,6 +342,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register an Arrow/Feather file as a virtual table
+    #' @description Register an Arrow/Feather file as a virtual table for SQL access.
+    #' @param file_path Path to the Feather/Arrow file.
+    #' @param table_name Optional table name. If NULL, derived from filename.
+    #' @return The name of the registered table (character).
+
     register_arrow = function(file_path, table_name = NULL) {
       if (!file.exists(file_path)) {
         stop("File not found: ", file_path)
@@ -355,6 +383,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register all CSV files in a directory
+    #' @description Register all CSV files in a directory that match `pattern`.
+    #' @param data_dir Directory containing CSV files to register.
+    #' @param pattern Glob pattern for files (default: "*.csv").
+    #' @return Character vector of registered table names.
+
     register_all_csvs = function(data_dir = "data", pattern = "*.csv") {
       csv_files <- list.files(data_dir, pattern = pattern, full.names = TRUE)
 
@@ -366,6 +399,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register all data files in a directory
+    #' @description Register all supported files (parquet/arrow/csv) in a directory.
+    #' @param data_dir Directory containing files to register.
+    #' @param formats Character vector of formats to register (subset of c("parquet","arrow","csv")).
+    #' @return Character vector of registered table names.
+
     register_all_files = function(
       data_dir = "data",
       formats = c("parquet", "arrow", "csv")
@@ -425,6 +463,12 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Export data to Parquet format
+    #' @description Export a registered table to a Parquet file.
+    #' @param table_name Name of the registered table to export.
+    #' @param output_path Destination Parquet file path.
+    #' @param compression Compression codec to use (e.g., "zstd").
+    #' @return Invisibly returns the `output_path`.
+
     export_to_parquet = function(
       table_name,
       output_path,
@@ -459,6 +503,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Execute a SQL query and return results
+    #' @description Execute a SQL query and return results as a data frame.
+    #' @param query SQL query string. May reference registered tables.
+    #' @param params Optional named list of parameter values for parameterized queries.
+    #' @return A data.frame with query results.
+
     query = function(query, params = NULL) {
       if (is.null(self$con)) {
         stop("No database connection. Call connect() first.")
@@ -480,6 +529,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Execute a SQL statement that doesn't return results
+    #' @description Execute a SQL statement that does not return rows (e.g., CREATE INDEX).
+    #' @param statement SQL statement string.
+    #' @param params Optional named list of parameter values.
+    #' @return Invisibly returns TRUE on success.
+
     execute = function(statement, params = NULL) {
       if (is.null(self$con)) {
         stop("No database connection. Call connect() first.")
@@ -507,6 +561,10 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create a lazy reference to a table for dplyr operations
+    #' @description Return a lazy dplyr table reference to an existing DuckDB table.
+    #' @param table_name Name of a registered table.
+    #' @return A dplyr tbl_lazy object.
+
     query_lazy = function(table_name) {
       if (!table_name %in% names(self$tables)) {
         stop("Table not found: ", table_name)
@@ -516,6 +574,12 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Process a specific domain using SQL
+    #' @description Process and return data for a given domain via SQL, optionally filtered by `data_type` and `scales`.
+    #' @param domain Domain name (character).
+    #' @param data_type Type of data: "neurocog", "neurobehav", or "validity".
+    #' @param scales Optional character vector of scales to include; NULL includes defaults for the domain.
+    #' @return A data.frame with processed domain data.
+
     process_domain = function(domain, data_type = "neurocog", scales = NULL) {
       # Base query
       base_query <- sprintf(
@@ -537,6 +601,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Calculate z-score statistics
+    #' @description Compute z-score statistics grouped by variables for a given table.
+    #' @param table_name Name of the registered table to summarize.
+    #' @param group_vars Character vector of column names to group by.
+    #' @return A data.frame containing z-score summaries by group.
+
     calculate_z_stats = function(table_name, group_vars) {
       # For complex z-score calculations, export to R and use the tidy_data function
       data <- self$query(sprintf(
@@ -567,6 +636,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Export query results to standard R6 processors
+    #' @description Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
+    #' @param domain Domain name to export.
+    #' @param processor_class R6 class name or generator to use (default: "DomainProcessorR6").
+    #' @return An instance of the target R6 processor initialized with the domain data.
+
     export_to_r6 = function(domain, processor_class = "DomainProcessorR6") {
       # Query the domain data
       data <- self$process_domain(domain)
@@ -623,6 +697,10 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Get domain summary statistics using SQL
+    #' @description Return summary statistics across domains via SQL.
+    #' @param include_all If TRUE, include all domains; otherwise, restrict to those with data.
+    #' @return A data.frame with domain-level summary metrics.
+
     get_domain_summary = function(include_all = TRUE) {
       query <- "
         SELECT
@@ -643,6 +721,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create optimized indexes for faster queries
+    #' @description Create useful indexes on commonly-queried columns to speed up SQL operations.
+    #' @return Invisibly returns TRUE on success.
+
     create_indexes = function() {
       # Create indexes on commonly queried columns
       indexes <- c(

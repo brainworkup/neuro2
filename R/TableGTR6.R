@@ -139,7 +139,7 @@ TableGTR6 <- R6::R6Class(
           test_name = gt::md("**Test**"),
           scale = gt::md("**Scale**"),
           score = gt::md("**Score**"),
-          percentile = gt::md("**‰ Rank**"),
+          percentile = gt::md("**\u2030 Rank**"),
           range = gt::md("**Range**")
         ) |>
         gt::tab_header(title = self$title) |>
@@ -538,7 +538,7 @@ TableGTR6 <- R6::R6Class(
             ) {
               self$fn_list[["standard_score"]]
             } else {
-              "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+              "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
             }
           }
 
@@ -550,7 +550,7 @@ TableGTR6 <- R6::R6Class(
             ) {
               self$fn_list[["scaled_score"]]
             } else {
-              "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+              "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
             }
           }
 

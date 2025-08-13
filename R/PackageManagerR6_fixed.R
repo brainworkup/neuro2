@@ -6,6 +6,19 @@
 #'
 #' @docType class
 #' @format An R6 class object
+    #' @section Methods:
+    #' \describe{
+    #'   \item{\code{$initialize}}{See method docs below.}
+#'   \item{\code{$check_and_install}}{See method docs below.}
+#'   \item{\code{$check_package_group}}{See method docs below.}
+#'   \item{\code{$check_single_package}}{See method docs below.}
+#'   \item{\code{$load_packages}}{See method docs below.}
+#'   \item{\code{$show_summary}}{See method docs below.}
+#'   \item{\code{$get_missing_packages}}{See method docs below.}
+#'   \item{\code{$install_missing_packages}}{See method docs below.}
+#'   \item{\code{$check_conflicts}}{See method docs below.}
+#'   \item{\code{$create_package_loading_script}}{See method docs below.}
+    #' }
 #'
 #' @field required_packages List of required package groups
 #' @field optional_packages List of optional package groups
@@ -20,6 +33,15 @@ PackageManagerR6 <- R6::R6Class(
     optional_packages = NULL,
     loaded_packages = NULL,
     failed_packages = NULL,
+
+    #' @description Constructor. Initialize the package manager with config and optional groups.
+
+    #' @param config Optional configuration object for package management.
+
+    #' @param package_groups Optional named list mapping group names to vectors of package names.
+
+    #' @return A new PackageManagerR6 object (invisible).
+
 
     initialize = function() {
       self$required_packages <- list(
@@ -102,6 +124,15 @@ PackageManagerR6 <- R6::R6Class(
       self$failed_packages <- character()
     },
 
+    #' @description Check required packages (and groups) and install any that are missing.
+
+    #' @param groups Optional character vector of group names to check; NULL = all defined groups.
+
+    #' @param ask Logical; if TRUE, interactively confirm before installing.
+
+    #' @return Invisibly returns self.
+
+
     check_and_install = function(install_missing = FALSE,
                                 include_optional = TRUE,
                                 verbose = TRUE) {
@@ -156,6 +187,13 @@ PackageManagerR6 <- R6::R6Class(
       invisible(self)
     },
 
+    #' @description Check availability of all packages in a named group.
+
+    #' @param group Character name of the package group.
+
+    #' @return Logical; TRUE if all packages in the group are available.
+
+
     check_package_group = function(packages, install_missing = FALSE,
                                   required = TRUE, verbose = TRUE) {
 
@@ -167,6 +205,13 @@ PackageManagerR6 <- R6::R6Class(
         }
       }
     },
+
+    #' @description Check whether a single package is installed and loadable.
+
+    #' @param pkg Character name of the package.
+
+    #' @return Logical; TRUE if package is available.
+
 
     check_single_package = function(pkg, install_missing = FALSE, verbose = TRUE) {
       # Check if package is already loaded
@@ -224,6 +269,17 @@ PackageManagerR6 <- R6::R6Class(
       }
     },
 
+    #' @description Load one or more packages, optionally by group.
+
+    #' @param packages Character vector of package names to load (ignored if `groups` provided).
+
+    #' @param groups Optional character vector of package groups to load.
+
+    #' @param quiet Logical; if TRUE, suppress startup messages.
+
+    #' @return Invisibly returns self.
+
+
     load_packages = function(packages = NULL, verbose = TRUE) {
       if (is.null(packages)) {
         # Load all available required packages
@@ -258,6 +314,11 @@ PackageManagerR6 <- R6::R6Class(
       invisible(successfully_loaded)
     },
 
+    #' @description Display a summary of package availability, versions, and groups.
+
+    #' @return Invisibly returns self.
+
+
     show_summary = function() {
       cli::cli_h2("Package Summary")
 
@@ -278,11 +339,29 @@ PackageManagerR6 <- R6::R6Class(
       }
     },
 
+    #' @description Return a character vector of missing packages across provided groups (or all).
+
+    #' @param groups Optional character vector of group names; NULL = all.
+
+    #' @return Character vector of missing package names.
+
+
     get_missing_packages = function() {
       all_required <- unlist(lapply(self$required_packages, function(x) x$packages))
       missing <- setdiff(all_required, self$loaded_packages)
       return(missing)
     },
+
+    #' @description Install missing packages (optionally restricted to groups).
+
+    #' @param groups Optional character vector of group names; NULL = all.
+
+    #' @param repos CRAN repos URL or vector passed to install.packages().
+
+    #' @param upgrade Logical or 'never'/'always' as used by package managers; upgrade if TRUE.
+
+    #' @return Invisibly returns self.
+
 
     install_missing_packages = function(verbose = TRUE) {
       missing <- self$get_missing_packages()
@@ -307,6 +386,10 @@ PackageManagerR6 <- R6::R6Class(
     },
 
     # Check for potential package conflicts
+    #' @description Check for function name conflicts across loaded packages.
+    #' @param packages Optional character vector; if NULL, check currently loaded packages.
+    #' @return A data.frame (or list) describing conflicts.
+
     check_conflicts = function(verbose = TRUE) {
       if (!requireNamespace("conflicted", quietly = TRUE)) {
         if (verbose) {
@@ -330,6 +413,11 @@ PackageManagerR6 <- R6::R6Class(
     },
 
     # Create a package loading script for Quarto documents
+    #' @description Write a helper R script that loads required packages/groups for reproducible environments.
+    #' @param path Output path to write the .R script.
+    #' @param groups Optional character vector of groups to include; NULL = all.
+    #' @return Path to the created script (character).
+
     create_package_loading_script = function(file = "load_packages.R") {
       all_required <- unlist(lapply(self$required_packages, function(x) x$packages))
       available <- intersect(all_required, self$loaded_packages)
