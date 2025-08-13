@@ -139,7 +139,7 @@ TableGTR6 <- R6::R6Class(
           test_name = gt::md("**Test**"),
           scale = gt::md("**Scale**"),
           score = gt::md("**Score**"),
-          percentile = gt::md("**\u2030 Rank**"),
+          percentile = gt::md("**‰ Rank**"),
           range = gt::md("**Range**")
         ) |>
         gt::tab_header(title = self$title) |>
@@ -157,28 +157,51 @@ TableGTR6 <- R6::R6Class(
       # PRE-PROCESS: Fix groupings for all neuropsych tests before adding any footnotes
       # This ensures that tests are assigned to the correct score type groups
 
-      # Create a comprehensive mapping of test names to their correct score types using lookup_neuropsych_scales
-      # The lookup_neuropsych_scales data is stored in R/sysdata.rda and should be automatically available
-      # If it's not available in the current environment, try to access it from the package namespace
-      if (!exists("lookup_neuropsych_scales", envir = environment())) {
-        if (exists("lookup_neuropsych_scales", envir = asNamespace("neuro2"))) {
-          lookup_neuropsych_scales <- get(
-            "lookup_neuropsych_scales",
-            envir = asNamespace("neuro2")
-          )
-        } else {
-          # Fallback: try to load from sysdata.rda directly
-          sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
-          if (sysdata_path != "" && file.exists(sysdata_path)) {
-            temp_env <- new.env()
-            load(sysdata_path, envir = temp_env)
-            if (exists("lookup_neuropsych_scales", envir = temp_env)) {
-              lookup_neuropsych_scales <- get(
-                "lookup_neuropsych_scales",
-                envir = temp_env
-              )
-            }
+      # Try to get lookup_neuropsych_scales from various sources
+      lookup_neuropsych_scales <- NULL
+
+      # Method 1: Check if it exists in the current environment
+      if (exists("lookup_neuropsych_scales", envir = environment())) {
+        lookup_neuropsych_scales <- get(
+          "lookup_neuropsych_scales",
+          envir = environment()
+        )
+      }
+
+      # Method 2: Try to get it from the package namespace
+      if (is.null(lookup_neuropsych_scales)) {
+        tryCatch(
+          {
+            lookup_neuropsych_scales <- get(
+              "lookup_neuropsych_scales",
+              envir = asNamespace("neuro2")
+            )
+          },
+          error = function(e) {
+            # Silent failure, will try next method
           }
+        )
+      }
+
+      # Method 3: Try to load from sysdata.rda directly
+      if (is.null(lookup_neuropsych_scales)) {
+        sysdata_path <- system.file("R", "sysdata.rda", package = "neuro2")
+        if (sysdata_path != "" && file.exists(sysdata_path)) {
+          temp_env <- new.env()
+          tryCatch(
+            {
+              load(sysdata_path, envir = temp_env)
+              if (exists("lookup_neuropsych_scales", envir = temp_env)) {
+                lookup_neuropsych_scales <- get(
+                  "lookup_neuropsych_scales",
+                  envir = temp_env
+                )
+              }
+            },
+            error = function(e) {
+              # Silent failure
+            }
+          )
         }
       }
 
@@ -195,7 +218,7 @@ TableGTR6 <- R6::R6Class(
       )
 
       # Extract unique test names and scales from lookup_neuropsych_scales
-      if (exists("lookup_neuropsych_scales")) {
+      if (!is.null(lookup_neuropsych_scales)) {
         message(
           "Using lookup_neuropsych_scales from sysdata.rda for score type mapping"
         )
@@ -246,8 +269,7 @@ TableGTR6 <- R6::R6Class(
         test_score_type_map <- list(
           # Scaled score tests (mean=10, SD=3)
           "scaled_score" = c(
-            # WISC-V subtests
-            "WISC-V",
+            # WISC-V/WAIS subtests
             "Similarities",
             "Vocabulary",
             "Comprehension",
@@ -262,8 +284,6 @@ TableGTR6 <- R6::R6Class(
             "Symbol Search",
 
             # RBANS subtests (not Index scores)
-            "Digit Span",
-            "Coding",
             "Picture Naming",
             "Semantic Fluency",
             "List Learning",
@@ -280,23 +300,29 @@ TableGTR6 <- R6::R6Class(
           "standard_score" = c(
             # IQ and Index Scores
             "Full Scale (FSIQ)",
+            "Full Scale IQ",
             "Verbal Comprehension (VCI)",
+            "Verbal Comprehension Index",
             "Perceptual Reasoning (PRI)",
+            "Perceptual Reasoning Index",
             "Working Memory (WMI)",
+            "Working Memory Index",
             "Processing Speed (PSI)",
+            "Processing Speed Index",
             "General Ability (GAI)",
+            "General Ability Index",
             "Cognitive Proficiency (CPI)",
+            "Cognitive Proficiency Index",
             "Visual Spatial (VSI)",
+            "Visual Spatial Index",
             "Fluid Reasoning (FRI)",
+            "Fluid Reasoning Index",
             "Quantitative Reasoning (QRI)",
-            "Language Index",
-            "Auditory Memory Index",
-            "Visual Memory Index",
-            "Immediate Memory Index",
-            "Delayed Memory Index",
+            "Quantitative Reasoning Index",
 
             # RBANS Index scores (not subtests)
             "RBANS Total Index",
+            "Total Index",
             "Immediate Memory Index",
             "Visuospatial Index",
             "Language Index",
@@ -306,13 +332,16 @@ TableGTR6 <- R6::R6Class(
 
           # T-score tests (mean=50, SD=10)
           "t_score" = c(
-            # Behavior Ratings
-            "BRIEF",
-            "BASC",
+            "BASC3",
+            "BASC-3",
             "Conners",
-            "CBCL",
+            "Conners-3",
             "Beck Depression Inventory",
-            "Beck Anxiety Inventory"
+            "BDI",
+            "Beck Anxiety Inventory",
+            "BAI",
+            "BRIEF",
+            "BRIEF-2"
           )
         )
       }
@@ -419,25 +448,6 @@ TableGTR6 <- R6::R6Class(
             standard_patterns <- battery_specific_patterns[[battery]]$standard
             scaled_patterns <- battery_specific_patterns[[battery]]$scaled
 
-            # Identify scales that match standard score patterns
-            standard_score_scales <- battery_scales[sapply(
-              battery_scales,
-              function(scale) {
-                any(sapply(standard_patterns, function(pattern) {
-                  grepl(pattern, scale, ignore.case = TRUE)
-                })) ||
-                  scale %in% scaled_patterns # Exact match for explicit list
-              }
-            )]
-
-            # Identify scales that match scaled score patterns
-            scaled_match_scales <- battery_scales[sapply(
-              battery_scales,
-              function(scale) {
-                scale %in% scaled_patterns # Exact match for explicit list
-              }
-            )]
-
             # Handle RBANS special case with explicit lists
             if (battery == "RBANS") {
               message("  Special handling for RBANS scales")
@@ -449,7 +459,15 @@ TableGTR6 <- R6::R6Class(
                 scaled_score_scales
               )
             } else {
-              # For other batteries, use the normal set difference
+              # For other batteries with specific patterns
+              standard_score_scales <- battery_scales[sapply(
+                battery_scales,
+                function(scale) {
+                  any(sapply(standard_patterns, function(pattern) {
+                    grepl(pattern, scale, ignore.case = TRUE)
+                  }))
+                }
+              )]
               scaled_score_scales <- setdiff(
                 battery_scales,
                 standard_score_scales
@@ -520,7 +538,7 @@ TableGTR6 <- R6::R6Class(
             ) {
               self$fn_list[["standard_score"]]
             } else {
-              "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
+              "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
             }
           }
 
@@ -532,7 +550,7 @@ TableGTR6 <- R6::R6Class(
             ) {
               self$fn_list[["scaled_score"]]
             } else {
-              "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
+              "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
             }
           }
 
@@ -623,16 +641,20 @@ TableGTR6 <- R6::R6Class(
           if (length(tests) > 0) {
             # For each test that should be in this score type
             for (test_name in tests) {
-              # Skip RBANS - we handle it specially above
-              if (test_name == "RBANS") {
-                message("  Skipping RBANS - handled separately")
+              # Skip batteries handled specially above
+              if (test_name %in% batteries_to_handle) {
+                message(paste0(
+                  "  Skipping ",
+                  test_name,
+                  " - handled separately"
+                ))
                 next
               }
 
               # For each score type group in our data
               for (group_score_type in names(self$grp_list)) {
-                # Only process main score type groups (skip special RBANS groups)
-                if (!grepl("^rbans_", group_score_type)) {
+                # Only process main score type groups (skip special battery groups)
+                if (!grepl("^(rbans|wisc|wais|nab|wms)_", group_score_type)) {
                   # If this is NOT the correct score type for this test
                   if (group_score_type != correct_score_type) {
                     # Remove this test from the incorrect group
@@ -679,6 +701,11 @@ TableGTR6 <- R6::R6Class(
             if (length(tests) > 0) {
               # For each test that should be in this score type
               for (test_name in tests) {
+                # Skip batteries handled specially
+                if (test_name %in% batteries_to_handle) {
+                  next
+                }
+
                 # For each dynamic group
                 for (group_score_type in names(self$dynamic_grp)) {
                   # If this is NOT the correct score type for this test
@@ -718,73 +745,6 @@ TableGTR6 <- R6::R6Class(
             ": ",
             paste(self$grp_list[[score_type]], collapse = ", ")
           ))
-        }
-      }
-
-      # Special handling for test batteries with multiple score types - add footnotes directly
-      for (battery in batteries_to_handle) {
-        # Check if we have mappings for this battery
-        if (
-          !is.null(self$row_score_type_map) &&
-            battery %in% names(self$row_score_type_map)
-        ) {
-          battery_map <- self$row_score_type_map[[battery]]
-
-          # Add standard score footnote if we have standard score scales
-          if (length(battery_map$standard_score_scales) > 0) {
-            message(paste0(
-              "  Adding standard score footnote directly to ",
-              battery,
-              " for scales: ",
-              paste(battery_map$standard_score_scales, collapse = ", ")
-            ))
-
-            # Add standard score footnote for this battery
-            standard_fn_id <- paste0(tolower(battery), "_standard")
-            self$fn_list[[standard_fn_id]] <- if (
-              "standard_score" %in% names(self$fn_list)
-            ) {
-              self$fn_list[["standard_score"]]
-            } else {
-              "Standard score: Mean = 100 [50th\u2030], SD ± 15 [16th\u2030, 84th\u2030]"
-            }
-            self$grp_list[[standard_fn_id]] <- battery
-
-            message(paste0(
-              "  Created standard score group ",
-              standard_fn_id,
-              " for ",
-              battery
-            ))
-          }
-
-          # Add scaled score footnote if we have scaled score scales
-          if (length(battery_map$scaled_score_scales) > 0) {
-            message(paste0(
-              "  Adding scaled score footnote directly to ",
-              battery,
-              " for scales: ",
-              paste(battery_map$scaled_score_scales, collapse = ", ")
-            ))
-
-            # Add scaled score footnote for this battery
-            scaled_fn_id <- paste0(tolower(battery), "_scaled")
-            self$fn_list[[scaled_fn_id]] <- if (
-              "scaled_score" %in% names(self$fn_list)
-            ) {
-              self$fn_list[["scaled_score"]]
-            } else {
-              "Scaled score: Mean = 10 [50th\u2030], SD ± 3 [16th\u2030, 84th\u2030]"
-            }
-            self$grp_list[[scaled_fn_id]] <- battery
-
-            message(paste0(
-              "  Created scaled score group ",
-              scaled_fn_id,
-              " for ",
-              battery
-            ))
-          }
         }
       }
 
