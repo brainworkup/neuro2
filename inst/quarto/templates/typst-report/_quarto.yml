@@ -2,16 +2,15 @@ project:
   type: default
   title: "neuro2"
   execute-dir: project
+  pre-render:
+    - generate_domain_files.R
+    - generate_all_domain_assets.R
+    - generate_domain_outputs.R
   render:
     - template.qmd
 
 metadata-files:
   - _variables.yml
-
-pre-render:
-  - generate_domain_files.R
-  - generate_all_domain_assets.R
-  - generate_domain_outputs.R
 
 format:
   neurotyp-adult-typst:

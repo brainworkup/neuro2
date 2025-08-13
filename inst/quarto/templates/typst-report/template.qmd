@@ -46,7 +46,9 @@ patient <- Sys.getenv("PATIENT")
 
 {{< include _02-00_behav_obs.qmd >}}
 
-# NEUROCOGNITIVE FINDINGS
+```{=typst}
+= NEUROCOGNITIVE FINDINGS
+```
 
 ```{r}
 #| label: include-domains
