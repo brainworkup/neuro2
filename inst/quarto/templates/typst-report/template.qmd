@@ -24,12 +24,204 @@ knitr::opts_knit$set(
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
 
-# Source the enhanced functions
-source("R/domain_validation_utils.R")
-source("R/score_type_cache.R")
+# Load required packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(readr)
+  library(here)
+})
 
-# Initialize the score type cache once
-.score_type_cache$build_mappings()
+# Source the enhanced functions (with error handling)
+if (file.exists("R/domain_validation_utils.R")) {
+  source("R/domain_validation_utils.R")
+} else {
+  # Create minimal validation function if file doesn't exist
+  validate_domain_data_exists <- function(domain_name, data_source, min_rows = 1) {
+    if (is.null(data_source) || nrow(data_source) == 0) {
+      return(list(has_data = FALSE, message = "No data source"))
+    }
+    if (!"domain" %in% names(data_source)) {
+      return(list(has_data = FALSE, message = "No domain column"))
+    }
+    domain_data <- data_source %>% 
+      filter(domain == domain_name) %>%
+      filter(!is.na(percentile) | !is.na(score))
+    
+    list(
+      has_data = nrow(domain_data) >= min_rows,
+      row_count = nrow(domain_data),
+      message = paste("Found", nrow(domain_data), "rows")
+    )
+  }
+  
+  get_domains_with_data <- function(neurocog_data, neurobehav_data, domain_config) {
+    domains_with_data <- list()
+    for (domain_name in names(domain_config)) {
+      config <- domain_config[[domain_name]]
+      data_source <- if (grepl("neurocog", config$input_file)) neurocog_data else neurobehav_data
+      validation <- validate_domain_data_exists(domain_name, data_source)
+      if (validation$has_data) {
+        domains_with_data[[domain_name]] <- list(config = config, validation = validation)
+      }
+    }
+    domains_with_data
+  }
+}
+
+if (file.exists("R/score_type_cache.R")) {
+  source("R/score_type_cache.R")
+  # Initialize the score type cache once
+  if (exists(".score_type_cache")) {
+    .score_type_cache$build_mappings()
+  }
+}
+
+# Define domain configuration
+domain_config <- list(
+  "General Cognitive Ability" = list(
+    pheno = "iq",
+    input_file = "data/neurocog.csv"
+  ),
+  "Academic Skills" = list(
+    pheno = "academics", 
+    input_file = "data/neurocog.csv"
+  ),
+  "Verbal/Language" = list(
+    pheno = "verbal",
+    input_file = "data/neurocog.csv"
+  ),
+  "Visual Perception/Construction" = list(
+    pheno = "spatial",
+    input_file = "data/neurocog.csv"
+  ),
+  "Memory" = list(
+    pheno = "memory",
+    input_file = "data/neurocog.csv"
+  ),
+  "Attention/Executive" = list(
+    pheno = "executive",
+    input_file = "data/neurocog.csv"
+  ),
+  "Motor" = list(
+    pheno = "motor",
+    input_file = "data/neurocog.csv"
+  ),
+  "Social Cognition" = list(
+    pheno = "social",
+    input_file = "data/neurocog.csv"
+  ),
+  "ADHD" = list(
+    pheno = "adhd",
+    input_file = "data/neurobehav.csv"
+  ),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion",
+    input_file = "data/neurobehav.csv"
+  ),
+  "Emotional/Behavioral/Personality" = list(
+    pheno = "emotion",
+    input_file = "data/neurobehav.csv"
+  ),
+  "Adaptive Functioning" = list(
+    pheno = "adaptive",
+    input_file = "data/neurobehav.csv"
+  ),
+  "Daily Living" = list(
+    pheno = "daily_living",
+    input_file = "data/neurocog.csv"
+  )
+)
+
+# Load data files (with error handling)
+neurocog_data <- NULL
+neurobehav_data <- NULL
+
+# Function to safely read data files
+read_data_safe <- function(file_paths) {
+  for (path in file_paths) {
+    if (file.exists(path)) {
+      tryCatch({
+        if (grepl("\\.parquet$", path)) {
+          if (requireNamespace("arrow", quietly = TRUE)) {
+            return(arrow::read_parquet(path))
+          }
+        } else if (grepl("\\.csv$", path)) {
+          return(readr::read_csv(path, show_col_types = FALSE))
+        }
+      }, error = function(e) {
+        message(paste("Failed to read", path, ":", e$message))
+      })
+    }
+  }
+  return(NULL)
+}
+
+# Try to read neurocog data
+neurocog_paths <- c("data/neurocog.parquet", "data/neurocog.csv")
+neurocog_data <- read_data_safe(neurocog_paths)
+
+# Try to read neurobehav data  
+neurobehav_paths <- c("data/neurobehav.parquet", "data/neurobehav.csv")
+neurobehav_data <- read_data_safe(neurobehav_paths)
+
+# Report data loading status
+if (!is.null(neurocog_data)) {
+  message(paste("✓ Loaded neurocog data:", nrow(neurocog_data), "rows"))
+} else {
+  message("✗ Could not load neurocog data")
+}
+
+if (!is.null(neurobehav_data)) {
+  message(paste("✓ Loaded neurobehav data:", nrow(neurobehav_data), "rows"))
+} else {
+  message("✗ Could not load neurobehav data")
+}
+
+# Function to ensure text files exist
+ensure_text_files_exist <- function(domain_files) {
+  if (!exists("ensure_text_files_exist", mode = "function")) {
+    # Create a simple version if the function doesn't exist
+    for (domain_file in domain_files) {
+      if (!file.exists(domain_file)) next
+      
+      content <- tryCatch(readLines(domain_file, warn = FALSE), error = function(e) character(0))
+      includes <- content[grepl("\\{\\{< include.*_text.*\\.qmd >\\}\\}", content)]
+      
+      for (include_line in includes) {
+        text_file <- gsub(".*include\\s+([^\\s}]+).*", "\\1", include_line)
+        text_file <- trimws(text_file)
+        
+        if (!file.exists(text_file)) {
+          message(paste("Creating placeholder text file:", text_file))
+          
+          # Extract parts from filename
+          parts <- strsplit(basename(text_file), "_")[[1]]
+          domain_name <- if (length(parts) >= 2) parts[2] else "Assessment"
+          rater_type <- if (length(parts) >= 4) parts[4] else NULL
+          
+          title <- tools::toTitleCase(gsub("\\.qmd$", "", domain_name))
+          if (!is.null(rater_type)) {
+            title <- paste(title, "-", tools::toTitleCase(gsub("\\.qmd$", "", rater_type)), "Report")
+          }
+          
+          placeholder_content <- c(
+            paste0("# ", title),
+            "",
+            paste0("*", title, " content will be generated based on available data.*"),
+            ""
+          )
+          
+          tryCatch({
+            writeLines(placeholder_content, text_file)
+            message(paste("  ✓ Created", text_file))
+          }, error = function(e) {
+            message(paste("  ✗ Failed to create", text_file, ":", e$message))
+          })
+        }
+      }
+    }
+  }
+}
 ```
 
 ```{=typst}
@@ -62,12 +254,24 @@ source("R/score_type_cache.R")
 #| output: asis
 #| echo: false
 
-# Before domain generation, validate data
-valid_domains_only <- get_domains_with_data(
-  neurocog_data,
-  neurobehav_data,
-  domain_config
-)
+# Only validate domains if data is available
+if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
+  # Before domain generation, validate data
+  valid_domains_only <- get_domains_with_data(
+    neurocog_data,
+    neurobehav_data,
+    domain_config
+  )
+  
+  if (length(valid_domains_only) > 0) {
+    message(paste("Found", length(valid_domains_only), "domains with data"))
+  } else {
+    message("No domains found with valid data")
+  }
+} else {
+  message("No data files available for domain validation")
+  valid_domains_only <- list()
+}
 
 # Only include files that were actually generated
 domain_files <- list.files(
@@ -89,13 +293,14 @@ if (length(domain_files) > 0) {
   for (file in domain_files) {
     cat(sprintf("\n{{< include %s >}}\n", file))
   }
+  
+  # After domain generation, ensure text files exist
+  ensure_text_files_exist(domain_files)
+  
 } else {
   cat("\n*No domain files found. Please run the domain generation process.*\n")
+  cat("\n*To generate domain files, run the domain generation module first.*\n")
 }
-
-# After domain generation, ensure text files exist
-domain_files <- list.files(".", pattern = "^_02-[0-9]+_.*\\.qmd$")
-ensure_text_files_exist(domain_files)
 ```
 
 {{< pagebreak >}}
