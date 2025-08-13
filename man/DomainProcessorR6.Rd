@@ -72,7 +72,7 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
-\item \href{#method-DomainProcessorR6-generate_domain_text_qmd_fixed}{\code{DomainProcessorR6$generate_domain_text_qmd_fixed()}}
+\item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists_fixed}{\code{DomainProcessorR6$check_rater_data_exists_fixed()}}
 \item \href{#method-DomainProcessorR6-generate_text_content}{\code{DomainProcessorR6$generate_text_content()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_text_content}{\code{DomainProcessorR6$generate_adhd_text_content()}}
@@ -373,13 +373,13 @@ Fixed Text File Generation for DomainProcessorR6
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd_fixed"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd_fixed}{}}}
-\subsection{Method \code{generate_domain_text_qmd_fixed()}}{
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_text_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_text_qmd}{}}}
+\subsection{Method \code{generate_domain_text_qmd()}}{
 Enhanced method to generate domain text files with proper validation
 Ensure All Required Text Files Exist
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd_fixed(report_type = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd(report_type = NULL)}\if{html}{\out{</div>}}
 }
 
 }

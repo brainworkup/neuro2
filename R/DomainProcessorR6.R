@@ -59,12 +59,12 @@ DomainProcessorR6 <- R6::R6Class(
     #'
     #' @return A new DomainProcessorR6 object
     initialize = function(
-    domains,
-    pheno,
-    input_file,
-    output_dir = "data",
-    scale_source = NULL,
-    test_filters = NULL
+      domains,
+      pheno,
+      input_file,
+      output_dir = "data",
+      scale_source = NULL,
+      test_filters = NULL
     ) {
       self$domains <- domains
       self$pheno <- pheno
@@ -513,21 +513,21 @@ DomainProcessorR6 <- R6::R6Class(
         if (
           any(
             self$data$test %in%
-            c(
-              # BASC-3 measures
-              "basc3_prs_child",
-              "basc3_prs_adolescent",
-              "basc3_srp_child",
-              "basc3_srp_adolescent",
-              "basc3_trs_child",
-              "basc3_trs_adolescent",
-              "basc3_prs_preschool",
-              "basc3_trs_preschool",
-              # PAI adolescent measures (these are CHILD measures)
-              "pai_adol",
-              "pai_adol_clinical",
-              "pai_adol_validity"
-            ),
+              c(
+                # BASC-3 measures
+                "basc3_prs_child",
+                "basc3_prs_adolescent",
+                "basc3_srp_child",
+                "basc3_srp_adolescent",
+                "basc3_trs_child",
+                "basc3_trs_adolescent",
+                "basc3_prs_preschool",
+                "basc3_trs_preschool",
+                # PAI adolescent measures (these are CHILD measures)
+                "pai_adol",
+                "pai_adol_clinical",
+                "pai_adol_validity"
+              ),
             na.rm = TRUE
           )
         ) {
@@ -540,7 +540,7 @@ DomainProcessorR6 <- R6::R6Class(
         if (
           any(
             self$data$test %in%
-            c("pai", "pai_clinical", "pai_validity", "pai_attention"),
+              c("pai", "pai_clinical", "pai_validity", "pai_attention"),
             na.rm = TRUE
           )
         ) {
@@ -567,17 +567,17 @@ DomainProcessorR6 <- R6::R6Class(
         # This could be determined by domain name or available data
         if (
           any(grepl("child", tolower(self$domains))) ||
-          (!is.null(self$data) &&
-           any(
-             self$data$test %in%
-             c(
-               "basc3_prs_child",
-               "basc3_prs_adolescent",
-               "basc3_trs_child",
-               "basc3_trs_adolescent"
-             ),
-             na.rm = TRUE
-           ))
+            (!is.null(self$data) &&
+              any(
+                self$data$test %in%
+                  c(
+                    "basc3_prs_child",
+                    "basc3_prs_adolescent",
+                    "basc3_trs_child",
+                    "basc3_trs_adolescent"
+                  ),
+                na.rm = TRUE
+              ))
         ) {
           # ADHD child has self, parent, and teacher reports
           return(c("self", "parent", "teacher"))
@@ -679,7 +679,7 @@ DomainProcessorR6 <- R6::R6Class(
           test_patterns <- rater_test_patterns[[rater_type]]
           if (
             length(test_patterns) > 0 &&
-            any(self$data$test %in% test_patterns, na.rm = TRUE)
+              any(self$data$test %in% test_patterns, na.rm = TRUE)
           ) {
             return(TRUE)
           }
@@ -698,9 +698,9 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param is_child Logical indicating if this is a child version (default: FALSE).
     #' @return The path to the generated file.
     generate_domain_qmd = function(
-    domain_name = NULL,
-    output_file = NULL,
-    is_child = FALSE
+      domain_name = NULL,
+      output_file = NULL,
+      is_child = FALSE
     ) {
       # Use the first domain if domain_name not provided
       if (is.null(domain_name)) {
@@ -726,16 +726,16 @@ DomainProcessorR6 <- R6::R6Class(
         # Determine if this is child or adult ADHD
         is_adhd_child <- any(grepl("child", tolower(self$domains))) ||
           (!is.null(self$data) &&
-             any(
-               self$data$test %in%
-                 c(
-                   "basc3_prs_child",
-                   "basc3_prs_adolescent",
-                   "basc3_trs_child",
-                   "basc3_trs_adolescent"
-                 ),
-               na.rm = TRUE
-             ))
+            any(
+              self$data$test %in%
+                c(
+                  "basc3_prs_child",
+                  "basc3_prs_adolescent",
+                  "basc3_trs_child",
+                  "basc3_trs_adolescent"
+                ),
+              na.rm = TRUE
+            ))
 
         if (is_adhd_child) {
           # ADHD child
@@ -1183,18 +1183,32 @@ DomainProcessorR6 <- R6::R6Class(
     #' @description Enhanced method to generate domain text files with proper validation
 
     # Add this method to DomainProcessorR6 class
-    generate_domain_text_qmd_fixed = function(report_type = NULL) {
+    generate_domain_text_qmd = function(report_type = NULL) {
       # Determine the appropriate text file name
       if (!is.null(report_type)) {
         # Multi-rater case (e.g., emotion_child_text_self.qmd)
-        text_file <- paste0("_", sprintf("%02d", as.numeric(self$number)), "-",
-                            sprintf("%02d", as.numeric(self$number)), "_",
-                            self$pheno, "_text_", report_type, ".qmd")
+        text_file <- paste0(
+          "_",
+          sprintf("%02d", as.numeric(self$number)),
+          "-",
+          sprintf("%02d", as.numeric(self$number)),
+          "_",
+          self$pheno,
+          "_text_",
+          report_type,
+          ".qmd"
+        )
       } else {
         # Single rater case (e.g., iq_text.qmd)
-        text_file <- paste0("_", sprintf("%02d", as.numeric(self$number)), "-",
-                            sprintf("%02d", as.numeric(self$number)), "_",
-                            self$pheno, "_text.qmd")
+        text_file <- paste0(
+          "_",
+          sprintf("%02d", as.numeric(self$number)),
+          "-",
+          sprintf("%02d", as.numeric(self$number)),
+          "_",
+          self$pheno,
+          "_text.qmd"
+        )
       }
 
       # Check if we need to create this text file
@@ -1207,20 +1221,32 @@ DomainProcessorR6 <- R6::R6Class(
       text_content <- private$generate_text_content(report_type)
 
       # Write the text file
-      tryCatch({
-        writeLines(text_content, text_file)
-        message(paste("Generated text file:", text_file))
-        return(text_file)
-      }, error = function(e) {
-        warning(paste("Failed to generate text file", text_file, ":", e$message))
-        # Create a minimal placeholder file to avoid include errors
-        placeholder_content <- paste0(
-          "# ", self$domains, " - ", ifelse(is.null(report_type), "General", report_type), " Report\n\n",
-          "*Text content for this domain and rater combination is not available.*\n"
-        )
-        writeLines(placeholder_content, text_file)
-        return(text_file)
-      })
+      tryCatch(
+        {
+          writeLines(text_content, text_file)
+          message(paste("Generated text file:", text_file))
+          return(text_file)
+        },
+        error = function(e) {
+          warning(paste(
+            "Failed to generate text file",
+            text_file,
+            ":",
+            e$message
+          ))
+          # Create a minimal placeholder file to avoid include errors
+          placeholder_content <- paste0(
+            "# ",
+            self$domains,
+            " - ",
+            ifelse(is.null(report_type), "General", report_type),
+            " Report\n\n",
+            "*Text content for this domain and rater combination is not available.*\n"
+          )
+          writeLines(placeholder_content, text_file)
+          return(text_file)
+        }
+      )
     },
 
     # Enhanced rater data check
@@ -1244,11 +1270,17 @@ DomainProcessorR6 <- R6::R6Class(
 
     # Enhanced text content generation
     generate_text_content = function(report_type = NULL) {
-      domain_name <- self$domains[1]  # Use first domain if multiple
+      domain_name <- self$domains[1] # Use first domain if multiple
 
       # Create appropriate header
       header <- if (!is.null(report_type)) {
-        paste0("# ", domain_name, " - ", stringr::str_to_title(report_type), " Report\n\n")
+        paste0(
+          "# ",
+          domain_name,
+          " - ",
+          stringr::str_to_title(report_type),
+          " Report\n\n"
+        )
       } else {
         paste0("# ", domain_name, " Report\n\n")
       }
@@ -1256,7 +1288,10 @@ DomainProcessorR6 <- R6::R6Class(
       # Generate content based on domain and rater
       content <- if (domain_name == "ADHD") {
         generate_adhd_text_content(report_type)
-      } else if (domain_name %in% c("Behavioral/Emotional/Social", "Emotional/Behavioral/Personality")) {
+      } else if (
+        domain_name %in%
+          c("Behavioral/Emotional/Social", "Emotional/Behavioral/Personality")
+      ) {
         generate_emotion_text_content(report_type)
       } else {
         generate_generic_text_content(report_type)
@@ -1270,16 +1305,24 @@ DomainProcessorR6 <- R6::R6Class(
       base_text <- "ADHD assessment results show patterns related to attention, hyperactivity, and impulsivity.\n\n"
 
       if (!is.null(report_type)) {
-        rater_text <- switch(report_type,
-                             "self" = "Based on self-report measures, ",
-                             "parent" = "Based on parent-report measures, ",
-                             "teacher" = "Based on teacher-report measures, ",
-                             "Based on observer measures, "
+        rater_text <- switch(
+          report_type,
+          "self" = "Based on self-report measures, ",
+          "parent" = "Based on parent-report measures, ",
+          "teacher" = "Based on teacher-report measures, ",
+          "Based on observer measures, "
         )
-        return(paste0(base_text, rater_text, "the individual's functioning was assessed across multiple domains.\n"))
+        return(paste0(
+          base_text,
+          rater_text,
+          "the individual's functioning was assessed across multiple domains.\n"
+        ))
       }
 
-      return(paste0(base_text, "Multiple perspectives were gathered to assess functioning.\n"))
+      return(paste0(
+        base_text,
+        "Multiple perspectives were gathered to assess functioning.\n"
+      ))
     },
 
     # Emotion-specific text generation
@@ -1287,29 +1330,48 @@ DomainProcessorR6 <- R6::R6Class(
       base_text <- "Behavioral and emotional functioning assessment provides insights into psychological well-being and adaptive functioning.\n\n"
 
       if (!is.null(report_type)) {
-        rater_text <- switch(report_type,
-                             "self" = "Self-report measures indicate ",
-                             "parent" = "Parent-report measures indicate ",
-                             "teacher" = "Teacher-report measures indicate ",
-                             "Observer measures indicate "
+        rater_text <- switch(
+          report_type,
+          "self" = "Self-report measures indicate ",
+          "parent" = "Parent-report measures indicate ",
+          "teacher" = "Teacher-report measures indicate ",
+          "Observer measures indicate "
         )
-        return(paste0(base_text, rater_text, "specific patterns of emotional and behavioral functioning.\n"))
+        return(paste0(
+          base_text,
+          rater_text,
+          "specific patterns of emotional and behavioral functioning.\n"
+        ))
       }
 
-      return(paste0(base_text, "Multiple rater perspectives provide comprehensive assessment.\n"))
+      return(paste0(
+        base_text,
+        "Multiple rater perspectives provide comprehensive assessment.\n"
+      ))
     },
 
     # Generic text generation
     generate_generic_text_content = function(report_type) {
       domain_name <- self$domains[1]
-      base_text <- paste0("Assessment of ", tolower(domain_name), " provides important information about cognitive functioning.\n\n")
+      base_text <- paste0(
+        "Assessment of ",
+        tolower(domain_name),
+        " provides important information about cognitive functioning.\n\n"
+      )
 
       if (!is.null(report_type)) {
         rater_text <- paste0("From the ", report_type, " perspective, ")
-        return(paste0(base_text, rater_text, "performance patterns were observed.\n"))
+        return(paste0(
+          base_text,
+          rater_text,
+          "performance patterns were observed.\n"
+        ))
       }
 
-      return(paste0(base_text, "Performance patterns provide insights into functioning.\n"))
+      return(paste0(
+        base_text,
+        "Performance patterns provide insights into functioning.\n"
+      ))
     },
 
     #' Ensure All Required Text Files Exist
@@ -1342,10 +1404,18 @@ DomainProcessorR6 <- R6::R6Class(
 
             # Create minimal placeholder content
             placeholder_content <- c(
-              paste0("# ", stringr::str_to_title(gsub("\\.qmd", "", domain_part)), " Assessment"),
+              paste0(
+                "# ",
+                stringr::str_to_title(gsub("\\.qmd", "", domain_part)),
+                " Assessment"
+              ),
               "",
               if (!is.null(rater_part)) {
-                paste0("*", stringr::str_to_title(rater_part), " report content would appear here.*")
+                paste0(
+                  "*",
+                  stringr::str_to_title(rater_part),
+                  " report content would appear here.*"
+                )
               } else {
                 "*Assessment content would appear here.*"
               },
@@ -1368,9 +1438,9 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
     #' @return Invisibly returns self for method chaining.
     process = function(
-    generate_reports = TRUE,
-    report_types = c("self"),
-    generate_domain_files = FALSE
+      generate_reports = TRUE,
+      report_types = c("self"),
+      generate_domain_files = FALSE
     ) {
       # Run the complete pipeline
       self$load_data()
@@ -3196,15 +3266,15 @@ DomainProcessorR6 <- R6::R6Class(
 #' @export
 #' @rdname process_domain_data
 process_domain_data <- function(
-    domains,
-    pheno,
-    input_file,
-    output_dir = "data",
-    scale_source = NULL,
-    test_filters = NULL,
-    generate_reports = TRUE,
-    report_types = c("self"),
-    generate_domain_files = FALSE
+  domains,
+  pheno,
+  input_file,
+  output_dir = "data",
+  scale_source = NULL,
+  test_filters = NULL,
+  generate_reports = TRUE,
+  report_types = c("self"),
+  generate_domain_files = FALSE
 ) {
   # Create a DomainProcessorR6 object and run the processing pipeline
   processor <- DomainProcessorR6$new(
@@ -3224,4 +3294,3 @@ process_domain_data <- function(
 
   invisible(processor$data)
 }
-
