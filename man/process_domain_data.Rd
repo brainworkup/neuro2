@@ -2,7 +2,7 @@
 % Please edit documentation in R/DomainProcessorR6.R
 \name{process_domain_data}
 \alias{process_domain_data}
-\title{Process Neuropsychological Domain Data}
+\title{Process Neuropsychological Domain Data (Function Wrapper)}
 \usage{
 process_domain_data(
   domains,
@@ -13,34 +13,32 @@ process_domain_data(
   test_filters = NULL,
   generate_reports = TRUE,
   report_types = c("self"),
-  generate_domain_files = FALSE,
-  config = NULL
+  generate_domain_files = FALSE
 )
 }
 \arguments{
-\item{domains}{Character vector of domain names to process}
+\item{domains}{Character vector of domain names to process.}
 
-\item{pheno}{Character string specifying the phenotype identifier}
+\item{pheno}{Target phenotype identifier string.}
 
-\item{input_file}{Character string path to the input data file}
+\item{input_file}{Path to the input CSV file (neurocog.csv, neurobehav.csv, or validity.csv).}
 
-\item{output_dir}{Character string path to the output directory}
+\item{output_dir}{Directory where output files will be saved (default: "data").}
 
-\item{scale_source}{Optional source for scale information}
+\item{scale_source}{Source of scales information (default: NULL, will use package internal data).}
 
-\item{test_filters}{List of test filters by rater type}
+\item{test_filters}{List of test filters for different report types (default: NULL).}
 
-\item{generate_reports}{Logical whether to generate reports}
+\item{generate_reports}{Whether to generate text reports (default: TRUE).}
 
-\item{report_types}{Character vector of report types to generate}
+\item{report_types}{Vector of report types to generate (default: c("self")).}
 
-\item{generate_domain_files}{Logical whether to generate domain files}
-
-\item{config}{List containing configuration parameters}
+\item{generate_domain_files}{Whether to generate domain QMD files (default: FALSE).}
 }
 \value{
-Invisibly returns the processed data
+Invisibly returns the processed data.
 }
 \description{
-Process Neuropsychological Domain Data
+This function encapsulates a complete data processing pipeline for neuropsychological domains.
+It's a wrapper around the DomainProcessorR6 class.
 }

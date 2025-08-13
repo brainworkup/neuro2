@@ -40,13 +40,6 @@ if (file.exists("R/utils.R")) {
   source("R/utils.R")
 }
 
-# Load NeurotypR if available, otherwise continue without it
-if (requireNamespace("NeurotypR", quietly = TRUE)) {
-  library(NeurotypR)
-  message("✅ NeurotypR loaded")
-} else {
-  message("⚠️  NeurotypR not available - using built-in alternatives")
-}
 
 # Source R6 classes with error handling
 r6_files <- c(

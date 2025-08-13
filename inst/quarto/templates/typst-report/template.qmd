@@ -25,15 +25,6 @@ Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
 ```
 
-```{r}
-#| label: generate-all-figures
-#| include: false
-
-# This chunk runs first and generates all needed figures
-# without rendering the domain files to Typst
-source("generate_all_domain_assets.R")
-```
-
 ```{=typst}
 #let case_number = [{{< var case_number >}}]
 #let name = [{{< var last_name >}}, {{< var first_name >}}]
@@ -59,7 +50,8 @@ source("generate_all_domain_assets.R")
 
 ```{r}
 #| label: include-domains
-#| include: false
+#| output: asis
+#| echo: false
 
 # Define all possible domain files in canonical order
 # Up to 14 total domains, with up to 10-12 domains per patient
@@ -80,10 +72,15 @@ all_possible_domains <- c(
   "_02-12_daily_living.qmd"
 )
 
-# Check which domain files actually exist
+# Check which domain files actually exist and include them
 existing_files <- character()
 for (file in all_possible_domains) {
-  if (file.exists(file)) {
+  # Check if the output file exists (pre-processed version without R code)
+  output_file <- gsub("\\.qmd$", "_output.qmd", file)
+  if (file.exists(output_file)) {
+    existing_files <- c(existing_files, output_file)
+  } else if (file.exists(file)) {
+    # Fall back to original file if output doesn't exist
     existing_files <- c(existing_files, file)
   }
 }
@@ -97,9 +94,10 @@ if (length(existing_files) > 0) {
 } else {
   cat("\n*No domain files found. Please run the domain generation process.*\n")
 }
+
 ```
 
-<!-- {{< pagebreak >}} -->
+{{< pagebreak >}}
 
 {{< include _03-00_sirf.qmd >}}
 

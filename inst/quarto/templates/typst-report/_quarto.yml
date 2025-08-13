@@ -10,6 +10,8 @@ metadata-files:
 
 pre-render:
   - generate_domain_files.R
+  - generate_all_domain_assets.R
+  - generate_domain_outputs.R
 
 format:
   neurotyp-adult-typst:
