@@ -9,7 +9,7 @@ metadata-files:
   - _variables.yml
 
 pre-render:
-  - generate_domain_files.R # Generate all .qmd files first
+  - generate_domain_files.R
 
 format:
   neurotyp-adult-typst:
@@ -49,6 +49,24 @@ format:
     fig-format: svg
 
   neurotyp-pediatric-typst:
+    keep-typ: true
+    keep-md: true
+    papersize: "us-letter"
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
+    fontsize: 11pt
+    number-sections: false
+    number-offset: 1
+    citeproc: true
+    csl: inst/resources/bib/apa.csl
+    reference-location: document
+    bibliography: inst/resources/bib/refs.bib
+    shift-heading-level-by: 0
+    fig-width: 6
+    fig-height: 4
+    fig-format: svg
+
+  typst:
     keep-typ: true
     keep-md: true
     papersize: "us-letter"

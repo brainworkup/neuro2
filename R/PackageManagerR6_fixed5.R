@@ -130,7 +130,11 @@ PackageManagerR6 <- R6::R6Class(
 
     #' @param ask Logical; if TRUE, interactively confirm before installing.
 
+    #' @param install_missing Logical; if TRUE, install any missing packages.
+    #' @param include_optional Logical; include optional (non-required) groups/packages if TRUE.
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Invisibly returns self.
+
 
 
     check_and_install = function(install_missing = FALSE,
@@ -191,7 +195,12 @@ PackageManagerR6 <- R6::R6Class(
 
     #' @param group Character name of the package group.
 
+    #' @param packages Character vector of package names.
+    #' @param install_missing Logical; if TRUE, install any missing packages.
+    #' @param required Logical or character; if provided, restrict to required packages or a subset.
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Logical; TRUE if all packages in the group are available.
+
 
 
     check_package_group = function(packages, install_missing = FALSE,
@@ -210,7 +219,10 @@ PackageManagerR6 <- R6::R6Class(
 
     #' @param pkg Character name of the package.
 
+    #' @param install_missing Logical; if TRUE, install any missing packages.
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Logical; TRUE if package is available.
+
 
 
     check_single_package = function(pkg, install_missing = FALSE, verbose = TRUE) {
@@ -277,7 +289,9 @@ PackageManagerR6 <- R6::R6Class(
 
     #' @param quiet Logical; if TRUE, suppress startup messages.
 
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Invisibly returns self.
+
 
 
     load_packages = function(packages = NULL, verbose = TRUE) {
@@ -360,7 +374,9 @@ PackageManagerR6 <- R6::R6Class(
 
     #' @param upgrade Logical or 'never'/'always' as used by package managers; upgrade if TRUE.
 
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Invisibly returns self.
+
 
 
     install_missing_packages = function(verbose = TRUE) {
@@ -388,7 +404,10 @@ PackageManagerR6 <- R6::R6Class(
     # Check for potential package conflicts
     #' @description Check for function name conflicts across loaded packages.
     #' @param packages Optional character vector; if NULL, check currently loaded packages.
+#' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return A data.frame (or list) describing conflicts.
+
+
 
     check_conflicts = function(verbose = TRUE) {
       if (!requireNamespace("conflicted", quietly = TRUE)) {
@@ -416,7 +435,10 @@ PackageManagerR6 <- R6::R6Class(
     #' @description Write a helper R script that loads required packages/groups for reproducible environments.
     #' @param path Output path to write the .R script.
     #' @param groups Optional character vector of groups to include; NULL = all.
+#' @param file Output path for the generated loading script file.
     #' @return Path to the created script (character).
+
+
 
     create_package_loading_script = function(file = "load_packages.R") {
       all_required <- unlist(lapply(self$required_packages, function(x) x$packages))

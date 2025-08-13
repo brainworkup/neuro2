@@ -154,6 +154,9 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @description Load input data sources into memory or database (as configured).
 
+    #' @param data_dir Directory path where raw data files are located.
+    #' @param use_duckdb Logical; use DuckDB-backed loading if TRUE, otherwise in-memory.
+    #' @param output_format Character specifying the target format for loaded data (e.g., 'arrow', 'parquet').
     #' @return Invisibly returns `self`.
 
     load_data = function(
@@ -213,6 +216,7 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @param age_group Optional character ('child' or 'adult') to control measure selection.
 
+    #' @param include_multi_rater Logical; if TRUE, include multi-rater behavioral measures.
     #' @return Invisibly returns `self`.
 
     process_domains = function(
@@ -301,6 +305,9 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @param age_group Optional character ('child' or 'adult').
 
+    #' @param processor An existing domain processor instance to (re)use for this domain.
+    #' @param domain_key Character key identifying a domain variant (e.g., narrow domain id).
+    #' @param rater Optional rater label for behavioral measures (e.g., 'self','parent','teacher').
     #' @return The created/updated domain processor (invisibly).
 
     process_single_domain = function(processor, domain_key, rater = "self") {
@@ -333,6 +340,7 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @param execute Logical; if TRUE, execute/knit the document.
 
+    #' @param format Output format for the rendered report (e.g., 'pdf','html','docx').
     #' @return Path to the generated report file (character).
 
     generate_report = function(
@@ -419,6 +427,8 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @param age_group Optional character ('child' or 'adult').
 
+    #' @param load_data Logical; if TRUE, run the data loading step within the workflow.
+    #' @param generate_report Logical; if TRUE, render the report at the end of the workflow.
     #' @return List or named list summarizing workflow results (invisibly).
 
     run_full_workflow = function(

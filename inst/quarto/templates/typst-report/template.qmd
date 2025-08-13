@@ -28,14 +28,10 @@ patient <- Sys.getenv("PATIENT")
 ```{r}
 #| label: generate-all-figures
 #| include: false
-#| echo: false
 
 # This chunk runs first and generates all needed figures
 # without rendering the domain files to Typst
-
 source("generate_all_domain_assets.R")
-# This script should generate your .svg and .png files
-# without rendering the .qmd files to Typst
 ```
 
 ```{=typst}
@@ -63,6 +59,7 @@ source("generate_all_domain_assets.R")
 
 ```{r}
 #| label: include-domains
+#| include: false
 
 # Define all possible domain files in canonical order
 # Up to 14 total domains, with up to 10-12 domains per patient
