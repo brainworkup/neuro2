@@ -29,6 +29,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
   library(here)
+  library(yaml)
 })
 
 # Source the enhanced functions (with error handling)
@@ -83,11 +84,11 @@ if (file.exists("R/domain_validation_utils.R")) {
   }
 }
 
-if (file.exists("R/score_type_cache.R")) {
-  source("R/score_type_cache.R")
+if (file.exists("R/ScoreTypeCacheR6.R")) {
+  source("R/ScoreTypeCacheR6.R")
   # Initialize the score type cache once
-  if (exists(".score_type_cache")) {
-    .score_type_cache$build_mappings()
+  if (exists(".ScoreTypeCacheR6")) {
+    .ScoreTypeCacheR6$build_mappings()
   }
 }
 
@@ -302,6 +303,50 @@ if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
   if (length(valid_domains_only) > 0) {
     message(paste("Found", length(valid_domains_only), "domains with data"))
 
+    # Get patient age for child/adult determination
+    patient_age <- NULL
+
+    # Try to get age from Quarto metadata/variables
+    tryCatch(
+      {
+        # Try reading from _variables.yml if it exists
+        if (file.exists("_variables.yml")) {
+          variables <- yaml::read_yaml("_variables.yml")
+          if (!is.null(variables$age)) {
+            patient_age <- as.numeric(variables$age)
+          }
+        }
+
+        # If still null, try other methods
+        if (is.null(patient_age)) {
+          # Try getting from knitr metadata
+          age_var <- knitr::opts_knit$get("rmarkdown.pandoc.args")
+          # This is a fallback - in practice, age should come from _variables.yml
+        }
+      },
+      error = function(e) {
+        message("Could not determine patient age, defaulting to adult")
+      }
+    )
+
+    # Default to adult if age cannot be determined
+    if (is.null(patient_age)) {
+      patient_age <- 18 # Default to adult
+    }
+
+    # Determine if patient is child (< 18) or adult (>= 18)
+    is_child <- patient_age < 18
+    emotion_suffix <- if (is_child) "child" else "adult"
+    adhd_suffix <- if (is_child) "child" else "adult"
+
+    message(paste(
+      "Patient age:",
+      patient_age,
+      "- Using",
+      emotion_suffix,
+      "emotion files"
+    ))
+
     # Create a mapping of domain names to their expected file patterns
     domain_to_pattern <- c(
       "General Cognitive Ability" = "_02-01_iq",
@@ -312,13 +357,16 @@ if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
       "Attention/Executive" = "_02-06_executive",
       "Motor" = "_02-07_motor",
       "Social Cognition" = "_02-08_social",
-      "ADHD" = "_02-09_adhd",
-      "Behavioral/Emotional/Social" = "_02-10_emotion",
-      "Emotional/Behavioral/Personality" = "_02-10_emotion",
-      "Personality Disorders" = "_02-10_emotion",
-      "Psychiatric Disorders" = "_02-10_emotion",
-      "Psychosocial Problems" = "_02-10_emotion",
-      "Substance Use" = "_02-10_emotion",
+      "ADHD" = paste0("_02-09_adhd_", adhd_suffix),
+      "Behavioral/Emotional/Social" = paste0("_02-10_emotion_", emotion_suffix),
+      "Emotional/Behavioral/Personality" = paste0(
+        "_02-10_emotion_",
+        emotion_suffix
+      ),
+      "Personality Disorders" = paste0("_02-10_emotion_", emotion_suffix),
+      "Psychiatric Disorders" = paste0("_02-10_emotion_", emotion_suffix),
+      "Psychosocial Problems" = paste0("_02-10_emotion_", emotion_suffix),
+      "Substance Use" = paste0("_02-10_emotion_", emotion_suffix),
       "Adaptive Functioning" = "_02-11_adaptive",
       "Daily Living" = "_02-12_daily_living"
     )
@@ -373,7 +421,21 @@ if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
       # After domain generation, ensure text files exist
       ensure_text_files_exist(domain_files)
     } else {
-      cat("\n*No domain files found for domains with data.*\n")
+      # More informative message about what's missing
+      expected_files <- unique(domain_to_pattern[names(valid_domains_only)])
+      expected_files <- expected_files[!is.na(expected_files)]
+
+      cat("\n*Domain files need to be generated for domains with data.*\n\n")
+      cat("**Domains with data (", length(valid_domains_only), "):**\n")
+      for (domain_name in names(valid_domains_only)) {
+        row_count <- valid_domains_only[[domain_name]]$validation$row_count
+        cat("- ", domain_name, " (", row_count, " rows)\n")
+      }
+      cat("\n**Expected files to generate:**\n")
+      for (file_pattern in sort(expected_files)) {
+        cat("- ", file_pattern, ".qmd (and related files)\n")
+      }
+      cat("\n*Run your domain generation process to create these files.*\n")
     }
   } else {
     cat("\n*No domains found with valid data.*\n")
