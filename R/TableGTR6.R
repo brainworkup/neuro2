@@ -76,21 +76,21 @@ TableGTR6 <- R6::R6Class(
     #'
     #' @return A new TableGTR6 object
     initialize = function(
-      data,
-      pheno = NULL,
-      table_name = NULL,
-      source_note = NULL,
-      names = NULL,
-      title = NULL,
-      tab_stubhead = NULL,
-      caption = NULL,
-      process_md = FALSE,
-      fn_list = list(),
-      grp_list = list(),
-      dynamic_grp = NULL,
-      vertical_padding = NULL,
-      multiline = TRUE,
-      row_score_type_map = NULL
+    data,
+    pheno = NULL,
+    table_name = NULL,
+    source_note = NULL,
+    names = NULL,
+    title = NULL,
+    tab_stubhead = NULL,
+    caption = NULL,
+    process_md = FALSE,
+    fn_list = list(),
+    grp_list = list(),
+    dynamic_grp = NULL,
+    vertical_padding = NULL,
+    multiline = TRUE,
+    row_score_type_map = NULL
     ) {
       self$data <- data
       self$pheno <- pheno
@@ -186,7 +186,7 @@ TableGTR6 <- R6::R6Class(
 
         # Process multi-score batteries with simplified logic
         for (battery in multi_score_batteries) {
-          tbl <- private$handle_multi_score_battery(battery, tbl)
+          private$handle_multi_score_battery(battery, tbl)
         }
       }
 
@@ -231,35 +231,7 @@ TableGTR6 <- R6::R6Class(
       return(tbl)
     },
 
-    #' @description
-    #' Save the table to PNG and PDF files.
-    #'
-    #' @param tbl A gt table object to save.
-    #' @param dir Directory to save the files in (default: current directory).
-    #' @return Invisibly returns self for method chaining.
-    save_table = function(tbl, dir = ".") {
-      # Save PNG
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".png"))
-      )
-
-      # Save PDF
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".pdf"))
-      )
-
-      invisible(self)
-    }
-  ),
-  
-  private = list(
-    #' Handle multi-score battery footnote assignment
-    #'
-    #' @param battery Character string of the battery name
-    #' @param tbl The gt table object to modify
-    #' @return Modified gt table object
+    # Add this private method to handle multi-score batteries
     handle_multi_score_battery = function(battery, tbl) {
       # Simplified multi-score battery handling
       battery_scales <- self$data$scale[self$data$test_name == battery]
@@ -298,8 +270,29 @@ TableGTR6 <- R6::R6Class(
             locations = gt::cells_row_groups(groups = battery)
           )
       }
-      
-      return(tbl)
+    },
+
+    #' @description
+    #' Save the table to PNG and PDF files.
+    #'
+    #' @param tbl A gt table object to save.
+    #' @param dir Directory to save the files in (default: current directory).
+    #' @return Invisibly returns self for method chaining.
+    save_table = function(tbl, dir = ".") {
+      # Save PNG
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".png"))
+      )
+
+      # Save PDF
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".pdf"))
+      )
+
+      invisible(self)
     }
-  )
+  ),
+
 )

@@ -68,11 +68,11 @@ if (file.exists("R/domain_validation_utils.R")) {
   }
 }
 
-if (file.exists("R/score_type_cache.R")) {
-  source("R/score_type_cache.R")
+if (file.exists("R/ScoreTypeCacheR6.R")) {
+  source("R/ScoreTypeCacheR6.R")
   # Initialize the score type cache once
-  if (exists(".score_type_cache")) {
-    .score_type_cache$build_mappings()
+  if (exists(".ScoreTypeCacheR6")) {
+    .ScoreTypeCacheR6$build_mappings()
   }
 }
 
