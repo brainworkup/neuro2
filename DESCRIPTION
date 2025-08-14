@@ -30,6 +30,7 @@ Imports:
     janitor,
     kableExtra,
     knitr,
+    magrittr,
     memoise,
     progress,
     purrr,
