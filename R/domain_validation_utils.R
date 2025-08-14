@@ -1,3 +1,9 @@
+# Load required packages for domain validation
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(magrittr)  # For %>% operator
+})
+
 #' Enhanced Domain Data Validation
 #'
 #' @description Validates if a domain has sufficient data before processing

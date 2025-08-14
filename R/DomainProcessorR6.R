@@ -681,13 +681,25 @@ DomainProcessorR6 <- R6::R6Class(
         return(NULL)
       }
 
-      # Generate appropriate text content
-      text_content <- private$generate_text_content(report_type)
-
-      # Write the text file
+      # Use NeuropsychResultsR6 to generate the actual narrative text from data
       tryCatch(
         {
-          writeLines(text_content, text_file)
+          # Ensure data is loaded and processed
+          if (is.null(self$data)) {
+            self$load_data()
+            self$filter_by_domain()
+            self$select_columns()
+          }
+
+          # Use NeuropsychResultsR6 class to generate proper text content
+          results_processor <- NeuropsychResultsR6$new(
+            data = self$data,
+            file = text_file
+          )
+          
+          # Process the data to generate narrative text
+          results_processor$process()
+          
           message(paste("Generated text file:", text_file))
           return(text_file)
         },
@@ -700,12 +712,9 @@ DomainProcessorR6 <- R6::R6Class(
           ))
           # Create a minimal placeholder file to avoid include errors
           placeholder_content <- paste0(
-            "# ",
-            self$domains[1],
-            " - ",
-            ifelse(is.null(report_type), "General", report_type),
-            " Report\n\n",
-            "*Text content for this domain and rater combination is not available.*\n"
+            "*Text content for this domain",
+            ifelse(is.null(report_type), "", paste(" and", report_type, "rater")),
+            " is not available.*\n"
           )
           writeLines(placeholder_content, text_file)
           return(text_file)
@@ -1155,108 +1164,7 @@ DomainProcessorR6 <- R6::R6Class(
 
   # Private methods
   private = list(
-    # Generate text content for different report types
-    generate_text_content = function(report_type = NULL) {
-      domain_name <- self$domains[1]
-
-      # Create appropriate header
-      header <- if (!is.null(report_type)) {
-        paste0(
-          "# ",
-          domain_name,
-          " - ",
-          stringr::str_to_title(report_type),
-          " Report\n\n"
-        )
-      } else {
-        paste0("# ", domain_name, " Report\n\n")
-      }
-
-      # Generate content based on domain and rater
-      content <- if (domain_name == "ADHD") {
-        private$generate_adhd_text_content(report_type)
-      } else if (
-        domain_name %in%
-          c("Behavioral/Emotional/Social", "Emotional/Behavioral/Personality")
-      ) {
-        private$generate_emotion_text_content(report_type)
-      } else {
-        private$generate_generic_text_content(report_type)
-      }
-
-      return(paste0(header, content))
-    },
-
-    # ADHD-specific text generation
-    generate_adhd_text_content = function(report_type) {
-      base_text <- "ADHD assessment results show patterns related to attention, hyperactivity, and impulsivity.\n\n"
-
-      if (!is.null(report_type)) {
-        rater_text <- switch(report_type,
-          "self" = "Based on self-report measures, ",
-          "parent" = "Based on parent-report measures, ",
-          "teacher" = "Based on teacher-report measures, ",
-          "Based on observer measures, "
-        )
-        return(paste0(
-          base_text,
-          rater_text,
-          "the individual's functioning was assessed across multiple domains.\n"
-        ))
-      }
-
-      return(paste0(
-        base_text,
-        "Multiple perspectives were gathered to assess functioning.\n"
-      ))
-    },
-
-    # Emotion-specific text generation
-    generate_emotion_text_content = function(report_type) {
-      base_text <- "Behavioral and emotional functioning assessment provides insights into psychological well-being and adaptive functioning.\n\n"
-
-      if (!is.null(report_type)) {
-        rater_text <- switch(report_type,
-          "self" = "Self-report measures indicate ",
-          "parent" = "Parent-report measures indicate ",
-          "teacher" = "Teacher-report measures indicate ",
-          "Observer measures indicate "
-        )
-        return(paste0(
-          base_text,
-          rater_text,
-          "specific patterns of emotional and behavioral functioning.\n"
-        ))
-      }
-
-      return(paste0(
-        base_text,
-        "Multiple rater perspectives provide comprehensive assessment.\n"
-      ))
-    },
-
-    # Generic text generation
-    generate_generic_text_content = function(report_type) {
-      domain_name <- self$domains[1]
-      base_text <- paste0(
-        "Assessment of ",
-        tolower(domain_name),
-        " provides important information about cognitive functioning.\n\n"
-      )
-
-      if (!is.null(report_type)) {
-        rater_text <- paste0("From the ", report_type, " perspective, ")
-        return(paste0(
-          base_text,
-          rater_text,
-          "performance patterns were observed.\n"
-        ))
-      }
-
-      return(paste0(
-        base_text,
-        "Performance patterns provide insights into functioning.\n"
-      ))
-    }
+    # Note: Text content generation is now handled by NeuropsychResultsR6$new()$process()
+    # This ensures we get actual narrative text from the data rather than generic placeholders
   )
 )

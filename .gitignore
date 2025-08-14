@@ -207,3 +207,5 @@ fixed_domain_processor.r
 _02-10_emotion_adult_text.qmd
 .gitignore
 _02-10_emotion_adult.qmd
+_02-10_emotion_text_parent.qmd
+_02-10_emotion_text_self.qmd
