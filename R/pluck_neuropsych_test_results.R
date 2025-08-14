@@ -108,8 +108,7 @@ extract_wisc5_data <- function(
   }
 
   # Set parameters based on test type and use dynamic page numbers
-  params <- switch(
-    test_type,
+  params <- switch(test_type,
     "index" = list(
       test = "wisc5_index",
       pages = pages_index,
@@ -2042,8 +2041,8 @@ process_rbans_unified <- function(
         scale == "Visuospatial Index" ~
           "Visuospatial/ Constructional Index (VCI)",
         scale == "Delayed Memory Index" ~ "Delayed Memory Index (DMI)",
-        scale == "Digit Span" ~ "Digit Span",
-        scale == "Coding" ~ "Coding",
+        scale == "RBANS Digit Span" ~ "Digit Span", # Check me
+        scale == "RBANS Coding" ~ "Coding", # check me
         scale == "List Learning" ~ "List Learning",
         scale == "Story Memory" ~ "Story Memory",
         scale == "Picture Naming" ~ "Picture Naming",
@@ -2076,7 +2075,7 @@ process_rbans_unified <- function(
   combined <- combined |>
     dplyr::mutate(
       test = "rbans",
-      test_name = "RBANS Update Form A",
+      test_name = "RBANS",
       # Set test_type and score_type for composite scores
       test_type = dplyr::case_when(
         stringr::str_detect(scale, "Index|Total Scale") ~ "composite",
@@ -2133,7 +2132,6 @@ process_rbans_unified <- function(
           "Below Average",
         score_type == "percentile" & as.numeric(percentile) < 2 ~
           "Exceptionally Low",
-
         TRUE ~ "Not Available"
       )
     ) |>
@@ -2251,7 +2249,6 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
           "Below Average",
         score_type == "percentile" & as.numeric(percentile) < 2 ~
           "Exceptionally Low",
-
         TRUE ~ "Not Available"
       )
     ) |>
@@ -2281,13 +2278,6 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' # Basic usage with built-in metadata
-#'   input_file = "patient_rbans.csv",
-#'   patient_id = "Patient001",
-#'   output_file = "rbans_processed.csv",
-#'   summary_file = "rbans_summary.csv",
-#'   debug = TRUE
-#' )
 #'
 #' # Using custom lookup file and manual percentile overrides
 #' results <- process_rbans_unified(

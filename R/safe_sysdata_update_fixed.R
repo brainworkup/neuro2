@@ -122,4 +122,3 @@ safe_use_data_internal <- function(
     cat("Saved", length(new_names), "objects to", file, "\n")
   }
 }
-

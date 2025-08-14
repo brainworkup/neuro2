@@ -61,15 +61,13 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param number Domain number for file naming (optional, will be auto-determined if not provided).
     #'
     #' @return A new DomainProcessorR6 object
-    initialize = function(
-      domains,
-      pheno,
-      input_file,
-      output_dir = "data",
-      scale_source = NULL,
-      test_filters = NULL,
-      number = NULL
-    ) {
+    initialize = function(domains,
+                          pheno,
+                          input_file,
+                          output_dir = "data",
+                          scale_source = NULL,
+                          test_filters = NULL,
+                          number = NULL) {
       self$domains <- domains
       self$pheno <- pheno
       self$input_file <- input_file
@@ -722,11 +720,9 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param output_file Output file path (default: NULL, will generate based on domain).
     #' @param is_child Logical indicating if this is a child version (default: FALSE).
     #' @return The path to the generated file.
-    generate_domain_qmd = function(
-      domain_name = NULL,
-      output_file = NULL,
-      is_child = FALSE
-    ) {
+    generate_domain_qmd = function(domain_name = NULL,
+                                   output_file = NULL,
+                                   is_child = FALSE) {
       # Use the first domain if domain_name not provided
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -1125,11 +1121,9 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param report_types Vector of report types to generate (default: c("self")).
     #' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
     #' @return Invisibly returns self for method chaining.
-    process = function(
-      generate_reports = TRUE,
-      report_types = c("self"),
-      generate_domain_files = FALSE
-    ) {
+    process = function(generate_reports = TRUE,
+                       report_types = c("self"),
+                       generate_domain_files = FALSE) {
       # Run the complete pipeline
       self$load_data()
       self$filter_by_domain()
@@ -1198,8 +1192,7 @@ DomainProcessorR6 <- R6::R6Class(
       base_text <- "ADHD assessment results show patterns related to attention, hyperactivity, and impulsivity.\n\n"
 
       if (!is.null(report_type)) {
-        rater_text <- switch(
-          report_type,
+        rater_text <- switch(report_type,
           "self" = "Based on self-report measures, ",
           "parent" = "Based on parent-report measures, ",
           "teacher" = "Based on teacher-report measures, ",
@@ -1223,8 +1216,7 @@ DomainProcessorR6 <- R6::R6Class(
       base_text <- "Behavioral and emotional functioning assessment provides insights into psychological well-being and adaptive functioning.\n\n"
 
       if (!is.null(report_type)) {
-        rater_text <- switch(
-          report_type,
+        rater_text <- switch(report_type,
           "self" = "Self-report measures indicate ",
           "parent" = "Parent-report measures indicate ",
           "teacher" = "Teacher-report measures indicate ",

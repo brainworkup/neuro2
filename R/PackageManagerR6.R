@@ -6,9 +6,9 @@
 #'
 #' @docType class
 #' @format An R6 class object
-    #' @section Methods:
-    #' \describe{
-    #'   \item{\code{$initialize}}{See method docs below.}
+#' @section Methods:
+#' \describe{
+#'   \item{\code{$initialize}}{See method docs below.}
 #'   \item{\code{$check_and_install}}{See method docs below.}
 #'   \item{\code{$check_package_group}}{See method docs below.}
 #'   \item{\code{$check_single_package}}{See method docs below.}
@@ -18,7 +18,7 @@
 #'   \item{\code{$install_missing_packages}}{See method docs below.}
 #'   \item{\code{$check_conflicts}}{See method docs below.}
 #'   \item{\code{$create_package_loading_script}}{See method docs below.}
-    #' }
+#' }
 #'
 #' @field required_packages List of required package groups
 #' @field optional_packages List of optional package groups
@@ -136,11 +136,9 @@ PackageManagerR6 <- R6::R6Class(
     #' @return Invisibly returns self.
 
 
-
     check_and_install = function(install_missing = FALSE,
-                                include_optional = TRUE,
-                                verbose = TRUE) {
-
+                                 include_optional = TRUE,
+                                 verbose = TRUE) {
       if (verbose) {
         cli::cli_h2("Checking Package Dependencies")
       }
@@ -202,10 +200,8 @@ PackageManagerR6 <- R6::R6Class(
     #' @return Logical; TRUE if all packages in the group are available.
 
 
-
     check_package_group = function(packages, install_missing = FALSE,
-                                  required = TRUE, verbose = TRUE) {
-
+                                   required = TRUE, verbose = TRUE) {
       for (pkg in packages) {
         status <- self$check_single_package(pkg, install_missing, verbose)
 
@@ -222,7 +218,6 @@ PackageManagerR6 <- R6::R6Class(
     #' @param install_missing Logical; if TRUE, install any missing packages.
     #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return Logical; TRUE if package is available.
-
 
 
     check_single_package = function(pkg, install_missing = FALSE, verbose = TRUE) {
@@ -249,15 +244,18 @@ PackageManagerR6 <- R6::R6Class(
           cli::cli_alert_info("Installing {pkg}...")
         }
 
-        install_result <- tryCatch({
-          # Try CRAN first
-          install.packages(pkg, quiet = TRUE)
+        install_result <- tryCatch(
+          {
+            # Try CRAN first
+            install.packages(pkg, quiet = TRUE)
 
-          # Verify installation
-          requireNamespace(pkg, quietly = TRUE)
-        }, error = function(e) {
-          FALSE
-        })
+            # Verify installation
+            requireNamespace(pkg, quietly = TRUE)
+          },
+          error = function(e) {
+            FALSE
+          }
+        )
 
         if (install_result) {
           self$loaded_packages <- c(self$loaded_packages, pkg)
@@ -293,7 +291,6 @@ PackageManagerR6 <- R6::R6Class(
     #' @return Invisibly returns self.
 
 
-
     load_packages = function(packages = NULL, verbose = TRUE) {
       if (is.null(packages)) {
         # Load all available required packages
@@ -308,17 +305,20 @@ PackageManagerR6 <- R6::R6Class(
       successfully_loaded <- character()
 
       for (pkg in packages) {
-        tryCatch({
-          library(pkg, character.only = TRUE, quietly = !verbose)
-          successfully_loaded <- c(successfully_loaded, pkg)
-          if (verbose) {
-            cli::cli_alert_success("Loaded {pkg}")
+        tryCatch(
+          {
+            library(pkg, character.only = TRUE, quietly = !verbose)
+            successfully_loaded <- c(successfully_loaded, pkg)
+            if (verbose) {
+              cli::cli_alert_success("Loaded {pkg}")
+            }
+          },
+          error = function(e) {
+            if (verbose) {
+              cli::cli_alert_danger("Failed to load {pkg}: {e$message}")
+            }
           }
-        }, error = function(e) {
-          if (verbose) {
-            cli::cli_alert_danger("Failed to load {pkg}: {e$message}")
-          }
-        })
+        )
       }
 
       if (verbose) {
@@ -378,7 +378,6 @@ PackageManagerR6 <- R6::R6Class(
     #' @return Invisibly returns self.
 
 
-
     install_missing_packages = function(verbose = TRUE) {
       missing <- self$get_missing_packages()
 
@@ -404,9 +403,8 @@ PackageManagerR6 <- R6::R6Class(
     # Check for potential package conflicts
     #' @description Check for function name conflicts across loaded packages.
     #' @param packages Optional character vector; if NULL, check currently loaded packages.
-#' @param verbose Logical; print detailed progress messages if TRUE.
+    #' @param verbose Logical; print detailed progress messages if TRUE.
     #' @return A data.frame (or list) describing conflicts.
-
 
 
     check_conflicts = function(verbose = TRUE) {
@@ -435,9 +433,8 @@ PackageManagerR6 <- R6::R6Class(
     #' @description Write a helper R script that loads required packages/groups for reproducible environments.
     #' @param path Output path to write the .R script.
     #' @param groups Optional character vector of groups to include; NULL = all.
-#' @param file Output path for the generated loading script file.
+    #' @param file Output path for the generated loading script file.
     #' @return Path to the created script (character).
-
 
 
     create_package_loading_script = function(file = "load_packages.R") {
@@ -474,8 +471,8 @@ PackageManagerR6 <- R6::R6Class(
 #' @param verbose Whether to show progress
 #' @export
 setup_neuro2_packages <- function(install_missing = FALSE,
-                                 include_optional = TRUE,
-                                 verbose = TRUE) {
+                                  include_optional = TRUE,
+                                  verbose = TRUE) {
   pkg_manager <- PackageManagerR6$new()
   pkg_manager$check_and_install(install_missing, include_optional, verbose)
 

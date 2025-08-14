@@ -22,10 +22,8 @@ ConfigManagerR6 <- R6::R6Class(
     config = NULL,
 
     #' @noRd
-    initialize = function(
-      config_file = NULL,
-      variables_file = "_variables.yml"
-    ) {
+    initialize = function(config_file = NULL,
+                          variables_file = "_variables.yml") {
       # Load base configuration
       self$config <- self$load_default_config()
 

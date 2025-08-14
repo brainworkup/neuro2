@@ -41,7 +41,7 @@ if (is_test_env()) {
       # Create a temporary directory for test output
       temp_dir <- tempfile("neuro2_test_")
       dir.create(temp_dir, recursive = TRUE)
-      
+
       # Process files to temporary directory
       load_data_duckdb(
         file_path = "data-raw/csv",
@@ -50,9 +50,9 @@ if (is_test_env()) {
         use_duckdb = TRUE,
         output_format = "all" # Generate CSV, Parquet, and Arrow formats
       )
-  
+
       cat("\n✓ Processing complete!\n")
-      
+
       # Check what was created
       cat("\nChecking created files in temporary directory:\n")
       created_files <- list.files(
@@ -68,7 +68,7 @@ if (is_test_env()) {
       } else {
         cat("  ✗ No files were created!\n")
       }
-      
+
       # Clean up temporary directory
       unlink(temp_dir, recursive = TRUE)
     },

@@ -3,9 +3,9 @@
 
 setup_workflow_environment <- function(config) {
   source("R/workflow_utils.R")
-  
+
   log_message("Setting up environment...", "WORKFLOW")
-  
+
   # Run setup_environment.R if it exists
   if (file.exists("setup_environment.R")) {
     log_message("Running setup_environment.R", "SETUP")
@@ -15,7 +15,7 @@ setup_workflow_environment <- function(config) {
       "setup_environment.R not found. Creating directories manually.",
       "SETUP"
     )
-    
+
     # Create necessary directories
     dirs_to_create <- c(
       config$data$input_dir,
@@ -24,36 +24,36 @@ setup_workflow_environment <- function(config) {
     )
     create_directories(dirs_to_create)
   }
-  
+
   # Copy template files
   copy_template_files()
-  
+
   # Setup Quarto extensions
   setup_quarto_extensions(config$report$format)
-  
+
   # Check for R6 class files
   check_r6_files()
-  
+
   # Check for CSV files
   check_input_files(config$data$input_dir)
-  
+
   log_message("Environment setup complete", "SETUP")
   return(TRUE)
 }
 
 copy_template_files <- function() {
   source("R/workflow_utils.R")
-  
+
   log_message("Copying template files to working directory...", "SETUP")
-  
+
   # Find template directory
   template_dir <- find_template_directory()
-  
+
   if (is.null(template_dir)) {
     log_message("Could not find template directory in any location", "ERROR")
     return(FALSE)
   }
-  
+
   # List files in the template directory
   log_message(
     paste0("Listing files in template directory: ", template_dir),
@@ -64,14 +64,14 @@ copy_template_files <- function() {
     paste0("Directory contents: ", paste(dir_contents, collapse = ", ")),
     "SETUP"
   )
-  
+
   # Get list of template files
   template_files <- list.files(
     template_dir,
     pattern = "\\.(qmd|yml)$",
     full.names = TRUE
   )
-  
+
   if (length(template_files) == 0) {
     log_message(
       paste0("No template files found in: ", template_dir),
@@ -79,16 +79,16 @@ copy_template_files <- function() {
     )
     return(FALSE)
   }
-  
+
   log_message(
     paste0("Found ", length(template_files), " template files"),
     "SETUP"
   )
-  
+
   # Copy each file to working directory
   for (file in template_files) {
     dest_file <- basename(file)
-    
+
     # Skip old/stale files
     if (dest_file == "_03-01_recommendations.qmd") {
       log_message(
@@ -97,22 +97,22 @@ copy_template_files <- function() {
       )
       next
     }
-    
+
     log_message(
       paste0("Processing template file: ", file, " -> ", dest_file),
       "SETUP"
     )
-    
+
     if (!file.exists(file)) {
       log_message(paste0("Source file does not exist: ", file), "ERROR")
       next
     }
-    
+
     # Determine if we should backup this file
     should_backup <- dest_file %in% c(
       "template.qmd", "_quarto.yml", "_variables.yml", "config.yml"
     )
-    
+
     # Back up existing files before overwriting (only for main template files)
     if (file.exists(dest_file) && should_backup) {
       backup_file <- paste0(
@@ -125,7 +125,7 @@ copy_template_files <- function() {
         "SETUP"
       )
     }
-    
+
     # Copy the latest version from inst
     copy_result <- file.copy(file, dest_file, overwrite = TRUE)
     if (copy_result) {
@@ -137,22 +137,22 @@ copy_template_files <- function() {
       )
     }
   }
-  
+
   # Verify essential files exist after copying
   verify_essential_files(template_dir)
-  
+
   return(TRUE)
 }
 
 find_template_directory <- function() {
   source("R/workflow_utils.R")
-  
+
   # First try using system.file (for installed package)
   template_dir <- system.file(
     "quarto/templates/typst-report",
     package = "neuro2"
   )
-  
+
   # If running from development environment, use local path
   if (template_dir == "") {
     template_dir <- "inst/quarto/templates/typst-report"
@@ -161,7 +161,7 @@ find_template_directory <- function() {
       "SETUP"
     )
   }
-  
+
   # Check if template directory exists using helper function
   template_dir <- find_directory(
     template_dir,
@@ -172,27 +172,27 @@ find_template_directory <- function() {
     ),
     "template"
   )
-  
+
   return(template_dir)
 }
 
 verify_essential_files <- function(template_dir) {
   source("R/workflow_utils.R")
-  
+
   essential_files <- c(
     "template.qmd",
     "_quarto.yml",
     "_variables.yml",
     "config.yml"
   )
-  
+
   missing_files <- character()
   for (file in essential_files) {
     if (!file.exists(file)) {
       missing_files <- c(missing_files, file)
     }
   }
-  
+
   if (length(missing_files) > 0) {
     log_message(
       paste0(
@@ -201,7 +201,7 @@ verify_essential_files <- function(template_dir) {
       ),
       "ERROR"
     )
-    
+
     # Last resort: try direct copy for each missing file
     for (file in missing_files) {
       source_file <- file.path(template_dir, file)
@@ -215,12 +215,12 @@ verify_essential_files <- function(template_dir) {
 
 setup_quarto_extensions <- function(report_format) {
   source("R/workflow_utils.R")
-  
+
   log_message("Setting up Quarto extensions...", "SETUP")
-  
+
   # Find extensions directory
   extensions_dir <- find_extensions_directory()
-  
+
   if (is.null(extensions_dir)) {
     log_message(
       "Could not find extensions directory in any location",
@@ -228,22 +228,22 @@ setup_quarto_extensions <- function(report_format) {
     )
     return(FALSE)
   }
-  
+
   if (!dir.exists(extensions_dir)) {
     return(FALSE)
   }
-  
+
   # Create _extensions directory in working directory
   if (!dir.exists("_extensions")) {
     dir.create("_extensions", recursive = TRUE, showWarnings = FALSE)
     log_message("Created _extensions directory", "SETUP")
   }
-  
+
   # Copy brainworkup directory with all extensions
   brainworkup_dir <- file.path(extensions_dir, "brainworkup")
   if (dir.exists(brainworkup_dir)) {
     copy_extensions(brainworkup_dir)
-    
+
     # Verify required extension exists
     required_extension <- gsub("-typst$", "", report_format)
     if (!dir.exists(file.path("_extensions/brainworkup", required_extension))) {
@@ -263,16 +263,16 @@ setup_quarto_extensions <- function(report_format) {
       "WARNING"
     )
   }
-  
+
   return(TRUE)
 }
 
 find_extensions_directory <- function() {
   source("R/workflow_utils.R")
-  
+
   # First try using system.file (for installed package)
   extensions_dir <- system.file("quarto/_extensions", package = "neuro2")
-  
+
   # If running from development environment, use local path
   if (extensions_dir == "") {
     extensions_dir <- "inst/quarto/_extensions"
@@ -281,7 +281,7 @@ find_extensions_directory <- function() {
       "SETUP"
     )
   }
-  
+
   # Check if extensions directory exists using helper function
   extensions_dir <- find_directory(
     extensions_dir,
@@ -292,13 +292,13 @@ find_extensions_directory <- function() {
     ),
     "extensions"
   )
-  
+
   return(extensions_dir)
 }
 
 copy_extensions <- function(brainworkup_dir) {
   source("R/workflow_utils.R")
-  
+
   # Create brainworkup directory in _extensions
   if (!dir.exists("_extensions/brainworkup")) {
     dir.create(
@@ -308,7 +308,7 @@ copy_extensions <- function(brainworkup_dir) {
     )
     log_message("Created _extensions/brainworkup directory", "SETUP")
   }
-  
+
   # List all extension directories
   extension_dirs <- list.dirs(
     brainworkup_dir,
@@ -319,12 +319,12 @@ copy_extensions <- function(brainworkup_dir) {
     paste0("Found extensions: ", paste(extension_dirs, collapse = ", ")),
     "SETUP"
   )
-  
+
   # Copy each extension directory
   for (ext_dir in extension_dirs) {
     src_dir <- file.path(brainworkup_dir, ext_dir)
     dest_dir <- file.path("_extensions/brainworkup", ext_dir)
-    
+
     # Remove existing extension directory to ensure fresh copy
     if (dir.exists(dest_dir)) {
       log_message(
@@ -333,10 +333,10 @@ copy_extensions <- function(brainworkup_dir) {
       )
       unlink(dest_dir, recursive = TRUE)
     }
-    
+
     # Create the directory
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
-    
+
     # Copy all files from the extension directory
     ext_files <- list.files(src_dir, full.names = TRUE)
     for (file in ext_files) {
@@ -348,7 +348,7 @@ copy_extensions <- function(brainworkup_dir) {
 
 check_r6_files <- function() {
   source("R/workflow_utils.R")
-  
+
   r6_files <- c(
     "R/ReportTemplateR6.R",
     "R/NeuropsychResultsR6.R",
@@ -360,7 +360,7 @@ check_r6_files <- function() {
     "R/ReportUtilitiesR6.R",
     "R/TemplateContentManagerR6.R"
   )
-  
+
   missing_files <- r6_files[!file.exists(r6_files)]
   if (length(missing_files) > 0) {
     log_message("Some R6 class files are missing:", "WARNING")
@@ -374,7 +374,7 @@ check_r6_files <- function() {
 
 check_input_files <- function(input_dir) {
   source("R/workflow_utils.R")
-  
+
   csv_files <- list.files(input_dir, pattern = "\\.csv$")
   if (length(csv_files) == 0) {
     log_message(

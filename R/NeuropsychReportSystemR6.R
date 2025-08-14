@@ -37,11 +37,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @param output_dir Directory for output files.
     #'
     #' @return A new NeuropsychReportSystemR6 object
-    initialize = function(
-      config = list(),
-      template_dir = "inst/quarto/_extensions/brainworkup",
-      output_dir = "output"
-    ) {
+    initialize = function(config = list(),
+                          template_dir = "inst/quarto/_extensions/brainworkup",
+                          output_dir = "output") {
       # Set default config values if not provided
       default_config <- list(
         patient = "Biggie",
@@ -320,10 +318,8 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @param domains List of domains to generate files for (default: all configured domains).
     #' @param data_dir Directory containing CSV data files (default: "data-raw/csv/").
     #' @return Invisibly returns self for method chaining.
-    generate_domain_files = function(
-      domains = NULL,
-      data_dir = "data-raw/csv/"
-    ) {
+    generate_domain_files = function(domains = NULL,
+                                     data_dir = "data-raw/csv/") {
       # If domains not specified, extract from actual data
       if (is.null(domains)) {
         # Extract domains from CSV files
@@ -553,11 +549,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @param output_file Output file for the report (default: from config).
     #' @param variables List of variables to use in the template.
     #' @return Invisibly returns self for method chaining.
-    generate_report = function(
-      template_file = NULL,
-      output_file = NULL,
-      variables = NULL
-    ) {
+    generate_report = function(template_file = NULL,
+                               output_file = NULL,
+                               variables = NULL) {
       # Use configured values if not specified
       if (is.null(template_file)) {
         template_file <- self$config$template_file

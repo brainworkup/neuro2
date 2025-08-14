@@ -52,9 +52,7 @@ TemplateContentManagerR6 <- R6::R6Class(
     #'   (default: "inst/quarto/_extensions/brainworkup")
     #'
     #' @return A new `TemplateContentManagerR6` object
-    initialize = function(
-      template_dir = "inst/quarto/_extensions/brainworkup"
-    ) {
+    initialize = function(template_dir = "inst/quarto/_extensions/brainworkup") {
       self$template_dir <- template_dir
       self$refresh_content_list()
     },

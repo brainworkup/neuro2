@@ -3,7 +3,6 @@
 
 WorkflowRunnerR6 <- R6::R6Class(
   "WorkflowRunnerR6",
-
   public = list(
     # Properties
     config = NULL,

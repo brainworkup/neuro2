@@ -24,7 +24,7 @@ print_colored <- function(message, color = "blue") {
     blue = "\033[0;34m",
     reset = "\033[0m"
   )
-  
+
   cat(paste0(colors[[color]], message, colors$reset, "\n"))
 }
 
@@ -45,12 +45,12 @@ find_directory <- function(primary_dir, alternative_dirs, dir_type = "directory"
   if (dir.exists(primary_dir)) {
     return(primary_dir)
   }
-  
+
   log_message(
     paste0(capitalize(dir_type), " directory not found: ", primary_dir),
     "WARNING"
   )
-  
+
   for (alt_dir in alternative_dirs) {
     if (dir.exists(alt_dir)) {
       log_message(
@@ -60,7 +60,7 @@ find_directory <- function(primary_dir, alternative_dirs, dir_type = "directory"
       return(alt_dir)
     }
   }
-  
+
   return(NULL)
 }
 
@@ -70,7 +70,7 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
     log_type
   )
   log_message(paste0("Current working directory: ", getwd()), log_type)
-  
+
   if (file.exists(template_file)) {
     log_message(paste0("Template file found: ", template_file), log_type)
     file_info <- file.info(template_file)
@@ -78,10 +78,10 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
     log_message(paste0("Last modified: ", file_info$mtime), log_type)
     return(TRUE)
   }
-  
+
   template_dir <- "inst/quarto/templates/typst-report"
   alt_template_path <- file.path(template_dir, template_file)
-  
+
   if (file.exists(alt_template_path)) {
     log_message(
       paste0("Template found in template directory: ", alt_template_path),
@@ -89,7 +89,7 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
     )
     log_message("Copying template file to working directory...", log_type)
     file.copy(alt_template_path, template_file)
-    
+
     if (file.exists(template_file)) {
       log_message("Template file copied successfully", log_type)
       return(TRUE)
@@ -135,7 +135,7 @@ ensure_packages <- function(required_packages) {
 # Template file checking
 check_essential_files <- function(essential_files, template_dir = "inst/quarto/templates/typst-report") {
   missing_files <- character()
-  
+
   for (file in essential_files) {
     if (!file.exists(file)) {
       if (file.exists(file.path(template_dir, file))) {
@@ -160,7 +160,7 @@ check_essential_files <- function(essential_files, template_dir = "inst/quarto/t
       }
     }
   }
-  
+
   return(missing_files)
 }
 
@@ -169,7 +169,7 @@ load_neuropsych_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurocog.parquet")
   csv_file <- file.path(data_dir, "neurocog.csv")
   feather_file <- file.path(data_dir, "neurocog.feather")
-  
+
   if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
     return(arrow::read_parquet(parquet_file))
   } else if (file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)) {
@@ -186,13 +186,13 @@ get_domains_from_data <- function(data_dir) {
   if (is.null(neurocog_data)) {
     return(data.frame(domain = character(0)))
   }
-  
+
   if ("domain" %in% names(neurocog_data)) {
     unique_domains <- unique(neurocog_data$domain)
     unique_domains <- unique_domains[!is.na(unique_domains)]
     return(data.frame(domain = unique_domains))
   }
-  
+
   return(data.frame(domain = character(0)))
 }
 
@@ -201,7 +201,7 @@ determine_patient_type <- function(age) {
   if (is.null(age)) {
     return("child")
   }
-  
+
   if (age >= 18) {
     return("adult")
   } else {

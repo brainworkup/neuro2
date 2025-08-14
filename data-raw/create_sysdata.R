@@ -21,8 +21,8 @@ safe_use_data_internal(
 safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
-  dots = dots,  # This exists in the file
-  overwrite = c("dots")  # Only allow overwriting 'dots'
+  dots = dots, # This exists in the file
+  overwrite = c("dots") # Only allow overwriting 'dots'
 )
 
 # Example 3: Update create_sysdata.R to use this function
@@ -1647,7 +1647,7 @@ domain_emotion_adult <- c("Emotional/Behavioral/Personality", "Psychiatric Sympt
 #' @title Child Emotional and Behavioral Domain
 #' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
 #' @keywords data internal
-domain_emotion_child <- c("Behavioral/Emotional/Social","Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
+domain_emotion_child <- c("Behavioral/Emotional/Social", "Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
 
 #' @name domain_adaptive
 #' @docType data
@@ -1688,8 +1688,8 @@ safe_use_data_internal(
 safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
-  dots = dots,  # This exists in the file
-  overwrite = c("dots")  # Only allow overwriting 'dots'
+  dots = dots, # This exists in the file
+  overwrite = c("dots") # Only allow overwriting 'dots'
 )
 
 safe_use_data_internal(
@@ -1719,12 +1719,12 @@ safe_use_data_internal(
 lookup_neuropsych_scales <- readr::read_csv(
   "~/Dropbox/neuropsych_lookup_table.csv"
 )
-#usethis::use_data(lookup_neuropsych_scales, internal = TRUE, overwrite = TRUE)
+# usethis::use_data(lookup_neuropsych_scales, internal = TRUE, overwrite = TRUE)
 
 # For other data
 safe_use_data_internal(
   lookup_neuropsych_scales = lookup_neuropsych_scales,
-   overwrite = c("lookup_neuropsych_scales")
+  overwrite = c("lookup_neuropsych_scales")
 )
 
 # Lookup score ranges

@@ -124,11 +124,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param auto_register If TRUE, attempt to auto-register supported data files from `data_dir`.
     #' @return A new DuckDBProcessorR6 object (invisible).
 
-    initialize = function(
-      db_path = ":memory:",
-      data_dir = "data",
-      auto_register = TRUE
-    ) {
+    initialize = function(db_path = ":memory:",
+                          data_dir = "data",
+                          auto_register = TRUE) {
       self$db_path <- db_path
       self$tables <- list()
       self$available_extensions <- character(0)
@@ -404,10 +402,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param formats Character vector of formats to register (subset of c("parquet","arrow","csv")).
     #' @return Character vector of registered table names.
 
-    register_all_files = function(
-      data_dir = "data",
-      formats = c("parquet", "arrow", "csv")
-    ) {
+    register_all_files = function(data_dir = "data",
+                                  formats = c("parquet", "arrow", "csv")) {
       # Priority order: Parquet (fastest) -> Arrow -> CSV (slowest)
       registered_tables <- character(0)
 
@@ -469,11 +465,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param compression Compression codec to use (e.g., "zstd").
     #' @return Invisibly returns the `output_path`.
 
-    export_to_parquet = function(
-      table_name,
-      output_path,
-      compression = "zstd"
-    ) {
+    export_to_parquet = function(table_name,
+                                 output_path,
+                                 compression = "zstd") {
       if (!table_name %in% names(self$tables)) {
         stop("Table not found: ", table_name)
       }
@@ -744,7 +738,6 @@ DuckDBProcessorR6 <- R6::R6Class(
       invisible(self)
     }
   ),
-
   private = list(
     # Finalizer method (now in private section as per R6 2.4.0)
     finalize = function() {
@@ -790,11 +783,9 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Safely install and load a DuckDB extension
-    install_extension_safe = function(
-      ext_name,
-      required = FALSE,
-      description = ""
-    ) {
+    install_extension_safe = function(ext_name,
+                                      required = FALSE,
+                                      description = "") {
       tryCatch(
         {
           # Try to install the extension

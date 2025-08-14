@@ -50,12 +50,10 @@ ErrorHandlerR6 <- R6::R6Class(
     #' @param silent If TRUE, suppress user-facing messages.
     #' @return Result of the expression on success; otherwise `fallback`.
 
-    safe_execute = function(
-      expr,
-      context = "operation",
-      fallback = NULL,
-      silent = FALSE
-    ) {
+    safe_execute = function(expr,
+                            context = "operation",
+                            fallback = NULL,
+                            silent = FALSE) {
       tryCatch(
         {
           expr
@@ -329,11 +327,9 @@ ErrorHandlerR6 <- R6::R6Class(
 
     #' @return Logical; TRUE if all required columns are present.
 
-    check_required_columns = function(
-      data,
-      required_cols,
-      context = "data_check"
-    ) {
+    check_required_columns = function(data,
+                                      required_cols,
+                                      context = "data_check") {
       missing_cols <- setdiff(required_cols, names(data))
       if (length(missing_cols) > 0) {
         self$handle_error(

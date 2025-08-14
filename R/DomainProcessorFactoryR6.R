@@ -44,12 +44,10 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' @param rater Rater type ("self", "observer", "parent", "teacher")
     #' @param custom_config Custom configuration to override defaults
     #' @return A DomainProcessorR6 object or NULL on error
-    create_processor = function(
-      domain_key,
-      age_group = "adult",
-      rater = "self",
-      custom_config = NULL
-    ) {
+    create_processor = function(domain_key,
+                                age_group = "adult",
+                                rater = "self",
+                                custom_config = NULL) {
       # Validate inputs
       validation_result <- self$validators$validate_processor_params(
         domain_key,
@@ -141,12 +139,10 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' @param include_multi_rater Whether to create multi-rater processors
     #' @param parallel Whether to process in parallel (not yet implemented)
     #' @return A list of processors
-    batch_create = function(
-      domain_keys,
-      age_group = "adult",
-      include_multi_rater = TRUE,
-      parallel = FALSE
-    ) {
+    batch_create = function(domain_keys,
+                            age_group = "adult",
+                            include_multi_rater = TRUE,
+                            parallel = FALSE) {
       self$logger$info(paste(
         "Batch creating processors for",
         length(domain_keys),
@@ -285,7 +281,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(config)
     }
   ),
-
   private = list(
     # Create default configuration
     get_default_config = function() {
@@ -334,7 +329,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           }
           self$logger$error(msg)
         },
-
         handle_warning = function(warning, context = NULL) {
           msg <- if (!is.null(context)) {
             paste0("[", context, "] ", warning$message)
@@ -343,7 +337,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           }
           self$logger$warn(msg)
         },
-
         safe_execute = function(expr, context = NULL, fallback = NULL) {
           tryCatch(
             expr(),
@@ -419,7 +412,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           has_narrow = TRUE,
           score_types = c("standard_score")
         ),
-
         academics = list(
           domains = "Academic Skills",
           pheno = "academics",
@@ -427,7 +419,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "02",
           score_types = c("standard_score")
         ),
-
         verbal = list(
           domains = "Verbal/Language",
           pheno = "verbal",
@@ -435,7 +426,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "03",
           score_types = c("standard_score", "scaled_score", "t_score")
         ),
-
         spatial = list(
           domains = "Visual Perception/Construction",
           pheno = "spatial",
@@ -448,7 +438,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
             "t_score"
           )
         ),
-
         memory = list(
           domains = "Memory",
           pheno = "memory",
@@ -456,7 +445,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "05",
           score_types = c("standard_score", "scaled_score", "t_score")
         ),
-
         executive = list(
           domains = "Attention/Executive",
           pheno = "executive",
@@ -464,7 +452,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "06",
           score_types = c("standard_score", "scaled_score", "t_score")
         ),
-
         motor = list(
           domains = "Motor",
           pheno = "motor",
@@ -472,7 +459,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "07",
           score_types = c("scaled_score", "t_score")
         ),
-
         social = list(
           domains = "Social Cognition",
           pheno = "social",
@@ -495,7 +481,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           ),
           score_types = c("t_score")
         ),
-
         emotion = list(
           domains = c(
             "Emotional/Behavioral/Personality",
@@ -512,7 +497,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           ),
           score_types = c("t_score")
         ),
-
         adaptive = list(
           domains = "Adaptive Functioning",
           pheno = "adaptive",
@@ -520,7 +504,6 @@ DomainProcessorFactoryR6 <- R6::R6Class(
           number = "11",
           score_types = c("standard_score", "scaled_score")
         ),
-
         daily_living = list(
           domains = "Daily Living",
           pheno = "daily_living",
@@ -680,11 +663,9 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Batch create processors sequentially
-    batch_create_sequential = function(
-      domain_keys,
-      age_group,
-      include_multi_rater
-    ) {
+    batch_create_sequential = function(domain_keys,
+                                       age_group,
+                                       include_multi_rater) {
       processors <- list()
 
       for (domain_key in domain_keys) {
@@ -711,11 +692,9 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Batch create processors in parallel
-    batch_create_parallel = function(
-      domain_keys,
-      age_group,
-      include_multi_rater
-    ) {
+    batch_create_parallel = function(domain_keys,
+                                     age_group,
+                                     include_multi_rater) {
       # This would implement parallel processing using future package
       # For now, fall back to sequential
       self$logger$info("Parallel processing not implemented, using sequential")

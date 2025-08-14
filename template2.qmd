@@ -43,17 +43,17 @@ if (file.exists("R/domain_validation_utils.R")) {
     if (!"domain" %in% names(data_source)) {
       return(list(has_data = FALSE, message = "No domain column"))
     }
-    domain_data <- data_source %>% 
+    domain_data <- data_source %>%
       filter(domain == domain_name) %>%
       filter(!is.na(percentile) | !is.na(score))
-    
+
     list(
       has_data = nrow(domain_data) >= min_rows,
       row_count = nrow(domain_data),
       message = paste("Found", nrow(domain_data), "rows")
     )
   }
-  
+
   get_domains_with_data <- function(neurocog_data, neurobehav_data, domain_config) {
     domains_with_data <- list()
     for (domain_name in names(domain_config)) {
@@ -83,7 +83,7 @@ domain_config <- list(
     input_file = "data/neurocog.csv"
   ),
   "Academic Skills" = list(
-    pheno = "academics", 
+    pheno = "academics",
     input_file = "data/neurocog.csv"
   ),
   "Verbal/Language" = list(
@@ -140,17 +140,20 @@ neurobehav_data <- NULL
 read_data_safe <- function(file_paths) {
   for (path in file_paths) {
     if (file.exists(path)) {
-      tryCatch({
-        if (grepl("\\.parquet$", path)) {
-          if (requireNamespace("arrow", quietly = TRUE)) {
-            return(arrow::read_parquet(path))
+      tryCatch(
+        {
+          if (grepl("\\.parquet$", path)) {
+            if (requireNamespace("arrow", quietly = TRUE)) {
+              return(arrow::read_parquet(path))
+            }
+          } else if (grepl("\\.csv$", path)) {
+            return(readr::read_csv(path, show_col_types = FALSE))
           }
-        } else if (grepl("\\.csv$", path)) {
-          return(readr::read_csv(path, show_col_types = FALSE))
+        },
+        error = function(e) {
+          message(paste("Failed to read", path, ":", e$message))
         }
-      }, error = function(e) {
-        message(paste("Failed to read", path, ":", e$message))
-      })
+      )
     }
   }
   return(NULL)
@@ -160,7 +163,7 @@ read_data_safe <- function(file_paths) {
 neurocog_paths <- c("data/neurocog.parquet", "data/neurocog.csv")
 neurocog_data <- read_data_safe(neurocog_paths)
 
-# Try to read neurobehav data  
+# Try to read neurobehav data
 neurobehav_paths <- c("data/neurobehav.parquet", "data/neurobehav.csv")
 neurobehav_data <- read_data_safe(neurobehav_paths)
 
@@ -183,40 +186,43 @@ ensure_text_files_exist <- function(domain_files) {
     # Create a simple version if the function doesn't exist
     for (domain_file in domain_files) {
       if (!file.exists(domain_file)) next
-      
+
       content <- tryCatch(readLines(domain_file, warn = FALSE), error = function(e) character(0))
       includes <- content[grepl("\\{\\{< include.*_text.*\\.qmd >\\}\\}", content)]
-      
+
       for (include_line in includes) {
         text_file <- gsub(".*include\\s+([^\\s}]+).*", "\\1", include_line)
         text_file <- trimws(text_file)
-        
+
         if (!file.exists(text_file)) {
           message(paste("Creating placeholder text file:", text_file))
-          
+
           # Extract parts from filename
           parts <- strsplit(basename(text_file), "_")[[1]]
           domain_name <- if (length(parts) >= 2) parts[2] else "Assessment"
           rater_type <- if (length(parts) >= 4) parts[4] else NULL
-          
+
           title <- tools::toTitleCase(gsub("\\.qmd$", "", domain_name))
           if (!is.null(rater_type)) {
             title <- paste(title, "-", tools::toTitleCase(gsub("\\.qmd$", "", rater_type)), "Report")
           }
-          
+
           placeholder_content <- c(
             paste0("# ", title),
             "",
             paste0("*", title, " content will be generated based on available data.*"),
             ""
           )
-          
-          tryCatch({
-            writeLines(placeholder_content, text_file)
-            message(paste("  ✓ Created", text_file))
-          }, error = function(e) {
-            message(paste("  ✗ Failed to create", text_file, ":", e$message))
-          })
+
+          tryCatch(
+            {
+              writeLines(placeholder_content, text_file)
+              message(paste("  ✓ Created", text_file))
+            },
+            error = function(e) {
+              message(paste("  ✗ Failed to create", text_file, ":", e$message))
+            }
+          )
         }
       }
     }
@@ -262,7 +268,7 @@ if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
     neurobehav_data,
     domain_config
   )
-  
+
   if (length(valid_domains_only) > 0) {
     message(paste("Found", length(valid_domains_only), "domains with data"))
   } else {
@@ -293,10 +299,9 @@ if (length(domain_files) > 0) {
   for (file in domain_files) {
     cat(sprintf("\n{{< include %s >}}\n", file))
   }
-  
+
   # After domain generation, ensure text files exist
   ensure_text_files_exist(domain_files)
-  
 } else {
   cat("\n*No domain files found. Please run the domain generation process.*\n")
   cat("\n*To generate domain files, run the domain generation module first.*\n")

@@ -182,7 +182,6 @@ ScoreTypeCacheR6 <- R6::R6Class(
       })))
     }
   ),
-
   private = list(
     # Get lookup data from various sources
     get_lookup_data = function() {

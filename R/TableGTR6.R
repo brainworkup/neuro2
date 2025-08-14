@@ -76,21 +76,21 @@ TableGTR6 <- R6::R6Class(
     #'
     #' @return A new TableGTR6 object
     initialize = function(
-    data,
-    pheno = NULL,
-    table_name = NULL,
-    source_note = NULL,
-    names = NULL,
-    title = NULL,
-    tab_stubhead = NULL,
-    caption = NULL,
-    process_md = FALSE,
-    fn_list = list(),
-    grp_list = list(),
-    dynamic_grp = NULL,
-    vertical_padding = NULL,
-    multiline = TRUE,
-    row_score_type_map = NULL
+      data,
+      pheno = NULL,
+      table_name = NULL,
+      source_note = NULL,
+      names = NULL,
+      title = NULL,
+      tab_stubhead = NULL,
+      caption = NULL,
+      process_md = FALSE,
+      fn_list = list(),
+      grp_list = list(),
+      dynamic_grp = NULL,
+      vertical_padding = NULL,
+      multiline = TRUE,
+      row_score_type_map = NULL
     ) {
       self$data <- data
       self$pheno <- pheno
@@ -159,7 +159,7 @@ TableGTR6 <- R6::R6Class(
 
       # Initialize/ensure cache is built (this runs only once across all domains)
       if (!exists(".score_type_cache")) {
-        source("R/score_type_cache.R")  # Load the cache from above
+        source("R/score_type_cache.R") # Load the cache from above
       }
       .score_type_cache$build_mappings()
 
@@ -294,5 +294,4 @@ TableGTR6 <- R6::R6Class(
       invisible(self)
     }
   ),
-
 )

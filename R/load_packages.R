@@ -1,4 +1,3 @@
-
 #' Load all required packages for neuropsych reports
 #'
 #' This function loads the minimal set of packages needed for
@@ -10,20 +9,19 @@
 load_neuropsych_packages <- function(verbose = TRUE) {
   # Minimal packages needed for templates
   required_packages <- c(
-    "knitr",     # For knitr options
-    "here",      # For path management
-    "readr",     # For reading CSV if needed
-    "dplyr",     # For data manipulation
-    "gt"         # For tables
+    "knitr", # For knitr options
+    "here", # For path management
+    "readr", # For reading CSV if needed
+    "dplyr", # For data manipulation
+    "gt" # For tables
   )
-  
+
   # Load packages
   for (pkg in required_packages) {
     if (verbose) message("Loading ", pkg, "...")
     library(pkg, character.only = TRUE)
   }
-  
+
   if (verbose) message("All packages loaded successfully!")
   invisible(NULL)
 }
-
