@@ -60,8 +60,7 @@ This class is identical to TableGT but removes the automatic saving in the build
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-TableGTR6-new}{\code{TableGTR6$new()}}
-\item \href{#method-TableGTR6-build_table_optimized}{\code{TableGTR6$build_table_optimized()}}
-\item \href{#method-TableGTR6-handle_multi_score_battery}{\code{TableGTR6$handle_multi_score_battery()}}
+\item \href{#method-TableGTR6-build_table}{\code{TableGTR6$build_table()}}
 \item \href{#method-TableGTR6-save_table}{\code{TableGTR6$save_table()}}
 \item \href{#method-TableGTR6-clone}{\code{TableGTR6$clone()}}
 }
@@ -131,22 +130,19 @@ A new TableGTR6 object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TableGTR6-build_table_optimized"></a>}}
-\if{latex}{\out{\hypertarget{method-TableGTR6-build_table_optimized}{}}}
-\subsection{Method \code{build_table_optimized()}}{
+\if{html}{\out{<a id="method-TableGTR6-build_table"></a>}}
+\if{latex}{\out{\hypertarget{method-TableGTR6-build_table}{}}}
+\subsection{Method \code{build_table()}}{
+Construct and return the formatted \code{gt} table using optimized score type handling.
+This method builds the table without automatically saving it, using cached score type
+mappings for improved performance.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TableGTR6$build_table_optimized()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TableGTR6$build_table()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+A formatted \code{gt} table object
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TableGTR6-handle_multi_score_battery"></a>}}
-\if{latex}{\out{\hypertarget{method-TableGTR6-handle_multi_score_battery}{}}}
-\subsection{Method \code{handle_multi_score_battery()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TableGTR6$handle_multi_score_battery(battery, tbl)}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TableGTR6-save_table"></a>}}
@@ -168,6 +164,7 @@ Save the table to PNG and PDF files.
 }
 \subsection{Returns}{
 Invisibly returns self for method chaining.
+Handle multi-score battery footnote assignment
 }
 }
 \if{html}{\out{<hr>}}

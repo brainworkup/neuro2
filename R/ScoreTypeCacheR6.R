@@ -1,6 +1,23 @@
 #' ScoreTypeCacheR6 - Cached Score Type Manager
 #'
 #' @description Manages score type mappings with caching to avoid repetitive lookups
+#'
+#' @field test_score_type_map Named list mapping score types to test/scale names
+#' @field fn_list Named list of footnote text for each score type
+#' @field lookup_data Cached lookup table data from neuropsychological scales
+#' @field initialized Logical indicating whether the cache has been built
+#'
+#' @section Methods:
+#' \describe{
+#'   \item{initialize}{Initialize the cache with default footnotes and empty mappings.}
+#'   \item{build_mappings}{Build the score type mappings from lookup data (runs once).}
+#'   \item{get_score_groups}{Get score type groups for specific test names.}
+#'   \item{get_footnotes}{Get footnotes for specified score types.}
+#'   \item{is_multi_score_battery}{Check if a test uses multiple score types.}
+#' }
+#'
+#' @importFrom R6 R6Class
+#' @export
 ScoreTypeCacheR6 <- R6::R6Class(
   classname = "ScoreTypeCacheR6",
   public = list(
@@ -10,7 +27,10 @@ ScoreTypeCacheR6 <- R6::R6Class(
     lookup_data = NULL,
     initialized = FALSE,
 
-    #' @description Initialize the cache
+    #' @description
+    #' Initialize the cache with default footnotes and empty score type mappings.
+    #'
+    #' @return A new ScoreTypeCacheR6 object
     initialize = function() {
       self$fn_list <- list(
         standard_score = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
@@ -36,7 +56,11 @@ ScoreTypeCacheR6 <- R6::R6Class(
       )
     },
 
-    #' @description Build the score type mappings (runs once)
+    #' @description
+    #' Build the score type mappings from lookup data. This is a one-time operation
+    #' that populates the cache with test-to-score-type mappings.
+    #'
+    #' @return Invisibly returns self for method chaining
     build_mappings = function() {
       if (self$initialized) {
         return(invisible(self))
@@ -95,9 +119,12 @@ ScoreTypeCacheR6 <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Get score type groups for specific test names
-    #' @param test_names Vector of test names to classify
-    #' @return List of score type groups
+    #' @description
+    #' Get score type groups for specific test names. Returns a list where each
+    #' element is a score type with its associated test names.
+    #'
+    #' @param test_names Vector of test names to classify by score type
+    #' @return Named list of score type groups with matching test names
     get_score_groups = function(test_names) {
       if (!self$initialized) {
         self$build_mappings()
@@ -119,9 +146,11 @@ ScoreTypeCacheR6 <- R6::R6Class(
       return(grp_list)
     },
 
-    #' @description Get footnotes for score types
-    #' @param score_types Vector of score types needed
-    #' @return List of footnotes
+    #' @description
+    #' Get footnote text for specified score types.
+    #'
+    #' @param score_types Character vector of score types to get footnotes for
+    #' @return Named list of footnote text for each requested score type
     get_footnotes = function(score_types) {
       footnotes <- list()
       for (score_type in score_types) {
@@ -132,9 +161,12 @@ ScoreTypeCacheR6 <- R6::R6Class(
       return(footnotes)
     },
 
-    #' @description Check if a test uses multiple score types (like RBANS, WISC-V)
-    #' @param test_name Test name to check
-    #' @return Boolean
+    #' @description
+    #' Check if a test battery uses multiple score types (e.g., RBANS has both
+    #' scaled scores for subtests and standard scores for indices).
+    #'
+    #' @param test_name Character string of the test name to check
+    #' @return Logical indicating whether the test uses multiple score types
     is_multi_score_battery = function(test_name) {
       multi_score_batteries <- c(
         "RBANS",
@@ -152,7 +184,7 @@ ScoreTypeCacheR6 <- R6::R6Class(
   ),
 
   private = list(
-    #' @description Get lookup data from various sources
+    # Get lookup data from various sources
     get_lookup_data = function() {
       lookup_neuropsych_scales <- NULL
 
@@ -200,7 +232,7 @@ ScoreTypeCacheR6 <- R6::R6Class(
       return(lookup_neuropsych_scales)
     },
 
-    #' @description Use fallback mappings if lookup data not available
+    # Use fallback mappings if lookup data not available
     use_fallback_mappings = function() {
       # Minimal hardcoded mappings for critical tests
       self$test_score_type_map <- list(
