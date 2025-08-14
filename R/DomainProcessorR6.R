@@ -799,11 +799,13 @@ DomainProcessorR6 <- R6::R6Class(
       self$generate_domain_text_qmd()
 
       # Generate basic QMD content for non-multi-rater domains
-      # Use the CORRECTED, SIMPLIFIED structure that prevents R code in PDF
+      # Use typst syntax for headers
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        "\n```\n\n",
+        "\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_",
@@ -814,12 +816,26 @@ DomainProcessorR6 <- R6::R6Class(
         "\n#| echo: false\n#| warning: false\n#| message: false\n\n",
         "# Generate and display table\n",
         "source(\"R/TableGTR6.R\")\n",
+        "# Try to read data in preferred order: parquet, csv\n",
+        "data_file <- NULL\n",
         "if (file.exists(\"data/",
+        tolower(self$pheno),
+        ".parquet\")) {\n",
+        "  if (requireNamespace(\"arrow\", quietly = TRUE)) {\n",
+        "    data <- arrow::read_parquet(\"data/",
+        tolower(self$pheno),
+        ".parquet\")\n",
+        "    data_file <- \"parquet\"\n",
+        "  }\n",
+        "} else if (file.exists(\"data/",
         tolower(self$pheno),
         ".csv\")) {\n",
         "  data <- read.csv(\"data/",
         tolower(self$pheno),
         ".csv\")\n",
+        "  data_file <- \"csv\"\n",
+        "}\n",
+        "if (!is.null(data_file)) {\n",
         "  if (nrow(data) > 0) {\n",
         "    table_obj <- TableGTR6$new(\n",
         "      data = data,\n",
@@ -834,6 +850,10 @@ DomainProcessorR6 <- R6::R6Class(
         "    table_obj$save_table(built_table, dir = \".\")\n",
         "    print(built_table)\n",
         "  }\n",
+        "} else {\n",
+        "  cat(\"*No data file found for ",
+        tolower(self$pheno),
+        " domain.*\\n\")\n",
         "}\n",
         "```\n\n",
         "```{r}\n#| label: plot-",
@@ -841,12 +861,26 @@ DomainProcessorR6 <- R6::R6Class(
         "\n#| echo: false\n#| fig-width: 10\n#| fig-height: 4.5\n#| out-width: \"100%\"\n\n",
         "# Generate and display dotplot\n",
         "source(\"R/DotplotR6.R\")\n",
+        "# Try to read data in preferred order: parquet, csv\n",
+        "data_file <- NULL\n",
         "if (file.exists(\"data/",
+        tolower(self$pheno),
+        ".parquet\")) {\n",
+        "  if (requireNamespace(\"arrow\", quietly = TRUE)) {\n",
+        "    data <- arrow::read_parquet(\"data/",
+        tolower(self$pheno),
+        ".parquet\")\n",
+        "    data_file <- \"parquet\"\n",
+        "  }\n",
+        "} else if (file.exists(\"data/",
         tolower(self$pheno),
         ".csv\")) {\n",
         "  data <- read.csv(\"data/",
         tolower(self$pheno),
         ".csv\")\n",
+        "  data_file <- \"csv\"\n",
+        "}\n",
+        "if (!is.null(data_file)) {\n",
         "  if (nrow(data) > 0) {\n",
         "    plot_obj <- DotplotR6$new(\n",
         "      data = data,\n",
@@ -858,6 +892,10 @@ DomainProcessorR6 <- R6::R6Class(
         "    plot_obj$generate_plot()\n",
         "    print(plot_obj$plot)\n",
         "  }\n",
+        "} else {\n",
+        "  cat(\"*No data file found for ",
+        tolower(self$pheno),
+        " domain.*\\n\")\n",
         "}\n",
         "```\n\n"
       )
@@ -879,16 +917,20 @@ DomainProcessorR6 <- R6::R6Class(
       # Generate text files for self and observer
       self$generate_adhd_adult_text_files()
 
-      # CORRECTED ADHD adult QMD generation with proper structure
+      # Use typst syntax for headers
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        "\n```\n\n",
-        "```{=typst}\n=== SELF-REPORT\n```\n\n",
+        "\n",
+        "=== SELF-REPORT\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_adhd_adult_text_self.qmd >}}\n\n",
-        "```{=typst}\n=== OBSERVER RATINGS\n```\n\n",
+        "```{=typst}\n",
+        "=== OBSERVER RATINGS\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_adhd_adult_text_observer.qmd >}}\n\n"
@@ -909,20 +951,26 @@ DomainProcessorR6 <- R6::R6Class(
       # Generate text files for self, parent, and teacher
       self$generate_adhd_child_text_files()
 
-      # CORRECTED ADHD child QMD generation with proper structure
+      # Use typst syntax for headers
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        "\n```\n\n",
-        "```{=typst}\n=== SELF-REPORT\n```\n\n",
+        "\n",
+        "=== SELF-REPORT\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_adhd_child_text_self.qmd >}}\n\n",
-        "```{=typst}\n=== PARENT RATINGS\n```\n\n",
+        "```{=typst}\n",
+        "=== PARENT RATINGS\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_adhd_child_text_parent.qmd >}}\n\n",
-        "```{=typst}\n=== TEACHER RATINGS\n```\n\n",
+        "```{=typst}\n",
+        "=== TEACHER RATINGS\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_adhd_child_text_teacher.qmd >}}\n\n"
@@ -1067,20 +1115,26 @@ DomainProcessorR6 <- R6::R6Class(
       # Generate text files for all raters first
       self$generate_emotion_child_text_files()
 
-      # CORRECTED emotion child QMD generation with proper structure
+      # Use typst syntax for headers
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        "\n```\n\n",
-        "```{=typst}\n=== SELF-REPORT\n```\n\n",
+        "\n",
+        "=== SELF-REPORT\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_emotion_child_text_self.qmd >}}\n\n",
-        "```{=typst}\n=== PARENT RATINGS\n```\n\n",
+        "```{=typst}\n",
+        "=== PARENT RATINGS\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_emotion_child_text_parent.qmd >}}\n\n",
-        "```{=typst}\n=== TEACHER RATINGS\n```\n\n",
+        "```{=typst}\n",
+        "=== TEACHER RATINGS\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_emotion_child_text_teacher.qmd >}}\n\n"
@@ -1196,11 +1250,13 @@ DomainProcessorR6 <- R6::R6Class(
         message(paste("[DOMAINS]   -", text_file, "(no data)"))
       }
 
-      # CORRECTED emotion adult QMD generation with proper structure
+      # Use typst syntax for headers
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        "\n```\n\n",
+        "\n",
+        "```\n\n",
         "{{< include _02-",
         self$number,
         "_emotion_adult_text.qmd >}}\n\n"
