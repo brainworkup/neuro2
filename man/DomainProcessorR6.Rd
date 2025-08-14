@@ -80,6 +80,7 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-generate_adhd_adult_text_files}{\code{DomainProcessorR6$generate_adhd_adult_text_files()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_child_text_files}{\code{DomainProcessorR6$generate_adhd_child_text_files()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_child_text_files}{\code{DomainProcessorR6$generate_emotion_child_text_files()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_table}{\code{DomainProcessorR6$generate_domain_table()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_child_tables}{\code{DomainProcessorR6$generate_emotion_child_tables()}}
@@ -479,6 +480,19 @@ Generate emotion child domain QMD file with multiple raters.
 }
 \subsection{Returns}{
 The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_child_text_files"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_child_text_files}{}}}
+\subsection{Method \code{generate_emotion_child_text_files()}}{
+Generate emotion child text files for self, parent, and teacher reports.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_text_files()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}

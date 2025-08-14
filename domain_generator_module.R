@@ -557,19 +557,12 @@ process_emotion_domains_validated <- function(
         processor$select_columns()
         processor$save_data()
 
-        generated_file <- processor$generate_domain_qmd(is_child = is_child)
+        # FIXED: Use the updated generate_domain_qmd method without is_child parameter
+        # The method automatically detects child vs adult emotion type
+        generated_file <- processor$generate_domain_qmd(
+          domain_name = emotion_domains_present[1] # Use first domain as name
+        )
         log_message(paste("Generated:", generated_file), "DOMAINS")
-
-        # Generate rater-specific text files
-        raters <- if (is_child) c("self", "parent", "teacher") else c("self")
-        for (rater in raters) {
-          if (
-            processor$check_rater_data_exists &&
-              processor$check_rater_data_exists(rater)
-          ) {
-            processor$generate_domain_text_qmd(report_type = rater)
-          }
-        }
 
         return(TRUE)
       }
@@ -616,7 +609,9 @@ process_adhd_domain_validated <- function(is_child, neurobehav_data) {
         processor$select_columns()
         processor$save_data()
 
-        generated_file <- processor$generate_domain_qmd(is_child = is_child)
+        # FIXED: Use the updated generate_domain_qmd method
+        # The method automatically detects child vs adult ADHD type
+        generated_file <- processor$generate_domain_qmd(domain_name = "ADHD")
         log_message(paste("Generated:", generated_file), "DOMAINS")
 
         return(TRUE)

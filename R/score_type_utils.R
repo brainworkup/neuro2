@@ -1,3 +1,68 @@
+# score_type_utils.R - Score Type Utilities and Compatibility
+# This file provides utility functions and ensures the score type cache is properly initialized
+
+# Source the ScoreTypeCacheR6 class
+source("R/ScoreTypeCacheR6.R")
+
+# Initialize the global cache if it doesn't exist
+if (!exists(".ScoreTypeCacheR6")) {
+  .ScoreTypeCacheR6 <- ScoreTypeCacheR6$new()
+  .ScoreTypeCacheR6$build_mappings()
+}
+
+# Compatibility shim for old .score_type_cache references
+if (!exists(".score_type_cache")) {
+  .score_type_cache <- .ScoreTypeCacheR6
+}
+
+#' Get score type groups for test names
+#' @param test_names Character vector of test names
+#' @return Named list of score type groups
+get_score_groups <- function(test_names) {
+  if (exists(".ScoreTypeCacheR6")) {
+    return(.ScoreTypeCacheR6$get_score_groups(test_names))
+  } else {
+    # Fallback - return empty list
+    return(list())
+  }
+}
+
+#' Get footnotes for score types
+#' @param score_types Character vector of score types
+#' @return Named list of footnotes
+get_score_footnotes <- function(score_types) {
+  if (exists(".ScoreTypeCacheR6")) {
+    return(.ScoreTypeCacheR6$get_footnotes(score_types))
+  } else {
+    # Fallback - return empty list
+    return(list())
+  }
+}
+
+#' Initialize score type cache safely
+#' @return Logical indicating success
+init_score_type_cache <- function() {
+  tryCatch(
+    {
+      if (!exists(".ScoreTypeCacheR6")) {
+        .ScoreTypeCacheR6 <<- ScoreTypeCacheR6$new()
+      }
+      if (!.ScoreTypeCacheR6$initialized) {
+        .ScoreTypeCacheR6$build_mappings()
+      }
+      # Compatibility
+      if (!exists(".score_type_cache")) {
+        .score_type_cache <<- .ScoreTypeCacheR6
+      }
+      return(TRUE)
+    },
+    error = function(e) {
+      warning("Failed to initialize score type cache: ", e$message)
+      return(FALSE)
+    }
+  )
+}
+
 #' Score Type Utilities
 #'
 #' Functions to handle dynamic score type footnotes and source notes
