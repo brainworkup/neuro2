@@ -12,4 +12,5 @@
 #' @importFrom utils installed.packages packageVersion head
 #' @importFrom webshot2 webshot
 #' @importFrom xfun session_info file_ext
+#' @importFrom magrittr `%>%`
 NULL

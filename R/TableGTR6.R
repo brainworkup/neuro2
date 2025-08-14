@@ -249,30 +249,6 @@ TableGTR6 <- R6::R6Class(
       return(tbl)
     },
 
-    #' @description
-    #' Save the table to PNG and PDF files.
-    #'
-    #' @param tbl A gt table object to save.
-    #' @param dir Directory to save the files in (default: current directory).
-    #' @return Invisibly returns self for method chaining.
-    save_table = function(tbl, dir = ".") {
-      # Save PNG
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".png"))
-      )
-
-      # Save PDF
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".pdf"))
-      )
-
-      invisible(self)
-    }
-  ),
-
-  private = list(
     # Add this private method to handle multi-score batteries
     handle_multi_score_battery = function(battery, tbl) {
       # Simplified multi-score battery handling
@@ -319,6 +295,28 @@ TableGTR6 <- R6::R6Class(
             locations = gt::cells_row_groups(groups = battery)
           )
       }
+    },
+
+    #' @description
+    #' Save the table to PNG and PDF files.
+    #'
+    #' @param tbl A gt table object to save.
+    #' @param dir Directory to save the files in (default: current directory).
+    #' @return Invisibly returns self for method chaining.
+    save_table = function(tbl, dir = ".") {
+      # Save PNG
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".png"))
+      )
+
+      # Save PDF
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".pdf"))
+      )
+
+      invisible(self)
     }
-  )
+  ),
 )

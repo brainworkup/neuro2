@@ -296,8 +296,7 @@ ScoreTypeCacheR6 <- R6::R6Class(
   )
 )
 
-# Create global cache instance with both names for compatibility
+# Create global cache instance
 if (!exists(".ScoreTypeCacheR6")) {
   .ScoreTypeCacheR6 <- ScoreTypeCacheR6$new()
-  .score_type_cache <- .ScoreTypeCacheR6 # Alias for TableGTR6 compatibility
 }

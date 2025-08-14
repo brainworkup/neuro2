@@ -4,12 +4,6 @@
 generate_workflow_domains <- function(config) {
   source("R/workflow_utils.R")
   source("R/workflow_data_processor.R")
-  
-  # Load required packages for domain processing
-  suppressPackageStartupMessages({
-    library(dplyr)
-    library(magrittr)  # For %>% operator
-  })
 
   log_message("Generating domain files...", "WORKFLOW")
 
