@@ -61,13 +61,15 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param number Domain number for file naming (optional, will be auto-determined if not provided).
     #'
     #' @return A new DomainProcessorR6 object
-    initialize = function(domains,
-                          pheno,
-                          input_file,
-                          output_dir = "data",
-                          scale_source = NULL,
-                          test_filters = NULL,
-                          number = NULL) {
+    initialize = function(
+      domains,
+      pheno,
+      input_file,
+      output_dir = "data",
+      scale_source = NULL,
+      test_filters = NULL,
+      number = NULL
+    ) {
       self$domains <- domains
       self$pheno <- pheno
       self$input_file <- input_file
@@ -696,10 +698,10 @@ DomainProcessorR6 <- R6::R6Class(
             data = self$data,
             file = text_file
           )
-          
+
           # Process the data to generate narrative text
           results_processor$process()
-          
+
           message(paste("Generated text file:", text_file))
           return(text_file)
         },
@@ -713,7 +715,11 @@ DomainProcessorR6 <- R6::R6Class(
           # Create a minimal placeholder file to avoid include errors
           placeholder_content <- paste0(
             "*Text content for this domain",
-            ifelse(is.null(report_type), "", paste(" and", report_type, "rater")),
+            ifelse(
+              is.null(report_type),
+              "",
+              paste(" and", report_type, "rater")
+            ),
             " is not available.*\n"
           )
           writeLines(placeholder_content, text_file)
@@ -722,16 +728,17 @@ DomainProcessorR6 <- R6::R6Class(
       )
     },
 
-    #' @description
     #' Generate domain QMD file.
     #'
     #' @param domain_name Name of the domain.
     #' @param output_file Output file path (default: NULL, will generate based on domain).
     #' @param is_child Logical indicating if this is a child version (default: FALSE).
     #' @return The path to the generated file.
-    generate_domain_qmd = function(domain_name = NULL,
-                                   output_file = NULL,
-                                   is_child = FALSE) {
+    generate_domain_qmd = function(
+      domain_name = NULL,
+      output_file = NULL,
+      is_child = FALSE
+    ) {
       # Use the first domain if domain_name not provided
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -807,15 +814,30 @@ DomainProcessorR6 <- R6::R6Class(
         source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
       }
 
+      # Get plot title and use shorter version for YAML safety
       plot_title <- self$get_default_plot_titles()
+      # Use a shorter, YAML-safe version of the plot title
+      short_titles <- list(
+        iq = "Intellectual and cognitive abilities",
+        academics = "Academic skills assessment results",
+        verbal = "Verbal and language functioning results",
+        spatial = "Visuospatial abilities assessment",
+        memory = "Memory functions assessment results",
+        executive = "Attentional and executive functions",
+        motor = "Motor functions assessment results",
+        social = "Social cognition assessment results"
+      )
 
-      # Generate complete QMD content
+      plot_title_safe <- short_titles[[tolower(self$pheno)]]
+      if (is.null(plot_title_safe)) {
+        plot_title_safe <- paste("Assessment results for", tolower(self$pheno))
+      }
+
+      # Generate complete QMD content with proper table and plot generation
       qmd_content <- paste0(
-        "## ",
+        "```{=typst}\n== ",
         domain_name,
-        " {#sec-",
-        tolower(self$pheno),
-        "}\n\n",
+        "\n```\n\n",
         "{{< include _02-",
         self$number,
         "_",
@@ -823,10 +845,17 @@ DomainProcessorR6 <- R6::R6Class(
         "_text.qmd >}}\n\n",
         "```{r}\n#| label: setup-",
         tolower(self$pheno),
-        "\n#| include: false\n\n",
+        "\n#| echo: false\n#| include: false\n#| warning: false\n#| message: false\n\n",
         "# Source R6 classes\nsource(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\nsource(\"R/DotplotR6.R\")\n",
         "source(\"R/TableGTR6.R\")\nsource(\"R/score_type_utils.R\")\n\n",
+        "# Initialize score type cache if it exists\n",
+        "if (file.exists(\"R/ScoreTypeCacheR6.R\")) {\n",
+        "  source(\"R/ScoreTypeCacheR6.R\")\n",
+        "  if (exists(\".ScoreTypeCacheR6\")) {\n",
+        "    .ScoreTypeCacheR6$build_mappings()\n",
+        "  }\n",
+        "}\n\n",
         "# Filter by domain\ndomains <- c(\"",
         domain_name,
         "\")\n\n",
@@ -860,7 +889,71 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         " <- processor_",
         tolower(self$pheno),
-        "$data\n```\n\n"
+        "$data\n```\n\n",
+
+        "```{r}\n#| label: table-",
+        tolower(self$pheno),
+        "\n#| echo: false\n#| warning: false\n#| message: false\n\n",
+        "# Generate table using TableGTR6\nif (nrow(",
+        tolower(self$pheno),
+        ") > 0) {\n",
+        "  table_",
+        tolower(self$pheno),
+        " <- TableGTR6$new(\n",
+        "    data = ",
+        tolower(self$pheno),
+        ",\n",
+        "    pheno = \"",
+        tolower(self$pheno),
+        "\",\n",
+        "    table_name = \"table_",
+        tolower(self$pheno),
+        "\",\n",
+        "    source_note = \"",
+        source_note,
+        "\",\n",
+        "    vertical_padding = 1.0\n",
+        "  )\n",
+        "  # Build the table\n",
+        "  built_table <- table_",
+        tolower(self$pheno),
+        "$build_table()\n",
+        "  \n",
+        "  # Save the table (this will create both PNG and PDF)\n",
+        "  table_",
+        tolower(self$pheno),
+        "$save_table(built_table, dir = \".\")\n",
+        "  \n",
+        "  # Display the table\n",
+        "  print(built_table)\n",
+        "}\n```\n\n",
+
+        "```{r}\n#| label: plot-",
+        tolower(self$pheno),
+        "\n#| echo: false\n#| fig-cap: '",
+        plot_title_safe,
+        "'\n#| fig-height: 4.5\n#| fig-width: 10\n#| out-width: \"100%\"\n\n",
+        "# Generate dotplot using DotplotR6\nif (nrow(",
+        tolower(self$pheno),
+        ") > 0) {\n",
+        "  plot_",
+        tolower(self$pheno),
+        " <- DotplotR6$new(\n",
+        "    data = ",
+        tolower(self$pheno),
+        ",\n",
+        "    x_var = \"percentile\",\n",
+        "    y_var = \"scale\",\n",
+        "    colors = c(\"#d7191c\", \"#fdae61\", \"#abdda4\", \"#2b83ba\"),\n",
+        "    return_plot = TRUE\n",
+        "  )\n",
+        "  plot_",
+        tolower(self$pheno),
+        "$generate_plot()\n",
+        "  print(plot_",
+        tolower(self$pheno),
+        "$plot)\n",
+        "}\n```\n\n"
       )
 
       # Write QMD to file
@@ -868,7 +961,6 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Generate the text file and table before rendering
       self$generate_domain_text_qmd()
-      self$generate_domain_table(domain_name)
 
       message(paste0(
         "[DOMAINS] Generated ",
@@ -1130,9 +1222,11 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param report_types Vector of report types to generate (default: c("self")).
     #' @param generate_domain_files Whether to generate domain QMD files (default: FALSE).
     #' @return Invisibly returns self for method chaining.
-    process = function(generate_reports = TRUE,
-                       report_types = c("self"),
-                       generate_domain_files = FALSE) {
+    process = function(
+      generate_reports = TRUE,
+      report_types = c("self"),
+      generate_domain_files = FALSE
+    ) {
       # Run the complete pipeline
       self$load_data()
       self$filter_by_domain()

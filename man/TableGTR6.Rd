@@ -61,7 +61,6 @@ This class is identical to TableGT but removes the automatic saving in the build
 \itemize{
 \item \href{#method-TableGTR6-new}{\code{TableGTR6$new()}}
 \item \href{#method-TableGTR6-build_table}{\code{TableGTR6$build_table()}}
-\item \href{#method-TableGTR6-handle_multi_score_battery}{\code{TableGTR6$handle_multi_score_battery()}}
 \item \href{#method-TableGTR6-save_table}{\code{TableGTR6$save_table()}}
 \item \href{#method-TableGTR6-clone}{\code{TableGTR6$clone()}}
 }
@@ -144,15 +143,6 @@ mappings for improved performance.
 \subsection{Returns}{
 A formatted \code{gt} table object
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TableGTR6-handle_multi_score_battery"></a>}}
-\if{latex}{\out{\hypertarget{method-TableGTR6-handle_multi_score_battery}{}}}
-\subsection{Method \code{handle_multi_score_battery()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TableGTR6$handle_multi_score_battery(battery, tbl)}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TableGTR6-save_table"></a>}}

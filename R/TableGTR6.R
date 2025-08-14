@@ -167,7 +167,11 @@ TableGTR6 <- R6::R6Class(
       if (length(self$grp_list) == 0) {
         # Auto-detect score groups using cache
         self$grp_list <- .score_type_cache$get_score_groups(existing_groups)
-        message(paste("Auto-detected score groups for", length(existing_groups), "tests"))
+        message(paste(
+          "Auto-detected score groups for",
+          length(existing_groups),
+          "tests"
+        ))
       }
 
       # Get relevant footnotes efficiently
@@ -177,12 +181,18 @@ TableGTR6 <- R6::R6Class(
       }
 
       # Handle multi-score batteries efficiently
-      multi_score_batteries <- existing_groups[sapply(existing_groups, function(x) {
-        .score_type_cache$is_multi_score_battery(x)
-      })]
+      multi_score_batteries <- existing_groups[sapply(
+        existing_groups,
+        function(x) {
+          .score_type_cache$is_multi_score_battery(x)
+        }
+      )]
 
       if (length(multi_score_batteries) > 0) {
-        message(paste("Found multi-score batteries:", paste(multi_score_batteries, collapse = ", ")))
+        message(paste(
+          "Found multi-score batteries:",
+          paste(multi_score_batteries, collapse = ", ")
+        ))
 
         # Process multi-score batteries with simplified logic
         for (battery in multi_score_batteries) {
@@ -196,14 +206,22 @@ TableGTR6 <- R6::R6Class(
         groups <- intersect(self$grp_list[[score_type]], existing_groups)
 
         # Skip battery-specific groups
-        if (any(sapply(multi_score_batteries, function(b) {
-          grepl(paste0("^", tolower(b), "_"), score_type)
-        }))) {
+        if (
+          any(sapply(multi_score_batteries, function(b) {
+            grepl(paste0("^", tolower(b), "_"), score_type)
+          }))
+        ) {
           next
         }
 
         if (!is.null(footnote) && length(groups) > 0) {
-          message(paste("Adding", score_type, "footnote to", length(groups), "groups"))
+          message(paste(
+            "Adding",
+            score_type,
+            "footnote to",
+            length(groups),
+            "groups"
+          ))
 
           tbl <- tbl |>
             gt::tab_footnote(
@@ -231,13 +249,44 @@ TableGTR6 <- R6::R6Class(
       return(tbl)
     },
 
+    #' @description
+    #' Save the table to PNG and PDF files.
+    #'
+    #' @param tbl A gt table object to save.
+    #' @param dir Directory to save the files in (default: current directory).
+    #' @return Invisibly returns self for method chaining.
+    save_table = function(tbl, dir = ".") {
+      # Save PNG
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".png"))
+      )
+
+      # Save PDF
+      gt::gtsave(
+        tbl,
+        filename = file.path(dir, paste0(self$table_name, ".pdf"))
+      )
+
+      invisible(self)
+    }
+  ),
+
+  private = list(
     # Add this private method to handle multi-score batteries
     handle_multi_score_battery = function(battery, tbl) {
       # Simplified multi-score battery handling
       battery_scales <- self$data$scale[self$data$test_name == battery]
 
       # Define standard score patterns
-      standard_patterns <- c("Index", "Composite", "IQ", "Sum", "Total", "Quotient")
+      standard_patterns <- c(
+        "Index",
+        "Composite",
+        "IQ",
+        "Sum",
+        "Total",
+        "Quotient"
+      )
 
       # Classify scales
       standard_scales <- battery_scales[sapply(battery_scales, function(scale) {
@@ -270,28 +319,6 @@ TableGTR6 <- R6::R6Class(
             locations = gt::cells_row_groups(groups = battery)
           )
       }
-    },
-
-    #' @description
-    #' Save the table to PNG and PDF files.
-    #'
-    #' @param tbl A gt table object to save.
-    #' @param dir Directory to save the files in (default: current directory).
-    #' @return Invisibly returns self for method chaining.
-    save_table = function(tbl, dir = ".") {
-      # Save PNG
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".png"))
-      )
-
-      # Save PDF
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".pdf"))
-      )
-
-      invisible(self)
     }
-  ),
+  )
 )

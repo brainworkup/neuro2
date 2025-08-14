@@ -359,13 +359,13 @@ Enhanced method to generate domain text files with proper validation
 }
 \subsection{Returns}{
 The path to the generated text file or NULL if failed.
+Generate domain QMD file.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(
   domain_name = NULL,
