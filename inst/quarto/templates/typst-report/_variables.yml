@@ -8,8 +8,8 @@ dob: "YYYY-MM-DD"
 doe: "YYYY-MM-DD"
 doe2: "YYYY-MM-DD"
 doe3: "YYYY-MM-DD"
-age: 18
-education: "12 years"
+age: 13
+education: "10 years"
 
 # Clinician information
 clinician: "Joey Trampush, Ph.D."

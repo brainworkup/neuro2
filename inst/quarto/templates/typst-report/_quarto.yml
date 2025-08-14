@@ -6,11 +6,9 @@ project:
     - R/quarto_helpers.R
     - generate_domain_files.R
     - generate_all_domain_assets.R
-    # Removed generate_domain_outputs.R - no longer needed
+
   render:
     - template.qmd
-
-# ...existing metadata and format sections...
 
 metadata-files:
   - _variables.yml
@@ -55,7 +53,7 @@ format:
   neurotyp-pediatric-typst:
     keep-typ: true
     keep-md: true
-    papersize: "us-letter"
+    papersize: "a4"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
     fontsize: 11pt
@@ -73,7 +71,7 @@ format:
   typst:
     keep-typ: true
     keep-md: true
-    papersize: "us-letter"
+    papersize: "a4"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
     fontsize: 11pt
