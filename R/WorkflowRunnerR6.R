@@ -20,36 +20,35 @@ WorkflowRunnerR6 <- R6::R6Class(
 
       log_message(
         paste0("Initialized WorkflowRunner for patient: ", self$patient_name),
-        "INFO",
-        self$log_file
+        "INFO"
       )
     },
 
     # Step 1: Setup environment
     setup_environment = function() {
       source("R/workflow_setup.R")
-      log_message("Step 1: Setting up environment...", "WORKFLOW", self$log_file)
+      log_message("Setting up environment...", "WORKFLOW")
       return(setup_workflow_environment(self$config))
     },
 
     # Step 2: Process data
     process_data = function() {
       source("R/workflow_data_processor.R")
-      log_message("Step 2: Processing data...", "WORKFLOW", self$log_file)
+      log_message("Processing data...", "WORKFLOW")
       return(process_workflow_data(self$config))
     },
 
     # Step 3: Generate domain files
     generate_domains = function() {
       source("R/workflow_domain_generator.R")
-      log_message("Step 3: Generating domain files...", "WORKFLOW", self$log_file)
+      log_message("Generating domain files...", "WORKFLOW")
       return(generate_workflow_domains(self$config))
     },
 
     # Step 4: Generate report
     generate_report = function() {
       source("R/workflow_report_generator.R")
-      log_message("Step 4: Generating final report...", "WORKFLOW")
+      log_message("Generating final report...", "WORKFLOW")
       return(generate_workflow_report(self$config))
     },
 
@@ -59,35 +58,38 @@ WorkflowRunnerR6 <- R6::R6Class(
 
       log_message(
         paste0("Starting unified workflow for patient: ", self$patient_name),
-        "WORKFLOW",
-        self$log_file
+        "WORKFLOW"
       )
 
       # Step 1: Setup environment
+      log_message("Step 1: Setting up environment...", "WORKFLOW")
       if (!self$setup_environment()) {
-        log_message("Environment setup failed", "ERROR", self$log_file)
+        log_message("Environment setup failed", "ERROR")
         return(FALSE)
       }
 
       # Step 2: Process data
+      log_message("Step 2: Processing data...", "WORKFLOW")
       if (!self$process_data()) {
-        log_message("Data processing failed", "ERROR", self$log_file)
+        log_message("Data processing failed", "ERROR")
         return(FALSE)
       }
 
       # Step 3: Generate domain files
+      log_message("Step 3: Generating domain files...", "WORKFLOW")
       if (!self$generate_domains()) {
-        log_message("Domain generation failed", "ERROR", self$log_file)
+        log_message("Domain generation failed", "ERROR")
         return(FALSE)
       }
 
       # Step 4: Generate report
+      log_message("Step 4: Generating final report...", "WORKFLOW")
       if (!self$generate_report()) {
-        log_message("Report generation failed", "ERROR", self$log_file)
+        log_message("Report generation failed", "ERROR")
         return(FALSE)
       }
 
-      log_message("Workflow completed successfully", "WORKFLOW", self$log_file)
+      log_message("Workflow completed successfully", "WORKFLOW")
       return(TRUE)
     },
 

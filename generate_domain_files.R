@@ -1,282 +1,117 @@
 #!/usr/bin/env Rscript
-# NOT GREAT SO FAR
-# Script to generate proper domain files using DomainProcessorR6
+# Validation-aware script to generate domain files using DomainProcessorR6
+# Only generates files for domains that have data
 
 # Ensure warnings are not converted to errors
 old_warn <- getOption("warn")
-options(warn = 1)  # Print warnings as they occur but don't convert to errors
+options(warn = 1)
 
 # Load required libraries
 library(here)
 library(R6)
+library(dplyr)
+library(readr)
+library(yaml)
 
-# Source R6 classes
+# Source required files
 source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
+source("R/NeuropsychResultsR6.R") 
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
 source("R/score_type_utils.R")
+source("R/domain_validation_utils.R")
 
-cat("Generating domain files using R6 classes...\n\n")
+cat("Generating domain files using R6 classes with validation...\n\n")
 
-# Define domain configurations
-domain_configs <- list(
-  list(
-    domain_name = "General Cognitive Ability",
-    pheno = "iq",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Academic Skills",
-    pheno = "academics",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Verbal/Language",
-    pheno = "verbal",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Visual Perception/Construction",
-    pheno = "spatial",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Memory",
-    pheno = "memory",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Attention/Executive",
-    pheno = "executive",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Motor",
-    pheno = "motor",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "Social Cognition",
-    pheno = "social",
-    input_file = "data/neurocog.parquet"
-  ),
-  list(
-    domain_name = "ADHD",
-    pheno = "adhd",
-    input_file = "data/neurobehav.parquet"
-  ),
-  list(
-    domain_name = "Behavioral/Emotional/Social",
-    pheno = "emotion",
-    input_file = "data/neurobehav.parquet"
-  ),
-  list(
-    domain_name = "Emotional/Behavioral/Personality",
-    pheno = "emotion",
-    input_file = "data/neurobehav.parquet"
+# Load data for validation
+tryCatch({
+  neurocog_data <- NULL
+  neurobehav_data <- NULL
+  
+  if(file.exists("data/neurocog.csv")) {
+    neurocog_data <- read_csv("data/neurocog.csv", show_col_types = FALSE)
+  }
+  
+  if(file.exists("data/neurobehav.csv")) {
+    neurobehav_data <- read_csv("data/neurobehav.csv", show_col_types = FALSE)
+  }
+  
+  if(is.null(neurocog_data) && is.null(neurobehav_data)) {
+    cat("⚠ No data files found - skipping domain generation\n")
+    quit(save = "no")
+  }
+  
+  # Load domain configuration
+  domain_config <- list(
+    "General Cognitive Ability" = list(pheno = "iq", input_file = "data/neurocog.csv"),
+    "Academic Skills" = list(pheno = "academics", input_file = "data/neurocog.csv"),
+    "Verbal/Language" = list(pheno = "verbal", input_file = "data/neurocog.csv"),
+    "Visual Perception/Construction" = list(pheno = "spatial", input_file = "data/neurocog.csv"),
+    "Memory" = list(pheno = "memory", input_file = "data/neurocog.csv"),
+    "Attention/Executive" = list(pheno = "executive", input_file = "data/neurocog.csv"),
+    "Motor" = list(pheno = "motor", input_file = "data/neurocog.csv"),
+    "Social Cognition" = list(pheno = "social", input_file = "data/neurocog.csv"),
+    "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.csv"),
+    "Behavioral/Emotional/Social" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Psychiatric Disorders" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Personality Disorders" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Psychosocial Problems" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Substance Use" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Emotional/Behavioral/Personality" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+    "Adaptive Functioning" = list(pheno = "adaptive", input_file = "data/neurobehav.csv"),
+    "Daily Living" = list(pheno = "daily_living", input_file = "data/neurobehav.csv")
   )
-)
-
-# Generate domain files
-for (config in domain_configs) {
-  cat(paste0(
-    "Generating files for ",
-    config$domain_name,
-    " (",
-    config$pheno,
-    ")...\n"
-  ))
-
-  tryCatch(
-    {
-      # Create processor
+  
+  # Get domains with data using validation
+  valid_domains_only <- get_domains_with_data(neurocog_data, neurobehav_data, domain_config)
+  
+  if(length(valid_domains_only) == 0) {
+    cat("⚠ No domains found with sufficient data\n")
+    quit(save = "no")
+  }
+  
+  cat("Found", length(valid_domains_only), "domains with data\n")
+  
+  # Only generate files for domains that have data
+  for(domain_name in names(valid_domains_only)) {
+    domain_info <- valid_domains_only[[domain_name]]
+    config <- domain_info$config
+    
+    cat("Generating files for", domain_name, "(", config$pheno, ")...\n")
+    
+    tryCatch({
       processor <- DomainProcessorR6$new(
-        domains = config$domain_name,
+        domains = domain_name,
         pheno = config$pheno,
         input_file = config$input_file
       )
-
-      # Since we don't have data, we'll inject empty data
-      processor$data <- data.frame(
-        domain = character(0),
-        test = character(0),
-        scale = character(0),
-        score = numeric(0),
-        percentile = numeric(0),
-        range = character(0),
-        stringsAsFactors = FALSE
-      )
-
-      # Generate domain QMD file
-      generated_file <- processor$generate_domain_qmd()
-      cat(paste0("  ✓ Generated ", generated_file, "\n"))
-    },
-    error = function(e) {
-      cat(paste0("  ✗ Error: ", e$message, "\n"))
-    }
-  )
-}
-
-# Generate special domain files for adult/child variants
-cat("\nGenerating adult/child variant files...\n")
-
-# ADHD adult
-tryCatch(
-  {
-    processor <- DomainProcessorR6$new(
-      domains = "ADHD",
-      pheno = "adhd",
-      input_file = "data/neurobehav.parquet"
-    )
-    processor$data <- data.frame(
-      domain = character(0),
-      test = character(0),
-      scale = character(0),
-      score = numeric(0),
-      percentile = numeric(0),
-      range = character(0),
-      stringsAsFactors = FALSE
-    )
-    generated_file <- processor$generate_domain_qmd(
-      output_file = "_02-09_adhd_adult.qmd"
-    )
-    cat("  ✓ Generated _02-09_adhd_adult.qmd\n")
-  },
-  error = function(e) {
-    cat(paste0("  ✗ Error: ", e$message, "\n"))
+      
+      processor$load_data()
+      processor$filter_by_domain()
+      
+      if(!is.null(processor$data) && nrow(processor$data) > 0) {
+        processor$select_columns()
+        processor$save_data()
+        
+        generated_file <- processor$generate_domain_qmd()
+        if(!is.null(generated_file)) {
+          cat("  ✓ Generated", generated_file, "\n")
+        }
+      } else {
+        cat("  ⚠ No data after filtering\n")
+      }
+      
+    }, error = function(e) {
+      cat("  ✗ Error generating", domain_name, ":", e$message, "\n")
+    })
   }
-)
+  
+  cat("\nValidated domain file generation complete!\n")
 
-# ADHD child
-tryCatch(
-  {
-    processor <- DomainProcessorR6$new(
-      domains = "ADHD",
-      pheno = "adhd",
-      input_file = "data/neurobehav.parquet"
-    )
-    processor$data <- data.frame(
-      domain = character(0),
-      test = character(0),
-      scale = character(0),
-      score = numeric(0),
-      percentile = numeric(0),
-      range = character(0),
-      stringsAsFactors = FALSE
-    )
-    generated_file <- processor$generate_domain_qmd(
-      output_file = "_02-09_adhd_child.qmd",
-      is_child = TRUE
-    )
-    cat("  ✓ Generated _02-09_adhd_child.qmd\n")
-  },
-  error = function(e) {
-    cat(paste0("  ✗ Error: ", e$message, "\n"))
-  }
-)
+}, error = function(e) {
+  cat("✗ Error in domain generation:", e$message, "\n")
+})
 
-# Emotion adult
-tryCatch(
-  {
-    processor <- DomainProcessorR6$new(
-      domains = "Emotional/Behavioral/Personality",
-      pheno = "emotion",
-      input_file = "data/neurobehav.parquet"
-    )
-    processor$data <- data.frame(
-      domain = character(0),
-      test = character(0),
-      scale = character(0),
-      score = numeric(0),
-      percentile = numeric(0),
-      range = character(0),
-      stringsAsFactors = FALSE
-    )
-    # Use the standard generate_domain_qmd method which handles emotion adult properly
-    generated_file <- processor$generate_domain_qmd(
-      domain_name = "Emotional/Behavioral/Personality",
-      output_file = "_02-10_emotion_adult.qmd"
-    )
-    cat("  ✓ Generated _02-10_emotion_adult.qmd\n")
-  },
-  error = function(e) {
-    cat(paste0("  ✗ Error: ", e$message, "\n"))
-  }
-)
-
-# Emotion child
-tryCatch(
-  {
-    processor <- DomainProcessorR6$new(
-      domains = "Behavioral/Emotional/Social",
-      pheno = "emotion",
-      input_file = "data/neurobehav.parquet"
-    )
-    processor$data <- data.frame(
-      domain = character(0),
-      test = character(0),
-      scale = character(0),
-      score = numeric(0),
-      percentile = numeric(0),
-      range = character(0),
-      stringsAsFactors = FALSE
-    )
-    # Use the standard generate_domain_qmd method which handles emotion child properly
-    generated_file <- processor$generate_domain_qmd(
-      domain_name = "Behavioral/Emotional/Social",
-      output_file = "_02-10_emotion_child.qmd"
-    )
-    cat("  ✓ Generated _02-10_emotion_child.qmd\n")
-  },
-  error = function(e) {
-    cat(paste0("  ✗ Error: ", e$message, "\n"))
-  }
-)
-
-# Adaptive and Daily Living
-remaining_domains <- list(
-  list(
-    domain = "Adaptive Functioning",
-    pheno = "adaptive",
-    file = "_02-11_adaptive.qmd",
-    input_file = "data/neurobehav.parquet" # Adaptive comes from neurobehav
-  ),
-  list(
-    domain = "Daily Living",
-    pheno = "daily_living",
-    file = "_02-12_daily_living.qmd",
-    input_file = "data/neurocog.parquet" # Daily Living comes from neurocog
-  )
-)
-
-for (dom in remaining_domains) {
-  tryCatch(
-    {
-      processor <- DomainProcessorR6$new(
-        domains = dom$domain,
-        pheno = dom$pheno,
-        input_file = dom$input_file # Use the specific input file for each domain
-      )
-      processor$data <- data.frame(
-        domain = character(0),
-        test = character(0),
-        scale = character(0),
-        score = numeric(0),
-        percentile = numeric(0),
-        range = character(0),
-        stringsAsFactors = FALSE
-      )
-      processor$generate_domain_qmd(output_file = dom$file)
-      cat(paste0("  ✓ Generated ", dom$file, "\n"))
-    },
-    error = function(e) {
-      cat(paste0("  ✗ Error generating ", dom$file, ": ", e$message, "\n"))
-    }
-  )
-}
-
-cat("\nDomain file generation complete!\n")
-
-# Restore original warning setting
+# Restore warning level
 options(warn = old_warn)
+
