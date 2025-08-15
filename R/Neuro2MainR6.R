@@ -49,9 +49,11 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @return A new Neuro2MainR6 object (invisible).
 
-    initialize = function(config_file = "config.yml",
-                          variables_file = "_variables.yml",
-                          verbose = NULL) {
+    initialize = function(
+      config_file = "config.yml",
+      variables_file = "_variables.yml",
+      verbose = NULL
+    ) {
       # Initialize configuration
       self$config <- ConfigManagerR6$new(config_file, variables_file)
 
@@ -157,9 +159,11 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param output_format Character specifying the target format for loaded data (e.g., 'arrow', 'parquet').
     #' @return Invisibly returns `self`.
 
-    load_data = function(data_dir = NULL,
-                         use_duckdb = NULL,
-                         output_format = NULL) {
+    load_data = function(
+      data_dir = NULL,
+      use_duckdb = NULL,
+      output_format = NULL
+    ) {
       # Use config defaults if not specified
       data_dir <- data_dir %||% self$config$get("data.input_dir")
       use_duckdb <- use_duckdb %||% self$config$get("data.use_duckdb", TRUE)
@@ -215,9 +219,11 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param include_multi_rater Logical; if TRUE, include multi-rater behavioral measures.
     #' @return Invisibly returns `self`.
 
-    process_domains = function(domains = NULL,
-                               age_group = NULL,
-                               include_multi_rater = NULL) {
+    process_domains = function(
+      domains = NULL,
+      age_group = NULL,
+      include_multi_rater = NULL
+    ) {
       # Use config defaults if not specified
       domains <- domains %||% self$config$get("domains.enabled")
       age_group <- age_group %||% self$detect_age_group()
@@ -337,9 +343,11 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param format Output format for the rendered report (e.g., 'pdf','html','docx').
     #' @return Path to the generated report file (character).
 
-    generate_report = function(template = NULL,
-                               output_file = NULL,
-                               format = NULL) {
+    generate_report = function(
+      template = NULL,
+      output_file = NULL,
+      format = NULL
+    ) {
       # Use config defaults if not specified
       template <- template %||%
         self$config$get("report.template", "template.qmd")
@@ -423,10 +431,12 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param generate_report Logical; if TRUE, render the report at the end of the workflow.
     #' @return List or named list summarizing workflow results (invisibly).
 
-    run_full_workflow = function(domains = NULL,
-                                 age_group = NULL,
-                                 load_data = TRUE,
-                                 generate_report = TRUE) {
+    run_full_workflow = function(
+      domains = NULL,
+      age_group = NULL,
+      load_data = TRUE,
+      generate_report = TRUE
+    ) {
       if (self$config$get("processing.verbose", TRUE)) {
         cli::cli_h1("Running Full Workflow")
       }

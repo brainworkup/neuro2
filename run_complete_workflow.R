@@ -12,7 +12,7 @@ print_colored <- function(message, color = "blue") {
     blue = "\033[0;34m",
     reset = "\033[0m"
   )
-  
+
   cat(paste0(colors[[color]], message, colors$reset, "\n"))
 }
 
@@ -24,14 +24,23 @@ print_colored("===============================", "blue")
 print_colored("Step 1: Cleaning up existing domain files...", "blue")
 
 domain_files_to_remove <- c(
-  "_02-01_iq.qmd", "_02-01_iq_text.qmd",
-  "_02-02_academics.qmd", "_02-02_academics_text.qmd", 
-  "_02-03_verbal.qmd", "_02-03_verbal_text.qmd",
-  "_02-04_spatial.qmd", "_02-04_spatial_text.qmd",
-  "_02-05_memory.qmd", "_02-05_memory_text.qmd",
-  "_02-06_executive.qmd", "_02-06_executive_text.qmd",
-  "_02-07_motor.qmd", "_02-07_motor_text.qmd",
-  "_02-10_emotion_child.qmd"
+  "_02-01_iq.qmd",
+  "_02-01_iq_text.qmd",
+  "_02-02_academics.qmd",
+  "_02-02_academics_text.qmd",
+  "_02-03_verbal.qmd",
+  "_02-03_verbal_text.qmd",
+  "_02-04_spatial.qmd",
+  "_02-04_spatial_text.qmd",
+  "_02-05_memory.qmd",
+  "_02-05_memory_text.qmd",
+  "_02-06_executive.qmd",
+  "_02-06_executive_text.qmd",
+  "_02-07_motor.qmd",
+  "_02-07_motor_text.qmd",
+  "_02-10_emotion_child.qmd",
+  "_02-10_emotion_child_text_self.qmd",
+  "_02-10_emotion_child_text_parent.qmd"
 )
 
 removed_count <- 0
@@ -46,7 +55,10 @@ for (file in domain_files_to_remove) {
 if (removed_count == 0) {
   print_colored("No existing domain files to remove", "green")
 } else {
-  print_colored(paste("Removed", removed_count, "existing domain files"), "green")
+  print_colored(
+    paste("Removed", removed_count, "existing domain files"),
+    "green"
+  )
 }
 
 # Step 2: Run the WorkflowRunnerR6
@@ -69,11 +81,14 @@ workflow$print_summary(result)
 
 if (result) {
   print_colored("✅ COMPLETE WORKFLOW SUCCESSFUL", "green")
-  
+
   # List generated domain files
   generated_files <- list.files(pattern = "^_02-[0-9]+_.*\\.qmd$")
   if (length(generated_files) > 0) {
-    print_colored(paste("Generated", length(generated_files), "domain files:"), "green")
+    print_colored(
+      paste("Generated", length(generated_files), "domain files:"),
+      "green"
+    )
     for (file in sort(generated_files)) {
       print_colored(paste("  ✓", file), "green")
     }

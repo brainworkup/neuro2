@@ -320,113 +320,113 @@ process_single_domain_validated <- function(
 }
 
 # # Function to process emotion domains (consolidated)
-# process_emotion_domains <- function(is_child = TRUE) {
-#   emotion_domains_present <- intersect(domains, emotion_domains)
+process_emotion_domains <- function(is_child = TRUE) {
+  emotion_domains_present <- intersect(domains, emotion_domains)
 
-#   if (length(emotion_domains_present) == 0) {
-#     return(FALSE)
-#   }
+  if (length(emotion_domains_present) == 0) {
+    return(FALSE)
+  }
 
-#   # Check if any emotion domains have data
-#   emotion_has_data <- any(sapply(emotion_domains_present, function(d) {
-#     check_domain_has_data(d, neurobehav_data)
-#   }))
+  # Check if any emotion domains have data
+  emotion_has_data <- any(sapply(emotion_domains_present, function(d) {
+    check_domain_has_data(d, neurobehav_data)
+  }))
 
-#   if (!emotion_has_data) {
-#     return(FALSE)
-#   }
+  if (!emotion_has_data) {
+    return(FALSE)
+  }
 
-#   tryCatch(
-#     {
-#       age_type <- if (is_child) "child" else "adult"
-#       log_message(
-#         paste("Processing consolidated emotion domains for", age_type),
-#         "DOMAINS"
-#       )
+  tryCatch(
+    {
+      age_type <- if (is_child) "child" else "adult"
+      log_message(
+        paste("Processing consolidated emotion domains for", age_type),
+        "DOMAINS"
+      )
 
-#       processor <- DomainProcessorR6$new(
-#         domains = emotion_domains_present,
-#         pheno = "emotion",
-#         input_file = "data/neurobehav.parquet"
-#       )
+      processor <- DomainProcessorR6$new(
+        domains = emotion_domains_present,
+        pheno = "emotion",
+        input_file = "data/neurobehav.parquet"
+      )
 
-#       processor$load_data()
-#       processor$filter_by_domain()
+      processor$load_data()
+      processor$filter_by_domain()
 
-#       if (!is.null(processor$data) && nrow(processor$data) > 0) {
-#         # Process and save data
-#         processor$select_columns()
-#         processor$save_data()
+      if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
 
-#         # Generate age-specific emotion file
-#         generated_file <- processor$generate_domain_qmd(is_child = is_child)
-#         log_message(paste("Generated:", generated_file), "DOMAINS")
+        # Generate age-specific emotion file
+        generated_file <- processor$generate_domain_qmd(is_child = is_child)
+        log_message(paste("Generated:", generated_file), "DOMAINS")
 
-#         # Generate rater-specific text files
-#         raters <- if (is_child) c("self", "parent", "teacher") else c("self")
-#         for (rater in raters) {
-#           processor$generate_domain_text_qmd(report_type = rater)
-#         }
+        # Generate rater-specific text files
+        raters <- if (is_child) c("self", "parent", "teacher") else c("self")
+        for (rater in raters) {
+          processor$generate_domain_text_qmd(report_type = rater)
+        }
 
-#         return(TRUE)
-#       }
+        return(TRUE)
+      }
 
-#       return(FALSE)
-#     },
-#     error = function(e) {
-#       log_message(
-#         paste("Error processing emotion domains:", e$message),
-#         "ERROR"
-#       )
-#       return(FALSE)
-#     }
-#   )
-# }
+      return(FALSE)
+    },
+    error = function(e) {
+      log_message(
+        paste("Error processing emotion domains:", e$message),
+        "ERROR"
+      )
+      return(FALSE)
+    }
+  )
+}
 
 # Function to process ADHD domain
-# process_adhd_domain <- function(is_child = TRUE) {
-#   if (!"ADHD" %in% domains) {
-#     return(FALSE)
-#   }
+process_adhd_domain <- function(is_child = TRUE) {
+  if (!"ADHD" %in% domains) {
+    return(FALSE)
+  }
 
-#   if (!check_domain_has_data("ADHD", neurobehav_data)) {
-#     return(FALSE)
-#   }
+  if (!check_domain_has_data("ADHD", neurobehav_data)) {
+    return(FALSE)
+  }
 
-#   tryCatch(
-#     {
-#       age_type <- if (is_child) "child" else "adult"
-#       log_message(paste("Processing ADHD domain for", age_type), "DOMAINS")
+  tryCatch(
+    {
+      age_type <- if (is_child) "child" else "adult"
+      log_message(paste("Processing ADHD domain for", age_type), "DOMAINS")
 
-#       processor <- DomainProcessorR6$new(
-#         domains = "ADHD",
-#         pheno = "adhd",
-#         input_file = "data/neurobehav.parquet"
-#       )
+      processor <- DomainProcessorR6$new(
+        domains = "ADHD",
+        pheno = "adhd",
+        input_file = "data/neurobehav.parquet"
+      )
 
-#       processor$load_data()
-#       processor$filter_by_domain()
+      processor$load_data()
+      processor$filter_by_domain()
 
-#       if (!is.null(processor$data) && nrow(processor$data) > 0) {
-#         # Process and save data
-#         processor$select_columns()
-#         processor$save_data()
+      if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        # Process and save data
+        processor$select_columns()
+        processor$save_data()
 
-#         # Generate age-specific ADHD file
-#         generated_file <- processor$generate_domain_qmd(is_child = is_child)
-#         log_message(paste("Generated:", generated_file), "DOMAINS")
+        # Generate age-specific ADHD file
+        generated_file <- processor$generate_domain_qmd(is_child = is_child)
+        log_message(paste("Generated:", generated_file), "DOMAINS")
 
-#         return(TRUE)
-#       }
+        return(TRUE)
+      }
 
-#       return(FALSE)
-#     },
-#     error = function(e) {
-#       log_message(paste("Error processing ADHD domain:", e$message), "ERROR")
-#       return(FALSE)
-#     }
-#   )
-# }
+      return(FALSE)
+    },
+    error = function(e) {
+      log_message(paste("Error processing ADHD domain:", e$message), "ERROR")
+      return(FALSE)
+    }
+  )
+}
 
 # Improved main processing logic
 main_processing_improved <- function() {
