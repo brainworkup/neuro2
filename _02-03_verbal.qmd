@@ -1,5 +1,5 @@
 ```{=typst}
-== Verbal
+== Verbal/Language
 <sec-verbal>
 ```
 
@@ -17,7 +17,7 @@ source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 
 # Filter by domain
-domains <- c("Verbal")
+domains <- c("Verbal/Language")
 
 # Target phenotype
 pheno <- "verbal"
@@ -34,14 +34,14 @@ processor_verbal$load_data()
 processor_verbal$filter_by_domain()
 
 # Create the data object with original name for compatibility
-memory <- processor_verbal$data
+verbal <- processor_verbal$data
 
 # Process and export data using R6
 processor_verbal$select_columns()
 processor_verbal$save_data()
 
 # Update the original object
-memory <- processor_verbal$data
+verbal <- processor_verbal$data
 
 # Load internal data to get standardized scale names
 scale_var_name <- paste0("scales_", tolower(pheno))
@@ -74,7 +74,7 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_verbal <- filter_data(data = memory, domain = domains, scale = scales)
+data_verbal <- filter_data(data = verbal, domain = domains, scale = scales)
 ```
 ```{r}
 #| label: text-verbal
@@ -86,7 +86,7 @@ data_verbal <- filter_data(data = memory, domain = domains, scale = scales)
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
   data = data_verbal,
-  file = "_02-01_memory_text.qmd"
+  file = "_02-03_verbal_text.qmd"
 )
 results_processor$process()
 ```
@@ -268,7 +268,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Verbal"
+#let title = "Verbal/Language"
 
 // Define the file name of the table
 #let file_qtbl = "table_verbal.png"
@@ -282,7 +282,7 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Verbal"
+#let title = "Verbal/Language"
 
 // Define the file name of the table
 #let file_qtbl = "table_verbal.png"

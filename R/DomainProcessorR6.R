@@ -689,36 +689,66 @@ DomainProcessorR6 <- R6::R6Class(
         return(NULL)
       }
 
-      # Generate appropriate text content
-      text_content <- private$generate_text_content(report_type)
+      # For domains that don't need report-specific content, create a minimal placeholder
+      # This prevents the generic text content from being generated and displayed
+      if (is.null(report_type) && !self$has_multiple_raters()) {
+        # Create a minimal placeholder that won't be rendered
+        text_content <- "<!-- Placeholder text file for domain -->\n"
 
-      # Write the text file
-      tryCatch(
-        {
-          writeLines(text_content, text_file)
-          message(paste("Generated text file:", text_file))
-          return(text_file)
-        },
-        error = function(e) {
-          warning(paste(
-            "Failed to generate text file",
-            text_file,
-            ":",
-            e$message
-          ))
-          # Create a minimal placeholder file to avoid include errors
-          placeholder_content <- paste0(
-            "# ",
-            self$domains[1],
-            " - ",
-            ifelse(is.null(report_type), "General", report_type),
-            " Report\n\n",
-            "*Text content for this domain and rater combination is not available.*\n"
-          )
-          writeLines(placeholder_content, text_file)
-          return(text_file)
-        }
-      )
+        # Write the minimal content to file
+        tryCatch(
+          {
+            writeLines(text_content, text_file)
+            message(paste("Generated minimal text file:", text_file))
+            return(text_file)
+          },
+          error = function(e) {
+            warning(paste(
+              "Failed to generate text file",
+              text_file,
+              ":",
+              e$message
+            ))
+            return(NULL)
+          }
+        )
+      }
+
+      # For multiple raters or specific report types, generate appropriate text content
+      if (!is.null(report_type) || self$has_multiple_raters()) {
+        text_content <- private$generate_text_content(report_type)
+
+        # Write the text file
+        tryCatch(
+          {
+            writeLines(text_content, text_file)
+            message(paste("Generated text file:", text_file))
+            return(text_file)
+          },
+          error = function(e) {
+            warning(paste(
+              "Failed to generate text file",
+              text_file,
+              ":",
+              e$message
+            ))
+            # Create a minimal placeholder file to avoid include errors
+            placeholder_content <- paste0(
+              "# ",
+              self$domains[1],
+              " - ",
+              ifelse(is.null(report_type), "General", report_type),
+              " Report\n\n",
+              "*Text content for this domain and rater combination is not available.*\n"
+            )
+            writeLines(placeholder_content, text_file)
+            return(text_file)
+          }
+        )
+      }
+
+      # Fallback - should not reach here but included for safety
+      return(text_file)
     },
 
     #' @description
@@ -857,13 +887,63 @@ DomainProcessorR6 <- R6::R6Class(
         fixed = TRUE
       )
 
-      # Replace data object names
-      qmd_content <- gsub(
-        "memory <- processor_memory",
-        paste0(tolower(self$pheno), " <- processor_", tolower(self$pheno)),
-        qmd_content,
-        fixed = TRUE
-      )
+      # Replace data object names - fix the memory variable references for ALL domains
+      # Handle the special case where the domain is "Memory" and we need to be more specific
+      if (tolower(self$pheno) == "memory") {
+        # For the memory domain, be very specific to avoid conflicts
+        qmd_content <- gsub(
+          "# Create the data object\nmemory <- processor_memory\\$data",
+          "# Create the data object\nmemory <- processor_memory$data",
+          qmd_content,
+          fixed = TRUE
+        )
+        qmd_content <- gsub(
+          "# Update the original object\nmemory <- processor_memory\\$data",
+          "# Update the original object\nmemory <- processor_memory$data",
+          qmd_content,
+          fixed = TRUE
+        )
+      } else {
+        # For all other domains, replace memory references with the correct pheno
+        qmd_content <- gsub(
+          "memory <- processor_memory",
+          paste0(tolower(self$pheno), " <- processor_", tolower(self$pheno)),
+          qmd_content,
+          fixed = TRUE
+        )
+
+        # Also replace standalone memory references that come from the template
+        qmd_content <- gsub(
+          "# Create the data object with original name for compatibility\nmemory <- processor_",
+          paste0(
+            "# Create the data object\n",
+            tolower(self$pheno),
+            " <- processor_"
+          ),
+          qmd_content,
+          fixed = TRUE
+        )
+
+        # Replace any memory variable assignments with the correct pheno (works for all domains)
+        memory_pattern <- "memory <- processor_([a-z_]+)\\$data"
+        replacement <- paste0(
+          tolower(self$pheno),
+          " <- processor_",
+          tolower(self$pheno),
+          "$data"
+        )
+        qmd_content <- gsub(memory_pattern, replacement, qmd_content)
+      }
+
+      # Replace memory references in filter_data function calls (but not for memory domain)
+      if (tolower(self$pheno) != "memory") {
+        qmd_content <- gsub(
+          "data = memory",
+          paste0("data = ", tolower(self$pheno)),
+          qmd_content,
+          fixed = TRUE
+        )
+      }
 
       # Replace data_memory references
       qmd_content <- gsub(

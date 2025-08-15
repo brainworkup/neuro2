@@ -1,12 +1,12 @@
 ```{=typst}
-== Memory
-<sec-memory>
+== General Cognitive Ability
+<sec-iq>
 ```
 
-{{< include _02-05_memory_text.qmd >}}
+{{< include _02-01_iq_text.qmd >}}
 
 ```{r}
-#| label: setup-memory
+#| label: setup-iq
 #| include: false
 
 # Source R6 classes
@@ -17,31 +17,31 @@ source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 
 # Filter by domain
-domains <- c("Memory")
+domains <- c("General Cognitive Ability")
 
 # Target phenotype
-pheno <- "memory"
+pheno <- "iq"
 
 # Create R6 processor
-processor_memory <- DomainProcessorR6$new(
+processor_iq <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
-  input_file = "data/neurocog.parquet"
+  input_file = "data/neurocog.csv"
 )
 
 # Load and process data
-processor_memory$load_data()
-processor_memory$filter_by_domain()
+processor_iq$load_data()
+processor_iq$filter_by_domain()
 
 # Create the data object with original name for compatibility
-memory <- processor_memory$data
+iq <- processor_iq$data
 
 # Process and export data using R6
-processor_memory$select_columns()
-processor_memory$save_data()
+processor_iq$select_columns()
+processor_iq$save_data()
 
 # Update the original object
-memory <- processor_memory$data
+iq <- processor_iq$data
 
 # Load internal data to get standardized scale names
 scale_var_name <- paste0("scales_", tolower(pheno))
@@ -74,10 +74,10 @@ filter_data <- function(data, domain, scale) {
 }
 
 # Apply the filter function
-data_memory <- filter_data(data = memory, domain = domains, scale = scales)
+data_iq <- filter_data(data = iq, domain = domains, scale = scales)
 ```
 ```{r}
-#| label: text-memory
+#| label: text-iq
 #| cache: true
 #| include: true
 #| echo: false
@@ -85,23 +85,23 @@ data_memory <- filter_data(data = memory, domain = domains, scale = scales)
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
-  data = data_memory,
-  file = "_02-05_memory_text.qmd"
+  data = data_iq,
+  file = "_02-01_iq_text.qmd"
 )
 results_processor$process()
 ```
 
 ```{r}
-#| label: qtbl-memory
+#| label: qtbl-iq
 #| include: false
 
 # Table parameters
-table_name <- "table_memory"
+table_name <- "table_iq"
 vertical_padding <- 0
 multiline <- TRUE
 
 # Get score types from the lookup table
-score_type_map <- get_score_types_from_lookup(data_memory)
+score_type_map <- get_score_types_from_lookup(data_iq)
 
 # Create a list of test names grouped by score type
 score_types_list <- list()
@@ -148,7 +148,7 @@ if (length(fn_list) == 0) {
 
 # Create table using our modified TableGT_ModifiedR6 R6 class
 table_gt <- TableGTR6$new(
-  data = data_memory,
+  data = data_iq,
   pheno = pheno,
   table_name = table_name,
   vertical_padding = vertical_padding,
@@ -167,20 +167,20 @@ table_gt$save_table(tbl, dir = here::here())
 ```
 
 ```{r}
-#| label: fig-memory-subdomain
+#| label: fig-iq-subdomain
 #| include: false
 
 # Create subdomain plot using R6 DotplotR6
 dotplot_subdomain <- DotplotR6$new(
-  data = data_memory,
+  data = data_iq,
   x = "z_mean_subdomain",
   y = "subdomain",
-  filename = here::here("fig_memory_subdomain.svg")
+  filename = here::here("fig_iq_subdomain.svg")
 )
 dotplot_subdomain$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_memory"
+plot_title_var <- "plot_title_iq"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -190,27 +190,27 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_memory <- get(plot_title_var)
+  plot_title_iq <- get(plot_title_var)
 } else {
-  plot_title_memory <- "Memory scores ... "
+  plot_title_iq <- "General Cognitive Ability scores ... "
 }
 ```
 
 ```{r}
-#| label: fig-memory-narrow
+#| label: fig-iq-narrow
 #| include: false
 
 # Create narrow plot using R6 DotplotR6
 dotplot_narrow <- DotplotR6$new(
-  data = data_memory,
+  data = data_iq,
   x = "z_mean_narrow",
   y = "narrow",
-  filename = here::here("fig_memory_narrow.svg")
+  filename = here::here("fig_iq_narrow.svg")
 )
 dotplot_narrow$create_plot()
 
 # Load plot title from sysdata.rda
-plot_title_var <- "plot_title_memory"
+plot_title_var <- "plot_title_iq"
 if (!exists(plot_title_var)) {
   sysdata_path <- here::here("R", "sysdata.rda")
   if (file.exists(sysdata_path)) {
@@ -220,9 +220,9 @@ if (!exists(plot_title_var)) {
 
 # Get the plot title or use default
 if (exists(plot_title_var)) {
-  plot_title_memory <- get(plot_title_var)
+  plot_title_iq <- get(plot_title_var)
 } else {
-  plot_title_memory <- "Memory scores ... "
+  plot_title_iq <- "General Cognitive Ability scores ... "
 }
 ```
 
@@ -255,7 +255,7 @@ if (exists(plot_title_var)) {
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_memory`],
+        [`{r} plot_title_iq`],
       ),
       placement: none,
       kind: "image",
@@ -268,13 +268,13 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Memory"
+#let title = "General Cognitive Ability"
 
 // Define the file name of the table
-#let file_qtbl = "table_memory.png"
+#let file_qtbl = "table_iq.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_memory_subdomain.svg"
+#let file_fig = "fig_iq_subdomain.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
@@ -282,13 +282,13 @@ if (exists(plot_title_var)) {
 
 ```{=typst}
 // Define the title of the domain
-#let title = "Memory"
+#let title = "General Cognitive Ability"
 
 // Define the file name of the table
-#let file_qtbl = "table_memory.png"
+#let file_qtbl = "table_iq.png"
 
 // Define the file name of the figure
-#let file_fig = "fig_memory_narrow.svg"
+#let file_fig = "fig_iq_narrow.svg"
 
 // The title is appended with ' Scores'
 #domain(title: [#title Scores], file_qtbl, file_fig)
