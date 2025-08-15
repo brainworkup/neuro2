@@ -167,6 +167,7 @@ structure of the memory template file.
 \item \href{#method-DomainProcessorR6-select_columns}{\code{DomainProcessorR6$select_columns()}}
 \item \href{#method-DomainProcessorR6-save_data}{\code{DomainProcessorR6$save_data()}}
 \item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
+\item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_standard_qmd}{\code{DomainProcessorR6$generate_standard_qmd()}}
@@ -379,6 +380,26 @@ Invisibly returns \code{self} for method chaining.
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-check_rater_data_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-check_rater_data_exists}{}}}
+\subsection{Method \code{check_rater_data_exists()}}{
+Check if a specific rater has data
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$check_rater_data_exists(rater)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{rater}}{The rater type to check for ("self", "parent", "teacher", "observer")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Logical indicating if the rater has data
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-detect_emotion_type"></a>}}

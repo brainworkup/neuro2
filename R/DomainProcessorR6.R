@@ -245,6 +245,36 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Check if a specific rater has data
+    #' @param rater The rater type to check for ("self", "parent", "teacher", "observer")
+    #' @return Logical indicating if the rater has data
+    check_rater_data_exists = function(rater) {
+      if (is.null(self$data) || nrow(self$data) == 0) {
+        return(FALSE)
+      }
+
+      # Check if there's a column that indicates rater type
+      rater_columns <- c("rater", "informant", "reporter")
+      rater_col <- NULL
+
+      for (col in rater_columns) {
+        if (col %in% names(self$data)) {
+          rater_col <- col
+          break
+        }
+      }
+
+      if (is.null(rater_col)) {
+        # If no rater column, assume data exists for all raters
+        return(TRUE)
+      }
+
+      # Check if this rater has any data
+      rater_data <- self$data[self$data[[rater_col]] == rater, ]
+      return(nrow(rater_data) > 0)
+    },
+
+    #' @description
     #' Detect emotion type (child/adult)
     #' @description Infer whether the dataset represents child or adult emotion measures.
     #' @return Invisibly returns \code{self} for method chaining.
@@ -379,20 +409,22 @@ DomainProcessorR6 <- R6::R6Class(
         domain_name <- self$domains[1]
       }
 
-      if (is.null(output_file)) {
-        output_file <- paste0(
-          "_02-",
-          self$number,
-          "_",
-          tolower(self$pheno),
-          ".qmd"
-        )
-      }
-
       # Handle special cases for multi-rater domains
       if (self$has_multiple_raters()) {
         if (tolower(self$pheno) == "emotion") {
           emotion_type <- self$detect_emotion_type()
+
+          # Fix output filename for emotion
+          if (is.null(output_file)) {
+            output_file <- paste0(
+              "_02-",
+              self$number,
+              "_emotion_",
+              emotion_type,
+              ".qmd"
+            )
+          }
+
           if (emotion_type == "child") {
             return(self$generate_emotion_child_qmd(domain_name, output_file))
           } else {
@@ -407,12 +439,35 @@ DomainProcessorR6 <- R6::R6Class(
                 ignore.case = TRUE
               )))
 
+          # Fix output filename for ADHD
+          age_type <- if (is_child) "child" else "adult"
+          if (is.null(output_file)) {
+            output_file <- paste0(
+              "_02-",
+              self$number,
+              "_adhd_",
+              age_type,
+              ".qmd"
+            )
+          }
+
           if (is_child) {
             return(self$generate_adhd_child_qmd(domain_name, output_file))
           } else {
             return(self$generate_adhd_adult_qmd(domain_name, output_file))
           }
         }
+      }
+
+      # For standard domains, use original logic
+      if (is.null(output_file)) {
+        output_file <- paste0(
+          "_02-",
+          self$number,
+          "_",
+          tolower(self$pheno),
+          ".qmd"
+        )
       }
 
       # Generate standard domain QMD following memory template exactly
@@ -623,13 +678,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50thâ€°], SD Â± 10 [16thâ€°, 84thâ€°]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50thâ€°], SD Â± 3 [16thâ€°, 84thâ€°]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50thâ€°], SD Â± 15 [16thâ€°, 84thâ€°]\"\n",
         "}\n\n",
 
         "# Create groups based on test names that use each score type\n",
@@ -641,7 +696,7 @@ DomainProcessorR6 <- R6::R6Class(
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
-        "  source_note <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "  source_note <- \"Standard score: Mean = 100 [50thâ€°], SD Â± 15 [16thâ€°, 84thâ€°]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -874,6 +929,15 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_adhd_adult_qmd(domain_name=..., output_file=...)
     #' }
     generate_adhd_adult_qmd = function(domain_name, output_file) {
+      # Fix the output filename to include "_adult"
+      if (is.null(output_file)) {
+        output_file <- paste0("_02-", self$number, "_adhd_adult.qmd")
+      } else {
+        if (!grepl("_adult", output_file)) {
+          output_file <- gsub("_adhd", "_adhd_adult", output_file)
+        }
+      }
+
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_adhd_adult_text_self.qmd")
       observer_text <- paste0(
@@ -888,16 +952,29 @@ DomainProcessorR6 <- R6::R6Class(
         domain_name,
         "\n",
         "<sec-adhd-adult>\n",
-        "```\n\n",
-        "### SELF-REPORT\n\n",
-        "{{< include ",
-        self_text,
-        " >}}\n\n",
-        "### OBSERVER RATINGS\n\n",
-        "{{< include ",
-        observer_text,
-        " >}}\n\n"
+        "```\n\n"
       )
+
+      # Check data availability for each rater and include conditionally
+      if (self$check_rater_data_exists("self")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### SELF-REPORT\n\n",
+          "{{< include ",
+          self_text,
+          " >}}\n\n"
+        )
+      }
+
+      if (self$check_rater_data_exists("observer")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### OBSERVER RATINGS\n\n",
+          "{{< include ",
+          observer_text,
+          " >}}\n\n"
+        )
+      }
 
       writeLines(qmd_content, output_file)
       message(paste("Generated ADHD adult QMD file:", output_file))
@@ -916,6 +993,15 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_adhd_child_qmd(domain_name=..., output_file=...)
     #' }
     generate_adhd_child_qmd = function(domain_name, output_file) {
+      # Fix the output filename to include "_child"
+      if (is.null(output_file)) {
+        output_file <- paste0("_02-", self$number, "_adhd_child.qmd")
+      } else {
+        if (!grepl("_child", output_file)) {
+          output_file <- gsub("_adhd", "_adhd_child", output_file)
+        }
+      }
+
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_adhd_child_text_self.qmd")
       parent_text <- paste0("_02-", self$number, "_adhd_child_text_parent.qmd")
@@ -931,20 +1017,39 @@ DomainProcessorR6 <- R6::R6Class(
         domain_name,
         "\n",
         "<sec-adhd-child>\n",
-        "```\n\n",
-        "### SELF-REPORT\n\n",
-        "{{< include ",
-        self_text,
-        " >}}\n\n",
-        "### PARENT RATINGS\n\n",
-        "{{< include ",
-        parent_text,
-        " >}}\n\n",
-        "### TEACHER RATINGS\n\n",
-        "{{< include ",
-        teacher_text,
-        " >}}\n\n"
+        "```\n\n"
       )
+
+      # Check data availability for each rater and include conditionally
+      if (self$check_rater_data_exists("self")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### SELF-REPORT\n\n",
+          "{{< include ",
+          self_text,
+          " >}}\n\n"
+        )
+      }
+
+      if (self$check_rater_data_exists("parent")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### PARENT RATINGS\n\n",
+          "{{< include ",
+          parent_text,
+          " >}}\n\n"
+        )
+      }
+
+      if (self$check_rater_data_exists("teacher")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### TEACHER RATINGS\n\n",
+          "{{< include ",
+          teacher_text,
+          " >}}\n\n"
+        )
+      }
 
       writeLines(qmd_content, output_file)
       message(paste("Generated ADHD child QMD file:", output_file))
@@ -963,6 +1068,19 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
     #' }
     generate_emotion_child_qmd = function(domain_name, output_file) {
+      # Fix the output filename to include "_child"
+      if (is.null(output_file)) {
+        output_file <- paste0("_02-", self$number, "_emotion_child.qmd")
+      } else {
+        # Ensure the filename includes "_child"
+        if (!grepl("_child", output_file)) {
+          output_file <- gsub("_emotion", "_emotion_child", output_file)
+        }
+      }
+
+      # Use correct header for child emotion domain
+      correct_domain_name <- "Behavioral/Emotional/Social"
+
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_emotion_child_text_self.qmd")
       parent_text <- paste0(
@@ -976,26 +1094,46 @@ DomainProcessorR6 <- R6::R6Class(
         "_emotion_child_text_teacher.qmd"
       )
 
+      # Start building QMD content
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
-        domain_name,
-        "\n",
+        correct_domain_name,
+        "\n", # Use correct domain name for child
         "<sec-emotion-child>\n",
-        "```\n\n",
-        "### SELF-REPORT\n\n",
-        "{{< include ",
-        self_text,
-        " >}}\n\n",
-        "### PARENT RATINGS\n\n",
-        "{{< include ",
-        parent_text,
-        " >}}\n\n",
-        "### TEACHER RATINGS\n\n",
-        "{{< include ",
-        teacher_text,
-        " >}}\n\n"
+        "```\n\n"
       )
+
+      # Check data availability for each rater and include conditionally
+      if (self$check_rater_data_exists("self")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### SELF-REPORT\n\n",
+          "{{< include ",
+          self_text,
+          " >}}\n\n"
+        )
+      }
+
+      if (self$check_rater_data_exists("parent")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### PARENT RATINGS\n\n",
+          "{{< include ",
+          parent_text,
+          " >}}\n\n"
+        )
+      }
+
+      if (self$check_rater_data_exists("teacher")) {
+        qmd_content <- paste0(
+          qmd_content,
+          "### TEACHER RATINGS\n\n",
+          "{{< include ",
+          teacher_text,
+          " >}}\n\n"
+        )
+      }
 
       writeLines(qmd_content, output_file)
       message(paste("Generated emotion child QMD file:", output_file))
@@ -1014,14 +1152,27 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
     #' }
     generate_emotion_adult_qmd = function(domain_name, output_file) {
-      # Create text file
+      # Fix the output filename to include "_adult"
+      if (is.null(output_file)) {
+        output_file <- paste0("_02-", self$number, "_emotion_adult.qmd")
+      } else {
+        # Ensure the filename includes "_adult"
+        if (!grepl("_adult", output_file)) {
+          output_file <- gsub("_emotion", "_emotion_adult", output_file)
+        }
+      }
+
+      # Use correct header for adult emotion domain
+      correct_domain_name <- "Emotional/Behavioral/Personality"
+
+      # Create text file for self-report (adults typically only have self-report)
       text_file <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
 
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
-        domain_name,
-        "\n",
+        correct_domain_name,
+        "\n", # Use correct domain name for adult
         "<sec-emotion-adult>\n",
         "```\n\n",
         "{{< include ",
