@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 
 #' Batch Domain Processor
-#' 
+#'
 #' This script processes all domains with available data and generates
 #' QMD files for each domain using DomainProcessorR6Combo
 #'
-#' @description 
+#' @description
 #' 1. Scans data files to determine which domains have data
 #' 2. Creates DomainProcessorR6Combo objects for each domain
 #' 3. Generates QMD files following the memory template structure
@@ -36,7 +36,7 @@ get_domain_registry <- function() {
     ),
     academics = list(
       domains = "Academic Skills",
-      pheno = "academics", 
+      pheno = "academics",
       data_source = "neurocog",
       number = "02"
     ),
@@ -76,7 +76,7 @@ get_domain_registry <- function() {
       data_source = "neurocog",
       number = "08"
     ),
-    
+
     # Behavioral domains
     adhd = list(
       domains = "ADHD",
@@ -85,14 +85,25 @@ get_domain_registry <- function() {
       number = "09"
     ),
     emotion_child = list(
-      domains = c("Behavioral/Emotional/Social", "Personality Disorders", 
-                  "Psychiatric Disorders", "Psychosocial Problems", "Substance Use"),
+      domains = c(
+        "Behavioral/Emotional/Social",
+        "Personality Disorders",
+        "Psychiatric Disorders",
+        "Psychosocial Problems",
+        "Substance Use"
+      ),
       pheno = "emotion",
-      data_source = "neurobehav", 
+      data_source = "neurobehav",
       number = "10"
     ),
     emotion_adult = list(
-      domains = "Emotional/Behavioral/Personality",
+      domains = c(
+        "Emotional/Behavioral/Personality",
+        "Personality Disorders",
+        "Psychiatric Disorders",
+        "Psychosocial Problems",
+        "Substance Use"
+      ),
       pheno = "emotion",
       data_source = "neurobehav",
       number = "10"
@@ -109,7 +120,7 @@ get_domain_registry <- function() {
       data_source = "neurocog",
       number = "12"
     ),
-    
+
     # Validity
     validity = list(
       domains = c("Performance Validity", "Symptom Validity"),
@@ -125,37 +136,40 @@ check_domain_has_data <- function(domain_names, data_file) {
   if (!file.exists(data_file)) {
     return(FALSE)
   }
-  
+
   # Try to read the file
-  data <- tryCatch({
-    file_ext <- tools::file_ext(data_file)
-    if (file_ext == "parquet") {
-      if (requireNamespace("arrow", quietly = TRUE)) {
-        arrow::read_parquet(data_file)
+  data <- tryCatch(
+    {
+      file_ext <- tools::file_ext(data_file)
+      if (file_ext == "parquet") {
+        if (requireNamespace("arrow", quietly = TRUE)) {
+          arrow::read_parquet(data_file)
+        } else {
+          return(FALSE)
+        }
+      } else if (file_ext == "feather") {
+        if (requireNamespace("arrow", quietly = TRUE)) {
+          arrow::read_feather(data_file)
+        } else {
+          return(FALSE)
+        }
       } else {
-        return(FALSE)
+        readr::read_csv(data_file, show_col_types = FALSE)
       }
-    } else if (file_ext == "feather") {
-      if (requireNamespace("arrow", quietly = TRUE)) {
-        arrow::read_feather(data_file)
-      } else {
-        return(FALSE)
-      }
-    } else {
-      readr::read_csv(data_file, show_col_types = FALSE)
+    },
+    error = function(e) {
+      NULL
     }
-  }, error = function(e) {
-    return(NULL)
-  })
-  
+  )
+
   if (is.null(data) || nrow(data) == 0) {
     return(FALSE)
   }
-  
+
   if (!"domain" %in% names(data)) {
     return(FALSE)
   }
-  
+
   # Check if any of the domain names exist in the data
   return(any(domain_names %in% data$domain))
 }
@@ -163,10 +177,10 @@ check_domain_has_data <- function(domain_names, data_file) {
 #' Get available data files
 get_data_files <- function() {
   data_dir <- here::here("data")
-  
+
   # Look for different formats in order of preference
   files <- list()
-  
+
   for (basename in c("neurocog", "neurobehav", "validity")) {
     # Try parquet first (best performance)
     parquet_file <- file.path(data_dir, paste0(basename, ".parquet"))
@@ -174,22 +188,22 @@ get_data_files <- function() {
       files[[basename]] <- parquet_file
       next
     }
-    
+
     # Try feather
     feather_file <- file.path(data_dir, paste0(basename, ".feather"))
     if (file.exists(feather_file)) {
       files[[basename]] <- feather_file
       next
     }
-    
+
     # Try CSV
     csv_file <- file.path(data_dir, paste0(basename, ".csv"))
     if (file.exists(csv_file)) {
       files[[basename]] <- csv_file
     }
   }
-  
-  return(files)
+
+  files
 }
 
 #' Process all domains with available data
@@ -197,14 +211,14 @@ process_all_domains <- function(verbose = TRUE) {
   if (verbose) {
     cat("🚀 Starting batch domain processing...\n\n")
   }
-  
+
   registry <- get_domain_registry()
   data_files <- get_data_files()
-  
+
   if (length(data_files) == 0) {
     stop("No data files found in data/ directory")
   }
-  
+
   if (verbose) {
     cat("📁 Found data files:\n")
     for (name in names(data_files)) {
@@ -212,20 +226,20 @@ process_all_domains <- function(verbose = TRUE) {
     }
     cat("\n")
   }
-  
+
   # Track results
   generated_files <- character()
   failed_domains <- character()
-  
+
   # Process each domain
   for (domain_key in names(registry)) {
     domain_info <- registry[[domain_key]]
     data_source <- domain_info$data_source
-    
+
     if (verbose) {
       cat("🔍 Checking domain:", domain_key, "(", domain_info$domains[1], ")\n")
     }
-    
+
     # Check if we have the required data file
     if (!data_source %in% names(data_files)) {
       if (verbose) {
@@ -234,12 +248,12 @@ process_all_domains <- function(verbose = TRUE) {
       failed_domains <- c(failed_domains, domain_key)
       next
     }
-    
+
     data_file <- data_files[[data_source]]
-    
+
     # Check if domain has data
     has_data <- check_domain_has_data(domain_info$domains, data_file)
-    
+
     if (!has_data) {
       if (verbose) {
         cat("  ❌ No data found for domain\n")
@@ -247,53 +261,55 @@ process_all_domains <- function(verbose = TRUE) {
       failed_domains <- c(failed_domains, domain_key)
       next
     }
-    
+
     if (verbose) {
       cat("  ✅ Data found, creating processor...\n")
     }
-    
+
     # Create and run processor
-    tryCatch({
-      processor <- DomainProcessorR6Combo$new(
-        domains = domain_info$domains,
-        pheno = domain_info$pheno,
-        input_file = data_file,
-        number = domain_info$number
-      )
-      
-      # Generate the QMD file
-      output_file <- processor$generate_domain_qmd()
-      generated_files <- c(generated_files, output_file)
-      
-      if (verbose) {
-        cat("  📄 Generated:", output_file, "\n")
+    tryCatch(
+      {
+        processor <- DomainProcessorR6Combo$new(
+          domains = domain_info$domains,
+          pheno = domain_info$pheno,
+          input_file = data_file,
+          number = domain_info$number
+        )
+
+        # Generate the QMD file
+        output_file <- processor$generate_domain_qmd()
+        generated_files <- c(generated_files, output_file)
+
+        if (verbose) {
+          cat("  📄 Generated:", output_file, "\n")
+        }
+      },
+      error = function(e) {
+        if (verbose) {
+          cat("  ❌ Error:", e$message, "\n")
+        }
+        failed_domains <- c(failed_domains, domain_key)
       }
-      
-    }, error = function(e) {
-      if (verbose) {
-        cat("  ❌ Error:", e$message, "\n")
-      }
-      failed_domains <- c(failed_domains, domain_key)
-    })
-    
+    )
+
     if (verbose) {
       cat("\n")
     }
   }
-  
+
   # Report results
   if (verbose) {
     cat("📊 Processing Summary:\n")
     cat("  ✅ Successfully generated:", length(generated_files), "files\n")
     cat("  ❌ Failed domains:", length(failed_domains), "\n")
-    
+
     if (length(generated_files) > 0) {
       cat("\n📄 Generated files:\n")
       for (file in generated_files) {
         cat("  -", file, "\n")
       }
     }
-    
+
     if (length(failed_domains) > 0) {
       cat("\n❌ Failed domains:\n")
       for (domain in failed_domains) {
@@ -301,14 +317,11 @@ process_all_domains <- function(verbose = TRUE) {
       }
     }
   }
-  
+
   # Create include list for template
   create_include_list(generated_files, verbose = verbose)
-  
-  return(list(
-    generated = generated_files,
-    failed = failed_domains
-  ))
+
+  return(list(generated = generated_files, failed = failed_domains))
 }
 
 #' Create include list for main template
@@ -319,20 +332,20 @@ create_include_list <- function(generated_files, verbose = TRUE) {
     }
     return()
   }
-  
+
   # Create include statements
   includes <- paste0("{{< include ", generated_files, " >}}")
-  
+
   # Write to include file
   include_file <- here::here("_domain_includes.qmd")
   writeLines(includes, include_file)
-  
+
   if (verbose) {
     cat("\n📝 Created include file:", include_file, "\n")
     cat("   Add this to your main template:\n")
     cat("   {{< include _domain_includes.qmd >}}\n")
   }
-  
+
   # Also create a summary for manual inclusion
   summary_file <- here::here("_domain_summary.md")
   summary_content <- c(
@@ -350,9 +363,9 @@ create_include_list <- function(generated_files, verbose = TRUE) {
     includes,
     "```"
   )
-  
+
   writeLines(summary_content, summary_file)
-  
+
   if (verbose) {
     cat("📋 Created summary file:", summary_file, "\n")
   }
@@ -362,16 +375,16 @@ create_include_list <- function(generated_files, verbose = TRUE) {
 main <- function() {
   cat("🧠 Neuropsychological Domain Processor\n")
   cat("=====================================\n\n")
-  
+
   # Process all domains
   results <- process_all_domains(verbose = TRUE)
-  
+
   cat("\n🎉 Batch processing complete!\n")
-  
+
   if (length(results$generated) > 0) {
     cat("\nNext steps:\n")
     cat("1. Review generated QMD files\n")
-    cat("2. Add domain includes to your main template\n") 
+    cat("2. Add domain includes to your main template\n")
     cat("3. Render your report\n")
   } else {
     cat("\n⚠️  No domain files were generated.\n")
