@@ -215,15 +215,25 @@ load_neurobehav_data <- function(data_dir) {
 }
 
 get_domains_from_data <- function(data_dir) {
-  neurocog_data <- load_neuropsych_data(data_dir)
-  if (is.null(neurocog_data)) {
-    return(data.frame(domain = character(0)))
+  neurocog_data <- load_neurocog_data(data_dir)
+  neurobehav_data <- load_neurobehav_data(data_dir)
+
+  domains <- character(0)
+
+  if (!is.null(neurocog_data) && "domain" %in% names(neurocog_data)) {
+    neurocog_domains <- unique(neurocog_data$domain)
+    neurocog_domains <- neurocog_domains[!is.na(neurocog_domains)]
+    domains <- c(domains, neurocog_domains)
   }
 
-  if ("domain" %in% names(neurocog_data)) {
-    unique_domains <- unique(neurocog_data$domain)
-    unique_domains <- unique_domains[!is.na(unique_domains)]
-    return(data.frame(domain = unique_domains))
+  if (!is.null(neurobehav_data) && "domain" %in% names(neurobehav_data)) {
+    neurobehav_domains <- unique(neurobehav_data$domain)
+    neurobehav_domains <- neurobehav_domains[!is.na(neurobehav_domains)]
+    domains <- c(domains, neurobehav_domains)
+  }
+
+  if (length(domains) > 0) {
+    return(data.frame(domain = unique(domains)))
   }
 
   return(data.frame(domain = character(0)))

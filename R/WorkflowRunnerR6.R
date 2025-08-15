@@ -52,7 +52,25 @@ WorkflowRunnerR6 <- R6::R6Class(
       return(generate_workflow_report(self$config))
     },
 
-    # Run the entire workflow
+    #' Run the complete neuropsychological workflow
+    #'
+    #' Executes all steps of the workflow in sequence:
+    #' 1. Environment setup
+    #' 2. Data processing
+    #' 3. Domain file generation
+    #' 4. Report generation
+    #'
+    #' @details
+    #' Each step is logged and the workflow will stop if any step fails.
+    #' The method returns TRUE if all steps complete successfully, FALSE otherwise.
+    #'
+    #' @return Logical indicating workflow success (TRUE) or failure (FALSE)
+    #' @examples
+    #' \dontrun{
+    #' runner <- WorkflowRunnerR6$new(config)
+    #' success <- runner$run_workflow()
+    #' runner$print_summary(success)
+    #' }
     run_workflow = function() {
       source("R/workflow_utils.R")
 

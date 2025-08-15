@@ -79,11 +79,25 @@ domain_mappings <- list(
     scales = scales_executive
   ),
   list(
+    domain = "Motor",
+    pheno = "motor",
+    file_num = "07",
+    obj_name = "motor",
+    scales = scales_motor
+  ),
+  list(
     domain = "ADHD",
     pheno = "adhd_child",
     file_num = "09",
     obj_name = "adhd_child",
     scales = scales_adhd_child
+  ),
+  list(
+    domain = "ADHD",
+    pheno = "adhd_adult",
+    file_num = "09",
+    obj_name = "adhd_adult",
+    scales = scales_adhd_adult
   ),
   list(
     domain = "Emotional/Behavioral/Personality",
@@ -98,6 +112,34 @@ domain_mappings <- list(
     file_num = "10",
     obj_name = "emotion_child",
     scales = scales_emotion_child
+  ),
+  list(
+    domain = "Personality Disorders",
+    pheno = "emotion",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion
+  ),
+  list(
+    domain = "Psychiatric Disorders",
+    pheno = "emotion",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion
+  ),
+  list(
+    domain = "Substance Use",
+    pheno = "emotion",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion
+  ),
+  list(
+    domain = "Psychosocial Problems",
+    pheno = "emotion",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion
   )
 )
 

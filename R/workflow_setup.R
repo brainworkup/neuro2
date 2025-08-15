@@ -73,10 +73,7 @@ copy_template_files <- function() {
   )
 
   if (length(template_files) == 0) {
-    log_message(
-      paste0("No template files found in: ", template_dir),
-      "ERROR"
-    )
+    log_message(paste0("No template files found in: ", template_dir), "ERROR")
     return(FALSE)
   }
 
@@ -89,15 +86,6 @@ copy_template_files <- function() {
   for (file in template_files) {
     dest_file <- basename(file)
 
-    # Skip old/stale files
-    if (dest_file == "_03-01_recommendations.qmd") {
-      log_message(
-        paste0("Skipping old/stale template file: ", dest_file),
-        "SETUP"
-      )
-      next
-    }
-
     log_message(
       paste0("Processing template file: ", file, " -> ", dest_file),
       "SETUP"
@@ -109,21 +97,19 @@ copy_template_files <- function() {
     }
 
     # Determine if we should backup this file
-    should_backup <- dest_file %in% c(
-      "template.qmd", "_quarto.yml", "_variables.yml", "config.yml"
-    )
+    should_backup <- dest_file %in%
+      c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
 
     # Back up existing files before overwriting (only for main template files)
     if (file.exists(dest_file) && should_backup) {
       backup_file <- paste0(
-        dest_file, ".",
-        format(Sys.time(), "%Y%m%d_%H%M%S"), ".bak"
+        dest_file,
+        ".",
+        format(Sys.time(), "%Y%m%d_%H%M%S"),
+        ".bak"
       )
       file.copy(dest_file, backup_file)
-      log_message(
-        paste0("Backed up existing file to: ", backup_file),
-        "SETUP"
-      )
+      log_message(paste0("Backed up existing file to: ", backup_file), "SETUP")
     }
 
     # Copy the latest version from inst
@@ -377,10 +363,7 @@ check_input_files <- function(input_dir) {
 
   csv_files <- list.files(input_dir, pattern = "\\.csv$")
   if (length(csv_files) == 0) {
-    log_message(
-      paste0("No CSV files found in ", input_dir),
-      "WARNING"
-    )
+    log_message(paste0("No CSV files found in ", input_dir), "WARNING")
   } else {
     log_message(
       paste0("Found ", length(csv_files), " CSV files in ", input_dir),
