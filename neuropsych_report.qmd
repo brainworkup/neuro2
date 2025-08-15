@@ -1,8 +1,25 @@
 ---
-title: "Neuropsychological Assessment Report"
+title: "NEUROCOGNITIVE EXAMINATION"
 author: "Dr. Joey Trampush"
 date: "`r Sys.Date()`"
 format:
+  neurotyp-forensic-typst:
+    keep-typ: true
+    keep-md: true
+    papersize: "us-letter"
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
+    fontsize: 12pt
+    number-sections: false
+    number-offset: 1
+    citeproc: true
+    csl: inst/resources/bib/apa.csl
+    reference-location: document
+    bibliography: inst/resources/bib/refs.bib
+    shift-heading-level-by: 0
+    fig-width: 6
+    fig-height: 4
+    fig-format: svg
   typst:
     toc: true
     toc-depth: 2

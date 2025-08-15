@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 #' Template Integration System
-#' 
+#'
 #' This script integrates generated domain QMD files into the main template
 #' and ensures the workflow runs correctly.
 
@@ -16,45 +16,44 @@ update_template_with_domains <- function(
   domain_marker = "<!-- DOMAIN_INCLUDES -->",
   verbose = TRUE
 ) {
-  
   template_path <- here::here(template_file)
-  
+
   if (!file.exists(template_path)) {
     stop("Template file not found: ", template_path)
   }
-  
+
   # Read template content
   template_lines <- readLines(template_path)
-  
+
   # Find domain files
   domain_files <- list.files(
     pattern = "^_02-[0-9]{2}_.*\\.qmd$",
     full.names = FALSE
   )
-  
+
   if (length(domain_files) == 0) {
     if (verbose) {
       cat("⚠️  No domain files found to include\n")
     }
     return(FALSE)
   }
-  
+
   # Sort domain files by number
   domain_files <- sort(domain_files)
-  
+
   if (verbose) {
     cat("📄 Found domain files to include:\n")
     for (file in domain_files) {
       cat("  -", file, "\n")
     }
   }
-  
+
   # Create include statements
   domain_includes <- paste0("{{< include ", domain_files, " >}}")
-  
+
   # Find marker position
   marker_line <- which(grepl(domain_marker, template_lines, fixed = TRUE))
-  
+
   if (length(marker_line) == 0) {
     if (verbose) {
       cat("⚠️  Domain marker not found in template\n")
@@ -63,7 +62,7 @@ update_template_with_domains <- function(
     }
     return(FALSE)
   }
-  
+
   # Replace marker with includes
   if (length(marker_line) > 1) {
     # Multiple markers - use the first one
@@ -72,21 +71,21 @@ update_template_with_domains <- function(
       cat("⚠️  Multiple domain markers found, using first one\n")
     }
   }
-  
+
   # Create new template content
   new_lines <- c(
-    template_lines[1:(marker_line-1)],
+    template_lines[1:(marker_line - 1)],
     domain_includes,
-    template_lines[(marker_line+1):length(template_lines)]
+    template_lines[(marker_line + 1):length(template_lines)]
   )
-  
+
   # Write updated template
   writeLines(new_lines, template_path)
-  
+
   if (verbose) {
     cat("✅ Updated template with", length(domain_files), "domain includes\n")
   }
-  
+
   return(TRUE)
 }
 
@@ -95,10 +94,9 @@ create_workflow_template <- function(
   output_file = "neuropsych_report.qmd",
   verbose = TRUE
 ) {
-  
   template_content <- c(
     "---",
-    "title: \"Neuropsychological Assessment Report\"",
+    "title: \"NEUROCOGNITIVE EVALUATION\"",
     "author: \"Dr. Joey Trampush\"",
     "date: \"`r Sys.Date()`\"",
     "format:",
@@ -126,7 +124,7 @@ create_workflow_template <- function(
     "suppressPackageStartupMessages({",
     "  library(tidyverse)",
     "  library(gt)",
-    "  library(gtExtras)", 
+    "  library(gtExtras)",
     "  library(glue)",
     "  library(here)",
     "})",
@@ -158,7 +156,7 @@ create_workflow_template <- function(
     "## Clinical Impressions",
     "",
     "- Summary of key findings",
-    "- Areas of strength and concern", 
+    "- Areas of strength and concern",
     "- Diagnostic considerations",
     "",
     "## Recommendations",
@@ -167,15 +165,15 @@ create_workflow_template <- function(
     "2. Therapeutic interventions",
     "3. Follow-up assessments"
   )
-  
+
   output_path <- here::here(output_file)
   writeLines(template_content, output_path)
-  
+
   if (verbose) {
     cat("📝 Created workflow template:", output_path, "\n")
     cat("   This template includes the domain marker for automatic inclusion\n")
   }
-  
+
   return(output_path)
 }
 
@@ -185,12 +183,12 @@ run_complete_workflow <- function(verbose = TRUE) {
     cat("🚀 Running complete neuropsychological report workflow\n")
     cat("=====================================================\n\n")
   }
-  
+
   # Step 1: Process all domains
   if (verbose) {
     cat("Step 1: Processing domains...\n")
   }
-  
+
   # Source and run the batch processor
   if (file.exists(here::here("R", "batch_domain_processor.R"))) {
     source(here::here("R", "batch_domain_processor.R"))
@@ -204,11 +202,11 @@ run_complete_workflow <- function(verbose = TRUE) {
       }
     }
   }
-  
+
   # Step 2: Check for template or create one
   template_file <- "neuropsych_report.qmd"
   template_path <- here::here(template_file)
-  
+
   if (!file.exists(template_path)) {
     if (verbose) {
       cat("\nStep 2: Creating workflow template...\n")
@@ -219,57 +217,65 @@ run_complete_workflow <- function(verbose = TRUE) {
       cat("\nStep 2: Using existing template:", template_file, "\n")
     }
   }
-  
+
   # Step 3: Update template with domain includes
   if (verbose) {
     cat("\nStep 3: Updating template with domain includes...\n")
   }
-  
+
   success <- update_template_with_domains(
     template_file = template_file,
     verbose = verbose
   )
-  
+
   if (!success) {
     if (verbose) {
       cat("❌ Failed to update template\n")
     }
     return(FALSE)
   }
-  
+
   # Step 4: Render the report
   if (verbose) {
     cat("\nStep 4: Rendering report...\n")
   }
-  
-  render_success <- tryCatch({
-    if (requireNamespace("quarto", quietly = TRUE)) {
-      quarto::quarto_render(template_path)
-      TRUE
-    } else {
-      # Try system quarto command
-      result <- system2("quarto", c("render", template_path), 
-                       stdout = FALSE, stderr = FALSE)
-      result == 0
+
+  render_success <- tryCatch(
+    {
+      if (requireNamespace("quarto", quietly = TRUE)) {
+        quarto::quarto_render(template_path)
+        TRUE
+      } else {
+        # Try system quarto command
+        result <- system2(
+          "quarto",
+          c("render", template_path),
+          stdout = FALSE,
+          stderr = FALSE
+        )
+        result == 0
+      }
+    },
+    error = function(e) {
+      if (verbose) {
+        cat("❌ Render error:", e$message, "\n")
+      }
+      FALSE
     }
-  }, error = function(e) {
-    if (verbose) {
-      cat("❌ Render error:", e$message, "\n")
-    }
-    FALSE
-  })
-  
+  )
+
   if (render_success) {
     if (verbose) {
       cat("✅ Report rendered successfully!\n")
-      
+
       # Look for output files
       output_files <- c(
         gsub("\\.qmd$", ".pdf", template_path),
         gsub("\\.qmd$", ".typ", template_path),
-        gsub("\\.qmd$", ".html", template_path)
+        gsub("\\.qmd$", ".html", template_path),
+        gsub("\\.qmd$", ".docx", template_path)
       )
-      
+
       existing_outputs <- output_files[file.exists(output_files)]
       if (length(existing_outputs) > 0) {
         cat("\n📄 Output files:\n")
@@ -284,11 +290,11 @@ run_complete_workflow <- function(verbose = TRUE) {
       cat("   Try running manually: quarto render", template_file, "\n")
     }
   }
-  
+
   if (verbose) {
     cat("\n🎉 Workflow complete!\n")
   }
-  
+
   return(render_success)
 }
 
@@ -296,15 +302,18 @@ run_complete_workflow <- function(verbose = TRUE) {
 quick_setup <- function() {
   cat("🧠 Neuropsychological Report Quick Setup\n")
   cat("=======================================\n\n")
-  
+
   # Check for required files/directories
   checks <- list(
     "data directory" = dir.exists(here::here("data")),
     "R directory" = dir.exists(here::here("R")),
     "figs directory" = dir.exists(here::here("figs")),
-    "DomainProcessorR6Combo.R" = file.exists(here::here("R", "DomainProcessorR6Combo.R"))
+    "DomainProcessorR6Combo.R" = file.exists(here::here(
+      "R",
+      "DomainProcessorR6Combo.R"
+    ))
   )
-  
+
   cat("📋 Environment Check:\n")
   all_good <- TRUE
   for (name in names(checks)) {
@@ -312,13 +321,13 @@ quick_setup <- function() {
     cat("  ", status, name, "\n")
     if (!checks[[name]]) all_good <- FALSE
   }
-  
+
   if (!all_good) {
     cat("\n⚠️  Some required files/directories are missing\n")
     cat("   Please ensure your project structure is correct\n")
     return(FALSE)
   }
-  
+
   # Create missing directories
   dirs_to_create <- c("figs", "output")
   for (dir in dirs_to_create) {
@@ -328,13 +337,13 @@ quick_setup <- function() {
       cat("📁 Created directory:", dir, "\n")
     }
   }
-  
+
   cat("\n✅ Environment ready!\n")
   cat("\nNext steps:\n")
   cat("1. Run: source('R/batch_domain_processor.R'); main()\n")
   cat("2. Run: source('R/template_integration.R'); run_complete_workflow()\n")
   cat("3. Or run everything: quick_workflow()\n")
-  
+
   return(TRUE)
 }
 

@@ -217,3 +217,7 @@ utils_consolidated_fix.R
 domain_processor_combo2.r
 neuropsych_report_cache/
 neuropsych_report.pdf
+tests/
+neuropsych_report.typst.md
+neuropsych_report.typ
+neuropsych_report.typ

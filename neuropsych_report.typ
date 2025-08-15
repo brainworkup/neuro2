@@ -169,102 +169,111 @@
     )
 }
 
-
-
-#let article(
-  title: none,
-  subtitle: none,
-  authors: none,
+#let report(
+  title: "NEUROCOGNITIVE EXAMINATION",
+  author: "Joey W. Trampush, Ph.D.",
+  name: [],
+  doe: [],
+  patient: [],
   date: none,
-  abstract: none,
-  abstract-title: none,
   cols: 1,
+  paper: "a4",
+  margin: (x: 25mm, y: 30mm),
   lang: "en",
   region: "US",
-  font: "libertinus serif",
+  font: (),
+  body-font: "Libertinus Serif",
+  sans-font: "Libertinus Sans",
   fontsize: 11pt,
-  title-size: 1.5em,
-  subtitle-size: 1.25em,
-  heading-family: "libertinus serif",
-  heading-weight: "bold",
-  heading-style: "normal",
-  heading-color: black,
-  heading-line-height: 0.65em,
   sectionnumbering: none,
-  toc: false,
-  toc_title: none,
-  toc_depth: none,
-  toc_indent: 1.5em,
   doc,
 ) = {
-  set par(justify: true)
-  set text(lang: lang,
-           region: region,
-           font: font,
-           size: fontsize)
+  // Metadata
+  set document(title: title, author: author)
+
+  // Set page size, margins, and header.
+  // Set up page properties
+  set page(
+    paper: paper,
+    margin: margin,
+    header: none, // Start with no header
+    numbering: "1/1",
+    number-align: center,
+    columns: cols,
+  )
+
+  // Add conditional header using page state
+  set page(header: context {
+    if counter(page).get().first() > 1 {
+      // Only add header on pages after the first
+      block[
+        #set par(leading: 0.65em)
+        #set text(9pt)
+        #smallcaps[
+          *CONFIDENTIAL* \
+          #name \
+          #doe
+        ]
+      ]
+    }
+  })
+
+  // align headers
+  show heading.where(level: 0): set align(center)
+  show heading.where(level: 1): set align(left)
+
+  // Set paragraph justification and leading.
+  set par(justify: true, leading: 1em, linebreaks: "optimized")
+
+  // Set text and body font family.
+  set text(font: body-font, size: fontsize, lang: lang, region: region)
+  show math.equation: set text(weight: 400)
+
+  // Set heading numbering.
   set heading(numbering: sectionnumbering)
-  if title != none {
-    align(center)[#block(inset: 2em)[
-      #set par(leading: heading-line-height)
-      #if (heading-family != none or heading-weight != "bold" or heading-style != "normal"
-           or heading-color != black) {
-        set text(font: heading-family, weight: heading-weight, style: heading-style, fill: heading-color)
-        text(size: title-size)[#title]
-        if subtitle != none {
-          parbreak()
-          text(size: subtitle-size)[#subtitle]
-        }
-      } else {
-        text(weight: "bold", size: title-size)[#title]
-        if subtitle != none {
-          parbreak()
-          text(weight: "bold", size: subtitle-size)[#subtitle]
-        }
-      }
-    ]]
+
+  // Set paragraph spacing.
+  set par(spacing: 1.75em)
+
+  // Set heading font.
+  show heading: set text(font: sans-font, weight: "semibold")
+
+  // Set run-in subheadings, starting at level 4.
+  show heading: it => {
+    if it.level > 3 {
+      parbreak()
+      text(1em, style: "italic", weight: "regular", it.body + ":")
+    } else {
+      it
+    }
   }
 
-  if authors != none {
-    let count = authors.len()
-    let ncols = calc.min(count, 3)
-    grid(
-      columns: (1fr,) * ncols,
-      row-gutter: 1.5em,
-      ..authors.map(author =>
-          align(center)[
-            #author.name \
-            #author.affiliation \
-            #author.email
-          ]
-      )
-    )
-  }
+  // Configure lists and links.
+  show enum: set block(above: 1em, below: 1em)
+  // show enum: set par(leading: 0.85em)
+  set enum(indent: 0em, body-indent: 0.25em, tight: false)
+
+  show list: set block(above: 1em, below: 1em)
+  // show list: set par(leading: 0.85em)
+  set list(indent: 0em, body-indent: 0.25em, marker: ([•], [--]), tight: false)
+
+  show link: set text(font: body-font, fill: rgb(4, 1, 23), weight: 450)
+  show link: underline
+
+  // Logo
+  block(figure(image("inst/resources/img/logo.png")))
+  // block(figure(image("inst/resources/img/bwu_logo.png")))
+
+  // Title row.
+  align(center)[
+    #block(text(font: sans-font, weight: 600, 1.75em, title))
+    #v(0em, weak: true)
+  ]
 
   if date != none {
     align(center)[#block(inset: 1em)[
-      #date
-    ]]
-  }
-
-  if abstract != none {
-    block(inset: 2em)[
-    #text(weight: "semibold")[#abstract-title] #h(1em) #abstract
-    ]
-  }
-
-  if toc {
-    let title = if toc_title == none {
-      auto
-    } else {
-      toc_title
-    }
-    block(above: 0em, below: 2em)[
-    #outline(
-      title: toc_title,
-      depth: toc_depth,
-      indent: toc_indent
-    );
-    ]
+        #date
+      ]]
   }
 
   if cols == 1 {
@@ -274,32 +283,18 @@
   }
 }
 
-#set table(
-  inset: 6pt,
-  stroke: none
-)
-
 #set page(
   paper: "us-letter",
-  margin: (x: 0.79in,y: 0.79in,),
+  margin: (x: 1.25in, y: 1.25in),
   numbering: "1",
 )
 
-#show: doc => article(
-  title: [Neuropsychological Assessment Report],
-  authors: (
-    ( name: [Dr.~Joey Trampush],
-      affiliation: [],
-      email: [] ),
-    ),
-  date: [2025-08-15],
-  font: ("Minion Pro",),
-  fontsize: 9pt,
-  toc: true,
-  toc_title: [Table of contents],
-  toc_depth: 2,
-  cols: 1,
-  doc,
+#show: report.with(
+  title: "NEUROCOGNITIVE EXAMINATION",
+  paper: "us-letter",
+  body-font: ("IBM Plex Serif"),
+  sans-font: ("IBM Plex Sans"),
+  fontsize: 12pt,
 )
 
 = Background Information
