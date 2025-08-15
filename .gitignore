@@ -211,3 +211,4 @@ _02-10_emotion_text_parent.qmd
 _02-10_emotion_text_self.qmd
 output/verbal.pdf
 output/iq_example.pdf
+R/domain_processor_fixed.r
