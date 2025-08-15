@@ -27,18 +27,18 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Initialize a new DomainProcessorR6Combo object
-    #' @description Create a new instance.
-    #' @param domains Character scalar or vector of domain names.
-    #' @param pheno A data.frame or tibble.
-    #' @param input_file Path to a file.
-    #' @param output_dir Path to an output directory.
-    #' @param number Numeric index or identifier.
-    #' @return A new \code{DomainProcessorR6Combo} object.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$initialize(domains=..., pheno=..., input_file=..., output_dir=..., number=...)
-    #' }
+#' @description Create a new instance.
+#' @param domains Character scalar or vector of domain names.
+#' @param pheno A data.frame or tibble.
+#' @param input_file Path to a file.
+#' @param output_dir Path to an output directory.
+#' @param number Numeric index or identifier.
+#' @return A new \code{DomainProcessorR6Combo} object.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$initialize(domains=..., pheno=..., input_file=..., output_dir=..., number=...)
+#' }
     initialize = function(
       domains,
       pheno,
@@ -60,13 +60,13 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Load data from the specified input file
-    #' @description Load and normalize input data into the processor.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$load_data()
-    #' }
+#' @description Load and normalize input data into the processor.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$load_data()
+#' }
     load_data = function() {
       if (!is.null(self$data)) {
         message("Data already loaded, skipping file read.")
@@ -98,13 +98,13 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Filter data to include only the specified domains
-    #' @description Filter the internal data to a specific domain or set of domains.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$filter_by_domain()
-    #' }
+#' @description Filter the internal data to a specific domain or set of domains.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$filter_by_domain()
+#' }
     filter_by_domain = function() {
       self$data <- self$data |> dplyr::filter(domain %in% self$domains)
       invisible(self)
@@ -112,13 +112,13 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Select relevant columns from the data
-    #' @description Select and rename columns needed for downstream processing.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$select_columns()
-    #' }
+#' @description Select and rename columns needed for downstream processing.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$select_columns()
+#' }
     select_columns = function() {
       desired_columns <- c(
         "test",
@@ -178,15 +178,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Save the processed data to a file
-    #' @description Persist the current data to disk in the requested format.
-    #' @param filename Path to a file.
-    #' @param format File format (e.g., 'csv', 'rds', 'qmd').
-    #' @return Invisibly returns the output file path on success.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$save_data(filename=..., format=...)
-    #' }
+#' @description Persist the current data to disk in the requested format.
+#' @param filename Path to a file.
+#' @param format File format (e.g., 'csv', 'rds', 'qmd').
+#' @return Invisibly returns the output file path on success.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$save_data(filename=..., format=...)
+#' }
     save_data = function(filename = NULL, format = "parquet") {
       if (is.null(filename)) {
         filename <- paste0(self$pheno, ".", format)
@@ -211,26 +211,26 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Check if domain has multiple raters
-    #' @description Check whether multiple raters are present for a given measure or dataset.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$has_multiple_raters()
-    #' }
+#' @description Check whether multiple raters are present for a given measure or dataset.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$has_multiple_raters()
+#' }
     has_multiple_raters = function() {
       tolower(self$pheno) %in% c("emotion", "adhd")
     },
 
     #' @description
     #' Detect emotion type (child/adult)
-    #' @description Infer whether the dataset represents child or adult emotion measures.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$detect_emotion_type()
-    #' }
+#' @description Infer whether the dataset represents child or adult emotion measures.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$detect_emotion_type()
+#' }
     detect_emotion_type = function() {
       if (tolower(self$pheno) != "emotion") {
         return(NULL)
@@ -265,15 +265,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate domain QMD file following the memory template exactly
-    #' @description Generate a Quarto (.qmd) file for the given domain.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_domain_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a Quarto (.qmd) file for the given domain.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_domain_qmd(domain_name=..., output_file=...)
+#' }
     generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -321,15 +321,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate standard domain QMD following the memory template structure exactly
-    #' @description Generate a standard Quarto (.qmd) file for general domains.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_standard_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a standard Quarto (.qmd) file for general domains.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_standard_qmd(domain_name=..., output_file=...)
+#' }
     generate_standard_qmd = function(domain_name, output_file) {
       # First generate the text file that will be included
       text_file <- paste0(
@@ -764,15 +764,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate ADHD adult QMD file
-    #' @description Generate a Quarto (.qmd) file tailored for adult ADHD measures.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_adhd_adult_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a Quarto (.qmd) file tailored for adult ADHD measures.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_adhd_adult_qmd(domain_name=..., output_file=...)
+#' }
     generate_adhd_adult_qmd = function(domain_name, output_file) {
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_adhd_adult_text_self.qmd")
@@ -806,15 +806,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate ADHD child QMD file
-    #' @description Generate a Quarto (.qmd) file tailored for child ADHD measures.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_adhd_child_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a Quarto (.qmd) file tailored for child ADHD measures.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_adhd_child_qmd(domain_name=..., output_file=...)
+#' }
     generate_adhd_child_qmd = function(domain_name, output_file) {
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_adhd_child_text_self.qmd")
@@ -853,15 +853,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate emotion child QMD file
-    #' @description Generate a Quarto (.qmd) file tailored for child emotion/affect measures.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a Quarto (.qmd) file tailored for child emotion/affect measures.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
+#' }
     generate_emotion_child_qmd = function(domain_name, output_file) {
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_emotion_child_text_self.qmd")
@@ -904,15 +904,15 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate emotion adult QMD file
-    #' @description Generate a Quarto (.qmd) file tailored for adult emotion/affect measures.
-    #' @param domain_name Character scalar or vector of domain names.
-    #' @param output_file Path to a file.
-    #' @return Invisibly returns the path to the generated file.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
-    #' }
+#' @description Generate a Quarto (.qmd) file tailored for adult emotion/affect measures.
+#' @param domain_name Character scalar or vector of domain names.
+#' @param output_file Path to a file.
+#' @return Invisibly returns the path to the generated file.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
+#' }
     generate_emotion_adult_qmd = function(domain_name, output_file) {
       # Create text file
       text_file <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
@@ -936,14 +936,14 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Run the complete processing pipeline
-    #' @description Run the full processing pipeline and (optionally) generate domain files.
-    #' @param generate_domain_files Character scalar or vector of domain names.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
-    #'   obj$process(generate_domain_files=...)
-    #' }
+#' @description Run the full processing pipeline and (optionally) generate domain files.
+#' @param generate_domain_files Character scalar or vector of domain names.
+#' @return Invisibly returns \code{self} for method chaining.
+#' @examples
+#' \dontrun{
+#'   obj <- DomainProcessorR6Combo$new()
+#'   obj$process(generate_domain_files=...)
+#' }
     process = function(generate_domain_files = TRUE) {
       self$load_data()
       self$filter_by_domain()
