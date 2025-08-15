@@ -41,7 +41,11 @@ print_header <- function() {
 }
 
 # File and directory utilities
-find_directory <- function(primary_dir, alternative_dirs, dir_type = "directory") {
+find_directory <- function(
+  primary_dir,
+  alternative_dirs,
+  dir_type = "directory"
+) {
   if (dir.exists(primary_dir)) {
     return(primary_dir)
   }
@@ -65,10 +69,7 @@ find_directory <- function(primary_dir, alternative_dirs, dir_type = "directory"
 }
 
 ensure_template_file <- function(template_file, log_type = "INFO") {
-  log_message(
-    paste0("Checking for template file: ", template_file),
-    log_type
-  )
+  log_message(paste0("Checking for template file: ", template_file), log_type)
   log_message(paste0("Current working directory: ", getwd()), log_type)
 
   if (file.exists(template_file)) {
@@ -133,18 +134,28 @@ ensure_packages <- function(required_packages) {
 }
 
 # Template file checking
-check_essential_files <- function(essential_files, template_dir = "inst/quarto/templates/typst-report") {
+check_essential_files <- function(
+  essential_files,
+  template_dir = "inst/quarto/templates/typst-report"
+) {
   missing_files <- character()
 
   for (file in essential_files) {
     if (!file.exists(file)) {
       if (file.exists(file.path(template_dir, file))) {
         print_colored(
-          paste0("⚠️ Essential template file not found in working directory: ", file),
+          paste0(
+            "⚠️ Essential template file not found in working directory: ",
+            file
+          ),
           "yellow"
         )
         print_colored(
-          paste0("  This file exists in ", template_dir, " and will be copied during setup."),
+          paste0(
+            "  This file exists in ",
+            template_dir,
+            " and will be copied during setup."
+          ),
           "yellow"
         )
       } else {
@@ -153,7 +164,9 @@ check_essential_files <- function(essential_files, template_dir = "inst/quarto/t
           "red"
         )
         print_colored(
-          paste0("  This file is required and should be created before running the workflow."),
+          paste0(
+            "  This file is required and should be created before running the workflow."
+          ),
           "red"
         )
         missing_files <- c(missing_files, file)
@@ -165,17 +178,37 @@ check_essential_files <- function(essential_files, template_dir = "inst/quarto/t
 }
 
 # Data loading utilities
-load_neuropsych_data <- function(data_dir) {
+load_neurocog_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurocog.parquet")
   csv_file <- file.path(data_dir, "neurocog.csv")
   feather_file <- file.path(data_dir, "neurocog.feather")
 
   if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
     return(arrow::read_parquet(parquet_file))
-  } else if (file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)) {
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
     return(arrow::read_feather(feather_file))
   } else if (file.exists(csv_file)) {
     return(readr::read_csv(csv_file, show_col_types = FALSE))
+  } else {
+    return(NULL)
+  }
+}
+
+load_neurobehav_data <- function(data_dir) {
+  parquet_file2 <- file.path(data_dir, "neurobehav.parquet")
+  csv_file2 <- file.path(data_dir, "neurobehav.csv")
+  feather_file2 <- file.path(data_dir, "neurobehav.feather")
+
+  if (file.exists(parquet_file2) && requireNamespace("arrow", quietly = TRUE)) {
+    return(arrow::read_parquet(parquet_file2))
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
+    return(arrow::read_feather(feather_file2))
+  } else if (file.exists(csv_file2)) {
+    return(readr::read_csv(csv_file2, show_col_types = FALSE))
   } else {
     return(NULL)
   }
