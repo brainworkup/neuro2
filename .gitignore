@@ -221,3 +221,7 @@ tests/
 neuropsych_report.typst.md
 neuropsych_report.typ
 neuropsych_report.typ
+data-raw/csv/basc3_prs_adolescent.csv
+data-raw/csv/pai_adol_clinical.csv
+.gitignore
+data-raw/csv/pai_adol_validity.csv
