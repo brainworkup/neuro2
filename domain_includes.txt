@@ -1,0 +1,8 @@
+_02-01_iq.qmd
+_02-02_academics.qmd
+_02-03_verbal.qmd
+_02-04_spatial.qmd
+_02-05_memory.qmd
+_02-06_executive.qmd
+_02-07_motor.qmd
+_02-08_social.qmd

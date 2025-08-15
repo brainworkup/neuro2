@@ -4,6 +4,7 @@
       "Bash(find:*)",
       "Bash(R:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   }
 }

@@ -21,10 +21,8 @@ suppressPackageStartupMessages({
   }
 })
 
-# Source the DomainProcessorR6 class (only if not already loaded)
-if (!exists("DomainProcessorR6")) {
-  source(here::here("R", "DomainProcessorR6.R"))
-}
+# Source the DomainProcessorR6 class
+source(here::here("R", "DomainProcessorR6.R"))
 
 #' Domain registry with mappings
 get_domain_registry <- function() {
@@ -347,27 +345,9 @@ process_all_domains <- function(verbose = TRUE) {
   }
 
   # Create include list for template
-  if (exists("create_include_list")) {
-    create_include_list(generated_files, verbose = verbose)
-  }
+  create_include_list(generated_files, verbose = verbose)
 
   return(list(generated = generated_files, failed = failed_domains))
-}
-
-#' Create include list for template integration
-create_include_list <- function(generated_files, verbose = TRUE) {
-  if (length(generated_files) == 0) {
-    return(NULL)
-  }
-  
-  include_file <- here::here("domain_includes.txt")
-  writeLines(generated_files, include_file)
-  
-  if (verbose) {
-    cat("\n📝 Created include list:", include_file, "\n")
-  }
-  
-  return(include_file)
 }
 
 # New function to handle emotion domains intelligently
@@ -439,8 +419,6 @@ process_emotion_domains <- function(data_files, registry, verbose = TRUE) {
 
 
 # Run if called as script
-if (!interactive() && sys.nframe() == 0) {
-  # Only run main() if this is the top-level script being executed
-  # sys.nframe() == 0 means this is not being sourced from another script
-  process_all_domains(verbose = TRUE)
+if (!interactive()) {
+  main()
 }

@@ -24,6 +24,7 @@ DomainProcessorR6 <- R6::R6Class(
     output_dir = "data",
     number = NULL,
     data = NULL,
+    dirs = NULL,
 
     #' @description
     #' Initialize a new DomainProcessorR6 object
