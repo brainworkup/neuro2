@@ -29,12 +29,18 @@ tryCatch(
     neurocog_data <- NULL
     neurobehav_data <- NULL
 
-    if (file.exists("data/neurocog.csv")) {
-      neurocog_data <- read_csv("data/neurocog.csv", show_col_types = FALSE)
+    if (file.exists("data/neurocog.parquet")) {
+      neurocog_data <- read_parquet(
+        "data/neurocog.parquet",
+        show_col_types = FALSE
+      )
     }
 
-    if (file.exists("data/neurobehav.csv")) {
-      neurobehav_data <- read_csv("data/neurobehav.csv", show_col_types = FALSE)
+    if (file.exists("data/neurobehav.parquet")) {
+      neurobehav_data <- read_parquet(
+        "data/neurobehav.parquet",
+        show_col_types = FALSE
+      )
     }
 
     if (is.null(neurocog_data) && is.null(neurobehav_data)) {
@@ -46,62 +52,62 @@ tryCatch(
     domain_config <- list(
       "General Cognitive Ability" = list(
         pheno = "iq",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
       "Academic Skills" = list(
         pheno = "academics",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
       "Verbal/Language" = list(
         pheno = "verbal",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
       "Visual Perception/Construction" = list(
         pheno = "spatial",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
-      "Memory" = list(pheno = "memory", input_file = "data/neurocog.csv"),
+      "Memory" = list(pheno = "memory", input_file = "data/neurocog.parquet"),
       "Attention/Executive" = list(
         pheno = "executive",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
-      "Motor" = list(pheno = "motor", input_file = "data/neurocog.csv"),
+      "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
       "Social Cognition" = list(
         pheno = "social",
-        input_file = "data/neurocog.csv"
+        input_file = "data/neurocog.parquet"
       ),
-      "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.csv"),
+      "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
       "Behavioral/Emotional/Social" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Psychiatric Disorders" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Personality Disorders" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Psychosocial Problems" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Substance Use" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Emotional/Behavioral/Personality" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Adaptive Functioning" = list(
         pheno = "adaptive",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       ),
       "Daily Living" = list(
         pheno = "daily_living",
-        input_file = "data/neurobehav.csv"
+        input_file = "data/neurobehav.parquet"
       )
     )
 
