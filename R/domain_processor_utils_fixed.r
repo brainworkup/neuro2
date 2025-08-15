@@ -17,7 +17,7 @@
 #' @param test_lookup_file Path to the test lookup CSV
 #' @param config Optional configuration list
 #' @param validate Whether to validate inputs before creation
-#' @return A DomainProcessorR6 object or NULL on error
+#' @return A DomainProcessor object or NULL on error
 #' @export
 create_domain_processor <- function(
   domain_name,
@@ -51,7 +51,7 @@ create_domain_processor <- function(
   # Create processor with error handling
   processor <- tryCatch(
     {
-      DomainProcessorR6$new(
+      DomainProcessor$new(
         domains = domain_name,
         pheno = pheno,
         input_file = data_file,
@@ -83,7 +83,7 @@ create_domain_processor <- function(
 #' @param age_group Age group ("adult" or "child")
 #' @param output_dir Output directory for generated files
 #' @param config Optional configuration
-#' @return A DomainProcessorR6 object or NULL on error
+#' @return A DomainProcessor object or NULL on error
 #' @export
 process_simple_domain <- function(
   domain_name,
@@ -142,7 +142,7 @@ process_simple_domain <- function(
 #' @param age_group Age group ("adult" or "child")
 #' @param raters Specific raters to process (NULL for all available)
 #' @param config Optional configuration
-#' @return A list of DomainProcessorR6 objects by rater
+#' @return A list of DomainProcessor objects by rater
 #' @export
 process_multi_rater_domain <- function(
   domain_name,
@@ -229,12 +229,15 @@ process_multi_rater_domain <- function(
 get_domain_info <- function(test_lookup_file = NULL, use_factory = TRUE) {
   # Try factory registry first if available
   if (use_factory && exists("DomainProcessorFactoryR6")) {
-    tryCatch({
-      factory <- DomainProcessorFactoryR6$new()
-      return(factory$get_registry_info())
-    }, error = function(e) {
-      message("Factory registry not available, trying test lookup file")
-    })
+    tryCatch(
+      {
+        factory <- DomainProcessorFactoryR6$new()
+        return(factory$get_registry_info())
+      },
+      error = function(e) {
+        message("Factory registry not available, trying test lookup file")
+      }
+    )
   }
 
   # Fall back to test lookup file
@@ -261,40 +264,43 @@ check_domain_raters <- function(
 ) {
   # Try factory first if available
   if (exists("DomainProcessorFactoryR6")) {
-    tryCatch({
-      factory <- DomainProcessorFactoryR6$new()
-      
-      # Try to get from registry
-      config <- factory$get_processor_config(get_domain_key(domain_name))
-      
-      if (!is.null(config) && !is.null(config$available_raters)) {
-        raters <- if (is.list(config$available_raters)) {
-          config$available_raters[[age_group]] %||% character()
-        } else {
-          config$available_raters
+    tryCatch(
+      {
+        factory <- DomainProcessorFactoryR6$new()
+
+        # Try to get from registry
+        config <- factory$get_processor_config(get_domain_key(domain_name))
+
+        if (!is.null(config) && !is.null(config$available_raters)) {
+          raters <- if (is.list(config$available_raters)) {
+            config$available_raters[[age_group]] %||% character()
+          } else {
+            config$available_raters
+          }
+
+          result <- data.frame(
+            rater = raters,
+            age_group = age_group,
+            domain = domain_name,
+            stringsAsFactors = FALSE
+          )
+
+          message(paste(
+            "Available raters for",
+            domain_name,
+            "(",
+            age_group,
+            "):",
+            paste(raters, collapse = ", ")
+          ))
+
+          return(result)
         }
-        
-        result <- data.frame(
-          rater = raters,
-          age_group = age_group,
-          domain = domain_name,
-          stringsAsFactors = FALSE
-        )
-        
-        message(paste(
-          "Available raters for",
-          domain_name,
-          "(",
-          age_group,
-          "):",
-          paste(raters, collapse = ", ")
-        ))
-        
-        return(result)
+      },
+      error = function(e) {
+        message("Factory not available, trying test lookup file")
       }
-    }, error = function(e) {
-      message("Factory not available, trying test lookup file")
-    })
+    )
   }
 
   # Fall back to test lookup if available

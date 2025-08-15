@@ -339,7 +339,7 @@ check_r6_files <- function() {
     "R/ReportTemplateR6.R",
     "R/NeuropsychResultsR6.R",
     "R/NeuropsychReportSystemR6.R",
-    "R/DomainProcessorR6.R",
+    "R/DomainProcessor.R",
     "R/DotplotR6.R",
     "R/DrilldownR6.R",
     "R/TableGTR6.R",

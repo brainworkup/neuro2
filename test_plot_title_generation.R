@@ -2,13 +2,13 @@
 
 library(here)
 
-# Source the DomainProcessorR6 class
-source(here::here("R/DomainProcessorR6.R"))
+# Source the DomainProcessor class
+source(here::here("R/DomainProcessor.R"))
 
 # Test for verbal domain
 cat("=== Testing Plot Title Generation ===\n\n")
 
-processor_verbal <- DomainProcessorR6$new(
+processor_verbal <- DomainProcessor$new(
   domains = "Verbal/Language",
   pheno = "verbal",
   input_file = "data/neurocog.parquet"
@@ -20,7 +20,7 @@ cat("Verbal domain plot title:\n")
 cat(plot_title, "\n\n")
 
 # Test for memory domain
-processor_memory <- DomainProcessorR6$new(
+processor_memory <- DomainProcessor$new(
   domains = "Memory",
   pheno = "memory",
   input_file = "data/neurocog.parquet"
@@ -38,7 +38,7 @@ processor_verbal$generate_domain_qmd(output_file = test_file)
 # Read the generated file and check if plot title is embedded
 if (file.exists(test_file)) {
   content <- readLines(test_file)
-  
+
   # Look for the plot title in the Typst section
   typst_start <- grep("```\\{=typst\\}", content)
   if (length(typst_start) > 0) {
@@ -49,12 +49,12 @@ if (file.exists(test_file)) {
       for (i in caption_lines) {
         if (i > 0 && i <= length(content)) {
           cat("\nFound caption at line", i, ":\n")
-          cat(content[max(1, i-2):min(length(content), i+2)], sep = "\n")
+          cat(content[max(1, i - 2):min(length(content), i + 2)], sep = "\n")
         }
       }
     }
   }
-  
+
   # Clean up test file
   file.remove(test_file)
   if (file.exists("_test_verbal_text.qmd")) {

@@ -1,10 +1,10 @@
 # Test script for ADHD scale standardization
-# This tests both the modified ADHD document and enhanced DomainProcessorR6 class
+# This tests both the modified ADHD document and enhanced DomainProcessor class
 
 library(here)
 
 # Source the required R6 classes
-source(here::here("R/DomainProcessorR6.R"))
+source(here::here("R/DomainProcessor.R"))
 source(here::here("R/NeuropsychResultsR6.R"))
 source(here::here("R/DotplotR6.R"))
 source(here::here("R/TableGTR6.R"))
@@ -19,9 +19,9 @@ if (exists("scales_adhd_adult")) {
   cat("✗ Failed to load scales_adhd_adult\n")
 }
 
-# Test 2: Test DomainProcessorR6 scale loading
-cat("\n=== Test 2: Testing DomainProcessorR6 scale loading ===\n")
-test_processor <- DomainProcessorR6$new(
+# Test 2: Test DomainProcessor scale loading
+cat("\n=== Test 2: Testing DomainProcessor scale loading ===\n")
+test_processor <- DomainProcessor$new(
   domains = "ADHD",
   pheno = "adhd_adult",
   input_file = "data/neurobehav.parquet"
@@ -30,7 +30,7 @@ test_processor <- DomainProcessorR6$new(
 # Test automatic scale loading
 scales_from_processor <- test_processor$get_scales()
 if (length(scales_from_processor) > 0) {
-  cat("✓ DomainProcessorR6 loaded scales automatically\n")
+  cat("✓ DomainProcessor loaded scales automatically\n")
   cat(paste("  Found", length(scales_from_processor), "scales\n"))
 
   # Compare with expected scales
@@ -40,13 +40,13 @@ if (length(scales_from_processor) > 0) {
     cat("✗ Loaded scales differ from expected\n")
   }
 } else {
-  cat("✗ DomainProcessorR6 failed to load scales\n")
+  cat("✗ DomainProcessor failed to load scales\n")
 }
 
 # Test 3: Test with explicit scale_source
 cat("\n=== Test 3: Testing with explicit scale_source ===\n")
 custom_scales <- c("Test Scale 1", "Test Scale 2")
-test_processor2 <- DomainProcessorR6$new(
+test_processor2 <- DomainProcessor$new(
   domains = "ADHD",
   pheno = "adhd_adult",
   input_file = "data/neurobehav.parquet",
@@ -90,7 +90,7 @@ cat(
   length(scales_adhd_adult),
   "standardized scale names\n"
 )
-cat("- DomainProcessorR6 can automatically load scales based on phenotype\n")
+cat("- DomainProcessor can automatically load scales based on phenotype\n")
 cat("- ADHD document now uses standardized scales instead of hardcoded list\n")
 cat(
   "- The system maintains backward compatibility with scale_source parameter\n"

@@ -23,7 +23,7 @@ log_message <- function(message, type = "INFO") {
 
 # Source R6 classes
 source("R/DotplotR6.R")
-source("R/DomainProcessorR6.R")
+source("R/DomainProcessor.R")
 source("R/NeuropsychResultsR6.R")
 source("R/ReportTemplateR6.R")
 source("R/TableGTR6.R")
@@ -207,7 +207,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "\n",
     "#| include: false\n\n",
     "# Source R6 classes\n",
-    "source(\"R/DomainProcessorR6.R\")\n",
+    "source(\"R/DomainProcessor.R\")\n",
     "source(\"R/NeuropsychResultsR6.R\")\n",
     "source(\"R/TableGTR6.R\")\n",
     "source(\"R/DotplotR6.R\")\n\n",
@@ -222,7 +222,7 @@ update_domain_file_with_r6 <- function(domain_info) {
     "# Create R6 processor\n",
     "processor_",
     domain_info$obj_name,
-    " <- DomainProcessorR6$new(\n",
+    " <- DomainProcessor$new(\n",
     "  domains = domains,\n",
     "  pheno = pheno,\n",
     "  input_file = \"data/neurocog.csv\"\n",

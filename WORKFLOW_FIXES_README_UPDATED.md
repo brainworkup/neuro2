@@ -18,7 +18,7 @@ This document provides instructions for fixing the issues in the unified neurops
 
 4. **Missing `IQReportGeneratorR6.R` file**:
    - This R6 class file is mentioned in the error message but doesn't need to exist
-   - Better approach: Use the generic DomainProcessorR6 for all domains instead of domain-specific generators
+   - Better approach: Use the generic DomainProcessor for all domains instead of domain-specific generators
 
 ## How to Apply the Fixes
 
@@ -28,7 +28,7 @@ Follow these steps to apply the fixes to your project:
    ```bash
    # Backup the original file
    cp R/duckdb_neuropsych_loader.R R/duckdb_neuropsych_loader.R.bak
-   
+
    # Replace with the fixed version
    cp R/duckdb_neuropsych_loader_fixed.R R/duckdb_neuropsych_loader.R
    ```
@@ -37,7 +37,7 @@ Follow these steps to apply the fixes to your project:
    ```bash
    # Backup the original file
    cp neuro2_R6_update_workflow.R neuro2_R6_update_workflow.R.bak
-   
+
    # Replace with the fixed version
    cp neuro2_R6_update_workflow_fixed.R neuro2_R6_update_workflow.R
    ```
@@ -50,7 +50,7 @@ Follow these steps to apply the fixes to your project:
 
 4. **Update the unified_workflow_runner.R file**:
    - Modify the R6 class files list in the `setup_environment` method to remove the IQReportGeneratorR6.R reference:
-   
+
    ```r
    # Change from:
    r6_files <- c(
@@ -58,28 +58,28 @@ Follow these steps to apply the fixes to your project:
      "R/NeuropsychResultsR6.R",
      "R/NeuropsychReportSystemR6.R",
      "R/IQReportGeneratorR6.R",  # Remove this line
-     "R/DomainProcessorR6.R",
+     "R/DomainProcessor.R",
      "R/DotplotR6.R",
      "R/DuckDBProcessorR6.R"
    )
-   
+
    # To:
    r6_files <- c(
      "R/ReportTemplateR6.R",
      "R/NeuropsychResultsR6.R",
      "R/NeuropsychReportSystemR6.R",
-     "R/DomainProcessorR6.R",
+     "R/DomainProcessor.R",
      "R/DotplotR6.R",
      "R/DuckDBProcessorR6.R"
    )
    ```
-   
+
    - Add the following line to the end of the `generate_domains` method in the `WorkflowRunner` class, right before the `return(TRUE)` statement:
-   
+
    ```r
    # Source the check_and_create_domain_files.R file
    source("R/check_and_create_domain_files.R")
-   
+
    # Call the function to check and create missing domain files
    check_and_create_domain_files(log_message)
    ```
@@ -110,7 +110,7 @@ To verify that the fixes worked:
 
 The original error mentioned a missing `IQReportGeneratorR6.R` file, but creating specialized report generators for each domain (IQ, memory, executive function, etc.) would lead to code duplication and maintenance issues. Instead, the better approach is to:
 
-1. Use the generic `DomainProcessorR6` class for all domains
+1. Use the generic `DomainProcessor` class for all domains
 2. Configure it with domain-specific parameters
 3. Let it handle the processing for any domain type
 

@@ -50,7 +50,7 @@ check_domain_r6_files <- function() {
 
   r6_domain_files <- c(
     "R/NeuropsychResultsR6.R",
-    "R/DomainProcessorR6.R",
+    "R/DomainProcessor.R",
     "R/TableGTR6.R",
     "R/DotplotR6.R"
   )
@@ -74,7 +74,7 @@ check_domain_r6_files <- function() {
 
 load_domain_r6_classes <- function() {
   source("R/NeuropsychResultsR6.R")
-  source("R/DomainProcessorR6.R")
+  source("R/DomainProcessor.R")
   source("R/TableGTR6.R")
   source("R/DotplotR6.R")
 }
@@ -85,7 +85,7 @@ process_all_domains <- function(config, patient_type, data_status) {
 
   tryCatch(
     {
-      log_message("Using DomainProcessorR6 to generate domain files", "DOMAINS")
+      log_message("Using DomainProcessor to generate domain files", "DOMAINS")
 
       # Load data for validation
       neurocog_data <- NULL
@@ -314,7 +314,7 @@ process_single_domain_validated <- function(
   # Proceed with processing only if data exists
   tryCatch(
     {
-      processor <- DomainProcessorR6$new(
+      processor <- DomainProcessor$new(
         domains = domain_name,
         pheno = config$pheno,
         input_file = config$input_file
@@ -389,7 +389,7 @@ process_emotion_domains_validated <- function(
         "DOMAINS"
       )
 
-      processor <- DomainProcessorR6$new(
+      processor <- DomainProcessor$new(
         domains = emotion_domains_present,
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
@@ -441,7 +441,7 @@ process_adhd_domain_validated <- function(is_child, neurobehav_data) {
         "DOMAINS"
       )
 
-      processor <- DomainProcessorR6$new(
+      processor <- DomainProcessor$new(
         domains = "ADHD",
         pheno = "adhd",
         input_file = "data/neurobehav.parquet"
@@ -533,7 +533,7 @@ process_single_domain <- function(
   )
 
   # Create domain processor
-  domain_processor <- DomainProcessorR6$new(
+  domain_processor <- DomainProcessor$new(
     domains = domain,
     pheno = domain_to_pheno(domain),
     input_file = input_file,

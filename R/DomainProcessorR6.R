@@ -1152,7 +1152,7 @@ DomainProcessorR6 <- R6::R6Class(
         "\n",
         "#| include: false\n\n",
         "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/DomainProcessor.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
         "source(\"R/TableGTR6.R\")\n",

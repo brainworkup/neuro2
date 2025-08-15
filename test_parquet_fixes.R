@@ -83,8 +83,8 @@ tryCatch(
   }
 )
 
-# Test 2: Simulate the DomainProcessorR6 functionality
-cat("\nTest 2: Simulating DomainProcessorR6 functionality...\n")
+# Test 2: Simulate the DomainProcessor functionality
+cat("\nTest 2: Simulating DomainProcessor functionality...\n")
 tryCatch(
   {
     # Read the Parquet file

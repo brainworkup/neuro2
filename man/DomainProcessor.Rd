@@ -2,11 +2,11 @@
 % Please edit documentation in R/DomainProcessor.R
 \name{DomainProcessor}
 \alias{DomainProcessor}
-\title{DomainProcessorR6 Class Version 2}
+\title{DomainProcessor Class Version 2}
 \description{
-DomainProcessorR6 Class Version 2
+DomainProcessor Class Version 2
 
-DomainProcessorR6 Class Version 2
+DomainProcessor Class Version 2
 }
 \details{
 An R6 class that encapsulates a complete data processing pipeline for neuropsychological domains.
@@ -15,7 +15,7 @@ This class handles loading data, filtering by domain, processing, and outputting
 \section{Methods}{
 
 \describe{
-\item{initialize}{Initialize a new DomainProcessorR6 object with configuration parameters.}
+\item{initialize}{Initialize a new DomainProcessor object with configuration parameters.}
 \item{load_data}{Load data from the specified input file.}
 \item{filter_by_domain}{Filter data to include only the specified domains.}
 \item{select_columns}{Select relevant columns from the data.}
@@ -91,7 +91,7 @@ This class handles loading data, filtering by domain, processing, and outputting
 \if{html}{\out{<a id="method-DomainProcessor-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessor-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a new DomainProcessorR6 object with configuration parameters.
+Initialize a new DomainProcessor object with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessor$new(
   domains,
@@ -124,7 +124,7 @@ Initialize a new DomainProcessorR6 object with configuration parameters.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new DomainProcessorR6 object
+A new DomainProcessor object
 }
 }
 \if{html}{\out{<hr>}}

@@ -43,7 +43,7 @@ if (file.exists("R/utils.R")) {
 
 # Source R6 classes with error handling
 r6_files <- c(
-  "R/DomainProcessorR6.R",
+  "R/DomainProcessor.R",
   "R/DuckDBProcessorR6.R",
   "R/NeuropsychResultsR6.R",
   "R/TableGTR6.R",

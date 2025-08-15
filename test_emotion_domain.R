@@ -2,10 +2,10 @@
 library(here)
 
 # Source the updated R6 class
-source("R/DomainProcessorR6.R")
+source("R/DomainProcessor.R")
 
 # Create processor for emotion domain
-processor <- DomainProcessorR6$new(
+processor <- DomainProcessor$new(
   domains = c("Personality Disorders"),
   pheno = "emotion",
   input_file = "data/neurobehav.parquet"
@@ -27,7 +27,7 @@ cat("Generated file:", output_file, "\n")
 # Check if the file was created
 if (file.exists(output_file)) {
   cat("File successfully created!\n")
-  
+
   # Display first 50 lines to verify structure
   content <- readLines(output_file, n = 50)
   cat("\nFirst 50 lines of generated file:\n")

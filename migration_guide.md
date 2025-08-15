@@ -1,4 +1,4 @@
-# Migration Guide: Simplified DomainProcessorR6
+# Migration Guide: Simplified DomainProcessor
 
 ## Key Problems with the Original Code
 
@@ -27,18 +27,18 @@ has_multiple_raters = function() {
 
 detect_emotion_type = function() {
   if (tolower(self$pheno) != "emotion") return(NULL)
-  
+
   # Hardcoded domain name checks
   if (any(grepl("Behavioral/Emotional/Social", self$domains, ignore.case = TRUE))) {
     return("child")
   } else if (any(grepl("Emotional/Behavioral/Personality", self$domains, ignore.case = TRUE))) {
     return("adult")
   }
-  
+
   # Hardcoded file checks
   if (file.exists("basc3_prs_child.csv")) return("child")
   if (file.exists("pai_adol.csv")) return("adult")
-  
+
   return("child")  # Hardcoded default
 }
 
@@ -46,7 +46,7 @@ get_rater_types = function() {
   if (tolower(self$pheno) == "adhd") {
     return(c("self", "observer"))  # Hardcoded!
   }
-  
+
   if (tolower(self$pheno) == "emotion") {
     emotion_type <- self$detect_emotion_type()
     if (emotion_type == "child") {
@@ -55,7 +55,7 @@ get_rater_types = function() {
       return(c("self"))  # Hardcoded!
     }
   }
-  
+
   return(NULL)
 }
 ```
@@ -69,7 +69,7 @@ get_available_raters = function() {
       domain %in% self$domains,
       age_group %in% c(self$age_group, "child/adult")
     )
-  
+
   unique(domain_tests$rater)  # Automatically determined from data!
 }
 
@@ -94,14 +94,14 @@ get_tests_for_rater = function(rater) {
 Ensure your `test_testname_rater.csv` file is in the project root or specify its location.
 
 ### Step 2: Replace the Old Class
-Replace your old `DomainProcessorR6.R` file with the new simplified version.
+Replace your old `DomainProcessor.R` file with the new simplified version.
 
 ### Step 3: Update Your Usage
 
 **OLD USAGE:**
 ```r
 # Complex instantiation with hardcoded assumptions
-processor <- DomainProcessorR6$new(
+processor <- DomainProcessor$new(
   domains = c("Behavioral/Emotional/Social"),
   pheno = "emotion",
   input_file = "neurobehav.csv"
@@ -114,10 +114,10 @@ processor$process(generate_domain_files = TRUE)
 **NEW USAGE:**
 ```r
 # Simple, explicit instantiation
-processor <- DomainProcessorR6$new(
+processor <- DomainProcessor$new(
   domains = "Behavioral/Emotional/Social",
   pheno = "emotion",
-  input_file = "neurobehav.csv", 
+  input_file = "neurobehav.csv",
   age_group = "child"  # Explicit, not guessed
 )
 
@@ -140,7 +140,7 @@ process_simple_domain("Personality Disorders", "neurobehav.csv", "adult")
 ```
 
 **For Multi-Rater Domains:**
-```r  
+```r
 # ADHD, Behavioral/Emotional/Social, etc.
 process_multi_rater_domain("ADHD", "neurobehav.csv", "adult")
 ```
@@ -161,7 +161,7 @@ check_domain_raters("Behavioral/Emotional/Social", "child")
 **OLD:** Had to modify multiple functions and add hardcoded logic
 **NEW:** Just add a row to the CSV file
 
-### 2. Clearer Age Group Handling  
+### 2. Clearer Age Group Handling
 **OLD:** Complex detection logic that could fail
 **NEW:** Explicit age_group parameter
 
@@ -185,7 +185,7 @@ check_domain_raters("Behavioral/Emotional/Social", "child")
 processor <- process_simple_domain("Personality Disorders", "data.csv", "adult")
 ```
 
-### Pattern 2: Child Multi-Rater  
+### Pattern 2: Child Multi-Rater
 ```r
 # Domains: Behavioral/Emotional/Social, ADHD (child)
 processor <- process_multi_rater_domain("Behavioral/Emotional/Social", "data.csv", "child")
@@ -195,7 +195,7 @@ processor <- process_multi_rater_domain("Behavioral/Emotional/Social", "data.csv
 ### Pattern 3: Adult Multi-Rater
 ```r
 # Domains: ADHD (adult), Adaptive Functioning
-processor <- process_multi_rater_domain("ADHD", "data.csv", "adult") 
+processor <- process_multi_rater_domain("ADHD", "data.csv", "adult")
 # Automatically includes: self, observer (as available)
 ```
 
@@ -210,7 +210,7 @@ results <- batch_process_domains(adult_domains, "data.csv", "adult")
 ### "Test lookup file not found"
 Make sure `test_testname_rater.csv` is in your project root, or specify the full path:
 ```r
-processor <- DomainProcessorR6$new(..., test_lookup_file = "path/to/file.csv")
+processor <- DomainProcessor$new(..., test_lookup_file = "path/to/file.csv")
 ```
 
 ### "No tests found for domain"

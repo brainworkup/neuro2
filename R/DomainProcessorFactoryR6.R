@@ -43,11 +43,13 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' @param age_group Age group ("adult" or "child")
     #' @param rater Rater type ("self", "observer", "parent", "teacher")
     #' @param custom_config Custom configuration to override defaults
-    #' @return A DomainProcessorR6 object or NULL on error
-    create_processor = function(domain_key,
-                                age_group = "adult",
-                                rater = "self",
-                                custom_config = NULL) {
+    #' @return A DomainProcessor object or NULL on error
+    create_processor = function(
+      domain_key,
+      age_group = "adult",
+      rater = "self",
+      custom_config = NULL
+    ) {
       # Validate inputs
       validation_result <- self$validators$validate_processor_params(
         domain_key,
@@ -94,7 +96,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' Create multi-rater processor
     #' @param domain_key Domain identifier
     #' @param age_group Age group ("adult" or "child")
-    #' @return A list of DomainProcessorR6 objects by rater
+    #' @return A list of DomainProcessor objects by rater
     create_multi_processor = function(domain_key, age_group = "adult") {
       domain_info <- self$registry[[domain_key]]
 
@@ -139,10 +141,12 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' @param include_multi_rater Whether to create multi-rater processors
     #' @param parallel Whether to process in parallel (not yet implemented)
     #' @return A list of processors
-    batch_create = function(domain_keys,
-                            age_group = "adult",
-                            include_multi_rater = TRUE,
-                            parallel = FALSE) {
+    batch_create = function(
+      domain_keys,
+      age_group = "adult",
+      include_multi_rater = TRUE,
+      parallel = FALSE
+    ) {
       self$logger$info(paste(
         "Batch creating processors for",
         length(domain_keys),
@@ -552,7 +556,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       )
 
       # Create processor
-      processor <- DomainProcessorR6$new(
+      processor <- DomainProcessor$new(
         domains = domain_info$domains,
         pheno = pheno,
         input_file = input_file,
@@ -663,9 +667,11 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Batch create processors sequentially
-    batch_create_sequential = function(domain_keys,
-                                       age_group,
-                                       include_multi_rater) {
+    batch_create_sequential = function(
+      domain_keys,
+      age_group,
+      include_multi_rater
+    ) {
       processors <- list()
 
       for (domain_key in domain_keys) {
@@ -692,9 +698,11 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Batch create processors in parallel
-    batch_create_parallel = function(domain_keys,
-                                     age_group,
-                                     include_multi_rater) {
+    batch_create_parallel = function(
+      domain_keys,
+      age_group,
+      include_multi_rater
+    ) {
       # This would implement parallel processing using future package
       # For now, fall back to sequential
       self$logger$info("Parallel processing not implemented, using sequential")
