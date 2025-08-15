@@ -231,6 +231,9 @@ process_all_domains <- function(verbose = TRUE) {
   generated_files <- character()
   failed_domains <- character()
 
+  # Special handling for emotion domains
+  emotion_domains_processed <- FALSE
+
   # Process each domain
   for (domain_key in names(registry)) {
     domain_info <- registry[[domain_key]]
@@ -238,6 +241,29 @@ process_all_domains <- function(verbose = TRUE) {
 
     if (verbose) {
       cat("🔍 Checking domain:", domain_key, "(", domain_info$domains[1], ")\n")
+    }
+
+    # Skip individual emotion processing if we already processed them together
+    if (domain_key %in% c("emotion_child", "emotion_adult")) {
+      if (emotion_domains_processed) {
+        if (verbose) {
+          cat("  ⏭️  Emotion domains already processed together\n")
+        }
+        next
+      }
+
+      # Process emotion domains together
+      emotion_result <- process_emotion_domains(data_files, registry, verbose)
+      if (!is.null(emotion_result)) {
+        generated_files <- c(generated_files, emotion_result)
+        emotion_domains_processed <- TRUE
+        if (verbose) {
+          cat("  ✅ Generated:", emotion_result, "\n")
+        }
+      } else {
+        failed_domains <- c(failed_domains, domain_key)
+      }
+      next
     }
 
     # Check if we have the required data file
@@ -324,73 +350,73 @@ process_all_domains <- function(verbose = TRUE) {
   return(list(generated = generated_files, failed = failed_domains))
 }
 
-#' Create include list for main template
-create_include_list <- function(generated_files, verbose = TRUE) {
-  if (length(generated_files) == 0) {
+# New function to handle emotion domains intelligently
+process_emotion_domains <- function(data_files, registry, verbose = TRUE) {
+  # Check if we have neurobehav data
+  if (!"neurobehav" %in% names(data_files)) {
     if (verbose) {
-      cat("\n⚠️  No files to include in template\n")
+      cat("  ❌ No neurobehavioral data file found\n")
     }
-    return()
+    return(NULL)
   }
 
-  # Create include statements
-  includes <- paste0("{{< include ", generated_files, " >}}")
+  data_file <- data_files[["neurobehav"]]
 
-  # Write to include file
-  include_file <- here::here("_domain_includes.qmd")
-  writeLines(includes, include_file)
+  # Get both child and adult emotion domain definitions
+  child_domains <- registry[["emotion_child"]]$domains
+  adult_domains <- registry[["emotion_adult"]]$domains
 
-  if (verbose) {
-    cat("\n📝 Created include file:", include_file, "\n")
-    cat("   Add this to your main template:\n")
-    cat("   {{< include _domain_includes.qmd >}}\n")
+  # Check which emotion domains have data
+  child_has_data <- check_domain_has_data(child_domains, data_file)
+  adult_has_data <- check_domain_has_data(adult_domains, data_file)
+
+  if (!child_has_data && !adult_has_data) {
+    if (verbose) {
+      cat("  ❌ No data found for any emotion domains\n")
+    }
+    return(NULL)
   }
 
-  # Also create a summary for manual inclusion
-  summary_file <- here::here("_domain_summary.md")
-  summary_content <- c(
-    "# Generated Domain Files",
-    "",
-    "The following domain QMD files were generated:",
-    "",
-    paste("-", generated_files),
-    "",
-    "## Include in Template",
-    "",
-    "Add these includes to your main template file:",
-    "",
-    "```qmd",
-    includes,
-    "```"
-  )
-
-  writeLines(summary_content, summary_file)
-
-  if (verbose) {
-    cat("📋 Created summary file:", summary_file, "\n")
-  }
-}
-
-#' Main execution function
-main <- function() {
-  cat("🧠 Neuropsychological Domain Processor\n")
-  cat("=====================================\n\n")
-
-  # Process all domains
-  results <- process_all_domains(verbose = TRUE)
-
-  cat("\n🎉 Batch processing complete!\n")
-
-  if (length(results$generated) > 0) {
-    cat("\nNext steps:\n")
-    cat("1. Review generated QMD files\n")
-    cat("2. Add domain includes to your main template\n")
-    cat("3. Render your report\n")
+  # Determine which type to process based on available data
+  if (child_has_data) {
+    emotion_info <- registry[["emotion_child"]]
+    if (verbose) {
+      cat("  🔍 Processing child emotion domains\n")
+    }
   } else {
-    cat("\n⚠️  No domain files were generated.\n")
-    cat("   Check your data files and domain mappings.\n")
+    emotion_info <- registry[["emotion_adult"]]
+    if (verbose) {
+      cat("  🔍 Processing adult emotion domains\n")
+    }
   }
+
+  # Create processor with the appropriate domains
+  tryCatch(
+    {
+      processor <- DomainProcessorR6$new(
+        domains = emotion_info$domains,
+        pheno = emotion_info$pheno,
+        input_file = data_file,
+        number = emotion_info$number
+      )
+
+      # Load data to help with age detection
+      processor$load_data()
+      processor$filter_by_domain()
+
+      # Generate the QMD file (this will automatically detect child vs adult)
+      output_file <- processor$generate_domain_qmd()
+      return(output_file)
+    },
+    error = function(e) {
+      if (verbose) {
+        cat("  ❌ Error processing emotion domains:", e$message, "\n")
+      }
+      return(NULL)
+    }
+  )
 }
+
 
 # Run if called as script
 if (!interactive()) {

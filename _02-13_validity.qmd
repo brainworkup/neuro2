@@ -1,0 +1,309 @@
+```{=typst}
+== Performance Validity
+<sec-validity>
+```
+
+{{< include _02-13_validity_text.qmd >}}
+
+```{r}
+#| label: setup-validity
+#| include: false
+
+# Source R6 classes
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/DotplotR6.R")
+source("R/TableGTR6.R")
+source("R/score_type_utils.R")
+
+# Filter by domain
+domains <- c("Performance Validity")
+
+# Target phenotype
+pheno <- "validity"
+
+# Create R6 processor
+processor_validity <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = pheno,
+  input_file = "data/validity.parquet"
+)
+
+# Load and process data
+processor_validity$load_data()
+processor_validity$filter_by_domain()
+
+# Create the data object with original name for compatibility
+validity <- processor_validity$data
+
+# Process and export data using R6
+processor_validity$select_columns()
+processor_validity$save_data()
+
+# Update the original object
+validity <- processor_validity$data
+
+# Load internal data to get standardized scale names
+scale_var_name <- paste0("scales_", tolower(pheno))
+if (!exists(scale_var_name)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path, envir = .GlobalEnv)
+  }
+}
+if (exists(scale_var_name)) {
+  scales <- get(scale_var_name)
+} else {
+  warning(paste0(
+    "Scale variable '",
+    scale_var_name,
+    "' not found. Using empty vector."
+  ))
+  scales <- character(0)
+}
+
+# Filter the data directly without using NeurotypR
+filter_data <- function(data, domain, scale) {
+  # Filter by domain if provided
+  if (!is.null(domain)) {
+    data <- data[data$domain %in% domain, ]
+  }
+
+  # Filter by scale if provided
+  if (!is.null(scale)) {
+    data <- data[data$scale %in% scale, ]
+  }
+
+  return(data)
+}
+
+# Apply the filter function
+data_validity <- filter_data(data = validity, domain = domains, scale = scales)
+```
+
+```{r}
+#| label: text-validity
+#| cache: true
+#| include: true
+#| echo: false
+#| results: asis
+
+# Generate text using R6 class
+results_processor <- NeuropsychResultsR6$new(
+  data = data_validity,
+  file = "_02-13_validity_text.qmd"
+)
+results_processor$process()
+```
+
+```{r}
+#| label: qtbl-validity
+#| include: false
+
+# Table parameters
+table_name <- "table_validity"
+vertical_padding <- 0
+multiline <- TRUE
+
+# Get score types from the lookup table
+score_type_map <- get_score_types_from_lookup(data_validity)
+
+# Create a list of test names grouped by score type
+score_types_list <- list()
+
+# Process the score type map to group tests by score type
+for (test_name in names(score_type_map)) {
+  types <- score_type_map[[test_name]]
+  for (type in types) {
+    if (!type %in% names(score_types_list)) {
+      score_types_list[[type]] <- character(0)
+    }
+    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))
+  }
+}
+
+# Get unique score types present
+unique_score_types <- names(score_types_list)
+
+# Define the score type footnotes
+fn_list <- list()
+if ("t_score" %in% unique_score_types) {
+  fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+}
+if ("scaled_score" %in% unique_score_types) {
+  fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+}
+if ("standard_score" %in% unique_score_types) {
+  fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+}
+
+# Create groups based on test names that use each score type
+grp_list <- score_types_list
+
+# Define which groups support which score types (for dynamic footnotes)
+dynamic_grp <- score_types_list
+
+# Default source note if no score types are found
+if (length(fn_list) == 0) {
+  # Determine default based on pheno
+  source_note <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+} else {
+  source_note <- NULL # No general source note when using footnotes
+}
+
+# Create table using our modified TableGTR6 R6 class
+table_gt <- TableGTR6$new(
+  data = data_validity,
+  pheno = pheno,
+  table_name = table_name,
+  vertical_padding = vertical_padding,
+  source_note = source_note,
+  multiline = multiline,
+  fn_list = fn_list,
+  grp_list = grp_list,
+  dynamic_grp = dynamic_grp
+)
+
+# Get the table object without automatic saving
+tbl <- table_gt$build_table()
+
+# Save the table using our save_table method
+table_gt$save_table(tbl, dir = here::here())
+```
+
+```{r}
+#| label: fig-validity-subdomain
+#| include: false
+
+# Create subdomain plot using R6 DotplotR6
+if ("z_mean_subdomain" %in% names(data_validity) && "subdomain" %in% names(data_validity)) {
+  dotplot_subdomain <- DotplotR6$new(
+    data = data_validity,
+    x = "z_mean_subdomain",
+    y = "subdomain",
+    filename = here::here("fig_validity_subdomain.svg")
+  )
+  dotplot_subdomain$create_plot()
+} else {
+  warning("Subdomain plot cannot be created: missing required columns")
+}
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_validity"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_validity <- get(plot_title_var)
+} else {
+  plot_title_validity <- "Performance Validity scores ... "
+}
+```
+
+```{r}
+#| label: fig-validity-narrow
+#| include: false
+
+# Create narrow plot using R6 DotplotR6
+if ("z_mean_narrow" %in% names(data_validity) && "narrow" %in% names(data_validity)) {
+  dotplot_narrow <- DotplotR6$new(
+    data = data_validity,
+    x = "z_mean_narrow",
+    y = "narrow",
+    filename = here::here("fig_validity_narrow.svg")
+  )
+  dotplot_narrow$create_plot()
+} else {
+  warning("Narrow plot cannot be created: missing required columns")
+}
+
+# Load plot title from sysdata.rda
+plot_title_var <- "plot_title_validity"
+if (!exists(plot_title_var)) {
+  sysdata_path <- here::here("R", "sysdata.rda")
+  if (file.exists(sysdata_path)) {
+    load(sysdata_path)
+  }
+}
+
+# Get the plot title or use default
+if (exists(plot_title_var)) {
+  plot_title_validity <- get(plot_title_var)
+} else {
+  plot_title_validity <- "Performance Validity scores ... "
+}
+```
+
+```{=typst}
+// Define a function to create a domain with a title, a table, and a figure
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  // Make all figure labels (Table X:, Figure X:) bold
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        [`{r} plot_title_validity`],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Performance Validity"
+
+// Define the file name of the table
+#let file_qtbl = "table_validity.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_validity_subdomain.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
+```{=typst}
+// Define the title of the domain
+#let title = "Performance Validity"
+
+// Define the file name of the table
+#let file_qtbl = "table_validity.png"
+
+// Define the file name of the figure
+#let file_fig = "fig_validity_narrow.svg"
+
+// The title is appended with ' Scores'
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+

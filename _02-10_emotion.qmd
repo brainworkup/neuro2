@@ -1,5 +1,5 @@
 ```{=typst}
-== Behavioral/Emotional/Social
+== Emotional/Behavioral/Personality
 <sec-emotion-child>
 ```
 

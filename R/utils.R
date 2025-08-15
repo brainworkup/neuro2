@@ -519,3 +519,74 @@ filter_data <- function(data, domain = NULL, scale = NULL) {
 
   return(data)
 }
+
+#' Ensure required directories exist
+ensure_output_directories <- function(base_dir = ".") {
+  dirs <- c("figs", "output", "tmp")
+
+  for (dir in dirs) {
+    dir_path <- file.path(base_dir, dir)
+    if (!dir.exists(dir_path)) {
+      dir.create(dir_path, recursive = TRUE)
+      message("Created directory: ", dir_path)
+    }
+  }
+
+  invisible(dirs)
+}
+
+#' Get package resource path
+get_resource_path <- function(filename) {
+  system.file("resources", filename, package = "neuro2")
+}
+
+#' Get output file paths
+get_fig_path <- function(filename, base_dir = ".") {
+  file.path(base_dir, "figs", filename)
+}
+
+get_output_path <- function(filename, base_dir = ".") {
+  file.path(base_dir, "output", filename)
+}
+
+#' Example usage in your processor
+save_plot <- function(plot, filename, base_dir = ".") {
+  ensure_output_directories(base_dir)
+
+  # Save PNG for web/reports
+  png_path <- get_fig_path(paste0(filename, ".png"), base_dir)
+  ggplot2::ggsave(png_path, plot, width = 8, height = 6, dpi = 300)
+
+  # Save PDF for print quality
+  pdf_path <- get_fig_path(paste0(filename, ".pdf"), base_dir)
+  ggplot2::ggsave(pdf_path, plot, width = 8, height = 6)
+
+  return(list(png = png_path, pdf = pdf_path))
+}
+
+#' Allow users to configure output directories
+neuro2_config <- function(
+  figs_dir = "figs",
+  output_dir = "output",
+  tmp_dir = "tmp",
+  base_dir = "."
+) {
+  config <- list(
+    dirs = list(
+      base = base_dir,
+      figs = file.path(base_dir, figs_dir),
+      output = file.path(base_dir, output_dir),
+      tmp = file.path(base_dir, tmp_dir)
+    )
+  )
+
+  # Store in options for package functions to use
+  options(neuro2.config = config)
+
+  # Create directories
+  lapply(config$dirs[-1], function(d) {
+    if (!dir.exists(d)) dir.create(d, recursive = TRUE)
+  })
+
+  invisible(config)
+}
