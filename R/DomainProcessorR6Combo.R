@@ -1,7 +1,7 @@
-#' DomainProcessorR6Combo - Integrated Working Version
+#' DomainProcessorR6Combo - Following Memory Template Exactly
 #'
-#' A clean, working implementation that generates QMD files correctly
-#' following the exact structure of the working Academic Skills example.
+#' A working implementation that generates QMD files following the exact
+#' structure of the memory template file.
 #'
 #' @field domains Character vector of domain names to process.
 #' @field pheno Target phenotype identifier string.
@@ -27,13 +27,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Initialize a new DomainProcessorR6Combo object
-    #'
-    #' @param domains Character vector of domain names to process
-    #' @param pheno Target phenotype identifier string
-    #' @param input_file Path to the input data file
-    #' @param output_dir Directory where output files will be saved
-    #' @param number Domain number for file naming (optional)
-    #' @return A new DomainProcessorR6Combo object
     initialize = function(
       domains,
       pheno,
@@ -46,7 +39,6 @@ DomainProcessorR6Combo <- R6::R6Class(
       self$input_file <- input_file
       self$output_dir <- output_dir
 
-      # Set the number field
       if (!is.null(number)) {
         self$number <- sprintf("%02d", as.numeric(number))
       } else {
@@ -56,7 +48,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Load data from the specified input file
-    #' @return Invisibly returns self for method chaining
     load_data = function() {
       if (!is.null(self$data)) {
         message("Data already loaded, skipping file read.")
@@ -67,7 +58,6 @@ DomainProcessorR6Combo <- R6::R6Class(
         stop("No input file specified and no data pre-loaded.")
       }
 
-      # Determine file extension and read appropriately
       file_ext <- tools::file_ext(self$input_file)
 
       if (file_ext == "parquet") {
@@ -89,7 +79,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Filter data to include only the specified domains
-    #' @return Invisibly returns self for method chaining
     filter_by_domain = function() {
       self$data <- self$data |> dplyr::filter(domain %in% self$domains)
       invisible(self)
@@ -97,7 +86,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Select relevant columns from the data
-    #' @return Invisibly returns self for method chaining
     select_columns = function() {
       desired_columns <- c(
         "test",
@@ -115,12 +103,36 @@ DomainProcessorR6Combo <- R6::R6Class(
         "verbal",
         "timed",
         "result",
-        "z"
+        "z",
+        "z_mean_domain",
+        "z_sd_domain",
+        "z_mean_subdomain",
+        "z_sd_subdomain",
+        "z_mean_narrow",
+        "z_sd_narrow",
+        "z_mean_pass",
+        "z_sd_pass",
+        "z_mean_verbal",
+        "z_sd_verbal",
+        "z_mean_timed",
+        "z_sd_timed"
       )
 
       existing_columns <- intersect(desired_columns, names(self$data))
 
-      # Calculate z-score if missing but percentile exists
+      # Only warn about missing z-score columns if verbose mode
+      missing_columns <- setdiff(desired_columns, existing_columns)
+      missing_z_columns <- grep("^z", missing_columns, value = TRUE)
+      missing_other_columns <- setdiff(missing_columns, missing_z_columns)
+
+      if (length(missing_other_columns) > 0) {
+        message(
+          "Note: The following columns were not found in the data: ",
+          paste(missing_other_columns, collapse = ", ")
+        )
+      }
+
+      # Calculate basic z-score if missing but percentile exists
       if ("percentile" %in% names(self$data) && !"z" %in% names(self$data)) {
         self$data$z <- qnorm(self$data$percentile / 100)
         self$data$z <- round(self$data$z, 2)
@@ -133,9 +145,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Save the processed data to a file
-    #' @param filename Optional custom filename
-    #' @param format Output format
-    #' @return Invisibly returns self for method chaining
     save_data = function(filename = NULL, format = "parquet") {
       if (is.null(filename)) {
         filename <- paste0(self$pheno, ".", format)
@@ -160,20 +169,17 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Check if domain has multiple raters
-    #' @return Logical indicating if domain has multiple raters
     has_multiple_raters = function() {
       tolower(self$pheno) %in% c("emotion", "adhd")
     },
 
     #' @description
     #' Detect emotion type (child/adult)
-    #' @return Character string: "child", "adult", or NULL
     detect_emotion_type = function() {
       if (tolower(self$pheno) != "emotion") {
         return(NULL)
       }
 
-      # Check domain names for clues
       child_patterns <- c(
         "Behavioral/Emotional/Social",
         "Personality Disorders",
@@ -198,67 +204,11 @@ DomainProcessorR6Combo <- R6::R6Class(
         return("adult")
       }
 
-      # Default to child if unclear
       return("child")
     },
 
     #' @description
-    #' Generate text file for the domain
-    #' @param report_type Type of report ("self", "parent", "teacher", "observer")
-    #' @return Path to generated text file
-    generate_text_file = function(report_type = NULL) {
-      if (!is.null(report_type)) {
-        text_file <- paste0(
-          "_02-",
-          self$number,
-          "_",
-          self$pheno,
-          "_text_",
-          report_type,
-          ".qmd"
-        )
-      } else {
-        text_file <- paste0("_02-", self$number, "_", self$pheno, "_text.qmd")
-      }
-
-      # Create minimal placeholder text for now
-      # This will be replaced by actual NeuropsychResultsR6 processing
-      domain_name <- self$domains[1]
-
-      text_content <- if (!is.null(report_type)) {
-        paste0(
-          "<!-- Text content for ",
-          domain_name,
-          " - ",
-          report_type,
-          " report -->\n",
-          "Results from ",
-          tolower(report_type),
-          " ratings for ",
-          domain_name,
-          " are summarized below.\n"
-        )
-      } else {
-        paste0(
-          "<!-- Text content for ",
-          domain_name,
-          " -->\n",
-          "Results from ",
-          domain_name,
-          " assessment are summarized below.\n"
-        )
-      }
-
-      writeLines(text_content, text_file)
-      message(paste("Generated text file:", text_file))
-      return(text_file)
-    },
-
-    #' @description
-    #' Generate domain QMD file following the working Academic Skills pattern
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
+    #' Generate domain QMD file following the memory template exactly
     generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
@@ -284,7 +234,6 @@ DomainProcessorR6Combo <- R6::R6Class(
             return(self$generate_emotion_adult_qmd(domain_name, output_file))
           }
         } else if (tolower(self$pheno) == "adhd") {
-          # Determine if child or adult ADHD
           is_child <- any(grepl("child", tolower(self$domains))) ||
             (!is.null(self$data) &&
               any(grepl(
@@ -301,35 +250,42 @@ DomainProcessorR6Combo <- R6::R6Class(
         }
       }
 
-      # Generate standard single-rater domain QMD
+      # Generate standard domain QMD following memory template exactly
       return(self$generate_standard_qmd(domain_name, output_file))
     },
 
     #' @description
-    #' Generate standard (single-rater) domain QMD file
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
+    #' Generate standard domain QMD following the memory template structure exactly
     generate_standard_qmd = function(domain_name, output_file) {
-      # Generate text file first
-      text_file <- self$generate_text_file()
+      # First generate the text file that will be included
+      text_file <- paste0(
+        "_02-",
+        self$number,
+        "_",
+        tolower(self$pheno),
+        "_text.qmd"
+      )
 
-      # Get input file info
+      # Get input file path
       input_path <- if (grepl("^data/", self$input_file)) {
         self$input_file
       } else {
         paste0("data/", basename(self$input_file))
       }
 
-      # Build QMD content following the exact Academic Skills pattern
+      # Build QMD content following the exact memory template structure
       qmd_content <- paste0(
-        "## ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        " {#sec-",
+        "\n",
+        "<sec-",
         tolower(self$pheno),
-        "}\n\n",
+        ">\n",
+        "```\n\n",
+
         "{{< include ",
-        basename(text_file),
+        text_file,
         " >}}\n\n",
 
         "```{r}\n",
@@ -338,259 +294,425 @@ DomainProcessorR6Combo <- R6::R6Class(
         "\n",
         "#| include: false\n\n",
 
-        "# Load packages\n",
-        "suppressPackageStartupMessages({\n",
-        "  library(tidyverse)\n",
-        "  library(gt)\n",
-        "  library(gtExtras)\n",
-        "  library(glue)\n",
-        "})\n\n",
-
         "# Source R6 classes\n",
-        "source(here::here(\"R\", \"DomainProcessorR6Combo.R\"))\n",
-        "source(here::here(\"R\", \"NeuropsychResultsR6.R\"))\n",
-        "source(here::here(\"R\", \"DotplotR6.R\"))\n",
-        "source(here::here(\"R\", \"TableGTR6.R\"))\n",
-        "source(here::here(\"R\", \"score_type_utils.R\"))\n",
-        "source(here::here(\"R\", \"tidy_data.R\"))\n\n",
+        "source(\"R/DomainProcessorR6Combo.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
+        "source(\"R/score_type_utils.R\")\n\n",
 
-        "# Set domain parameters\n",
-        "domains <- \"",
+        "# Filter by domain\n",
+        "domains <- c(\"",
         domain_name,
-        "\"\n",
+        "\")\n\n",
+
+        "# Target phenotype\n",
         "pheno <- \"",
         tolower(self$pheno),
+        "\"\n\n",
+
+        "# Create R6 processor\n",
+        "processor_",
+        tolower(self$pheno),
+        " <- DomainProcessorR6Combo$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        input_path,
         "\"\n",
+        ")\n\n",
+
+        "# Load and process data\n",
+        "processor_",
+        tolower(self$pheno),
+        "$load_data()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$filter_by_domain()\n\n",
+
+        "# Create the data object with original name for compatibility\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n\n",
+
+        "# Process and export data using R6\n",
+        "processor_",
+        tolower(self$pheno),
+        "$select_columns()\n",
+        "processor_",
+        tolower(self$pheno),
+        "$save_data()\n\n",
+
+        "# Update the original object\n",
+        tolower(self$pheno),
+        " <- processor_",
+        tolower(self$pheno),
+        "$data\n\n",
+
+        "# Load internal data to get standardized scale names\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path, envir = .GlobalEnv)\n",
+        "  }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\n",
+        "    \"Scale variable '\",\n",
+        "    scale_var_name,\n",
+        "    \"' not found. Using empty vector.\"\n",
+        "  ))\n",
+        "  scales <- character(0)\n",
+        "}\n\n",
+
+        "# Filter the data directly without using NeurotypR\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+
+        "# Apply the filter function\n",
+        "data_",
+        tolower(self$pheno),
+        " <- filter_data(data = ",
+        tolower(self$pheno),
+        ", domain = domains, scale = scales)\n",
         "```\n\n",
 
         "```{r}\n",
-        "#| label: data-",
+        "#| label: text-",
         tolower(self$pheno),
         "\n",
-        "#| include: false\n\n",
+        "#| cache: true\n",
+        "#| include: true\n",
+        "#| echo: false\n",
+        "#| results: asis\n\n",
 
-        "# Read and process data\n",
-        "data <- readr::read_csv(\n",
-        "  here::here(\"",
-        input_path,
-        "\"),\n",
-        "  show_col_types = FALSE\n",
-        ") |>\n",
-        "  dplyr::filter(domain %in% domains) |>\n",
-        "  dplyr::filter(!is.na(percentile))\n\n",
-
-        "# Calculate z-scores if needed\n",
-        "if (!\"z\" %in% names(data)) {\n",
-        "  data <- data |>\n",
-        "    dplyr::mutate(\n",
-        "      z = qnorm(percentile / 100),\n",
-        "      z = round(z, 2)\n",
-        "    )\n",
-        "}\n\n",
-
-        "# Select relevant columns\n",
-        "data <- data |>\n",
-        "  dplyr::select(\n",
-        "    test, test_name, scale, raw_score, score,\n",
-        "    ci_95, percentile, range, domain, subdomain,\n",
-        "    narrow, pass, verbal, timed, result, z\n",
-        "  ) |>\n",
-        "  dplyr::arrange(desc(percentile))\n",
+        "# Generate text using R6 class\n",
+        "results_processor <- NeuropsychResultsR6$new(\n",
+        "  data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "  file = \"",
+        text_file,
+        "\"\n",
+        ")\n",
+        "results_processor$process()\n",
         "```\n\n",
 
         "```{r}\n",
         "#| label: qtbl-",
         tolower(self$pheno),
         "\n",
-        "#| include: false\n",
-        "#| eval: true\n\n",
+        "#| include: false\n\n",
 
-        "# Define score type footnotes\n",
-        "fn_list <- list(\n",
-        "  standard_score = \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\",\n",
-        "  scaled_score = \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\",\n",
-        "  t_score = \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\",\n",
-        "  z_score = \"z-score: Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰]\",\n",
-        "  raw_score = \"Raw score: Untransformed test score\",\n",
-        "  base_rate = \"Base rate: Percentage of the normative sample at or below this score\"\n",
+        "# Table parameters\n",
+        "table_name <- \"table_",
+        tolower(self$pheno),
+        "\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_",
+        tolower(self$pheno),
         ")\n\n",
 
-        "# Determine score type groups based on test batteries\n",
-        "test_names <- unique(data$test_name)\n",
-        "grp_list <- list()\n",
-        "source_note <- \"\"\n\n",
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
 
-        "# Check for different score types\n",
-        "if (any(grepl(\"WAIS|WISC|WPPSI|WJ|WIAT|KTEA\", test_names))) {\n",
-        "  grp_list$standard_score <- test_names[grepl(\"WAIS|WISC|WPPSI|WJ|WIAT|KTEA\", test_names)]\n",
-        "  source_note <- fn_list$standard_score\n",
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
         "}\n\n",
 
-        "if (any(grepl(\"RBANS\", test_names))) {\n",
-        "  # RBANS has both standard scores (indices) and scaled scores (subtests)\n",
-        "  rbans_indices <- test_names[grepl(\"Index|Total\", test_names)]\n",
-        "  rbans_subtests <- setdiff(test_names[grepl(\"RBANS\", test_names)], rbans_indices)\n",
-        "  \n",
-        "  if (length(rbans_indices) > 0) {\n",
-        "    grp_list$standard_score <- c(grp_list$standard_score, rbans_indices)\n",
-        "  }\n",
-        "  if (length(rbans_subtests) > 0) {\n",
-        "    grp_list$scaled_score <- rbans_subtests\n",
-        "  }\n",
-        "  \n",
-        "  if (nchar(source_note) == 0) source_note <- fn_list$standard_score\n",
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
         "}\n\n",
 
-        "# Create table\n",
-        "table <- TableGTR6$new(\n",
-        "  data = data,\n",
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  # Determine default based on pheno\n",
+        "  source_note <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_",
+        tolower(self$pheno),
+        ",\n",
         "  pheno = pheno,\n",
-        "  table_name = paste0(\"table_\", pheno),\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
         "  source_note = source_note,\n",
-        "  title = NULL,\n",
+        "  multiline = multiline,\n",
         "  fn_list = fn_list,\n",
         "  grp_list = grp_list,\n",
-        "  vertical_padding = 0.0,\n",
-        "  multiline = FALSE\n",
+        "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
 
-        "# Build the table\n",
-        "qtbl <- table$build_table()\n\n",
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
 
-        "# Save as PNG and PDF\n",
-        "gt::gtsave(\n",
-        "  qtbl,\n",
-        "  filename = here::here(\"figs\", paste0(\"_qtbl_\", pheno, \".png\")),\n",
-        "  expand = 10\n",
-        ")\n",
-        "gt::gtsave(\n",
-        "  qtbl,\n",
-        "  filename = here::here(\"figs\", paste0(\"_qtbl_\", pheno, \".pdf\")),\n",
-        "  expand = 10\n",
-        ")\n",
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
 
         "```{r}\n",
         "#| label: fig-",
         tolower(self$pheno),
-        "\n",
-        "#| include: false\n",
-        "#| eval: true\n\n",
+        "-subdomain\n",
+        "#| include: false\n\n",
 
-        "# Get plot title\n",
-        "plot_title <- \"",
-        private$get_default_plot_title(),
-        "\"\n\n",
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\"z_mean_subdomain\" %in% names(data_",
+        tolower(self$pheno),
+        ") && \"subdomain\" %in% names(data_",
+        tolower(self$pheno),
+        ")) {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_",
+        tolower(self$pheno),
+        "_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
 
-        "# Define colors\n",
-        "colors <- list(\n",
-        "  domain = \"#E89606\",\n",
-        "  test = \"grey50\"\n",
-        ")\n\n",
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_",
+        tolower(self$pheno),
+        "\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
 
-        "# Create dotplot\n",
-        "dotplot <- DotplotR6$new(\n",
-        "  data = data,\n",
-        "  x_var = \"percentile\",\n",
-        "  y_var = \"scale\",\n",
-        "  domain = domains,\n",
-        "  pheno = pheno,\n",
-        "  colors = colors,\n",
-        "  plot_title = plot_title,\n",
-        "  width = 8,\n",
-        "  height = 6\n",
-        ")\n\n",
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_",
+        tolower(self$pheno),
+        " <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_",
+        tolower(self$pheno),
+        " <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
 
-        "# Generate the plot\n",
-        "fig <- dotplot$generate_plot()\n\n",
+        "```{r}\n",
+        "#| label: fig-",
+        tolower(self$pheno),
+        "-narrow\n",
+        "#| include: false\n\n",
 
-        "# Save the plot\n",
-        "ggplot2::ggsave(\n",
-        "  filename = here::here(\"figs\", paste0(\"_fig_\", pheno, \".png\")),\n",
-        "  plot = fig,\n",
-        "  width = 8,\n",
-        "  height = 6,\n",
-        "  dpi = 300,\n",
-        "  bg = \"white\"\n",
-        ")\n\n",
+        "# Create narrow plot using R6 DotplotR6\n",
+        "if (\"z_mean_narrow\" %in% names(data_",
+        tolower(self$pheno),
+        ") && \"narrow\" %in% names(data_",
+        tolower(self$pheno),
+        ")) {\n",
+        "  dotplot_narrow <- DotplotR6$new(\n",
+        "    data = data_",
+        tolower(self$pheno),
+        ",\n",
+        "    x = \"z_mean_narrow\",\n",
+        "    y = \"narrow\",\n",
+        "    filename = here::here(\"fig_",
+        tolower(self$pheno),
+        "_narrow.svg\")\n",
+        "  )\n",
+        "  dotplot_narrow$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
+        "}\n\n",
 
-        "ggplot2::ggsave(\n",
-        "  filename = here::here(\"figs\", paste0(\"_fig_\", pheno, \".pdf\")),\n",
-        "  plot = fig,\n",
-        "  width = 8,\n",
-        "  height = 6,\n",
-        "  bg = \"white\"\n",
-        ")\n",
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_",
+        tolower(self$pheno),
+        "\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_",
+        tolower(self$pheno),
+        " <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_",
+        tolower(self$pheno),
+        " <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
         "```\n\n",
 
         "```{=typst}\n",
-        "#let domain(title: \"\", file_qtbl, file_fig) = [\n",
-        "  == #title\n",
-        "  #figure(\n",
-        "    image(file_qtbl, width: 100%),\n",
-        "    caption: figure.caption(\n",
-        "      position: top,\n",
-        "      [\n",
-        "        #title\n",
-        "      ],\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
         "    ),\n",
-        "    kind: \"qtbl\",\n",
-        "    supplement: [Table],\n",
-        "  )\n",
-        "  #figure(\n",
-        "    image(file_fig, width: 100%),\n",
-        "    caption: figure.caption(\n",
-        "      position: bottom,\n",
-        "      [\n",
-        "        #title\n",
-        "      ],\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_",
+        tolower(self$pheno),
+        "`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
         "    ),\n",
-        "    kind: \"image\",\n",
-        "    supplement: [Figure],\n",
         "  )\n",
-        "]\n\n",
+        "}\n",
+        "```\n\n",
 
-        "#domain(\n",
-        "  title: [",
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
         domain_name,
-        "],\n",
-        "  file_qtbl: \"figs/_qtbl_",
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_",
         tolower(self$pheno),
-        ".png\",\n",
-        "  file_fig: \"figs/_fig_",
+        ".png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_",
         tolower(self$pheno),
-        ".png\"\n",
-        ")\n",
+        "_subdomain.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_",
+        tolower(self$pheno),
+        ".png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_",
+        tolower(self$pheno),
+        "_narrow.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
       )
 
       # Write the QMD file
       writeLines(qmd_content, output_file)
-      message(paste("Generated standard QMD file:", output_file))
+      message(paste(
+        "Generated standard QMD file following memory template:",
+        output_file
+      ))
       return(output_file)
     },
 
     #' @description
     #' Generate ADHD adult QMD file
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
     generate_adhd_adult_qmd = function(domain_name, output_file) {
-      # Generate text files for different raters
-      self_text <- self$generate_text_file("self")
-      observer_text <- self$generate_text_file("observer")
+      # Create text files for different raters
+      self_text <- paste0("_02-", self$number, "_adhd_adult_text_self.qmd")
+      observer_text <- paste0(
+        "_02-",
+        self$number,
+        "_adhd_adult_text_observer.qmd"
+      )
 
       qmd_content <- paste0(
-        "## ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        " {#sec-adhd-adult}\n\n",
+        "\n",
+        "<sec-adhd-adult>\n",
+        "```\n\n",
         "### SELF-REPORT\n\n",
         "{{< include ",
-        basename(self_text),
+        self_text,
         " >}}\n\n",
         "### OBSERVER RATINGS\n\n",
         "{{< include ",
-        basename(observer_text),
+        observer_text,
         " >}}\n\n"
       )
 
@@ -601,31 +723,34 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate ADHD child QMD file
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
     generate_adhd_child_qmd = function(domain_name, output_file) {
-      # Generate text files for different raters
-      self_text <- self$generate_text_file("self")
-      parent_text <- self$generate_text_file("parent")
-      teacher_text <- self$generate_text_file("teacher")
+      # Create text files for different raters
+      self_text <- paste0("_02-", self$number, "_adhd_child_text_self.qmd")
+      parent_text <- paste0("_02-", self$number, "_adhd_child_text_parent.qmd")
+      teacher_text <- paste0(
+        "_02-",
+        self$number,
+        "_adhd_child_text_teacher.qmd"
+      )
 
       qmd_content <- paste0(
-        "```{=typst}\n== ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
+        "\n",
+        "<sec-adhd-child>\n",
         "```\n\n",
-        " {#sec-adhd-child}\n\n",
         "### SELF-REPORT\n\n",
         "{{< include ",
-        basename(self_text),
+        self_text,
         " >}}\n\n",
         "### PARENT RATINGS\n\n",
         "{{< include ",
-        basename(parent_text),
+        parent_text,
         " >}}\n\n",
         "### TEACHER RATINGS\n\n",
         "{{< include ",
-        basename(teacher_text),
+        teacher_text,
         " >}}\n\n"
       )
 
@@ -636,30 +761,38 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate emotion child QMD file
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
     generate_emotion_child_qmd = function(domain_name, output_file) {
-      # Generate text files for different raters
-      self_text <- self$generate_text_file("self")
-      parent_text <- self$generate_text_file("parent")
-      teacher_text <- self$generate_text_file("teacher")
+      # Create text files for different raters
+      self_text <- paste0("_02-", self$number, "_emotion_child_text_self.qmd")
+      parent_text <- paste0(
+        "_02-",
+        self$number,
+        "_emotion_child_text_parent.qmd"
+      )
+      teacher_text <- paste0(
+        "_02-",
+        self$number,
+        "_emotion_child_text_teacher.qmd"
+      )
 
       qmd_content <- paste0(
-        "## ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        " {#sec-emotion-child}\n\n",
+        "\n",
+        "<sec-emotion-child>\n",
+        "```\n\n",
         "### SELF-REPORT\n\n",
         "{{< include ",
-        basename(self_text),
+        self_text,
         " >}}\n\n",
         "### PARENT RATINGS\n\n",
         "{{< include ",
-        basename(parent_text),
+        parent_text,
         " >}}\n\n",
         "### TEACHER RATINGS\n\n",
         "{{< include ",
-        basename(teacher_text),
+        teacher_text,
         " >}}\n\n"
       )
 
@@ -670,19 +803,19 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Generate emotion adult QMD file
-    #' @param domain_name Name of the domain
-    #' @param output_file Output file path
-    #' @return Path to generated QMD file
     generate_emotion_adult_qmd = function(domain_name, output_file) {
-      # Generate text file
-      text_file <- self$generate_text_file()
+      # Create text file
+      text_file <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
 
       qmd_content <- paste0(
-        "## ",
+        "```{=typst}\n",
+        "== ",
         domain_name,
-        " {#sec-emotion-adult}\n\n",
+        "\n",
+        "<sec-emotion-adult>\n",
+        "```\n\n",
         "{{< include ",
-        basename(text_file),
+        text_file,
         " >}}\n\n"
       )
 
@@ -693,16 +826,12 @@ DomainProcessorR6Combo <- R6::R6Class(
 
     #' @description
     #' Run the complete processing pipeline
-    #' @param generate_domain_files Whether to generate domain QMD files
-    #' @return Invisibly returns self for method chaining
     process = function(generate_domain_files = TRUE) {
-      # Run the complete pipeline
       self$load_data()
       self$filter_by_domain()
       self$select_columns()
       self$save_data()
 
-      # Generate domain files if requested
       if (generate_domain_files) {
         self$generate_domain_qmd()
       }
@@ -733,33 +862,6 @@ DomainProcessorR6Combo <- R6::R6Class(
 
       num <- domain_numbers[tolower(self$pheno)]
       if (is.na(num) || is.null(num)) "99" else num
-    },
-
-    # Get default plot title
-    get_default_plot_title = function() {
-      titles <- list(
-        iq = "Intellectual and cognitive abilities represent an individual's capacity to think, reason, and solve problems.",
-        academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
-        verbal = "Verbal and language functioning refers to the ability to access and apply acquired word knowledge.",
-        spatial = "Visuospatial abilities involve perceiving, analyzing, and mentally manipulating visual information.",
-        memory = "Memory functions are crucial for learning, daily functioning, and cognitive processing.",
-        executive = "Attentional and executive functions underlie most domains of cognitive performance.",
-        motor = "Motor functions involve the planning and execution of voluntary movements.",
-        social = "Social cognition encompasses the mental processes involved in perceiving, interpreting, and responding to social information.",
-        adhd = "ADHD assessment evaluates attention, hyperactivity, and impulsivity patterns.",
-        emotion = "Emotional and behavioral functioning assessment provides insights into psychological well-being."
-      )
-
-      result <- titles[[tolower(self$pheno)]]
-      if (is.null(result)) {
-        paste(
-          "This section presents results from the",
-          self$domains[1],
-          "domain assessment."
-        )
-      } else {
-        result
-      }
     }
   )
 )

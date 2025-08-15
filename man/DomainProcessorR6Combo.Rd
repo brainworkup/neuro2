@@ -2,15 +2,15 @@
 % Please edit documentation in R/DomainProcessorR6Combo.R
 \name{DomainProcessorR6Combo}
 \alias{DomainProcessorR6Combo}
-\title{DomainProcessorR6Combo - Integrated Working Version}
+\title{DomainProcessorR6Combo - Following Memory Template Exactly}
 \description{
-DomainProcessorR6Combo - Integrated Working Version
+DomainProcessorR6Combo - Following Memory Template Exactly
 
-DomainProcessorR6Combo - Integrated Working Version
+DomainProcessorR6Combo - Following Memory Template Exactly
 }
 \details{
-A clean, working implementation that generates QMD files correctly
-following the exact structure of the working Academic Skills example.
+A working implementation that generates QMD files following the exact
+structure of the memory template file.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -39,7 +39,6 @@ following the exact structure of the working Academic Skills example.
 \item \href{#method-DomainProcessorR6Combo-save_data}{\code{DomainProcessorR6Combo$save_data()}}
 \item \href{#method-DomainProcessorR6Combo-has_multiple_raters}{\code{DomainProcessorR6Combo$has_multiple_raters()}}
 \item \href{#method-DomainProcessorR6Combo-detect_emotion_type}{\code{DomainProcessorR6Combo$detect_emotion_type()}}
-\item \href{#method-DomainProcessorR6Combo-generate_text_file}{\code{DomainProcessorR6Combo$generate_text_file()}}
 \item \href{#method-DomainProcessorR6Combo-generate_domain_qmd}{\code{DomainProcessorR6Combo$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6Combo-generate_standard_qmd}{\code{DomainProcessorR6Combo$generate_standard_qmd()}}
 \item \href{#method-DomainProcessorR6Combo-generate_adhd_adult_qmd}{\code{DomainProcessorR6Combo$generate_adhd_adult_qmd()}}
@@ -65,24 +64,6 @@ Initialize a new DomainProcessorR6Combo object
 )}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domains}}{Character vector of domain names to process}
-
-\item{\code{pheno}}{Target phenotype identifier string}
-
-\item{\code{input_file}}{Path to the input data file}
-
-\item{\code{output_dir}}{Directory where output files will be saved}
-
-\item{\code{number}}{Domain number for file naming (optional)}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new DomainProcessorR6Combo object
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-load_data"></a>}}
@@ -93,9 +74,6 @@ Load data from the specified input file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$load_data()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Invisibly returns self for method chaining
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-filter_by_domain"></a>}}
@@ -106,9 +84,6 @@ Filter data to include only the specified domains
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$filter_by_domain()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Invisibly returns self for method chaining
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-select_columns"></a>}}
@@ -119,9 +94,6 @@ Select relevant columns from the data
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$select_columns()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Invisibly returns self for method chaining
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-save_data"></a>}}
@@ -132,18 +104,6 @@ Save the processed data to a file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$save_data(filename = NULL, format = "parquet")}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filename}}{Optional custom filename}
-
-\item{\code{format}}{Output format}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns self for method chaining
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-has_multiple_raters"></a>}}
@@ -154,9 +114,6 @@ Check if domain has multiple raters
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$has_multiple_raters()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Logical indicating if domain has multiple raters
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-detect_emotion_type"></a>}}
@@ -167,35 +124,12 @@ Detect emotion type (child/adult)
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$detect_emotion_type()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Character string: "child", "adult", or NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_text_file"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6Combo-generate_text_file}{}}}
-\subsection{Method \code{generate_text_file()}}{
-Generate text file for the domain
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_text_file(report_type = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{report_type}}{Type of report ("self", "parent", "teacher", "observer")}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated text file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6Combo-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file following the working Academic Skills pattern
+Generate domain QMD file following the memory template exactly
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_domain_qmd(
   domain_name = NULL,
@@ -203,40 +137,16 @@ Generate domain QMD file following the working Academic Skills pattern
 )}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_standard_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6Combo-generate_standard_qmd}{}}}
 \subsection{Method \code{generate_standard_qmd()}}{
-Generate standard (single-rater) domain QMD file
+Generate standard domain QMD following the memory template structure exactly
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_standard_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_adhd_adult_qmd"></a>}}
@@ -247,18 +157,6 @@ Generate ADHD adult QMD file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_adhd_adult_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_adhd_child_qmd"></a>}}
@@ -269,18 +167,6 @@ Generate ADHD child QMD file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_adhd_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_emotion_child_qmd"></a>}}
@@ -291,18 +177,6 @@ Generate emotion child QMD file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-generate_emotion_adult_qmd"></a>}}
@@ -313,18 +187,6 @@ Generate emotion adult QMD file
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$generate_emotion_adult_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_name}}{Name of the domain}
-
-\item{\code{output_file}}{Output file path}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Path to generated QMD file
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-process"></a>}}
@@ -335,16 +197,6 @@ Run the complete processing pipeline
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6Combo$process(generate_domain_files = TRUE)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{generate_domain_files}}{Whether to generate domain QMD files}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns self for method chaining
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6Combo-clone"></a>}}
