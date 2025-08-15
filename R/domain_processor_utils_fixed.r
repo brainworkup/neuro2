@@ -17,7 +17,7 @@
 #' @param test_lookup_file Path to the test lookup CSV
 #' @param config Optional configuration list
 #' @param validate Whether to validate inputs before creation
-#' @return A DomainProcessor object or NULL on error
+#' @return A DomainProcessorR6Combo object or NULL on error
 #' @export
 create_domain_processor <- function(
   domain_name,
@@ -51,7 +51,7 @@ create_domain_processor <- function(
   # Create processor with error handling
   processor <- tryCatch(
     {
-      DomainProcessor$new(
+      DomainProcessorR6Combo$new(
         domains = domain_name,
         pheno = pheno,
         input_file = data_file,
@@ -83,7 +83,7 @@ create_domain_processor <- function(
 #' @param age_group Age group ("adult" or "child")
 #' @param output_dir Output directory for generated files
 #' @param config Optional configuration
-#' @return A DomainProcessor object or NULL on error
+#' @return A DomainProcessorR6Combo object or NULL on error
 #' @export
 process_simple_domain <- function(
   domain_name,
@@ -142,7 +142,7 @@ process_simple_domain <- function(
 #' @param age_group Age group ("adult" or "child")
 #' @param raters Specific raters to process (NULL for all available)
 #' @param config Optional configuration
-#' @return A list of DomainProcessor objects by rater
+#' @return A list of DomainProcessorR6Combo objects by rater
 #' @export
 process_multi_rater_domain <- function(
   domain_name,

@@ -94,7 +94,7 @@ Create a domain processor with validation
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A DomainProcessor object or NULL on error
+A DomainProcessorR6Combo object or NULL on error
 }
 }
 \if{html}{\out{<hr>}}
@@ -119,7 +119,7 @@ Create multi-rater processor
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list of DomainProcessor objects by rater
+A list of DomainProcessorR6Combo objects by rater
 }
 }
 \if{html}{\out{<hr>}}

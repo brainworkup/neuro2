@@ -10,7 +10,7 @@ library(here)
 library(arrow)
 
 # Source the R6 classes
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6Combo.R")
 source("R/TableGTR6.R")
 
 # Load data

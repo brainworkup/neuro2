@@ -2,10 +2,10 @@
 library(here)
 
 # Source the updated R6 class
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6Combo.R")
 
 # Create processor for emotion domain
-processor <- DomainProcessor$new(
+processor <- DomainProcessorR6Combo$new(
   domains = c("Personality Disorders"),
   pheno = "emotion",
   input_file = "data/neurobehav.parquet"

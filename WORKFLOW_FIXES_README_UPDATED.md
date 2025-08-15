@@ -18,7 +18,7 @@ This document provides instructions for fixing the issues in the unified neurops
 
 4. **Missing `IQReportGeneratorR6.R` file**:
    - This R6 class file is mentioned in the error message but doesn't need to exist
-   - Better approach: Use the generic DomainProcessor for all domains instead of domain-specific generators
+   - Better approach: Use the generic DomainProcessorR6Combo for all domains instead of domain-specific generators
 
 ## How to Apply the Fixes
 
@@ -58,7 +58,7 @@ Follow these steps to apply the fixes to your project:
      "R/NeuropsychResultsR6.R",
      "R/NeuropsychReportSystemR6.R",
      "R/IQReportGeneratorR6.R",  # Remove this line
-     "R/DomainProcessor.R",
+     "R/DomainProcessorR6Combo.R",
      "R/DotplotR6.R",
      "R/DuckDBProcessorR6.R"
    )
@@ -68,7 +68,7 @@ Follow these steps to apply the fixes to your project:
      "R/ReportTemplateR6.R",
      "R/NeuropsychResultsR6.R",
      "R/NeuropsychReportSystemR6.R",
-     "R/DomainProcessor.R",
+     "R/DomainProcessorR6Combo.R",
      "R/DotplotR6.R",
      "R/DuckDBProcessorR6.R"
    )
@@ -110,7 +110,7 @@ To verify that the fixes worked:
 
 The original error mentioned a missing `IQReportGeneratorR6.R` file, but creating specialized report generators for each domain (IQ, memory, executive function, etc.) would lead to code duplication and maintenance issues. Instead, the better approach is to:
 
-1. Use the generic `DomainProcessor` class for all domains
+1. Use the generic `DomainProcessorR6Combo` class for all domains
 2. Configure it with domain-specific parameters
 3. Let it handle the processing for any domain type
 

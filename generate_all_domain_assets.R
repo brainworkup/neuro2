@@ -13,7 +13,7 @@ library(gt)
 library(ggplot2)
 
 # Source R6 classes
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6Combo.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
@@ -55,7 +55,7 @@ generate_domain_assets <- function(
   }
 
   # Create R6 processor
-  processor <- DomainProcessor$new(
+  processor <- DomainProcessorR6Combo$new(
     domains = domain_name,
     pheno = pheno,
     input_file = input_file

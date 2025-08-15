@@ -285,19 +285,19 @@ process_domain_safely <- function(domain_name, domain_info) {
     {
       config <- domain_info$config
 
-      # Check if DomainProcessor class exists
-      if (!exists("DomainProcessor")) {
+      # Check if DomainProcessorR6Combo class exists
+      if (!exists("DomainProcessorR6Combo")) {
         # Try to load it
-        if (file.exists("R/DomainProcessor.R")) {
-          source("R/DomainProcessor.R")
+        if (file.exists("R/DomainProcessorR6Combo.R")) {
+          source("R/DomainProcessorR6Combo.R")
         } else {
-          log_domain_message("DomainProcessor class not found", "ERROR")
+          log_domain_message("DomainProcessorR6Combo class not found", "ERROR")
           return(FALSE)
         }
       }
 
       # Create processor with error handling
-      processor <- DomainProcessor$new(
+      processor <- DomainProcessorR6Combo$new(
         domains = domain_name,
         pheno = config$pheno,
         input_file = config$input_file,

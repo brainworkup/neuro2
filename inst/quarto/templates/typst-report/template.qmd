@@ -96,53 +96,62 @@ if (file.exists("R/ScoreTypeCacheR6.R")) {
 domain_config <- list(
   "General Cognitive Ability" = list(
     pheno = "iq",
-    input_file = "data/neurocog.csv"
+    input_file = "data/neurocog.parquet"
   ),
   "Academic Skills" = list(
     pheno = "academics",
-    input_file = "data/neurocog.csv"
+    input_file = "data/neurocog.parquet"
   ),
-  "Verbal/Language" = list(pheno = "verbal", input_file = "data/neurocog.csv"),
+  "Verbal/Language" = list(
+    pheno = "verbal",
+    input_file = "data/neurocog.parquet"
+  ),
   "Visual Perception/Construction" = list(
     pheno = "spatial",
-    input_file = "data/neurocog.csv"
+    input_file = "data/neurocog.parquet"
   ),
-  "Memory" = list(pheno = "memory", input_file = "data/neurocog.csv"),
+  "Memory" = list(pheno = "memory", input_file = "data/neurocog.parquet"),
   "Attention/Executive" = list(
     pheno = "executive",
-    input_file = "data/neurocog.csv"
+    input_file = "data/neurocog.parquet"
   ),
-  "Motor" = list(pheno = "motor", input_file = "data/neurocog.csv"),
-  "Social Cognition" = list(pheno = "social", input_file = "data/neurocog.csv"),
-  "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.csv"),
+  "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
+  "Social Cognition" = list(
+    pheno = "social",
+    input_file = "data/neurocog.parquet"
+  ),
+  "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
   "Behavioral/Emotional/Social" = list(
     pheno = "emotion",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
   "Psychiatric Disorders" = list(
     pheno = "emotion",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
   "Personality Disorders" = list(
     pheno = "emotion",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
   "Psychosocial Problems" = list(
     pheno = "emotion",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
-  "Substance Use" = list(pheno = "emotion", input_file = "data/neurobehav.csv"),
+  "Substance Use" = list(
+    pheno = "emotion",
+    input_file = "data/neurobehav.parquet"
+  ),
   "Emotional/Behavioral/Personality" = list(
     pheno = "emotion",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
   "Adaptive Functioning" = list(
     pheno = "adaptive",
-    input_file = "data/neurobehav.csv"
+    input_file = "data/neurobehav.parquet"
   ),
   "Daily Living" = list(
     pheno = "daily_living",
-    input_file = "data/neurocog.csv"
+    input_file = "data/neurocog.parquet"
   )
 )
 

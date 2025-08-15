@@ -13,7 +13,7 @@ library(DBI)
 library(duckdb)
 
 # Source R6 classes
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6Combo.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
@@ -56,9 +56,9 @@ if (!"z" %in% names(verbal_data)) {
 }
 
 # Test 2: Create processor with injected data
-cat("2. Processing with DomainProcessor...\n")
+cat("2. Processing with DomainProcessorR6Combo...\n")
 
-processor_verbal <- DomainProcessor$new(
+processor_verbal <- DomainProcessorR6Combo$new(
   domains = "Verbal/Language",
   pheno = "verbal",
   input_file = NULL # No file, data injected

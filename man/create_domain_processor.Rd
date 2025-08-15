@@ -27,7 +27,7 @@ create_domain_processor(
 \item{validate}{Whether to validate inputs before creation}
 }
 \value{
-A DomainProcessor object or NULL on error
+A DomainProcessorR6Combo object or NULL on error
 }
 \description{
 Create a domain processor with smart defaults and validation

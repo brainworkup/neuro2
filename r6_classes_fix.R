@@ -1,10 +1,10 @@
 # FIXES FOR R6 CLASSES - "attempt to apply non-function" errors
-# These are likely fixes for your DomainProcessor and TableGTR6 classes
+# These are likely fixes for your DomainProcessorR6Combo and TableGTR6 classes
 
 # ==============================================================================
 # 1. FIXED DOMAINPROCESSORR6 METHOD
 # ==============================================================================
-# Add this method to your DomainProcessor class or replace existing one
+# Add this method to your DomainProcessorR6Combo class or replace existing one
 
 generate_domain_qmd_fixed <- function() {
   # Validate required fields exist
@@ -53,7 +53,7 @@ generate_domain_qmd_fixed <- function() {
 # ==============================================================================
 # 2. SAFE QMD CONTENT GENERATION
 # ==============================================================================
-# Add this to private methods in DomainProcessor
+# Add this to private methods in DomainProcessorR6Combo
 
 generate_qmd_content_safe <- function() {
   domain_name <- self$domains[1]
@@ -296,7 +296,7 @@ diagnose_r6_object <- function(obj, obj_name = "object") {
 # 6. HOW TO USE THESE FIXES
 # ==============================================================================
 
-# In your DomainProcessor class, replace the problematic methods with:
+# In your DomainProcessorR6Combo class, replace the problematic methods with:
 # - generate_domain_qmd_fixed() instead of generate_domain_qmd()
 # - generate_table_safe() instead of direct table generation
 # - Add generate_qmd_content_safe() to private methods
@@ -308,7 +308,7 @@ diagnose_r6_object <- function(obj, obj_name = "object") {
 # result <- safe_method_call(processor, "some_method", arg1, arg2, default = NULL)
 
 # Example usage in your domain processing:
-# processor <- DomainProcessor$new(...)
+# processor <- DomainProcessorR6Combo$new(...)
 # diagnose_r6_object(processor, "domain_processor")
 # file_result <- safe_method_call(processor, "generate_domain_qmd_fixed", default = NULL)
 # table_result <- safe_method_call(processor, "generate_table_safe", "parent", default = NULL)

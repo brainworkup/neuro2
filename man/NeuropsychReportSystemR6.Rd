@@ -34,7 +34,7 @@ This class coordinates utilities, template management, domain processing, and re
 
 \item{\code{content_manager}}{TemplateContentManagerR6 object for content files.}
 
-\item{\code{domain_processors}}{List of DomainProcessor objects for different domains.}
+\item{\code{domain_processors}}{List of DomainProcessorR6Combo objects for different domains.}
 }
 \if{html}{\out{</div>}}
 }

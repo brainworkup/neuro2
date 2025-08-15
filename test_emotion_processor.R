@@ -1,8 +1,8 @@
-# Test script for DomainProcessor emotion domain processing
+# Test script for DomainProcessorR6Combo emotion domain processing
 # Tests both child and adult emotion domains
 
 library(here)
-source(here("R/DomainProcessor.R"))
+source(here("R/DomainProcessorR6Combo.R"))
 source(here("R/NeuropsychResultsR6.R"))
 
 # Create a test function to process and check results
@@ -38,7 +38,7 @@ test_emotion_processing <- function() {
     z = c(1.04, 1.28, 0.67, 0.52)
   )
 
-  processor_child <- DomainProcessor$new(
+  processor_child <- DomainProcessorR6Combo$new(
     domains = c("Behavioral/Emotional/Social"),
     pheno = "emotion",
     input_file = NULL # We'll inject data directly
@@ -102,7 +102,7 @@ test_emotion_processing <- function() {
     z = c(1.04, 1.28, 0.67, 0.52)
   )
 
-  processor_adult <- DomainProcessor$new(
+  processor_adult <- DomainProcessorR6Combo$new(
     domains = c("Emotional/Behavioral/Personality"),
     pheno = "emotion",
     input_file = NULL # We'll inject data directly
@@ -166,7 +166,7 @@ test_emotion_processing <- function() {
   cat(paste(rep("-", 50), collapse = ""), "\n")
 
   # Create a test ADHD processor
-  processor_adhd <- DomainProcessor$new(
+  processor_adhd <- DomainProcessorR6Combo$new(
     domains = c("Attention/Executive"),
     pheno = "adhd",
     input_file = NULL

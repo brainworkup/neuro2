@@ -1,4 +1,4 @@
-#' DomainProcessor Class
+#' DomainProcessorR6Combo Class
 #'
 #' An R6 class that encapsulates a complete data processing pipeline for neuropsychological domains.
 #' This class handles loading data, filtering by domain, processing, and outputting results in various formats.
@@ -14,7 +14,7 @@
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{initialize}{Initialize a new DomainProcessor object with configuration parameters.}
+#'   \item{initialize}{Initialize a new DomainProcessorR6Combo object with configuration parameters.}
 #'   \item{load_data}{Load data from the specified input file.}
 #'   \item{filter_by_domain}{Filter data to include only the specified domains.}
 #'   \item{select_columns}{Select relevant columns from the data.}
@@ -37,8 +37,8 @@
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom here here
 #' @export
-DomainProcessor <- R6::R6Class(
-  classname = "DomainProcessor",
+DomainProcessorR6Combo <- R6::R6Class(
+  classname = "DomainProcessorR6Combo",
   public = list(
     domains = NULL,
     pheno = NULL,
@@ -50,7 +50,7 @@ DomainProcessor <- R6::R6Class(
     data = NULL,
 
     #' @description
-    #' Initialize a new DomainProcessor object with configuration parameters.
+    #' Initialize a new DomainProcessorR6Combo object with configuration parameters.
     initialize = function(
       domains,
       pheno,
@@ -1153,7 +1153,7 @@ DomainProcessor <- R6::R6Class(
         "\n",
         "#| include: false\n\n",
         "# Source R6 classes\n",
-        "source(\"R/DomainProcessor.R\")\n",
+        "source(\"R/DomainProcessorR6Combo.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
         "source(\"R/TableGTR6.R\")\n",
@@ -1169,7 +1169,7 @@ DomainProcessor <- R6::R6Class(
         "# Create R6 processor\n",
         "processor_",
         tolower(self$pheno),
-        " <- DomainProcessor$new(\n",
+        " <- DomainProcessorR6Combo$new(\n",
         "  domains = domains,\n",
         "  pheno = pheno,\n",
         "  input_file = \"",

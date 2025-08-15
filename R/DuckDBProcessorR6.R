@@ -38,7 +38,7 @@
 #' @param data_type Type of data ("neurocog", "neurobehav", or "validity")
 #' @param scales Optional vector of scales to include
 #' @param group_vars Vector of grouping variables
-#' @param processor_class R6 class to use (default: DomainProcessor)
+#' @param processor_class R6 class to use (default: DomainProcessorR6Combo)
 #' @param include_all Whether to include all domains
 #'
 #' @section Methods:
@@ -85,7 +85,7 @@
 #'   \item{\code{calculate_z_stats(table_name, group_vars)}}{
 #'     Calculate z-score statistics.
 #'   }
-#'   \item{\code{export_to_r6(domain, processor_class = "DomainProcessor")}}{
+#'   \item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6Combo")}}{
 #'     Export query results to standard R6 processors.
 #'   }
 #'   \item{\code{get_domain_summary(include_all = TRUE)}}{
@@ -636,17 +636,20 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Export query results to standard R6 processors
-    #' @description Export processed results into a standard R6 processor (e.g., DomainProcessor).
+    #' @description Export processed results into a standard R6 processor (e.g., DomainProcessorR6Combo).
     #' @param domain Domain name to export.
-    #' @param processor_class R6 class name or generator to use (default: "DomainProcessor").
+    #' @param processor_class R6 class name or generator to use (default: "DomainProcessorR6Combo").
     #' @return An instance of the target R6 processor initialized with the domain data.
 
-    export_to_r6 = function(domain, processor_class = "DomainProcessor") {
+    export_to_r6 = function(
+      domain,
+      processor_class = "DomainProcessorR6Combo"
+    ) {
       # Query the domain data
       data <- self$process_domain(domain)
 
       # Create processor
-      if (processor_class == "DomainProcessor") {
+      if (processor_class == "DomainProcessorR6Combo") {
         # Map common domains to their expected phenotype names
         pheno_map <- c(
           "General Cognitive Ability" = "iq",
@@ -676,9 +679,9 @@ DuckDBProcessorR6 <- R6::R6Class(
           pheno <- tolower(gsub(" ", "_", domain))
         }
 
-        # Check if DomainProcessor class exists
-        if (exists("DomainProcessor")) {
-          processor <- DomainProcessor$new(
+        # Check if DomainProcessorR6Combo class exists
+        if (exists("DomainProcessorR6Combo")) {
+          processor <- DomainProcessorR6Combo$new(
             domains = domain,
             pheno = pheno,
             input_file = "data/neurocog.csv", # Set a default for compatibility
@@ -688,7 +691,7 @@ DuckDBProcessorR6 <- R6::R6Class(
           # Inject the queried data
           processor$data <- data
         } else {
-          warning("DomainProcessor class not found. Returning raw data.")
+          warning("DomainProcessorR6Combo class not found. Returning raw data.")
           processor <- list(data = data, domain = domain, pheno = pheno)
         }
       }

@@ -2,13 +2,13 @@
 
 library(here)
 
-# Source the DomainProcessor class
-source(here::here("R/DomainProcessor.R"))
+# Source the DomainProcessorR6Combo class
+source(here::here("R/DomainProcessorR6Combo.R"))
 
 # Test for verbal domain
 cat("=== Testing Plot Title Generation ===\n\n")
 
-processor_verbal <- DomainProcessor$new(
+processor_verbal <- DomainProcessorR6Combo$new(
   domains = "Verbal/Language",
   pheno = "verbal",
   input_file = "data/neurocog.parquet"
@@ -20,7 +20,7 @@ cat("Verbal domain plot title:\n")
 cat(plot_title, "\n\n")
 
 # Test for memory domain
-processor_memory <- DomainProcessor$new(
+processor_memory <- DomainProcessorR6Combo$new(
   domains = "Memory",
   pheno = "memory",
   input_file = "data/neurocog.parquet"

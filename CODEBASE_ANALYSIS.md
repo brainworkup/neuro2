@@ -45,7 +45,7 @@ The package follows a **modular, object-oriented architecture** with clear separ
 - Supports CSV, Parquet, and Arrow/Feather formats for optimal performance
 
 #### **Domain Processing Layer**
-- [`DomainProcessor`](R/DomainProcessor.R:32-592): Processes data by cognitive domains (e.g., IQ, Memory, Executive)
+- [`DomainProcessorR6Combo`](R/DomainProcessorR6Combo.R:32-592): Processes data by cognitive domains (e.g., IQ, Memory, Executive)
 - [`NeuropsychResultsR6`](R/NeuropsychResultsR6.R): Generates narrative text summaries from test results
 - Dynamic domain detection and processing based on available data
 

@@ -9,7 +9,7 @@ library(here)
 source("R/ReportTemplateR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/NeuropsychReportSystemR6.R")
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6Combo.R")
 
 # Load utility functions (replacements for NeurotypR functions)
 source("R/utils.R")
