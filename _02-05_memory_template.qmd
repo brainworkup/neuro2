@@ -10,7 +10,7 @@
 #| include: false
 
 # Source R6 classes
-source("R/DomainProcessor.R")
+source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
@@ -23,7 +23,7 @@ domains <- c("Memory")
 pheno <- "memory"
 
 # Create R6 processor
-processor_memory <- DomainProcessor$new(
+processor_memory <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"
