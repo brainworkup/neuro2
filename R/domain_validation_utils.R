@@ -1,7 +1,7 @@
 # Load required packages for domain validation
 suppressPackageStartupMessages({
   library(dplyr)
-  library(magrittr)  # For %>% operator
+  library(magrittr)
 })
 
 #' Enhanced Domain Data Validation
@@ -37,7 +37,7 @@ validate_domain_data_exists <- function(
   # Filter for the specific domain
   domain_data <- data_source %>%
     dplyr::filter(domain == domain_name) %>%
-    dplyr::filter(!is.na(percentile) | !is.na(score)) # Must have some scoreable data
+    dplyr::filter(!is.na(percentile) | !is.na(score))
 
   validation$row_count <- nrow(domain_data)
   validation$has_data <- validation$row_count >= min_rows

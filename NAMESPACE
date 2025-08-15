@@ -2,6 +2,7 @@
 
 export("%||%")
 export(ConfigManagerR6)
+export(DomainProcessor)
 export(DomainProcessorFactoryR6)
 export(DomainProcessorR6)
 export(DotplotR6)
