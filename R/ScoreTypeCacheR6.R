@@ -177,9 +177,13 @@ ScoreTypeCacheR6 <- R6::R6Class(
         "NAB-S",
         "WMS-IV"
       )
-      return(any(sapply(multi_score_batteries, function(x) {
+
+      # Use any() to ensure we return a single logical value
+      result <- any(sapply(multi_score_batteries, function(x) {
         grepl(x, test_name, ignore.case = TRUE)
-      })))
+      }))
+
+      return(result)
     }
   ),
   private = list(

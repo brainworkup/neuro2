@@ -75,6 +75,7 @@ This class handles loading data, filtering by domain, processing, and outputting
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_domain_qmd_fallback}{\code{DomainProcessorR6$generate_domain_qmd_fallback()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_adult_qmd}{\code{DomainProcessorR6$generate_adhd_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_child_qmd}{\code{DomainProcessorR6$generate_adhd_child_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_adult_text_files}{\code{DomainProcessorR6$generate_adhd_adult_text_files()}}
@@ -365,7 +366,7 @@ The path to the generated text file or NULL if failed.
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file.
+Generate domain QMD file based on the memory template structure.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd(
   domain_name = NULL,
@@ -382,6 +383,28 @@ Generate domain QMD file.
 \item{\code{output_file}}{Output file path (default: NULL, will generate based on domain).}
 
 \item{\code{is_child}}{Logical indicating if this is a child version (default: FALSE).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The path to the generated file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd_fallback"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd_fallback}{}}}
+\subsection{Method \code{generate_domain_qmd_fallback()}}{
+Fallback method for generating domain QMD files (original method).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_qmd_fallback(domain_name, output_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Name of the domain.}
+
+\item{\code{output_file}}{Output file path.}
 }
 \if{html}{\out{</div>}}
 }

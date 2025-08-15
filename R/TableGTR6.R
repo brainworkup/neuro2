@@ -159,7 +159,10 @@ TableGTR6 <- R6::R6Class(
 
       # Initialize/ensure cache is built (this runs only once across all domains)
       if (!exists(".score_type_cache")) {
-        source("R/score_type_cache.R") # Load the cache from above
+        source("R/ScoreTypeCacheR6.R") # Load the ScoreTypeCacheR6 class
+        if (!exists(".score_type_cache")) {
+          .score_type_cache <- ScoreTypeCacheR6$new()
+        }
       }
       .score_type_cache$build_mappings()
 
@@ -180,13 +183,25 @@ TableGTR6 <- R6::R6Class(
         self$fn_list <- .score_type_cache$get_footnotes(score_types_needed)
       }
 
-      # Handle multi-score batteries efficiently
-      multi_score_batteries <- existing_groups[sapply(
+      # Handle multi-score batteries efficiently - fix the sapply issue
+      multi_score_results <- sapply(
         existing_groups,
         function(x) {
           .score_type_cache$is_multi_score_battery(x)
-        }
-      )]
+        },
+        USE.NAMES = TRUE,
+        simplify = TRUE
+      )
+
+      # Ensure we get a logical vector and filter properly
+      if (is.logical(multi_score_results)) {
+        multi_score_batteries <- existing_groups[multi_score_results]
+      } else {
+        # Fallback: convert to logical if needed
+        multi_score_batteries <- existing_groups[as.logical(
+          multi_score_results
+        )]
+      }
 
       if (length(multi_score_batteries) > 0) {
         message(paste(
