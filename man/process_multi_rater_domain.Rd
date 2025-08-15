@@ -24,7 +24,7 @@ process_multi_rater_domain(
 \item{config}{Optional configuration}
 }
 \value{
-A list of DomainProcessorR6Combo objects by rater
+A list of DomainProcessorR6 objects by rater
 }
 \description{
 Process a multi-rater domain

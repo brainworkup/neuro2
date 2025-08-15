@@ -2,6 +2,12 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "R"
+    },
+    {
+      "path": "inst/scripts"
     }
   ],
   "settings": {

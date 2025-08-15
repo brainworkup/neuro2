@@ -115,7 +115,7 @@ Your workflow already has a dynamic approach to domain processing:
    for (i in 1:nrow(domains_data)) {
      domain <- domains_data$domain[i]
      # Create a domain processor for this domain
-     domain_processor <- DomainProcessorR6Combo$new(
+     domain_processor <- DomainProcessorR6$new(
        domains = domain,
        pheno = tolower(gsub("[^a-zA-Z0-9]", "_", domain)),
        input_file = file.path(
@@ -133,7 +133,7 @@ Your workflow already has a dynamic approach to domain processing:
    }
    ```
 
-3. The `DomainProcessorR6Combo` class handles the generation of domain files based on the domain data.
+3. The `DomainProcessorR6` class handles the generation of domain files based on the domain data.
 
 This approach is already dynamic and doesn't rely on hardcoded domain lists or static helper files. The `_include_domains.qmd` file is no longer needed as the system dynamically discovers domains from the data.
 

@@ -9,7 +9,7 @@ library(gt)
 library(ggplot2)
 
 # Source R6 classes
-source("R/DomainProcessorR6Combo.R")
+source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
@@ -24,7 +24,7 @@ domains <- c("Visual Perception/Construction")
 pheno <- "spatial"
 
 # Create R6 processor
-processor_spatial <- DomainProcessorR6Combo$new(
+processor_spatial <- DomainProcessorR6$new(
   domains = domains,
   pheno = pheno,
   input_file = "data/neurocog.parquet"

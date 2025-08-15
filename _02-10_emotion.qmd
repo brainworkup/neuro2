@@ -1,0 +1,18 @@
+```{=typst}
+== Behavioral/Emotional/Social
+<sec-emotion-child>
+```
+
+### SELF-REPORT
+
+{{< include _02-10_emotion_child_text_self.qmd >}}
+
+### PARENT RATINGS
+
+{{< include _02-10_emotion_child_text_parent.qmd >}}
+
+### TEACHER RATINGS
+
+{{< include _02-10_emotion_child_text_teacher.qmd >}}
+
+

@@ -217,12 +217,10 @@ ensure_r6_class <- function(class_name, file_path) {
 
 # Safe R6 object creation
 create_processor_safely <- function(domain_name, config, domain_data) {
-  # Ensure DomainProcessorR6Combo is available
-  if (
-    !ensure_r6_class("DomainProcessorR6Combo", "R/DomainProcessorR6Combo.R")
-  ) {
+  # Ensure DomainProcessorR6 is available
+  if (!ensure_r6_class("DomainProcessorR6", "R/DomainProcessorR6.R")) {
     log_workflow(
-      "Cannot create processor - DomainProcessorR6Combo not available",
+      "Cannot create processor - DomainProcessorR6 not available",
       "ERROR"
     )
     return(NULL)
@@ -231,7 +229,7 @@ create_processor_safely <- function(domain_name, config, domain_data) {
   tryCatch(
     {
       # Create processor
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = domain_name,
         pheno = config$pheno,
         input_file = paste0("data/", config$data_source, ".csv"),

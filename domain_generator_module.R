@@ -58,7 +58,7 @@ for (pkg in required_packages) {
 
 # Source R6 classes
 r6_files <- c(
-  "R/DomainProcessorR6Combo.R",
+  "R/DomainProcessorR6.R",
   "R/NeuropsychResultsR6.R",
   "R/DotplotR6.R",
   "R/TableGTR6.R",
@@ -269,7 +269,7 @@ process_single_domain_validated <- function(
   # Proceed with processing only if data exists
   tryCatch(
     {
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = domain_name,
         pheno = config$pheno,
         input_file = config$input_file
@@ -344,7 +344,7 @@ process_emotion_domains <- function(is_child = TRUE) {
         "DOMAINS"
       )
 
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = emotion_domains_present,
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
@@ -398,7 +398,7 @@ process_adhd_domain <- function(is_child = TRUE) {
       age_type <- if (is_child) "child" else "adult"
       log_message(paste("Processing ADHD domain for", age_type), "DOMAINS")
 
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = "ADHD",
         pheno = "adhd",
         input_file = "data/neurobehav.parquet"
@@ -544,7 +544,7 @@ process_emotion_domains_validated <- function(
         "DOMAINS"
       )
 
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = emotion_domains_present,
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
@@ -596,7 +596,7 @@ process_adhd_domain_validated <- function(is_child, neurobehav_data) {
         "DOMAINS"
       )
 
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = "ADHD",
         pheno = "adhd",
         input_file = "data/neurobehav.parquet"

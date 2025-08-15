@@ -1,4 +1,4 @@
-#' DomainProcessorR6Combo - Following Memory Template Exactly
+#' DomainProcessorR6 - Following Memory Template Exactly
 #'
 #' A working implementation that generates QMD files following the exact
 #' structure of the memory template file.
@@ -15,8 +15,8 @@
 #' @importFrom readr read_csv write_excel_csv
 #' @importFrom here here
 #' @export
-DomainProcessorR6Combo <- R6::R6Class(
-  classname = "DomainProcessorR6Combo",
+DomainProcessorR6 <- R6::R6Class(
+  classname = "DomainProcessorR6",
   public = list(
     domains = NULL,
     pheno = NULL,
@@ -26,17 +26,17 @@ DomainProcessorR6Combo <- R6::R6Class(
     data = NULL,
 
     #' @description
-    #' Initialize a new DomainProcessorR6Combo object
+    #' Initialize a new DomainProcessorR6 object
     #' @description Create a new instance.
     #' @param domains Character scalar or vector of domain names.
     #' @param pheno A data.frame or tibble.
     #' @param input_file Path to a file.
     #' @param output_dir Path to an output directory.
     #' @param number Numeric index or identifier.
-    #' @return A new \code{DomainProcessorR6Combo} object.
+    #' @return A new \code{DomainProcessorR6} object.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$initialize(domains=..., pheno=..., input_file=..., output_dir=..., number=...)
     #' }
     initialize = function(
@@ -44,7 +44,8 @@ DomainProcessorR6Combo <- R6::R6Class(
       pheno,
       input_file,
       output_dir = "data",
-      number = NULL
+      number = NULL,
+      output_base = "."
     ) {
       self$domains <- domains
       self$pheno <- pheno
@@ -56,6 +57,27 @@ DomainProcessorR6Combo <- R6::R6Class(
       } else {
         self$number <- private$get_domain_number()
       }
+      # Ensure output directories exist
+      self$dirs <- list(
+        figs = file.path(output_base, "figs"),
+        output = file.path(output_base, "output"),
+        tmp = file.path(output_base, "tmp")
+      )
+
+      lapply(self$dirs, function(d) {
+        if (!dir.exists(d)) dir.create(d, recursive = TRUE)
+      })
+    },
+
+    # Update your save functions
+    save_plot = function(plot, filename) {
+      png_file <- file.path(self$dirs$figs, paste0(filename, ".png"))
+      pdf_file <- file.path(self$dirs$figs, paste0(filename, ".pdf"))
+
+      ggplot2::ggsave(png_file, plot, width = 8, height = 6, dpi = 300)
+      ggplot2::ggsave(pdf_file, plot, width = 8, height = 6)
+
+      return(list(png = png_file, pdf = pdf_file))
     },
 
     #' @description
@@ -64,7 +86,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$load_data()
     #' }
     load_data = function() {
@@ -102,7 +124,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$filter_by_domain()
     #' }
     filter_by_domain = function() {
@@ -116,7 +138,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$select_columns()
     #' }
     select_columns = function() {
@@ -184,7 +206,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the output file path on success.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$save_data(filename=..., format=...)
     #' }
     save_data = function(filename = NULL, format = "parquet") {
@@ -215,7 +237,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$has_multiple_raters()
     #' }
     has_multiple_raters = function() {
@@ -228,7 +250,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$detect_emotion_type()
     #' }
     detect_emotion_type = function() {
@@ -271,7 +293,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_domain_qmd(domain_name=..., output_file=...)
     #' }
     generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
@@ -327,7 +349,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_standard_qmd(domain_name=..., output_file=...)
     #' }
     generate_standard_qmd = function(domain_name, output_file) {
@@ -369,7 +391,7 @@ DomainProcessorR6Combo <- R6::R6Class(
         "#| include: false\n\n",
 
         "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6Combo.R\")\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
         "source(\"R/NeuropsychResultsR6.R\")\n",
         "source(\"R/DotplotR6.R\")\n",
         "source(\"R/TableGTR6.R\")\n",
@@ -388,7 +410,7 @@ DomainProcessorR6Combo <- R6::R6Class(
         "# Create R6 processor\n",
         "processor_",
         tolower(self$pheno),
-        " <- DomainProcessorR6Combo$new(\n",
+        " <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
         "  pheno = pheno,\n",
         "  input_file = \"",
@@ -770,7 +792,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_adhd_adult_qmd(domain_name=..., output_file=...)
     #' }
     generate_adhd_adult_qmd = function(domain_name, output_file) {
@@ -812,7 +834,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_adhd_child_qmd(domain_name=..., output_file=...)
     #' }
     generate_adhd_child_qmd = function(domain_name, output_file) {
@@ -859,7 +881,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
     #' }
     generate_emotion_child_qmd = function(domain_name, output_file) {
@@ -910,7 +932,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns the path to the generated file.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
     #' }
     generate_emotion_adult_qmd = function(domain_name, output_file) {
@@ -941,7 +963,7 @@ DomainProcessorR6Combo <- R6::R6Class(
     #' @return Invisibly returns \code{self} for method chaining.
     #' @examples
     #' \dontrun{
-    #'   obj <- DomainProcessorR6Combo$new()
+    #'   obj <- DomainProcessorR6$new()
     #'   obj$process(generate_domain_files=...)
     #' }
     process = function(generate_domain_files = TRUE) {

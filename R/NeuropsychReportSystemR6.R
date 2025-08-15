@@ -7,7 +7,7 @@
 #' @field utilities ReportUtilitiesR6 object for utility functions.
 #' @field template_manager ReportTemplateR6 object for template management.
 #' @field content_manager TemplateContentManagerR6 object for content files.
-#' @field domain_processors List of DomainProcessorR6Combo objects for different domains.
+#' @field domain_processors List of DomainProcessorR6 objects for different domains.
 #'
 #' @section Methods:
 #' \describe{
@@ -241,7 +241,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           input_file <- self$config$data_files[[file_type]]
         }
 
-        self$domain_processors[[pheno]] <- DomainProcessorR6Combo$new(
+        self$domain_processors[[pheno]] <- DomainProcessorR6$new(
           domains = domain,
           pheno = pheno,
           input_file = input_file

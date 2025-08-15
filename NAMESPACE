@@ -3,7 +3,7 @@
 export("%||%")
 export(ConfigManagerR6)
 export(DomainProcessorFactoryR6)
-export(DomainProcessorR6Combo)
+export(DomainProcessorR6)
 export(DotplotR6)
 export(DrilldownR6)
 export(DuckDBProcessorR6)

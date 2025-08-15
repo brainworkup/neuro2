@@ -24,7 +24,7 @@ process_simple_domain(
 \item{config}{Optional configuration}
 }
 \value{
-A DomainProcessorR6Combo object or NULL on error
+A DomainProcessorR6 object or NULL on error
 }
 \description{
 Process a simple single-rater domain

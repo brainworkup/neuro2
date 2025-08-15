@@ -3,11 +3,11 @@
 #' Batch Domain Processor
 #'
 #' This script processes all domains with available data and generates
-#' QMD files for each domain using DomainProcessorR6Combo
+#' QMD files for each domain using DomainProcessorR6
 #'
 #' @description
 #' 1. Scans data files to determine which domains have data
-#' 2. Creates DomainProcessorR6Combo objects for each domain
+#' 2. Creates DomainProcessorR6 objects for each domain
 #' 3. Generates QMD files following the memory template structure
 #' 4. Creates an include list for the main template
 
@@ -21,8 +21,8 @@ suppressPackageStartupMessages({
   }
 })
 
-# Source the DomainProcessorR6Combo class
-source(here::here("R", "DomainProcessorR6Combo.R"))
+# Source the DomainProcessorR6 class
+source(here::here("R", "DomainProcessorR6.R"))
 
 #' Domain registry with mappings
 get_domain_registry <- function() {
@@ -269,7 +269,7 @@ process_all_domains <- function(verbose = TRUE) {
     # Create and run processor
     tryCatch(
       {
-        processor <- DomainProcessorR6Combo$new(
+        processor <- DomainProcessorR6$new(
           domains = domain_info$domains,
           pheno = domain_info$pheno,
           input_file = data_file,

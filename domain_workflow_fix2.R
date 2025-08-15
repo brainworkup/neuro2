@@ -389,13 +389,13 @@ process_domain_safely <- function(domain_name, domain_info) {
   # Try R6 class first (without number parameter)
   r6_success <- tryCatch(
     {
-      # Check if DomainProcessorR6Combo class exists
-      if (!exists("DomainProcessorR6Combo")) {
-        if (file.exists("R/DomainProcessorR6Combo.R")) {
-          source("R/DomainProcessorR6Combo.R")
+      # Check if DomainProcessorR6 class exists
+      if (!exists("DomainProcessorR6")) {
+        if (file.exists("R/DomainProcessorR6.R")) {
+          source("R/DomainProcessorR6.R")
         } else {
           log_domain_message(
-            "DomainProcessorR6Combo class not found, using fallback",
+            "DomainProcessorR6 class not found, using fallback",
             "INFO"
           )
           return(FALSE)
@@ -403,7 +403,7 @@ process_domain_safely <- function(domain_name, domain_info) {
       }
 
       # Try to create processor (without number parameter since it causes error)
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = domain_name,
         pheno = config$pheno,
         input_file = config$input_file

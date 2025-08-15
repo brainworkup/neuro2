@@ -1,4 +1,4 @@
-# Migration Guide: Simplified DomainProcessorR6Combo
+# Migration Guide: Simplified DomainProcessorR6
 
 ## Key Problems with the Original Code
 
@@ -94,14 +94,14 @@ get_tests_for_rater = function(rater) {
 Ensure your `test_testname_rater.csv` file is in the project root or specify its location.
 
 ### Step 2: Replace the Old Class
-Replace your old `DomainProcessorR6Combo.R` file with the new simplified version.
+Replace your old `DomainProcessorR6.R` file with the new simplified version.
 
 ### Step 3: Update Your Usage
 
 **OLD USAGE:**
 ```r
 # Complex instantiation with hardcoded assumptions
-processor <- DomainProcessorR6Combo$new(
+processor <- DomainProcessorR6$new(
   domains = c("Behavioral/Emotional/Social"),
   pheno = "emotion",
   input_file = "neurobehav.csv"
@@ -114,7 +114,7 @@ processor$process(generate_domain_files = TRUE)
 **NEW USAGE:**
 ```r
 # Simple, explicit instantiation
-processor <- DomainProcessorR6Combo$new(
+processor <- DomainProcessorR6$new(
   domains = "Behavioral/Emotional/Social",
   pheno = "emotion",
   input_file = "neurobehav.csv",
@@ -210,7 +210,7 @@ results <- batch_process_domains(adult_domains, "data.csv", "adult")
 ### "Test lookup file not found"
 Make sure `test_testname_rater.csv` is in your project root, or specify the full path:
 ```r
-processor <- DomainProcessorR6Combo$new(..., test_lookup_file = "path/to/file.csv")
+processor <- DomainProcessorR6$new(..., test_lookup_file = "path/to/file.csv")
 ```
 
 ### "No tests found for domain"

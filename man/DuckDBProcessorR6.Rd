@@ -65,7 +65,7 @@ Process a specific domain using SQL.
 \item{\code{calculate_z_stats(table_name, group_vars)}}{
 Calculate z-score statistics.
 }
-\item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6Combo")}}{
+\item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6")}}{
 Export query results to standard R6 processors.
 }
 \item{\code{get_domain_summary(include_all = TRUE)}}{
@@ -426,12 +426,9 @@ A data.frame containing z-score summaries by group.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-export_to_r6"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-export_to_r6}{}}}
 \subsection{Method \code{export_to_r6()}}{
-Export processed results into a standard R6 processor (e.g., DomainProcessorR6Combo).
+Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$export_to_r6(
-  domain,
-  processor_class = "DomainProcessorR6Combo"
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$export_to_r6(domain, processor_class = "DomainProcessorR6")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -439,7 +436,7 @@ Export processed results into a standard R6 processor (e.g., DomainProcessorR6Co
 \describe{
 \item{\code{domain}}{Domain name to export.}
 
-\item{\code{processor_class}}{R6 class name or generator to use (default: "DomainProcessorR6Combo").}
+\item{\code{processor_class}}{R6 class name or generator to use (default: "DomainProcessorR6").}
 }
 \if{html}{\out{</div>}}
 }

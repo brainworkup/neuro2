@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Validation-aware script to generate domain files using DomainProcessorR6Combo
+# Validation-aware script to generate domain files using DomainProcessorR6
 # Only generates files for domains that have data
 
 # Ensure warnings are not converted to errors
@@ -14,7 +14,7 @@ library(readr)
 library(yaml)
 
 # Source required files
-source("R/DomainProcessorR6Combo.R")
+source("R/DomainProcessorR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/DotplotR6.R")
 source("R/TableGTR6.R")
@@ -134,7 +134,7 @@ tryCatch(
 
       tryCatch(
         {
-          processor <- DomainProcessorR6Combo$new(
+          processor <- DomainProcessorR6$new(
             domains = domain_name,
             pheno = config$pheno,
             input_file = config$input_file

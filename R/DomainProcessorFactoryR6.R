@@ -43,7 +43,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' @param age_group Age group ("adult" or "child")
     #' @param rater Rater type ("self", "observer", "parent", "teacher")
     #' @param custom_config Custom configuration to override defaults
-    #' @return A DomainProcessorR6Combo object or NULL on error
+    #' @return A DomainProcessorR6 object or NULL on error
     create_processor = function(
       domain_key,
       age_group = "adult",
@@ -96,7 +96,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     #' Create multi-rater processor
     #' @param domain_key Domain identifier
     #' @param age_group Age group ("adult" or "child")
-    #' @return A list of DomainProcessorR6Combo objects by rater
+    #' @return A list of DomainProcessorR6 objects by rater
     create_multi_processor = function(domain_key, age_group = "adult") {
       domain_info <- self$registry[[domain_key]]
 
@@ -556,7 +556,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       )
 
       # Create processor
-      processor <- DomainProcessorR6Combo$new(
+      processor <- DomainProcessorR6$new(
         domains = domain_info$domains,
         pheno = pheno,
         input_file = input_file,

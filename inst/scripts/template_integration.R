@@ -308,10 +308,7 @@ quick_setup <- function() {
     "data directory" = dir.exists(here::here("data")),
     "R directory" = dir.exists(here::here("R")),
     "figs directory" = dir.exists(here::here("figs")),
-    "DomainProcessorR6Combo.R" = file.exists(here::here(
-      "R",
-      "DomainProcessorR6Combo.R"
-    ))
+    "DomainProcessorR6.R" = file.exists(here::here("R", "DomainProcessorR6.R"))
   )
 
   cat("📋 Environment Check:\n")
