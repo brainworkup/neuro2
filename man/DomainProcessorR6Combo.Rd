@@ -2,11 +2,11 @@
 % Please edit documentation in R/DomainProcessorR6Combo.R
 \name{DomainProcessorR6Combo}
 \alias{DomainProcessorR6Combo}
-\title{DomainProcessorR6 - Integrated Working Version}
+\title{DomainProcessorR6Combo - Integrated Working Version}
 \description{
-DomainProcessorR6 - Integrated Working Version
+DomainProcessorR6Combo - Integrated Working Version
 
-DomainProcessorR6 - Integrated Working Version
+DomainProcessorR6Combo - Integrated Working Version
 }
 \details{
 A clean, working implementation that generates QMD files correctly
