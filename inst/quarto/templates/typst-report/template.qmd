@@ -280,7 +280,7 @@ ensure_text_files_exist <- function(domain_files) {
 
 {{< include _01-00_nse_forensic.qmd >}}
 
-{{< include _02-00_behav_obs.qmd >}}
+{{< include _01-01_behav_obs.qmd >}}
 
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS

@@ -196,7 +196,7 @@ TableGTR6 <- R6::R6Class(
 
         # Process multi-score batteries with simplified logic
         for (battery in multi_score_batteries) {
-          private$handle_multi_score_battery(battery, tbl)
+          tbl <- self$handle_multi_score_battery(battery, tbl)
         }
       }
 
@@ -295,6 +295,7 @@ TableGTR6 <- R6::R6Class(
             locations = gt::cells_row_groups(groups = battery)
           )
       }
+      return(tbl)
     },
 
     #' @description
