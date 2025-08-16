@@ -21,8 +21,10 @@ suppressPackageStartupMessages({
   }
 })
 
-# Source the DomainProcessorR6 class
-source(here::here("R", "DomainProcessorR6.R"))
+# Source the DomainProcessorR6 class (only if not already loaded)
+if (!exists("DomainProcessorR6")) {
+  source(here::here("R", "DomainProcessorR6.R"))
+}
 
 #' Domain registry with mappings
 get_domain_registry <- function() {
@@ -84,20 +86,9 @@ get_domain_registry <- function() {
       data_source = "neurobehav",
       number = "09"
     ),
-    emotion_child = list(
+    emotion = list(
       domains = c(
         "Behavioral/Emotional/Social",
-        "Personality Disorders",
-        "Psychiatric Disorders",
-        "Psychosocial Problems",
-        "Substance Use"
-      ),
-      pheno = "emotion",
-      data_source = "neurobehav",
-      number = "10"
-    ),
-    emotion_adult = list(
-      domains = c(
         "Emotional/Behavioral/Personality",
         "Personality Disorders",
         "Psychiatric Disorders",
@@ -327,7 +318,7 @@ process_all_domains <- function(verbose = TRUE) {
   if (verbose) {
     cat("📊 Processing Summary:\n")
     cat("  ✅ Successfully generated:", length(generated_files), "files\n")
-    cat("  ❌ Failed domains:", length(failed_domains), "\n")
+    cat("  ❌ Failed/missing domains:", length(failed_domains), "\n")
 
     if (length(generated_files) > 0) {
       cat("\n📄 Generated files:\n")
@@ -345,9 +336,27 @@ process_all_domains <- function(verbose = TRUE) {
   }
 
   # Create include list for template
-  create_include_list(generated_files, verbose = verbose)
+  if (exists("create_include_list")) {
+    create_include_list(generated_files, verbose = verbose)
+  }
 
   return(list(generated = generated_files, failed = failed_domains))
+}
+
+#' Create include list for template integration
+create_include_list <- function(generated_files, verbose = TRUE) {
+  if (length(generated_files) == 0) {
+    return(NULL)
+  }
+
+  include_file <- here::here("domain_includes.txt")
+  writeLines(generated_files, include_file)
+
+  if (verbose) {
+    cat("\n📝 Created include list:", include_file, "\n")
+  }
+
+  return(include_file)
 }
 
 # New function to handle emotion domains intelligently
@@ -419,6 +428,8 @@ process_emotion_domains <- function(data_files, registry, verbose = TRUE) {
 
 
 # Run if called as script
-if (!interactive()) {
-  main()
+if (!interactive() && sys.nframe() == 0) {
+  # Only run main() if this is the top-level script being executed
+  # sys.nframe() == 0 means this is not being sourced from another script
+  process_all_domains(verbose = TRUE)
 }

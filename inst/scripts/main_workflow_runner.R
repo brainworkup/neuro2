@@ -187,7 +187,7 @@ check_generated_files <- function() {
   }
 
   # Look for report files
-  report_files <- list.files(".", pattern = "neuropsych.*\\.(pdf|html|docx)$")
+  report_files <- list.files(".", pattern = "template.*\\.(pdf|typ|html|docx)$")
   if (length(report_files) > 0) {
     cat("   📊 Report files generated:\n")
     for (file in report_files) {
@@ -254,7 +254,13 @@ test_single <- function(domain = "Memory") {
   data_files <- c(
     "data/neurocog.parquet",
     "data/neurocog.feather",
-    "data/neurocog.csv"
+    "data/neurocog.csv",
+    "data/neurobehav.parquet",
+    "data/neurobehav.feather",
+    "data/neurobehav.csv",
+    "data/validity.parquet",
+    "data/validity.feather",
+    "data/validity.csv"
   )
 
   data_file <- NULL
@@ -315,7 +321,7 @@ show_usage <- function() {
   cat("🧠 Neuropsychological Report Generator\n")
   cat("=====================================\n\n")
   cat("Usage:\n")
-  cat("  main()                    - Run complete workflow\n")
+  cat("  main()                   - Run complete workflow\n")
   cat("  test_setup()             - Test environment setup\n")
   cat("  test_single('Memory')    - Test single domain\n")
   cat("  check_required_files()   - Check if all files are present\n")

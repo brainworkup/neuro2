@@ -589,10 +589,12 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Process a specific domain using SQL
-    #' @description Process and return data for a given domain via SQL, optionally filtered by `data_type` and `scales`.
+    #' @description Process and return data for a given domain
+    #'  via SQL, optionally filtered by `data_type` and `scales`.
     #' @param domain Domain name (character).
     #' @param data_type Type of data: "neurocog", "neurobehav", or "validity".
-    #' @param scales Optional character vector of scales to include; NULL includes defaults for the domain.
+    #' @param scales Optional character vector of scales to include;
+    #'  NULL includes defaults for the domain.
     #' @return A data.frame with processed domain data.
 
     process_domain = function(domain, data_type = "neurocog", scales = NULL) {
@@ -616,13 +618,15 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Calculate z-score statistics
-    #' @description Compute z-score statistics grouped by variables for a given table.
+    #' @description Compute z-score statistics grouped by
+    #'  variables for a given table.
     #' @param table_name Name of the registered table to summarize.
     #' @param group_vars Character vector of column names to group by.
     #' @return A data.frame containing z-score summaries by group.
 
     calculate_z_stats = function(table_name, group_vars) {
-      # For complex z-score calculations, export to R and use the tidy_data function
+      # For complex z-score calculations,
+      # export to R and use the tidy_data function
       data <- self$query(sprintf(
         "SELECT * FROM %s WHERE z IS NOT NULL",
         table_name
@@ -651,10 +655,13 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Export query results to standard R6 processors
-    #' @description Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
+    #' @description Export processed results into a
+    #'  standard R6 processor (e.g., DomainProcessorR6).
     #' @param domain Domain name to export.
-    #' @param processor_class R6 class name or generator to use (default: "DomainProcessorR6").
-    #' @return An instance of the target R6 processor initialized with the domain data.
+    #' @param processor_class R6 class name or generator to use
+    #'  (default: "DomainProcessorR6").
+    #' @return An instance of the target R6 processor
+    #'  initialized with the domain data.
 
     export_to_r6 = function(domain, processor_class = "DomainProcessorR6") {
       # Query the domain data
@@ -713,7 +720,8 @@ DuckDBProcessorR6 <- R6::R6Class(
 
     # Get domain summary statistics using SQL
     #' @description Return summary statistics across domains via SQL.
-    #' @param include_all If TRUE, include all domains; otherwise, restrict to those with data.
+    #' @param include_all If TRUE, include all domains;
+    #'  otherwise, restrict to those with data.
     #' @return A data.frame with domain-level summary metrics.
 
     get_domain_summary = function(include_all = TRUE) {
@@ -736,7 +744,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create optimized indexes for faster queries
-    #' @description Create useful indexes on commonly-queried columns to speed up SQL operations.
+    #' @description Create useful indexes on commonly-queried
+    #'  columns to speed up SQL operations.
     #' @return Invisibly returns TRUE on success.
 
     create_indexes = function() {

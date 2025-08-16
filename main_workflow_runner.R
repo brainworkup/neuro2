@@ -187,7 +187,7 @@ check_generated_files <- function() {
   }
 
   # Look for report files
-  report_files <- list.files(".", pattern = "neuropsych.*\\.(pdf|html|docx)$")
+  report_files <- list.files(".", pattern = "template.*\\.(pdf|typ|html|docx)$")
   if (length(report_files) > 0) {
     cat("   📊 Report files generated:\n")
     for (file in report_files) {
