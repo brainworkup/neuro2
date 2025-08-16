@@ -295,10 +295,14 @@ ensure_text_files_exist <- function(domain_files) {
 = NEUROCOGNITIVE FINDINGS
 ```
 
+<!-- DOMAIN_INCLUDES -->
+
+
 ```{r}
 #| label: include-domains
 #| output: asis
 #| echo: false
+#| eval: false
 
 # Only validate domains if data is available
 if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
