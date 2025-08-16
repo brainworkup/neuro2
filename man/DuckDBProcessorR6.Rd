@@ -44,10 +44,13 @@ Register an Arrow/Feather file as a virtual table.
 \item{\code{register_all_csvs(data_dir = "data", pattern = "*.csv")}}{
 Register all CSV files in a directory.
 }
-\item{\code{register_all_files(data_dir = "data", formats = c("parquet", "arrow", "csv"))}}{
+\item{\code{register_all_files(
+data_dir = "data",
+formats = c("parquet", "arrow", "csv"))}}{
 Register all data files in a directory.
 }
-\item{\code{export_to_parquet(table_name, output_path, compression = "zstd")}}{
+\item{\code{export_to_parquet(
+table_name, output_path, compression = "zstd")}}{
 Export data to Parquet format.
 }
 \item{\code{query(query, params = NULL)}}{
@@ -59,7 +62,8 @@ Execute a SQL statement that doesn't return results.
 \item{\code{query_lazy(table_name)}}{
 Create a lazy reference to a table for dplyr operations.
 }
-\item{\code{process_domain(domain, data_type = "neurocog", scales = NULL)}}{
+\item{\code{process_domain(
+domain, data_type = "neurocog", scales = NULL)}}{
 Process a specific domain using SQL.
 }
 \item{\code{calculate_z_stats(table_name, group_vars)}}{
@@ -119,7 +123,8 @@ Create optimized indexes for faster queries.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-new}{}}}
 \subsection{Method \code{new()}}{
-Constructor. Create a new DuckDBProcessorR6 instance and optionally auto-register data files.
+Constructor. Create a new DuckDBProcessorR6 instance
+and optionally auto-register data files.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$new(
   db_path = ":memory:",
@@ -131,11 +136,13 @@ Constructor. Create a new DuckDBProcessorR6 instance and optionally auto-registe
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{db_path}}{Path to the DuckDB database file. Use ":memory:" for in-memory DB.}
+\item{\code{db_path}}{Path to the DuckDB database file.
+Use ":memory:" for in-memory DB.}
 
 \item{\code{data_dir}}{Directory containing data files to register.}
 
-\item{\code{auto_register}}{If TRUE, attempt to auto-register supported data files from \code{data_dir}.}
+\item{\code{auto_register}}{If TRUE, attempt to auto-register
+supported data files from \code{data_dir}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -147,7 +154,8 @@ A new DuckDBProcessorR6 object (invisible).
 \if{html}{\out{<a id="method-DuckDBProcessorR6-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-connect}{}}}
 \subsection{Method \code{connect()}}{
-Open (or re-open) a DuckDB connection based on \code{db_path} and set up extensions.
+Open (or re-open) a DuckDB connection
+based on \code{db_path} and set up extensions.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$connect()}\if{html}{\out{</div>}}
 }
@@ -185,7 +193,8 @@ Register a CSV file as a virtual table for SQL access.
 
 \item{\code{table_name}}{Optional table name. If NULL, derived from filename.}
 
-\item{\code{options}}{Named list of DuckDB CSV reader options (e.g., header, delim).}
+\item{\code{options}}{Named list of DuckDB CSV reader options
+(e.g., header, delim).}
 }
 \if{html}{\out{</div>}}
 }
@@ -219,7 +228,8 @@ The name of the registered table (character).
 \if{html}{\out{<a id="method-DuckDBProcessorR6-register_arrow"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_arrow}{}}}
 \subsection{Method \code{register_arrow()}}{
-Register an Arrow/Feather file as a virtual table for SQL access.
+Register an Arrow/Feather file
+as a virtual table for SQL access.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_arrow(file_path, table_name = NULL)}\if{html}{\out{</div>}}
 }
@@ -263,7 +273,8 @@ Character vector of registered table names.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-register_all_files"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_all_files}{}}}
 \subsection{Method \code{register_all_files()}}{
-Register all supported files (parquet/arrow/csv) in a directory.
+Register all supported files
+(parquet/arrow/csv) in a directory.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_all_files(
   data_dir = "data",
@@ -276,7 +287,8 @@ Register all supported files (parquet/arrow/csv) in a directory.
 \describe{
 \item{\code{data_dir}}{Directory containing files to register.}
 
-\item{\code{formats}}{Character vector of formats to register (subset of c("parquet","arrow","csv")).}
+\item{\code{formats}}{Character vector of formats to register
+(subset of c("parquet","arrow","csv")).}
 }
 \if{html}{\out{</div>}}
 }
@@ -326,7 +338,8 @@ Execute a SQL query and return results as a data frame.
 \describe{
 \item{\code{query}}{SQL query string. May reference registered tables.}
 
-\item{\code{params}}{Optional named list of parameter values for parameterized queries.}
+\item{\code{params}}{Optional named list of parameter values
+for parameterized queries.}
 }
 \if{html}{\out{</div>}}
 }
@@ -338,7 +351,8 @@ A data.frame with query results.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-execute"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-execute}{}}}
 \subsection{Method \code{execute()}}{
-Execute a SQL statement that does not return rows (e.g., CREATE INDEX).
+Execute a SQL statement
+that does not return rows (e.g., CREATE INDEX).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$execute(statement, params = NULL)}\if{html}{\out{</div>}}
 }
@@ -360,7 +374,8 @@ Invisibly returns TRUE on success.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-query_lazy"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-query_lazy}{}}}
 \subsection{Method \code{query_lazy()}}{
-Return a lazy dplyr table reference to an existing DuckDB table.
+Return a lazy dplyr table reference
+to an existing DuckDB table.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$query_lazy(table_name)}\if{html}{\out{</div>}}
 }
@@ -380,7 +395,8 @@ A dplyr tbl_lazy object.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-process_domain"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-process_domain}{}}}
 \subsection{Method \code{process_domain()}}{
-Process and return data for a given domain via SQL, optionally filtered by \code{data_type} and \code{scales}.
+Process and return data for a given domain
+via SQL, optionally filtered by \code{data_type} and \code{scales}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$process_domain(domain, data_type = "neurocog", scales = NULL)}\if{html}{\out{</div>}}
 }
@@ -392,7 +408,8 @@ Process and return data for a given domain via SQL, optionally filtered by \code
 
 \item{\code{data_type}}{Type of data: "neurocog", "neurobehav", or "validity".}
 
-\item{\code{scales}}{Optional character vector of scales to include; NULL includes defaults for the domain.}
+\item{\code{scales}}{Optional character vector of scales to include;
+NULL includes defaults for the domain.}
 }
 \if{html}{\out{</div>}}
 }
@@ -404,7 +421,8 @@ A data.frame with processed domain data.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-calculate_z_stats"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-calculate_z_stats}{}}}
 \subsection{Method \code{calculate_z_stats()}}{
-Compute z-score statistics grouped by variables for a given table.
+Compute z-score statistics grouped by
+variables for a given table.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$calculate_z_stats(table_name, group_vars)}\if{html}{\out{</div>}}
 }
@@ -426,7 +444,8 @@ A data.frame containing z-score summaries by group.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-export_to_r6"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-export_to_r6}{}}}
 \subsection{Method \code{export_to_r6()}}{
-Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
+Export processed results into a
+standard R6 processor (e.g., DomainProcessorR6).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$export_to_r6(domain, processor_class = "DomainProcessorR6")}\if{html}{\out{</div>}}
 }
@@ -436,12 +455,14 @@ Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
 \describe{
 \item{\code{domain}}{Domain name to export.}
 
-\item{\code{processor_class}}{R6 class name or generator to use (default: "DomainProcessorR6").}
+\item{\code{processor_class}}{R6 class name or generator to use
+(default: "DomainProcessorR6").}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-An instance of the target R6 processor initialized with the domain data.
+An instance of the target R6 processor
+initialized with the domain data.
 }
 }
 \if{html}{\out{<hr>}}
@@ -456,7 +477,8 @@ Return summary statistics across domains via SQL.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{include_all}}{If TRUE, include all domains; otherwise, restrict to those with data.}
+\item{\code{include_all}}{If TRUE, include all domains;
+otherwise, restrict to those with data.}
 }
 \if{html}{\out{</div>}}
 }
@@ -468,7 +490,8 @@ A data.frame with domain-level summary metrics.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-create_indexes"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-create_indexes}{}}}
 \subsection{Method \code{create_indexes()}}{
-Create useful indexes on commonly-queried columns to speed up SQL operations.
+Create useful indexes on commonly-queried
+columns to speed up SQL operations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$create_indexes()}\if{html}{\out{</div>}}
 }
