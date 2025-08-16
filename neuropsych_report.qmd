@@ -65,20 +65,14 @@ This comprehensive neuropsychological assessment was conducted to evaluate cogni
 
 # Test Results
 
-<!-- {{< include _02-01_iq_text.qmd >}} -->
 {{< include _02-01_iq.qmd >}}
-<!-- {{< include _02-02_academics_text.qmd >}} -->
 {{< include _02-02_academics.qmd >}}
-<!-- {{< include _02-03_verbal_text.qmd >}} -->
 {{< include _02-03_verbal.qmd >}}
-<!-- {{< include _02-04_spatial_text.qmd >}} -->
 {{< include _02-04_spatial.qmd >}}
-<!-- {{< include _02-05_memory_text.qmd >}} -->
 {{< include _02-05_memory.qmd >}}
-<!-- {{< include _02-06_executive_text.qmd >}} -->
 {{< include _02-06_executive.qmd >}}
-<!-- {{< include _02-07_motor_text.qmd >}} -->
 {{< include _02-07_motor.qmd >}}
+{{< include _02-13_validity.qmd >}}
 
 # Summary and Recommendations
 

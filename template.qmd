@@ -120,7 +120,10 @@ domain_config <- list(
     pheno = "social",
     input_file = "data/neurocog.parquet"
   ),
-  "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
+  "ADHD" = list(
+    pheno = "adhd",
+    input_file = "data/neurobehav.parquet"
+  ),
   "Behavioral/Emotional/Social" = list(
     pheno = "emotion",
     input_file = "data/neurobehav.parquet"
@@ -294,6 +297,7 @@ ensure_text_files_exist <- function(domain_files) {
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
+<!-- DOMAIN_INCLUDES -->
 
 ```{r}
 #| label: include-domains

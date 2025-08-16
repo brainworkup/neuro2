@@ -86,20 +86,9 @@ get_domain_registry <- function() {
       data_source = "neurobehav",
       number = "09"
     ),
-    emotion_child = list(
+    emotion = list(
       domains = c(
         "Behavioral/Emotional/Social",
-        "Personality Disorders",
-        "Psychiatric Disorders",
-        "Psychosocial Problems",
-        "Substance Use"
-      ),
-      pheno = "emotion",
-      data_source = "neurobehav",
-      number = "10"
-    ),
-    emotion_adult = list(
-      domains = c(
         "Emotional/Behavioral/Personality",
         "Personality Disorders",
         "Psychiatric Disorders",
@@ -329,7 +318,7 @@ process_all_domains <- function(verbose = TRUE) {
   if (verbose) {
     cat("📊 Processing Summary:\n")
     cat("  ✅ Successfully generated:", length(generated_files), "files\n")
-    cat("  ❌ Failed domains:", length(failed_domains), "\n")
+    cat("  ❌ Failed/missing domains:", length(failed_domains), "\n")
 
     if (length(generated_files) > 0) {
       cat("\n📄 Generated files:\n")
@@ -359,14 +348,14 @@ create_include_list <- function(generated_files, verbose = TRUE) {
   if (length(generated_files) == 0) {
     return(NULL)
   }
-  
+
   include_file <- here::here("domain_includes.txt")
   writeLines(generated_files, include_file)
-  
+
   if (verbose) {
     cat("\n📝 Created include list:", include_file, "\n")
   }
-  
+
   return(include_file)
 }
 

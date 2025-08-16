@@ -204,7 +204,8 @@ run_complete_workflow <- function(verbose = TRUE) {
   }
 
   # Step 2: Check for template or create one
-  template_file <- "neuropsych_report.qmd"
+  template_file <- "template.qmd"
+  # template_file <- "neuropsych_report.qmd"
   template_path <- here::here(template_file)
 
   if (!file.exists(template_path)) {
@@ -273,7 +274,8 @@ run_complete_workflow <- function(verbose = TRUE) {
         gsub("\\.qmd$", ".pdf", template_path),
         gsub("\\.qmd$", ".typ", template_path),
         gsub("\\.qmd$", ".html", template_path),
-        gsub("\\.qmd$", ".docx", template_path)
+        gsub("\\.qmd$", ".docx", template_path),
+        gsub("\\.qmd$", ".md", template_path)
       )
 
       existing_outputs <- output_files[file.exists(output_files)]

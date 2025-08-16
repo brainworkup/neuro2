@@ -64,10 +64,13 @@
 #'   \item{\code{register_all_csvs(data_dir = "data", pattern = "*.csv")}}{
 #'     Register all CSV files in a directory.
 #'   }
-#'   \item{\code{register_all_files(data_dir = "data", formats = c("parquet", "arrow", "csv"))}}{
+#'   \item{\code{register_all_files(
+#' data_dir = "data",
+#' formats = c("parquet", "arrow", "csv"))}}{
 #'     Register all data files in a directory.
 #'   }
-#'   \item{\code{export_to_parquet(table_name, output_path, compression = "zstd")}}{
+#'   \item{\code{export_to_parquet(
+#' table_name, output_path, compression = "zstd")}}{
 #'     Export data to Parquet format.
 #'   }
 #'   \item{\code{query(query, params = NULL)}}{
@@ -79,7 +82,8 @@
 #'   \item{\code{query_lazy(table_name)}}{
 #'     Create a lazy reference to a table for dplyr operations.
 #'   }
-#'   \item{\code{process_domain(domain, data_type = "neurocog", scales = NULL)}}{
+#'   \item{\code{process_domain(
+#' domain, data_type = "neurocog", scales = NULL)}}{
 #'     Process a specific domain using SQL.
 #'   }
 #'   \item{\code{calculate_z_stats(table_name, group_vars)}}{
@@ -118,10 +122,13 @@ DuckDBProcessorR6 <- R6::R6Class(
     available_extensions = NULL,
 
     # Initialize a new DuckDBProcessorR6 object
-    #' @description Constructor. Create a new DuckDBProcessorR6 instance and optionally auto-register data files.
-    #' @param db_path Path to the DuckDB database file. Use ":memory:" for in-memory DB.
+    #' @description Constructor. Create a new DuckDBProcessorR6 instance
+    #' and optionally auto-register data files.
+    #' @param db_path Path to the DuckDB database file.
+    #' Use ":memory:" for in-memory DB.
     #' @param data_dir Directory containing data files to register.
-    #' @param auto_register If TRUE, attempt to auto-register supported data files from `data_dir`.
+    #' @param auto_register If TRUE, attempt to auto-register
+    #'  supported data files from `data_dir`.
     #' @return A new DuckDBProcessorR6 object (invisible).
 
     initialize = function(
@@ -149,7 +156,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create or reconnect to the DuckDB database
-    #' @description Open (or re-open) a DuckDB connection based on `db_path` and set up extensions.
+    #' @description Open (or re-open) a DuckDB connection
+    #'  based on `db_path` and set up extensions.
     #' @return Invisibly returns `self` after establishing a connection.
 
     connect = function() {
@@ -233,7 +241,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @description Register a CSV file as a virtual table for SQL access.
     #' @param file_path Path to the CSV file.
     #' @param table_name Optional table name. If NULL, derived from filename.
-    #' @param options Named list of DuckDB CSV reader options (e.g., header, delim).
+    #' @param options Named list of DuckDB CSV reader options
+    #'  (e.g., header, delim).
     #' @return The name of the registered table (character).
 
     register_csv = function(file_path, table_name = NULL, options = NULL) {
@@ -342,7 +351,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register an Arrow/Feather file as a virtual table
-    #' @description Register an Arrow/Feather file as a virtual table for SQL access.
+    #' @description Register an Arrow/Feather file
+    #'  as a virtual table for SQL access.
     #' @param file_path Path to the Feather/Arrow file.
     #' @param table_name Optional table name. If NULL, derived from filename.
     #' @return The name of the registered table (character).
@@ -399,9 +409,11 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Register all data files in a directory
-    #' @description Register all supported files (parquet/arrow/csv) in a directory.
+    #' @description Register all supported files
+    #'  (parquet/arrow/csv) in a directory.
     #' @param data_dir Directory containing files to register.
-    #' @param formats Character vector of formats to register (subset of c("parquet","arrow","csv")).
+    #' @param formats Character vector of formats to register
+    #'  (subset of c("parquet","arrow","csv")).
     #' @return Character vector of registered table names.
 
     register_all_files = function(
@@ -505,7 +517,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     # Execute a SQL query and return results
     #' @description Execute a SQL query and return results as a data frame.
     #' @param query SQL query string. May reference registered tables.
-    #' @param params Optional named list of parameter values for parameterized queries.
+    #' @param params Optional named list of parameter values
+    #'  for parameterized queries.
     #' @return A data.frame with query results.
 
     query = function(query, params = NULL) {
@@ -529,7 +542,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Execute a SQL statement that doesn't return results
-    #' @description Execute a SQL statement that does not return rows (e.g., CREATE INDEX).
+    #' @description Execute a SQL statement
+    #'  that does not return rows (e.g., CREATE INDEX).
     #' @param statement SQL statement string.
     #' @param params Optional named list of parameter values.
     #' @return Invisibly returns TRUE on success.
@@ -561,7 +575,8 @@ DuckDBProcessorR6 <- R6::R6Class(
     },
 
     # Create a lazy reference to a table for dplyr operations
-    #' @description Return a lazy dplyr table reference to an existing DuckDB table.
+    #' @description Return a lazy dplyr table reference
+    #'  to an existing DuckDB table.
     #' @param table_name Name of a registered table.
     #' @return A dplyr tbl_lazy object.
 
@@ -570,7 +585,7 @@ DuckDBProcessorR6 <- R6::R6Class(
         stop("Table not found: ", table_name)
       }
 
-      return(dplyr::tbl(self$con, table_name))
+      dplyr::tbl(self$con, table_name)
     },
 
     # Process a specific domain using SQL
