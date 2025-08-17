@@ -230,3 +230,8 @@ batch_domain_processor2.r
 inst/scripts/_02-*_*.qmd
 fixed_domainprocessor_complete.r
 _btw.qmd
+_02-13_validity_text.qmd
+_quarto.yml
+results_ellmer_rbans.qmd
+template.qmd
+domain_includes.txt

@@ -5,4 +5,4 @@ _02-04_spatial.qmd
 _02-05_memory.qmd
 _02-06_executive.qmd
 _02-07_motor.qmd
-_02-13_validity.qmd
+_02-10_emotion_child.qmd
