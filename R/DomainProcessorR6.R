@@ -1,4 +1,4 @@
-#' DomainProcessorR6 - Following Memory Template Exactly
+#' DomainProcessorR6
 #'
 #' A working implementation that generates QMD files following the exact
 #' structure of the memory template file.

@@ -14,6 +14,7 @@
 #' @param value Value to set
 #' @param default Default value if path not found
 #' @param file Path to save the configuration file
+#' @importFrom R6 R6Class
 #'
 #' @export
 ConfigManagerR6 <- R6::R6Class(
@@ -22,8 +23,10 @@ ConfigManagerR6 <- R6::R6Class(
     config = NULL,
 
     #' @noRd
-    initialize = function(config_file = NULL,
-                          variables_file = "_variables.yml") {
+    initialize = function(
+      config_file = NULL,
+      variables_file = "_variables.yml"
+    ) {
       # Load base configuration
       self$config <- self$load_default_config()
 
@@ -77,7 +80,8 @@ ConfigManagerR6 <- R6::R6Class(
             "motor",
             "social",
             "adhd",
-            "emotion"
+            "emotion",
+            "validity"
           ),
           multi_rater = c("adhd", "emotion"),
           age_variants = c("adhd", "emotion")

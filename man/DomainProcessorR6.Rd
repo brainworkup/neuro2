@@ -2,11 +2,11 @@
 % Please edit documentation in R/DomainProcessorR6.R
 \name{DomainProcessorR6}
 \alias{DomainProcessorR6}
-\title{DomainProcessorR6 - Following Memory Template Exactly}
+\title{DomainProcessorR6}
 \description{
-DomainProcessorR6 - Following Memory Template Exactly
+DomainProcessorR6
 
-DomainProcessorR6 - Following Memory Template Exactly
+DomainProcessorR6
 }
 \details{
 A working implementation that generates QMD files following the exact
