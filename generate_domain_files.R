@@ -21,6 +21,55 @@ source("R/TableGTR6.R")
 source("R/score_type_utils.R")
 source("R/domain_validation_utils.R")
 
+# Function to generate placeholder text files
+generate_text_files <- function(generated_files, verbose = TRUE) {
+  if (verbose) cat("\nGenerating placeholder text files...\n")
+  
+  text_files_created <- character(0)
+  
+  for (qmd_file in generated_files) {
+    if (file.exists(qmd_file)) {
+      # Read the QMD file to find text file references
+      content <- readLines(qmd_file, warn = FALSE)
+      
+      # Look for {{< include patterns
+      include_lines <- grep('{{< include.*_text\\.qmd', content, value = TRUE)
+      
+      for (include_line in include_lines) {
+        # Extract the text filename
+        text_file_match <- regmatches(include_line, regexpr('[^/\\s]+_text\\.qmd', include_line))
+        
+        if (length(text_file_match) > 0) {
+          text_file <- text_file_match[1]
+          
+          if (!file.exists(text_file)) {
+            # Extract domain name from the text file name
+            domain_name <- gsub("_[0-9]+-[0-9]+-([^_]+)_.*", "\\1", text_file)
+            domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
+            
+            # Create placeholder content
+            placeholder_content <- paste0(
+              "# ", domain_name, " Assessment\n\n",
+              "The ", tolower(domain_name), " assessment results will be generated here.\n\n",
+              "This section will include:\n\n",
+              "- Overview of test results\n",
+              "- Clinical interpretation\n", 
+              "- Relevant observations\n"
+            )
+            
+            writeLines(placeholder_content, text_file)
+            text_files_created <- c(text_files_created, text_file)
+            
+            if (verbose) cat("  ✓ Created placeholder:", text_file, "\n")
+          }
+        }
+      }
+    }
+  }
+  
+  return(text_files_created)
+}
+
 cat("Generating domain files using R6 classes with validation...\n\n")
 
 # Load data for validation
@@ -74,9 +123,12 @@ tryCatch(
       "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
       "Social Cognition" = list(
         pheno = "social",
-        input_file = "data/neurocog.parquet"
-      ),
-      "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
+    cat("Found", length(valid_domains_only), "domains with data\n")
+
+    # Track generated files for text file creation
+    generated_qmd_files <- character(0)
+
+    # Only generate files for domains that have datata/neurobehav.parquet"),
       "Behavioral/Emotional/Social" = list(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
@@ -95,10 +147,11 @@ tryCatch(
       ),
       "Substance Use" = list(
         pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
-      "Emotional/Behavioral/Personality" = list(
-        pheno = "emotion",
+            generated_file <- processor$generate_domain_qmd()
+            if (!is.null(generated_file)) {
+              cat("  ✓ Generated", generated_file, "\n")
+              generated_qmd_files <- c(generated_qmd_files, generated_file)
+            } = "emotion",
         input_file = "data/neurobehav.parquet"
       ),
       "Adaptive Functioning" = list(
@@ -106,9 +159,17 @@ tryCatch(
         input_file = "data/neurobehav.parquet"
       ),
       "Daily Living" = list(
-        pheno = "daily_living",
-        input_file = "data/neurobehav.parquet"
-      )
+    }
+
+    # Generate placeholder text files for all created QMD files
+    if (length(generated_qmd_files) > 0) {
+      text_files <- generate_text_files(generated_qmd_files, verbose = TRUE)
+      if (length(text_files) > 0) {
+        cat("\n✓ Created", length(text_files), "placeholder text files\n")
+      }
+    }
+
+    cat("\nValidated domain file generation complete!\n")
     )
 
     # Get domains with data using validation

@@ -305,7 +305,7 @@ DomainProcessorR6 <- R6::R6Class(
       child_domain_match <- any(sapply(
         child_domain_patterns,
         function(pattern) {
-          any(grepl(pattern, self$domains, ignore.case = TRUE, fixed = TRUE))
+          any(grepl(pattern, self$domains, fixed = TRUE))
         }
       ))
 
@@ -313,7 +313,7 @@ DomainProcessorR6 <- R6::R6Class(
       adult_domain_match <- any(sapply(
         adult_domain_patterns,
         function(pattern) {
-          any(grepl(pattern, self$domains, ignore.case = TRUE, fixed = TRUE))
+          any(grepl(pattern, self$domains, fixed = TRUE))
         }
       ))
 

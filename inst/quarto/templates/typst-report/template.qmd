@@ -294,9 +294,7 @@ ensure_text_files_exist <- function(domain_files) {
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
-
 <!-- DOMAIN_INCLUDES -->
-
 
 ```{r}
 #| label: include-domains

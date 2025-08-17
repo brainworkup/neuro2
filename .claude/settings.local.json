@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(find:*)",
-      "Bash(R:*)"
+      "Bash(R:*)",
+      "Bash(claude mcp add:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

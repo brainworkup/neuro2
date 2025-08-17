@@ -43,6 +43,7 @@ safe_use_data_internal(
   scales_emotion_child = scales_emotion_child,
   scales_adaptive = scales_adaptive,
   scales_daily_living = scales_daily_living,
+  scales_validity = scales_validity,
   scales_all = scales_all,
   overwrite = c(
     "scales_iq",
@@ -60,6 +61,7 @@ safe_use_data_internal(
     "scales_emotion_child",
     "scales_adaptive",
     "scales_daily_living",
+    "scales_validity",
     "scales_all"
   )
 )
@@ -81,6 +83,7 @@ safe_use_data_internal(
   plot_title_emotion_child = plot_title_emotion_child,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
+  plot_title_validity = plot_title_validity,
   overwrite = c(
     "plot_title_neurocognition",
     "plot_title_iq",
@@ -96,15 +99,14 @@ safe_use_data_internal(
     "plot_title_emotion_adult",
     "plot_title_emotion_child",
     "plot_title_adaptive",
-    "plot_title_daily_living"
+    "plot_title_daily_living",
+    "plot_title_validity"
   )
 )
 
 # Scales ------------------------------------------------------------------
 
-
 ## IQ ----------------------------------------------------------------------
-
 
 #' @name scales_iq
 #' @docType data
@@ -1175,6 +1177,7 @@ scales_adaptive <- c(
   "Work"
 )
 
+## Daily living ----------------------------------------------------------------
 #' @name scales_daily_living
 #' @docType data
 #' @title Daily Living and Functional Assessment Scales
@@ -1198,6 +1201,47 @@ scales_daily_living <- c(
   "Name/Address/Phone Immediate Recall"
 )
 
+## Validity ----------------------------------------------------------------
+
+#' @name scales_validity
+#' @docType data
+#' @title Cognitive Performance and Symptom Validity Effort/Validity Scales
+#' @description A character vector of scale names related to symptom
+#' exaggeration and poor effort/validity from various neuropsychological and
+#' neurobehavioral assessment instruments.
+#' @keywords data internal
+scales_validity <- c(
+  "Inconsistency Index",
+  "Back Random Responding",
+  "Cashel Discriminant Function",
+  "Defensiveness Index",
+  "Hong Defensiveness Index",
+  "Hong Malingering Index",
+  "Hong Randomness Index",
+  "Inconsistency",
+  "Infrequency",
+  "Malingered Pain-Related Disability Discriminant Function",
+  "Malingering Index",
+  "Multiscale Feigning Index",
+  "Negative Distortion Scale",
+  "Negative Impression Management",
+  "Positive Distortion Scale",
+  "Positive Impression Management",
+  "Rogers Discriminant Function",
+  "Inconsistency",
+  "Infrequency",
+  "Negative Impression Management",
+  "Positive Impression Management",
+  "CVLT-3 Forced-Choice Recognition Hits",
+  "Reliable Digit Span",
+  "TOMM Trial 1",
+  "TOMM Trial 2",
+  "DCT E-Score",
+  "Word Choice"
+)
+
+## All neuropsych test scales---------------------------------------------
+
 #' @name scales
 #' @docType data
 #' @title All Neuropsychological Test Scales Combined
@@ -1217,29 +1261,9 @@ scales_all <- c(
   scales_emotion_child,
   scales_social,
   scales_adaptive,
-  scales_daily_living
+  scales_daily_living,
+  scales_validity
 )
-
-# usethis::use_data(
-#   scales_iq,
-#   scales_academics,
-#   scales_verbal,
-#   scales_spatial,
-#   scales_memory,
-#   scales_memory_order,
-#   scales_executive,
-#   scales_motor,
-#   scales_social,
-#   scales_adhd_adult,
-#   scales_adhd_child,
-#   scales_emotion_adult,
-#   scales_emotion_child,
-#   scales_adaptive,
-#   scales_daily_living,
-#   scales_all,
-#   internal = TRUE,
-#   overwrite = TRUE
-# )
 
 # Plot Titles ------------------------------------------------------------------
 
@@ -1254,6 +1278,8 @@ scales_all <- c(
 #' @format A character string
 #' @keywords data internal
 plot_title_neurocognition <- "Neurocognitive Index evaluates cognitive functioning across five domains: Attention (focus, concentration, and information processing), Language (verbal communication, naming, comprehension, and fluency), Memory (immediate and delayed verbal and visual recall), Spatial (visuospatial perception, construction, and orientation), and Executive Functions (planning, problem-solving, and mental flexibility)."
+
+## IQ/g --------------------------------------------------------------------
 
 #' Intelligence and Cognitive Ability Plot Title
 #'
@@ -1277,11 +1303,8 @@ logic."
 # For the plot titles
 safe_use_data_internal(
   plot_title_iq = plot_title_iq,
-  overwrite = c(
-    "plot_title_iq"
-  )
+  overwrite = c("plot_title_iq")
 )
-
 
 ## Academics ---------------------------------------------------------------
 
@@ -1300,9 +1323,7 @@ plot_title_academics <- "Reading, writing, and math are the three main academic 
 # For the plot titles
 safe_use_data_internal(
   plot_title_academics = plot_title_academics,
-  overwrite = c(
-    "plot_title_academics"
-  )
+  overwrite = c("plot_title_academics")
 )
 
 #' Verbal and Language Functioning Plot Title
@@ -1429,9 +1450,7 @@ about one or the other."
 # For the plot titles
 safe_use_data_internal(
   plot_title_adhd_child = plot_title_adhd_child,
-  overwrite = c(
-    "plot_title_adhd_child"
-  )
+  overwrite = c("plot_title_adhd_child")
 )
 
 ## Emotion child ------------------------------------------------------
@@ -1450,10 +1469,7 @@ plot_title_emotion_child_self <- "Mood, Behavioral, and Social-Emotional Reports
 # For the plot titles
 safe_use_data_internal(
   plot_title_emotion_child_self = plot_title_emotion_child_self,
-  overwrite = c(
-    "plot_title_emotion_child_self",
-    add_only = TRUE
-  )
+  overwrite = c("plot_title_emotion_child_self", add_only = TRUE)
 )
 
 #' Child Emotional and Behavioral Plot Title - Parent
@@ -1470,9 +1486,7 @@ plot_title_emotion_child_parent <- "Mood, Behavioral, and Social-Emotional Repor
 # For the plot titles
 safe_use_data_internal(
   plot_title_emotion_child_parent = plot_title_emotion_child_parent,
-  overwrite = c(
-    "plot_title_emotion_child_parent"
-  )
+  overwrite = c("plot_title_emotion_child_parent")
 )
 
 #' Child Emotional and Behavioral Plot Title - Teacher
@@ -1489,9 +1503,7 @@ plot_title_emotion_child_teacher <- "Mood, Behavioral, and Social-Emotional Repo
 # For the plot titles
 safe_use_data_internal(
   plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
-  overwrite = c(
-    "plot_title_emotion_child_teacher"
-  )
+  overwrite = c("plot_title_emotion_child_teacher")
 )
 
 ## Emotion adult -----------------------------------------------------------
@@ -1526,7 +1538,6 @@ to function independently and meet the demands of everyday life. These skills
 include things like communication, self-care, home living, social skills, and
 community use."
 
-
 ## Daily living ------------------------------------------------------------
 
 #' Daily Living Functions Plot Title
@@ -1540,6 +1551,20 @@ community use."
 #' @format A character string
 #' @keywords internal data
 plot_title_daily_living <- "Daily Living tests evaluate functional abilities required for independent living through ecologically-valid tasks, including bill payment processing, remembering appointments and medication instructions, map navigation, driving awareness, and everyday judgment. These tasks assess how cognitive abilities translate to real-world performance, providing insight into the patient's daily functioning and independence."
+
+## Validity ----------------------------------------------------
+
+#' Validity Plot Title
+#'
+#' @description
+#' Descriptive text for effort/validity domain plots examining symptom and
+#' performance validity.
+#'
+#' @docType data
+#' @name plot_title_validity
+#' @format A character string
+#' @keywords internal data
+plot_title_validity <- "Effort/validity tests can be performed by patient's with severe neurocognitive impairment, etc."
 
 # Using safe_use_data_internal instead of usethis::use_data
 safe_use_data_internal(
@@ -1560,6 +1585,7 @@ safe_use_data_internal(
   plot_title_emotion_adult = plot_title_emotion_adult,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
+  plot_title_validity = plot_title_validity,
   add_only = TRUE
 )
 
@@ -1640,14 +1666,26 @@ domain_adhd_child <- "ADHD"
 #' @title Adult Emotional and Behavioral Domain
 #' @description A character vector of labels representing the adult emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
 #' @keywords data internal
-domain_emotion_adult <- c("Emotional/Behavioral/Personality", "Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
+domain_emotion_adult <- c(
+  "Emotional/Behavioral/Personality",
+  "Psychiatric Symptoms",
+  "Substance Use",
+  "Personality Disorders",
+  "Psychosocial Problems"
+)
 
 #' @name domain_emotion_child
 #' @docType data
 #' @title Child Emotional and Behavioral Domain
 #' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
 #' @keywords data internal
-domain_emotion_child <- c("Behavioral/Emotional/Social", "Psychiatric Symptoms", "Substance Use", "Personality Disorders", "Psychosocial Problems")
+domain_emotion_child <- c(
+  "Behavioral/Emotional/Social",
+  "Psychiatric Symptoms",
+  "Substance Use",
+  "Personality Disorders",
+  "Psychosocial Problems"
+)
 
 #' @name domain_adaptive
 #' @docType data
@@ -1662,6 +1700,13 @@ domain_adaptive <- "Adaptive Functioning"
 #' @description A character string label representing the daily living domain for grouping and categorizing neuropsychological test scales related to functional abilities required for independent living tasks.
 #' @keywords data internal
 domain_daily_living <- "Daily Living"
+
+#' @name domain_validity
+#' @docType data
+#' @title Validity Domain
+#' @description A character string label representing the validity domain for grouping neuropsychological tests and rating scales by indicators of validity and adequate effort.
+#' @keywords data internal
+domain_validity <- c("Performance Validity", "Symptom Validity")
 
 # Save domain labels --------------------------------------------------------
 
@@ -1681,6 +1726,7 @@ safe_use_data_internal(
   domain_emotion_child = domain_emotion_child,
   domain_adaptive = domain_adaptive,
   domain_daily_living = domain_daily_living,
+  domain_validity = domain_validity,
   add_only = TRUE
 )
 
@@ -1697,11 +1743,21 @@ safe_use_data_internal(
   domain_adhd_child = domain_adhd_child,
   domain_emotion_adult = domain_emotion_adult,
   domain_emotion_child = domain_emotion_child,
-  overwrite = c("domain_adhd_adult", "domain_adhd_child", "domain_emotion_adult", "domain_emotion_child")
+  overwrite = c(
+    "domain_adhd_adult",
+    "domain_adhd_child",
+    "domain_emotion_adult",
+    "domain_emotion_child"
+  )
 )
 safe_use_data_internal(
   domain_emotion_adult = domain_emotion_adult,
   overwrite = c("domain_emotion_adult")
+)
+
+safe_use_data_internal(
+  domain_validity = domain_validity,
+  overwrite = c("domain_validity")
 )
 # Lookup tables ---------------------------------------------
 
