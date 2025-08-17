@@ -115,20 +115,26 @@ tryCatch(
         pheno = "spatial",
         input_file = "data/neurocog.parquet"
       ),
-      "Memory" = list(pheno = "memory", input_file = "data/neurocog.parquet"),
+      "Memory" = list(
+        pheno = "memory", 
+        input_file = "data/neurocog.parquet"
+      ),
       "Attention/Executive" = list(
         pheno = "executive",
         input_file = "data/neurocog.parquet"
       ),
-      "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
+      "Motor" = list(
+        pheno = "motor", 
+        input_file = "data/neurocog.parquet"
+      ),
       "Social Cognition" = list(
         pheno = "social",
-    cat("Found", length(valid_domains_only), "domains with data\n")
-
-    # Track generated files for text file creation
-    generated_qmd_files <- character(0)
-
-    # Only generate files for domains that have datata/neurobehav.parquet"),
+        input_file = "data/neurocog.parquet"
+      ),
+      "ADHD" = list(
+        pheno = "adhd", 
+        input_file = "data/neurobehav.parquet"
+      ),
       "Behavioral/Emotional/Social" = list(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
@@ -147,11 +153,10 @@ tryCatch(
       ),
       "Substance Use" = list(
         pheno = "emotion",
-            generated_file <- processor$generate_domain_qmd()
-            if (!is.null(generated_file)) {
-              cat("  ✓ Generated", generated_file, "\n")
-              generated_qmd_files <- c(generated_qmd_files, generated_file)
-            } = "emotion",
+        input_file = "data/neurobehav.parquet"
+      ),
+      "Emotional/Behavioral/Personality" = list(
+        pheno = "emotion",
         input_file = "data/neurobehav.parquet"
       ),
       "Adaptive Functioning" = list(
@@ -159,17 +164,9 @@ tryCatch(
         input_file = "data/neurobehav.parquet"
       ),
       "Daily Living" = list(
-    }
-
-    # Generate placeholder text files for all created QMD files
-    if (length(generated_qmd_files) > 0) {
-      text_files <- generate_text_files(generated_qmd_files, verbose = TRUE)
-      if (length(text_files) > 0) {
-        cat("\n✓ Created", length(text_files), "placeholder text files\n")
-      }
-    }
-
-    cat("\nValidated domain file generation complete!\n")
+        pheno = "daily_living",
+        input_file = "data/neurobehav.parquet"
+      )
     )
 
     # Get domains with data using validation
@@ -185,6 +182,9 @@ tryCatch(
     }
 
     cat("Found", length(valid_domains_only), "domains with data\n")
+
+    # Track generated files for text file creation
+    generated_qmd_files <- character(0)
 
     # Only generate files for domains that have data
     for (domain_name in names(valid_domains_only)) {
@@ -211,6 +211,7 @@ tryCatch(
             generated_file <- processor$generate_domain_qmd()
             if (!is.null(generated_file)) {
               cat("  ✓ Generated", generated_file, "\n")
+              generated_qmd_files <- c(generated_qmd_files, generated_file)
             }
           } else {
             cat("  ⚠ No data after filtering\n")
@@ -220,6 +221,14 @@ tryCatch(
           cat("  ✗ Error generating", domain_name, ":", e$message, "\n")
         }
       )
+    }
+
+    # Generate placeholder text files for all created QMD files
+    if (length(generated_qmd_files) > 0) {
+      text_files <- generate_text_files(generated_qmd_files, verbose = TRUE)
+      if (length(text_files) > 0) {
+        cat("\n✓ Created", length(text_files), "placeholder text files\n")
+      }
     }
 
     cat("\nValidated domain file generation complete!\n")
