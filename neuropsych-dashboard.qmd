@@ -1,0 +1,262 @@
+
+---
+title: "Neuropsych Scoring Dashboard"
+author: "neuro2 · Shiny + Quarto"
+format: dashboard
+server: shiny
+---
+
+```{r}
+#| context: setup
+# Core libs
+library(shiny)
+library(tidyverse)
+
+# Source primary scoring
+score_paths <- c(
+  "neuropsych_test_scoring.R",
+  "R/neuropsych_test_scoring.R",
+  "./neuropsych_test_scoring.R",
+  "./R/neuropsych_test_scoring.R"
+)
+loaded <- FALSE
+for (p in score_paths) {
+  if (file.exists(p)) {
+    source(p, local = TRUE)
+    loaded <- TRUE
+    break
+  }
+}
+if (!loaded) {
+  warning("Could not source 'neuropsych_test_scoring.R'. Place it next to this .qmd or under R/.")
+}
+
+# Source child norms add-on if present
+child_paths <- c(
+  "rocft_child_norms.R",
+  "R/rocft_child_norms.R",
+  "./rocft_child_norms.R",
+  "./R/rocft_child_norms.R"
+)
+child_loaded <- FALSE
+for (p in child_paths) {
+  if (file.exists(p)) {
+    source(p, local = TRUE)
+    child_loaded <- TRUE
+    break
+  }
+}
+
+fmt_metric <- function(label, value, digits = 2) {
+  if (is.numeric(value)) value <- round(value, digits = digits)
+  paste0("<b>", label, ":</b> ", value)
+}
+```
+
+# {.sidebar}
+
+## Patient
+
+```{r}
+numericInput(
+  "age", "Age (years)",
+  min = 4, max = 89, value = 25, step = 1
+)
+```
+
+## ROCFT (Rey-Osterrieth Complex Figure)
+
+```{r}
+numericInput("rocft_copy_raw",   "Copy (raw)",   min = 0, value = NA, step = 0.5)
+numericInput("rocft_recall_raw", "Delayed Recall (raw)", min = 0, value = NA, step = 0.5)
+```
+
+## Grooved Pegboard Test (seconds, lower is better)
+
+```{r}
+numericInput("peg_dom_raw",  "Dominant hand (sec)",    min = 0, value = NA, step = 0.1)
+numericInput("peg_non_raw",  "Nondominant hand (sec)", min = 0, value = NA, step = 0.1)
+```
+
+## Trail Making Test (seconds, lower is better)
+
+```{r}
+numericInput("tmt_a_raw", "TMT A (sec)", min = 1, value = NA, step = 1)
+numericInput("tmt_b_raw", "TMT B (sec)", min = 1, value = NA, step = 1)
+```
+
+# ROCFT
+
+```{r}
+uiOutput("rocft_copy_out")
+uiOutput("rocft_recall_out")
+```
+
+# Grooved Pegboard
+
+```{r}
+uiOutput("peg_dom_out")
+uiOutput("peg_non_out")
+```
+
+# Trail Making Test
+
+## TMT A
+
+```{r}
+uiOutput("tmt_a_metrics")
+tableOutput("tmt_a_table")
+```
+
+## TMT B
+
+```{r}
+uiOutput("tmt_b_metrics")
+tableOutput("tmt_b_table")
+```
+
+```{r}
+#| context: server
+
+#---- ROCFT: Copy ----#
+output$rocft_copy_out <- renderUI({
+  req(input$age)
+  raw <- suppressWarnings(as.numeric(input$rocft_copy_raw))
+  if (is.na(raw)) return(HTML("<em>Enter a raw score for ROCFT Copy.</em>"))
+
+  # Prefer child norms ages 6–15 when helper is available & age in range
+  if (exists("rocft_copy_child") && !is.null(input$age) && input$age >= 6 && input$age <= 15) {
+    child_txt <- try(rocft_copy_child(age = input$age, raw_score = raw), silent = TRUE)
+    if (!inherits(child_txt, "try-error") && !is.null(child_txt)) {
+      return(HTML(child_txt))
+    }
+  }
+
+  # Fallback to original function if present
+  if (exists("rocft_copy")) {
+    res <- try(rocft_copy(age = input$age, raw_score = raw), silent = TRUE)
+    if (inherits(res, "try-error")) {
+      HTML(paste0("<span style='color:#b00020;'>", as.character(res), "</span>"))
+    } else {
+      HTML(res)
+    }
+  } else {
+    HTML("<em>rocft_copy() not available. Ensure neuropsych_test_scoring.R is sourced.</em>")
+  }
+})
+
+#---- ROCFT: Delayed Recall ----#
+output$rocft_recall_out <- renderUI({
+  req(input$age)
+  raw <- suppressWarnings(as.numeric(input$rocft_recall_raw))
+  if (is.na(raw)) return(HTML("<em>Enter a raw score for ROCFT Delayed Recall.</em>"))
+
+  # Prefer child norms ages 6–15 when helper is available & age in range
+  if (exists("rocft_recall_child") && !is.null(input$age) && input$age >= 6 && input$age <= 15) {
+    child_txt <- try(rocft_recall_child(age = input$age, raw_score = raw), silent = TRUE)
+    if (!inherits(child_txt, "try-error") && !is.null(child_txt)) {
+      return(HTML(child_txt))
+    }
+  }
+
+  # Fallback to original function if present
+  if (exists("rocft_recall")) {
+    res <- try(rocft_recall(age = input$age, raw_score = raw), silent = TRUE)
+    if (inherits(res, "try-error")) {
+      HTML(paste0("<span style='color:#b00020;'>", as.character(res), "</span>"))
+    } else {
+      HTML(res)
+    }
+  } else {
+    HTML("<em>rocft_recall() not available. Ensure neuropsych_test_scoring.R is sourced.</em>")
+  }
+})
+
+#---- Grooved Pegboard: Dominant ----#
+output$peg_dom_out <- renderUI({
+  req(input$age)
+  if (!exists("pegboard_dominant")) {
+    return(HTML("<em>pegboard_dominant() not available. Ensure neuropsych_test_scoring.R is sourced.</em>"))
+  }
+  raw <- suppressWarnings(as.numeric(input$peg_dom_raw))
+  if (is.na(raw)) return(HTML("<em>Enter a time (sec) for Grooved Pegboard — Dominant.</em>"))
+  res <- try(pegboard_dominant(age = input$age, raw_score = raw), silent = TRUE)
+  if (inherits(res, "try-error")) {
+    HTML(paste0("<span style='color:#b00020;'>", as.character(res), "</span>"))
+  } else {
+    HTML(res)
+  }
+})
+
+#---- Grooved Pegboard: Nondominant ----#
+output$peg_non_out <- renderUI({
+  req(input$age)
+  if (!exists("pegboard_nondominant")) {
+    return(HTML("<em>pegboard_nondominant() not available. Ensure neuropsych_test_scoring.R is sourced.</em>"))
+  }
+  raw <- suppressWarnings(as.numeric(input$peg_non_raw))
+  if (is.na(raw)) return(HTML("<em>Enter a time (sec) for Grooved Pegboard — Nondominant.</em>"))
+  res <- try(pegboard_nondominant(age = input$age, raw_score = raw), silent = TRUE)
+  if (inherits(res, "try-error")) {
+    HTML(paste0("<span style='color:#b00020;'>", as.character(res), "</span>"))
+  } else {
+    HTML(res)
+  }
+})
+
+#---- TMT A ----#
+tmt_a_data <- reactive({
+  req(input$age)
+  if (!exists("tmt_a")) return(NULL)
+  raw <- suppressWarnings(as.numeric(input$tmt_a_raw))
+  if (is.na(raw)) return(NULL)
+  out <- try(tmt_a(age = input$age, raw_score = raw), silent = TRUE)
+  if (inherits(out, "try-error")) return(NULL)
+  out
+})
+
+output$tmt_a_metrics <- renderUI({
+  df <- tmt_a_data()
+  if (is.null(df)) return(HTML("<em>Enter a time (sec) for TMT A.</em>"))
+  HTML(paste(
+    fmt_metric("TMT A T", df$t_score),
+    fmt_metric("z", df$z_score),
+    fmt_metric("Percentile", df$percentile, digits = 1),
+    sep = "<br/>"
+  ))
+})
+
+output$tmt_a_table <- renderTable({
+  df <- tmt_a_data()
+  validate(need(!is.null(df), " "))
+  df |> select(age, raw_score, predicted_mean, predicted_sd, z_score, t_score, percentile)
+})
+
+#---- TMT B ----#
+tmt_b_data <- reactive({
+  req(input$age)
+  if (!exists("tmt_b")) return(NULL)
+  raw <- suppressWarnings(as.numeric(input$tmt_b_raw))
+  if (is.na(raw)) return(NULL)
+  out <- try(tmt_b(age = input$age, raw_score = raw), silent = TRUE)
+  if (inherits(out, "try-error")) return(NULL)
+  out
+})
+
+output$tmt_b_metrics <- renderUI({
+  df <- tmt_b_data()
+  if (is.null(df)) return(HTML("<em>Enter a time (sec) for TMT B.</em>"))
+  HTML(paste(
+    fmt_metric("TMT B T", df$t_score),
+    fmt_metric("z", df$z_score),
+    fmt_metric("Percentile", df$percentile, digits = 1),
+    sep = "<br/>"
+  ))
+})
+
+output$tmt_b_table <- renderTable({
+  df <- tmt_b_data()
+  validate(need(!is.null(df), " "))
+  df |> select(age, raw_score, predicted_mean, predicted_sd, z_score, t_score, percentile)
+})
+```

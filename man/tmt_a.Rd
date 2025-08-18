@@ -25,8 +25,8 @@ A tibble with the following columns:
 }
 \description{
 This function calculates standardized scores for the Trail Making Test A (TMT-A)
-using normative data from adults (Appendix 4M, Mitrushina et al.) and imputed
-child norms for ages 4–15. Because TMT-A is timed (higher raw = slower), scores
+using normative data from adults (Appendix 4M, Mitrushina et al.) and imputed
+child norms for ages 4–15. Because TMT-A is timed (higher raw = slower), scores
 are reversed so that larger raw times yield more negative z-scores, lower t-scores,
 and lower percentile ranks.
 }

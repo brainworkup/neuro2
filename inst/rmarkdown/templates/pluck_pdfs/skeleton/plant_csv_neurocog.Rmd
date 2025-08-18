@@ -5,7 +5,7 @@ title: |
 date: "`r Sys.Date()`"
 params:
   patient:
-    value: Ethan
+    value: Isabella
     label: "Patient's first name:"
     input: text
   test_name:
@@ -324,6 +324,19 @@ output:
     highlight: kate
 ---
 
+# Trail making test norms
+
+```{r}
+age <- 20
+tmt_a_sec <- 27
+tmt_b_sec <- 67
+tmt_a <- neuro2::tmt_a(age, tmt_a_sec)
+tmt_b <- neuro2::tmt_b(age, tmt_b_sec)
+
+tmt_a_score <- tmt_a(age, tmt_a_sec)
+tmt_b_score <- tmt_b(age, tmt_b_sec)
+```
+
 ## Setup
 
 ```{r setup, include = FALSE}
@@ -347,8 +360,7 @@ library(tidyr)
 library(glue)
 library(dplyr)
 library(readr)
-library(bwu)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters

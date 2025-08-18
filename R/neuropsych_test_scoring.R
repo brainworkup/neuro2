@@ -286,8 +286,8 @@ pegboard_nondominant <- function(age, raw_score) {
 #' Compute TMT-A standardized scores (z, t, percentile)
 #'
 #' This function calculates standardized scores for the Trail Making Test A (TMT-A)
-#' using normative data from adults (Appendix 4M, Mitrushina et al.) and imputed
-#' child norms for ages 4–15. Because TMT-A is timed (higher raw = slower), scores
+#' using normative data from adults (Appendix 4M, Mitrushina et al.) and imputed
+#' child norms for ages 4–15. Because TMT-A is timed (higher raw = slower), scores
 #' are reversed so that larger raw times yield more negative z-scores, lower t-scores,
 #' and lower percentile ranks.
 #'
@@ -306,8 +306,8 @@ pegboard_nondominant <- function(age, raw_score) {
 #' @export
 #'
 tmt_a <- function(age, raw_score) {
-  #--- Adult norms (Appendix 4M) ---#
-  adult_norms <- tibble::tribble(
+  #--- Adult norms (Appendix 4M) ---#
+  adult_norms_a <- tibble::tribble(
     ~AgeMin,
     ~AgeMax,
     ~PredictedScore,
@@ -375,13 +375,13 @@ tmt_a <- function(age, raw_score) {
   )
 
   #--- Child imputation equations and anchors ---#
-  pred_score_eq <- function(a) {
+  pred_score_eq_a <- function(a) {
     26.50094 - 0.2665049 * a + 0.0069935 * a^2
   }
-  pred_sd_eq <- function(a) {
+  pred_sd_eq_a <- function(a) {
     8.760348 - 0.1138093 * a + 0.0028324 * a^2
   }
-  anchors <- tibble::tribble(
+  anchors_a <- tibble::tribble(
     ~age,
     ~PredictedScore,
     ~PredictedSD,
@@ -397,10 +397,10 @@ tmt_a <- function(age, raw_score) {
   ages_df <- tibble::tibble(age = 4:15) |>
     dplyr::mutate(
       # Create PS_eq and SD_eq columns with equation results
-      PS_eq = pred_score_eq(.data$age),
-      SD_eq = pred_sd_eq(.data$age)
+      PS_eq = pred_score_eq_a(.data$age),
+      SD_eq = pred_sd_eq_a(.data$age)
     ) |>
-    dplyr::left_join(anchors, by = "age") |>
+    dplyr::left_join(anchors_a, by = "age") |>
     dplyr::mutate(
       # Use coalesce to fill in values from equations if not in anchors
       PredictedScore = dplyr::coalesce(.data$PredictedScore, .data$PS_eq),
@@ -409,7 +409,7 @@ tmt_a <- function(age, raw_score) {
     dplyr::select(age, PredictedScore, PredictedSD)
 
   # Aggregate into broader child age-ranges
-  child_norms <- tibble::tribble(
+  child_norms_a <- tibble::tribble(
     ~AgeMin,
     ~AgeMax,
     4,
@@ -433,7 +433,7 @@ tmt_a <- function(age, raw_score) {
     dplyr::ungroup()
 
   # Combine child and adult norms
-  norms <- dplyr::bind_rows(adult_norms, child_norms)
+  norms <- dplyr::bind_rows(adult_norms_a, child_norms_a)
 
   # Find the appropriate normative row
   norm_row <- norms |> dplyr::filter(norms$AgeMin <= age, age <= norms$AgeMax)
@@ -479,14 +479,14 @@ tmt_a <- function(age, raw_score) {
 #' * \code{predicted_mean}: Normative mean completion time for that age.
 #' * \code{predicted_sd}: Normative standard deviation for that age.
 #' * \code{z_score}: Reversed z-score: (mean - raw) / sd.
-#' * \code{t_score}: Reversed t-score: 50 + 10 * z-score.
-#' * \code{percentile}: Percentile rank (pnorm(z) * 100).
+#' * \code{t_score}: Reversed t-score: 50 + 10 \* z-score.
+#' * \code{percentile}: Percentile rank (pnorm(z) \* 100).
 #' @rdname tmt_b
 #' @export
 #'
 tmt_b <- function(age, raw_score) {
   #--- Adult norms for TMT-B (Appendix 4M) ---#
-  adult_norms_B <- tibble::tribble(
+  adult_norms_b <- tibble::tribble(
     ~AgeMin,
     ~AgeMax,
     ~PredictedScore,
@@ -554,13 +554,13 @@ tmt_b <- function(age, raw_score) {
   )
 
   #--- Child imputation equations and anchors for TMT-B ---#
-  pred_score_eq_B <- function(a) {
-    64.07469 - 0.9881013 * a + 0.0235581 * a^2
+  pred_score_eq_b_child <- function(b) {
+    64.07469 - 0.9881013 * b + 0.0235581 * b^2
   }
-  pred_sd_eq_B <- function(a) {
-    29.8444 - 0.8080508 * a + 0.0148732 * a^2
+  pred_sd_eq_b_child <- function(b) {
+    29.8444 - 0.8080508 * b + 0.0148732 * b^2
   }
-  anchors_B <- tibble::tribble(
+  anchors_b_child <- tibble::tribble(
     ~age,
     ~PredictedScore,
     ~PredictedSD,
@@ -576,24 +576,10 @@ tmt_b <- function(age, raw_score) {
   ages_df <- tibble::tibble(age = 4:15) |>
     dplyr::mutate(
       # Create PS_eq and SD_eq columns with equation results
-      PS_eq = pred_score_eq(.data$age),
-      SD_eq = pred_sd_eq(.data$age)
+      PS_eq = pred_score_eq_b_child(.data$age),
+      SD_eq = pred_sd_eq_b_child(.data$age)
     ) |>
-    dplyr::left_join(anchors, by = "age") |>
-    dplyr::mutate(
-      # Use coalesce to fill in values from equations if not in anchors
-      PredictedScore = dplyr::coalesce(.data$PredictedScore, .data$PS_eq),
-      PredictedSD = dplyr::coalesce(.data$PredictedSD, .data$SD_eq)
-    ) |>
-    dplyr::select(age, PredictedScore, PredictedSD)
-  # Build age-by-age norms for 4–15, override at anchors
-  ages_B_df <- tibble::tibble(age = 4:15) |>
-    dplyr::mutate(
-      # Create PS_eq and SD_eq columns with equation results
-      PS_eq = pred_score_eq_B(.data$age),
-      SD_eq = pred_sd_eq_B(.data$age)
-    ) |>
-    dplyr::left_join(anchors_B, by = "age") |>
+    dplyr::left_join(anchors_b_child, by = "age") |>
     dplyr::mutate(
       # Use coalesce to fill in values from equations if not in anchors
       PredictedScore = dplyr::coalesce(.data$PredictedScore, .data$PS_eq),
@@ -601,8 +587,9 @@ tmt_b <- function(age, raw_score) {
     ) |>
     dplyr::select(age, PredictedScore, PredictedSD)
 
+
   # Aggregate into broader child age-ranges
-  child_norms <- tibble::tribble(
+  child_norms_b <- tibble::tribble(
     ~AgeMin,
     ~AgeMax,
     4,
@@ -624,37 +611,10 @@ tmt_b <- function(age, raw_score) {
       ])
     ) |>
     dplyr::ungroup()
-  # Aggregate into broader child age-ranges
-  child_norms_B <- tibble::tribble(
-    ~AgeMin,
-    ~AgeMax,
-    4,
-    7,
-    8,
-    10,
-    11,
-    13,
-    14,
-    15
-  ) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      PredictedScore = mean(ages_B_df$PredictedScore[
-        ages_B_df$age >= .data$AgeMin & ages_B_df$age <= .data$AgeMax
-      ]),
-      PredictedSD = mean(ages_B_df$PredictedSD[
-        ages_B_df$age >= .data$AgeMin & ages_B_df$age <= .data$AgeMax
-      ])
-    ) |>
-    dplyr::ungroup()
+
 
   # Combine child and adult norms
-  norms <- dplyr::bind_rows(adult_norms, child_norms)
-
-  # Find the appropriate normative row
-  norm_row <- norms |> dplyr::filter(norms$AgeMin <= age, age <= norms$AgeMax)
-  # Combine child and adult norms
-  norms <- dplyr::bind_rows(adult_norms_B, child_norms_B)
+  norms <- dplyr::bind_rows(adult_norms_b, child_norms_b)
 
   # Find the appropriate normative row
   norm_row <- norms |> dplyr::filter(norms$AgeMin <= age, age <= norms$AgeMax)

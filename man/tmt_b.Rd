@@ -19,8 +19,8 @@ A tibble with the following columns:
 \item \code{predicted_mean}: Normative mean completion time for that age.
 \item \code{predicted_sd}: Normative standard deviation for that age.
 \item \code{z_score}: Reversed z-score: (mean - raw) / sd.
-\item \code{t_score}: Reversed t-score: 50 + 10 * z-score.
-\item \code{percentile}: Percentile rank (pnorm(z) * 100).
+\item \code{t_score}: Reversed t-score: 50 + 10 \* z-score.
+\item \code{percentile}: Percentile rank (pnorm(z) \* 100).
 }
 }
 \description{
