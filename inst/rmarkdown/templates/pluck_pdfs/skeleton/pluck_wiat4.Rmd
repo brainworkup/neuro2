@@ -341,6 +341,21 @@ wiat4 <-
 readr::write_csv(wiat4, here::here(patient, "csv", "wiat4.csv"))
 ```
 
+## Functions
+
+```{r}
+# Function to convert specified columns to integer, double, and factor types
+# Handles non-numeric and missing values gracefully by converting them to NA
+convert_columns <- function(df, to_integer, to_double, to_factor) {
+  df <- df |>
+    mutate(across(all_of(to_integer), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
+    mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
+    mutate(across(all_of(to_double), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
+    mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
+  return(df)
+}
+```
+
 # Table 1
 
 ## Pluck and tidy tables
@@ -354,7 +369,7 @@ colnames(table1) <- params$colnames
 to_double <- c("raw_score", "score", "percentile")
 table1 <-
   table1 |>
-  hablar::convert(dbl(all_of(to_double))) |>
+  convert_columns(c(), to_double, c()) |>
   dplyr::relocate(scale, .before = raw_score)
 ```
 
@@ -398,7 +413,7 @@ colnames(table2) <- params$colnames
 # table2 <- dplyr::slice(table2, 2) # check each time
 # table2 <- dplyr::distinct(table2, .keep_all = FALSE) # check each time
 to_double <- c("raw_score", "score", "percentile")
-table2 <- table2 |> hablar::convert(dbl(all_of(to_double)))
+table2 <- convert_columns(table2, c(), to_double, c())
 ```
 
 ## Scale names

@@ -286,7 +286,7 @@ table2[, 1] <- (params$table2)
 table3 <- as.data.frame(plucked_tables[[3]])
 colnames(table3) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table3 <- table3 |> hablar::convert(dbl(all_of(to_double)))
+table3 <- convert_columns(table3, c(), to_double, c())
 table3[, 1] <- (params$table3)
 ```
 
@@ -296,7 +296,7 @@ table3[, 1] <- (params$table3)
 table4 <- as.data.frame(plucked_tables[[4]])
 colnames(table4) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table4 <- table4 |> hablar::convert(dbl(all_of(to_double)))
+table4 <- convert_columns(table4, c(), to_double, c())
 table4[, 1] <- (params$table4)
 ```
 
@@ -306,7 +306,7 @@ table4[, 1] <- (params$table4)
 table5 <- as.data.frame(plucked_tables[[5]])
 colnames(table5) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table5 <- table5 |> hablar::convert(dbl(all_of(to_double)))
+table5 <- convert_columns(table5, c(), to_double, c())
 table5[, 1] <- (params$table5)
 ```
 
@@ -316,7 +316,7 @@ table5[, 1] <- (params$table5)
 table6 <- as.data.frame(plucked_tables[[6]])
 colnames(table6) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table6 <- table6 |> hablar::convert(dbl(all_of(to_double)))
+table6 <- convert_columns(table6, c(), to_double, c())
 table6[, 1] <- (params$table6)
 ```
 
@@ -326,7 +326,7 @@ table6[, 1] <- (params$table6)
 table7 <- as.data.frame(plucked_tables[[7]])
 colnames(table7) <- params$colnames2
 to_double <- c("raw_score", "base_rate")
-table7 <- table7 |> hablar::convert(dbl(all_of(to_double)))
+table7 <- convert_columns(table7, c(), to_double, c())
 table7[, 1] <- (params$table7)
 ```
 
