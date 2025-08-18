@@ -4,7 +4,7 @@ author: "neuro2 · Shiny + Quarto"
 format: dashboard
 server: shiny
 ---
-
+<!-- Panels are different here -->
 ```{r}
 #| context: setup
 # Core libs
@@ -63,28 +63,14 @@ numericInput(
 )
 ```
 
+# ROCFT
+
 ## ROCFT (Rey-Osterrieth Complex Figure)
 
 ```{r}
 numericInput("rocft_copy_raw",   "Copy (raw)",   min = 0, value = NA, step = 0.5)
 numericInput("rocft_recall_raw", "Delayed Recall (raw)", min = 0, value = NA, step = 0.5)
 ```
-
-## Grooved Pegboard Test (seconds, lower is better)
-
-```{r}
-numericInput("peg_dom_raw",  "Dominant hand (sec)",    min = 0, value = NA, step = 0.1)
-numericInput("peg_non_raw",  "Nondominant hand (sec)", min = 0, value = NA, step = 0.1)
-```
-
-## Trail Making Test (seconds, lower is better)
-
-```{r}
-numericInput("tmt_a_raw", "TMT A (sec)", min = 1, value = NA, step = 1)
-numericInput("tmt_b_raw", "TMT B (sec)", min = 1, value = NA, step = 1)
-```
-
-# ROCFT
 
 ```{r}
 uiOutput("rocft_copy_out")
@@ -93,12 +79,26 @@ uiOutput("rocft_recall_out")
 
 # Grooved Pegboard
 
+## Grooved Pegboard Test (seconds, lower is better)
+
+```{r}
+numericInput("peg_dom_raw",  "Dominant hand (sec)",    min = 0, value = NA, step = 0.1)
+numericInput("peg_non_raw",  "Nondominant hand (sec)", min = 0, value = NA, step = 0.1)
+```
+
 ```{r}
 uiOutput("peg_dom_out")
 uiOutput("peg_non_out")
 ```
 
 # Trail Making Test
+
+## Trail Making Test (seconds, lower is better)
+
+```{r}
+numericInput("tmt_a_raw", "TMT A (sec)", min = 1, value = NA, step = 1)
+numericInput("tmt_b_raw", "TMT B (sec)", min = 1, value = NA, step = 1)
+```
 
 ## TMT A
 

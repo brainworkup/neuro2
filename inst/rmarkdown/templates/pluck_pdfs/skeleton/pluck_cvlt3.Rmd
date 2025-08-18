@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from CVLT-3/CVLT-3 Brief"
 params:
-  patient: Biggie
+  patient: Isabella
   test:
     label: "Test"
     value: cvlt3_brief
@@ -67,18 +67,18 @@ params:
       - Recognition Discriminability Nonparametric
   table5:
     label: "Recall Errors: Intrusions"
-    value: "CVLT-3 Total Intrusions"
+    value: "Total Intrusions"
     input: select
     multiple: yes
     choices:
-      - "CVLT-3 Total Intrusions"
+      - "Total Intrusions"
   table6:
     label: "Recall Errors: Repetitions"
-    value: "CVLT-3 Total Repetitions"
+    value: "Total Repetitions"
     input: select
     multiple: yes
     choices:
-      - "CVLT-3 Total Repetitions"
+      - "Total Repetitions"
   table7:
     label: "Forced-Choice Recognition:"
     value: "CVLT-3 Forced-Choice Recognition Hits"
@@ -145,7 +145,6 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
 library(tidytable)
 library(hablar)
 library(here)
@@ -159,6 +158,7 @@ library(shiny)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
+library(neuro2)
 ```
 
 ## Patient
@@ -245,28 +245,13 @@ plucked_tables <-
   )
 ```
 
-## Functions
-
-```{r}
-# Function to convert specified columns to integer, double, and factor types
-# Handles non-numeric and missing values gracefully by converting them to NA
-convert_columns <- function(df, to_integer, to_double, to_factor) {
-  df <- df |>
-    mutate(across(all_of(to_integer), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
-    mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
-    mutate(across(all_of(to_double), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
-    mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
-  return(df)
-}
-```
-
 # Table 1
 
 ```{r table1}
 table1 <- as.data.frame(plucked_tables[[1]])
 colnames(table1) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table1 <- convert_columns(table1, c(), to_double, c())
+table1 <- table1 |> hablar::convert(dbl(all_of(to_double)))
 table1[, 1] <- (params$table1)
 ```
 
@@ -276,7 +261,7 @@ table1[, 1] <- (params$table1)
 table2 <- as.data.frame(plucked_tables[[2]])
 colnames(table2) <- params$colnames1
 to_double <- c("raw_score", "score", "percentile")
-table2 <- convert_columns(table2, c(), to_double, c())
+table2 <- table2 |> hablar::convert(dbl(all_of(to_double)))
 table2[, 1] <- (params$table2)
 ```
 
@@ -617,7 +602,7 @@ table5 <-
   tidytable::mutate(
     description = tidytable::case_when(
       scale ==
-        "CVLT-3 Total Intrusions" ~
+        "Total Intrusions" ~
         "Total number of intrusive response errors",
       TRUE ~ as.character(description)
     )
@@ -630,7 +615,7 @@ table6 <-
   tidytable::mutate(
     description = tidytable::case_when(
       scale ==
-        "CVLT-3 Total Repetitions" ~
+        "Total Repetitions" ~
         "Total number of repetitive response errors",
       TRUE ~ as.character(description)
     )
@@ -719,17 +704,17 @@ if (params$test == "cvlt3") {
 if (params$test == "cvlt3") {
   readr::write_csv(
     cvlt3,
-    here::here("csv", "cvlt3.csv")
+    here::here("data-raw", "csv", "cvlt3.csv")
   )
 } else if (params$test == "cvlt3_brief") {
   readr::write_csv(
     cvlt3_brief,
-    here::here("csv", "cvlt3_brief.csv")
+    here::here("data-raw", "csv", "cvlt3_brief.csv")
   )
 }
 ```
 
-## Write to "g2"
+## Write to "g"
 
 ```{r}
 has_headers <- function(file_path) {
@@ -743,8 +728,8 @@ has_headers <- function(file_path) {
 
 ```{r writeout-g}
 table <- cvlt3_brief
-test <- "g2"
-file_path <- here::here("csv", paste0(test, ".csv"))
+test <- "g"
+file_path <- here::here("data-raw", paste0(test, ".csv"))
 
 readr::write_excel_csv(
   table,
