@@ -432,7 +432,7 @@ Invisibly returns \code{self} for method chaining.
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file following the memory template exactly
+Generate domain QMD file
 
 
 Generate a Quarto (.qmd) file for the given domain.
@@ -468,7 +468,7 @@ Invisibly returns the path to the generated file.
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_standard_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_standard_qmd}{}}}
 \subsection{Method \code{generate_standard_qmd()}}{
-Generate standard domain QMD following the memory template structure exactly
+Generate standard domain QMD
 
 
 Generate a standard Quarto (.qmd) file for general domains.

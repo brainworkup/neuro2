@@ -395,7 +395,7 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Generate domain QMD file following the memory template exactly
+    #' Generate domain QMD file
     #' @description Generate a Quarto (.qmd) file for the given domain.
     #' @param domain_name Character scalar or vector of domain names.
     #' @param output_file Path to a file.
@@ -476,7 +476,7 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Generate standard domain QMD following the memory template structure exactly
+    #' Generate standard domain QMD
     #' @description Generate a standard Quarto (.qmd) file for general domains.
     #' @param domain_name Character scalar or vector of domain names.
     #' @param output_file Path to a file.
@@ -658,8 +658,7 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "\n",
         "#| cache: true\n",
-        "#| include: true\n",
-        "#| echo: false\n",
+        "#| include: false\n",
         "#| results: asis\n\n",
 
         "# Generate text using R6 class\n",
@@ -944,10 +943,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Write the QMD file
       writeLines(qmd_content, output_file)
-      message(paste(
-        "Generated standard QMD file following memory template:",
-        output_file
-      ))
+      message(paste("Generated standard QMD file:", output_file))
       return(output_file)
     },
 
@@ -1101,8 +1097,7 @@ DomainProcessorR6 <- R6::R6Class(
             rater,
             "\n",
             "#| cache: true\n",
-            "#| include: true\n",
-            "#| echo: false\n",
+            "#| include: false\n",
             "#| results: asis\n\n",
 
             "# Filter data for this rater\n",
@@ -1182,9 +1177,6 @@ DomainProcessorR6 <- R6::R6Class(
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
         "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
-        "}\n",
-        "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
@@ -1524,8 +1516,7 @@ DomainProcessorR6 <- R6::R6Class(
             rater,
             "\n",
             "#| cache: true\n",
-            "#| include: true\n",
-            "#| echo: false\n",
+            "#| include: false\n",
             "#| results: asis\n\n",
 
             "# Filter data for this rater\n",
@@ -1605,9 +1596,6 @@ DomainProcessorR6 <- R6::R6Class(
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
         "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
-        "}\n",
-        "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
@@ -1944,8 +1932,7 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: text-emotion-child-self\n",
         "#| cache: true\n",
-        "#| include: true\n",
-        "#| echo: false\n",
+        "#| include: false\n",
         "#| results: asis\n\n",
 
         "# Filter data for this rater\n",
@@ -1970,8 +1957,7 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: text-emotion-child-parent\n",
         "#| cache: true\n",
-        "#| include: true\n",
-        "#| echo: false\n",
+        "#| include: false\n",
         "#| results: asis\n\n",
 
         "# Filter data for this rater\n",
@@ -1998,8 +1984,7 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: text-emotion-child-teacher\n",
         "#| cache: true\n",
-        "#| include: true\n",
-        "#| echo: false\n",
+        "#| include: false\n",
         "#| results: asis\n",
         "#| eval: false\n\n",
 
@@ -2026,8 +2011,8 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Add separate table generation for each rater
       # SELF TABLE
-      qmd_content <- paste0(
-        qmd_content,
+      qmd_content_self <- paste0(
+        qmd_content_self,
         "```{r}\n",
         "#| label: qtbl-emotion-child-self\n",
         "#| include: false\n\n",
@@ -2105,8 +2090,8 @@ DomainProcessorR6 <- R6::R6Class(
       )
 
       # PARENT TABLE
-      qmd_content <- paste0(
-        qmd_content,
+      qmd_content_parent <- paste0(
+        qmd_content_parent,
         "```{r}\n",
         "#| label: qtbl-emotion-child-parent\n",
         "#| include: false\n\n",
@@ -2184,8 +2169,8 @@ DomainProcessorR6 <- R6::R6Class(
       )
 
       # TEACHER TABLE (with eval: false)
-      qmd_content <- paste0(
-        qmd_content,
+      qmd_content_teacher <- paste0(
+        qmd_content_teacher,
         "```{r}\n",
         "#| label: qtbl-emotion-child-teacher\n",
         "#| include: false\n",
@@ -2502,7 +2487,7 @@ DomainProcessorR6 <- R6::R6Class(
         "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
-        "### TEACHER RATINGS\n\n",
+        "<!-- ### TEACHER RATINGS-->\n\n",
         "<!-- {{< include ",
         teacher_text,
         " >}} -->\n\n",
