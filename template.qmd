@@ -122,27 +122,47 @@ domain_config <- list(
   ),
   "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
   "Behavioral/Emotional/Social" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Psychiatric Disorders" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Personality Disorders" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Psychosocial Problems" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Substance Use" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Emotional/Behavioral/Personality" = list(
-    pheno = "emotion",
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychiatric Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Personality Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychosocial Problems" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Substance Use" = list(
+    pheno = "emotion_adult",
     input_file = "data/neurobehav.parquet"
   ),
   "Adaptive Functioning" = list(
@@ -294,25 +314,7 @@ ensure_text_files_exist <- function(domain_files) {
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
-<!-- {{< include _02-01_iq_text.qmd >}} -->
-{{< include _02-01_iq.qmd >}}
-<!-- {{< include _02-02_academics_text.qmd >}} -->
-{{< include _02-02_academics.qmd >}}
-<!-- {{< include _02-03_verbal_text.qmd >}} -->
-{{< include _02-03_verbal.qmd >}}
-<!-- {{< include _02-04_spatial_text.qmd >}} -->
-{{< include _02-04_spatial.qmd >}}
-<!-- {{< include _02-05_memory_text.qmd >}} -->
-{{< include _02-05_memory.qmd >}}
-<!-- {{< include _02-06_executive_text.qmd >}} -->
-{{< include _02-06_executive.qmd >}}
-<!-- {{< include _02-07_motor_text.qmd >}} -->
-{{< include _02-07_motor.qmd >}}
-<!-- {{< include _02-10_emotion_child_text_parent.qmd >}} -->
-<!-- {{< include _02-10_emotion_child_text_self.qmd >}} -->
-{{< include _02-10_emotion_child.qmd >}}
-<!-- {{< include _02-13_validity_text.qmd >}} -->
-<!-- {{< include _02-13_validity.qmd >}} -->
+<!-- DOMAIN_INCLUDES -->
 
 ```{r}
 #| label: include-domains

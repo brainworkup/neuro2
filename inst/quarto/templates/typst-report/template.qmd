@@ -122,27 +122,47 @@ domain_config <- list(
   ),
   "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
   "Behavioral/Emotional/Social" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Psychiatric Disorders" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Personality Disorders" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Psychosocial Problems" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Substance Use" = list(
-    pheno = "emotion",
+    pheno = "emotion_child",
     input_file = "data/neurobehav.parquet"
   ),
   "Emotional/Behavioral/Personality" = list(
-    pheno = "emotion",
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychiatric Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Personality Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychosocial Problems" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Substance Use" = list(
+    pheno = "emotion_adult",
     input_file = "data/neurobehav.parquet"
   ),
   "Adaptive Functioning" = list(

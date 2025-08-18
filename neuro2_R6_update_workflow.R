@@ -107,6 +107,34 @@ domain_mappings <- list(
     scales = scales_emotion_adult
   ),
   list(
+    domain = "Personality Disorders",
+    pheno = "emotion_adult",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion_adult
+  ),
+  list(
+    domain = "Psychiatric Disorders",
+    pheno = "emotion_adult",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion_adult
+  ),
+  list(
+    domain = "Substance Use",
+    pheno = "emotion_adult",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion_adult
+  ),
+  list(
+    domain = "Psychosocial Problems",
+    pheno = "emotion_adult",
+    file_num = "10",
+    obj_name = "emotion",
+    scales = scales_emotion_adult
+  ),
+  list(
     domain = "Behavioral/Emotional/Social",
     pheno = "emotion_child",
     file_num = "10",
@@ -115,31 +143,31 @@ domain_mappings <- list(
   ),
   list(
     domain = "Personality Disorders",
-    pheno = "emotion",
+    pheno = "emotion_child",
     file_num = "10",
     obj_name = "emotion",
-    scales = scales_emotion
+    scales = scales_emotion_child
   ),
   list(
     domain = "Psychiatric Disorders",
-    pheno = "emotion",
+    pheno = "emotion_child",
     file_num = "10",
     obj_name = "emotion",
-    scales = scales_emotion
+    scales = scales_emotion_child
   ),
   list(
     domain = "Substance Use",
-    pheno = "emotion",
+    pheno = "emotion_child",
     file_num = "10",
     obj_name = "emotion",
-    scales = scales_emotion
+    scales = scales_emotion_child
   ),
   list(
     domain = "Psychosocial Problems",
-    pheno = "emotion",
+    pheno = "emotion_child",
     file_num = "10",
     obj_name = "emotion",
-    scales = scales_emotion
+    scales = scales_emotion_child
   )
 )
 
