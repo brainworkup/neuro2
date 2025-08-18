@@ -350,6 +350,21 @@ plucked_tables_wais4 <- NeurotypR::gpluck_extract_table(
 load("plucked_tables_wais4.RData")
 ```
 
+## Functions
+
+```{r}
+# Function to convert specified columns to integer, double, and factor types
+# Handles non-numeric and missing values gracefully by converting them to NA
+convert_columns <- function(df, to_integer, to_double, to_factor) {
+  df <- df |>
+    mutate(across(all_of(to_integer), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
+    mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
+    mutate(across(all_of(to_double), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
+    mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
+  return(df)
+}
+```
+
 # WAIS-IV Index Scores (Table 1)
 
 ## Pluck and tidy tables
@@ -757,7 +772,7 @@ table3 <- as.data.frame(plucked_tables_wais4[[3]])
 # }
 colnames(table3) <- params$colnames2
 to_double <- c("raw_score", "score", "percentile")
-table3 <- table3 |> hablar::convert(dbl(all_of(to_double)))
+table3 <- convert_columns(table3, c(), to_double, c())
 table3$scale <- params$table3
 table3 <- table3 |> dplyr::select(all_of(params$keep2))
 ```
@@ -889,7 +904,7 @@ table4 <- as.data.frame(plucked_tables_wais4[[4]])
 # }
 colnames(table4) <- params$colnames2
 to_double <- c("raw_score", "score", "percentile")
-table4 <- table4 |> hablar::convert(dbl(all_of(to_double)))
+table4 <- convert_columns(table4, c(), to_double, c())
 table4$scale <- params$table4
 table4 <- table4 |> dplyr::select(all_of(params$keep2))
 ```
@@ -1028,7 +1043,7 @@ table5 <- as.data.frame(plucked_tables_wais4[[5]])
 # }
 colnames(table5) <- params$colnames2
 to_double <- c("raw_score", "score", "percentile")
-table5 <- table5 |> hablar::convert(dbl(all_of(to_double)))
+table5 <- convert_columns(table5, c(), to_double, c())
 table5$scale <- params$table5
 table5 <- table5 |> dplyr::select(all_of(params$keep2))
 ```
@@ -1151,7 +1166,7 @@ if (params$version == "brief") {
 }
 colnames(table6) <- params$colnames3
 to_double <- c("raw_score", "score", "percentile")
-table6 <- table6 |> hablar::convert(dbl(all_of(to_double)))
+table6 <- convert_columns(table6, c(), to_double, c())
 table6$scale <- params$table6
 table6 <- table6 |> dplyr::select(all_of(params$keep2))
 ```
@@ -1230,7 +1245,7 @@ if (params$version == "brief") {
 }
 colnames(table7) <- params$colnames4
 to_double <- c("raw_score", "score", "percentile")
-table7 <- table7 |> hablar::convert(dbl(all_of(to_double)))
+table7 <- convert_columns(table7, c(), to_double, c())
 table7$scale <- params$table7
 table7 <- table7 |> dplyr::select(all_of(params$keep2))
 ```

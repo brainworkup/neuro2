@@ -637,9 +637,11 @@ convert_percentile <- function(df, column_name) {
 
 # Function to convert specified columns to integer, double, and factor types
 convert_columns <- function(df, to_integer, to_double, to_factor) {
+  # Handles non-numeric and missing values gracefully by converting them to NA
   df <- df |>
+    dplyr::mutate(across(all_of(to_integer), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
     dplyr::mutate(across(all_of(to_integer), as.integer, .names = "{.col}")) |>
-    dplyr::mutate(across(all_of(to_double), as.double, .names = "{.col}")) |>
+    dplyr::mutate(across(all_of(to_double), ~ as.numeric(as.character(.x)), .names = "{.col}")) |>
     dplyr::mutate(across(all_of(to_factor), as.factor, .names = "{.col}"))
   return(df)
 }
