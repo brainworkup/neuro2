@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from NAB-Screener (NAB-S)"
 params:
-  patient: Macdonald
+  patient: Biggie
   test:
     label: "Test"
     value: nabs
