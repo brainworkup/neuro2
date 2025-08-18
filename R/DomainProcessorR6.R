@@ -580,26 +580,59 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "$data\n\n",
 
-        "# Load internal data to get standardized scale names\n",
-        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
-        "if (!exists(scale_var_name)) {\n",
-        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
-        "  if (file.exists(sysdata_path)) {\n",
-        "    load(sysdata_path, envir = .GlobalEnv)\n",
-        "  }\n",
-        "}\n",
-        "if (exists(scale_var_name)) {\n",
-        "  scales <- get(scale_var_name)\n",
-        "} else {\n",
-        "  warning(paste0(\n",
-        "    \"Scale variable '\",\n",
-        "    scale_var_name,\n",
-        "    \"' not found. Using empty vector.\"\n",
-        "  ))\n",
-        "  scales <- character(0)\n",
-        "}\n\n",
+        # Replace the entire scale variable section (around lines 575-595) with:
 
-        "# Filter the data directly without using NeurotypR\n",
+        "# Load internal data to get standardized scale names\n",
+        if (tolower(self$pheno) == "emotion") {
+          emotion_type <- self$detect_emotion_type()
+          paste0(
+            "scale_var_name <- \"scales_",
+            tolower(self$pheno),
+            "_",
+            emotion_type,
+            "\"\n",
+            "if (!exists(scale_var_name)) {\n",
+            "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+            "  if (file.exists(sysdata_path)) {\n",
+            "    load(sysdata_path, envir = .GlobalEnv)\n",
+            "  }\n",
+            "}\n",
+            "if (exists(scale_var_name)) {\n",
+            "  scales <- get(scale_var_name)\n",
+            "} else {\n",
+            "  warning(paste0(\n",
+            "    \"Scale variable '\",\n",
+            "    scale_var_name,\n",
+            "    \"' not found. Using empty vector.\"\n",
+            "  ))\n",
+            "  scales <- character(0)\n",
+            "}\n\n"
+          )
+        } else {
+          paste0(
+            "scale_var_name <- \"scales_",
+            tolower(self$pheno),
+            "\"\n",
+            "if (!exists(scale_var_name)) {\n",
+            "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+            "  if (file.exists(sysdata_path)) {\n",
+            "    load(sysdata_path, envir = .GlobalEnv)\n",
+            "  }\n",
+            "}\n",
+            "if (exists(scale_var_name)) {\n",
+            "  scales <- get(scale_var_name)\n",
+            "} else {\n",
+            "  warning(paste0(\n",
+            "    \"Scale variable '\",\n",
+            "    scale_var_name,\n",
+            "    \"' not found. Using empty vector.\"\n",
+            "  ))\n",
+            "  scales <- character(0)\n",
+            "}\n\n"
+          )
+        },
+
+        "# Filter the data directly\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
         "  if (!is.null(domain)) {\n",
@@ -679,13 +712,13 @@ DomainProcessorR6 <- R6::R6Class(
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
-        "  fn_list$t_score <- \"T score: Mean = 50 [50thâ€°], SD Â± 10 [16thâ€°, 84thâ€°]\"\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
         "}\n",
         "if (\"scaled_score\" %in% unique_score_types) {\n",
-        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50thâ€°], SD Â± 3 [16thâ€°, 84thâ€°]\"\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
         "}\n",
         "if (\"standard_score\" %in% unique_score_types) {\n",
-        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50thâ€°], SD Â± 15 [16thâ€°, 84thâ€°]\"\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
         "}\n\n",
 
         "# Create groups based on test names that use each score type\n",
@@ -697,7 +730,7 @@ DomainProcessorR6 <- R6::R6Class(
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
-        "  source_note <- \"Standard score: Mean = 100 [50thâ€°], SD Â± 15 [16thâ€°, 84thâ€°]\"\n",
+        "  source_note <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
@@ -947,38 +980,396 @@ DomainProcessorR6 <- R6::R6Class(
         "_adhd_adult_text_observer.qmd"
       )
 
+      # Get input file path
+      input_path <- if (grepl("^data/", self$input_file)) {
+        self$input_file
+      } else {
+        paste0("data/", basename(self$input_file))
+      }
+
+      # Build complete QMD content with all R processing blocks
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
         domain_name,
         "\n",
         "<sec-adhd-adult>\n",
+        "```\n\n",
+
+        # Setup R code block
+        "```{r}\n",
+        "#| label: setup-adhd-adult\n",
+        "#| include: false\n\n",
+
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
+        "source(\"R/score_type_utils.R\")\n\n",
+
+        "# Filter by domain\n",
+        "domains <- c(\"",
+        domain_name,
+        "\")\n\n",
+
+        "# Target phenotype\n",
+        "pheno <- \"adhd\"\n\n",
+
+        "# Create R6 processor\n",
+        "processor_adhd <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        input_path,
+        "\"\n",
+        ")\n\n",
+
+        "# Load and process data\n",
+        "processor_adhd$load_data()\n",
+        "processor_adhd$filter_by_domain()\n\n",
+
+        "# Create the data object with original name for compatibility\n",
+        "adhd <- processor_adhd$data\n\n",
+
+        "# Process and export data using R6\n",
+        "processor_adhd$select_columns()\n",
+        "processor_adhd$save_data()\n\n",
+
+        "# Update the original object\n",
+        "adhd <- processor_adhd$data\n\n",
+
+        "# Load internal data to get standardized scale names\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path, envir = .GlobalEnv)\n",
+        "  }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\n",
+        "    \"Scale variable '\",\n",
+        "    scale_var_name,\n",
+        "    \"' not found. Using empty vector.\"\n",
+        "  ))\n",
+        "  scales <- character(0)\n",
+        "}\n\n",
+
+        "# Filter the data directly\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+
+        "# Apply the filter function\n",
+        "data_adhd <- filter_data(data = adhd, domain = domains, scale = scales)\n",
         "```\n\n"
       )
 
-      # Check data availability for each rater and include conditionally
-      if (self$check_rater_data_exists("self")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### SELF-REPORT\n\n",
-          "{{< include ",
-          self_text,
-          " >}}\n\n"
-        )
+      # Add text processing sections for each available rater
+      raters <- c("self", "observer")
+      text_files <- c(self_text, observer_text)
+      rater_names <- c("SELF-REPORT", "OBSERVER RATINGS")
+
+      for (i in seq_along(raters)) {
+        rater <- raters[i]
+        text_file <- text_files[i]
+        section_name <- rater_names[i]
+
+        if (self$check_rater_data_exists(rater)) {
+          qmd_content <- paste0(
+            qmd_content,
+            "### ",
+            section_name,
+            "\n\n",
+            "{{< include ",
+            text_file,
+            " >}}\n\n",
+
+            "```{r}\n",
+            "#| label: text-adhd-adult-",
+            rater,
+            "\n",
+            "#| cache: true\n",
+            "#| include: true\n",
+            "#| echo: false\n",
+            "#| results: asis\n\n",
+
+            "# Filter data for this rater\n",
+            "data_adhd_",
+            rater,
+            " <- data_adhd\n",
+            "if (\"rater\" %in% names(data_adhd_",
+            rater,
+            ")) {\n",
+            "  data_adhd_",
+            rater,
+            " <- data_adhd_",
+            rater,
+            "[data_adhd_",
+            rater,
+            "$rater == \"",
+            rater,
+            "\", ]\n",
+            "}\n\n",
+
+            "# Generate text using R6 class\n",
+            "if (nrow(data_adhd_",
+            rater,
+            ") > 0) {\n",
+            "  results_processor_",
+            rater,
+            " <- NeuropsychResultsR6$new(\n",
+            "    data = data_adhd_",
+            rater,
+            ",\n",
+            "    file = \"",
+            text_file,
+            "\"\n",
+            "  )\n",
+            "  results_processor_",
+            rater,
+            "$process()\n",
+            "}\n",
+            "```\n\n"
+          )
+        }
       }
 
-      if (self$check_rater_data_exists("observer")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### OBSERVER RATINGS\n\n",
-          "{{< include ",
-          observer_text,
-          " >}}\n\n"
-        )
-      }
+      # Add table generation and plot code
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: qtbl-adhd-adult\n",
+        "#| include: false\n\n",
+
+        "# Table parameters\n",
+        "table_name <- \"table_adhd_adult\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_adhd)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  source_note <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_adhd,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-adhd-adult-subdomain\n",
+        "#| include: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\"z_mean_subdomain\" %in% names(data_adhd) && \"subdomain\" %in% names(data_adhd)) {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_adhd,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_adhd_adult_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_adhd\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_adhd <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_adhd <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-adhd-adult-narrow\n",
+        "#| include: false\n\n",
+
+        "# Create narrow plot using R6 DotplotR6\n",
+        "if (\"z_mean_narrow\" %in% names(data_adhd) && \"narrow\" %in% names(data_adhd)) {\n",
+        "  dotplot_narrow <- DotplotR6$new(\n",
+        "    data = data_adhd,\n",
+        "    x = \"z_mean_narrow\",\n",
+        "    y = \"narrow\",\n",
+        "    filename = here::here(\"fig_adhd_adult_narrow.svg\")\n",
+        "  )\n",
+        "  dotplot_narrow$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_adhd\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_adhd <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_adhd <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_adhd`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_adhd_adult.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_adhd_adult_subdomain.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_adhd_adult.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_adhd_adult_narrow.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n"
+      )
 
       writeLines(qmd_content, output_file)
-      message(paste("Generated ADHD adult QMD file:", output_file))
+      message(paste("Generated complete ADHD adult QMD file:", output_file))
       return(output_file)
     },
 
@@ -1012,48 +1403,394 @@ DomainProcessorR6 <- R6::R6Class(
         "_adhd_child_text_teacher.qmd"
       )
 
+      # Get input file path
+      input_path <- if (grepl("^data/", self$input_file)) {
+        self$input_file
+      } else {
+        paste0("data/", basename(self$input_file))
+      }
+
+      # Build complete QMD content with all R processing blocks
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
         domain_name,
         "\n",
         "<sec-adhd-child>\n",
+        "```\n\n",
+
+        # Setup R code block
+        "```{r}\n",
+        "#| label: setup-adhd-child\n",
+        "#| include: false\n\n",
+
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
+        "source(\"R/score_type_utils.R\")\n\n",
+
+        "# Filter by domain\n",
+        "domains <- c(\"",
+        domain_name,
+        "\")\n\n",
+
+        "# Target phenotype\n",
+        "pheno <- \"adhd\"\n\n",
+
+        "# Create R6 processor\n",
+        "processor_adhd <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        input_path,
+        "\"\n",
+        ")\n\n",
+
+        "# Load and process data\n",
+        "processor_adhd$load_data()\n",
+        "processor_adhd$filter_by_domain()\n\n",
+
+        "# Create the data object with original name for compatibility\n",
+        "adhd <- processor_adhd$data\n\n",
+
+        "# Process and export data using R6\n",
+        "processor_adhd$select_columns()\n",
+        "processor_adhd$save_data()\n\n",
+
+        "# Update the original object\n",
+        "adhd <- processor_adhd$data\n\n",
+
+        "# Load internal data to get standardized scale names\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path, envir = .GlobalEnv)\n",
+        "  }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\n",
+        "    \"Scale variable '\",\n",
+        "    scale_var_name,\n",
+        "    \"' not found. Using empty vector.\"\n",
+        "  ))\n",
+        "  scales <- character(0)\n",
+        "}\n\n",
+
+        "# Filter the data directly\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+
+        "# Apply the filter function\n",
+        "data_adhd <- filter_data(data = adhd, domain = domains, scale = scales)\n",
         "```\n\n"
       )
 
-      # Check data availability for each rater and include conditionally
-      if (self$check_rater_data_exists("self")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### SELF-REPORT\n\n",
-          "{{< include ",
-          self_text,
-          " >}}\n\n"
-        )
+      # Add text processing sections for each available rater
+      raters <- c("self", "parent", "teacher")
+      text_files <- c(self_text, parent_text, teacher_text)
+      rater_names <- c("SELF-REPORT", "PARENT RATINGS", "TEACHER RATINGS")
+
+      for (i in seq_along(raters)) {
+        rater <- raters[i]
+        text_file <- text_files[i]
+        section_name <- rater_names[i]
+
+        if (self$check_rater_data_exists(rater)) {
+          qmd_content <- paste0(
+            qmd_content,
+            "### ",
+            section_name,
+            "\n\n",
+            "{{< include ",
+            text_file,
+            " >}}\n\n",
+
+            "```{r}\n",
+            "#| label: text-adhd-child-",
+            rater,
+            "\n",
+            "#| cache: true\n",
+            "#| include: true\n",
+            "#| echo: false\n",
+            "#| results: asis\n\n",
+
+            "# Filter data for this rater\n",
+            "data_adhd_",
+            rater,
+            " <- data_adhd\n",
+            "if (\"rater\" %in% names(data_adhd_",
+            rater,
+            ")) {\n",
+            "  data_adhd_",
+            rater,
+            " <- data_adhd_",
+            rater,
+            "[data_adhd_",
+            rater,
+            "$rater == \"",
+            rater,
+            "\", ]\n",
+            "}\n\n",
+
+            "# Generate text using R6 class\n",
+            "if (nrow(data_adhd_",
+            rater,
+            ") > 0) {\n",
+            "  results_processor_",
+            rater,
+            " <- NeuropsychResultsR6$new(\n",
+            "    data = data_adhd_",
+            rater,
+            ",\n",
+            "    file = \"",
+            text_file,
+            "\"\n",
+            "  )\n",
+            "  results_processor_",
+            rater,
+            "$process()\n",
+            "}\n",
+            "```\n\n"
+          )
+        }
       }
 
-      if (self$check_rater_data_exists("parent")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### PARENT RATINGS\n\n",
-          "{{< include ",
-          parent_text,
-          " >}}\n\n"
-        )
-      }
+      # Add table generation and plot code (same structure as emotion domain)
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: qtbl-adhd-child\n",
+        "#| include: false\n\n",
 
-      if (self$check_rater_data_exists("teacher")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### TEACHER RATINGS\n\n",
-          "{{< include ",
-          teacher_text,
-          " >}}\n\n"
-        )
-      }
+        "# Table parameters\n",
+        "table_name <- \"table_adhd_child\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_adhd)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  source_note <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_adhd,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-adhd-child-subdomain\n",
+        "#| include: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\"z_mean_subdomain\" %in% names(data_adhd) && \"subdomain\" %in% names(data_adhd)) {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_adhd,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_adhd_child_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_adhd\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_adhd <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_adhd <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-adhd-child-narrow\n",
+        "#| include: false\n\n",
+
+        "# Create narrow plot using R6 DotplotR6\n",
+        "if (\"z_mean_narrow\" %in% names(data_adhd) && \"narrow\" %in% names(data_adhd)) {\n",
+        "  dotplot_narrow <- DotplotR6$new(\n",
+        "    data = data_adhd,\n",
+        "    x = \"z_mean_narrow\",\n",
+        "    y = \"narrow\",\n",
+        "    filename = here::here(\"fig_adhd_child_narrow.svg\")\n",
+        "  )\n",
+        "  dotplot_narrow$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_adhd\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_adhd <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_adhd <- \"",
+        domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_adhd`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_adhd_child.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_adhd_child_subdomain.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_adhd_child.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_adhd_child_narrow.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n"
+      )
 
       writeLines(qmd_content, output_file)
-      message(paste("Generated ADHD child QMD file:", output_file))
+      message(paste("Generated complete ADHD child QMD file:", output_file))
       return(output_file)
     },
 
@@ -1095,49 +1832,733 @@ DomainProcessorR6 <- R6::R6Class(
         "_emotion_child_text_teacher.qmd"
       )
 
-      # Start building QMD content
+      # Get input file path
+      input_path <- if (grepl("^data/", self$input_file)) {
+        self$input_file
+      } else {
+        paste0("data/", basename(self$input_file))
+      }
+
+      # Multiple domains for emotion (based on master template)
+      multiple_domains <- c(
+        "Behavioral/Emotional/Social",
+        "Psychiatric Symptoms",
+        "Substance Use",
+        "Personality Disorders",
+        "Psychosocial Problems"
+      )
+
+      # Start building QMD content with complete R processing blocks
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
         correct_domain_name,
-        "\n", # Use correct domain name for child
+        "\n",
         "<sec-emotion-child>\n",
+        "```\n\n",
+
+        # Setup R code block
+        "```{r}\n",
+        "#| label: setup-emotion-child\n",
+        "#| include: false\n\n",
+
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
+        "source(\"R/score_type_utils.R\")\n\n",
+
+        "# Filter by domain\n",
+        "domains <- c(\n",
+        paste0("  \"", multiple_domains, "\"", collapse = ",\n"),
+        "\n)\n\n",
+
+        "# Target phenotype\n",
+        "pheno <- \"emotion\"\n\n",
+
+        "# Create R6 processor\n",
+        "processor_emotion <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        input_path,
+        "\"\n",
+        ")\n\n",
+
+        "# Load and process data\n",
+        "processor_emotion$load_data()\n",
+        "processor_emotion$filter_by_domain()\n\n",
+
+        "# Create the data object with original name for compatibility\n",
+        "emotion <- processor_emotion$data\n\n",
+
+        "# Process and export data using R6\n",
+        "processor_emotion$select_columns()\n",
+        "processor_emotion$save_data()\n\n",
+
+        "# Update the original object\n",
+        "emotion <- processor_emotion$data\n\n",
+
+        "# Load internal data to get standardized scale names\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path, envir = .GlobalEnv)\n",
+        "  }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\n",
+        "    \"Scale variable '\",\n",
+        "    scale_var_name,\n",
+        "    \"' not found. Using empty vector.\"\n",
+        "  ))\n",
+        "  scales <- character(0)\n",
+        "}\n\n",
+
+        "# Filter the data directly\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+
+        "# Apply the filter function\n",
+        "data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)\n",
         "```\n\n"
       )
 
-      # Check data availability for each rater and include conditionally
-      if (self$check_rater_data_exists("self")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### SELF-REPORT\n\n",
-          "{{< include ",
-          self_text,
-          " >}}\n\n"
-        )
-      }
+      # Add separate R code blocks for each rater following the master template
+      # SELF-REPORT TEXT PROCESSING
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: text-emotion-child-self\n",
+        "#| cache: true\n",
+        "#| include: true\n",
+        "#| echo: false\n",
+        "#| results: asis\n\n",
 
-      if (self$check_rater_data_exists("parent")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### PARENT RATINGS\n\n",
-          "{{< include ",
-          parent_text,
-          " >}}\n\n"
-        )
-      }
+        "# Filter data for this rater\n",
+        "data_emotion_self <- data_emotion\n",
+        "if (\"rater\" %in% names(data_emotion_self)) {\n",
+        "  data_emotion_self <- data_emotion_self[data_emotion_self$rater == \"self\", ]\n",
+        "}\n\n",
 
-      if (self$check_rater_data_exists("teacher")) {
-        qmd_content <- paste0(
-          qmd_content,
-          "### TEACHER RATINGS\n\n",
-          "{{< include ",
-          teacher_text,
-          " >}}\n\n"
-        )
-      }
+        "# Generate text using R6 class\n",
+        "if (nrow(data_emotion_self) > 0) {\n",
+        "  results_processor_self <- NeuropsychResultsR6$new(\n",
+        "    data = data_emotion_self,\n",
+        "    file = \"",
+        self_text,
+        "\"\n",
+        "  )\n",
+        "  results_processor_self$process()\n",
+        "}\n",
+        "```\n\n",
+
+        # PARENT TEXT PROCESSING
+        "```{r}\n",
+        "#| label: text-emotion-child-parent\n",
+        "#| cache: true\n",
+        "#| include: true\n",
+        "#| echo: false\n",
+        "#| results: asis\n\n",
+
+        "# Filter data for this rater\n",
+        "data_emotion_parent <- data_emotion\n",
+        "if (\"rater\" %in% names(data_emotion_parent)) {\n",
+        "  data_emotion_parent <- data_emotion_parent[\n",
+        "    data_emotion_parent$rater == \"parent\",\n",
+        "  ]\n",
+        "}\n\n",
+
+        "# Generate text using R6 class\n",
+        "if (nrow(data_emotion_parent) > 0) {\n",
+        "  results_processor_parent <- NeuropsychResultsR6$new(\n",
+        "    data = data_emotion_parent,\n",
+        "    file = \"",
+        parent_text,
+        "\"\n",
+        "  )\n",
+        "  results_processor_parent$process()\n",
+        "}\n",
+        "```\n\n",
+
+        # TEACHER TEXT PROCESSING (with eval: false)
+        "```{r}\n",
+        "#| label: text-emotion-child-teacher\n",
+        "#| cache: true\n",
+        "#| include: true\n",
+        "#| echo: false\n",
+        "#| results: asis\n",
+        "#| eval: false\n\n",
+
+        "# Filter data for this rater\n",
+        "data_emotion_teacher <- data_emotion\n",
+        "if (\"rater\" %in% names(data_emotion_teacher)) {\n",
+        "  data_emotion_teacher <- data_emotion_teacher[\n",
+        "    data_emotion_teacher$rater == \"teacher\",\n",
+        "  ]\n",
+        "}\n\n",
+
+        "# Generate text using R6 class\n",
+        "if (nrow(data_emotion_teacher) > 0) {\n",
+        "  results_processor_teacher <- NeuropsychResultsR6$new(\n",
+        "    data = data_emotion_teacher,\n",
+        "    file = \"",
+        teacher_text,
+        "\"\n",
+        "  )\n",
+        "  results_processor_teacher$process()\n",
+        "}\n",
+        "```\n\n"
+      )
+
+      # Add separate table generation for each rater
+      # SELF TABLE
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: qtbl-emotion-child-self\n",
+        "#| include: false\n\n",
+
+        "# Table parameters\n",
+        "table_name <- \"table_emotion_child_self\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  # Determine default based on pheno\n",
+        "  source_note <- \"T score: Mean = 50 [50th], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_emotion_self,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n"
+      )
+
+      # PARENT TABLE
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: qtbl-emotion-child-parent\n",
+        "#| include: false\n\n",
+
+        "# Table parameters\n",
+        "table_name <- \"table_emotion_child_parent\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  # Determine default based on pheno\n",
+        "  source_note <- \"T score: Mean = 50 [50th], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_emotion_parent,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n"
+      )
+
+      # TEACHER TABLE (with eval: false)
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: qtbl-emotion-child-teacher\n",
+        "#| include: false\n",
+        "#| eval: false\n\n",
+
+        "# Table parameters\n",
+        "table_name <- \"table_emotion_child_teacher\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  # Determine default based on pheno\n",
+        "  source_note <- \"T score: Mean = 50 [50th], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_emotion_teacher,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n"
+      )
+
+      # Add separate figure generation for each rater
+      # SELF FIGURE
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: fig-emotion-child-self-subdomain\n",
+        "#| include: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\n",
+        "  \"z_mean_subdomain\" %in%\n",
+        "    names(data_emotion_self) &&\n",
+        "    \"subdomain\" %in% names(data_emotion_self)\n",
+        ") {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_emotion_self,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_emotion_child_self_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_emotion_child_self\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_emotion <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_emotion <- \"Behavioral/Emotional/Social self-report scores ... \"\n",
+        "}\n",
+        "```\n\n"
+      )
+
+      # PARENT FIGURE
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: fig-emotion-child-parent-subdomain\n",
+        "#| include: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\n",
+        "  \"z_mean_subdomain\" %in%\n",
+        "    names(data_emotion_parent) &&\n",
+        "    \"subdomain\" %in% names(data_emotion_parent)\n",
+        ") {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_emotion_parent,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_emotion_child_parent_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_emotion_child_parent\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_emotion <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_emotion <- \"Behavioral/Emotional/Social parent-report scores ... \"\n",
+        "}\n",
+        "```\n\n"
+      )
+
+      # TEACHER FIGURE (with eval: false)
+      qmd_content <- paste0(
+        qmd_content,
+        "```{r}\n",
+        "#| label: fig-emotion-child-teacher-subdomain\n",
+        "#| include: false\n",
+        "#| eval: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\n",
+        "  \"z_mean_subdomain\" %in%\n",
+        "    names(data_emotion_teacher) &&\n",
+        "    \"subdomain\" %in% names(data_emotion_teacher)\n",
+        ") {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_emotion_teacher,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_emotion_child_teacher_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_emotion_child_teacher\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_emotion <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_emotion <- \"Behavioral/Emotional/Social teacher-report scores ... \"\n",
+        "}\n",
+        "```\n\n"
+      )
+
+      # Add the section structure with text includes and Typst code matching the master
+      qmd_content <- paste0(
+        qmd_content,
+        "### SELF-REPORT\n\n",
+        "{{< include ",
+        self_text,
+        " >}}\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_emotion_child_self`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"Behavioral/Emotional/Social\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_emotion_child_self.png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_emotion_child_self_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "### PARENT RATINGS\n\n",
+        "{{< include ",
+        parent_text,
+        " >}}\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_emotion_child_parent`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"Behavioral/Emotional/Social\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_emotion_child_parent.png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_emotion_child_parent_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "### TEACHER RATINGS\n\n",
+        "<!-- {{< include ",
+        teacher_text,
+        " >}} -->\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_emotion_child_teacher`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"Behavioral/Emotional/Social\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_emotion_child_teacher.png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_emotion_child_teacher_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n"
+      )
 
       writeLines(qmd_content, output_file)
-      message(paste("Generated emotion child QMD file:", output_file))
+      message(paste("Generated complete emotion child QMD file:", output_file))
       return(output_file)
     },
 
@@ -1169,6 +2590,14 @@ DomainProcessorR6 <- R6::R6Class(
       # Create text file for self-report (adults typically only have self-report)
       text_file <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
 
+      # Get input file path
+      input_path <- if (grepl("^data/", self$input_file)) {
+        self$input_file
+      } else {
+        paste0("data/", basename(self$input_file))
+      }
+
+      # Build complete QMD content with all R processing blocks
       qmd_content <- paste0(
         "```{=typst}\n",
         "== ",
@@ -1176,13 +2605,327 @@ DomainProcessorR6 <- R6::R6Class(
         "\n", # Use correct domain name for adult
         "<sec-emotion-adult>\n",
         "```\n\n",
+
         "{{< include ",
         text_file,
-        " >}}\n\n"
+        " >}}\n\n",
+
+        # Setup R code block
+        "```{r}\n",
+        "#| label: setup-emotion-adult\n",
+        "#| include: false\n\n",
+
+        "# Source R6 classes\n",
+        "source(\"R/DomainProcessorR6.R\")\n",
+        "source(\"R/NeuropsychResultsR6.R\")\n",
+        "source(\"R/DotplotR6.R\")\n",
+        "source(\"R/TableGTR6.R\")\n",
+        "source(\"R/score_type_utils.R\")\n\n",
+
+        "# Filter by domain\n",
+        "domains <- c(\"",
+        correct_domain_name,
+        "\")\n\n",
+
+        "# Target phenotype\n",
+        "pheno <- \"emotion\"\n\n",
+
+        "# Create R6 processor\n",
+        "processor_emotion <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = pheno,\n",
+        "  input_file = \"",
+        input_path,
+        "\"\n",
+        ")\n\n",
+
+        "# Load and process data\n",
+        "processor_emotion$load_data()\n",
+        "processor_emotion$filter_by_domain()\n\n",
+
+        "# Create the data object with original name for compatibility\n",
+        "emotion <- processor_emotion$data\n\n",
+
+        "# Process and export data using R6\n",
+        "processor_emotion$select_columns()\n",
+        "processor_emotion$save_data()\n\n",
+
+        "# Update the original object\n",
+        "emotion <- processor_emotion$data\n\n",
+
+        "# Load internal data to get standardized scale names\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "if (!exists(scale_var_name)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path, envir = .GlobalEnv)\n",
+        "  }\n",
+        "}\n",
+        "if (exists(scale_var_name)) {\n",
+        "  scales <- get(scale_var_name)\n",
+        "} else {\n",
+        "  warning(paste0(\n",
+        "    \"Scale variable '\",\n",
+        "    scale_var_name,\n",
+        "    \"' not found. Using empty vector.\"\n",
+        "  ))\n",
+        "  scales <- character(0)\n",
+        "}\n\n",
+
+        "# Filter the data directly\n",
+        "filter_data <- function(data, domain, scale) {\n",
+        "  # Filter by domain if provided\n",
+        "  if (!is.null(domain)) {\n",
+        "    data <- data[data$domain %in% domain, ]\n",
+        "  }\n\n",
+        "  # Filter by scale if provided\n",
+        "  if (!is.null(scale)) {\n",
+        "    data <- data[data$scale %in% scale, ]\n",
+        "  }\n\n",
+        "  return(data)\n",
+        "}\n\n",
+
+        "# Apply the filter function\n",
+        "data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: text-emotion-adult\n",
+        "#| cache: true\n",
+        "#| include: true\n",
+        "#| echo: false\n",
+        "#| results: asis\n\n",
+
+        "# Generate text using R6 class\n",
+        "results_processor <- NeuropsychResultsR6$new(\n",
+        "  data = data_emotion,\n",
+        "  file = \"",
+        text_file,
+        "\"\n",
+        ")\n",
+        "results_processor$process()\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: qtbl-emotion-adult\n",
+        "#| include: false\n\n",
+
+        "# Table parameters\n",
+        "table_name <- \"table_emotion_adult\"\n",
+        "vertical_padding <- 0\n",
+        "multiline <- TRUE\n\n",
+
+        "# Get score types from the lookup table\n",
+        "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
+
+        "# Create a list of test names grouped by score type\n",
+        "score_types_list <- list()\n\n",
+
+        "# Process the score type map to group tests by score type\n",
+        "for (test_name in names(score_type_map)) {\n",
+        "  types <- score_type_map[[test_name]]\n",
+        "  for (type in types) {\n",
+        "    if (!type %in% names(score_types_list)) {\n",
+        "      score_types_list[[type]] <- character(0)\n",
+        "    }\n",
+        "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get unique score types present\n",
+        "unique_score_types <- names(score_types_list)\n\n",
+
+        "# Define the score type footnotes\n",
+        "fn_list <- list()\n",
+        "if (\"t_score\" %in% unique_score_types) {\n",
+        "  fn_list$t_score <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"scaled_score\" %in% unique_score_types) {\n",
+        "  fn_list$scaled_score <- \"Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]\"\n",
+        "}\n",
+        "if (\"standard_score\" %in% unique_score_types) {\n",
+        "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]\"\n",
+        "}\n\n",
+
+        "# Create groups based on test names that use each score type\n",
+        "grp_list <- score_types_list\n\n",
+
+        "# Define which groups support which score types (for dynamic footnotes)\n",
+        "dynamic_grp <- score_types_list\n\n",
+
+        "# Default source note if no score types are found\n",
+        "if (length(fn_list) == 0) {\n",
+        "  # Determine default based on pheno\n",
+        "  source_note <- \"T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]\"\n",
+        "} else {\n",
+        "  source_note <- NULL # No general source note when using footnotes\n",
+        "}\n\n",
+
+        "# Create table using our modified TableGTR6 R6 class\n",
+        "table_gt <- TableGTR6$new(\n",
+        "  data = data_emotion,\n",
+        "  pheno = pheno,\n",
+        "  table_name = table_name,\n",
+        "  vertical_padding = vertical_padding,\n",
+        "  source_note = source_note,\n",
+        "  multiline = multiline,\n",
+        "  fn_list = fn_list,\n",
+        "  grp_list = grp_list,\n",
+        "  dynamic_grp = dynamic_grp\n",
+        ")\n\n",
+
+        "# Get the table object without automatic saving\n",
+        "tbl <- table_gt$build_table()\n\n",
+
+        "# Save the table using our save_table method\n",
+        "table_gt$save_table(tbl, dir = here::here())\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-emotion-adult-subdomain\n",
+        "#| include: false\n\n",
+
+        "# Create subdomain plot using R6 DotplotR6\n",
+        "if (\"z_mean_subdomain\" %in% names(data_emotion) && \"subdomain\" %in% names(data_emotion)) {\n",
+        "  dotplot_subdomain <- DotplotR6$new(\n",
+        "    data = data_emotion,\n",
+        "    x = \"z_mean_subdomain\",\n",
+        "    y = \"subdomain\",\n",
+        "    filename = here::here(\"fig_emotion_adult_subdomain.svg\")\n",
+        "  )\n",
+        "  dotplot_subdomain$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_emotion\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_emotion <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_emotion <- \"",
+        correct_domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{r}\n",
+        "#| label: fig-emotion-adult-narrow\n",
+        "#| include: false\n\n",
+
+        "# Create narrow plot using R6 DotplotR6\n",
+        "if (\"z_mean_narrow\" %in% names(data_emotion) && \"narrow\" %in% names(data_emotion)) {\n",
+        "  dotplot_narrow <- DotplotR6$new(\n",
+        "    data = data_emotion,\n",
+        "    x = \"z_mean_narrow\",\n",
+        "    y = \"narrow\",\n",
+        "    filename = here::here(\"fig_emotion_adult_narrow.svg\")\n",
+        "  )\n",
+        "  dotplot_narrow$create_plot()\n",
+        "} else {\n",
+        "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
+        "}\n\n",
+
+        "# Load plot title from sysdata.rda\n",
+        "plot_title_var <- \"plot_title_emotion\"\n",
+        "if (!exists(plot_title_var)) {\n",
+        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "  if (file.exists(sysdata_path)) {\n",
+        "    load(sysdata_path)\n",
+        "  }\n",
+        "}\n\n",
+
+        "# Get the plot title or use default\n",
+        "if (exists(plot_title_var)) {\n",
+        "  plot_title_emotion <- get(plot_title_var)\n",
+        "} else {\n",
+        "  plot_title_emotion <- \"",
+        correct_domain_name,
+        " scores ... \"\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_emotion`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        correct_domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_emotion_adult.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_emotion_adult_subdomain.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        correct_domain_name,
+        "\"\n\n",
+
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_emotion_adult.png\"\n\n",
+
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_emotion_adult_narrow.svg\"\n\n",
+
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n"
       )
 
       writeLines(qmd_content, output_file)
-      message(paste("Generated emotion adult QMD file:", output_file))
+      message(paste("Generated complete emotion adult QMD file:", output_file))
       return(output_file)
     },
 
