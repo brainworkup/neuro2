@@ -1901,7 +1901,7 @@ DomainProcessorR6 <- R6::R6Class(
         "emotion <- processor_emotion$data\n\n",
 
         "# Load internal data to get standardized scale names\n",
-        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno), \"_child\")\n",
         "if (!exists(scale_var_name)) {\n",
         "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
         "  if (file.exists(sysdata_path)) {\n",
@@ -2654,7 +2654,7 @@ DomainProcessorR6 <- R6::R6Class(
         "emotion <- processor_emotion$data\n\n",
 
         "# Load internal data to get standardized scale names\n",
-        "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
+        "scale_var_name <- paste0(\"scales_\", tolower(pheno), \"_adult\")\n",
         "if (!exists(scale_var_name)) {\n",
         "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
         "  if (file.exists(sysdata_path)) {\n",
