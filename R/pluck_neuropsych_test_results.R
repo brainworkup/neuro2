@@ -108,7 +108,8 @@ extract_wisc5_data <- function(
   }
 
   # Set parameters based on test type and use dynamic page numbers
-  params <- switch(test_type,
+  params <- switch(
+    test_type,
     "index" = list(
       test = "wisc5_index",
       pages = pages_index,
@@ -268,7 +269,7 @@ extract_wisc5_data <- function(
       )
     ) |>
     dplyr::select(-description) |>
-    dplyr::relocate(absort, .after = result)
+    dplyr::relocate(absort, .before = result)
 
   # Filter out rows with missing or incomplete data
   df_merged <- df_merged |>
@@ -280,7 +281,7 @@ extract_wisc5_data <- function(
     )
 
   # Save results
-  output_dir <- "data/csv"
+  output_dir <- "raw-data/csv"
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
@@ -535,7 +536,7 @@ process_wais5_complete <- function(
   test <- "wais5"
   readr::write_excel_csv(
     wais5,
-    here::here("data", "csv", paste0(test, ".csv")),
+    here::here("data-raw", "csv", paste0(test, ".csv")),
     col_names = TRUE
   )
 
@@ -807,7 +808,7 @@ pluck_wiat4 <- function(
     return(length(readLines(file_path, n = 1)) > 0)
   }
 
-  file_path <- here::here("data", paste0(g_file_name, ".csv"))
+  file_path <- here::here("data-raw", paste0(g_file_name, ".csv"))
 
   readr::write_excel_csv(
     df,

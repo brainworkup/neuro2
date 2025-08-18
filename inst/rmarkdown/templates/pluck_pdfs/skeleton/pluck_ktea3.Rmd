@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from KTEA-3"
 params:
-  patient: Biggie
+  patient: Isabella
   test:
     label: "Test"
     value: ktea3
@@ -138,15 +138,13 @@ library(here)
 library(knitr)
 library(magrittr)
 library(pdftools)
-library(rJava)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
 library(snakecase)
 library(tabulapdf)
 library(tidyverse)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters
@@ -291,7 +289,7 @@ print(table2)
 ## Make columns
 
 ```{r mutate1}
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- neuro2::gpluck_make_columns(
   table1,
   range = "",
   test = "ktea3",
@@ -308,7 +306,7 @@ table1 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- neuro2::gpluck_make_columns(
   table2,
   range = "",
   test = "ktea3",
@@ -329,8 +327,8 @@ table2 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-table1 <- NeurotypR::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
-table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table1 <- neuro2::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
+table2 <- neuro2::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Domains for language tests
@@ -670,8 +668,16 @@ table2 <-
 ## Relocate variables
 
 ```{r}
-table1 <- table1 |> dplyr::relocate(c(test, test_name), .before = scale)
-table2 <- table2 |> dplyr::relocate(c(test, test_name), .before = scale)
+table1 <-
+  table1 |>
+  dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+
+table2 <-
+  table2 |>
+  dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
+
+# table1 <- table1 |> dplyr::relocate(c(test, test_name), .before = scale)
+# table2 <- table2 |> dplyr::relocate(c(test, test_name), .before = scale)
 ```
 
 ## Merge tables
@@ -694,19 +700,19 @@ ktea3_lookup <- ktea3 |>
 # ktea3$patient <- patient
 ```
 
-## Remove rows with no data
+## Remove rows with no data and keep unique rows
 
 ```{r}
 ktea3bk <- ktea3
 ktea3 <- ktea3 |>
-  dplyr::filter(!is.na(description) & description != "") |>
-  dplyr::filter(!is.na(score) & score != "") |>
-  dplyr::slice(-(2:7)) |>
-  dplyr::slice(-11, -17, -18)
+  dplyr::filter(!is.na(percentile) & percentile != "") |>
+  dplyr::filter(!is.na(score) & score != "") |> 
+  dplyr::distinct(scale, .keep_all = TRUE) |> 
+  dplyr::select(-c(description, age_equiv))
 ```
 
 ## Write out final csv
 
 ```{r}
-readr::write_csv(ktea3, here::here("data", "csv", "ktea3.csv"), col_names = TRUE, na = "")
+readr::write_csv(ktea3, here::here("data-raw", "csv", "ktea3.csv"), col_names = TRUE, na = "")
 ```

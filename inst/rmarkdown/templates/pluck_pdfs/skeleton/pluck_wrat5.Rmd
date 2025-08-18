@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from WRAT-5"
 params:
-  patient: Biggie
+  patient: Isabella
   test:
     label: "Test"
     value: wrat5
@@ -22,7 +22,7 @@ params:
     label: "No file selected"
     value: file
     input: file
-  pages: 7
+  pages: 10
   table:
     label: "SCORE SUMMARY"
     value: [Word Reading]
@@ -82,12 +82,10 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
 library(hablar)
 library(here)
 library(knitr)
 library(readr)
-library(rJava)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
@@ -96,36 +94,31 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(dplyr)
+library(neuro2)
 ```
 
-## Patient
+## Parameters
 
-```{r patient}
+```{r}
 patient <- params$patient
-```
-
-## Test
-
-```{r test}
 test <- params$test
 test_name <- params$test_name
-```
-
-## Pages
-
-```{r pages}
 pages <- params$pages
+# file <- file.path(file.choose())
+file <- file.path(params$file)
+saveRDS(file, paste0(test, "_path.rds"))
+# file <- readRDS(paste0(test, "_path.rds"))
 ```
 
 ## Extract Areas and Tables with tabulapdf
 
-```{r eval = FALSE}
-f <- file.path("/Users/joey/reports/Biggie/pdf/ADHD Young Adult Battery 2024-210a6756-acdd-488e-86e1-1446de4cb331.pdf")
+```{r eval = TRUE}
+# f <- file.path("/Users/joey/reports/Biggie/pdf/ADHD Young Adult Battery 2024-210a6756-acdd-488e-86e1-1446de4cb331.pdf")
 
 # locate areas and extract
 plucked_tables_wrat5 <- tabulapdf::extract_areas(
-  file = f,
-  pages = c(7),
+  file = file,
+  pages = pages,
   method = "stream",
   output = "matrix"
 )
@@ -135,22 +128,14 @@ plucked_tables_wrat5 <- tabulapdf::extract_areas(
 # Loop over the list and write each matrix to a CSV file
 test <- "wrat5"
 for (i in seq_along(plucked_tables_wrat5)) {
-  readr::write_(plucked_tables_wrat5[[i]], file = paste0(test, "_", i, ".csv"))
+  readr::write_excel_csv(plucked_tables_wrat5[[i]], file = paste0(test, "_", i, ".csv"))
 }
 
 # Save the entire list to an R data file
 save(plucked_tables_wrat5, file = "plucked_tables_wrat5.RData")
-```
 
-## Upload/attach PDF
-
-```{r choose, eval = FALSE}
-file <- file.path(params$file)
-```
-
-```{r}
 # Load the entire list from an R data file
-load("plucked_tables_wrat5.RData")
+# load("plucked_tables_wrat5.RData")
 ```
 
 # WRAT-5 Score Summary Table
@@ -185,7 +170,7 @@ timed <- "Untimed"
 test <- params$test
 test_name <- params$test_name
 
-df <- NeurotypR::gpluck_make_columns(
+df <- neuro2::gpluck_make_columns(
   df,
   range = "",
   test = test,
@@ -206,7 +191,7 @@ df <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+df <- neuro2::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -343,7 +328,7 @@ df <-
 # Compute CI 95%
 
 ```{r}
-library(NeurotypR)
+library(neuro2)
 
 # Assuming df is your dataframe and calc_ci_95 is your function
 for (i in 1:nrow(df)) {
@@ -367,7 +352,7 @@ scale_mean <- 100
 scale_sd <- 15
 scale_rel <- .95
 
-ci_values <- NeurotypR::calc_ci_95(
+ci_values <- neuro2::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,
@@ -380,10 +365,15 @@ df$ci_hi <- ci_values["upper_ci_95"]
 df$ci <- paste0(df$ci_lo, " - ", df$ci_hi)
 ```
 
-## Relocate variables
+## Relocate variables and select/remove columns
 
 ```{r relocate}
-df <- df |> dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .before = test)
+df <- 
+  df |> 
+  dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .before = test) |> 
+  dplyr::select(
+    scale, raw_score, score, ci_95, percentile, range, test, test_name, domain, subdomain, narrow, pass, verbal, timed, test_type, score_type, absort, result
+    )
 ```
 
 # Finalize and save csv
@@ -393,7 +383,7 @@ df <- df |> dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .befo
 ```{r write}
 table <- df
 test <- params$test
-file_path <- here::here("csv", paste0(test, ".csv"))
+file_path <- here::here("data-raw", "csv", paste0(test, ".csv"))
 
 readr::write_excel_csv(
   table,
@@ -404,7 +394,7 @@ readr::write_excel_csv(
 rm(file_path)
 ```
 
-## Write to "g2"
+## Write to "g"
 
 ```{r}
 has_headers <- function(file_path) {
@@ -418,8 +408,8 @@ has_headers <- function(file_path) {
 
 ```{r writeout-g}
 table <- df
-test <- "g2"
-file_path <- here::here("csv", paste0(test, ".csv"))
+test <- "g"
+file_path <- here::here("data-raw", paste0(test, ".csv"))
 
 readr::write_excel_csv(
   table,
@@ -429,3 +419,5 @@ readr::write_excel_csv(
   quote = "none"
 )
 ```
+
+Finished!!

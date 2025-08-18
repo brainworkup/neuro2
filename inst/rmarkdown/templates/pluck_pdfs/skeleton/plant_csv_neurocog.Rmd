@@ -5,7 +5,7 @@ title: |
 date: "`r Sys.Date()`"
 params:
   patient:
-    value: Isabella
+    value: Biggie
     label: "Patient's first name:"
     input: text
   test_name:
@@ -330,9 +330,6 @@ output:
 age <- 20
 tmt_a_sec <- 27
 tmt_b_sec <- 67
-tmt_a <- neuro2::tmt_a(age, tmt_a_sec)
-tmt_b <- neuro2::tmt_b(age, tmt_b_sec)
-
 tmt_a_score <- tmt_a(age, tmt_a_sec)
 tmt_b_score <- tmt_b(age, tmt_b_sec)
 ```
@@ -355,6 +352,7 @@ library(googledrive)
 library(here)
 library(pdftools)
 library(shiny)
+library(snakecase)
 library(tabulapdf)
 library(tidyr)
 library(glue)
@@ -640,7 +638,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- bwu::calc_ci_95(
+ci_values <- neuro2::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,
@@ -677,6 +675,14 @@ vars <- c(
 data <- data |>
   dplyr::select(dplyr::all_of(vars))
 
+```
+
+## Relocate variables
+
+```{r relocate}
+data <-
+  data |>
+  dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
 ```
 
 ## Write csv files
