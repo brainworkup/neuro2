@@ -40,38 +40,11 @@ NeuropsychResultsR6 <- R6::R6Class(
     #'
     #' @param domain_file The domain QMD file (e.g., "_02-01_iq.qmd")
     #' @return The text filename that was created or already existed
-    create_text_placeholder = function(domain_file) {
-      # Extract domain info from the domain file name
-      # Pattern: _02-01_iq.qmd -> _02-01_iq_text.qmd
-      text_file <- gsub("\\.qmd$", "_text.qmd", domain_file)
-
-      if (!file.exists(text_file)) {
-        # Extract domain name for the placeholder content
-        # Pattern: _02-01_iq_text.qmd -> "iq"
-        domain_match <- regmatches(
-          text_file,
-          regexpr("_[0-9]+-[0-9]+_([^_]+)_text", text_file)
-        )
-
-        if (length(domain_match) > 0) {
-          domain_name <- gsub(
-            ".*_[0-9]+-[0-9]+_([^_]+)_text.*",
-            "\\1",
-            domain_match[1]
-          )
-          domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
-        } else {
-          domain_name <- "Assessment"
-        }
-
-        # Create placeholder content
-        placeholder_content <- "<summary>\n\n</summary>"
-
-        writeLines(placeholder_content, text_file)
-        cat("  ✓ Created placeholder text file:", text_file, "\n")
+    create_text_placeholder = function() {
+      if (!is.null(self$file) && nzchar(self$file) && !file.exists(self$file)) {
+        file.create(self$file)
       }
-
-      return(text_file)
+      invisible(self$file)
     },
 
     #' @description
@@ -81,7 +54,7 @@ NeuropsychResultsR6 <- R6::R6Class(
     #' @return Invisibly returns NULL after writing to the file.
     process = function() {
       # Create the text placeholder file first
-      self$create_text_placeholder(self$file)
+      self$create_text_placeholder()
 
       # Sorting the data by percentile and removing duplicates
       sorted_data <- self$data |>
@@ -101,6 +74,44 @@ NeuropsychResultsR6 <- R6::R6Class(
       invisible(NULL)
     }
   )
+)
+
+NeuropsychResultsR6$set(
+  "public",
+  "emit_quarto_text_chunk",
+  function(domain_key, data_var, file_path) {
+    stopifnot(
+      is.character(domain_key),
+      length(domain_key) == 1,
+      is.character(data_var),
+      length(data_var) == 1,
+      is.character(file_path),
+      length(file_path) == 1
+    )
+
+    lbl <- paste0("text-", domain_key)
+
+    # EXACTLY the format you requested:
+    lines <- c(
+      "```{r}",
+      paste0("#| label: ", lbl),
+      "#| cache: true",
+      "#| include: false",
+      "",
+      "# Create a new empty file",
+      paste0("file.create(\"", file_path, "\")"),
+      "",
+      "# Generate text using R6 class",
+      "results_processor <- NeuropsychResultsR6$new(",
+      paste0("  data = ", data_var, ","),
+      paste0("  file = \"", file_path, "\""),
+      ")",
+      "results_processor$process()",
+      "```",
+      ""
+    )
+    paste(lines, collapse = "\n")
+  }
 )
 
 #' Concatenate and Flatten Neuropsych Results by Scale (Function Wrapper)

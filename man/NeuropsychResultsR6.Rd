@@ -36,6 +36,7 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \item \href{#method-NeuropsychResultsR6-new}{\code{NeuropsychResultsR6$new()}}
 \item \href{#method-NeuropsychResultsR6-create_text_placeholder}{\code{NeuropsychResultsR6$create_text_placeholder()}}
 \item \href{#method-NeuropsychResultsR6-process}{\code{NeuropsychResultsR6$process()}}
+\item \href{#method-NeuropsychResultsR6-emit_quarto_text_chunk}{\code{NeuropsychResultsR6$emit_quarto_text_chunk()}}
 \item \href{#method-NeuropsychResultsR6-clone}{\code{NeuropsychResultsR6$clone()}}
 }
 }
@@ -69,7 +70,7 @@ A new NeuropsychResultsR6 object
 \subsection{Method \code{create_text_placeholder()}}{
 Create a placeholder text file for a given domain if it doesn't already exist.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$create_text_placeholder(domain_file)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$create_text_placeholder()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -96,6 +97,15 @@ Also creates the corresponding text placeholder file.
 \subsection{Returns}{
 Invisibly returns NULL after writing to the file.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NeuropsychResultsR6-emit_quarto_text_chunk"></a>}}
+\if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-emit_quarto_text_chunk}{}}}
+\subsection{Method \code{emit_quarto_text_chunk()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$emit_quarto_text_chunk(domain_key, data_var, file_path)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-clone"></a>}}
