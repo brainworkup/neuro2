@@ -98,7 +98,7 @@ if (length(found_workflows) == 0) {
 
 # Check R6 workflows
 found_r6 <- c()
-for (file in r6_workflow_files) {
+for (file in workflow_files) {
   if (file.exists(file)) {
     found_r6 <- c(found_r6, file)
   }
