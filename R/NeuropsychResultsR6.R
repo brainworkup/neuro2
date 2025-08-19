@@ -94,22 +94,38 @@ NeuropsychResultsR6 <- R6::R6Class(
 
       lbl <- paste0("text-", domain_key)
 
-      # EXACTLY the format you requested:
+      # Updated format with improved reliability:
       lines <- c(
         "```{r}",
         paste0("#| label: ", lbl),
-        "#| cache: true",
+        "#| cache: false",
         "#| include: false",
         "",
-        "# Create a new empty file",
-        paste0("file.create(\"", file_path, "\")"),
+        "# Define the text file path",
+        paste0("text_file <- \"", file_path, "\""),
+        "",
+        "# Check if file exists, if not create it",
+        "if (!file.exists(text_file)) {",
+        "  file.create(text_file)",
+        "  message(paste(\"Created new text file:\", text_file))",
+        "}",
         "",
         "# Generate text using R6 class",
         "results_processor <- NeuropsychResultsR6$new(",
         paste0("  data = ", data_var, ","),
-        paste0("  file = \"", file_path, "\""),
+        "  file = text_file",
         ")",
+        "",
+        "# Process and write the results",
         "results_processor$process()",
+        "",
+        "# Verify the file was written",
+        "if (file.exists(text_file) && file.size(text_file) > 0) {",
+        "  message(paste(\"Successfully generated text file:\", text_file,",
+        "                \"with\", file.size(text_file), \"bytes\"))",
+        "} else {",
+        "  warning(paste(\"Text file generation may have failed for:\", text_file))",
+        "}",
         "```",
         ""
       )
