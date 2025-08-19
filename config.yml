@@ -1,0 +1,22 @@
+patient:
+  name: Biggie
+  age: 20
+  dob: "XXXX-XX-XX"
+  doe: "2025-07-21"
+data:
+  input_dir: data-raw/csv
+  output_dir: data
+  format: all
+processing:
+  use_duckdb: yes
+  parallel: yes
+  verbose: yes
+  age_group: ""
+output:
+  generate_qmd: yes
+  generate_plots: yes
+  generate_tables: yes
+report:
+  template: template.qmd
+  format: neurotyp-forensic-typst
+  output_dir: output

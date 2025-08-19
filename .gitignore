@@ -50,3 +50,11 @@ _arxiv/
 .roo/
 .specstory/
 _extensions/
+data/*.csv
+
+/.quarto/
+_freeze/
+archive/
+*.svg
+template.pdf
+
