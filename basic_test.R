@@ -63,12 +63,12 @@ if (length(missing_optional) > 0) {
 }
 
 # Test 2: Check if data files exist
-data_files <- list.files("data-raw", pattern = "\\.csv$", full.names = TRUE)
+data_files <- list.files("data-raw/csv", pattern = "\\.csv$", full.names = TRUE)
 if (length(data_files) == 0) {
-  cat("❌ No CSV data files found in data-raw/\n")
+  cat("❌ No CSV data files found in data-raw/csv\n")
   quit(status = 1)
 } else {
-  cat("✅ Found", length(data_files), "data files in data-raw/\n")
+  cat("✅ Found", length(data_files), "data files in data-raw/csv\n")
 }
 
 duckdb_workflow_files <- c("neuro2_duckdb_workflow.R")
