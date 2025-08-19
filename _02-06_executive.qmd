@@ -83,18 +83,34 @@ data_executive <- filter_data(data = executive, domain = domains, scale = scales
 
 ```{r}
 #| label: text-executive
-#| cache: true
+#| cache: false
 #| include: false
 
-# Create a new empty file
-file.create("_02-06_executive_text.qmd")
+# Define the text file path
+text_file <- "_02-06_executive_text.qmd"
+
+# Check if file exists, if not create it
+if (!file.exists(text_file)) {
+  file.create(text_file)
+  message(paste("Created new text file:", text_file))
+}
 
 # Generate text using R6 class
 results_processor <- NeuropsychResultsR6$new(
   data = data_executive,
-  file = "_02-06_executive_text.qmd"
+  file = text_file
 )
+
+# Process and write the results
 results_processor$process()
+
+# Verify the file was written
+if (file.exists(text_file) && file.size(text_file) > 0) {
+  message(paste("Successfully generated text file:", text_file, 
+                "with", file.size(text_file), "bytes"))
+} else {
+  warning(paste("Text file generation may have failed for:", text_file))
+}
 ```
 
 ```{r}

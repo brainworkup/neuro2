@@ -111,3 +111,8 @@ df-print: kable
 
 # Set log level
 log-level: error # or "warning" for more output
+
+# Reduce pandoc verbosity
+pandoc:
+  - --quiet
+  - --trace=0

@@ -87,7 +87,7 @@ data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)
 
 ```{r}
 #| label: text-emotion-child-self
-#| cache: true
+#| cache: false
 #| include: false
 #| results: asis
 
@@ -97,19 +97,38 @@ if ("rater" %in% names(data_emotion_self)) {
   data_emotion_self <- data_emotion_self[data_emotion_self$rater == "self", ]
 }
 
+# Define the text file path
+text_file <- "_02-10_emotion_child_text_self.qmd"
+
+# Check if file exists, if not create it
+if (!file.exists(text_file)) {
+  file.create(text_file)
+  message(paste("Created new text file:", text_file))
+}
+
 # Generate text using R6 class
 if (nrow(data_emotion_self) > 0) {
   results_processor_self <- NeuropsychResultsR6$new(
     data = data_emotion_self,
-    file = "_02-10_emotion_child_text_self.qmd"
+    file = text_file
   )
+  
+  # Process and write the results
   results_processor_self$process()
+  
+  # Verify the file was written
+  if (file.exists(text_file) && file.size(text_file) > 0) {
+    message(paste("Successfully generated text file:", text_file, 
+                  "with", file.size(text_file), "bytes"))
+  } else {
+    warning(paste("Text file generation may have failed for:", text_file))
+  }
 }
 ```
 
 ```{r}
 #| label: text-emotion-child-parent
-#| cache: true
+#| cache: false
 #| include: false
 #| results: asis
 
@@ -121,19 +140,38 @@ if ("rater" %in% names(data_emotion_parent)) {
   ]
 }
 
+# Define the text file path
+text_file <- "_02-10_emotion_child_text_parent.qmd"
+
+# Check if file exists, if not create it
+if (!file.exists(text_file)) {
+  file.create(text_file)
+  message(paste("Created new text file:", text_file))
+}
+
 # Generate text using R6 class
 if (nrow(data_emotion_parent) > 0) {
   results_processor_parent <- NeuropsychResultsR6$new(
     data = data_emotion_parent,
-    file = "_02-10_emotion_child_text_parent.qmd"
+    file = text_file
   )
+  
+  # Process and write the results
   results_processor_parent$process()
+  
+  # Verify the file was written
+  if (file.exists(text_file) && file.size(text_file) > 0) {
+    message(paste("Successfully generated text file:", text_file, 
+                  "with", file.size(text_file), "bytes"))
+  } else {
+    warning(paste("Text file generation may have failed for:", text_file))
+  }
 }
 ```
 
 ```{r}
 #| label: text-emotion-child-teacher
-#| cache: true
+#| cache: false
 #| include: false
 #| results: asis
 #| eval: false
@@ -146,13 +184,32 @@ if ("rater" %in% names(data_emotion_teacher)) {
   ]
 }
 
+# Define the text file path
+text_file <- "_02-10_emotion_child_text_teacher.qmd"
+
+# Check if file exists, if not create it
+if (!file.exists(text_file)) {
+  file.create(text_file)
+  message(paste("Created new text file:", text_file))
+}
+
 # Generate text using R6 class
 if (nrow(data_emotion_teacher) > 0) {
   results_processor_teacher <- NeuropsychResultsR6$new(
     data = data_emotion_teacher,
-    file = "_02-10_emotion_child_text_teacher.qmd"
+    file = text_file
   )
+  
+  # Process and write the results
   results_processor_teacher$process()
+  
+  # Verify the file was written
+  if (file.exists(text_file) && file.size(text_file) > 0) {
+    message(paste("Successfully generated text file:", text_file, 
+                  "with", file.size(text_file), "bytes"))
+  } else {
+    warning(paste("Text file generation may have failed for:", text_file))
+  }
 }
 ```
 

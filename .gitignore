@@ -58,3 +58,5 @@ archive/
 *.svg
 template.pdf
 
+_02-**_*.qmd
+_02-**_*_*.qmd
