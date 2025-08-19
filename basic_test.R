@@ -71,7 +71,7 @@ if (length(data_files) == 0) {
   cat("✅ Found", length(data_files), "data files in data-raw/csv\n")
 }
 
-duckdb_workflow_files <- c("neuro2_duckdb_workflow.R")
+workflow_files <- c("neuro2_duckdb_workflow.R")
 
 # Check main workflows
 found_workflows <- c()
