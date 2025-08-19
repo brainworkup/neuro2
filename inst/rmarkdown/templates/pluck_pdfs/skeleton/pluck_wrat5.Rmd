@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from WRAT-5"
 params:
-  patient: Isabella
+  patient: Biggie
   test:
     label: "Test"
     value: wrat5

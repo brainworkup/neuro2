@@ -352,6 +352,9 @@ scales_spatial <- c(
   "Map Reading"
 )
 
+## Memory ------------------------------------------------------------------
+
+
 #' @name scales_memory
 #' @docType data
 #' @title Memory Scales
@@ -639,6 +642,9 @@ scales_memory_order <- c(
   "Name/Address/Phone Delayed Recognition"
 )
 
+## Attention/Executive -----------------------------------------------------
+
+
 #' @name scales_executive
 #' @docType data
 #' @title Executive Function and Attention Scales
@@ -755,6 +761,9 @@ scales_executive <- c(
   "Figure Drawing Immediate Recall Planning"
 )
 
+## Motor -------------------------------------------------------------------
+
+
 #' @name scales_motor
 #' @docType data
 #' @title Motor and Psychomotor Scales
@@ -789,6 +798,8 @@ scales_motor <- c(
   "FT Dominant Hand Combined",
   "FT Nondominant Hand Combined"
 )
+
+## Social cognition --------------------------------------------------------
 
 #' @name scales_social
 #' @docType data
@@ -857,6 +868,8 @@ scales_social <- c(
   "CARS-2 HF Total Score"
 )
 
+## ADHD --------------------------------------------------------------------
+
 #' @name scales_adhd_adult
 #' @docType data
 #' @title ADHD Adult Scales
@@ -891,16 +904,6 @@ scales_adhd_adult <- c(
   "Planning",
   "Self-Monitoring",
   "Working Memory",
-  # Conners 4
-  "Inattention/Executive Dysfunction",
-  "Hyperactivity",
-  "Impulsivity",
-  "Emotional Dysregulation",
-  "Negative Self-Concept",
-  "ADHD Inattentive Symptoms",
-  "ADHD Hyperactive/Impulsive Symptoms",
-  "Total ADHD Symptoms",
-  "ADHD Index",
   # PAI
   "Inattention (INATTN) Index",
   # CAARS-2
@@ -912,7 +915,16 @@ scales_adhd_adult <- c(
   "Impulsivity",
   "Inattention/Executive Dysfunction",
   "Negative Self-Concept",
-  "Total ADHD Symptoms"
+  "Total ADHD Symptoms",
+  # FRSBE
+  "Apathy (Before)",
+  "Apathy (After)",
+  "Disinhibition (Before)",
+  "Disinhibition (After)",
+  "Executive Dysfunction (Before)",
+  "Executive Dysfunction (After)",
+  "Total (Before)",
+  "Total (After)"
 )
 
 #' @name scales_adhd_child
@@ -949,9 +961,17 @@ scales_adhd_child <- c(
   "ADHD Inattentive Symptoms",
   "ADHD Hyperactive/Impulsive Symptoms",
   "Total ADHD Symptoms",
-  "ADHD Index"
+  "ADHD Index",
+  # FRSBE
+  "Apathy (Before)",
+  "Apathy (After)",
+  "Disinhibition (Before)",
+  "Disinhibition (After)",
+  "Executive Dysfunction (Before)",
+  "Executive Dysfunction (After)",
+  "Total (Before)",
+  "Total (After)"
 )
-
 
 ## Emotion --------------------------------------------------------
 
@@ -1265,7 +1285,7 @@ scales_all <- c(
   scales_validity
 )
 
-# Plot Titles ------------------------------------------------------------------
+# Plot Titles --------------------------------------------------------------
 
 #' Neurocognitive Index Plot Title
 #'

@@ -44,7 +44,7 @@ library(tidyr)
 library(vroom)
 library(xfun)
 library(yaml)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Export PAI CSV file from PARiConnect
@@ -56,8 +56,8 @@ Specify date range to exclude entire database.
 ## Parameters
 
 ```{r}
-file_path <- here::here("data", "pdf", "pai.pdf")
-read_content <- readLines(file_path)
+# file_path <- here::here("data-raw", "pdf", "pai.pdf")
+# read_content <- readr::read_lines(file_path)
 ```
 
 ```{r}
@@ -75,7 +75,7 @@ saveRDS(file, "pai.rds")
 ```{r}
 plucked_tables <-
   readr::read_csv(
-    here::here("data", "pariconnectexportPAI.csv")
+    here::here("data-raw", "pariconnectexportPAI.csv")
   )
 ```
 
@@ -136,7 +136,7 @@ adhd_items <- c(
 )
 
 df_adhd <- plucked_tables |>
-  dplyr::select(adhd_items) |>
+  dplyr::select(all_of(adhd_items)) |>
   tidyr::gather() |>
   dplyr::rename(scale = key, score = value)
 ```
@@ -144,10 +144,10 @@ df_adhd <- plucked_tables |>
 ### Convert T scores to z scores to percentiles
 
 ```{r}
-pai <- pai |>
-  dplyr::mutate(z = (score - 50) / 10) |>
-  dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
-  dplyr::select(scale, score, percentile)
+# pai <- pai |>
+#   dplyr::mutate(z = (score - 50) / 10) |>
+#   dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
+#   dplyr::select(scale, score, percentile)
 
 df_clinical <- df_clinical |>
   dplyr::mutate(z = (score - 50) / 10) |>
@@ -274,9 +274,8 @@ df_clinical <- df_clinical |> dplyr::slice(
 ## Add/mutate columns
 
 ```{r mutate}
-# TODO: Probably delete pai df
 pai <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     data = pai,
     raw_score = "",
     range = "",
@@ -300,7 +299,7 @@ pai <-
 
 
 df_clinical <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     data = df_clinical,
     raw_score = "",
     range = "",
@@ -323,7 +322,7 @@ df_clinical <-
   )
 
 df_validity <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     data = df_validity,
     raw_score = "",
     range = "",
@@ -336,7 +335,7 @@ df_validity <-
     pass = "",
     verbal = "",
     timed = "",
-    test_type = "symptom_validity",
+    test_type = "validity_indicator",
     score_type = "t_score",
     absort = paste0(
       tolower(test), "_", tolower(scale), "_", seq_len(nrow(df_validity))
@@ -346,7 +345,7 @@ df_validity <-
   )
 
 df_inatt <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     data = df_inatt,
     raw_score = "",
     range = "",
@@ -372,15 +371,15 @@ df_inatt <-
 ## Rating Scale score ranges
 
 ```{r ranges}
-df_clinical <- NeurotypR::gpluck_make_score_ranges(
+df_clinical <- neuro2::gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
 )
-df_validity <- NeurotypR::gpluck_make_score_ranges(
+df_validity <- neuro2::gpluck_make_score_ranges(
   table = df_validity,
-  test_type = "symptom_validity"
+  test_type = "validity_indicator"
 )
-df_inatt <- NeurotypR::gpluck_make_score_ranges(
+df_inatt <- neuro2::gpluck_make_score_ranges(
   table = df_inatt,
   test_type = "rating_scale"
 )
@@ -776,28 +775,28 @@ df_intatt <-
 ```{r writeout}
 readr::write_csv(
   pai,
-  here::here("data", "pai.csv"),
+  here::here("data-raw", "pai.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_csv(
   df_clinical,
-  here::here("data", "csv", "pai_clinical.csv"),
+  here::here("data-raw", "csv", "pai_clinical.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_csv(
   df_validity,
-  here::here("data", "csv", "pai_validity.csv"),
+  here::here("data-raw", "csv", "pai_validity.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_csv(
   df_inatt,
-  here::here("data", "csv", "pai_inatt.csv"),
+  here::here("data-raw", "csv", "pai_inatt.csv"),
   col_names = TRUE,
   na = ""
 )
