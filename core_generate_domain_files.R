@@ -35,14 +35,22 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
       # Read the QMD file to find text file references
       content <- readLines(qmd_file, warn = FALSE)
 
-      # Look for {{< include patterns
-      include_lines <- grep('{{< include.*_text\\.qmd', content, value = TRUE)
+      # Look for {{< include patterns - escape the curly braces
+      include_lines <- grep(
+        '\\{\\{< include.*_text\\.qmd',
+        content,
+        value = TRUE
+      )
 
       for (include_line in include_lines) {
-        # Extract the text filename
+        # Extract the text filename - Fixed regex pattern
         text_file_match <- regmatches(
           include_line,
-          regexpr('[^/\\s]+_text\\.qmd', include_line)
+          regexpr(
+            '(?<=\\{\\{<\\s*include\\s+)[^\\s>}]+_text\\.qmd',
+            include_line,
+            perl = TRUE
+          )
         )
 
         if (length(text_file_match) > 0) {
