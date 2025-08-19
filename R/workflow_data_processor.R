@@ -14,7 +14,9 @@ process_workflow_data <- function(config) {
   }
 
   # Fallback to using existing scripts
-  if (config$processing$use_duckdb && file.exists("R/duckdb_neuropsych_loader.R")) {
+  if (
+    config$processing$use_duckdb && file.exists("R/duckdb_neuropsych_loader.R")
+  ) {
     log_message("Using DuckDB data processor", "DATA")
     source("R/duckdb_neuropsych_loader.R")
 
@@ -24,9 +26,6 @@ process_workflow_data <- function(config) {
       output_dir = config$data$output_dir,
       output_format = config$data$format
     )
-  } else if (file.exists("neuro2_duckdb_workflow.R")) {
-    log_message("Using neuro2_duckdb_workflow.R", "DATA")
-    source("neuro2_duckdb_workflow.R")
   } else {
     log_message("No suitable data processor found", "ERROR")
     return(FALSE)
@@ -35,6 +34,8 @@ process_workflow_data <- function(config) {
   log_message("Data processing complete", "DATA")
   return(TRUE)
 }
+
+# ...existing code...
 
 # Query function for neuropsych data
 query_neuropsych <- function(query, data_dir) {
@@ -77,7 +78,9 @@ load_neurobehav_data <- function(data_dir) {
 
   if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
     return(arrow::read_parquet(parquet_file))
-  } else if (file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)) {
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
     return(arrow::read_feather(feather_file))
   } else if (file.exists(csv_file)) {
     return(readr::read_csv(csv_file, show_col_types = FALSE))
@@ -88,18 +91,21 @@ load_neurobehav_data <- function(data_dir) {
 
 # Check if data exists
 check_data_exists <- function(config) {
-  neurocog_exists <- file.exists(file.path(config$data$output_dir, "neurocog.csv")) ||
+  neurocog_exists <- file.exists(file.path(
+    config$data$output_dir,
+    "neurocog.csv"
+  )) ||
     file.exists(file.path(config$data$output_dir, "neurocog.parquet")) ||
     file.exists(file.path(config$data$output_dir, "neurocog.feather"))
 
-  neurobehav_exists <- file.exists(file.path(config$data$output_dir, "neurobehav.csv")) ||
+  neurobehav_exists <- file.exists(file.path(
+    config$data$output_dir,
+    "neurobehav.csv"
+  )) ||
     file.exists(file.path(config$data$output_dir, "neurobehav.parquet")) ||
     file.exists(file.path(config$data$output_dir, "neurobehav.feather"))
 
-  return(list(
-    neurocog = neurocog_exists,
-    neurobehav = neurobehav_exists
-  ))
+  return(list(neurocog = neurocog_exists, neurobehav = neurobehav_exists))
 }
 
 # Get data format
@@ -108,11 +114,23 @@ get_data_format <- function(config, data_type = "neurocog") {
 
   if (is.null(input_format) || input_format == "all") {
     # If format is "all", check which format exists
-    if (file.exists(file.path(config$data$output_dir, paste0(data_type, ".parquet")))) {
+    if (
+      file.exists(file.path(
+        config$data$output_dir,
+        paste0(data_type, ".parquet")
+      ))
+    ) {
       input_format <- "parquet"
-    } else if (file.exists(file.path(config$data$output_dir, paste0(data_type, ".csv")))) {
+    } else if (
+      file.exists(file.path(config$data$output_dir, paste0(data_type, ".csv")))
+    ) {
       input_format <- "csv"
-    } else if (file.exists(file.path(config$data$output_dir, paste0(data_type, ".feather")))) {
+    } else if (
+      file.exists(file.path(
+        config$data$output_dir,
+        paste0(data_type, ".feather")
+      ))
+    ) {
       input_format <- "feather"
     } else {
       input_format <- "parquet" # fallback
