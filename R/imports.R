@@ -13,4 +13,5 @@
 #' @importFrom webshot2 webshot
 #' @importFrom xfun session_info file_ext
 #' @importFrom magrittr `%>%`
+#' @importFrom glue glue
 NULL

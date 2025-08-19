@@ -2,12 +2,44 @@
 % Please edit documentation in R/neuro2-package.R
 \docType{package}
 \name{neuro2-package}
-\alias{neuro2}
 \alias{neuro2-package}
-\title{neuro2: Quarto + Typst Report Generator}
+\alias{neuro2}
+\title{neuro2: Neuropsychological Assessment Report Generator}
 \description{
-Provides Quarto .qmd and Typst .typ templates for neuropsychological evaluation data processing and report generation.
+The neuro2 package provides a comprehensive toolkit for generating
+neuropsychological assessment reports. It includes R6 classes for
+processing cognitive and behavioral test data, generating publication-quality
+tables and figures, and creating formatted reports using Quarto and Typst.
 }
+\section{Main Classes}{
+
+\describe{
+\item{\code{\link{DomainProcessorR6}}}{Process domain-specific assessment data}
+\item{\code{\link{DomainProcessorFactoryR6}}}{Factory for creating processors}
+\item{\code{\link{TableGTR6}}}{Generate formatted assessment tables}
+\item{\code{\link{DotplotR6}}}{Create domain-specific visualizations}
+\item{\code{\link{NeuropsychResultsR6}}}{Manage assessment results}
+}
+}
+
+\section{Workflow Functions}{
+
+\describe{
+\item{\code{\link{create_patient_workspace}}}{Set up assessment workspace}
+\item{\code{\link{process_all_domains}}}{Process all assessment domains}
+\item{\code{\link{generate_assessment_report}}}{Create final report}
+}
+}
+
+\section{Package Options}{
+
+\describe{
+\item{\code{neuro2.verbose}}{Show verbose output (default: TRUE)}
+\item{\code{neuro2.parallel}}{Use parallel processing (default: FALSE)}
+\item{\code{neuro2.output_dir}}{Default output directory (default: "output")}
+}
+}
+
 \author{
 \strong{Maintainer}: Joey Trampush \email{joey.trampush@brainworkup.org}
 

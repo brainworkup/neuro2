@@ -42,7 +42,7 @@ essential_files <- c(
   "_01-00_nse_adult.qmd",
   "_01-00_nse_pediatric.qmd",
   "_01-00_nse_forensic.qmd",
-  "_02-00_behav_obs.qmd",
+  "_01-01_behav_obs.qmd",
   "_03-00_sirf_text.qmd",
   "_03-00_sirf.qmd",
   "_03-01_recs.qmd",

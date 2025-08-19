@@ -71,21 +71,27 @@ main_analysis <- function() {
   
   # Step 1: Load and validate data
   message("📊 Loading and validating data...")
-  data_files <- validate_and_load_data()
+  data_success <- process_workflow_data(config)
+  
+  if (!data_success) {
+    stop("❌ Data processing failed. Please check your data files and config.")
+  }
   
   # Step 2: Process all domains
   message("🧠 Processing cognitive and behavioral domains...")
   results <- process_all_domains(
+    data_dir = config$data$input_dir,
     age_group = config$processing$age_group,
     verbose = config$processing$verbose
   )
   
   # Step 3: Generate report
   message("📄 Generating assessment report...")
-  report_path <- generate_complete_report(
-    patient_name = config$patient$name,
+  report_path <- generate_assessment_report(
     results = results,
-    output_format = config$output$output_format
+    patient_info = config$patient,
+    output_dir = config$data$output_dir,
+    format = config$output$format
   )
   
   message("✅ Assessment complete! Report saved to: ", report_path)

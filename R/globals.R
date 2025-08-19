@@ -89,3 +89,23 @@ utils::globalVariables(c(
   "`%>%`",
   "rater"
 ))
+
+# Declare global variables from internal data to avoid R CMD check warnings
+utils::globalVariables(c(
+  "domain_iq",
+  "domain_academics",
+  "domain_verbal",
+  "domain_spatial",
+  "domain_memory",
+  "domain_executive",
+  "domain_motor",
+  "domain_social",
+  "domain_adhd_adult",
+  "domain_adhd_child",
+  "domain_emotion_adult",
+  "domain_emotion_child",
+  "domain_adaptive",
+  "domain_daily_living",
+  "domain_emotion",
+  "domain_adhd"
+))

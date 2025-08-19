@@ -12,6 +12,7 @@ library(R6)
 library(dplyr)
 library(readr)
 library(yaml)
+library(arrow)
 
 # Source required files
 source("R/DomainProcessorR6.R")
@@ -23,50 +24,59 @@ source("R/domain_validation_utils.R")
 
 # Function to generate placeholder text files
 generate_text_files <- function(generated_files, verbose = TRUE) {
-  if (verbose) cat("\nGenerating placeholder text files...\n")
-  
+  if (verbose) {
+    cat("\nGenerating placeholder text files...\n")
+  }
+
   text_files_created <- character(0)
-  
+
   for (qmd_file in generated_files) {
     if (file.exists(qmd_file)) {
       # Read the QMD file to find text file references
       content <- readLines(qmd_file, warn = FALSE)
-      
+
       # Look for {{< include patterns
       include_lines <- grep('{{< include.*_text\\.qmd', content, value = TRUE)
-      
+
       for (include_line in include_lines) {
         # Extract the text filename
-        text_file_match <- regmatches(include_line, regexpr('[^/\\s]+_text\\.qmd', include_line))
-        
+        text_file_match <- regmatches(
+          include_line,
+          regexpr('[^/\\s]+_text\\.qmd', include_line)
+        )
+
         if (length(text_file_match) > 0) {
           text_file <- text_file_match[1]
-          
+
           if (!file.exists(text_file)) {
             # Extract domain name from the text file name
             domain_name <- gsub("_[0-9]+-[0-9]+-([^_]+)_.*", "\\1", text_file)
             domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
-            
+
             # Create placeholder content
             placeholder_content <- paste0(
-              "# ", domain_name, " Assessment\n\n",
-              "The ", tolower(domain_name), " assessment results will be generated here.\n\n",
+              "# ",
+              domain_name,
+              " Assessment\n\n",
+              "The ",
+              tolower(domain_name),
+              " assessment results will be generated here.\n\n",
               "This section will include:\n\n",
               "- Overview of test results\n",
-              "- Clinical interpretation\n", 
+              "- Clinical interpretation\n",
               "- Relevant observations\n"
             )
-            
+
             writeLines(placeholder_content, text_file)
             text_files_created <- c(text_files_created, text_file)
-            
+
             if (verbose) cat("  ✓ Created placeholder:", text_file, "\n")
           }
         }
       }
     }
   }
-  
+
   return(text_files_created)
 }
 
@@ -77,17 +87,25 @@ tryCatch(
   {
     neurocog_data <- NULL
     neurobehav_data <- NULL
+    validity_data <- NULL
 
     if (file.exists("data/neurocog.parquet")) {
-      neurocog_data <- read_parquet(
+      neurocog_data <- arrow::read_parquet(
         "data/neurocog.parquet",
         show_col_types = FALSE
       )
     }
 
     if (file.exists("data/neurobehav.parquet")) {
-      neurobehav_data <- read_parquet(
+      neurobehav_data <- arrow::read_parquet(
         "data/neurobehav.parquet",
+        show_col_types = FALSE
+      )
+    }
+
+    if (file.exists("data/validity.parquet")) {
+      validity_data <- arrow::read_parquet(
+        "data/validity.parquet",
         show_col_types = FALSE
       )
     }
@@ -115,26 +133,17 @@ tryCatch(
         pheno = "spatial",
         input_file = "data/neurocog.parquet"
       ),
-      "Memory" = list(
-        pheno = "memory", 
-        input_file = "data/neurocog.parquet"
-      ),
+      "Memory" = list(pheno = "memory", input_file = "data/neurocog.parquet"),
       "Attention/Executive" = list(
         pheno = "executive",
         input_file = "data/neurocog.parquet"
       ),
-      "Motor" = list(
-        pheno = "motor", 
-        input_file = "data/neurocog.parquet"
-      ),
+      "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
       "Social Cognition" = list(
         pheno = "social",
         input_file = "data/neurocog.parquet"
       ),
-      "ADHD" = list(
-        pheno = "adhd", 
-        input_file = "data/neurobehav.parquet"
-      ),
+      "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
       "Behavioral/Emotional/Social" = list(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"

@@ -4,41 +4,37 @@
 #' Setup Template Repository Structure
 #' This creates all the necessary template files for patient workspaces
 setup_template_repo <- function() {
-  
   # Create patient template config
   patient_config <- list(
     patient = list(
       name = "PATIENT_NAME",
-      age = "PATIENT_AGE", 
+      age = "PATIENT_AGE",
       date_of_birth = "PATIENT_DOB",
       assessment_date = "ASSESSMENT_DATE"
     ),
     data = list(
       input_dir = "data",
       output_dir = "output",
-      format = "parquet",  # or "csv"
+      format = "parquet", # or "csv"
       neurocog_file = "neurocog.csv",
       neurobehav_file = "neurobehav.csv"
     ),
     processing = list(
       verbose = TRUE,
       parallel = FALSE,
-      age_group = "auto"  # auto-detect from age
+      age_group = "auto" # auto-detect from age
     ),
     output = list(
       generate_qmd = TRUE,
       generate_plots = TRUE,
       generate_tables = TRUE,
-      output_format = "typst"  # or "pdf", "html"
+      output_format = "typst" # or "pdf", "html"
     )
   )
-  
+
   # Write config template
-  yaml::write_yaml(
-    patient_config, 
-    file = "inst/patient_template/config.yml"
-  )
-  
+  yaml::write_yaml(patient_config, file = "inst/patient_template/config.yml")
+
   # Create patient setup script
   setup_script <- '#!/usr/bin/env Rscript
 # File: setup_patient.R
@@ -110,21 +106,27 @@ main_analysis <- function() {
   
   # Step 1: Load and validate data
   message("📊 Loading and validating data...")
-  data_files <- validate_and_load_data()
+  data_success <- process_workflow_data(config)
+  
+  if (!data_success) {
+    stop("❌ Data processing failed. Please check your data files and config.")
+  }
   
   # Step 2: Process all domains
   message("🧠 Processing cognitive and behavioral domains...")
   results <- process_all_domains(
+    data_dir = config$data$input_dir,
     age_group = config$processing$age_group,
     verbose = config$processing$verbose
   )
   
   # Step 3: Generate report
   message("📄 Generating assessment report...")
-  report_path <- generate_complete_report(
-    patient_name = config$patient$name,
+  report_path <- generate_assessment_report(
     results = results,
-    output_format = config$output$output_format
+    patient_info = config$patient,
+    output_dir = config$data$output_dir,
+    format = config$output$format
   )
   
   message("✅ Assessment complete! Report saved to: ", report_path)
@@ -195,9 +197,9 @@ if (!interactive()) {
   }
 }
 '
-  
+
   writeLines(setup_script, "inst/patient_template/setup_patient.R")
-  
+
   # Create main neuro2 loader
   neuro2_loader <- '
 # File: R/setup_neuro2.R
@@ -243,9 +245,9 @@ if (!exists(".neuro2_loaded")) {
   .neuro2_loaded <- TRUE
 }
 '
-  
+
   writeLines(neuro2_loader, "R/setup_neuro2.R")
-  
+
   message("✅ Template repository setup complete!")
   message("📋 Next steps:")
   message("   1. Commit all changes to git")

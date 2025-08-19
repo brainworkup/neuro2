@@ -11,6 +11,7 @@
 #'   \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
 #'   \item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
 #'   \item{create_text_placeholder}{Create placeholder text file if it doesn't exist.}
+#'   \item{emit_quarto_text_chunk}{Static method to emit a Quarto text chunk with file creation.}
 #' }
 #'
 #' @importFrom R6 R6Class
@@ -72,46 +73,49 @@ NeuropsychResultsR6 <- R6::R6Class(
       cat(qmd_content, file = self$file, sep = "\n", append = FALSE)
 
       invisible(NULL)
+    },
+
+    #' @description
+    #' Static method to emit a Quarto text chunk with file creation code
+    #'
+    #' @param domain_key Character scalar domain key for chunk label
+    #' @param data_var Character scalar data variable name
+    #' @param file_path Character scalar file path for output
+    #' @return Character string containing the complete chunk
+    emit_quarto_text_chunk = function(domain_key, data_var, file_path) {
+      stopifnot(
+        is.character(domain_key),
+        length(domain_key) == 1,
+        is.character(data_var),
+        length(data_var) == 1,
+        is.character(file_path),
+        length(file_path) == 1
+      )
+
+      lbl <- paste0("text-", domain_key)
+
+      # EXACTLY the format you requested:
+      lines <- c(
+        "```{r}",
+        paste0("#| label: ", lbl),
+        "#| cache: true",
+        "#| include: false",
+        "",
+        "# Create a new empty file",
+        paste0("file.create(\"", file_path, "\")"),
+        "",
+        "# Generate text using R6 class",
+        "results_processor <- NeuropsychResultsR6$new(",
+        paste0("  data = ", data_var, ","),
+        paste0("  file = \"", file_path, "\""),
+        ")",
+        "results_processor$process()",
+        "```",
+        ""
+      )
+      paste(lines, collapse = "\n")
     }
   )
-)
-
-NeuropsychResultsR6$set(
-  "public",
-  "emit_quarto_text_chunk",
-  function(domain_key, data_var, file_path) {
-    stopifnot(
-      is.character(domain_key),
-      length(domain_key) == 1,
-      is.character(data_var),
-      length(data_var) == 1,
-      is.character(file_path),
-      length(file_path) == 1
-    )
-
-    lbl <- paste0("text-", domain_key)
-
-    # EXACTLY the format you requested:
-    lines <- c(
-      "```{r}",
-      paste0("#| label: ", lbl),
-      "#| cache: true",
-      "#| include: false",
-      "",
-      "# Create a new empty file",
-      paste0("file.create(\"", file_path, "\")"),
-      "",
-      "# Generate text using R6 class",
-      "results_processor <- NeuropsychResultsR6$new(",
-      paste0("  data = ", data_var, ","),
-      paste0("  file = \"", file_path, "\""),
-      ")",
-      "results_processor$process()",
-      "```",
-      ""
-    )
-    paste(lines, collapse = "\n")
-  }
 )
 
 #' Concatenate and Flatten Neuropsych Results by Scale (Function Wrapper)

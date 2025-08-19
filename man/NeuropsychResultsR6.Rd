@@ -18,6 +18,7 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
 \item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
 \item{create_text_placeholder}{Create placeholder text file if it doesn't exist.}
+\item{emit_quarto_text_chunk}{Static method to emit a Quarto text chunk with file creation.}
 }
 }
 
@@ -102,10 +103,25 @@ Invisibly returns NULL after writing to the file.
 \if{html}{\out{<a id="method-NeuropsychResultsR6-emit_quarto_text_chunk"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-emit_quarto_text_chunk}{}}}
 \subsection{Method \code{emit_quarto_text_chunk()}}{
+Static method to emit a Quarto text chunk with file creation code
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$emit_quarto_text_chunk(domain_key, data_var, file_path)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_key}}{Character scalar domain key for chunk label}
+
+\item{\code{data_var}}{Character scalar data variable name}
+
+\item{\code{file_path}}{Character scalar file path for output}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Character string containing the complete chunk
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-clone"></a>}}

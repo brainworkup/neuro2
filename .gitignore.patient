@@ -54,3 +54,16 @@ data-raw/
 *.parquet
 *.zip
 *.gz
+
+# Patient-specific files (don't version control)
+data/*.csv
+data/*.parquet
+figs/
+output/
+*.pdf
+*.docx
+
+# Keep structure
+!data/.gitkeep
+!figs/.gitkeep
+!output/.gitkeep
