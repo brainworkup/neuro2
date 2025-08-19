@@ -50,7 +50,7 @@ create_default_config <- function(config_file) {
 
     default_config <- list(
       patient = list(
-        name = "Biggie",
+        name = "Isabella",
         age = 21,
         doe = format(Sys.Date(), "%Y-%m-%d")
       ),
@@ -59,10 +59,7 @@ create_default_config <- function(config_file) {
         output_dir = "data",
         format = "all"
       ),
-      processing = list(
-        use_duckdb = TRUE,
-        parallel = TRUE
-      ),
+      processing = list(use_duckdb = TRUE, parallel = TRUE),
       report = list(
         template = "template.qmd",
         format = "neurotyp-adult-typst",
@@ -95,7 +92,12 @@ validate_config <- function(config) {
 
     for (field in required_fields[[section]]) {
       if (!field %in% names(config[[section]])) {
-        stop(paste0("Missing required configuration field: ", section, "$", field))
+        stop(paste0(
+          "Missing required configuration field: ",
+          section,
+          "$",
+          field
+        ))
       }
     }
   }

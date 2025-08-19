@@ -17,6 +17,7 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \describe{
 \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
 \item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
+\item{create_text_placeholder}{Create placeholder text file if it doesn't exist.}
 }
 }
 
@@ -33,6 +34,7 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-NeuropsychResultsR6-new}{\code{NeuropsychResultsR6$new()}}
+\item \href{#method-NeuropsychResultsR6-create_text_placeholder}{\code{NeuropsychResultsR6$create_text_placeholder()}}
 \item \href{#method-NeuropsychResultsR6-process}{\code{NeuropsychResultsR6$process()}}
 \item \href{#method-NeuropsychResultsR6-clone}{\code{NeuropsychResultsR6$clone()}}
 }
@@ -62,10 +64,31 @@ A new NeuropsychResultsR6 object
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NeuropsychResultsR6-create_text_placeholder"></a>}}
+\if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-create_text_placeholder}{}}}
+\subsection{Method \code{create_text_placeholder()}}{
+Create a placeholder text file for a given domain if it doesn't already exist.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$create_text_placeholder(domain_file)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_file}}{The domain QMD file (e.g., "_02-01_iq.qmd")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The text filename that was created or already existed
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-process}{}}}
 \subsection{Method \code{process()}}{
 Sort the data by percentile, remove duplicates, convert to text, and write to file as proper QMD content.
+Also creates the corresponding text placeholder file.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$process()}\if{html}{\out{</div>}}
 }

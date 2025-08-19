@@ -353,6 +353,89 @@ quick_workflow <- function() {
   }
 }
 
+# Function to generate placeholder text files
+generate_text_files <- function(generated_files, verbose = TRUE) {
+  if (verbose) {
+    cat("\nGenerating placeholder text files...\n")
+  }
+
+  text_files_created <- character(0)
+
+  for (qmd_file in generated_files) {
+    if (file.exists(qmd_file)) {
+      # Read the QMD file to find text file references
+      content <- readLines(qmd_file, warn = FALSE)
+
+      # Look for {{< include patterns - more precise regex
+      include_lines <- grep(
+        '\\{\\{<\\s*include\\s+[^}]+_text\\.qmd',
+        content,
+        value = TRUE
+      )
+
+      for (include_line in include_lines) {
+        # Extract the text filename more precisely
+        # Look for pattern: {{< include filename_text.qmd >}}
+        text_file_match <- regmatches(
+          include_line,
+          regexpr('_[0-9]+-[0-9]+_[^\\s>}]+_text\\.qmd', include_line)
+        )
+
+        if (length(text_file_match) > 0) {
+          text_file <- text_file_match[1]
+
+          if (!file.exists(text_file)) {
+            # Extract domain name from the text filename itself
+            # Pattern: _02-01_iq_text.qmd -> "iq"
+            domain_match <- regmatches(
+              text_file,
+              regexpr('_[0-9]+-[0-9]+_([^_]+)_text', text_file)
+            )
+
+            if (length(domain_match) > 0) {
+              # Extract just the domain part
+              domain_name <- gsub(
+                '.*_[0-9]+-[0-9]+_([^_]+)_text.*',
+                '\\1',
+                domain_match[1]
+              )
+              domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
+            } else {
+              # Fallback - use a generic name
+              domain_name <- "Assessment"
+            }
+
+            # Create placeholder content
+            placeholder_content <- paste0(
+              "# ",
+              domain_name,
+              " Assessment\n\n",
+              "The ",
+              tolower(domain_name),
+              " assessment results will be generated here.\n\n",
+              "This section will include:\n\n",
+              "- Overview of test results\n",
+              "- Clinical interpretation\n",
+              "- Relevant observations\n"
+            )
+
+            writeLines(placeholder_content, text_file)
+            text_files_created <- c(text_files_created, text_file)
+
+            if (verbose) cat("  ✓ Created placeholder:", text_file, "\n")
+          }
+        }
+      }
+    }
+  }
+
+  if (verbose) {
+    cat("\n✓ Created", length(text_files_created), "placeholder text files\n")
+  }
+
+  return(text_files_created)
+}
+
 # Make functions available when sourced
 if (!interactive()) {
   # If run as script, provide menu

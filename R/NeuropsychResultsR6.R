@@ -10,6 +10,7 @@
 #' \describe{
 #'   \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
 #'   \item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
+#'   \item{create_text_placeholder}{Create placeholder text file if it doesn't exist.}
 #' }
 #'
 #' @importFrom R6 R6Class
@@ -35,10 +36,53 @@ NeuropsychResultsR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Create a placeholder text file for a given domain if it doesn't already exist.
+    #'
+    #' @param domain_file The domain QMD file (e.g., "_02-01_iq.qmd")
+    #' @return The text filename that was created or already existed
+    create_text_placeholder = function(domain_file) {
+      # Extract domain info from the domain file name
+      # Pattern: _02-01_iq.qmd -> _02-01_iq_text.qmd
+      text_file <- gsub("\\.qmd$", "_text.qmd", domain_file)
+
+      if (!file.exists(text_file)) {
+        # Extract domain name for the placeholder content
+        # Pattern: _02-01_iq_text.qmd -> "iq"
+        domain_match <- regmatches(
+          text_file,
+          regexpr("_[0-9]+-[0-9]+_([^_]+)_text", text_file)
+        )
+
+        if (length(domain_match) > 0) {
+          domain_name <- gsub(
+            ".*_[0-9]+-[0-9]+_([^_]+)_text.*",
+            "\\1",
+            domain_match[1]
+          )
+          domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
+        } else {
+          domain_name <- "Assessment"
+        }
+
+        # Create placeholder content
+        placeholder_content <- "<summary>\n\n</summary>"
+
+        writeLines(placeholder_content, text_file)
+        cat("  ✓ Created placeholder text file:", text_file, "\n")
+      }
+
+      return(text_file)
+    },
+
+    #' @description
     #' Sort the data by percentile, remove duplicates, convert to text, and write to file as proper QMD content.
+    #' Also creates the corresponding text placeholder file.
     #'
     #' @return Invisibly returns NULL after writing to the file.
     process = function() {
+      # Create the text placeholder file first
+      self$create_text_placeholder(self$file)
+
       # Sorting the data by percentile and removing duplicates
       sorted_data <- self$data |>
         dplyr::arrange(dplyr::desc(percentile)) |>

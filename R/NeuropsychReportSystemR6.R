@@ -44,7 +44,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     ) {
       # Set default config values if not provided
       default_config <- list(
-        patient = "Biggie",
+        patient = "Isabella",
         domains = c(
           "domain_iq",
           "domain_academics",

@@ -299,7 +299,13 @@ DomainProcessorR6 <- R6::R6Class(
         "Substance Use"
       )
 
-      adult_domain_patterns <- c("Emotional/Behavioral/Personality")
+      adult_domain_patterns <- c(
+        "Emotional/Behavioral/Personality",
+        "Personality Disorders",
+        "Psychiatric Disorders",
+        "Psychosocial Problems",
+        "Substance Use"
+      )
 
       # Check if any child-specific domains are present
       child_domain_match <- any(sapply(
@@ -2011,8 +2017,8 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Add separate table generation for each rater
       # SELF TABLE
-      qmd_content_self <- paste0(
-        qmd_content_self,
+      qmd_content <- paste0(
+        qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-self\n",
         "#| include: false\n\n",
@@ -2090,8 +2096,8 @@ DomainProcessorR6 <- R6::R6Class(
       )
 
       # PARENT TABLE
-      qmd_content_parent <- paste0(
-        qmd_content_parent,
+      qmd_content <- paste0(
+        qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-parent\n",
         "#| include: false\n\n",
@@ -2169,8 +2175,8 @@ DomainProcessorR6 <- R6::R6Class(
       )
 
       # TEACHER TABLE (with eval: false)
-      qmd_content_teacher <- paste0(
-        qmd_content_teacher,
+      qmd_content <- paste0(
+        qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-teacher\n",
         "#| include: false\n",

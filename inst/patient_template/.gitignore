@@ -1,0 +1,24 @@
+# Patient-specific data (never commit)
+data/*.csv
+data/*.xlsx
+data/*.parquet
+data/*.feather
+figs/
+output/
+tmp/
+
+# Generated QMD files (patient-specific)
+_02-*.qmd
+*_text.qmd
+
+# Reports
+*.pdf
+*.docx
+*.html
+*.typ
+
+# Keep directory structure
+!data/.gitkeep
+!figs/.gitkeep
+!output/.gitkeep
+!config/

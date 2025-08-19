@@ -69,7 +69,7 @@ ReportTemplateR6 <- R6::R6Class(
         } else {
           self$variables <- list(
             version = "0.1.0",
-            patient = "Biggie",
+            patient = "Isabella",
             first_name = "First",
             last_name = "Last",
             dob = format(Sys.Date() - 365 * 30, "%Y-%m-%d"), # 30 years ago
