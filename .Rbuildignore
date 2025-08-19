@@ -1,0 +1,140 @@
+^renv$
+^renv\.lock$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.DS_Store$
+^\*\.DS_Store$
+^_.*\.qmd$
+^_extension\.yml$
+^_extensions$
+^_freeze$
+^_arxiv$
+^_include_domains\.qmd$
+^_quarto\.yml$
+^_variables\.yml$
+^air\.toml$
+^altdoc$
+^apa\.csl$
+^basic_test\.R$
+^EFFICIENCY_REPORT\.md$
+^efficient_workflow\.R$
+^efficient_workflow_v5\.R$
+^fill_pdf\.typ$
+^fillable_pdf\.typ$
+^fillable_pdf2\.typ$
+^forensic_report_biggie\.qmd$
+^Forensic_Retainer_Template\.qmd$
+^LICENSE\.md$
+^lint_check\.R$
+^maintain_deps\.R$
+^neuro2_efficient_workflow\.R$
+^project_readme\.md$
+^README\.md$
+^refs\.bib$
+^report_template_demo\.qmd$
+^run_test_workflow\.R$
+^sections_report\.qmd$
+^setup_environment\.R$
+^spatial_table_typo_fix\.txt$
+^template\.qmd$
+^template\.typ$
+^template\.typst\.md$
+^template_cache$
+^template_files$
+^test_run\.R$
+^test_workflow\.R$
+^troubleshooting_guide\.md$
+^typst-show\.typ$
+^typst-template\.typ$
+^verbal_qmd_fix\.R$
+^WORKFLOW_GUIDE\.md$
+^wrapper_report\.qmd$
+^01_import_process_data\.R$
+^02_create_domain_qmds\.R$
+^03_render_domains\.R$
+^04_updated_workflow_quarto\.R$
+^06_run_complete_workflow\.R$
+^fig_.*\.svg$
+^fig_.*\.png$
+^table_.*\.pdf$
+^table_.*\.png$
+^jwt_sig\.png$
+^logo\.png$
+^settings\.json$
+^LICENSE$
+^reports$
+^data-raw$
+^data-raw\.R$
+^scratch\.R$
+^dev$
+^neuro2/inst/quarto/templates/typst-report/\.quarto$
+^\.specstory$
+^\.dbxignore$
+^\.editorconfig$
+^\.github$
+^rsrc$
+^data/neuropsych_lookup_table\.csv$
+^\.history$
+^\.quarto$
+^\.roo$
+^\.vscode$
+^_04-00_feedback\.Rmd$
+^benchmark_r6_performance\.R$
+^DUCKDB_INTEGRATION_GUIDE\.md$
+^DUCKDB_INTEGRATION_GUIDE\.pdf$
+^duckdb\.R$
+^fix_domain_example\.R$
+^ignore\.R$
+^neuro2_duckdb_workflow\.R$
+^neuro2_r6_update_workflow\.R$
+^output$
+^parallel_r6_workflow\.R$
+^R6_IMPLEMENTATION_GUIDE\.md$
+^R6_IMPLEMENTATION_GUIDE\.pdf$
+^r6_iq_comparison\.md$
+^r6_iq_comparison\.qmd$
+^template\.pdf$
+^test_domains_fix\.R$
+^test_r6_integration\.R$
+^README\.Rmd$
+^data$
+^data/.*$
+^data/README$
+^\.git$
+^\.git/.*$
+^\.\.Rcheck$
+^.*copy.*\.yml$
+^.*copy.*\.R$
+^tests/test_domain_workflow\.R$
+^\.claude$
+^tests$
+^\.env$
+^‘01_setup_environment\.R’ ‘02_unified_neuropsych_workflow\.sh’
+    ‘CODEBASE_ANALYSIS\.md’ ‘EF2025_4_17_2025_scores\.csv’ ‘FINAL_FIXES\.md’
+    ‘INTEGRATED_WORKFLOW_FIXES\.md’ ‘UNIFIED_WORKFLOW_README\.md’
+    ‘WORKFLOW_FIXES_README\.md’ ‘WORKFLOW_FIXES_README_UPDATED\.md’
+    ‘_02-00_behav_obs\.pdf’ ‘check_all_templates\.R’ ‘check_plot_titles\.R’
+    ‘config\.yml’ ‘data_processor_module\.R’ ‘docs’
+    ‘domain_generator_module\.R’ ‘domain_workflow_code_updates\.R’
+    ‘generate_all_domain_assets\.R’ ‘generate_domain_files\.R’
+    ‘generate_figures\.R’ ‘generate_spatial_tbl_img_files\.R’
+    ‘generate_tables\.R’ ‘install_dependencies\.R’ ‘migration_guide\.md’
+    ‘neuro2\.code-workspace’ ‘neuro2_duckdb_workflow_DEMO\.R’
+    ‘package_management\.md’ ‘pluck_rbans_harry\.Rmd’
+    ‘report_generator_module\.R’ ‘run_test_workflow\.sh’ ‘run_workflow\.R’
+    ‘safe_sysdata_update_examples\.R’ ‘setup_templates\.R’ ‘shiny-pegboard’
+    ‘template_master\.pdf’ ‘template_master\.typ’
+    ‘test_adhd_standardization\.R’ ‘test_config\.yml’
+    ‘test_domain_generation\.R’ ‘test_domain_mapping\.R’
+    ‘test_emotion_domain\.R’ ‘test_emotion_processor\.R’ ‘test_fixes\.R’
+    ‘test_output_emotion_adult\.qmd’ ‘test_output_emotion_child\.qmd’
+    ‘test_output_filename\.R’ ‘test_parquet_fixes\.R’
+    ‘test_plot_title_generation\.R’ ‘test_table_generation\.R’
+    ‘test_testname_rater\.csv’ ‘test_unified_workflow\.R’
+    ‘test_workflow\.log’ ‘test_workflow\.sh’
+    ‘unified_neuropsych_workflow\.sh’ ‘unified_workflow_architecture\.md’
+    ‘unified_workflow_runner\.R’ ‘verify_adhd_scales\.R’ ‘workflow\.log’
+    ‘workflow_r6_update\.log’$
+^neuro2/inst/quarto/_extensions/brainworkup/\.quarto$
+^src$
+^\.venv$

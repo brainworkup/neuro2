@@ -1,3 +1,12 @@
-{
-  "template": true
-}
+# Normalize line endings and mark binaries
+* text=auto eol=lf
+
+# Treat common binary assets as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.feather binary
+*.parquet binary

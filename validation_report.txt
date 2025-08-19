@@ -1,0 +1,72 @@
+neuro2 Package Validation Report
+Generated: 2025-08-13 15:21:39.255427
+==================================================
+
+Data Files:
+  neurocog.csv exists: TRUE
+  neurobehav.csv exists: TRUE
+
+Generated Domain Files:
+   _02-00_behav_obs.qmd
+   _02-01_iq_output.qmd
+   _02-01_iq_text.qmd
+   _02-01_iq.qmd
+   _02-02_academics_output.qmd
+   _02-02_academics_text.qmd
+   _02-02_academics.qmd
+   _02-03_verbal_output.qmd
+   _02-03_verbal_text.qmd
+   _02-03_verbal.qmd
+   _02-04_spatial_output.qmd
+   _02-04_spatial_text.qmd
+   _02-04_spatial.qmd
+   _02-05_memory_output.qmd
+   _02-05_memory_text.qmd
+   _02-05_memory.qmd
+   _02-06_executive_output.qmd
+   _02-06_executive_text.qmd
+   _02-06_executive.qmd
+   _02-07_motor_output.qmd
+   _02-07_motor_text.qmd
+   _02-07_motor.qmd
+   _02-08_social_output.qmd
+   _02-08_social_text.qmd
+   _02-08_social.qmd
+   _02-09_adhd_adult_output.qmd
+   _02-09_adhd_adult_text_observer.qmd
+   _02-09_adhd_adult_text_self.qmd
+   _02-09_adhd_adult.qmd
+   _02-10_emotion_child_output.qmd
+   _02-10_emotion_child_text_parent.qmd
+   _02-10_emotion_child_text_self.qmd
+   _02-10_emotion_child.qmd
+   _02-11_adaptive_output.qmd
+   _02-11_adaptive_text.qmd
+   _02-11_adaptive.qmd
+   _02-12_daily_living_output.qmd
+   _02-12_daily_living_text.qmd
+   _02-12_daily_living.qmd
+
+Text Files Status:
+   _02-01_iq_text.qmd
+   _02-02_academics_text.qmd
+   _02-03_verbal_text.qmd
+   _02-04_spatial_text.qmd
+   _02-05_memory_text.qmd
+   _02-06_executive_text.qmd
+   _02-07_motor_text.qmd
+   _02-08_social_text.qmd
+   _02-09_adhd_adult_text_observer.qmd
+   _02-09_adhd_adult_text_self.qmd
+   _02-10_emotion_child_text_parent.qmd
+   _02-10_emotion_child_text_self.qmd
+   _02-11_adaptive_text.qmd
+   _02-12_daily_living_text.qmd
+   _03-00_sirf_text.qmd
+
+Recommendations:
+1. Only generate files for domains with actual data
+2. Implement score type caching to improve performance
+3. Add proper validation before file generation
+4. Create placeholder text files for missing includes
+

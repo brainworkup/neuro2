@@ -1,0 +1,56 @@
+# Aggressive ignore for per-patient repositories to minimize PHI in Git
+# Rename this to .gitignore in the patient repo if desired.
+
+# OS/system
+.DS_Store
+Thumbs.db
+Icon
+Icon?
+
+# Env and secrets
+.env
+
+# R / RStudio
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Editors
+.vscode/
+.history/
+
+# Quarto build artifacts
+.quarto/
+*_cache/
+**/*_cache/
+*_files/
+**/*_files/
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+
+# Generated outputs
+output/
+reports/
+*.html
+*.pdf
+*.docx
+*.pptx
+
+# Data files (assume PHI)
+data/
+data-raw/
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.sav
+*.rda
+*.rds
+*.feather
+*.parquet
+*.zip
+*.gz
