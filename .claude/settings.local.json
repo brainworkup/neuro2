@@ -3,7 +3,8 @@
     "allow": [
       "Bash(find:*)",
       "Bash(R:*)",
-      "Bash(claude mcp add:*)"
+      "Bash(claude mcp add:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

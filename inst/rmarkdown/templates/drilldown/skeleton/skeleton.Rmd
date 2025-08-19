@@ -48,8 +48,7 @@ library(widgetframe)
 library(xaringan)
 library(xaringanExtra)
 library(xaringanthemer)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
 ## knitr options
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
@@ -142,12 +141,12 @@ data <- neurocog
 neuro_domain <- "Neuropsychological Test Scores"
 theme <- theme_merge
 plot1 <-
-  NeurotypR::drilldown(
+  neuro2::DrilldownR6$new(
     data = data,
     patient = patient,
     neuro_domain = neuro_domain,
     theme = theme
-  )
+  )$create_plot()
 plot1
 ```
 
@@ -172,12 +171,12 @@ data <- neurobehav
 neuro_domain <- "Behavioral Rating Scales"
 theme <- theme_merge
 plot2 <-
-  NeurotypR::drilldown(
+  neuro2::DrilldownR6$new(
     data = data,
     patient = patient,
     neuro_domain = neuro_domain,
     theme = theme
-  )
+  )$create_plot()
 plot2
 ```
 
@@ -201,11 +200,11 @@ data <- validity
 neuro_domain <- "Effort/Validity Test Scores"
 theme <- theme_merge
 plot3 <-
-  NeurotypR::drilldown(
+  neuro2::DrilldownR6$new(
     data = data,
     patient = patient,
     neuro_domain = neuro_domain,
     theme = theme
-  )
+  )$create_plot()
 plot3
 ```
