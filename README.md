@@ -119,7 +119,7 @@ report_system$run_workflow()
     ├── R/                 # R6 classes and functions
     │   ├── DomainProcessorR6.R      # Domain data processing
     │   ├── NeuropsychReportSystemR6.R # Report orchestration
-    │   ├── TableGT.R                # Table generation
+    │   ├── TableGTR6.R                # Table generation
     │   ├── DotplotR6.R             # Visualization
     │   └── duckdb_neuropsych_loader.R # Data loading
     ├── inst/              # Package resources
@@ -167,7 +167,7 @@ processor <- DomainProcessorR6$new(
 processor$process()  # Runs complete pipeline
 ```
 
-### TableGT
+### TableGTR6
 
 Creates publication-quality tables:
 
@@ -275,7 +275,7 @@ memory_data <- query_neuropsych(
 )
 
 # Create custom table
-table_gt <- TableGT$new(
+table_gt <- TableGTR6$new(
   data = memory_data,
   pheno = "memory",
   table_name = "custom_memory_table"

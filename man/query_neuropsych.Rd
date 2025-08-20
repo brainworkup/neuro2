@@ -4,7 +4,7 @@
 \alias{query_neuropsych}
 \title{Query neuropsychological data using DuckDB}
 \usage{
-query_neuropsych(query, data_dir)
+query_neuropsych(query, data_dir = "data", ...)
 }
 \arguments{
 \item{query}{SQL query string}

@@ -258,8 +258,12 @@ TableGTR6 <- R6::R6Class(
           row_group.font.weight = "bold",
           footnotes.multiline = self$multiline,
           footnotes.font.size = "small"
-        ) |>
-        gt::opt_vertical_padding(scale = self$vertical_padding)
+        )
+
+      # Only apply vertical padding if a value is provided
+      if (!is.null(self$vertical_padding)) {
+        tbl <- tbl |> gt::opt_vertical_padding(scale = self$vertical_padding)
+      }
 
       return(tbl)
     },

@@ -37,8 +37,9 @@ process_workflow_data <- function(config) {
 
 # ...existing code...
 
-# Query function for neuropsych data
-query_neuropsych <- function(query, data_dir) {
+# Simple query function for neuropsych data (for basic operations)
+# Note: For SQL queries, use query_neuropsych from duckdb_neuropsych_loader.R
+query_neuropsych_simple <- function(query, data_dir) {
   source("R/workflow_utils.R")
 
   # Try to load the data
@@ -68,6 +69,25 @@ query_neuropsych <- function(query, data_dir) {
   }
 
   return(data.frame())
+}
+
+# Load neuropsych data (neurocog)
+load_neuropsych_data <- function(data_dir) {
+  parquet_file <- file.path(data_dir, "neurocog.parquet")
+  csv_file <- file.path(data_dir, "neurocog.csv")
+  feather_file <- file.path(data_dir, "neurocog.feather")
+
+  if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
+    return(arrow::read_parquet(parquet_file))
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
+    return(arrow::read_feather(feather_file))
+  } else if (file.exists(csv_file)) {
+    return(readr::read_csv(csv_file, show_col_types = FALSE))
+  } else {
+    return(NULL)
+  }
 }
 
 # Load neurobehav data
