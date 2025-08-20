@@ -16,7 +16,7 @@ required_packages <- c(
   "ggplot2",
   "gt"
 )
-# NeurotypR is optional - the package has fallback mechanisms
+# `neuro2` is optional - the package has fallback mechanisms
 optional_packages <- c("duckdb", "DBI", "future", "furrr")
 missing_packages <- c()
 missing_optional <- c()

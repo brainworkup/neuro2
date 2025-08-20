@@ -6,10 +6,10 @@
 \usage{
 generate_neuropsych_report_system(
   patient,
-  domains = c("domain_iq", "domain_academics", "domain_verbal", "domain_spatial",
-    "domain_memory", "domain_executive", "domain_motor", "domain_social",
-    "domain_adhd_adult", "domain_emotion_adult", "domain_adhd_child",
-    "domain_emotion_child", "domain_adaptive", "domain_daily_living"),
+  domains = c(domain_iq, domain_academics, domain_verbal, domain_spatial, domain_memory,
+    domain_executive, domain_motor, domain_social, domain_adhd_adult,
+    domain_emotion_adult, domain_adhd_child, domain_emotion_child, domain_adaptive,
+    domain_daily_living, domain_validity),
   data_files = list(neurocog = "data/neurocog.parquet", neurobehav =
     "data/neurobehav.parquet", neuropsych = "data/neuropsych.parquet", validity =
     "data/validity.parquet"),
@@ -44,6 +44,7 @@ generate_neuropsych_report_system(
 Invisibly returns the NeuropsychReportSystemR6 object.
 }
 \description{
-This function encapsulates the entire workflow for generating neuropsychological reports.
+This function encapsulates the entire workflow
+for generating neuropsychological reports.
 It's a wrapper around the NeuropsychReportSystemR6 class.
 }

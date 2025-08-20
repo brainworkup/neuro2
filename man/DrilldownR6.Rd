@@ -9,14 +9,18 @@ DrilldownR6 Class
 DrilldownR6 Class
 }
 \details{
-An R6 class that creates interactive highcharter drilldown plots for neuropsychological domains.
-This is an R6 implementation of the drilldown function with identical functionality.
+An R6 class that creates interactive
+highcharter drilldown plots for neuropsychological domains.
+This is an R6 implementation of the drilldown function
+with identical functionality.
 }
 \section{Methods}{
 
 \describe{
-\item{initialize}{Initialize a new DrilldownR6 object with configuration and data.}
-\item{create_plot}{Generate the interactive highcharter drilldown plot based on the object's configuration.}
+\item{initialize}{Initialize a new DrilldownR6 object
+with configuration and data.}
+\item{create_plot}{Generate the interactive highcharter
+drilldown plot based on the object's configuration.}
 }
 }
 
@@ -77,7 +81,8 @@ A new DrilldownR6 object
 \if{html}{\out{<a id="method-DrilldownR6-create_plot"></a>}}
 \if{latex}{\out{\hypertarget{method-DrilldownR6-create_plot}{}}}
 \subsection{Method \code{create_plot()}}{
-Generate the interactive highcharter drilldown plot based on the object's configuration.
+Generate the interactive highcharter
+drilldown plot based on the object's configuration.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DrilldownR6$create_plot()}\if{html}{\out{</div>}}
 }

@@ -1,8 +1,8 @@
-#' Enhanced Utility Functions for NeurotypR
+#' Enhanced Utility Functions for `neuro2`
 #'
 #' @description
 #' Core utility functions that provide common operations used throughout
-#' the NeurotypR package. These functions improve performance, reduce
+#' the `neuro2` package. These functions improve performance, reduce
 #' code duplication, and provide consistent behavior.
 #'
 #' @name neurotypr_utils
@@ -481,9 +481,9 @@ batch_process <- function(items, fn, batch_size = 100) {
   list(results = results, errors = errors)
 }
 
-#' Utility functions to replace NeurotypR dependencies
+#' Utility functions to replace `neuro2` dependencies
 #'
-#' This file contains utility functions that replace NeurotypR functions
+#' This file contains utility functions that replace `neuro2` functions
 #' used in the neuro2 package.
 
 #' Filter data by domain and scale

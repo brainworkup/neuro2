@@ -1,13 +1,16 @@
 #' NeuropsychReportSystemR6 Class
 #'
-#' An R6 class that orchestrates the entire neuropsychological report generation system.
-#' This class coordinates utilities, template management, domain processing, and report generation.
+#' An R6 class that orchestrates the
+#'  entire neuropsychological report generation system.
+#' This class coordinates utilities,
+#'  template management, domain processing, and report generation.
 #'
 #' @field config Configuration parameters for the report system.
 #' @field utilities ReportUtilitiesR6 object for utility functions.
 #' @field template_manager ReportTemplateR6 object for template management.
 #' @field content_manager TemplateContentManagerR6 object for content files.
-#' @field domain_processors List of DomainProcessorR6 objects for different domains.
+#' @field domain_processors List of DomainProcessorR6
+#'  objects for different domains.
 #'
 #' @section Methods:
 #' \describe{
@@ -44,22 +47,25 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     ) {
       # Set default config values if not provided
       default_config <- list(
-        patient = "Isabella",
+        patient = "Biggie",
         domains = c(
-          "domain_iq",
-          "domain_academics",
-          "domain_verbal",
-          "domain_spatial",
-          "domain_memory",
-          "domain_executive",
-          "domain_motor",
-          "domain_social",
-          "domain_adhd_adult",
-          "domain_adhd_child",
-          "domain_emotion_adult",
-          "domain_emotion_child",
-          "domain_adaptive",
-          "domain_daily_living"
+          domain_iq,
+          domain_academics,
+          domain_verbal,
+          domain_spatial,
+          domain_memory,
+          domain_executive,
+          domain_motor,
+          domain_social,
+          # domain_adhd,
+          domain_adhd_adult,
+          domain_adhd_child,
+          # domain_emotion,
+          domain_emotion_adult,
+          domain_emotion_child,
+          domain_adaptive,
+          domain_daily_living,
+          domain_validity
         ),
         data_files = list(
           neurocog = "data/neurocog.parquet",
@@ -314,235 +320,130 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       invisible(self)
     },
 
+    # Create processor configurations based on requested domains
+    create_processor_configs = function(domains) {
+      factory <- DomainProcessorFactoryR6$new()
+      configs <- list()
+
+      for (domain_name in domains) {
+        # Get the correct domain key from the domain name
+        domain_key <- get_domain_key(domain_name)
+
+        message(paste("Mapping domain:", domain_name, "->", domain_key))
+
+        # Get configuration from factory
+        config <- factory$get_processor_config(domain_key)
+
+        if (is.null(config)) {
+          warning(paste("No processor configured for domain key:", domain_key))
+          next
+        }
+
+        configs[[domain_name]] <- config
+      }
+
+      return(configs)
+    },
+
+    # Get processor configuration
+    get_processor_config = function(domain_name) {
+      if (is.null(private$processor_configs)) {
+        private$processor_configs <- self$create_processor_configs(
+          self$config$domains
+        )
+      }
+      return(private$processor_configs[[domain_name]])
+    },
+
     #' @description
     #' Generate domain-specific QMD files for the report.
     #'
     #' @param domains List of domains to generate files for (default: all configured domains).
     #' @param data_dir Directory containing CSV data files (default: "data-raw/csv/").
     #' @return Invisibly returns self for method chaining.
-    generate_domain_files = function(
-      domains = NULL,
-      data_dir = "data-raw/csv/"
-    ) {
-      # If domains not specified, extract from actual data
-      if (is.null(domains)) {
-        # Extract domains from CSV files
-        csv_files <- list.files(
-          data_dir,
-          pattern = "\\.csv$",
-          full.names = TRUE
+    generate_domain_files = function(domains) {
+      message("Generating domain files for: ", paste(domains, collapse = ", "))
+
+      # Create factory
+      factory <- DomainProcessorFactoryR6$new()
+
+      for (domain_name in domains) {
+        message("Processing domain: ", domain_name)
+
+        # Get the domain key correctly
+        domain_key <- get_domain_key(domain_name)
+        message(paste("Domain key:", domain_key))
+
+        # Get config from factory
+        config <- factory$get_processor_config(domain_key)
+
+        if (is.null(config)) {
+          warning(paste(
+            "No processor configured for domain key:",
+            domain_key,
+            "from domain:",
+            domain_name
+          ))
+          next
+        }
+
+        # Get data file based on data source
+        data_file <- private$get_data_file_for_source(config$data_source)
+
+        if (is.null(data_file) || !file.exists(data_file)) {
+          warning(paste(
+            "Data file not found for",
+            domain_name,
+            "- expected:",
+            data_file
+          ))
+          next
+        }
+
+        message(paste("Using data file:", data_file))
+
+        # Create processor with the corrected configuration
+        processor <- DomainProcessorR6$new(
+          domains = config$domain,
+          pheno = config$pheno,
+          input_file = data_file,
+          number = config$number
         )
-        all_domains <- character()
 
-        for (file in csv_files) {
-          data <- readr::read_csv(file, show_col_types = FALSE)
-          if ("domain" %in% names(data)) {
-            all_domains <- c(all_domains, unique(data$domain))
+        # Generate domain and text files
+        domain_file <- paste0(
+          "_02-",
+          sprintf("%02d", as.numeric(config$number)),
+          "_",
+          config$pheno,
+          ".qmd"
+        )
+        text_file <- paste0(
+          "_02-",
+          sprintf("%02d", as.numeric(config$number)),
+          "_",
+          config$pheno,
+          "_text.qmd"
+        )
+
+        message(paste("  -", domain_file))
+        message(paste("  -", text_file))
+
+        tryCatch(
+          {
+            processor$generate_domain_qmd(domain_name, domain_file)
+          },
+          error = function(e) {
+            warning(paste(
+              "Failed to generate domain QMD for",
+              domain_name,
+              ":",
+              e$message
+            ))
           }
-        }
-
-        domains <- unique(all_domains)
-        message("Found ", length(domains), " unique domains in data")
+        )
       }
 
-      # Flatten domains in case some are vectors
-      flat_domains <- unlist(domains)
-
-      # Define canonical domain order with adult/child variants
-      # Each entry can be a string or a list with 'domain' and 'variant'
-      domain_config <- list(
-        list(domain = "General Cognitive Ability", number = "01", pheno = "iq"),
-        list(domain = "Academic Skills", number = "02", pheno = "academics"),
-        list(domain = "Verbal/Language", number = "03", pheno = "verbal"),
-        list(
-          domain = "Visual Perception/Construction",
-          number = "04",
-          pheno = "spatial"
-        ),
-        list(domain = "Memory", number = "05", pheno = "memory"),
-        list(
-          domain = "Attention/Executive",
-          number = "06",
-          pheno = "executive"
-        ),
-        list(domain = "Motor", number = "07", pheno = "motor"),
-        list(domain = "Social Cognition", number = "08", pheno = "social"),
-        # ADHD has adult/child variants
-        list(
-          domain = "ADHD",
-          number = "09",
-          pheno = "adhd",
-          variants = c("adult", "child")
-        ),
-        # Emotion domains all map to same number with adult/child variants
-        list(
-          domain = c(
-            "Emotional/Behavioral/Personality",
-            "Behavioral/Emotional/Social",
-            "Psychiatric Disorders",
-            "Personality Disorders",
-            "Substance Use",
-            "Psychosocial Problems"
-          ),
-          number = "10",
-          pheno = "emotion",
-          variants = c("adult", "child")
-        ),
-        list(
-          domain = "Adaptive Functioning",
-          number = "11",
-          pheno = "adaptive"
-        ),
-        list(domain = "Daily Living", number = "12", pheno = "daily_living"),
-        list(domain = "Symptom Validity", number = "13", pheno = "validity")
-      )
-
-      # Determine patient type (adult/child) based on data or config
-      # This could be enhanced to detect from actual test data
-      patient_type <- "adult" # Default to adult, could be parameterized
-
-      # Process domains according to configuration
-      generated_files <- character()
-
-      for (config in domain_config) {
-        # Get all domain names for this config
-        domain_names <- if (is.character(config$domain)) {
-          config$domain
-        } else {
-          unlist(config$domain)
-        }
-
-        # Check if any of these domains exist in the data
-        matching_domains <- intersect(domain_names, flat_domains)
-
-        if (length(matching_domains) > 0) {
-          # Determine variant to use
-          variant_suffix <- ""
-          if (!is.null(config$variants) && patient_type %in% config$variants) {
-            variant_suffix <- paste0("_", patient_type)
-          }
-
-          # Generate file names
-          pheno_name <- paste0(config$pheno, variant_suffix)
-          domain_file <- paste0("_02-", config$number, "_", pheno_name, ".qmd")
-          text_file <- paste0(
-            "_02-",
-            config$number,
-            "_",
-            pheno_name,
-            "_text.qmd"
-          )
-
-          # Get the processor for this phenotype
-          if (config$pheno %in% names(self$domain_processors)) {
-            processor <- self$domain_processors[[config$pheno]]
-
-            # Update processor domains to include all matching domains
-            processor$domains <- matching_domains
-
-            # Process the domain data
-            if (!is.null(processor$input_file)) {
-              file_ext <- tools::file_ext(processor$input_file)
-
-              if (file_ext %in% c("parquet", "feather")) {
-                # Load data using appropriate method
-                if (file_ext == "parquet") {
-                  processor$data <- arrow::read_parquet(processor$input_file)
-                } else if (file_ext == "feather") {
-                  processor$data <- arrow::read_feather(processor$input_file)
-                }
-                processor$filter_by_domain()
-                processor$select_columns()
-                processor$save_data()
-              } else {
-                # Standard CSV processing
-                processor$load_data()
-                processor$filter_by_domain()
-                processor$select_columns()
-                processor$save_data()
-              }
-            }
-
-            message(
-              "Generating domain files for: ",
-              paste(matching_domains, collapse = ", ")
-            )
-            message("  - ", domain_file)
-            message("  - ", text_file)
-
-            # # Generate the domain QMD file
-            # domain_title <- matching_domains[1] # Use first matching domain as title
-            # cat(
-            #   paste0(
-            #     "## ",
-            #     domain_title,
-            #     " {#sec-",
-            #     config$pheno,
-            #     "}\n\n",
-            #     "{{< include ",
-            #     text_file,
-            #     " >}}\n\n",
-            #     "```{r}\n",
-            #     "#| label: data-",
-            #     pheno_name,
-            #     "\n",
-            #     "#| include: false\n\n",
-            #     "# Domain-specific data is loaded here if needed\n",
-            #     "# The domain processor has already prepared the data\n",
-            #     "```\n\n",
-            #     "```{r}\n",
-            #     "#| label: table-",
-            #     pheno_name,
-            #     "\n",
-            #     "#| tbl-cap: \"",
-            #     domain_title,
-            #     " Test Results\"\n",
-            #     "#| echo: false\n\n",
-            #     "# Table generation code here\n",
-            #     "# This would use the processed data for this domain\n",
-            #     "```\n"
-            #   ),
-            #   file = domain_file
-            # )
-
-            # Generate text file
-            filtered_data <- processor$filter_by_test("self")
-            if (!is.null(filtered_data) && nrow(filtered_data) > 0) {
-              if (exists("NeuropsychResultsR6")) {
-                results_obj <- NeuropsychResultsR6$new(
-                  data = filtered_data,
-                  file = text_file
-                )
-                results_obj$process()
-              } else {
-                cat(
-                  "<summary>\n\n",
-                  "Results for ",
-                  domain_title,
-                  " domain.\n\n",
-                  "</summary>",
-                  file = text_file
-                )
-              }
-            } else {
-              cat(
-                "<summary>\n\n",
-                "No data available for ",
-                domain_title,
-                " domain.\n\n",
-                "</summary>",
-                file = text_file
-              )
-            }
-
-            generated_files <- c(generated_files, domain_file)
-          } else {
-            warning("No processor configured for phenotype: ", config$pheno)
-          }
-        }
-      }
-
-      message("\nGenerated ", length(generated_files), " domain files")
       invisible(self)
     },
 
@@ -575,16 +476,35 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         )
       }
 
+      # Check if template file exists before proceeding
+      if (!file.exists(template_file)) {
+        warning(
+          "Template file not found: ",
+          template_file,
+          ". Skipping report generation."
+        )
+        return(invisible(self))
+      }
+
       # Generate template with ReportTemplateR6
       message("Generating report template: ", template_file)
-      self$template_manager$variables <- variables
-      self$template_manager$generate_template(template_file)
 
-      # Render the report
-      message("Rendering report to: ", output_file)
-      self$template_manager$render_report(
-        input_file = template_file,
-        output_file = output_file
+      tryCatch(
+        {
+          self$template_manager$variables <- variables
+          self$template_manager$generate_template(template_file)
+
+          # Render the report
+          message("Rendering report to: ", output_file)
+          self$template_manager$render_report(
+            input_file = template_file,
+            output_file = output_file
+          )
+        },
+        error = function(e) {
+          warning("Report generation failed: ", e$message)
+          message("Domain files have been generated successfully.")
+        }
       )
 
       invisible(self)
@@ -595,7 +515,8 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #'
     #' @param setup Whether to set up the environment.
     #' @param prepare_data Whether to prepare data files.
-    #' @param domains List of domains to include (default: all configured domains).
+    #' @param domains List of domains to include
+    #'  (default: all configured domains).
     #' @return Invisibly returns self for method chaining.
     run_workflow = function(setup = TRUE, prepare_data = TRUE, domains = NULL) {
       if (setup) {
@@ -615,12 +536,77 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       message("Report generation workflow completed")
       invisible(self)
     }
+  ),
+  private = list(
+    processor_configs = NULL,
+
+    # Get data file based on source
+    get_data_file_for_source = function(data_source) {
+      data_files <- self$config$data_files
+
+      # Map data source to data file
+      source_map <- list(
+        neurocog = data_files$neurocog,
+        neurobehav = data_files$neurobehav,
+        validity = data_files$validity,
+        neuropsych = data_files$neuropsych
+      )
+
+      return(source_map[[data_source]])
+    },
+
+    # Get domain key from domain name
+    get_domain_key = function(domain_name) {
+      # Map common domain names to keys
+      domain_map <- list(
+        "General Cognitive Ability" = "iq",
+        "Academic Skills" = "academics",
+        "Verbal/Language" = "verbal",
+        "Visual Perception/Construction" = "spatial",
+        "Memory" = "memory",
+        "Attention/Executive" = "executive",
+        "Motor" = "motor",
+        "Social Cognition" = "social",
+        "ADHD" = "adhd",
+        "ADHD Adult" = "adhd_adult",
+        "ADHD Child" = "adhd_child",
+        "Emotional/Behavioral/Personality" = "emotion",
+        "Behavioral/Emotional/Social" = "emotion",
+        "Psychiatric Disorders" = "emotion",
+        "Personality Disorders" = "emotion",
+        "Substance Use" = "emotion",
+        "Psychosocial Problems" = "emotion",
+        "Adaptive Functioning" = "adaptive",
+        "Daily Living" = "daily_living",
+        "Performance Validity" = "validity",
+        "Symptom Validity" = "validity"
+      )
+
+      # Try exact match first
+      if (domain_name %in% names(domain_map)) {
+        return(domain_map[[domain_name]])
+      }
+
+      # Try case-insensitive match
+      for (name in names(domain_map)) {
+        if (tolower(name) == tolower(domain_name)) {
+          return(domain_map[[name]])
+        }
+      }
+
+      # Return cleaned version as fallback
+      pheno <- tolower(gsub("[^A-Za-z0-9]", "_", domain_name))
+      pheno <- gsub("_+", "_", pheno) # Remove multiple underscores
+      pheno <- gsub("^_|_$", "", pheno) # Remove leading/trailing underscores
+      return(pheno)
+    }
   )
 )
 
 #' Generate Complete Neuropsychological Report (Function Wrapper)
 #'
-#' This function encapsulates the entire workflow for generating neuropsychological reports.
+#' This function encapsulates the entire workflow
+#'  for generating neuropsychological reports.
 #' It's a wrapper around the NeuropsychReportSystemR6 class.
 #'
 #' @param patient Patient's name for the report.
@@ -639,20 +625,21 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 generate_neuropsych_report_system <- function(
   patient,
   domains = c(
-    "domain_iq",
-    "domain_academics",
-    "domain_verbal",
-    "domain_spatial",
-    "domain_memory",
-    "domain_executive",
-    "domain_motor",
-    "domain_social",
-    "domain_adhd_adult",
-    "domain_emotion_adult",
-    "domain_adhd_child",
-    "domain_emotion_child",
-    "domain_adaptive",
-    "domain_daily_living"
+    domain_iq,
+    domain_academics,
+    domain_verbal,
+    domain_spatial,
+    domain_memory,
+    domain_executive,
+    domain_motor,
+    domain_social,
+    domain_adhd_adult,
+    domain_emotion_adult,
+    domain_adhd_child,
+    domain_emotion_child,
+    domain_adaptive,
+    domain_daily_living,
+    domain_validity
   ),
   data_files = list(
     neurocog = "data/neurocog.parquet",

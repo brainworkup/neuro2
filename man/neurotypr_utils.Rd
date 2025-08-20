@@ -3,7 +3,7 @@
 \name{neurotypr_utils}
 \alias{neurotypr_utils}
 \alias{\%||\%}
-\title{Enhanced Utility Functions for NeurotypR}
+\title{Enhanced Utility Functions for \code{neuro2}}
 \usage{
 x \%||\% y
 }
@@ -14,7 +14,7 @@ x \%||\% y
 }
 \description{
 Core utility functions that provide common operations used throughout
-the NeurotypR package. These functions improve performance, reduce
+the \code{neuro2} package. These functions improve performance, reduce
 code duplication, and provide consistent behavior.
 
 Returns the first non-null value from left to right.

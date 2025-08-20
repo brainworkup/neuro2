@@ -9,8 +9,10 @@ NeuropsychReportSystemR6 Class
 NeuropsychReportSystemR6 Class
 }
 \details{
-An R6 class that orchestrates the entire neuropsychological report generation system.
-This class coordinates utilities, template management, domain processing, and report generation.
+An R6 class that orchestrates the
+entire neuropsychological report generation system.
+This class coordinates utilities,
+template management, domain processing, and report generation.
 }
 \section{Methods}{
 
@@ -34,7 +36,8 @@ This class coordinates utilities, template management, domain processing, and re
 
 \item{\code{content_manager}}{TemplateContentManagerR6 object for content files.}
 
-\item{\code{domain_processors}}{List of DomainProcessorR6 objects for different domains.}
+\item{\code{domain_processors}}{List of DomainProcessorR6
+objects for different domains.}
 }
 \if{html}{\out{</div>}}
 }
@@ -44,6 +47,8 @@ This class coordinates utilities, template management, domain processing, and re
 \item \href{#method-NeuropsychReportSystemR6-new}{\code{NeuropsychReportSystemR6$new()}}
 \item \href{#method-NeuropsychReportSystemR6-setup_environment}{\code{NeuropsychReportSystemR6$setup_environment()}}
 \item \href{#method-NeuropsychReportSystemR6-prepare_data}{\code{NeuropsychReportSystemR6$prepare_data()}}
+\item \href{#method-NeuropsychReportSystemR6-create_processor_configs}{\code{NeuropsychReportSystemR6$create_processor_configs()}}
+\item \href{#method-NeuropsychReportSystemR6-get_processor_config}{\code{NeuropsychReportSystemR6$get_processor_config()}}
 \item \href{#method-NeuropsychReportSystemR6-generate_domain_files}{\code{NeuropsychReportSystemR6$generate_domain_files()}}
 \item \href{#method-NeuropsychReportSystemR6-generate_report}{\code{NeuropsychReportSystemR6$generate_report()}}
 \item \href{#method-NeuropsychReportSystemR6-run_workflow}{\code{NeuropsychReportSystemR6$run_workflow()}}
@@ -124,15 +129,30 @@ Invisibly returns self for method chaining.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NeuropsychReportSystemR6-create_processor_configs"></a>}}
+\if{latex}{\out{\hypertarget{method-NeuropsychReportSystemR6-create_processor_configs}{}}}
+\subsection{Method \code{create_processor_configs()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$create_processor_configs(domains)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NeuropsychReportSystemR6-get_processor_config"></a>}}
+\if{latex}{\out{\hypertarget{method-NeuropsychReportSystemR6-get_processor_config}{}}}
+\subsection{Method \code{get_processor_config()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$get_processor_config(domain_name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychReportSystemR6-generate_domain_files"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychReportSystemR6-generate_domain_files}{}}}
 \subsection{Method \code{generate_domain_files()}}{
 Generate domain-specific QMD files for the report.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$generate_domain_files(
-  domains = NULL,
-  data_dir = "data-raw/csv/"
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$generate_domain_files(domains)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -196,7 +216,8 @@ Run the complete report generation workflow.
 
 \item{\code{prepare_data}}{Whether to prepare data files.}
 
-\item{\code{domains}}{List of domains to include (default: all configured domains).}
+\item{\code{domains}}{List of domains to include
+(default: all configured domains).}
 }
 \if{html}{\out{</div>}}
 }

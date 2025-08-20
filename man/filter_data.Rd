@@ -27,7 +27,7 @@ Filtered data frame
 \description{
 This function filters a dataframe by domain and scale.
 
-This file contains utility functions that replace NeurotypR functions
+This file contains utility functions that replace \code{neuro2} functions
 used in the neuro2 package.
 Filter data by domain and scale
 }

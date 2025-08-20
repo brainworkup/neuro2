@@ -1,18 +1,23 @@
 #' ReportTemplateR6 Class
 #'
-#' An R6 class that encapsulates the Quarto-Typst template system for neuropsychological reports.
-#' This class handles template variables, section inclusion, and report generation.
+#' An R6 class that encapsulates the Quarto-Typst template system
+#'  for neuropsychological reports.
+#' This class handles template variables,
+#'  section inclusion, and report generation.
 #'
 #' @field variables List of variables used in the report template.
-#' @field template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
-#' @field output_dir Directory where generated reports will be saved (default: ".").
+#' @field template_dir Directory containing the template files
+#'  (default: "inst/quarto/_extensions/brainworkup").
+#' @field output_dir Directory where generated reports will be saved
+#'  (default: ".").
 #' @field domains List of domains to include in the report.
 #' @field data_paths List of paths to data files.
 #' @field packages List of R packages required for the report.
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{initialize}{Initialize a new ReportTemplateR6 object with configuration parameters.}
+#'   \item{initialize}{Initialize a new ReportTemplateR6
+#'  object with configuration parameters.}
 #'   \item{load_variables}{Load variables from a YAML file or list.}
 #'   \item{set_variable}{Set a specific variable value.}
 #'   \item{get_variable}{Get a specific variable value.}
@@ -39,14 +44,20 @@ ReportTemplateR6 <- R6::R6Class(
     packages = NULL,
 
     #' @description
-    #' Initialize a new ReportTemplateR6 object with configuration parameters.
+    #' Initialize a new ReportTemplateR6 object
+    #'  with configuration parameters.
     #'
-    #' @param variables List of variables or path to a YAML file containing variables.
-    #' @param template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
-    #' @param output_dir Directory where generated reports will be saved (default: ".").
-    #' @param domains List of domains to include in the report (default: NULL, will use all domains).
+    #' @param variables List of variables or path to
+    #'  a YAML file containing variables.
+    #' @param template_dir Directory containing the template files
+    #'  (default: "inst/quarto/_extensions/brainworkup").
+    #' @param output_dir Directory where generated reports
+    #'  will be saved (default: ".").
+    #' @param domains List of domains to include in the report
+    #'  (default: NULL, will use all domains).
     #' @param data_paths List of paths to data files (default: NULL).
-    #' @param packages List of R packages required for the report (default: NULL, will use defaults).
+    #' @param packages List of R packages required for the report
+    #'  (default: NULL, will use defaults).
     #'
     #' @return A new ReportTemplateR6 object
     initialize = function(
@@ -69,7 +80,7 @@ ReportTemplateR6 <- R6::R6Class(
         } else {
           self$variables <- list(
             version = "0.1.0",
-            patient = "Isabella",
+            patient = "Biggie",
             first_name = "First",
             last_name = "Last",
             dob = format(Sys.Date() - 365 * 30, "%Y-%m-%d"), # 30 years ago
@@ -96,7 +107,7 @@ ReportTemplateR6 <- R6::R6Class(
           "_01-00_nse_adult.qmd",
           "_01-00_nse_forensic.qmd",
           "_01-00_nse_pediatric.qmd",
-          "_02-00_behav_obs.qmd",
+          "_01-01_behav_obs.qmd",
           "_03-00_sirf.qmd",
           "_03-00_sirf_text.qmd",
           "_03-01_recs.qmd",
@@ -248,7 +259,7 @@ ReportTemplateR6 <- R6::R6Class(
         "date_of_report: ",
         self$variables$date_of_report,
         "\n",
-        "format: neurotypr-adult-typst\n",
+        "format: neurotyp-adult-typst\n",
         "\n",
         "execute:\n",
         "  warning: false\n",
@@ -348,7 +359,7 @@ ReportTemplateR6 <- R6::R6Class(
         "```\n\n"
       )
 
-      # Create the data load chunk - using direct file loading instead of NeurotypR
+      # Create the data load chunk - using direct file loading
       data_load_chunk <- paste0(
         "```{r}\n",
         "#| label: data-load\n",
@@ -444,12 +455,15 @@ ReportTemplateR6 <- R6::R6Class(
     #' Render the report using Quarto.
     #'
     #' @param input_file Input Quarto file path.
-    #' @param output_format Output format (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").
-    #' @param output_file Output file path (default: NULL, will use Quarto default).
+    #' @param output_format Output format
+    #'  (default: "neurotyp-adult-typst",
+    #'  other options: "neurotyp-forensic-typst", "neurotyp-pediatric-typst").
+    #' @param output_file Output file path
+    #'  (default: NULL, will use Quarto default).
     #' @return Invisibly returns self for method chaining.
     render_report = function(
       input_file,
-      output_format = "neurotypr-adult-typst",
+      output_format = "neurotyp-adult-typst",
       output_file = NULL
     ) {
       if (!file.exists(input_file)) {
@@ -477,17 +491,25 @@ ReportTemplateR6 <- R6::R6Class(
 
 #' Generate Neuropsychological Report (Function Wrapper)
 #'
-#' This function encapsulates the entire workflow for generating neuropsychological reports.
+#' This function encapsulates the entire workflow
+#'  for generating neuropsychological reports.
 #' It's a wrapper around the ReportTemplateR6 class.
 #'
-#' @param variables List of variables or path to a YAML file containing variables.
-#' @param template_dir Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").
-#' @param output_dir Directory where generated reports will be saved (default: ".").
-#' @param domains List of domains to include in the report (default: NULL, will use all domains).
+#' @param variables List of variables or
+#'  path to a YAML file containing variables.
+#' @param template_dir Directory containing the template files
+#'  (default: "inst/quarto/_extensions/brainworkup").
+#' @param output_dir Directory where generated reports will be saved
+#'  (default: ".").
+#' @param domains List of domains to include in the report
+#'  (default: NULL, will use all domains).
 #' @param data_paths List of paths to data files (default: NULL).
-#' @param output_file Output file path for the generated template (default: "report_template.qmd").
-#' @param render Whether to render the report after generating the template (default: TRUE).
-#' @param output_format Output format for rendering (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").
+#' @param output_file Output file path for the generated template
+#'  (default: "report_template.qmd").
+#' @param render Whether to render the report after generating
+#'  the template (default: TRUE).
+#' @param output_format Output format for rendering
+#'  (default: "neurotyp-adult-typst", other options: "neurotyp-forensic-typst", "neurotyp-pediatric-typst").
 #'
 #' @return Invisibly returns the ReportTemplateR6 object.
 #' @export
@@ -500,7 +522,7 @@ generate_neuropsych_report <- function(
   data_paths = NULL,
   output_file = "template.qmd",
   render = TRUE,
-  output_format = "neurotypr-adult-typst"
+  output_format = "neurotyp-adult-typst"
 ) {
   # Create a ReportTemplateR6 object
   report_generator <- ReportTemplateR6$new(

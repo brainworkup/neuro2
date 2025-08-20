@@ -9,13 +9,16 @@ ReportTemplateR6 Class
 ReportTemplateR6 Class
 }
 \details{
-An R6 class that encapsulates the Quarto-Typst template system for neuropsychological reports.
-This class handles template variables, section inclusion, and report generation.
+An R6 class that encapsulates the Quarto-Typst template system
+for neuropsychological reports.
+This class handles template variables,
+section inclusion, and report generation.
 }
 \section{Methods}{
 
 \describe{
-\item{initialize}{Initialize a new ReportTemplateR6 object with configuration parameters.}
+\item{initialize}{Initialize a new ReportTemplateR6
+object with configuration parameters.}
 \item{load_variables}{Load variables from a YAML file or list.}
 \item{set_variable}{Set a specific variable value.}
 \item{get_variable}{Get a specific variable value.}
@@ -32,9 +35,11 @@ This class handles template variables, section inclusion, and report generation.
 \describe{
 \item{\code{variables}}{List of variables used in the report template.}
 
-\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
+\item{\code{template_dir}}{Directory containing the template files
+(default: "inst/quarto/_extensions/brainworkup").}
 
-\item{\code{output_dir}}{Directory where generated reports will be saved (default: ".").}
+\item{\code{output_dir}}{Directory where generated reports will be saved
+(default: ".").}
 
 \item{\code{domains}}{List of domains to include in the report.}
 
@@ -63,7 +68,8 @@ This class handles template variables, section inclusion, and report generation.
 \if{html}{\out{<a id="method-ReportTemplateR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-ReportTemplateR6-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a new ReportTemplateR6 object with configuration parameters.
+Initialize a new ReportTemplateR6 object
+with configuration parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$new(
   variables = NULL,
@@ -78,17 +84,22 @@ Initialize a new ReportTemplateR6 object with configuration parameters.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{variables}}{List of variables or path to a YAML file containing variables.}
+\item{\code{variables}}{List of variables or path to
+a YAML file containing variables.}
 
-\item{\code{template_dir}}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
+\item{\code{template_dir}}{Directory containing the template files
+(default: "inst/quarto/_extensions/brainworkup").}
 
-\item{\code{output_dir}}{Directory where generated reports will be saved (default: ".").}
+\item{\code{output_dir}}{Directory where generated reports
+will be saved (default: ".").}
 
-\item{\code{domains}}{List of domains to include in the report (default: NULL, will use all domains).}
+\item{\code{domains}}{List of domains to include in the report
+(default: NULL, will use all domains).}
 
 \item{\code{data_paths}}{List of paths to data files (default: NULL).}
 
-\item{\code{packages}}{List of R packages required for the report (default: NULL, will use defaults).}
+\item{\code{packages}}{List of R packages required for the report
+(default: NULL, will use defaults).}
 }
 \if{html}{\out{</div>}}
 }
@@ -248,7 +259,7 @@ Render the report using Quarto.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ReportTemplateR6$render_report(
   input_file,
-  output_format = "neurotypr-adult-typst",
+  output_format = "neurotyp-adult-typst",
   output_file = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -258,9 +269,12 @@ Render the report using Quarto.
 \describe{
 \item{\code{input_file}}{Input Quarto file path.}
 
-\item{\code{output_format}}{Output format (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").}
+\item{\code{output_format}}{Output format
+(default: "neurotyp-adult-typst",
+other options: "neurotyp-forensic-typst", "neurotyp-pediatric-typst").}
 
-\item{\code{output_file}}{Output file path (default: NULL, will use Quarto default).}
+\item{\code{output_file}}{Output file path
+(default: NULL, will use Quarto default).}
 }
 \if{html}{\out{</div>}}
 }

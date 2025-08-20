@@ -12,30 +12,38 @@ generate_neuropsych_report(
   data_paths = NULL,
   output_file = "template.qmd",
   render = TRUE,
-  output_format = "neurotypr-adult-typst"
+  output_format = "neurotyp-adult-typst"
 )
 }
 \arguments{
-\item{variables}{List of variables or path to a YAML file containing variables.}
+\item{variables}{List of variables or
+path to a YAML file containing variables.}
 
-\item{template_dir}{Directory containing the template files (default: "inst/quarto/_extensions/brainworkup").}
+\item{template_dir}{Directory containing the template files
+(default: "inst/quarto/_extensions/brainworkup").}
 
-\item{output_dir}{Directory where generated reports will be saved (default: ".").}
+\item{output_dir}{Directory where generated reports will be saved
+(default: ".").}
 
-\item{domains}{List of domains to include in the report (default: NULL, will use all domains).}
+\item{domains}{List of domains to include in the report
+(default: NULL, will use all domains).}
 
 \item{data_paths}{List of paths to data files (default: NULL).}
 
-\item{output_file}{Output file path for the generated template (default: "report_template.qmd").}
+\item{output_file}{Output file path for the generated template
+(default: "report_template.qmd").}
 
-\item{render}{Whether to render the report after generating the template (default: TRUE).}
+\item{render}{Whether to render the report after generating
+the template (default: TRUE).}
 
-\item{output_format}{Output format for rendering (default: "neurotypr-adult-typst", other options: "neurotypr-forensic-typst", "neurotypr-pediatric-typst").}
+\item{output_format}{Output format for rendering
+(default: "neurotyp-adult-typst", other options: "neurotyp-forensic-typst", "neurotyp-pediatric-typst").}
 }
 \value{
 Invisibly returns the ReportTemplateR6 object.
 }
 \description{
-This function encapsulates the entire workflow for generating neuropsychological reports.
+This function encapsulates the entire workflow
+for generating neuropsychological reports.
 It's a wrapper around the ReportTemplateR6 class.
 }
