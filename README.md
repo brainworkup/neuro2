@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# neuro2: Modern Neuropsychological Report Generation System
+# `neuro2`: Modern Neuropsychological Report Generation System
 
 <!-- badges: start -->
 
@@ -173,7 +173,7 @@ Creates publication-quality tables:
 
 ``` r
 # Generate a formatted table
-table <- TableGT$new(
+table <- TableGTR6$new(
   data = domain_data,
   pheno = "memory",
   table_name = "table_memory"
@@ -200,10 +200,15 @@ plot$build_plot()
 
 ### 1. Import Raw Data
 
-Place CSV files in `data-raw/csv/` with required columns: - `test`: Test
-abbreviation - `test_name`: Full test name - `scale`: Subtest/scale
-name - `raw_score`: Raw score - `score`: Standard score - `percentile`:
-Percentile rank - `domain`: Cognitive domain
+Place CSV files in `data-raw/csv/` with required columns:
+
+- `test`: Test abbreviation
+- `test_name`: Full test name
+- `scale`: Subtest/scale name
+- `raw_score`: Raw score
+- `score`: Standardized score (z, t, scaled, standard)
+- `percentile`: Percentile rank
+- `domain`: Cognitive and/or behavioral domain
 
 ### 2. Process with DuckDB
 
@@ -234,8 +239,8 @@ query_neuropsych(
 Edit `_variables.yml`:
 
 ``` yaml
-patient: "Biggie Smalls"
-age: 45
+patient: "Biggie"
+age: 25
 sex: "male"
 education: 16
 handedness: "right"
@@ -244,10 +249,13 @@ handedness: "right"
 ### Customize Domains
 
 The system automatically detects available domains from your data.
-Domain mappings are defined in `data-raw/create_sysdata.R`: - General
-Cognitive Ability → `iq` - Academic Skills → `academics` -
-Verbal/Language → `verbal` - Memory → `memory` - Attention/Executive →
-`executive`
+Domain mappings are defined in `data-raw/create_sysdata.R`. For example:
+
+- General Cognitive Ability → `iq`
+- Academic Skills → `academics`
+- Verbal/Language → `verbal`
+- Memory → `memory`
+- Attention/Executive → `executive`
 
 ### Add Custom Tests
 
@@ -329,7 +337,7 @@ for (patient in patients) {
   workflow**
 - [Unified Workflow Architecture](unified_workflow_architecture.md) -
   Technical design
-- [Domain File Generation Workflow](DOMAIN_FILE_GENERATION_WORKFLOW.md)
+- [Domain File Generation Workflow](DOMAIN_GENERATION_FIXES.md)
 - [DuckDB Integration Guide](DUCKDB_INTEGRATION_GUIDE.md)
 - [R6 Implementation Guide](R6_IMPLEMENTATION_GUIDE.md)
 - [Dependency Setup Guide](DEPENDENCY_SETUP_GUIDE.md)

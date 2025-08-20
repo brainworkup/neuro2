@@ -10,7 +10,7 @@ data:
 processing:
   use_duckdb: yes
   parallel: yes
-  verbose: no
+  verbose: yes
   age_group: ""
 output:
   generate_qmd: yes

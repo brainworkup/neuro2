@@ -374,10 +374,17 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     #' @description
     #' Generate domain-specific QMD files for the report.
     #'
-    #' @param domains List of domains to generate files for (default: all configured domains).
-    #' @param data_dir Directory containing CSV data files (default: "data-raw/csv/").
+    #' @param domains List of domains to generate files for
+    #'  (default: all configured domains).
+    #' @param data_dir Directory containing CSV data files
+    #'  (default: "data-raw/csv/").
     #' @return Invisibly returns self for method chaining.
-    generate_domain_files = function(domains) {
+    generate_domain_files = function(domains = NULL) {
+      # Use configured domains if not specified
+      if (is.null(domains)) {
+        domains <- self$config$domains
+      }
+
       message("Generating domain files for: ", paste(domains, collapse = ", "))
 
       # Create factory
