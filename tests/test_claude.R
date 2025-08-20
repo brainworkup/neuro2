@@ -114,7 +114,10 @@ test_text_files <- function() {
   for (file in domain_files) {
     if (file.exists(file)) {
       content <- readLines(file, warn = FALSE)
-      includes <- content[grepl("{{< include.*_text.*\\.qmd >}}", content)]
+      includes <- content[grepl(
+        "\\{\\{< include.*_text.*\\.qmd >\\}\\}",
+        content
+      )]
 
       for (include_line in includes) {
         text_file <- gsub(".*include\\s+([^\\s}]+).*", "\\1", include_line)

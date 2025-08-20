@@ -1,0 +1,494 @@
+---
+title: NEUROCOGNITIVE EXAMINATION
+patient: Biggie
+name: Smalls, Biggie
+doe: "YYYY-MM-DD"
+date_of_report: last-modified
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+# Set knitr options
+knitr::opts_knit$set(
+  width = 80,
+  digits = 2,
+  warnPartialMatchArgs = FALSE,
+  crop = knitr::hook_pdfcrop,
+  optipng = knitr::hook_optipng
+)
+
+# Set environment variables
+Sys.setenv(PATIENT = "{{< var patient >}}")
+patient <- Sys.getenv("PATIENT")
+
+# Load required packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(readr)
+  library(here)
+  library(yaml)
+})
+
+# Source the enhanced functions (with error handling)
+if (file.exists("R/domain_validation_utils.R")) {
+  source("R/domain_validation_utils.R")
+} else {
+  # Create minimal validation function if file doesn't exist
+  validate_domain_data_exists <- function(
+    domain_name,
+    data_source,
+    min_rows = 1
+  ) {
+    if (is.null(data_source) || nrow(data_source) == 0) {
+      return(list(has_data = FALSE, message = "No data source"))
+    }
+    if (!"domain" %in% names(data_source)) {
+      return(list(has_data = FALSE, message = "No domain column"))
+    }
+    domain_data <- data_source %>%
+      filter(domain == domain_name) %>%
+      filter(!is.na(percentile) | !is.na(score))
+
+    list(
+      has_data = nrow(domain_data) >= min_rows,
+      row_count = nrow(domain_data),
+      message = paste("Found", nrow(domain_data), "rows")
+    )
+  }
+
+  get_domains_with_data <- function(
+    neurocog_data,
+    neurobehav_data,
+    domain_config
+  ) {
+    domains_with_data <- list()
+    for (domain_name in names(domain_config)) {
+      config <- domain_config[[domain_name]]
+      data_source <- if (grepl("neurocog", config$input_file)) {
+        neurocog_data
+      } else {
+        neurobehav_data
+      }
+      validation <- validate_domain_data_exists(domain_name, data_source)
+      if (validation$has_data) {
+        domains_with_data[[domain_name]] <- list(
+          config = config,
+          validation = validation
+        )
+      }
+    }
+    domains_with_data
+  }
+}
+
+if (file.exists("R/ScoreTypeCacheR6.R")) {
+  source("R/ScoreTypeCacheR6.R")
+  # Initialize the score type cache once
+  if (exists(".ScoreTypeCacheR6")) {
+    .ScoreTypeCacheR6$build_mappings()
+  }
+}
+
+# Define domain configuration
+domain_config <- list(
+  "General Cognitive Ability" = list(
+    pheno = "iq",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Academic Skills" = list(
+    pheno = "academics",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Verbal/Language" = list(
+    pheno = "verbal",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Visual Perception/Construction" = list(
+    pheno = "spatial",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Memory" = list(pheno = "memory", input_file = "data/neurocog.parquet"),
+  "Attention/Executive" = list(
+    pheno = "executive",
+    input_file = "data/neurocog.parquet"
+  ),
+  "Motor" = list(pheno = "motor", input_file = "data/neurocog.parquet"),
+  "Social Cognition" = list(
+    pheno = "social",
+    input_file = "data/neurocog.parquet"
+  ),
+  "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion_child",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychiatric Disorders" = list(
+    pheno = "emotion_child",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Personality Disorders" = list(
+    pheno = "emotion_child",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychosocial Problems" = list(
+    pheno = "emotion_child",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Substance Use" = list(
+    pheno = "emotion_child",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Emotional/Behavioral/Personality" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Behavioral/Emotional/Social" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychiatric Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Personality Disorders" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Psychosocial Problems" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Substance Use" = list(
+    pheno = "emotion_adult",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Adaptive Functioning" = list(
+    pheno = "adaptive",
+    input_file = "data/neurobehav.parquet"
+  ),
+  "Daily Living" = list(
+    pheno = "daily_living",
+    input_file = "data/neurocog.parquet"
+  )
+)
+
+# Load data files (with error handling)
+neurocog_data <- NULL
+neurobehav_data <- NULL
+
+# Function to safely read data files
+read_data_safe <- function(file_paths) {
+  for (path in file_paths) {
+    if (file.exists(path)) {
+      tryCatch(
+        {
+          if (grepl("\\.parquet$", path)) {
+            if (requireNamespace("arrow", quietly = TRUE)) {
+              return(arrow::read_parquet(path))
+            }
+          } else if (grepl("\\.csv$", path)) {
+            return(readr::read_csv(path, show_col_types = FALSE))
+          }
+        },
+        error = function(e) {
+          message(paste("Failed to read", path, ":", e$message))
+        }
+      )
+    }
+  }
+  return(NULL)
+}
+
+# Try to read neurocog data
+neurocog_paths <- c("data/neurocog.parquet", "data/neurocog.csv")
+neurocog_data <- read_data_safe(neurocog_paths)
+
+# Try to read neurobehav data
+neurobehav_paths <- c("data/neurobehav.parquet", "data/neurobehav.csv")
+neurobehav_data <- read_data_safe(neurobehav_paths)
+
+# Report data loading status
+if (!is.null(neurocog_data)) {
+  message(paste("✓ Loaded neurocog data:", nrow(neurocog_data), "rows"))
+} else {
+  message("✗ Could not load neurocog data")
+}
+
+if (!is.null(neurobehav_data)) {
+  message(paste("✓ Loaded neurobehav data:", nrow(neurobehav_data), "rows"))
+} else {
+  message("✗ Could not load neurobehav data")
+}
+
+# Function to ensure text files exist
+ensure_text_files_exist <- function(domain_files) {
+  if (!exists("ensure_text_files_exist", mode = "function")) {
+    # Create a simple version if the function doesn't exist
+    for (domain_file in domain_files) {
+      if (!file.exists(domain_file)) {
+        next
+      }
+
+      content <- tryCatch(
+        readLines(domain_file, warn = FALSE),
+        error = function(e) character(0)
+      )
+      includes <- content[grepl(
+        "\\{\\{< include.*_text.*\\.qmd >\\}\\}",
+        content
+      )]
+
+      for (include_line in includes) {
+        text_file <- gsub(".*include\\s+([^\\s}]+).*", "\\1", include_line)
+        text_file <- trimws(text_file)
+
+        if (!file.exists(text_file)) {
+          message(paste("Creating placeholder text file:", text_file))
+
+          # Extract parts from filename
+          parts <- strsplit(basename(text_file), "_")[[1]]
+          domain_name <- if (length(parts) >= 2) parts[2] else "Assessment"
+          rater_type <- if (length(parts) >= 4) parts[4] else NULL
+
+          title <- tools::toTitleCase(gsub("\\.qmd$", "", domain_name))
+          if (!is.null(rater_type)) {
+            title <- paste(
+              title,
+              "-",
+              tools::toTitleCase(gsub("\\.qmd$", "", rater_type)),
+              "Report"
+            )
+          }
+
+          placeholder_content <- c(
+            paste0("# ", title),
+            "",
+            paste0(
+              "*",
+              title,
+              " content will be generated based on available data.*"
+            ),
+            ""
+          )
+
+          tryCatch(
+            {
+              writeLines(placeholder_content, text_file)
+              message(paste("  ✓ Created", text_file))
+            },
+            error = function(e) {
+              message(paste("  ✗ Failed to create", text_file, ":", e$message))
+            }
+          )
+        }
+      }
+    }
+  }
+}
+```
+
+```{=typst}
+#let case_number = [{{< var case_number >}}]
+#let name = [{{< var last_name >}}, {{< var first_name >}}]
+#let doe = [{{< var date_of_report >}}]
+#let patient = [{{< var patient >}}]
+#v(2em, weak: true)
+#show block: set par(leading: 0.65em)
+#block[
+*CASE NUMBER:* #case_number \
+*PATIENT NAME:* #name \
+*DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
+*DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
+*DATE OF REPORT*: {{< var date_of_report >}} \
+]
+```
+{{< include _00-00_tests.qmd >}}
+
+{{< include _01-00_nse_forensic.qmd >}}
+
+{{< include _01-01_behav_obs.qmd >}}
+
+```{=typst}
+= NEUROCOGNITIVE FINDINGS
+```
+<!-- DOMAIN_INCLUDES -->
+
+```{r}
+#| label: include-domains
+#| output: asis
+#| echo: false
+#| eval: false
+
+# Only validate domains if data is available
+if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {
+  # Before domain generation, validate data
+  valid_domains_only <- get_domains_with_data(
+    neurocog_data,
+    neurobehav_data,
+    domain_config
+  )
+
+  if (length(valid_domains_only) > 0) {
+    message(paste("Found", length(valid_domains_only), "domains with data"))
+
+    # Get patient age for child/adult determination
+    patient_age <- NULL
+
+    # Try to get age from Quarto metadata/variables
+    tryCatch(
+      {
+        # Try reading from _variables.yml if it exists
+        if (file.exists("_variables.yml")) {
+          variables <- yaml::read_yaml("_variables.yml")
+          if (!is.null(variables$age)) {
+            patient_age <- as.numeric(variables$age)
+          }
+        }
+
+        # If still null, try other methods
+        if (is.null(patient_age)) {
+          # Try getting from knitr metadata
+          age_var <- knitr::opts_knit$get("rmarkdown.pandoc.args")
+          # This is a fallback - in practice, age should come from _variables.yml
+        }
+      },
+      error = function(e) {
+        message("Could not determine patient age, defaulting to adult")
+      }
+    )
+
+    # Default to adult if age cannot be determined
+    if (is.null(patient_age)) {
+      patient_age <- 18 # Default to adult
+    }
+
+    # Determine if patient is child (< 18) or adult (>= 18)
+    is_child <- patient_age < 18
+    emotion_suffix <- if (is_child) "child" else "adult"
+    adhd_suffix <- if (is_child) "child" else "adult"
+
+    message(paste(
+      "Patient age:",
+      patient_age,
+      "- Using",
+      emotion_suffix,
+      "emotion files"
+    ))
+
+    # Create a mapping of domain names to their expected file patterns
+    domain_to_pattern <- c(
+      "General Cognitive Ability" = "_02-01_iq",
+      "Academic Skills" = "_02-02_academics",
+      "Verbal/Language" = "_02-03_verbal",
+      "Visual Perception/Construction" = "_02-04_spatial",
+      "Memory" = "_02-05_memory",
+      "Attention/Executive" = "_02-06_executive",
+      "Motor" = "_02-07_motor",
+      "Social Cognition" = "_02-08_social",
+      "ADHD" = paste0("_02-09_adhd_", adhd_suffix),
+      "Behavioral/Emotional/Social" = paste0("_02-10_emotion_", emotion_suffix),
+      "Emotional/Behavioral/Personality" = paste0(
+        "_02-10_emotion_",
+        emotion_suffix
+      ),
+      "Personality Disorders" = paste0("_02-10_emotion_", emotion_suffix),
+      "Psychiatric Disorders" = paste0("_02-10_emotion_", emotion_suffix),
+      "Psychosocial Problems" = paste0("_02-10_emotion_", emotion_suffix),
+      "Substance Use" = paste0("_02-10_emotion_", emotion_suffix),
+      "Adaptive Functioning" = "_02-11_adaptive",
+      "Daily Living" = "_02-12_daily_living"
+    )
+
+    # Get all existing domain files
+    all_domain_files <- list.files(
+      pattern = "^_02-[0-9]+_.*\\.qmd$",
+      full.names = FALSE
+    )
+
+    # Remove backup files and timestamped files
+    all_domain_files <- all_domain_files[
+      !grepl("_[0-9]+_[0-9]+\\.qmd$", all_domain_files)
+    ]
+    all_domain_files <- all_domain_files[!grepl("\\.bak$", all_domain_files)]
+
+    # Filter to only include files for domains that have data
+    domain_files <- c()
+    for (domain_name in names(valid_domains_only)) {
+      if (domain_name %in% names(domain_to_pattern)) {
+        pattern <- domain_to_pattern[domain_name]
+        # Find all files that match this domain pattern
+        matching_files <- all_domain_files[grepl(
+          paste0("^", pattern),
+          all_domain_files
+        )]
+        domain_files <- c(domain_files, matching_files)
+      }
+    }
+
+    # Sort the files numerically
+    if (length(domain_files) > 0) {
+      # Extract the numeric part for sorting
+      domain_numbers <- as.numeric(gsub(
+        "^_02-([0-9]+)_.*",
+        "\\1",
+        domain_files
+      ))
+      domain_files <- domain_files[order(domain_numbers)]
+
+      cat(
+        "<!-- Including",
+        length(domain_files),
+        "domain files for",
+        length(valid_domains_only),
+        "domains with data -->\n"
+      )
+      for (file in domain_files) {
+        cat(sprintf("\n{{< include %s >}}\n", file))
+      }
+
+      # After domain generation, ensure text files exist
+      ensure_text_files_exist(domain_files)
+    } else {
+      # More informative message about what's missing
+      expected_files <- unique(domain_to_pattern[names(valid_domains_only)])
+      expected_files <- expected_files[!is.na(expected_files)]
+
+      cat("\n*Domain files need to be generated for domains with data.*\n\n")
+      cat("**Domains with data (", length(valid_domains_only), "):**\n")
+      for (domain_name in names(valid_domains_only)) {
+        row_count <- valid_domains_only[[domain_name]]$validation$row_count
+        cat("- ", domain_name, " (", row_count, " rows)\n")
+      }
+      cat("\n**Expected files to generate:**\n")
+      for (file_pattern in sort(expected_files)) {
+        cat("- ", file_pattern, ".qmd (and related files)\n")
+      }
+      cat("\n*Run your domain generation process to create these files.*\n")
+    }
+  } else {
+    cat("\n*No domains found with valid data.*\n")
+  }
+} else {
+  cat("\n*No data files available for domain validation.*\n")
+  cat(
+    "\n*To generate domain files, run the domain generation process first.*\n"
+  )
+}
+```
+
+{{< pagebreak >}}
+
+{{< include _03-00_sirf.qmd >}}
+
+{{< include _03-00_sirf_text.qmd >}}
+
+{{< include _03-01_recs.qmd >}}
+
+{{< include _03-02_signature.qmd >}}
+
+<!-- {{< pagebreak >}} -->
+
+{{< include _03-03_appendix.qmd >}}

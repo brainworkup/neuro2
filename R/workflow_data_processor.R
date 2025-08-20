@@ -39,6 +39,7 @@ process_workflow_data <- function(config) {
 
 # Simple query function for neuropsych data (for basic operations)
 # Note: For SQL queries, use query_neuropsych from duckdb_neuropsych_loader.R
+# IMPORTANT: This function has been renamed to avoid conflicts with DuckDB version
 query_neuropsych_simple <- function(query, data_dir) {
   source("R/workflow_utils.R")
 
