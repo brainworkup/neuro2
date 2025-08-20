@@ -177,7 +177,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(tidyverse)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Patient
@@ -301,8 +301,8 @@ process_table <- function(table_path, colnames, keep, table_value) {
 
   # Ensure table_value is compatible and numeric
   stopifnot(
-      length(table_value) == 1 || length(table_value) == nrow(table),
-      is.numeric(table_value)
+    length(table_value) == 1 || length(table_value) == nrow(table),
+    is.numeric(table_value)
   )
 
   # Assign value to first column
@@ -391,13 +391,12 @@ table1 <- filter_real_data(table1_all_rows, key_columns)
 
 # Print the filtered table
 print(table1)
-
 ```
 
 ## Mutate columns
 
 ```{r}
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- neuro2::gpluck_make_columns(
   table1,
   range = "",
   ci_95 = "",
@@ -416,9 +415,10 @@ table1 <- NeurotypR::gpluck_make_columns(
 )
 
 # Test score ranges
-table1 <- NeurotypR::gpluck_make_score_ranges(
+table1 <- neuro2::gpluck_make_score_ranges(
   table = table1,
-  test_type = "npsych_test")
+  test_type = "npsych_test"
+)
 ```
 
 ## Subdomains
@@ -511,7 +511,7 @@ table2 <- filter_real_data(table2_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- neuro2::gpluck_make_columns(
   table2,
   range = "",
   ci_95 = "",
@@ -533,7 +533,7 @@ table2 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table2 <- neuro2::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -632,7 +632,7 @@ table3 <- filter_real_data(table3_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table3 <- NeurotypR::gpluck_make_columns(
+table3 <- neuro2::gpluck_make_columns(
   table3,
   range = "",
   ci_95 = "",
@@ -654,7 +654,7 @@ table3 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table3 <- neuro2::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -715,7 +715,7 @@ table3 <-
       scale == "Matrix Reasoning" ~ "Inductive reasoning and nonverbal problem-solving",
       scale == "Figure Weights" ~ "General sequential (deductive) reasoning and quantitative reasoning", # TODO:
       scale == "Picture Concepts" ~ "Reasoning and semantic matching",
-     scale == "Arithmetic" ~ "Solving math word problems in working memory",
+      scale == "Arithmetic" ~ "Solving math word problems in working memory",
       TRUE ~ as.character(description)
     )
   )
@@ -759,7 +759,7 @@ table4 <- filter_real_data(table4_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table4 <- NeurotypR::gpluck_make_columns(
+table4 <- neuro2::gpluck_make_columns(
   table4,
   range = "",
   ci_95 = "",
@@ -781,10 +781,10 @@ table4 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table4 <- NeurotypR::gpluck_make_score_ranges(
+table4 <- neuro2::gpluck_make_score_ranges(
   table = table4,
   test_type = "npsych_test"
-  )
+)
 ```
 
 ## Subdomains
@@ -900,7 +900,7 @@ table5 <- filter_real_data(table5_all_rows, key_columns)
 ## Mutate columns
 
 ```{r}
-table5 <- NeurotypR::gpluck_make_columns(
+table5 <- neuro2::gpluck_make_columns(
   table5,
   range = "",
   ci_95 = "",
@@ -922,7 +922,7 @@ table5 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table5 <- neuro2::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -1122,7 +1122,7 @@ table6 <- table6 |>
 
 table6 <- table6 |> dplyr::select(all_of(params$keep2))
 
-table6 <- NeurotypR::gpluck_make_columns(
+table6 <- neuro2::gpluck_make_columns(
   table6,
   range = "",
   test = params$test,
@@ -1143,7 +1143,7 @@ table6 <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table6 <- neuro2::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Subdomain
@@ -1248,17 +1248,17 @@ table6 <-
         "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
       ),
       scale == "Visual Spatial (VSI" ~ glue::glue(
-          "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
-        ),
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
       scale == "Fluid Reasoning (FRI)" ~ glue::glue(
-          "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
-        ),
+        "{description} was classified as {range} and ranked at the {percentile}th percentile.\n"
+      ),
       scale == "Working Memory (WMI)" ~ glue::glue(
-          "{description} fell in the {range} range.\n"
-        ),
+        "{description} fell in the {range} range.\n"
+      ),
       scale == "Processing Speed (PSI)" ~ glue::glue(
-          "{description} was {range}.\n"
-        ),
+        "{description} was {range}.\n"
+      ),
       scale == "Full Scale IQ (FSIQ)" ~ glue::glue(
         "{description} was {range} overall.\n"
       ),
@@ -1279,7 +1279,7 @@ table6 <- table6 |> dplyr::relocate(c(raw_score, score, ci_95, percentile, range
 # Combine tables
 
 ```{r}
-wisc5 <- rbind(table6,table1,table2,table3,table4,table5)
+wisc5 <- rbind(table6, table1, table2, table3, table4, table5)
 ```
 
 ## Write out final csv

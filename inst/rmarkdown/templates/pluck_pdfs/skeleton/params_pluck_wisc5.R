@@ -113,7 +113,7 @@ df <- df |>
 
 # Assuming df is your data.frame and calc_ci_95 is your function
 for (i in seq_len(nrow(df))) {
-  ci_values <- NeurotypR::calc_ci_95(
+  ci_values <- neuro2::calc_ci_95(
     ability_score = df$score[i],
     mean = 10, # change to 50, 0, 100, etc.
     standard_deviation = 3, # change to 10, 1, 15, etc.
@@ -142,7 +142,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(all_of(c("test", "test_name")), .before = "scale")
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -153,7 +153,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(
+  neuro2::gpluck_make_score_ranges(
     table = df_mutated,
     test_type = "npsych_test"
   ) |>
@@ -315,7 +315,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(all_of(c("test", "test_name")), .before = "scale")
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -326,7 +326,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(
+  neuro2::gpluck_make_score_ranges(
     table = df_mutated,
     test_type = "npsych_test"
   ) |>

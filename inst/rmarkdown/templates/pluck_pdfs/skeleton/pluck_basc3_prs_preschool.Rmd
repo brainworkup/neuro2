@@ -51,7 +51,7 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(NeurotypR)
+library(neuro2)
 # Set JAVA environment
 Sys.setenv(
   JAVA_HOME =
@@ -156,7 +156,7 @@ areas <- list(
 ## Extract tables
 
 ```{r extract}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = areas,
@@ -208,7 +208,7 @@ df <- df |> dplyr::left_join(lookup_basc3_prs, by = c("test", "scale"))
 ## Mutate columns
 
 ```{r mutate, eval = T}
-df <- df |> NeurotypR::gpluck_make_columns(
+df <- df |> neuro2::gpluck_make_columns(
   range = ""
 )
 ```
@@ -216,23 +216,26 @@ df <- df |> NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(
+df <- neuro2::gpluck_make_score_ranges(
   table = df,
   test_type = "basc3"
-  )
+)
 ```
 
 # Glue Results v2
 
 ```{r}
-
 concatenate_results <- function(result) {
   df$result <- apply(df, 1, function(row) {
     sw <- ifelse(row["range"] %in% c("At-Risk"), "a moderate concern",
-           ifelse(row["range"] %in% c("Clinically Significant"), "a clinically-significant concern",
-           ifelse(row["range"] %in% c("Average"), "an area of typical functioning",
-           ifelse(row["range"] %in% c("Normative Strength"), "a relative strength",
-           "undefined")))) # Handle cases that do not match any specified category
+      ifelse(row["range"] %in% c("Clinically Significant"), "a clinically-significant concern",
+        ifelse(row["range"] %in% c("Average"), "an area of typical functioning",
+          ifelse(row["range"] %in% c("Normative Strength"), "a relative strength",
+            "undefined"
+          )
+        )
+      )
+    ) # Handle cases that do not match any specified category
 
     percentile_as_percentage <- paste0(row["percentile"], "%")
     glue("{row['patient']}'s {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating difficulties at a rate higher than approximately {percentile_as_percentage} of same-age peers from the general population. {row['patient']}'s parent reports {row['patient']} engages in {row['description']}, which is interpreted to be {sw}.")
@@ -280,7 +283,6 @@ file <- fs::fs_path(file)
 
 # BASC-3 PRS Child
 if (params$test == "basc3_prs_child") {
-
   ## extract text
   get_text <- function(file) {
     txt <- pdftools::pdf_text(file) |>
@@ -302,21 +304,22 @@ if (params$test == "basc3_prs_child") {
   readr::write_lines(
     basc3_prs_squished,
     here::here("basc3_prs_text.md"),
-    sep = "\n")
+    sep = "\n"
+  )
   # save as quarto
   readr::write_lines(
     basc3_prs_squished,
     here::here("basc3_prs_text.qmd"),
-    sep = "\n")
+    sep = "\n"
+  )
   # save as text
   readr::write_lines(basc3_prs_squished,
-                     here::here("basc3_prs_text.txt"),
-                     sep = "\n"
+    here::here("basc3_prs_text.txt"),
+    sep = "\n"
   )
 
-# BASC-3 SRP Preschool
+  # BASC-3 SRP Preschool
 } else if (params$test == "basc3_prs_preschool") {
-
   ## extract text
   get_text <- function(file) {
     txt <- pdftools::pdf_text(file) |>
@@ -337,37 +340,36 @@ if (params$test == "basc3_prs_child") {
   ## squished text
   # save as markdown
   readr::write_lines(basc3_prs_preschool_squished,
-                     here::here("basc3_prs_preschool_squished.md"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_squished.md"),
+    sep = "\n"
   )
   # save as quarto
   readr::write_lines(basc3_prs_preschool_squished,
-                     here::here("basc3_prs_preschool_squished.qmd"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_squished.qmd"),
+    sep = "\n"
   )
   # save as text
   readr::write_lines(basc3_prs_preschool_squished,
-                     here::here("basc3_prs_preschool_squished.txt"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_squished.txt"),
+    sep = "\n"
   )
 
   ## raw/untouched text
   # save as markdown
   readr::write_lines(basc3_prs_preschool_txt,
-                     here::here("basc3_prs_preschool_txt.md"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_txt.md"),
+    sep = "\n"
   )
   # squished save as quarto
   readr::write_lines(basc3_prs_preschool_txt,
-                     here::here("basc3_prs_preschool_txt.qmd"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_txt.qmd"),
+    sep = "\n"
   )
   # squished save as text
   readr::write_lines(basc3_prs_preschool_txt,
-                     here::here("basc3_prs_preschool_txt.txt"),
-                     sep = "\n"
+    here::here("basc3_prs_preschool_txt.txt"),
+    sep = "\n"
   )
-
 }
 ```
 

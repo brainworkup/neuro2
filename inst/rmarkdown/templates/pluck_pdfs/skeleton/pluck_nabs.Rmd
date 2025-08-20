@@ -236,7 +236,7 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(bwu)
-library(NeurotypR)
+library(neuro2)
 library(neuro2)
 ```
 
@@ -272,7 +272,7 @@ area <- list(
 file <- file.choose()
 area2 <- bwu::gpluck_locate_areas(
   file = file,
-  pages = c(2,3,4,5,6,6)
+  pages = c(2, 3, 4, 5, 6, 6)
 )
 ```
 
@@ -1519,7 +1519,6 @@ for (i in 1:nrow(df)) {
 # Write final csv table
 
 ```{r write-out}
-
 nabs <- df
 
 readr::write_excel_csv(

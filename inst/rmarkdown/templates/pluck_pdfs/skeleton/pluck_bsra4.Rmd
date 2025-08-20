@@ -105,7 +105,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(vroom)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Patient
@@ -141,10 +141,9 @@ eval_df2 <- params$eval_df2
 ## Extract Areas with tabulapdf
 
 ```{r extract-areas, eval = FALSE}
-
 f <- file.path("/Users/joey/reports/Biggie/pdf/Biggie 3_8 yo ASD-2d0f9f88-433a-4fa7-8b39-5f6301683d09.pdf")
 
-#file <- file.path(file.choose(""))
+# file <- file.path(file.choose(""))
 
 # using extract areas for now
 extracted_areas <- tabulapdf::extract_areas(
@@ -187,15 +186,15 @@ areas_bsra4 <- tabulapdf::locate_areas(
 ```{r areas-known, eval = F}
 # if known
 area <- list(
-    df1 = c(225, 55, 320, 277),
-    df2 = c(196.9, 54.1, 214.4, 572.8)
-  )
+  df1 = c(225, 55, 320, 277),
+  df2 = c(196.9, 54.1, 214.4, 572.8)
+)
 ```
 
 ## Extract tables
 
 ```{r extract-tables, eval = F}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -228,7 +227,7 @@ colnames(table1) <- colnames1
 colnames2 <- params[["names_df2"]]
 colnames(table2) <- colnames2
 
-#Create new scale column
+# Create new scale column
 table2 <- table2 |>
   mutate(scale = paste0(scale, " (", "SRC", ")")) |>
   slice(-2)
@@ -257,7 +256,7 @@ df <- df |> dplyr::left_join(lookup_bsra4, by = c("test", "scale"))
 ## Mutate columns
 
 ```{r mutate, eval = T}
-df <- NeurotypR::gpluck_make_columns(
+df <- neuro2::gpluck_make_columns(
   df,
   range = "",
   result = ""
@@ -267,10 +266,10 @@ df <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(
+df <- neuro2::gpluck_make_score_ranges(
   table = df,
   test_type = "npsych_test"
-  )
+)
 ```
 
 ## Glue results

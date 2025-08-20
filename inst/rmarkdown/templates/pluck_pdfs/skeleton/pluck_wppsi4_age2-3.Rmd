@@ -134,7 +134,7 @@ library(snakecase)
 library(tabulapdf)
 library(tibble)
 library(tidyr)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Patient
@@ -170,10 +170,9 @@ eval_df3 <- params$eval_df3
 ## Extract Areas with tabulapdf
 
 ```{r extract-areas, eval = FALSE}
-
 f <- file.path("/Users/joey/reports/Biggie/pdf/Biggie 3_8 yo ASD-2d0f9f88-433a-4fa7-8b39-5f6301683d09.pdf")
 
-#file <- file.path(file.choose(""))
+# file <- file.path(file.choose(""))
 
 # using extract areas for now
 extracted_areas <- tabulapdf::extract_areas(
@@ -236,7 +235,7 @@ if (params$version == "WPPSI-IV: Ages 2-3") {
 ## Extract tables
 
 ```{r extract-tables, eval = F}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -285,7 +284,7 @@ table3 <- table3 |>
 
 ```{r rbind}
 df <- bind_rows(table2, table3, table1) |>
-  dplyr::select(all_of(params$keep2))|>
+  dplyr::select(all_of(params$keep2)) |>
   dplyr::filter(!is.na(percentile))
 ```
 
@@ -306,7 +305,7 @@ df <- df |> dplyr::left_join(lookup_wppsi4, by = c("test", "scale"))
 ## Mutate columns
 
 ```{r mutate, eval = T}
-df <- NeurotypR::gpluck_make_columns(
+df <- neuro2::gpluck_make_columns(
   df,
   range = "",
   result = ""
@@ -316,10 +315,10 @@ df <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(
+df <- neuro2::gpluck_make_score_ranges(
   table = df,
   test_type = "npsych_test"
-  )
+)
 ```
 
 ## Glue results
@@ -364,7 +363,7 @@ df <-
 ## Compute CI 95%
 
 ```{r ci, eval = FALSE}
-library(NeurotypR)
+library(neuro2)
 df$true_score <- ""
 df$ci_lo <- ""
 df$ci_hi <- ""

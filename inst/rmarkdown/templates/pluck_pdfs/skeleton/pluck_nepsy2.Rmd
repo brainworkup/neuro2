@@ -36,10 +36,10 @@ library(tidyr)
 library(vroom)
 library(tibble)
 library(stringr)
-library(NeurotypR)
+library(neuro2)
 # Set JAVA environment
 options(java.parameters = "-Xmx16000m")
-Sys.setenv(JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
 # Set knitr options
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
@@ -150,27 +150,30 @@ df <- df |> dplyr::relocate(c(patient), .before = test)
 ```
 
 ```{r mutate, eval = T}
-df <- df |> NeurotypR::gpluck_make_columns(ci_95 = "", range = "")
+df <- df |> neuro2::gpluck_make_columns(ci_95 = "", range = "")
 ```
 
 ## Test score ranges
 
 ```{r range, eval = T}
-df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
+df <- neuro2::gpluck_make_score_ranges(table = df, test_type = "npsych_test")
 ```
 
 # Glue Results v2
 
 ```{r}
-
 # version 2 of results
 concatenate_results <- function(result) {
   df$result <- apply(df, 1, function(row) {
     sw <- ifelse(row["range"] %in% c("Below Average"), "a relative neurocognitive weakness and moderate concern",
-           ifelse(row["range"] %in% c("Exceptionally Low"), "an extreme relative neurocognitive weakness and a clinically significant concern",
-           ifelse(row["range"] %in% c("Average", "Low Average", "High Average"), "an area of typical functioning",
-           ifelse(row["range"] %in% c("Above Average", "Exceptionally High"), "a relative neurocognitive strength",
-           "undefined")))) # Handle cases that do not match any specified category
+      ifelse(row["range"] %in% c("Exceptionally Low"), "an extreme relative neurocognitive weakness and a clinically significant concern",
+        ifelse(row["range"] %in% c("Average", "Low Average", "High Average"), "an area of typical functioning",
+          ifelse(row["range"] %in% c("Above Average", "Exceptionally High"), "a relative neurocognitive strength",
+            "undefined"
+          )
+        )
+      )
+    ) # Handle cases that do not match any specified category
 
     percentile_as_percentage <- paste0(row["percentile"], "%")
     glue("{row['patient']}'s {row['scale']} score of {row['score']} ({row['ci_95']}) is classified as {row['range']} and is ranked at the {row['percentile']}th percentile, indicating performance as good as or better than {percentile_as_percentage} of same age peers from the general population. This estimate of {row['description']} is considered {sw}.")

@@ -73,8 +73,8 @@ library(stringr)
 library(tabulapdf)
 library(xfun)
 library(yaml)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
+library(neuro2)
 ```
 
 ## Parameters
@@ -481,7 +481,7 @@ df_merged <- dplyr::mutate(combined_df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -495,7 +495,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 df_mutated <-
   df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(
+  neuro2::gpluck_make_score_ranges(
     table = df_mutated,
     test_type = "rating_scale"
   ) |>

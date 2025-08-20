@@ -425,8 +425,8 @@ library(rlang)
 library(purrr)
 library(qs2)
 library(readr)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
+library(neuro2)
 ```
 
 ## Parameters
@@ -1286,7 +1286,7 @@ df <- df |>
 ```{r eval = FALSE}
 # Assuming df is your data.frame and calc_ci_95 is your function
 for (i in seq_len(nrow(df))) {
-  ci_values <- NeurotypR::calc_ci_95(
+  ci_values <- neuro2::calc_ci_95(
     ability_score = df$score[i],
     mean = 10, # change to 50, 0, 100, etc.
     standard_deviation = 3, # change to 10, 1, 15, etc.
@@ -1317,7 +1317,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -1330,7 +1330,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 ```{r ranges, eval = TRUE}
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(
+  neuro2::gpluck_make_score_ranges(
     table = df_mutated,
     test_type = "npsych_test"
   ) |>
@@ -1353,8 +1353,8 @@ df <- df_mutated |>
 ## Sort by domains and subtests
 
 ```{r eval = TRUE}
-library(NeurotypR)
-df <- NeurotypR::sort_nab_scales(df)
+library(neuro2)
+df <- neuro2::sort_nab_scales(df)
 
 # Remove any incomplete rows (rows with just "test" value but missing other data)
 df <- df |>

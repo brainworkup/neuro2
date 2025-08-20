@@ -132,7 +132,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(all_of(c("test", "test_name")), .before = "scale")
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -143,7 +143,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 
 df_mutated <- df_mutated |>
   dplyr::mutate(range = NULL) |>
-  NeurotypR::gpluck_make_score_ranges(
+  neuro2::gpluck_make_score_ranges(
     table = df_mutated,
     test_type = "npsych_test"
   ) |>

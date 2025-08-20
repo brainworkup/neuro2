@@ -257,7 +257,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(tidyverse)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Patient
@@ -499,7 +499,7 @@ table1 <- gpluck_make_columns(
 )
 
 # Test score ranges
-table1 <- NeurotypR::gpluck_make_score_ranges(
+table1 <- neuro2::gpluck_make_score_ranges(
   table = table1,
   test_type = "npsych_test"
 )
@@ -617,7 +617,7 @@ table2 <- gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table2 <- NeurotypR::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table2 <- neuro2::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -738,7 +738,7 @@ table3 <- gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table3 <- NeurotypR::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
+table3 <- neuro2::gpluck_make_score_ranges(table = table3, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -865,7 +865,7 @@ table4 <- gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table4 <- NeurotypR::gpluck_make_score_ranges(
+table4 <- neuro2::gpluck_make_score_ranges(
   table = table4,
   test_type = "npsych_test"
 )
@@ -1006,7 +1006,7 @@ table5 <- gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table5 <- NeurotypR::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
+table5 <- neuro2::gpluck_make_score_ranges(table = table5, test_type = "npsych_test")
 ```
 
 ## Subdomains
@@ -1171,7 +1171,7 @@ table6 <- gpluck_make_columns(
 ## Test score ranges
 
 ```{r}
-table6 <- NeurotypR::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
+table6 <- neuro2::gpluck_make_score_ranges(table = table6, test_type = "npsych_test")
 ```
 
 ## Subdomain

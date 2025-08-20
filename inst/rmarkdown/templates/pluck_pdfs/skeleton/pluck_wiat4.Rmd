@@ -137,7 +137,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
+library(neuro2)
 library(dplyr)
 library(hablar)
 library(here)
@@ -207,7 +207,7 @@ area <- list(
 # if unknown
 # patient <- "Aria"
 # file <- file.choose()
-# area <- NeurotypR::gpluck_locate_areas(
+# area <- neuro2::gpluck_locate_areas(
 #   file = file,
 #   pages = c(9, 10)
 # )
@@ -240,7 +240,7 @@ plucked_tables <- tabulapdf::extract_text(
   pages = c(12, 13)
 )
 
-plucked_table <- NeurotypR::gpluck_extract_table(
+plucked_table <- neuro2::gpluck_extract_table(
   file = file,
   pages = c(12, 13),
   method = "lattice" # decide
@@ -455,7 +455,7 @@ table <- dplyr::distinct(table, .keep_all = FALSE)
 ```{r mutate}
 table <- wiat4
 
-table <- NeurotypR::gpluck_make_columns(
+table <- neuro2::gpluck_make_columns(
   table,
   range = "",
   test = params$test,
@@ -476,7 +476,7 @@ table <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-table <- NeurotypR::gpluck_make_score_ranges(table = table, test_type = "npsych_test")
+table <- neuro2::gpluck_make_score_ranges(table = table, test_type = "npsych_test")
 ```
 
 ## Subdomain

@@ -149,7 +149,7 @@ library(tidytable)
 library(tibble)
 library(tidyr)
 library(vroom)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters
@@ -177,7 +177,7 @@ areas <- list(
 # if unknown
 # patient <- "Biggie"
 # file <- file.choose()
-located_areas <- NeurotypR::gpluck_locate_areas(
+located_areas <- neuro2::gpluck_locate_areas(
   file = file,
   pages = c(12, 13)
 )
@@ -186,7 +186,7 @@ located_areas <- NeurotypR::gpluck_locate_areas(
 ## Extract tables
 
 ```{r extract-table-pdf}
-extracted_tables <- NeurotypR::gpluck_extract_tables(
+extracted_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = c(12, 13),
   method = "decide",
@@ -296,7 +296,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- NeurotypR::gpluck_make_columns(
+df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
   result = "",
@@ -307,7 +307,7 @@ df_mutated <- NeurotypR::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-df <- NeurotypR::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test")
+df <- neuro2::gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test")
 ```
 
 ## Glue results

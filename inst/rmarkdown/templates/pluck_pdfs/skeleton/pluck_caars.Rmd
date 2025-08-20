@@ -56,7 +56,7 @@ library(tabulapdf)
 library(tibble)
 library(tidyr)
 library(dplyr)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Patient
@@ -120,7 +120,7 @@ if (params$test == "caars_or") {
 ```
 
 ```{r area-unknown, eval=FALSE}
-# area <- NeurotypR::gpluck_locate_areas(
+# area <- neuro2::gpluck_locate_areas(
 #   file = file,
 #   pages = pages
 # )
@@ -137,7 +137,7 @@ saveRDS(area, here::here("pre_csv", paste0(test, "_area.rds")))
 ## Extract table
 
 ```{r extract}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -229,7 +229,7 @@ table <- dplyr::bind_cols(table1, table2, table3)
 ## Mutate columns
 
 ```{r mutate}
-table <- NeurotypR::gpluck_make_columns(
+table <- neuro2::gpluck_make_columns(
   table,
   percentile = "",
   range = "",
@@ -281,7 +281,7 @@ table <- table |>
 ## Test score ranges
 
 ```{r ranges}
-table <- NeurotypR::gpluck_make_score_ranges(
+table <- neuro2::gpluck_make_score_ranges(
   table = table,
   test_type = "rating_scale"
 )

@@ -431,7 +431,7 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(yaml)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters
@@ -679,7 +679,6 @@ print(table1)
 ## NAB Attention (Table 2)
 
 ```{r}
-
 # Extract table
 table_index <- 2
 table <- tibble::as_tibble(plucked_tables[[table_index]])
@@ -757,7 +756,6 @@ print(table2)
 ## NAB Language (Table 3)
 
 ```{r}
-
 # Extract table
 table_index <- 3
 table <- as_tibble(plucked_tables[[table_index]])
@@ -828,7 +826,6 @@ print(table3)
 ## NAB List Learning (Table 4)
 
 ```{r}
-
 # Extract table
 table_index <- 4
 table <- as_tibble(plucked_tables[[table_index]])
@@ -891,7 +888,6 @@ print(table4)
 ## NAB Shape Learning (Table 5)
 
 ```{r}
-
 # Extract table
 table_index <- 5
 table <- as_tibble(plucked_tables[[table_index]])
@@ -943,7 +939,6 @@ print(table5)
 ## NAB Story Learning (Table 6)
 
 ```{r}
-
 # Extract table
 table_index <- 6
 table <- as_tibble(plucked_tables[[table_index]])
@@ -996,7 +991,6 @@ print(table6)
 ## NAB Daily Living Memory (Table 7)
 
 ```{r}
-
 # Extract table
 table_index <- 7
 table <- as_tibble(plucked_tables[[table_index]])
@@ -1047,7 +1041,6 @@ print(table7)
 ## NAB Spatial Module (Table 8)
 
 ```{r}
-
 # Extract table
 table_index <- 8
 table <- as_tibble(plucked_tables[[table_index]])
@@ -1101,7 +1094,6 @@ print(table8)
 ## NAB Executive Functions Module (Table 9)
 
 ```{r}
-
 # Extract table
 table_index <- 9
 table <- as_tibble(plucked_tables[[table_index]])
@@ -1148,7 +1140,7 @@ print(table9)
 ## Mutate
 
 ```{r}
-table1 <- NeurotypR::gpluck_make_columns(
+table1 <- neuro2::gpluck_make_columns(
   table1,
   test = params$test,
   test_name = params$test_name,
@@ -1165,7 +1157,7 @@ table1 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table2 <- NeurotypR::gpluck_make_columns(
+table2 <- neuro2::gpluck_make_columns(
   table2,
   test = params$test,
   test_name = params$test_name,
@@ -1183,7 +1175,7 @@ table2 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table3 <- NeurotypR::gpluck_make_columns(
+table3 <- neuro2::gpluck_make_columns(
   table3,
   test = params$test,
   test_name = params$test_name,
@@ -1201,7 +1193,7 @@ table3 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table4 <- NeurotypR::gpluck_make_columns(
+table4 <- neuro2::gpluck_make_columns(
   table4,
   test = params$test,
   test_name = params$test_name,
@@ -1219,7 +1211,7 @@ table4 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table5 <- NeurotypR::gpluck_make_columns(
+table5 <- neuro2::gpluck_make_columns(
   table5,
   test = params$test,
   test_name = params$test_name,
@@ -1237,7 +1229,7 @@ table5 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table6 <- NeurotypR::gpluck_make_columns(
+table6 <- neuro2::gpluck_make_columns(
   table6,
   test = params$test,
   test_name = params$test_name,
@@ -1255,7 +1247,7 @@ table6 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table7 <- NeurotypR::gpluck_make_columns(
+table7 <- neuro2::gpluck_make_columns(
   table7,
   test = params$test,
   test_name = params$test_name,
@@ -1273,7 +1265,7 @@ table7 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table8 <- NeurotypR::gpluck_make_columns(
+table8 <- neuro2::gpluck_make_columns(
   table8,
   test = params$test,
   test_name = params$test_name,
@@ -1291,7 +1283,7 @@ table8 <- NeurotypR::gpluck_make_columns(
   result = ""
 )
 
-table9 <- NeurotypR::gpluck_make_columns(
+table9 <- neuro2::gpluck_make_columns(
   table9,
   test = params$test,
   test_name = params$test_name,
@@ -1318,7 +1310,7 @@ tables <- list(table1, table2, table3, table4, table5, table6, table7, table8, t
 
 # Apply the function to each table using a for loop
 for (i in seq_along(tables)) {
-  tables[[i]] <- NeurotypR::gpluck_make_score_ranges(table = tables[[i]], test_type = "npsych_test")
+  tables[[i]] <- neuro2::gpluck_make_score_ranges(table = tables[[i]], test_type = "npsych_test")
 }
 
 # Optionally, assign the modified tables back to individual variables if needed
@@ -2189,7 +2181,7 @@ if (params$test == "nab") {
 ## 95% CI
 
 ```{r eval=F}
-library(NeurotypR)
+library(neuro2)
 
 # Assuming df is your dataframe and calc_ci_95 is your function
 for (i in seq_len(df)) {

@@ -60,8 +60,8 @@ library(dplyr)
 library(vroom)
 library(glue)
 library(rlang)
-library(NeurotypR)
-library(NeurotypR)
+library(neuro2)
+library(neuro2)
 ```
 
 ## Parameters
@@ -177,7 +177,7 @@ if (params$test == "brown_efa_parent") {
 ## Format Tables
 
 ```{r}
-df <- NeurotypR::gpluck_make_columns(
+df <- neuro2::gpluck_make_columns(
   data = df,
   test = params$test,
   test_name = params$test_name,
@@ -206,7 +206,7 @@ df <-
 ## Test score ranges
 
 ```{r test-score-ranges}
-df <- NeurotypR::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
+df <- neuro2::gpluck_make_score_ranges(table = df, test_type = "rating_scale")
 ```
 
 ## Narrow subdomains

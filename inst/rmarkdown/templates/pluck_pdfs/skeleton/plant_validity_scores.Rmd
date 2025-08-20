@@ -212,7 +212,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
+library(neuro2)
 library(here)
 library(knitr)
 library(magrittr)
@@ -285,38 +285,38 @@ scale_description <- function(data, scale, description) {
   dplyr::mutate(
     data,
     description = dplyr::case_when(
-    scale == "ACS Word Choice" ~ "Forced-choice recognition",
-    scale == "Word Choice Correct" ~ "Forced-choice recognition",
-    scale == "Reliable Digit Span" ~ "Forced-choice recognition",
-    scale == "CVLT-3 Forced-Choice Recognition Hits" ~ "Forced-choice recognition",
-    scale == "E-Score" ~ "Forced-choice recognition",
-    scale == "TOMM Trial 1" ~ "Forced-choice recognition",
-    scale == "TOMM Trial 2" ~ "Forced-choice recognition",
-    scale == "Inconsistency Index" ~ "consistency of responses",
-    scale == "CAARS-SR Inconsistency Index" ~ "consistency of responses",
-    scale == "CAARS-OR Inconsistency Index" ~ "consistency of responses",
-    scale == "Consistency Index" ~ "consistency of responses",
-    scale == "Negative Impression" ~ "faking bad",
-    scale == "CEFI-SR Consistency Index" ~ "consistency of responses",
-    scale == "CEFI-SR Negative Impression" ~ "Faking bad",
-    scale == "CEFI-OR Consistency Index" ~ "Consistency of responses",
-    scale == "CEFI-OR Negative Impression" ~ "Faking bad",
-    scale == "Inconsistency Index" ~ "consistency of responses",
-    scale == "Infrequency Index" ~ "Infrequent responses",
-    scale == "Negative Impression Management" ~ "Faking bad",
-    scale == "Positive Impression Management" ~ "Faking good",
-    scale == "Malingering Index" ~ "faking bad",
-    scale == "Rogers Discriminant Function" ~ "faking bad",
-    scale == "Negative Distortion Scale" ~ "faking bad",
-    scale == "Hong Malingering Index" ~ "faking bad",
-    scale == "Multiscale Feigning Index" ~ "faking bad",
-    scale == "Malingered Pain-Related Disability Discriminant Function" ~ "faking bad",
-    scale == "Defensiveness Index" ~ "Defensiveness",
-    scale == "Cashel Discriminant Function" ~ "Faking bad",
-    scale == "Positive Distortion Scale" ~ "Faking goood",
-    scale == "Hong Defensiveness Index" ~ "Defensiveness",
-    scale == "Back Random Responding" ~ "Back random responding",
-    scale == "Hong Randomness Index" ~ "Random responding",
+      scale == "ACS Word Choice" ~ "Forced-choice recognition",
+      scale == "Word Choice Correct" ~ "Forced-choice recognition",
+      scale == "Reliable Digit Span" ~ "Forced-choice recognition",
+      scale == "CVLT-3 Forced-Choice Recognition Hits" ~ "Forced-choice recognition",
+      scale == "E-Score" ~ "Forced-choice recognition",
+      scale == "TOMM Trial 1" ~ "Forced-choice recognition",
+      scale == "TOMM Trial 2" ~ "Forced-choice recognition",
+      scale == "Inconsistency Index" ~ "consistency of responses",
+      scale == "CAARS-SR Inconsistency Index" ~ "consistency of responses",
+      scale == "CAARS-OR Inconsistency Index" ~ "consistency of responses",
+      scale == "Consistency Index" ~ "consistency of responses",
+      scale == "Negative Impression" ~ "faking bad",
+      scale == "CEFI-SR Consistency Index" ~ "consistency of responses",
+      scale == "CEFI-SR Negative Impression" ~ "Faking bad",
+      scale == "CEFI-OR Consistency Index" ~ "Consistency of responses",
+      scale == "CEFI-OR Negative Impression" ~ "Faking bad",
+      scale == "Inconsistency Index" ~ "consistency of responses",
+      scale == "Infrequency Index" ~ "Infrequent responses",
+      scale == "Negative Impression Management" ~ "Faking bad",
+      scale == "Positive Impression Management" ~ "Faking good",
+      scale == "Malingering Index" ~ "faking bad",
+      scale == "Rogers Discriminant Function" ~ "faking bad",
+      scale == "Negative Distortion Scale" ~ "faking bad",
+      scale == "Hong Malingering Index" ~ "faking bad",
+      scale == "Multiscale Feigning Index" ~ "faking bad",
+      scale == "Malingered Pain-Related Disability Discriminant Function" ~ "faking bad",
+      scale == "Defensiveness Index" ~ "Defensiveness",
+      scale == "Cashel Discriminant Function" ~ "Faking bad",
+      scale == "Positive Distortion Scale" ~ "Faking goood",
+      scale == "Hong Defensiveness Index" ~ "Defensiveness",
+      scale == "Back Random Responding" ~ "Back random responding",
+      scale == "Hong Randomness Index" ~ "Random responding",
       TRUE ~ as.character(description)
     )
   )
@@ -334,11 +334,12 @@ data <- scale_description(data, scale = params$scale, description = "description
 ```{r fx-zpr}
 library(dplyr)
 compute_percentile_range <- function(
-    data,
-    score,
-    score_type,
-    percentile,
-    range_type) {
+  data,
+  score,
+  score_type,
+  percentile,
+  range_type
+) {
   # Define score parameters based on score_type
   score_params <- switch(score_type,
     "z_score" = list(mean = 0, sd = 1),
@@ -465,7 +466,7 @@ scale_mean <- as.numeric(params$mean)
 scale_sd <- as.numeric(params$stdev)
 scale_rel <- as.numeric(params$reliability)
 
-ci_values <- NeurotypR::calc_ci_95(
+ci_values <- neuro2::calc_ci_95(
   ability_score = scale_score,
   mean = scale_mean,
   standard_deviation = scale_sd,

@@ -55,7 +55,7 @@ library(shiny)
 library(snakecase)
 library(tabulapdf)
 library(tidyverse)
-library(NeurotypR)
+library(neuro2)
 ```
 
 ## Parameters
@@ -94,7 +94,7 @@ if (params$test == "caars2_or") {
 ## Extract tables
 
 ```{r}
-plucked_tables <- NeurotypR::gpluck_extract_tables(
+plucked_tables <- neuro2::gpluck_extract_tables(
   file = file,
   pages = pages,
   area = area,
@@ -265,7 +265,7 @@ combined_df <- combined_df[1:9, ]
 ```{r}
 table <- combined_df
 
-table <- NeurotypR::gpluck_make_columns(
+table <- neuro2::gpluck_make_columns(
   table,
   test = params$test,
   test_name = params$test_name,
@@ -297,7 +297,7 @@ table <- table |>
 ## Ranges
 
 ```{r ranges}
-table <- NeurotypR::gpluck_make_score_ranges(
+table <- neuro2::gpluck_make_score_ranges(
   table = table,
   test_type = "rating_scale"
 )
@@ -326,7 +326,6 @@ if (length(subdomain_col) > 0) {
 ## Narrow subdomains
 
 ```{r}
-
 narrow_col <- which(colnames(table) == "narrow")
 
 if (length(narrow_col) > 0) {
@@ -366,8 +365,6 @@ table <-
       TRUE ~ as.character(description)
     )
   )
-
-
 ```
 
 ## Results

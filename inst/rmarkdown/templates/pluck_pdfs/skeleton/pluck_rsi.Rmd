@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(NeurotypR)
+library(neuro2)
 library(hablar)
 library(here)
 library(magrittr)
@@ -80,14 +80,16 @@ Specify date range to exclude entire database.
 ```{r subset, eval=FALSE}
 df_clinical <- plucked_table |>
   tidytable::select(
-    SOM_T:AGG_P_T, ALC_Est, DRG_Est) |>
+    SOM_T:AGG_P_T, ALC_Est, DRG_Est
+  ) |>
   tidyr::gather() |>
   tidytable::rename(scale = key, score = value)
 
 df_validity <- plucked_table |>
   tidytable::select(
     ICN_T:PIM_T,
-    MAL_T:HRI_T) |>
+    MAL_T:HRI_T
+  ) |>
   tidyr::gather() |>
   tidytable::rename(scale = key, score = value)
 
@@ -258,7 +260,7 @@ df_clinical <- df_clinical |> tidytable::slice(
 
 ```{r mutate, eval=FALSE}
 df_clinical <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     table = df_clinical,
     raw_score = "",
     range = "",
@@ -283,7 +285,7 @@ df_clinical <-
 
 ```{r, eval=FALSE}
 df_validity <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     table = df_validity,
     raw_score = "",
     range = "",
@@ -308,7 +310,7 @@ df_validity <-
 
 ```{r, eval=FALSE}
 df_inatt <-
-  NeurotypR::gpluck_make_columns(
+  neuro2::gpluck_make_columns(
     table = df_inatt,
     raw_score = "",
     range = "",
@@ -334,15 +336,15 @@ df_inatt <-
 ## Rating Scale score ranges
 
 ```{r ranges, eval=FALSE}
-df_clinical <- NeurotypR::gpluck_make_score_ranges(
+df_clinical <- neuro2::gpluck_make_score_ranges(
   table = df_clinical,
   test_type = "rating_scale"
 )
-df_validity <- NeurotypR::gpluck_make_score_ranges(
+df_validity <- neuro2::gpluck_make_score_ranges(
   table = df_validity,
   test_type = "symptom_validity"
 )
-df_inatt <- NeurotypR::gpluck_make_score_ranges(
+df_inatt <- neuro2::gpluck_make_score_ranges(
   table = df_inatt,
   test_type = "rating_scale"
 )
