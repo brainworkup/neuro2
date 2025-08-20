@@ -241,7 +241,7 @@ ReportTemplateR6 <- R6::R6Class(
     #' @param output_file Output file path (default: "report_template.qmd").
     #' @return Invisibly returns self for method chaining.
     generate_template = function(output_file = "report_template.qmd") {
-      # Create the YAML frontmatter
+      # Create the YAML frontmatter with all necessary fields
       yaml_header <- paste0(
         "---\n",
         "title: NEUROCOGNITIVE EXAMINATION\n",
@@ -359,25 +359,36 @@ ReportTemplateR6 <- R6::R6Class(
         "```\n\n"
       )
 
-      # Create the data load chunk - using direct file loading
+      # Create the data load chunk - fix to use arrow for Parquet files
       data_load_chunk <- paste0(
         "```{r}\n",
         "#| label: data-load\n",
         "#| include: false\n",
         "\n",
         "path_data <- here::here(\"data\")\n",
-        "# Use here::here to ensure correct paths regardless of working directory\n"
+        "# Use arrow to read Parquet files\n"
       )
 
-      # Add data loading for each data path
+      # Add data loading for each data path - fix to use correct reader
       for (name in names(self$data_paths)) {
-        data_load_chunk <- paste0(
-          data_load_chunk,
-          name,
-          " <- readr::read_csv(here::here(\"",
-          self$data_paths[[name]],
-          "\"))\n"
-        )
+        file_path <- self$data_paths[[name]]
+        if (grepl("\\.parquet$", file_path)) {
+          data_load_chunk <- paste0(
+            data_load_chunk,
+            name,
+            " <- arrow::read_parquet(here::here(\"",
+            file_path,
+            "\"))\n"
+          )
+        } else if (grepl("\\.csv$", file_path)) {
+          data_load_chunk <- paste0(
+            data_load_chunk,
+            name,
+            " <- readr::read_csv(here::here(\"",
+            file_path,
+            "\"))\n"
+          )
+        }
       }
 
       data_load_chunk <- paste0(data_load_chunk, "```\n\n")
@@ -399,22 +410,28 @@ ReportTemplateR6 <- R6::R6Class(
         "// #v(2em, weak: true)\n",
         "// #show block: set par(leading: 0.65em)\n",
         "#block[\n",
-        "*PATIENT NAME:* #name \\\n",
+        "*PATIENT NAME:* #name \\\\\n",
         "*DATE OF BIRTH:* ",
-        self$variables$dob,
+        if (!is.null(self$variables$dob)) self$variables$dob else "YYYY-MM-DD",
         ", Age ",
-        self$variables$age,
-        " \\\n",
+        if (!is.null(self$variables$age)) self$variables$age else "XX",
+        " \\\\\n",
         "*DATES OF EXAM:* ",
         self$variables$doe,
-        ", ",
-        self$variables$doe2,
-        ", and ",
-        self$variables$doe3,
-        " \\\n",
+        if (!is.null(self$variables$doe2)) {
+          paste0(", ", self$variables$doe2)
+        } else {
+          ""
+        },
+        if (!is.null(self$variables$doe3)) {
+          paste0(", and ", self$variables$doe3)
+        } else {
+          ""
+        },
+        " \\\\\n",
         "*DATE OF REPORT*: ",
         self$variables$date_of_report,
-        " \\\n",
+        " \\\\\n",
         "]\n",
         "```\n\n"
       )
@@ -475,14 +492,16 @@ ReportTemplateR6 <- R6::R6Class(
         stop("The 'quarto' package is required to render reports.")
       }
 
-      # Render the report
-      args <- list(input = input_file, output_format = output_format)
-
+      # Render the report - call function directly instead of using do.call
       if (!is.null(output_file)) {
-        args$output_file <- output_file
+        quarto::quarto_render(
+          input = input_file,
+          output_format = output_format,
+          output_file = output_file
+        )
+      } else {
+        quarto::quarto_render(input = input_file, output_format = output_format)
       }
-
-      do.call(quarto::quarto_render, args)
 
       invisible(self)
     }

@@ -134,7 +134,23 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Initialize component classes
       self$utilities <- structure(list(), class = "ReportUtilitiesR6") # Placeholder
+
+      # Initialize template manager with complete variables
+      template_variables <- list(
+        version = "0.1.0",
+        patient = self$config$patient,
+        first_name = "Biggie",
+        last_name = "Smalls",
+        dob = "1995-08-19",
+        doe = format(Sys.Date(), "%Y-%m-%d"),
+        doe2 = format(Sys.Date(), "%Y-%m-%d"),
+        doe3 = format(Sys.Date(), "%Y-%m-%d"),
+        date_of_report = format(Sys.Date(), "%Y-%m-%d"),
+        age = "30"
+      )
+
       self$template_manager <- ReportTemplateR6$new(
+        variables = template_variables,
         template_dir = template_dir,
         output_dir = output_dir
       )

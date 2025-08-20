@@ -482,6 +482,76 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Generate the paired narrative text .qmd file(s) for this domain.
+    #' @details Creates minimal placeholder file(s) containing:
+    #' 
+    #' <summary>
+    #' 
+    #' </summary>
+    #' 
+    #' If a file already exists, it is left unchanged. For multi-rater child
+    #' emotion/ADHD domains, creates one file per available rater.
+    #' @return Invisibly returns a character vector of the path(s) created or found.
+    generate_domain_text_qmd = function() {
+      create_if_missing <- function(f) {
+        if (!file.exists(f)) {
+          writeLines(c("<summary>", "", "</summary>", ""), con = f, useBytes = TRUE)
+        }
+        f
+      }
+      
+      ph <- tolower(self$pheno)
+      created <- character()
+      
+      if (ph == "emotion") {
+        etype <- tryCatch(self$detect_emotion_type(), error = function(e) NULL)
+        if (is.null(etype)) etype <- "adult"
+        if (etype == "child") {
+          raters <- c("self", "parent", "teacher")
+          for (r in raters) {
+            if (self$check_rater_data_exists(r)) {
+              f <- paste0("_02-", self$number, "_emotion_child_text_", r, ".qmd")
+              created <- c(created, create_if_missing(f))
+            }
+          }
+        } else {
+          f <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
+          created <- c(created, create_if_missing(f))
+        }
+        return(invisible(created))
+      }
+      
+      if (ph == "adhd") {
+        is_child <- any(grepl("child", tolower(self$domains))) ||
+          (!is.null(self$data) && any(grepl("child|adolescent", self$data$test_name, ignore.case = TRUE)))
+        
+        if (is_child) {
+          raters <- c("self", "parent", "teacher")
+          for (r in raters) {
+            if (self$check_rater_data_exists(r)) {
+              f <- paste0("_02-", self$number, "_adhd_child_text_", r, ".qmd")
+              created <- c(created, create_if_missing(f))
+            }
+          }
+        } else {
+          raters <- c("self", "observer")
+          for (r in raters) {
+            if (self$check_rater_data_exists(r)) {
+              f <- paste0("_02-", self$number, "_adhd_adult_text_", r, ".qmd")
+              created <- c(created, create_if_missing(f))
+            }
+          }
+        }
+        return(invisible(created))
+      }
+      
+      # Standard/other domains: single text file
+      f <- paste0("_02-", self$number, "_", ph, "_text.qmd")
+      created <- c(created, create_if_missing(f))
+      invisible(created)
+    },
+
+    #' @description
     #' Generate standard domain QMD
     #' @description Generate a standard Quarto (.qmd) file for general domains.
     #' @param domain_name Character scalar or vector of domain names.

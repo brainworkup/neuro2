@@ -108,6 +108,3 @@ fig-align: center
 fig-format: svg
 fig-dpi: 270
 df-print: kable
-
-# Set log level
-log-level: error # or "warning" for more output
