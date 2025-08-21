@@ -41,12 +41,12 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$initialize(domains=..., pheno=..., input_file=..., output_dir=..., number=...)
     #' }
     initialize = function(
-      domains,
-      pheno,
-      input_file,
-      output_dir = "data",
-      number = NULL,
-      output_base = "."
+    domains,
+    pheno,
+    input_file,
+    output_dir = "data",
+    number = NULL,
+    output_base = "."
     ) {
       self$domains <- domains
       self$pheno <- pheno
@@ -284,7 +284,6 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj <- DomainProcessorR6$new()
     #'   obj$detect_emotion_type()
     #' }
-
     detect_emotion_type = function() {
       if (tolower(self$pheno) != "emotion") {
         return(NULL)
@@ -401,7 +400,7 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
-    #' Generate domain QMD file
+    #' Generate domain QMD file (unified method)
     #' @description Generate a Quarto (.qmd) file for the given domain.
     #' @param domain_name Character scalar or vector of domain names.
     #' @param output_file Path to a file.
@@ -416,101 +415,75 @@ DomainProcessorR6 <- R6::R6Class(
         domain_name <- self$domains[1]
       }
 
-      # Handle special cases for multi-rater domains
-      if (self$has_multiple_raters()) {
+      # Determine output file
+      if (is.null(output_file)) {
+        # Handle special cases
         if (tolower(self$pheno) == "emotion") {
           emotion_type <- self$detect_emotion_type()
-
-          # Fix output filename for emotion
-          if (is.null(output_file)) {
-            output_file <- paste0(
-              "_02-",
-              self$number,
-              "_emotion_",
-              emotion_type,
-              ".qmd"
-            )
-          }
-
-          if (emotion_type == "child") {
-            return(self$generate_emotion_child_qmd(domain_name, output_file))
-          } else {
-            return(self$generate_emotion_adult_qmd(domain_name, output_file))
-          }
+          output_file <- paste0("_02-", self$number, "_emotion_", emotion_type, ".qmd")
         } else if (tolower(self$pheno) == "adhd") {
-          is_child <- any(grepl("child", tolower(self$domains))) ||
-            (!is.null(self$data) &&
-              any(grepl(
-                "child|adolescent",
-                self$data$test_name,
-                ignore.case = TRUE
-              )))
-
-          # Fix output filename for ADHD
-          age_type <- if (is_child) "child" else "adult"
-          if (is.null(output_file)) {
-            output_file <- paste0(
-              "_02-",
-              self$number,
-              "_adhd_",
-              age_type,
-              ".qmd"
-            )
-          }
-
-          if (is_child) {
-            return(self$generate_adhd_child_qmd(domain_name, output_file))
-          } else {
-            return(self$generate_adhd_adult_qmd(domain_name, output_file))
-          }
+          age_type <- if (self$detect_age_group() == "child") "child" else "adult"
+          output_file <- paste0("_02-", self$number, "_adhd_", age_type, ".qmd")
+        } else {
+          output_file <- paste0("_02-", self$number, "_", tolower(self$pheno), ".qmd")
         }
       }
 
-      # For standard domains, use original logic
-      if (is.null(output_file)) {
-        output_file <- paste0(
-          "_02-",
-          self$number,
-          "_",
-          tolower(self$pheno),
-          ".qmd"
-        )
-      }
+      # Generate text files first
+      text_files <- self$generate_domain_text_qmd()
 
-      # Generate standard domain QMD following memory template exactly
-      return(self$generate_standard_qmd(domain_name, output_file))
+      # Build QMD content using template
+      qmd_content <- private$build_unified_qmd_template(domain_name, text_files)
+
+      # Write file
+      writeLines(qmd_content, output_file)
+      message(paste("Generated domain file:", output_file))
+
+      return(output_file)
     },
 
     #' @description
     #' Generate the paired narrative text .qmd file(s) for this domain.
     #' @details Creates minimal placeholder file(s) containing:
-    #' 
+    #'
     #' <summary>
-    #' 
+    #'
     #' </summary>
-    #' 
+    #'
     #' If a file already exists, it is left unchanged. For multi-rater child
     #' emotion/ADHD domains, creates one file per available rater.
     #' @return Invisibly returns a character vector of the path(s) created or found.
     generate_domain_text_qmd = function() {
       create_if_missing <- function(f) {
         if (!file.exists(f)) {
-          writeLines(c("<summary>", "", "</summary>", ""), con = f, useBytes = TRUE)
+          writeLines(
+            c("<summary>", "", "</summary>", ""),
+            con = f,
+            useBytes = TRUE
+          )
         }
         f
       }
-      
+
       ph <- tolower(self$pheno)
       created <- character()
-      
+
       if (ph == "emotion") {
         etype <- tryCatch(self$detect_emotion_type(), error = function(e) NULL)
-        if (is.null(etype)) etype <- "adult"
+        if (is.null(etype)) {
+          etype <- "adult"
+        }
         if (etype == "child") {
           raters <- c("self", "parent", "teacher")
           for (r in raters) {
             if (self$check_rater_data_exists(r)) {
-              f <- paste0("_02-", self$number, "_emotion_child_text_", r, ".qmd")
+              f <- paste0(
+                "_02-",
+                self$number,
+                "_emotion_child_text_",
+                r,
+                ".qmd"
+              )
               created <- c(created, create_if_missing(f))
             }
           }
@@ -520,11 +493,16 @@ DomainProcessorR6 <- R6::R6Class(
         }
         return(invisible(created))
       }
-      
+
       if (ph == "adhd") {
         is_child <- any(grepl("child", tolower(self$domains))) ||
-          (!is.null(self$data) && any(grepl("child|adolescent", self$data$test_name, ignore.case = TRUE)))
-        
+          (!is.null(self$data) &&
+             any(grepl(
+               "child|adolescent",
+               self$data$test_name,
+               ignore.case = TRUE
+             )))
+
         if (is_child) {
           raters <- c("self", "parent", "teacher")
           for (r in raters) {
@@ -544,7 +522,7 @@ DomainProcessorR6 <- R6::R6Class(
         }
         return(invisible(created))
       }
-      
+
       # Standard/other domains: single text file
       f <- paste0("_02-", self$number, "_", ph, "_text.qmd")
       created <- c(created, create_if_missing(f))
@@ -563,6 +541,9 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_standard_qmd(domain_name=..., output_file=...)
     #' }
     generate_standard_qmd = function(domain_name, output_file) {
+      # Ensure text files exist
+      self$generate_domain_text_qmd()
+
       # First generate the text file that will be included
       text_file <- paste0(
         "_02-",
@@ -729,21 +710,21 @@ DomainProcessorR6 <- R6::R6Class(
         ", domain = domains, scale = scales)\n",
         "```\n\n",
 
-        # Use the emit_quarto_text_chunk method properly by creating a temporary instance
-        paste0(
-          {
-            temp_results <- NeuropsychResultsR6$new(
-              data = data.frame(),
-              file = "temp"
-            )
-            temp_results$emit_quarto_text_chunk(
-              domain_key = tolower(self$pheno),
-              data_var = paste0("data_", tolower(self$pheno)),
-              file_path = text_file
-            )
-          },
-          "\n"
-        ),
+        # # Use the emit_quarto_text_chunk method properly by creating a temporary instance
+        # paste0(
+        #   {
+        #     temp_results <- NeuropsychResultsR6$new(
+        #       data = data.frame(),
+        #       file = "temp"
+        #     )
+        #     temp_results$emit_quarto_text_chunk(
+        #       domain_key = tolower(self$pheno),
+        #       data_var = paste0("data_", tolower(self$pheno)),
+        #       file_path = text_file
+        #     )
+        #   },
+        #   "\n"
+        # ),
 
         "```{r}\n",
         "#| label: qtbl-",
@@ -979,7 +960,7 @@ DomainProcessorR6 <- R6::R6Class(
         "\"\n\n",
 
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_",
+        "// #let file_qtbl = \"table_",
         tolower(self$pheno),
         ".png\"\n\n",
 
@@ -989,7 +970,7 @@ DomainProcessorR6 <- R6::R6Class(
         "_subdomain.svg\"\n\n",
 
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "```{=typst}\n",
@@ -1406,13 +1387,13 @@ DomainProcessorR6 <- R6::R6Class(
         "\"\n\n",
 
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_adhd_adult.png\"\n\n",
+        "// #let file_qtbl = \"table_adhd_adult.png\"\n\n",
 
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_adult_subdomain.svg\"\n\n",
 
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "```{=typst}\n",
@@ -1823,13 +1804,13 @@ DomainProcessorR6 <- R6::R6Class(
         "\"\n\n",
 
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_adhd_child.png\"\n\n",
+        "// #let file_qtbl = \"table_adhd_child.png\"\n\n",
 
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_child_subdomain.svg\"\n\n",
 
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "```{=typst}\n",
@@ -2498,11 +2479,11 @@ DomainProcessorR6 <- R6::R6Class(
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_emotion_child_self.png\"\n\n",
+        "// #let file_qtbl = \"table_emotion_child_self.png\"\n\n",
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_child_self_subdomain.svg\"\n\n",
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "### PARENT RATINGS\n\n",
@@ -2552,11 +2533,11 @@ DomainProcessorR6 <- R6::R6Class(
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_emotion_child_parent.png\"\n\n",
+        "// #let file_qtbl = \"table_emotion_child_parent.png\"\n\n",
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_child_parent_subdomain.svg\"\n\n",
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "<!-- ### TEACHER RATINGS-->\n\n",
@@ -2606,11 +2587,11 @@ DomainProcessorR6 <- R6::R6Class(
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_emotion_child_teacher.png\"\n\n",
+        "// #let file_qtbl = \"table_emotion_child_teacher.png\"\n\n",
         "// Define the file name of the figure\n",
-        "#let file_fig = \"fig_emotion_child_teacher_subdomain.svg\"\n\n",
+        "// #let file_fig = \"fig_emotion_child_teacher_subdomain.svg\"\n\n",
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
       )
 
@@ -2955,13 +2936,13 @@ DomainProcessorR6 <- R6::R6Class(
         "\"\n\n",
 
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_emotion_adult.png\"\n\n",
+        "// #let file_qtbl = \"table_emotion_adult.png\"\n\n",
 
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_adult_subdomain.svg\"\n\n",
 
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
         "```{=typst}\n",
@@ -2971,13 +2952,13 @@ DomainProcessorR6 <- R6::R6Class(
         "\"\n\n",
 
         "// Define the file name of the table\n",
-        "#let file_qtbl = \"table_emotion_adult.png\"\n\n",
+        "// #let file_qtbl = \"table_emotion_adult.png\"\n\n",
 
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_adult_narrow.svg\"\n\n",
 
         "// The title is appended with ' Scores'\n",
-        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
       )
 
@@ -3032,6 +3013,85 @@ DomainProcessorR6 <- R6::R6Class(
 
       num <- domain_numbers[tolower(self$pheno)]
       if (is.na(num) || is.null(num)) "99" else num
+    },
+
+    build_unified_qmd_template = function(domain_name, text_files) {
+      # Create the basic structure
+      header <- paste0(
+        "## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n"
+      )
+
+      # Handle multi-rater domains
+      if (self$has_multiple_raters()) {
+        return(private$build_multi_rater_template(domain_name, text_files))
+      } else {
+        return(private$build_single_rater_template(domain_name, text_files[1]))
+      }
+    },
+
+    build_single_rater_template = function(domain_name, text_file) {
+      paste0(
+        "## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n",
+        "{{< include ", text_file, " >}}\n\n",
+        private$build_r_processing_block(),
+        private$build_typst_display_block()
+      )
+    },
+
+    build_multi_rater_template = function(domain_name, text_files) {
+      # Build sections for each rater
+      content <- paste0("## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n")
+
+      rater_names <- c("SELF-REPORT" = "self", "PARENT RATINGS" = "parent", "TEACHER RATINGS" = "teacher", "OBSERVER RATINGS" = "observer")
+
+      for (section_name in names(rater_names)) {
+        rater <- rater_names[section_name]
+        text_file <- grep(paste0("_", rater, "\\.qmd$"), text_files, value = TRUE)
+
+        if (length(text_file) > 0 && self$check_rater_data_exists(rater)) {
+          content <- paste0(
+            content,
+            "### ", section_name, "\n\n",
+            "{{< include ", text_file, " >}}\n\n"
+          )
+        }
+      }
+
+      content <- paste0(
+        content,
+        private$build_r_processing_block(),
+        private$build_typst_display_block()
+      )
+
+      return(content)
+    },
+
+    build_r_processing_block = function() {
+      # Simplified R block that handles data processing and table/figure generation
+      # This replaces the massive duplicated R chunks
+      paste0(
+        "```{r}\n",
+        "#| label: process-", tolower(self$pheno), "\n",
+        "#| include: false\n\n",
+        "# Process data and generate table/figures\n",
+        "source('R/domain_processing_utils.R')\n",
+        "process_domain_data('", self$pheno, "', '", paste(self$domains, collapse = "', '"), "')\n",
+        "```\n\n"
+      )
+    },
+
+    build_typst_display_block = function() {
+      # Simple Typst block for display
+      paste0(
+        "```{=typst}\n",
+        "#domain(\n",
+        "  title: [", self$domains[1], "],\n",
+        "  file_qtbl: \"table_", tolower(self$pheno), ".png\",\n",
+        "  file_fig: \"fig_", tolower(self$pheno), "_subdomain.svg\"\n",
+        ")\n",
+        "```\n"
+      )
     }
   )
 )
+

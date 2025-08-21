@@ -444,7 +444,7 @@ Invisibly returns \code{self} for method chaining.
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_domain_qmd}{}}}
 \subsection{Method \code{generate_domain_qmd()}}{
-Generate domain QMD file
+Generate domain QMD file (unified method)
 
 
 Generate a Quarto (.qmd) file for the given domain.

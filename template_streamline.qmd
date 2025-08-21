@@ -1,0 +1,115 @@
+---
+title: NEUROCOGNITIVE EXAMINATION
+patient: Biggie
+name: Smalls, Biggie
+doe: "YYYY-MM-DD"
+date_of_report: last-modified
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+
+# Load required packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(readr)
+  library(here)
+  library(yaml)
+})
+
+# Source the domain processor
+source("R/DomainProcessorR6.R")
+```
+
+```{=typst}
+#let case_number = [{{< var case_number >}}]
+#let name = [{{< var last_name >}}, {{< var first_name >}}]
+// ... your existing Typst header
+```
+
+{{< include _00-00_tests.qmd >}}
+{{< include _01-00_nse_forensic.qmd >}}
+{{< include _01-01_behav_obs.qmd >}}
+
+```{=typst}
+= NEUROCOGNITIVE FINDINGS
+```
+
+```{r}
+#| label: generate-domain-files
+#| include: false
+#| cache: false
+
+# Generate domain files only if they don't exist
+# This runs once to create the domain structure
+
+domain_config <- list(
+  "01" = list(domains = "General Cognitive Ability", pheno = "iq", input_file = "data/neurocog.parquet"),
+  "02" = list(domains = "Academic Skills", pheno = "academics", input_file = "data/neurocog.parquet"),
+  "03" = list(domains = "Verbal/Language", pheno = "verbal", input_file = "data/neurocog.parquet"),
+  "04" = list(domains = "Visual Perception/Construction", pheno = "spatial", input_file = "data/neurocog.parquet"),
+  "05" = list(domains = "Memory", pheno = "memory", input_file = "data/neurocog.parquet"),
+  "06" = list(domains = "Attention/Executive", pheno = "executive", input_file = "data/neurocog.parquet"),
+  "07" = list(domains = "Motor", pheno = "motor", input_file = "data/neurocog.parquet"),
+  "08" = list(domains = "Social Cognition", pheno = "social", input_file = "data/neurocog.parquet"),
+  "09" = list(domains = "ADHD", pheno = "adhd", input_file = "data/neurobehav.parquet"),
+  "10" = list(domains = c("Behavioral/Emotional/Social", "Emotional/Behavioral/Personality"), pheno = "emotion", input_file = "data/neurobehav.parquet"),
+  "11" = list(domains = "Adaptive Functioning", pheno = "adaptive", input_file = "data/neurobehav.parquet"),
+  "12" = list(domains = "Daily Living", pheno = "daily_living", input_file = "data/neurocog.parquet")
+)
+
+# Generate files only if they don't exist and have data
+for (number in names(domain_config)) {
+  config <- domain_config[[number]]
+  
+  # Check if domain file exists
+  domain_file <- paste0("_02-", number, "_", config$pheno, ".qmd")
+  
+  if (!file.exists(domain_file)) {
+    # Check if data exists for this domain
+    if (file.exists(config$input_file)) {
+      processor <- DomainProcessorR6$new(
+        domains = config$domains,
+        pheno = config$pheno,
+        input_file = config$input_file,
+        number = number
+      )
+      
+      # Only generate if data exists
+      processor$load_data()
+      processor$filter_by_domain()
+      
+      if (!is.null(processor$data) && nrow(processor$data) > 0) {
+        processor$generate_domain_qmd()
+        message(paste("Generated:", domain_file))
+      }
+    }
+  }
+}
+```
+
+<!-- Static includes - these will work if files exist, be ignored if not -->
+{{< include _02-01_iq.qmd >}}
+{{< include _02-02_academics.qmd >}}
+{{< include _02-03_verbal.qmd >}}
+{{< include _02-04_spatial.qmd >}}
+{{< include _02-05_memory.qmd >}}
+{{< include _02-06_executive.qmd >}}
+{{< include _02-07_motor.qmd >}}
+{{< include _02-08_social.qmd >}}
+{{< include _02-09_adhd_adult.qmd >}}
+{{< include _02-09_adhd_child.qmd >}}
+{{< include _02-10_emotion_adult.qmd >}}
+{{< include _02-10_emotion_child.qmd >}}
+{{< include _02-11_adaptive.qmd >}}
+{{< include _02-12_daily_living.qmd >}}
+{{< pagebreak >}}
+{{< include _03-00_sirf.qmd >}}
+{{< include _03-00_sirf_text.qmd >}}
+{{< include _03-01_recs.qmd >}}
+{{< include _03-02_signature.qmd >}}
+{{< pagebreak >}}
+{{< include _03-03_appendix.qmd >}}
+

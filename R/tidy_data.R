@@ -8,9 +8,9 @@
 #' @param output_dir character, Directory to write output files (default: current working directory)
 #' @param return_data logical, Whether to return the processed data as a list (default: FALSE)
 #' @return If return_data is TRUE, returns a list with 4 elements (neuropsych, neurocog, neurobehav, validity). Otherwise, returns NULL and writes CSV files.
-#' @rdname load_data2
+#' @rdname load_data
 #' @export
-load_data2 <- function(
+load_data <- function(
   file_path,
   output_dir = here::here("data"),
   return_data = FALSE
@@ -138,9 +138,9 @@ load_data2 <- function(
 #' @param domains Character vector of domain names to filter by
 #' @param scales Character vector of scale names to filter by
 #' @return Returns a filtered data frame
-#' @rdname filter_data2
+#' @rdname filter_data
 #' @export
-filter_data2 <- function(data, domains = NULL, scales = NULL) {
+filter_data <- function(data, domains = NULL, scales = NULL) {
   # Input validation
   if (is.null(data) || nrow(data) == 0) {
     # Silently return an empty data frame with expected columns
