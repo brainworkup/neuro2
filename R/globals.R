@@ -81,17 +81,12 @@ utils::globalVariables(c(
   "pct2",
   "pct3",
   "abbrev",
-  "`%||%`",
   "V2",
   "col2_paren",
   "index_pages",
   "subtest_pages",
   "`%>%`",
-  "rater"
-))
-
-# Declare global variables from internal data to avoid R CMD check warnings
-utils::globalVariables(c(
+  "rater",
   "domain_iq",
   "domain_academics",
   "domain_verbal",

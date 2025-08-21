@@ -1,17 +1,6 @@
 # R/domain_processing_utils.R
 # Complete utility functions for neuropsychological domain processing
 
-#' Domain Processor Utility Functions - Fixed Version
-#'
-#' @description High-level utility functions for domain processing with
-#'   improved error handling and validation
-#'
-#' @import dplyr
-#' @import readr
-
-# Null coalesce operator if not already defined
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 # ============================================================================
 # HIGH-LEVEL WORKFLOW FUNCTIONS
 # ============================================================================

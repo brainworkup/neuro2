@@ -42,7 +42,7 @@ process_rbans_unified(
 # Data processing ---------------------------------------------------------
 
 
-styler::style_pkg(strict = TRUE, exclude_dirs = c("renv", ".history", "_arxiv"),)
+styler::style_pkg(strict = TRUE, exclude_dirs = c("renv", ".history/", "_arxiv/"))
 
 usethis::use_rmarkdown_template("pluck")
 
