@@ -41,12 +41,12 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$initialize(domains=..., pheno=..., input_file=..., output_dir=..., number=...)
     #' }
     initialize = function(
-    domains,
-    pheno,
-    input_file,
-    output_dir = "data",
-    number = NULL,
-    output_base = "."
+      domains,
+      pheno,
+      input_file,
+      output_dir = "data",
+      number = NULL,
+      output_base = "."
     ) {
       self$domains <- domains
       self$pheno <- pheno
@@ -420,12 +420,28 @@ DomainProcessorR6 <- R6::R6Class(
         # Handle special cases
         if (tolower(self$pheno) == "emotion") {
           emotion_type <- self$detect_emotion_type()
-          output_file <- paste0("_02-", self$number, "_emotion_", emotion_type, ".qmd")
+          output_file <- paste0(
+            "_02-",
+            self$number,
+            "_emotion_",
+            emotion_type,
+            ".qmd"
+          )
         } else if (tolower(self$pheno) == "adhd") {
-          age_type <- if (self$detect_age_group() == "child") "child" else "adult"
+          age_type <- if (self$detect_age_group() == "child") {
+            "child"
+          } else {
+            "adult"
+          }
           output_file <- paste0("_02-", self$number, "_adhd_", age_type, ".qmd")
         } else {
-          output_file <- paste0("_02-", self$number, "_", tolower(self$pheno), ".qmd")
+          output_file <- paste0(
+            "_02-",
+            self$number,
+            "_",
+            tolower(self$pheno),
+            ".qmd"
+          )
         }
       }
 
@@ -497,11 +513,11 @@ DomainProcessorR6 <- R6::R6Class(
       if (ph == "adhd") {
         is_child <- any(grepl("child", tolower(self$domains))) ||
           (!is.null(self$data) &&
-             any(grepl(
-               "child|adolescent",
-               self$data$test_name,
-               ignore.case = TRUE
-             )))
+            any(grepl(
+              "child|adolescent",
+              self$data$test_name,
+              ignore.case = TRUE
+            )))
 
         if (is_child) {
           raters <- c("self", "parent", "teacher")
@@ -809,6 +825,8 @@ DomainProcessorR6 <- R6::R6Class(
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
 
+        # Replace this section in generate_standard_qmd method:
+
         "```{r}\n",
         "#| label: fig-",
         tolower(self$pheno),
@@ -836,28 +854,27 @@ DomainProcessorR6 <- R6::R6Class(
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
 
-        "# Load plot title from sysdata.rda\n",
-        "plot_title_var <- \"plot_title_",
+        "# Load plot title from sysdata.rda or use default\n",
+        "plot_title_var_name <- paste0(\"plot_title_\", \"",
         tolower(self$pheno),
-        "\"\n",
-        "if (!exists(plot_title_var)) {\n",
-        "  sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
-        "  if (file.exists(sysdata_path)) {\n",
-        "    load(sysdata_path)\n",
-        "  }\n",
+        "\")\n",
+        "sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "if (file.exists(sysdata_path)) {\n",
+        "  load(sysdata_path)\n",
         "}\n\n",
 
-        "# Get the plot title or use default\n",
-        "if (exists(plot_title_var)) {\n",
+        "# Always create the plot title variable\n",
+        "if (exists(plot_title_var_name)) {\n",
         "  plot_title_",
         tolower(self$pheno),
-        " <- get(plot_title_var)\n",
+        " <- get(plot_title_var_name)\n",
         "} else {\n",
+        "  # Use a sensible default based on the domain\n",
         "  plot_title_",
         tolower(self$pheno),
         " <- \"",
         domain_name,
-        " scores ... \"\n",
+        " scores reflect performance across multiple cognitive and behavioral measures.\"\n",
         "}\n",
         "```\n\n",
 
@@ -3018,7 +3035,11 @@ DomainProcessorR6 <- R6::R6Class(
     build_unified_qmd_template = function(domain_name, text_files) {
       # Create the basic structure
       header <- paste0(
-        "## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n"
+        "## ",
+        domain_name,
+        " {#sec-",
+        tolower(self$pheno),
+        "}\n\n"
       )
 
       # Handle multi-rater domains
@@ -3031,8 +3052,14 @@ DomainProcessorR6 <- R6::R6Class(
 
     build_single_rater_template = function(domain_name, text_file) {
       paste0(
-        "## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n",
-        "{{< include ", text_file, " >}}\n\n",
+        "## ",
+        domain_name,
+        " {#sec-",
+        tolower(self$pheno),
+        "}\n\n",
+        "{{< include ",
+        text_file,
+        " >}}\n\n",
         private$build_r_processing_block(),
         private$build_typst_display_block()
       )
@@ -3040,19 +3067,38 @@ DomainProcessorR6 <- R6::R6Class(
 
     build_multi_rater_template = function(domain_name, text_files) {
       # Build sections for each rater
-      content <- paste0("## ", domain_name, " {#sec-", tolower(self$pheno), "}\n\n")
+      content <- paste0(
+        "## ",
+        domain_name,
+        " {#sec-",
+        tolower(self$pheno),
+        "}\n\n"
+      )
 
-      rater_names <- c("SELF-REPORT" = "self", "PARENT RATINGS" = "parent", "TEACHER RATINGS" = "teacher", "OBSERVER RATINGS" = "observer")
+      rater_names <- c(
+        "SELF-REPORT" = "self",
+        "PARENT RATINGS" = "parent",
+        "TEACHER RATINGS" = "teacher",
+        "OBSERVER RATINGS" = "observer"
+      )
 
       for (section_name in names(rater_names)) {
         rater <- rater_names[section_name]
-        text_file <- grep(paste0("_", rater, "\\.qmd$"), text_files, value = TRUE)
+        text_file <- grep(
+          paste0("_", rater, "\\.qmd$"),
+          text_files,
+          value = TRUE
+        )
 
         if (length(text_file) > 0 && self$check_rater_data_exists(rater)) {
           content <- paste0(
             content,
-            "### ", section_name, "\n\n",
-            "{{< include ", text_file, " >}}\n\n"
+            "### ",
+            section_name,
+            "\n\n",
+            "{{< include ",
+            text_file,
+            " >}}\n\n"
           )
         }
       }
@@ -3067,31 +3113,203 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     build_r_processing_block = function() {
-      # Simplified R block that handles data processing and table/figure generation
-      # This replaces the massive duplicated R chunks
+      # Format domains properly as a vector if multiple
+      domains_arg <- if (length(self$domains) == 1) {
+        paste0("'", self$domains, "'")
+      } else {
+        paste0("c(", paste0("'", self$domains, "'", collapse = ", "), ")")
+      }
+
       paste0(
         "```{r}\n",
-        "#| label: process-", tolower(self$pheno), "\n",
+        "#| label: process-",
+        tolower(self$pheno),
+        "\n",
         "#| include: false\n\n",
         "# Process data and generate table/figures\n",
         "source('R/domain_processing_utils.R')\n",
-        "process_domain_data('", self$pheno, "', '", paste(self$domains, collapse = "', '"), "')\n",
+        "process_domain_data('",
+        self$pheno,
+        "', ",
+        domains_arg,
+        ")\n\n",
+        private$get_plot_title_block(self$domains[1]),
         "```\n\n"
       )
     },
 
+    # Replace the build_typst_display_block method in the private section with this:
     build_typst_display_block = function() {
-      # Simple Typst block for display
+      # Build complete Typst blocks with function definition and two figure displays
       paste0(
+        # First block - subdomain figure
         "```{=typst}\n",
-        "#domain(\n",
-        "  title: [", self$domains[1], "],\n",
-        "  file_qtbl: \"table_", tolower(self$pheno), ".png\",\n",
-        "  file_fig: \"fig_", tolower(self$pheno), "_subdomain.svg\"\n",
-        ")\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_",
+        tolower(self$pheno),
+        "`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        self$domains[1],
+        "\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_",
+        tolower(self$pheno),
+        ".png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_",
+        tolower(self$pheno),
+        "_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
+        "```\n\n",
+
+        # Second block - narrow figure (if applicable)
+        "```{=typst}\n",
+        "// Define a function to create a domain with a title, a table, and a figure\n",
+        "#let domain(title: none, file_qtbl, file_fig) = {\n",
+        "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
+        "  set text(..font)\n\n",
+        "  // Make all figure labels (Table X:, Figure X:) bold\n",
+        "  show figure.caption: it => {\n",
+        "    context {\n",
+        "      let supplement = it.supplement\n",
+        "      let counter = it.counter.display(it.numbering)\n",
+        "      block[*#supplement #counter:* #it.body]\n",
+        "    }\n",
+        "  }\n\n",
+        "  pad(top: 0.5em)[]\n",
+        "  grid(\n",
+        "    columns: (50%, 50%),\n",
+        "    gutter: 8pt,\n",
+        "    figure(\n",
+        "      [#image(file_qtbl)],\n",
+        "      caption: figure.caption(position: top, [#title]),\n",
+        "      kind: \"qtbl\",\n",
+        "      supplement: [*Table*],\n",
+        "    ),\n",
+        "    figure(\n",
+        "      [#image(file_fig, width: auto)],\n",
+        "      caption: figure.caption(\n",
+        "        position: bottom,\n",
+        "        [`{r} plot_title_",
+        tolower(self$pheno),
+        "`],\n",
+        "      ),\n",
+        "      placement: none,\n",
+        "      kind: \"image\",\n",
+        "      supplement: [*Figure*],\n",
+        "      gap: 0.5em,\n",
+        "    ),\n",
+        "  )\n",
+        "}\n",
+        "```\n\n",
+
+        "```{=typst}\n",
+        "// Define the title of the domain\n",
+        "#let title = \"",
+        self$domains[1],
+        "\"\n\n",
+        "// Define the file name of the table\n",
+        "#let file_qtbl = \"table_",
+        tolower(self$pheno),
+        ".png\"\n\n",
+        "// Define the file name of the figure\n",
+        "#let file_fig = \"fig_",
+        tolower(self$pheno),
+        "_narrow.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
+        "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
+      )
+    },
+    # Add this to the private section of DomainProcessorR6:
+
+    get_plot_title_block = function(domain_name) {
+      pheno_lower <- tolower(self$pheno)
+
+      # Default plot titles for each domain
+      default_titles <- list(
+        iq = "General cognitive ability reflects overall intellectual functioning across verbal and nonverbal domains.",
+        academics = "Academic skills reflect the application of cognitive abilities to educational tasks.",
+        verbal = "Verbal and language abilities support communication and verbal reasoning.",
+        spatial = "Visual-spatial processing enables understanding of visual information and spatial relationships.",
+        memory = "Memory functions support encoding, storage, and retrieval of information.",
+        executive = "Executive functions coordinate attention, planning, and cognitive control.",
+        motor = "Motor skills encompass fine and gross motor coordination and speed.",
+        social = "Social cognition supports understanding of social situations and interpersonal interactions.",
+        adhd = "ADHD symptoms impact attention, hyperactivity, and impulsivity across settings.",
+        emotion = "Emotional and behavioral functioning reflects psychological adjustment and regulation.",
+        adaptive = "Adaptive functioning encompasses practical skills for daily living.",
+        daily_living = "Daily living skills support independence in everyday activities.",
+        validity = "Performance and symptom validity indicators assess test engagement and response patterns."
+      )
+
+      default_title <- default_titles[[pheno_lower]] %||%
+        paste0(
+          domain_name,
+          " scores reflect performance across multiple measures."
+        )
+
+      paste0(
+        "# Ensure plot title exists\n",
+        "plot_title_",
+        pheno_lower,
+        " <- \"",
+        default_title,
+        "\"\n",
+        "\n",
+        "# Try to load custom title from sysdata.rda\n",
+        "sysdata_path <- here::here(\"R\", \"sysdata.rda\")\n",
+        "if (file.exists(sysdata_path)) {\n",
+        "  sysdata_env <- new.env()\n",
+        "  load(sysdata_path, envir = sysdata_env)\n",
+        "  custom_title_name <- paste0(\"plot_title_\", \"",
+        pheno_lower,
+        "\")\n",
+        "  if (exists(custom_title_name, envir = sysdata_env)) {\n",
+        "    plot_title_",
+        pheno_lower,
+        " <- get(custom_title_name, envir = sysdata_env)\n",
+        "  }\n",
+        "}\n"
       )
     }
   )
 )
-

@@ -68,3 +68,15 @@ template_ethan.qmd
 .gitignore
 template_ethan.typ
 template_ethan.pdf
+_00-00_tests.qmd
+_01-**_*_*.qmd
+_03-**_*.qmd
+_emotion_include.qmd
+_domains_to_include.qmd
+template_streamline.typ
+template_streamline.qmd
+_quarto.yml
+_variables.yml
+config.yml
+template.qmd
+
