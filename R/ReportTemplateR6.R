@@ -407,8 +407,8 @@ ReportTemplateR6 <- R6::R6Class(
         "#let patient = [",
         self$variables$patient,
         "]\n",
-        "// #v(2em, weak: true)\n",
-        "// #show block: set par(leading: 0.65em)\n",
+        "#v(2em, weak: true)\n",
+        "#show block: set par(leading: 0.65em)\n",
         "#block[\n",
         "*PATIENT NAME:* #name \\\\\n",
         "*DATE OF BIRTH:* ",
@@ -441,16 +441,29 @@ ReportTemplateR6 <- R6::R6Class(
       for (domain in self$domains) {
         domain_includes <- paste0(
           domain_includes,
-          "{{< include domains/",
+          "{{< include ",
           domain,
           " >}}\n\n"
         )
+
+        # Add text companion for cognitive/behavioral domains (_02-XX_ pattern)
+        if (grepl("^_02-", domain)) {
+          domain_text <- sub("\\.qmd$", "_text.qmd", domain)
+          domain_includes <- paste0(
+            domain_includes,
+            "{{< include ",
+            domain_text,
+            " >}}\n\n"
+          )
+        }
       }
 
       # Add the "NEUROCOGNITIVE FINDINGS" heading
       domain_includes <- paste0(
         domain_includes,
-        "# NEUROCOGNITIVE FINDINGS\n\n"
+        "```{=typst}\n",
+        "= NEUROCOGNITIVE FINDINGS\n",
+        "```\n\n"
       )
 
       # Combine all parts
