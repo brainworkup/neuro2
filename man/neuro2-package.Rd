@@ -40,8 +40,16 @@ tables and figures, and creating formatted reports using Quarto and Typst.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/brainworkup/neuro2}
+  \item Report bugs at \url{https://github.com/brainworkup/neuro2/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: Joey Trampush \email{joey.trampush@brainworkup.org}
+\strong{Maintainer}: Joey Trampush \email{joey.trampush@brainworkup.org} (\href{https://orcid.org/0000-0003-0830-508X}{ORCID})
 
 }
 \keyword{internal}
