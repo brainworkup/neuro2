@@ -18,31 +18,52 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2.9000
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.1)
 Imports:
-    R6 (>= 2.5.0),
-    dplyr (>= 1.1.0),
-    readr (>= 2.1.0),
-    ggplot2 (>= 3.4.0),
-    gt (>= 0.9.0),
-    yaml (>= 2.3.0),
-    here (>= 1.0.0),
-    glue (>= 1.6.0),
-    tidyr (>= 1.3.0),
-    purrr (>= 1.0.0),
-    stringr (>= 1.5.0)
-Suggests:
-    gtExtras (>= 0.5.0),
     arrow (>= 10.0.0),
-    quarto (>= 1.3),
-    knitr (>= 1.42),
-    rmarkdown (>= 2.20),
-    testthat (>= 3.0.0),
+    cli,
     DBI (>= 1.1.0),
+    dplyr,
     duckdb (>= 0.8.0),
-    jsonlite (>= 1.8.0),
+    fs,
     future (>= 1.33.0),
-    conflicted (>= 1.2.0)
+    future.apply,
+    ggplot2,
+    ggtext,
+    ggthemes,
+    glue,
+    gt,
+    gtExtras (>= 0.5.0),
+    here,
+    highcharter,
+    janitor,
+    jsonlite (>= 1.8.0),
+    kableExtra,
+    knitr (>= 1.42),
+    memoise,
+    progress,
+    purrr,
+    quarto (>= 1.4.0),
+    R6,
+    readr,
+    readxl,
+    rlang,
+    rmarkdown (>= 2.20),
+    stats,
+    stringr,
+    tabulapdf,
+    tibble,
+    tidyr,
+    tidyselect,
+    tools,
+    utils,
+    webshot2,
+    xfun,
+    yaml
+Suggests:
+    magrittr,
+    usethis,
+    testthat (>= 3.0.0),
 SystemRequirements: 
     Quarto (>= 1.3) for report generation,
     Typst for PDF generation (optional)

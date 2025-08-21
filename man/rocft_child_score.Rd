@@ -2,20 +2,36 @@
 % Please edit documentation in R/rocft_child_norms.R
 \name{rocft_child_score}
 \alias{rocft_child_score}
-\title{Score ROCFT child norms (ages 6–15)}
+\title{Score ROCFT Child Norms (Ages 6–15)}
 \usage{
 rocft_child_score(trial = c("copy", "recall"), age, raw_score)
 }
 \arguments{
-\item{trial}{One of "copy" or "recall"}
+\item{trial}{Character string; one of \code{"copy"} or \code{"recall"}.}
 
-\item{age}{Numeric age in years}
+\item{age}{Numeric; child's age in years (6–15). Non-integer ages are rounded.}
 
-\item{raw_score}{Numeric raw score}
+\item{raw_score}{Numeric; raw score for the specified trial.}
 }
 \value{
-A tibble with age, raw_score, mean, sd, z, T, percentile
+A tibble with columns:
+\itemize{
+\item \code{age} (rounded)
+\item \code{raw_score}
+\item \code{mean}
+\item \code{sd}
+\item \code{z}
+\item \code{t} (T-score)
+\item \code{percentile}
+}
+Returns \code{NULL} if age is outside 6–15 or inputs are invalid.
 }
 \description{
-Score ROCFT child norms (ages 6–15)
+Calculate normative scores (z, T, percentile) for the ROCFT based on child
+norms for ages 6–15.
+}
+\examples{
+rocft_child_score(trial = "copy",   age = 7,  raw_score = 22)
+rocft_child_score(trial = "recall", age = 13, raw_score = 20)
+
 }

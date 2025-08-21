@@ -726,22 +726,6 @@ DomainProcessorR6 <- R6::R6Class(
         ", domain = domains, scale = scales)\n",
         "```\n\n",
 
-        # # Use the emit_quarto_text_chunk method properly by creating a temporary instance
-        # paste0(
-        #   {
-        #     temp_results <- NeuropsychResultsR6$new(
-        #       data = data.frame(),
-        #       file = "temp"
-        #     )
-        #     temp_results$emit_quarto_text_chunk(
-        #       domain_key = tolower(self$pheno),
-        #       data_var = paste0("data_", tolower(self$pheno)),
-        #       file_path = text_file
-        #     )
-        #   },
-        #   "\n"
-        # ),
-
         "```{r}\n",
         "#| label: qtbl-",
         tolower(self$pheno),
