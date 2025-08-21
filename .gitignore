@@ -64,3 +64,7 @@ _03-00_dsm5_icd10_dx.qmd
 _01-00_nse_referral.qmd
 scripts
 {{< include _02-*_*_text.qmd
+template_ethan.qmd
+.gitignore
+template_ethan.typ
+template_ethan.pdf

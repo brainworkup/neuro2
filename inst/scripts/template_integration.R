@@ -49,7 +49,7 @@ update_template_with_domains <- function(
   }
 
   # Create include statements
-  domain_includes <- paste0("{{< include ", domain_files, " >}}")
+  # domain_includes <- paste0("{{< include ", domain_files, " >}}")
 
   # Find marker position
   marker_line <- which(grepl(domain_marker, template_lines, fixed = TRUE))
@@ -190,8 +190,8 @@ run_complete_workflow <- function(verbose = TRUE) {
   }
 
   # Source and run the batch processor
-  if (file.exists(here::here("R", "batch_domain_processor.R"))) {
-    source(here::here("R", "batch_domain_processor.R"))
+  if (file.exists(here::here("scripts", "batch_domain_processor.R"))) {
+    source(here::here("scripts", "batch_domain_processor.R"))
   } else {
     # Run the processing function directly
     if (exists("process_all_domains")) {
@@ -204,8 +204,8 @@ run_complete_workflow <- function(verbose = TRUE) {
   }
 
   # Step 2: Check for template or create one
-  template_file <- "template.qmd"
-  # template_file <- "neuropsych_report.qmd"
+  # template_file <- "template.qmd"
+  template_file <- "neuropsych_report.qmd"
   template_path <- here::here(template_file)
 
   if (!file.exists(template_path)) {
@@ -339,8 +339,10 @@ quick_setup <- function() {
 
   cat("\n✅ Environment ready!\n")
   cat("\nNext steps:\n")
-  cat("1. Run: source('R/batch_domain_processor.R'); main()\n")
-  cat("2. Run: source('R/template_integration.R'); run_complete_workflow()\n")
+  cat("1. Run: source('scripts/batch_domain_processor.R'); main()\n")
+  cat(
+    "2. Run: source('scripts/template_integration.R'); run_complete_workflow()\n"
+  )
   cat("3. Or run everything: quick_workflow()\n")
 
   return(TRUE)

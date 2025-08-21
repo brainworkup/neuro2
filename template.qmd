@@ -348,8 +348,8 @@ ensure_text_files_exist <- function(domain_files) {
 ```{r}
 #| label: include-domains
 #| output: asis
-#| echo: false
-#| eval: true
+#| include: false
+#| eval: false
 
 # Only validate domains if data is available
 if (!is.null(neurocog_data) || !is.null(neurobehav_data)) {

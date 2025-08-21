@@ -460,11 +460,8 @@ ReportTemplateR6 <- R6::R6Class(
 
       # Add the "NEUROCOGNITIVE FINDINGS" heading
       domain_includes <- paste0(
-        "```{=typst}\n",
-        "= NEUROCOGNITIVE FINDINGS\n",
-        "```\n\n",
-        domain_includes,
-        domain_text
+        "# NEUROCOGNITIVE FINDINGS\n\n",
+        domain_includes
       )
 
       # Combine all parts
