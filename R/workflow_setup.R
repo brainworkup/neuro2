@@ -68,7 +68,7 @@ copy_template_files <- function() {
   # Get list of template files
   template_files <- list.files(
     template_dir,
-    pattern = "\\.(qmd|yml)$",
+    pattern = "\\.(qmd|yml|typ)$",
     full.names = TRUE
   )
 

@@ -7,14 +7,17 @@ generate_workflow_report <- function(config) {
   log_message("Generating final report...", "WORKFLOW")
 
   # Source the report generator module if it exists
-  if (file.exists("report_generator_module.R")) {
+  if (file.exists("scripts/report_generator_module.R")) {
     log_message("Running report_generator_module.R", "REPORT")
-    source("report_generator_module.R")
+    source("scripts/report_generator_module.R")
     return(TRUE)
   }
 
   # Use Quarto directly
-  log_message("report_generator_module.R not found. Using Quarto directly.", "REPORT")
+  log_message(
+    "report_generator_module.R not found. Using Quarto directly.",
+    "REPORT"
+  )
 
   # Ensure template file exists
   template_file <- config$report$template
@@ -57,14 +60,20 @@ verify_report_output <- function(template_file) {
   # Check for PDF output
   report_file <- gsub("\\.qmd$", ".pdf", template_file)
   if (file.exists(report_file)) {
-    log_message(paste0("Report generated successfully: ", report_file), "REPORT")
+    log_message(
+      paste0("Report generated successfully: ", report_file),
+      "REPORT"
+    )
     return(TRUE)
   }
 
   # Check for HTML output
   report_file <- gsub("\\.qmd$", ".html", template_file)
   if (file.exists(report_file)) {
-    log_message(paste0("Report generated successfully: ", report_file), "REPORT")
+    log_message(
+      paste0("Report generated successfully: ", report_file),
+      "REPORT"
+    )
     return(TRUE)
   }
 

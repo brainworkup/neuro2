@@ -180,8 +180,8 @@ check_essential_files <- function(
 # Data loading utilities
 load_neurocog_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurocog.parquet")
-  csv_file <- file.path(data_dir, "neurocog.csv")
   feather_file <- file.path(data_dir, "neurocog.feather")
+  csv_file <- file.path(data_dir, "neurocog.csv")
 
   if (file.exists(parquet_file) && requireNamespace("arrow", quietly = TRUE)) {
     return(arrow::read_parquet(parquet_file))
@@ -198,8 +198,26 @@ load_neurocog_data <- function(data_dir) {
 
 load_neurobehav_data <- function(data_dir) {
   parquet_file2 <- file.path(data_dir, "neurobehav.parquet")
-  csv_file2 <- file.path(data_dir, "neurobehav.csv")
   feather_file2 <- file.path(data_dir, "neurobehav.feather")
+  csv_file2 <- file.path(data_dir, "neurobehav.csv")
+
+  if (file.exists(parquet_file2) && requireNamespace("arrow", quietly = TRUE)) {
+    return(arrow::read_parquet(parquet_file2))
+  } else if (
+    file.exists(feather_file) && requireNamespace("arrow", quietly = TRUE)
+  ) {
+    return(arrow::read_feather(feather_file2))
+  } else if (file.exists(csv_file2)) {
+    return(readr::read_csv(csv_file2, show_col_types = FALSE))
+  } else {
+    return(NULL)
+  }
+}
+
+load_validity_data <- function(data_dir) {
+  parquet_file3 <- file.path(data_dir, "validity.parquet")
+  feather_file3 <- file.path(data_dir, "validity.feather")
+  csv_file3 <- file.path(data_dir, "validity.csv")
 
   if (file.exists(parquet_file2) && requireNamespace("arrow", quietly = TRUE)) {
     return(arrow::read_parquet(parquet_file2))
@@ -217,6 +235,7 @@ load_neurobehav_data <- function(data_dir) {
 get_domains_from_data <- function(data_dir) {
   neurocog_data <- load_neurocog_data(data_dir)
   neurobehav_data <- load_neurobehav_data(data_dir)
+  validity_data <- load_validity_data(data_dir)
 
   domains <- character(0)
 
@@ -230,6 +249,12 @@ get_domains_from_data <- function(data_dir) {
     neurobehav_domains <- unique(neurobehav_data$domain)
     neurobehav_domains <- neurobehav_domains[!is.na(neurobehav_domains)]
     domains <- c(domains, neurobehav_domains)
+  }
+
+  if (!is.null(validity_data) && "domain" %in% names(validity_data)) {
+    validity_domains <- unique(validity_data$domain)
+    validity_domains <- validity_domains[!is.na(validity_domains)]
+    domains <- c(domains, validity_domains)
   }
 
   if (length(domains) > 0) {

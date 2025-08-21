@@ -592,7 +592,8 @@ domain_to_pheno <- function(domain_name) {
     "Attention/Executive" = "executive",
     "Motor" = "motor",
     "ADHD" = "adhd",
-    "Behavioral/Emotional/Social" = "emotion"
+    "Behavioral/Emotional/Social" = "emotion",
+    "Emotional/Behavioral/Personality" = "emotion"
   )
 
   # Check if domain should be combined into emotion
@@ -630,7 +631,9 @@ get_domain_output_file <- function(domain_name, patient_type) {
     "Memory" = "_02-05_memory.qmd",
     "Attention/Executive" = "_02-06_executive.qmd",
     "Motor" = "_02-07_motor.qmd",
-    "Social Cognition" = "_02-08_social.qmd"
+    "Social Cognition" = "_02-08_social.qmd",
+    "Adaptive Functioning" = "_02-11_adaptive.qmd",
+    "Daily Living" = "_02-12_daily_living"
   )
 
   # Special handling for ADHD
@@ -732,12 +735,12 @@ run_fallback_domain_generation <- function(config, patient_type) {
   source("R/workflow_utils.R")
 
   # Source the domain generator module as a fallback
-  if (file.exists("domain_generator_module.R")) {
+  if (file.exists("scripts/domain_generator_module.R")) {
     log_message(
       "Running domain_generator_module.R to generate missing files",
       "DOMAINS"
     )
-    source("domain_generator_module.R")
+    source("scripts/domain_generator_module.R")
     return(TRUE)
   }
 

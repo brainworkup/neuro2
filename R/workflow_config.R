@@ -63,7 +63,7 @@ create_default_config <- function(config_file) {
       report = list(
         template = "template.qmd",
         format = "neurotyp-adult-typst",
-        output_dir = "output"
+        output_dir = "output/report"
       )
     )
 
@@ -116,7 +116,7 @@ validate_config <- function(config) {
   }
 
   if (is.null(config$report$output_dir)) {
-    config$report$output_dir <- "output"
+    config$report$output_dir <- "output/report"
   }
 
   return(config)
