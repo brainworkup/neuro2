@@ -64,14 +64,8 @@ patient <- Sys.getenv("PATIENT")
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
+
 ```{r}
-#| label: generate-domain-files
-#| include: false
-#| cache: false
-
-# Generate domain files only if they don't exist
-# This runs once to create the domain structure
-
 #| label: generate-domain-files
 #| include: false
 #| cache: false
