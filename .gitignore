@@ -3,33 +3,27 @@
 Thumbs.db
 Icon
 Icon?
-
 # Env and secrets
 .env
-
 # R / RStudio
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
-
 # Editors
 .vscode/
 .history/
-
 # Quarto build artifacts
 .quarto/
 *_cache/
 **/*_cache/
 *_files/
 **/*_files/
-
 # Logs and temp
 *.log
 *.tmp
 *.bak
 *_backup.*
-
 # Generated outputs (keep source tracked)
 output/
 reports/
@@ -37,27 +31,22 @@ neuropsych_report*.pdf
 *_main.pdf
 table_*.pdf
 table_*.png
-
 # Large binary data that should not be tracked by default
 *.parquet
 *.feather
-
 # Node/quarto dashboard vendor bundles (if any get generated)
 neuropsych-dashboard_files/
-
 # Other folders/files
 _arxiv/
 .roo/
 .specstory/
 _extensions/
 data/*.csv
-
 /.quarto/
 _freeze/
 archive/
 *.svg
 template.pdf
-
 _02-**_*.qmd
 _02-**_*_*.qmd
 neuropsych-dashboard.html
@@ -74,3 +63,4 @@ _03-03a_informed_consent.qmd
 _03-00_dsm5_icd10_dx.qmd
 _01-00_nse_referral.qmd
 scripts
+{{< include _02-*_*_text.qmd
