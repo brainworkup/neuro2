@@ -6,6 +6,14 @@
 \usage{
 init_neuro2_workspace(patient_name = NULL, verbose = TRUE)
 }
+\arguments{
+\item{patient_name}{Character string for patient name (optional)}
+
+\item{verbose}{Logical, whether to show verbose output}
+}
+\value{
+TRUE if successful
+}
 \description{
 Sets up directories and loads functionality
 }

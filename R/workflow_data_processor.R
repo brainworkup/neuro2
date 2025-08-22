@@ -2,14 +2,14 @@
 # Handles data loading and processing for the workflow
 
 process_workflow_data <- function(config) {
-  source("R/workflow_utils.R")
+  # Removed: source("R/workflow_utils.R") - not needed in R package
 
   log_message("Processing data...", "WORKFLOW")
 
   # Source the data processor module if it exists
   if (file.exists("scripts/data_processor_module.R")) {
     log_message("Running data_processor_module.R", "DATA")
-    source("scripts/data_processor_module.R")
+    source("scripts/data_processor_module.R") # This is external to package, so kept
     return(TRUE)
   }
 
@@ -18,7 +18,7 @@ process_workflow_data <- function(config) {
     config$processing$use_duckdb && file.exists("R/duckdb_neuropsych_loader.R")
   ) {
     log_message("Using DuckDB data processor", "DATA")
-    source("R/duckdb_neuropsych_loader.R")
+    # Removed: source("R/duckdb_neuropsych_loader.R") - functions available from package
 
     # Process the data
     load_data_duckdb(
@@ -41,7 +41,7 @@ process_workflow_data <- function(config) {
 # Note: For SQL queries, use query_neuropsych from duckdb_neuropsych_loader.R
 # IMPORTANT: This function has been renamed to avoid conflicts with DuckDB version
 query_neuropsych_simple <- function(query, data_dir) {
-  source("R/workflow_utils.R")
+  # Removed: source("R/workflow_utils.R") - not needed in R package
 
   # Try to load the data
   neurocog_data <- load_neuropsych_data(data_dir)
@@ -71,6 +71,8 @@ query_neuropsych_simple <- function(query, data_dir) {
 
   return(data.frame())
 }
+
+# ...rest of existing code...
 
 # Load neuropsych data (neurocog)
 load_neuropsych_data <- function(data_dir) {

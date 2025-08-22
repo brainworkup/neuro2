@@ -1,30 +1,13 @@
-#' NeuropsychReportSystemR6 Class
-#'
-#' An R6 class that orchestrates the
-#'  entire neuropsychological report generation system.
-#' This class coordinates utilities,
-#'  template management, domain processing, and report generation.
-#'
-#' @field config Configuration parameters for the report system.
-#' @field utilities ReportUtilitiesR6 object for utility functions.
-#' @field template_manager ReportTemplateR6 object for template management.
-#' @field content_manager TemplateContentManagerR6 object for content files.
-#' @field domain_processors List of DomainProcessorR6
-#'  objects for different domains.
-#'
-#' @section Methods:
-#' \describe{
-#'   \item{initialize}{Initialize the report system with configuration.}
-#'   \item{setup_environment}{Set up the environment for report generation.}
-#'   \item{prepare_data}{Prepare data files for report generation.}
-#'   \item{generate_domain_files}{Generate domain-specific QMD files.}
-#'   \item{generate_report}{Generate the complete report.}
-#' }
-#'
-#' @importFrom R6 R6Class
+#' @title NeuropsychReportSystemR6
+#' @description R6 class for managing neuropsychological report systems
+#' @field config Configuration list for the report system
+#' @field utilities Utilities object for report operations
+#' @field template_manager Template manager for handling template files
+#' @field content_manager Content manager for template content
+#' @field domain_processors List of domain processors for different domains
 #' @export
 NeuropsychReportSystemR6 <- R6::R6Class(
-  classname = "NeuropsychReportSystemR6",
+  "NeuropsychReportSystemR6",
   public = list(
     config = NULL,
     utilities = NULL,

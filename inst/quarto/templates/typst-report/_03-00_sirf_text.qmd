@@ -1,5 +1,22 @@
 ## Overall Evaluation Interpretation
 
+{{< var first_name >}} {{< var last_name >}} is a {{< var age >}}-year-old {{< var handedness >}}-handed {{< var sex >}} with a history of {{< var dx1 >}}, {{< var dx2 >}}, and {{< var dx3 >}} who was referred for neuropsychological testing as part of a comprehensive work-up for attention-deficit/hyperactivity disorder. General cognitive ability is well within normal limits, and there is no evidence of decline from premorbid estimates. No deficits were detected in the domains of attention, processing speed, motor functioning, or visuospatial skills. Although many aspects of executive functioning, language functioning, and memory were within normal limits, {{< var he_she >}} demonstrated mildly inefficient problem solving and hypothesis testing, weaknesses in word retrieval, and inefficiency in new learning of verbal information. There is no evidence of a mood disorder at this time.
+
+In conclusion, the cognitive profile is ...
+
+### Diagnostic Impression
+
+- {{< var dsm5_dx1 >}}
+- {{< var dsm5_dx2 >}}
+- {{< var dsm5_dx3 >}}
+- {{< var dsm5_dx4 >}}
+- {{< var dsm5_dx5 >}}
+
+- [DSM-5/ICD-10 Codes](_03-00_dsm5_icd10_dx.qmd)
+
+
+## Overall Evaluation Interpretation
+
 Neuropsychological evaluation revealed a pattern of cognitive strengths and weaknesses characterized by below-average overall neuropsychological functioning. Notable strengths emerged in visuoperceptual processing and visuoconstructional abilities, where performance reached the high average range for focused spatial tasks. The patient demonstrated average capabilities in basic judgment, decision-making, and orientation to person, place, time, and situation.
 
 ## Diagnostic Impression
@@ -10,22 +27,22 @@ Neuropsychological evaluation revealed a pattern of cognitive strengths and weak
 
 ## Mental Health Diversion: Contextual Analysis and Interpretation
 
-_1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?_
+1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?
 
-Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5.
+_Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5._
 
-_2. Were any mental disorders a motivating, causal, or contributing factor to the defendant’s involvement in the commission of the offense?_
+2. Were any mental disorders a motivating, causal, or contributing factor to the defendant’s involvement in the commission of the offense?
 
-Yes, causal.
+_Yes, causal._
 
-_3. If any mental disorders were significant factors in the commission of the offense, would the defendant’s symptoms of those mental disorders respond to treatment?_
+3. If any mental disorders were significant factors in the commission of the offense, would the defendant’s symptoms of those mental disorders respond to treatment?
 
-Yes. The defendant's symptoms related to cognitive impairment and mood problems would respond well to treatment.
+_Yes. The defendant's symptoms related to cognitive impairment and mood problems would respond well to treatment._
 
-_4. Does the defendant agree to comply with treatment as a condition of diversion?_
+4. Does the defendant agree to comply with treatment as a condition of diversion?
 
-Yes, the defendant agreed to comply with treatment as a condition of diversion.
+_Yes, the defendant agreed to comply with treatment as a condition of diversion._
 
-_5. Would the defendant pose an unreasonable risk of danger to public safety (under the meaning of California Penal Code 1001.36), if treated in the community?_
+5. Would the defendant pose an unreasonable risk of danger to public safety (under the meaning of California Penal Code 1001.36), if treated in the community?
 
-The defendant would not pose "an unreasonable risk of danger to public safety" under the meaning of California Penal Code 1001.36, if treated in the community.
+_The defendant would not pose "an unreasonable risk of danger to public safety" under the meaning of California Penal Code 1001.36, if treated in the community._

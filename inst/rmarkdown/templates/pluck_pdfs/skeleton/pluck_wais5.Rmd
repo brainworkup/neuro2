@@ -1,4 +1,5 @@
 ---
+# Use the R function instead of this
 title: "Pluck Tables from WAIS-5"
 params:
   patient: Biggie

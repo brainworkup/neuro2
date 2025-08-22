@@ -1,43 +1,81 @@
 # Environment Setup Module
 # Handles setting up the workflow environment, directories, and template files
 
+# Workflow Setup Functions
+
 setup_workflow_environment <- function(config) {
-  source("R/workflow_utils.R")
+  # Removed: source("R/workflow_utils.R") - functions available from package
 
-  log_message("Setting up environment...", "WORKFLOW")
+  tryCatch(
+    {
+      if (file.exists("setup_environment.R")) {
+        source("setup_environment.R") # External script, so kept
+      }
 
-  # Run setup_environment.R if it exists
-  if (file.exists("setup_environment.R")) {
-    log_message("Running setup_environment.R", "SETUP")
-    source("setup_environment.R")
-  } else {
+      log_message("Environment setup complete", "SETUP")
+      return(TRUE)
+    },
+    error = function(e) {
+      log_message(paste("Failed to setup environment:", e$message), "ERROR")
+      return(FALSE)
+    }
+  )
+}
+
+# Load required libraries for the workflow
+load_workflow_libraries <- function() {
+  # Removed: source("R/workflow_utils.R") - functions available from package
+
+  required_packages <- c(
+    "dplyr",
+    "readr",
+    "here",
+    "yaml",
+    "purrr",
+    "DBI",
+    "duckdb",
+    "arrow",
+    "gt",
+    "ggplot2"
+  )
+
+  missing_packages <- setdiff(
+    required_packages,
+    installed.packages()[, "Package"]
+  )
+
+  if (length(missing_packages) > 0) {
     log_message(
-      "setup_environment.R not found. Creating directories manually.",
-      "SETUP"
+      paste("Missing packages:", paste(missing_packages, collapse = ", ")),
+      "WARNING"
     )
-
-    # Create necessary directories
-    dirs_to_create <- c(
-      config$data$input_dir,
-      config$data$output_dir,
-      config$report$output_dir
-    )
-    create_directories(dirs_to_create)
+    return(FALSE)
   }
 
-  # Copy template files
-  copy_template_files()
+  # Load all required packages
+  for (pkg in required_packages) {
+    suppressMessages(library(pkg, character.only = TRUE))
+  }
 
-  # Setup Quarto extensions
-  setup_quarto_extensions(config$report$format)
+  log_message("All workflow libraries loaded", "INFO")
+  return(TRUE)
+}
 
-  # Check for R6 class files
-  check_r6_files()
+# Setup project directories
+setup_project_directories <- function(base_dir = ".") {
+  # Removed: source("R/workflow_utils.R") - functions available from package
 
-  # Check for CSV files
-  check_input_files(config$data$input_dir)
+  required_dirs <- c("data", "figs", "output", "tmp")
 
-  log_message("Environment setup complete", "SETUP")
+  for (dir in required_dirs) {
+    full_path <- file.path(base_dir, dir)
+    if (!dir.exists(full_path)) {
+      dir.create(full_path, recursive = TRUE)
+      log_message(paste("Created directory:", full_path), "SETUP")
+    }
+  }
+
+  log_message("Project directories verified", "SETUP")
   return(TRUE)
 }
 

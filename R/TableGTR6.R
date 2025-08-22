@@ -24,6 +24,7 @@
 #'   \item{initialize}{Initialize a new TableGTR6 object with configuration and data.}
 #'   \item{build_table}{Construct and return the formatted `gt` table, without saving.}
 #'   \item{save_table}{Save the table to PNG and PDF files.}
+#'   \item{handle_multi_score_battery}{Handle multi-score battery data formatting.}
 #' }
 #'
 #' @importFrom R6 R6Class
@@ -36,8 +37,11 @@
 #' @importFrom gtExtras gt_theme_538
 #' @importFrom glue glue glue_collapse
 #' @export
+#' @title TableGTR6
+#' @description R6 class for creating formatted tables using gt
+#' @export
 TableGTR6 <- R6::R6Class(
-  classname = "TableGTR6",
+  "TableGTR6",
   public = list(
     data = NULL,
     pheno = NULL,

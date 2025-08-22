@@ -4,24 +4,7 @@
 \alias{DomainProcessorR6}
 \title{DomainProcessorR6}
 \description{
-DomainProcessorR6
-
-DomainProcessorR6
-}
-\details{
-A working implementation that generates QMD files following the exact
-structure of the memory template file.
-
-Creates minimal placeholder file(s) containing:\if{html}{\out{
-<summary>
-}}
-\if{html}{\out{
-</summary>
-}}
-
-
-If a file already exists, it is left unchanged. For multi-rater child
-emotion/ADHD domains, creates one file per available rater.
+R6 class for processing neuropsychological domain data
 }
 \examples{
 
@@ -154,17 +137,19 @@ emotion/ADHD domains, creates one file per available rater.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{domains}}{Character vector of domain names to process.}
+\item{\code{domains}}{Character vector of domain names to process}
 
-\item{\code{pheno}}{Target phenotype identifier string.}
+\item{\code{pheno}}{The phenotype identifier (e.g., "emotion", "adhd")}
 
-\item{\code{input_file}}{Path to the input data file.}
+\item{\code{input_file}}{Path to the input data file}
 
-\item{\code{output_dir}}{Directory where output files will be saved.}
+\item{\code{output_dir}}{Directory path for output files (default: "data")}
 
-\item{\code{number}}{Domain number for file naming.}
+\item{\code{number}}{Numeric identifier for domain ordering}
 
-\item{\code{data}}{The loaded and processed data.}
+\item{\code{data}}{Data frame containing the processed neuropsychological data}
+
+\item{\code{dirs}}{List containing directory paths for output organization}
 }
 \if{html}{\out{</div>}}
 }
@@ -196,9 +181,6 @@ emotion/ADHD domains, creates one file per available rater.
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a new DomainProcessorR6 object
-
-
-Create a new instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$new(
   domains,
@@ -222,6 +204,8 @@ Create a new instance.
 \item{\code{output_dir}}{Path to an output directory.}
 
 \item{\code{number}}{Numeric index or identifier.}
+
+\item{\code{output_base}}{Base directory path for output files}
 }
 \if{html}{\out{</div>}}
 }
@@ -244,10 +228,23 @@ A new \code{DomainProcessorR6} object.
 \if{html}{\out{<a id="method-DomainProcessorR6-save_plot"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-save_plot}{}}}
 \subsection{Method \code{save_plot()}}{
+Save a plot to file
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$save_plot(plot, filename)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{plot}}{The plot object to save}
+
+\item{\code{filename}}{The filename to save the plot as}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+List with paths to saved PNG and PDF files
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-load_data"></a>}}
@@ -483,6 +480,19 @@ Invisibly returns the path to the generated file.
 Generate the paired narrative text .qmd file(s) for this domain.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_domain_text_qmd()}\if{html}{\out{</div>}}
+}
+
+\subsection{Details}{
+Creates minimal placeholder file(s) containing:\if{html}{\out{
+<summary>
+}}
+\if{html}{\out{
+</summary>
+}}
+
+
+If a file already exists, it is left unchanged. For multi-rater child
+emotion/ADHD domains, creates one file per available rater.
 }
 
 \subsection{Returns}{

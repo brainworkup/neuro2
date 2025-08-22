@@ -1,22 +1,15 @@
-#' DomainProcessorR6
-#'
-#' A working implementation that generates QMD files following the exact
-#' structure of the memory template file.
-#'
-#' @field domains Character vector of domain names to process.
-#' @field pheno Target phenotype identifier string.
-#' @field input_file Path to the input data file.
-#' @field output_dir Directory where output files will be saved.
-#' @field number Domain number for file naming.
-#' @field data The loaded and processed data.
-#'
-#' @importFrom R6 R6Class
-#' @importFrom dplyr filter select arrange desc distinct all_of
-#' @importFrom readr read_csv write_excel_csv
-#' @importFrom here here
+#' @title DomainProcessorR6
+#' @description R6 class for processing neuropsychological domain data
+#' @field domains Character vector of domain names to process
+#' @field pheno The phenotype identifier (e.g., "emotion", "adhd")
+#' @field input_file Path to the input data file
+#' @field output_dir Directory path for output files (default: "data")
+#' @field number Numeric identifier for domain ordering
+#' @field data Data frame containing the processed neuropsychological data
+#' @field dirs List containing directory paths for output organization
 #' @export
 DomainProcessorR6 <- R6::R6Class(
-  classname = "DomainProcessorR6",
+  "DomainProcessorR6",
   public = list(
     domains = NULL,
     pheno = NULL,
@@ -28,12 +21,12 @@ DomainProcessorR6 <- R6::R6Class(
 
     #' @description
     #' Initialize a new DomainProcessorR6 object
-    #' @description Create a new instance.
     #' @param domains Character scalar or vector of domain names.
     #' @param pheno A data.frame or tibble.
     #' @param input_file Path to a file.
     #' @param output_dir Path to an output directory.
     #' @param number Numeric index or identifier.
+    #' @param output_base Base directory path for output files
     #' @return A new \code{DomainProcessorR6} object.
     #' @examples
     #' \dontrun{
@@ -70,7 +63,10 @@ DomainProcessorR6 <- R6::R6Class(
       })
     },
 
-    # Update your save functions
+    #' @description Save a plot to file
+    #' @param plot The plot object to save
+    #' @param filename The filename to save the plot as
+    #' @return List with paths to saved PNG and PDF files
     save_plot = function(plot, filename) {
       png_file <- file.path(self$dirs$figs, paste0(filename, ".png"))
       pdf_file <- file.path(self$dirs$figs, paste0(filename, ".pdf"))

@@ -14,7 +14,8 @@ create_domain_processor(
 )
 }
 \arguments{
-\item{domain_name}{The domain name (e.g., "ADHD", "Behavioral/Emotional/Social")}
+\item{domain_name}{The domain name
+(e.g., "ADHD", "Behavioral/Emotional/Social")}
 
 \item{data_file}{Path to your neurobehavioral data file}
 

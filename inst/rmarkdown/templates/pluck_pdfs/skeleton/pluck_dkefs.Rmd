@@ -198,7 +198,7 @@ if (length(header_row) == 0) {
   }
   
   # Extract data rows (start after column headers)
-  data_start_row <- col_header_row + 1
+  data_start_row <- col_header_row + 0 # changed this for Ethan and it worked
   data_rows <- df[data_start_row:nrow(df), 1:4, drop = FALSE]
   
   # Clean up the data - remove empty rows
@@ -210,7 +210,11 @@ if (length(header_row) == 0) {
   # Convert numeric columns
   data_rows$raw_score <- as.numeric(data_rows$raw_score)
   data_rows$score <- as.numeric(data_rows$score)
-  data_rows$percentile <- as.numeric(data_rows$percentile)
+  data_rows$percentile <- as.numeric(data_rows$percentile)  
+    
+  # Ensure clean test names
+  data_rows$scale <- trimws(as.character(data_rows$scale))
+  # data_rows$scale <- trimws(data_rows$scale)
   
   # Filter for rows that contain test names
   df_cwi <- data_rows[grepl("Color Naming|Word Reading|Inhibition", data_rows$scale), ]
@@ -234,7 +238,6 @@ df_cwi <- pluck_dkefs_cwi(input_file_path, test_name_prefix, output_file_path)
 ## Create percentile
 
 ```{r percentile, eval = TRUE}
-# TODO: Add percentile calculation ONLY if NA
 df_cwi <- df_cwi |>
   dplyr::mutate(z = (score - 10) / 3) |>
   dplyr::mutate(percentile = ifelse(is.na(percentile), trunc(pnorm(z) * 100), percentile)) |>
@@ -248,7 +251,7 @@ dkefs <- neuro2::gpluck_make_columns(
   test = params$test,
   test_name = params$test_name,
   range = "",
-  # ci_95 = paste0(dkefs$ci_95_lower, "-", dkefs$ci_95_upper),
+  ci_95 = paste0(dkefs$ci_95_lower, "-", dkefs$ci_95_upper),
   domain = "",
   subdomain = "",
   narrow = "",
@@ -298,8 +301,8 @@ dkefs <-
   dkefs |>
   dplyr::mutate(
     subdomain = dplyr::case_when(
-      scale == "Color Naming" ~ "Retrieval",
-      scale == "Word Reading" ~ "Retrieval",
+      scale == "Color Naming" ~ "Rapid Naming",
+      scale == "Word Reading" ~ "Rapid Naming",
       scale == "Inhibition" ~ "Executive",
       scale == "Inhibition/Switching" ~ "Executive",
       scale == "Color Naming Total Errors" ~ "Attention",
@@ -440,7 +443,7 @@ dkefs <-
 ```{r relocate}
 dkefs <-
   dkefs |>
-  dplyr::relocate(c(raw_score, score, percentile, range, ci_95), .after = scale)
+  dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
 ```
 
 # EXPORT

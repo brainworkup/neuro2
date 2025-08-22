@@ -4,7 +4,29 @@ patient: Biggie
 name: Smalls, Biggie
 doe: "YYYY-MM-DD"
 date_of_report: last-modified
+format: 
+  neurotyp-pdf:
+    pdf-engine: typst
+    output-file: '{uuid()}.pdf'
 ---
+
+{{< include /Users/joey/neuro2/inst/quarto/templates/typst-report/_environment.qmd >}}
+
+```{r}
+#| label: load-packages
+#| include: false
+
+# Load the neuro2 package instead of sourcing individual files
+library(neuro2)
+
+# Removed source() calls - all functions are available from the neuro2 package:
+# source("R/DomainProcessorR6.R")
+# source("R/NeuropsychResultsR6.R")
+# source("R/DotplotR6.R")
+# source("R/TableGTR6.R")
+# source("R/score_type_utils.R")
+
+# ...rest of existing code...
 
 ```{r}
 #| label: setup
@@ -18,13 +40,6 @@ suppressPackageStartupMessages({
   library(here)
   library(yaml)
 })
-
-# Source the domain processor
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGTR6.R")
-source("R/score_type_utils.R")
 
 # Set knitr options
 knitr::opts_knit$set(

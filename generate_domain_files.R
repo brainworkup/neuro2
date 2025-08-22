@@ -13,14 +13,15 @@ library(dplyr)
 library(readr)
 library(yaml)
 library(arrow)
+library(neuro2) # Load the package instead of sourcing individual files
 
-# Source required files
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGTR6.R")
-source("R/score_type_utils.R")
-source("R/domain_validation_utils.R")
+# Removed source() calls - all functions are available from the neuro2 package:
+# source("R/DomainProcessorR6.R")
+# source("R/NeuropsychResultsR6.R")
+# source("R/DotplotR6.R")
+# source("R/TableGTR6.R")
+# source("R/score_type_utils.R")
+# source("R/domain_validation_utils.R")
 
 # Function to generate placeholder text files
 generate_text_files <- function(generated_files, verbose = TRUE) {

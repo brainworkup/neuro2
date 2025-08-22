@@ -4,9 +4,11 @@ if (interactive()) {
   suppressMessages(require(devtools))
   suppressMessages(require(usethis))
 
-  # Automatically load the package when starting R in this project
-  cat("Loading neuro2 package for development...\n")
-  devtools::load_all(quiet = TRUE)
+  # Note: Removed automatic devtools::load_all() to prevent UI comm errors
+  # You can manually run devtools::load_all() when needed
+  cat(
+    "Development tools loaded. Run devtools::load_all() to load neuro2 package.\n"
+  )
 
   # Set options
   options(
@@ -23,6 +25,6 @@ if (interactive()) {
 # Set option to convert conflict warnings to messages
 options(conflicts.policy = list(warn = FALSE))
 
-# Or use the conflicted package
+# Load conflicted package but don't auto-prefer neuro2 functions
 library(conflicted)
-conflict_prefer_all("neuro2", quiet = TRUE)
+# Removed: conflict_prefer_all("neuro2", quiet = TRUE)

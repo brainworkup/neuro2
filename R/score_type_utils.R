@@ -1,8 +1,8 @@
 # score_type_utils.R - Score Type Utilities and Compatibility
 # This file provides utility functions and ensures the score type cache is properly initialized
 
-# Source the ScoreTypeCacheR6 class
-source("R/ScoreTypeCacheR6.R")
+# Removed: source("R/ScoreTypeCacheR6.R") - not needed in proper R package
+# The ScoreTypeCacheR6 class is automatically available from the R/ directory
 
 # Initialize the global cache if it doesn't exist
 if (!exists(".ScoreTypeCacheR6")) {

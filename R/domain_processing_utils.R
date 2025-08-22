@@ -7,7 +7,8 @@
 
 #' Create a domain processor with smart defaults and validation
 #'
-#' @param domain_name The domain name (e.g., "ADHD", "Behavioral/Emotional/Social")
+#' @param domain_name The domain name
+#'  (e.g., "ADHD", "Behavioral/Emotional/Social")
 #' @param data_file Path to your neurobehavioral data file
 #' @param age_group Either "adult" or "child"
 #' @param test_lookup_file Path to the test lookup CSV

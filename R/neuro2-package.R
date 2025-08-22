@@ -150,7 +150,7 @@ create_patient_workspace <- function(
   yaml::write_yaml(workspace_config, config_path)
 
   # Create main analysis script (FIXED VERSION)
-  source("R/data_validation.R") # Load the validation functions
+  # Removed: source("R/data_validation.R") # This was causing the global env conflicts
   analysis_script <- create_fixed_analysis_script(patient_name, Sys.Date())
 
   # Write analysis script

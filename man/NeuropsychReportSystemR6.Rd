@@ -2,42 +2,22 @@
 % Please edit documentation in R/NeuropsychReportSystemR6.R
 \name{NeuropsychReportSystemR6}
 \alias{NeuropsychReportSystemR6}
-\title{NeuropsychReportSystemR6 Class}
+\title{NeuropsychReportSystemR6}
 \description{
-NeuropsychReportSystemR6 Class
-
-NeuropsychReportSystemR6 Class
+R6 class for managing neuropsychological report systems
 }
-\details{
-An R6 class that orchestrates the
-entire neuropsychological report generation system.
-This class coordinates utilities,
-template management, domain processing, and report generation.
-}
-\section{Methods}{
-
-\describe{
-\item{initialize}{Initialize the report system with configuration.}
-\item{setup_environment}{Set up the environment for report generation.}
-\item{prepare_data}{Prepare data files for report generation.}
-\item{generate_domain_files}{Generate domain-specific QMD files.}
-\item{generate_report}{Generate the complete report.}
-}
-}
-
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{config}}{Configuration parameters for the report system.}
+\item{\code{config}}{Configuration list for the report system}
 
-\item{\code{utilities}}{ReportUtilitiesR6 object for utility functions.}
+\item{\code{utilities}}{Utilities object for report operations}
 
-\item{\code{template_manager}}{ReportTemplateR6 object for template management.}
+\item{\code{template_manager}}{Template manager for handling template files}
 
-\item{\code{content_manager}}{TemplateContentManagerR6 object for content files.}
+\item{\code{content_manager}}{Content manager for template content}
 
-\item{\code{domain_processors}}{List of DomainProcessorR6
-objects for different domains.}
+\item{\code{domain_processors}}{List of domain processors for different domains}
 }
 \if{html}{\out{</div>}}
 }

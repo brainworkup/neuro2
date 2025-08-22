@@ -2,23 +2,20 @@
 % Please edit documentation in R/WorkflowRunnerR6.R
 \name{WorkflowRunnerR6}
 \alias{WorkflowRunnerR6}
-\title{Run the complete neuropsychological workflow}
+\title{WorkflowRunnerR6}
 \description{
-Run the complete neuropsychological workflow
-
-Run the complete neuropsychological workflow
+R6 class for running neuro2 workflows
 }
-\examples{
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{config}}{Configuration list for the workflow}
 
-## ------------------------------------------------
-## Method `WorkflowRunnerR6$run_workflow`
-## ------------------------------------------------
+\item{\code{patient_name}}{Name of the patient for the workflow}
 
-\dontrun{
-runner <- WorkflowRunnerR6$new(config)
-success <- runner$run_workflow()
-runner$print_summary(success)
+\item{\code{log_file}}{Path to the log file}
 }
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -28,7 +25,7 @@ runner$print_summary(success)
 \item \href{#method-WorkflowRunnerR6-process_data}{\code{WorkflowRunnerR6$process_data()}}
 \item \href{#method-WorkflowRunnerR6-generate_domains}{\code{WorkflowRunnerR6$generate_domains()}}
 \item \href{#method-WorkflowRunnerR6-generate_report}{\code{WorkflowRunnerR6$generate_report()}}
-\item \href{#method-WorkflowRunnerR6-run_workflow}{\code{WorkflowRunnerR6$run_workflow()}}
+\item \href{#method-WorkflowRunnerR6-run}{\code{WorkflowRunnerR6$run()}}
 \item \href{#method-WorkflowRunnerR6-print_summary}{\code{WorkflowRunnerR6$print_summary()}}
 \item \href{#method-WorkflowRunnerR6-clone}{\code{WorkflowRunnerR6$clone()}}
 }
@@ -37,15 +34,24 @@ runner$print_summary(success)
 \if{html}{\out{<a id="method-WorkflowRunnerR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize the workflow runner
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$new(config)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{config}}{Configuration list}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-WorkflowRunnerR6-setup_environment"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-setup_environment}{}}}
 \subsection{Method \code{setup_environment()}}{
+Set up the environment for workflow processing
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$setup_environment()}\if{html}{\out{</div>}}
 }
@@ -55,6 +61,7 @@ runner$print_summary(success)
 \if{html}{\out{<a id="method-WorkflowRunnerR6-process_data"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-process_data}{}}}
 \subsection{Method \code{process_data()}}{
+Process data for the workflow
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$process_data()}\if{html}{\out{</div>}}
 }
@@ -64,6 +71,7 @@ runner$print_summary(success)
 \if{html}{\out{<a id="method-WorkflowRunnerR6-generate_domains"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-generate_domains}{}}}
 \subsection{Method \code{generate_domains()}}{
+Generate domain files
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$generate_domains()}\if{html}{\out{</div>}}
 }
@@ -73,44 +81,19 @@ runner$print_summary(success)
 \if{html}{\out{<a id="method-WorkflowRunnerR6-generate_report"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-generate_report}{}}}
 \subsection{Method \code{generate_report()}}{
+Generate final report
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$generate_report()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-WorkflowRunnerR6-run_workflow"></a>}}
-\if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-run_workflow}{}}}
-\subsection{Method \code{run_workflow()}}{
-Executes all steps of the workflow in sequence:
-\enumerate{
-\item Environment setup
-\item Data processing
-\item Domain file generation
-\item Report generation
-}
+\if{html}{\out{<a id="method-WorkflowRunnerR6-run"></a>}}
+\if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-run}{}}}
+\subsection{Method \code{run()}}{
+Run the complete workflow
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$run_workflow()}\if{html}{\out{</div>}}
-}
-
-\subsection{Details}{
-Each step is logged and the workflow will stop if any step fails.
-The method returns TRUE if all steps complete successfully, FALSE otherwise.
-}
-
-\subsection{Returns}{
-Logical indicating workflow success (TRUE) or failure (FALSE)
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-runner <- WorkflowRunnerR6$new(config)
-success <- runner$run_workflow()
-runner$print_summary(success)
-}
-}
-\if{html}{\out{</div>}}
-
+\if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$run()}\if{html}{\out{</div>}}
 }
 
 }
@@ -118,10 +101,18 @@ runner$print_summary(success)
 \if{html}{\out{<a id="method-WorkflowRunnerR6-print_summary"></a>}}
 \if{latex}{\out{\hypertarget{method-WorkflowRunnerR6-print_summary}{}}}
 \subsection{Method \code{print_summary()}}{
+Print workflow summary
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WorkflowRunnerR6$print_summary(success)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{success}}{Whether the workflow succeeded}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-WorkflowRunnerR6-clone"></a>}}

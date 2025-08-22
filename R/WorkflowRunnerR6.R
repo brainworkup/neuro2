@@ -1,125 +1,114 @@
-# WorkflowRunnerR6 Class
-# Simplified R6 class for orchestrating the neuropsychological workflow
+# R/WorkflowRunnerR6.R
 
+#' @title WorkflowRunnerR6
+#' @description R6 class for running neuro2 workflows
+#' @field config Configuration list for the workflow
+#' @field patient_name Name of the patient for the workflow
+#' @field log_file Path to the log file
+#' @export
 WorkflowRunnerR6 <- R6::R6Class(
   "WorkflowRunnerR6",
   public = list(
-    # Properties
     config = NULL,
     patient_name = NULL,
     log_file = NULL,
 
-    # Constructor
+    #' @description Initialize the workflow runner
+    #' @param config Configuration list
     initialize = function(config) {
-      # Load utility functions
-      source("R/workflow_utils.R")
-
+      # Removed: source("R/workflow_utils.R") - not needed in R package
       self$config <- config
       self$patient_name <- config$patient$name
       self$log_file <- "workflow.log"
-
-      log_message(
-        paste0("Initialized WorkflowRunner for patient: ", self$patient_name),
-        "INFO"
-      )
     },
 
-    # Step 1: Setup environment
+    #' @description Set up the environment for workflow processing
     setup_environment = function() {
-      source("R/workflow_setup.R")
-      log_message("Setting up environment...", "WORKFLOW")
-      return(setup_workflow_environment(self$config))
+      tryCatch(
+        {
+          message("Setting up environment...")
+
+          # Load required packages
+          required_packages <- c("dplyr", "readr", "here", "yaml", "purrr")
+
+          # Removed: source("R/workflow_setup.R") - not needed in R package
+          # All functions are already available from the package namespace
+
+          invisible(TRUE)
+        },
+        error = function(e) {
+          stop("Failed to setup environment: ", e$message)
+        }
+      )
     },
 
-    # Step 2: Process data
+    #' @description Process data for the workflow
     process_data = function() {
-      source("R/workflow_data_processor.R")
-      log_message("Processing data...", "WORKFLOW")
-      return(process_workflow_data(self$config))
+      # Removed: source("R/workflow_data_processor.R") - not needed in R package
+      process_workflow_data(self$config)
     },
 
-    # Step 3: Generate domain files
+    #' @description Generate domain files
     generate_domains = function() {
-      source("R/workflow_domain_generator.R")
-      log_message("Generating domain files...", "WORKFLOW")
-      return(generate_workflow_domains(self$config))
+      # Removed: source("R/workflow_domain_generator.R") - not needed in R package
+      generate_workflow_domains(self$config)
     },
 
-    # Step 4: Generate report
+    #' @description Generate final report
     generate_report = function() {
-      source("R/workflow_report_generator.R")
-      log_message("Generating final report...", "WORKFLOW")
-      return(generate_workflow_report(self$config))
+      # Removed: source("R/workflow_report_generator.R") - not needed in R package
+      generate_workflow_report(self$config)
     },
 
-    #' Run the complete neuropsychological workflow
-    #'
-    #' Executes all steps of the workflow in sequence:
-    #' 1. Environment setup
-    #' 2. Data processing
-    #' 3. Domain file generation
-    #' 4. Report generation
-    #'
-    #' @details
-    #' Each step is logged and the workflow will stop if any step fails.
-    #' The method returns TRUE if all steps complete successfully, FALSE otherwise.
-    #'
-    #' @return Logical indicating workflow success (TRUE) or failure (FALSE)
-    #' @examples
-    #' \dontrun{
-    #' runner <- WorkflowRunnerR6$new(config)
-    #' success <- runner$run_workflow()
-    #' runner$print_summary(success)
-    #' }
-    run_workflow = function() {
-      source("R/workflow_utils.R")
+    #' @description Run the complete workflow
+    run = function() {
+      start_time <- Sys.time()
+      success <- FALSE
 
-      log_message(
-        paste0("Starting unified workflow for patient: ", self$patient_name),
-        "WORKFLOW"
+      tryCatch(
+        {
+          message("🚀 Starting neuro2 workflow for: ", self$patient_name)
+
+          # Setup
+          self$setup_environment()
+
+          # Process data
+          message("📊 Processing data...")
+          self$process_data()
+
+          # Generate domains
+          message("🔄 Generating domain files...")
+          self$generate_domains()
+
+          # Generate report
+          message("📄 Generating report...")
+          self$generate_report()
+
+          success <- TRUE
+        },
+        error = function(e) {
+          message("❌ Workflow failed: ", e$message)
+          success <- FALSE
+        }
       )
 
-      # Step 1: Setup environment
-      log_message("Step 1: Setting up environment...", "WORKFLOW")
-      if (!self$setup_environment()) {
-        log_message("Environment setup failed", "ERROR")
-        return(FALSE)
-      }
+      end_time <- Sys.time()
+      duration <- end_time - start_time
 
-      # Step 2: Process data
-      log_message("Step 2: Processing data...", "WORKFLOW")
-      if (!self$process_data()) {
-        log_message("Data processing failed", "ERROR")
-        return(FALSE)
-      }
+      # Removed: source("R/workflow_utils.R") - not needed in R package
+      self$print_summary(success)
 
-      # Step 3: Generate domain files
-      log_message("Step 3: Generating domain files...", "WORKFLOW")
-      if (!self$generate_domains()) {
-        log_message("Domain generation failed", "ERROR")
-        return(FALSE)
-      }
-
-      # Step 4: Generate report
-      log_message("Step 4: Generating final report...", "WORKFLOW")
-      if (!self$generate_report()) {
-        log_message("Report generation failed", "ERROR")
-        return(FALSE)
-      }
-
-      log_message("Workflow completed successfully", "WORKFLOW")
-      return(TRUE)
+      return(success)
     },
 
-    # Print summary
+    #' @description Print workflow summary
+    #' @param success Whether the workflow succeeded
     print_summary = function(success) {
-      source("R/workflow_report_generator.R")
-
       if (success) {
-        print_report_summary(self$config)
+        message("✅ Workflow completed successfully!")
+        message("📁 Check the output directory for results")
       } else {
-        print_colored("❌ WORKFLOW FAILED", "red")
-        print_colored("Check workflow.log for details", "red")
+        message("❌ Workflow failed. Check the log file for details.")
       }
     }
   )

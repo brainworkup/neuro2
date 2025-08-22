@@ -6,6 +6,9 @@
 \usage{
 check_neuro2_setup()
 }
+\value{
+TRUE if setup is valid, FALSE otherwise
+}
 \description{
 Checks if all essential components are available
 }

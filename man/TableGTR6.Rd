@@ -2,13 +2,13 @@
 % Please edit documentation in R/TableGTR6.R
 \name{TableGTR6}
 \alias{TableGTR6}
-\title{TableGTR6 R6 Class}
+\title{TableGTR6}
 \description{
-TableGTR6 R6 Class
-
-TableGTR6 R6 Class
+R6 class for creating formatted tables using gt
 }
 \details{
+TableGTR6 R6 Class
+
 A modified version of the TableGT R6 class that doesn't automatically save the table.
 This class is identical to TableGT but removes the automatic saving in the build_table() method.
 }
@@ -18,6 +18,7 @@ This class is identical to TableGT but removes the automatic saving in the build
 \item{initialize}{Initialize a new TableGTR6 object with configuration and data.}
 \item{build_table}{Construct and return the formatted \code{gt} table, without saving.}
 \item{save_table}{Save the table to PNG and PDF files.}
+\item{handle_multi_score_battery}{Handle multi-score battery data formatting.}
 }
 }
 
