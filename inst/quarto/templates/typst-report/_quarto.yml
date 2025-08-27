@@ -2,9 +2,9 @@ project:
   type: default
   title: "neuro2"
   execute-dir: project
-  # pre-render:
-  # - generate_all_domain_assets.R
-  # - generate_domain_files.R
+  pre-render:
+    - generate_all_domain_assets.R
+    - generate_domain_files.R
 
   render:
     - template.qmd
