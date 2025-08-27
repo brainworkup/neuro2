@@ -324,32 +324,37 @@ DomainProcessorFactoryR6 <- R6::R6Class(
 
     # Create error handler
     create_error_handler = function() {
+      # Private error handling functions
+      .handle_error <- function(error, context = NULL) {
+        msg <- if (!is.null(context)) {
+          paste0("[", context, "] ", error$message)
+        } else {
+          error$message
+        }
+        self$logger$error(msg)
+      }
+
+      .handle_warning <- function(warning, context = NULL) {
+        msg <- if (!is.null(context)) {
+          paste0("[", context, "] ", warning$message)
+        } else {
+          warning$message
+        }
+        self$logger$warn(msg)
+      }
+
       list(
-        handle_error = function(error, context = NULL) {
-          msg <- if (!is.null(context)) {
-            paste0("[", context, "] ", error$message)
-          } else {
-            error$message
-          }
-          self$logger$error(msg)
-        },
-        handle_warning = function(warning, context = NULL) {
-          msg <- if (!is.null(context)) {
-            paste0("[", context, "] ", warning$message)
-          } else {
-            warning$message
-          }
-          self$logger$warn(msg)
-        },
+        handle_error = .handle_error,
+        handle_warning = .handle_warning,
         safe_execute = function(expr, context = NULL, fallback = NULL) {
           tryCatch(
             expr(),
             error = function(e) {
-              private$create_error_handler()$handle_error(e, context)
+              .handle_error(e, context)
               return(fallback)
             },
             warning = function(w) {
-              private$create_error_handler()$handle_warning(w, context)
+              .handle_warning(w, context)
               invokeRestart("muffleWarning")
             }
           )
