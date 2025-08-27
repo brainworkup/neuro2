@@ -22,7 +22,6 @@ process_workflow_data <- function(config) {
     config$processing$use_duckdb && file.exists("R/duckdb_neuropsych_loader.R")
   ) {
     log_message("Using DuckDB data processor", "DATA")
-    # Removed: source("R/duckdb_neuropsych_loader.R") - functions available from package
 
     # Process the data
     load_data_duckdb(
