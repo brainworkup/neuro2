@@ -59,7 +59,7 @@ pak::pak("brainworkup/neuro2")
 ``` r
 # Core dependencies
 install.packages(c(
-  "dplyr", "tidyr", "ggplot2", "stringr", "here", "glue", "yaml", "quarto ","gt", "gtExtras", "janitor", "R6", "readr", "readxl",
+  "dplyr", "tidyr", "ggplot2", "stringr", "here", "glue", "yaml", "quarto", "gt", "gtExtras", "janitor", "R6", "readr", "readxl",
   "DBI", "duckdb", "arrow", "webshot2"
 ))
 ```
