@@ -20,14 +20,15 @@ library(neuro2)
 
 # Introduction
 
-The `neuro2` package provides tools for generating comprehensive neuropsychological reports using Quarto and Typst templates. This vignette demonstrates the basic workflow for creating reports from neuropsychological test data.
+The `neuro2` package provides tools for generating comprehensive neuropsychological reports using Quarto and Typst templates.
+This vignette demonstrates the basic workflow for creating reports from neuropsychological test data.
 
 ## Key Features
 
-- **Automated report generation** from neuropsychological test data
-- **Domain-specific processing** for cognitive domains (IQ, memory, executive function, etc.)
-- **Flexible templates** supporting multiple output formats (HTML, PDF, Typst)
-- **Standardized reporting** following clinical best practices
+-   **Automated report generation** from neuropsychological test data
+-   **Domain-specific processing** for cognitive domains (IQ, memory, executive function, etc.)
+-   **Flexible templates** supporting multiple output formats (HTML, PDF, Typst)
+-   **Standardized reporting** following clinical best practices
 
 ## Basic Workflow
 
@@ -41,13 +42,14 @@ check_dependencies()
 
 ### 2. Prepare Your Data
 
-The package accepts neuropsychological data in CSV or RDA format. Your data should include test results organized by cognitive domains.
+The package accepts neuropsychological data in CSV or RDA format.
+Your data should include test results organized by cognitive domains.
 
 ```{r eval=FALSE}
 # Example data structure
 data_file <- system.file(
   "extdata",
-  "neurocog.rda",
+  "neurocog.csv",
   package = "neuro2"
 )
 ```
@@ -67,7 +69,7 @@ Create a comprehensive neuropsychological report:
 ```{r eval=FALSE}
 report_file <- generate_report(
   data_file = data_file,
-  template_name = "report-template",
+  template_name = "template.qmd",
   output_dir = "output",
   output_format = "html"
 )
@@ -77,25 +79,25 @@ report_file <- generate_report(
 
 The package includes several templates:
 
-- `report-template`: Comprehensive neuropsychological report
-- `domain-specific`: Individual domain reports
-- `feedback`: Client feedback reports
+-   `report-template`: Comprehensive neuropsychological report
+-   `domain-specific`: Individual domain reports
+-   `feedback`: Client feedback reports
 
 ## Cognitive Domains
 
 The package processes the following cognitive domains:
 
-- **IQ**: Intelligence and general cognitive ability
-- **Academics**: Reading, writing, and math skills
-- **Verbal**: Language and verbal processing
-- **Spatial**: Visuospatial and visuoconstructional abilities
-- **Memory**: Learning and memory functions
-- **Executive**: Executive functions and cognitive control
-- **Motor**: Motor and psychomotor functions
-- **Social**: Social cognition and emotional processing
-- **ADHD**: Attention and hyperactivity measures
-- **Emotion**: Emotional and behavioral functioning
-- **Adaptive**: Adaptive behavior and daily living skills
+-   **IQ**: Intelligence and general cognitive ability
+-   **Academics**: Reading, writing, and math skills
+-   **Verbal**: Language and verbal processing
+-   **Spatial**: Visuospatial and visuoconstructional abilities
+-   **Memory**: Learning and memory functions
+-   **Executive**: Executive functions and cognitive control
+-   **Motor**: Motor and psychomotor functions
+-   **Social**: Social cognition and emotional processing
+-   **ADHD**: Attention and hyperactivity measures
+-   **Emotion**: Emotional and behavioral functioning
+-   **Adaptive**: Adaptive behavior and daily living skills
 
 ## Customization
 
@@ -133,26 +135,26 @@ client_dir <- create_output_dir(
 
 ### Common Issues
 
-1. **Missing dependencies**: Run `check_dependencies()` to identify missing packages
-2. **Data format issues**: Ensure data follows expected structure
-3. **Template not found**: Verify template names and locations
+1.  **Missing dependencies**: Run `check_dependencies()` to identify missing packages
+2.  **Data format issues**: Ensure data follows expected structure
+3.  **Template not found**: Verify template names and locations
 
 ### Getting Help
 
 For additional help:
 
-- Check function documentation: `?generate_report`
-- View package vignettes: `browseVignettes("neuro2")`
-- Report issues on GitHub
+-   Check function documentation: `?generate_report`
+-   View package vignettes: `browseVignettes("neuro2")`
+-   Report issues on GitHub
 
 ## Example Output
 
 When you run `generate_report()`, you'll get a comprehensive neuropsychological report that includes:
 
-- Client demographics and referral information
-- Test administration details
-- Domain-specific results and interpretations
-- Diagnostic impressions
-- Recommendations for treatment and accommodations
+-   Client demographics and referral information
+-   Test administration details
+-   Domain-specific results and interpretations
+-   Diagnostic impressions
+-   Recommendations for treatment and accommodations
 
 The report follows professional standards for neuropsychological assessment and can be customized for different clinical contexts.
