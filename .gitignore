@@ -100,3 +100,6 @@ scratch.R
 **/*.quarto_ipynb
 .claude/
 _02-05_memory.typ
+tests/test_data.csv
+data/assessment_report.md
+patial_text.qmd

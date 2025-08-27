@@ -12,12 +12,25 @@ library(dplyr)
 library(gt)
 library(ggplot2)
 
-# Source R6 classes
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGTR6.R")
-source("R/score_type_utils.R")
+# Prefer loading local neuro2 package code instead of sourcing files piecemeal
+load_neuro2_dev <- function() {
+  if (file.exists(here::here("DESCRIPTION"))) {
+    if (requireNamespace("devtools", quietly = TRUE)) {
+      try(devtools::load_all(here::here(), quiet = TRUE), silent = TRUE)
+      return(TRUE)
+    }
+    if (requireNamespace("pkgload", quietly = TRUE)) {
+      try(pkgload::load_all(here::here(), quiet = TRUE), silent = TRUE)
+      return(TRUE)
+    }
+  }
+  FALSE
+}
+
+if (!load_neuro2_dev()) {
+  # Fallback to installed package
+  suppressPackageStartupMessages(library(neuro2))
+}
 
 cat("Generating all domain table and figure files...\n\n")
 

@@ -13,7 +13,24 @@ library(dplyr)
 library(readr)
 library(yaml)
 library(arrow)
-library(neuro2) # Load the package instead of sourcing individual files
+# Prefer loading local package source first for consistency with development
+load_neuro2_dev <- function() {
+  if (file.exists(here::here("DESCRIPTION"))) {
+    if (requireNamespace("devtools", quietly = TRUE)) {
+      try(devtools::load_all(here::here(), quiet = TRUE), silent = TRUE)
+      return(TRUE)
+    }
+    if (requireNamespace("pkgload", quietly = TRUE)) {
+      try(pkgload::load_all(here::here(), quiet = TRUE), silent = TRUE)
+      return(TRUE)
+    }
+  }
+  FALSE
+}
+
+if (!load_neuro2_dev()) {
+  suppressPackageStartupMessages(library(neuro2))
+}
 
 # Removed source() calls - all functions are available from the neuro2 package:
 # source("R/DomainProcessorR6.R")
