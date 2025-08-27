@@ -5,16 +5,15 @@
 #'
 #' @param config Configuration list from load_workflow_config
 #' @return Logical indicating success
+#' @rdname process_workflow_data
 #' @export
 process_workflow_data <- function(config) {
-  # Removed: source("R/workflow_utils.R") - not needed in R package
-
   log_message("Processing data...", "WORKFLOW")
 
   # Source the data processor module if it exists
   if (file.exists("scripts/data_processor_module.R")) {
     log_message("Running data_processor_module.R", "DATA")
-    source("scripts/data_processor_module.R") # This is external to package, so kept
+    source("scripts/data_processor_module.R")
     return(TRUE)
   }
 

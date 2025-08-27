@@ -42,7 +42,7 @@ if (length(missing_files) > 0) {
     "yellow"
   )
   answer <- readline(prompt = "")
-  
+
   if (tolower(answer) == "y") {
     template_dir <- "inst/quarto/templates/typst-report"
     for (file in missing_files) {
@@ -69,7 +69,7 @@ config <- load_workflow_config(config_file)
 
 # Create and run the workflow
 workflow <- WorkflowRunnerR6$new(config)
-result <- workflow$run_workflow()
+result <- workflow$run()
 
 # Print summary
 workflow$print_summary(result)

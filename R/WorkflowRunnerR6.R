@@ -30,9 +30,6 @@ WorkflowRunnerR6 <- R6::R6Class(
           # Load required packages
           required_packages <- c("dplyr", "readr", "here", "yaml", "purrr")
 
-          # Removed: source("R/workflow_setup.R") - not needed in R package
-          # All functions are already available from the package namespace
-
           invisible(TRUE)
         },
         error = function(e) {
