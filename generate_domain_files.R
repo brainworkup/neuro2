@@ -70,7 +70,11 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
 
       # Find lines with Quarto include; use fixed matching to avoid escaping '{'
       include_lines <- grep("{{< include", content, value = TRUE, fixed = TRUE)
-      include_lines <- include_lines[grepl("_text.qmd", include_lines, fixed = TRUE)]
+      include_lines <- include_lines[grepl(
+        "_text.qmd",
+        include_lines,
+        fixed = TRUE
+      )]
 
       for (include_line in include_lines) {
         # Extract the text filename appearing after `include`
@@ -186,22 +190,22 @@ tryCatch(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
       ),
-      "Psychiatric Disorders" = list(
-        pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
-      "Personality Disorders" = list(
-        pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
-      "Psychosocial Problems" = list(
-        pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
-      "Substance Use" = list(
-        pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
+      # "Psychiatric Disorders" = list(
+      #   pheno = "emotion",
+      #   input_file = "data/neurobehav.parquet"
+      # ),
+      # "Personality Disorders" = list(
+      #   pheno = "emotion",
+      #   input_file = "data/neurobehav.parquet"
+      # ),
+      # "Psychosocial Problems" = list(
+      #   pheno = "emotion",
+      #   input_file = "data/neurobehav.parquet"
+      # ),
+      # "Substance Use" = list(
+      #   pheno = "emotion",
+      #   input_file = "data/neurobehav.parquet"
+      # ),
       "Emotional/Behavioral/Personality" = list(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
