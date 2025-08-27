@@ -251,7 +251,7 @@ available_domains <- unique(list.files(pattern = "^_02-[0-9]{2}_.*\\.qmd$"))
 
 
 available_domains <- available_domains[
-  !grepl("_text\\.qmd$", available_domains)
+  !grepl("_text.*\\.qmd$", available_domains)
 ]
 available_domains <- sort(available_domains)
 
@@ -264,7 +264,9 @@ for (file in available_domains) {
 # Create the include file with unique entries only
 if (length(available_domains) > 0) {
   include_content <- paste0("{{< include ", available_domains, " >}}")
-  writeLines(include_content, "_domains_to_include.qmd")
+  # Add blank lines between each include statement for Quarto compatibility
+  include_with_breaks <- paste(include_content, collapse = "\n\n")
+  writeLines(include_with_breaks, "_domains_to_include.qmd")
   message(paste(
     "\nCreated _domains_to_include.qmd with",
     length(available_domains),

@@ -3,7 +3,7 @@
 
 # Logging setup and functions
 #' Setup Logging
-#' 
+#'
 #' @param log_file Path to log file
 #' @return Log file path
 #' @export
@@ -14,7 +14,7 @@ setup_logging <- function(log_file = "workflow.log") {
 }
 
 #' Log Message
-#' 
+#'
 #' @param message Message to log
 #' @param type Type of message (INFO, WARNING, ERROR, etc)
 #' @param log_file Path to log file

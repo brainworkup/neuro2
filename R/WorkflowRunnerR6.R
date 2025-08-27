@@ -16,7 +16,6 @@ WorkflowRunnerR6 <- R6::R6Class(
     #' @description Initialize the workflow runner
     #' @param config Configuration list
     initialize = function(config) {
-      # Removed: source("R/workflow_utils.R") - not needed in R package
       self$config <- config
       self$patient_name <- config$patient$name
       self$log_file <- "workflow.log"
@@ -44,19 +43,16 @@ WorkflowRunnerR6 <- R6::R6Class(
 
     #' @description Process data for the workflow
     process_data = function() {
-      # Removed: source("R/workflow_data_processor.R") - not needed in R package
       process_workflow_data(self$config)
     },
 
     #' @description Generate domain files
     generate_domains = function() {
-      # Removed: source("R/workflow_domain_generator.R") - not needed in R package
       generate_workflow_domains(self$config)
     },
 
     #' @description Generate final report
     generate_report = function() {
-      # Removed: source("R/workflow_report_generator.R") - not needed in R package
       generate_workflow_report(self$config)
     },
 
@@ -95,7 +91,6 @@ WorkflowRunnerR6 <- R6::R6Class(
       end_time <- Sys.time()
       duration <- end_time - start_time
 
-      # Removed: source("R/workflow_utils.R") - not needed in R package
       self$print_summary(success)
 
       return(success)

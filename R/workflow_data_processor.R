@@ -2,7 +2,7 @@
 # Handles data loading and processing for the workflow
 
 #' Process Workflow Data
-#' 
+#'
 #' @param config Configuration list from load_workflow_config
 #' @return Logical indicating success
 #' @export

@@ -3135,25 +3135,159 @@ DomainProcessorR6 <- R6::R6Class(
     build_r_processing_block = function() {
       # Format domains properly as a vector if multiple
       domains_arg <- if (length(self$domains) == 1) {
-        paste0("'", self$domains, "'")
+        paste0("\"", self$domains, "\"")
       } else {
-        paste0("c(", paste0("'", self$domains, "'", collapse = ", "), ")")
+        paste0(
+          "c(\n  ",
+          paste0("\"", self$domains, "\"", collapse = ",\n  "),
+          "\n)"
+        )
+      }
+
+      # Get input file path
+      input_path <- if (grepl("^data/", self$input_file)) {
+        self$input_file
+      } else {
+        paste0("data/", basename(self$input_file))
       }
 
       paste0(
+        # Setup block
         "```{r}\n",
-        "#| label: process-",
+        "#| label: setup-",
         tolower(self$pheno),
         "\n",
         "#| include: false\n\n",
-        "# Process data and generate table/figures\n",
-        "# Ensure neuro2 package is loaded for R6 classes\n", 
-        "library(neuro2)\n",
-        "process_domain_data('",
-        self$pheno,
-        "', ",
+
+        "# Load required packages\n",
+        "suppressPackageStartupMessages({\n",
+        "  library(here)\n",
+        "  library(tidyverse)\n",
+        "  library(gt)\n",
+        "  library(gtExtras)\n",
+        "  library(neuro2)\n",
+        "})\n\n",
+
+        "# Define domains\n",
+        "domains <- ",
         domains_arg,
+        "\n\n",
+
+        "# Load and process data\n",
+        "processor <- DomainProcessorR6$new(\n",
+        "  domains = domains,\n",
+        "  pheno = \"",
+        self$pheno,
+        "\",\n",
+        "  input_file = \"",
+        input_path,
+        "\"\n",
         ")\n\n",
+
+        "processor$load_data()\n",
+        "processor$filter_by_domain()\n",
+        "processor$select_columns()\n\n",
+
+        "# Main data object\n",
+        tolower(self$pheno),
+        "_data <- processor$data\n",
+        "```\n\n",
+
+        # Text generation block
+        "```{r}\n",
+        "#| label: text-",
+        tolower(self$pheno),
+        "\n",
+        "#| cache: true\n",
+        "#| include: false\n",
+        "#| results: asis\n\n",
+
+        "# Generate text using R6 class\n",
+        "if (nrow(",
+        tolower(self$pheno),
+        "_data) > 0) {\n",
+        "  results_processor <- NeuropsychResultsR6$new(\n",
+        "    data = ",
+        tolower(self$pheno),
+        "_data,\n",
+        "    file = \"_02-",
+        self$number,
+        "_",
+        tolower(self$pheno),
+        "_text.qmd\"\n",
+        "  )\n",
+        "  results_processor$process()\n",
+        "}\n",
+        "```\n\n",
+
+        # Table generation block
+        "```{r}\n",
+        "#| label: qtbl-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+
+        "if (nrow(",
+        tolower(self$pheno),
+        "_data) > 0) {\n",
+        "  # Generate table\n",
+        "  table_",
+        tolower(self$pheno),
+        " <- TableGTR6$new(\n",
+        "    data = ",
+        tolower(self$pheno),
+        "_data,\n",
+        "    pheno = \"",
+        self$pheno,
+        "\",\n",
+        "    table_name = \"table_",
+        tolower(self$pheno),
+        "\",\n",
+        "    vertical_padding = 0\n",
+        "  )\n",
+        "  tbl <- table_",
+        tolower(self$pheno),
+        "$build_table()\n",
+        "  table_",
+        tolower(self$pheno),
+        "$save_table(tbl, dir = here::here())\n",
+        "}\n",
+        "```\n\n",
+
+        # Figure generation block
+        "```{r}\n",
+        "#| label: fig-",
+        tolower(self$pheno),
+        "\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+
+        "if (nrow(",
+        tolower(self$pheno),
+        "_data) > 0) {\n",
+        "  # Generate figure\n",
+        "  if (all(c(\"z_mean_subdomain\", \"subdomain\") %in% names(",
+        tolower(self$pheno),
+        "_data))) {\n",
+        "    dotplot_",
+        tolower(self$pheno),
+        " <- DotplotR6$new(\n",
+        "      data = ",
+        tolower(self$pheno),
+        "_data,\n",
+        "      x = \"z_mean_subdomain\",\n",
+        "      y = \"subdomain\",\n",
+        "      filename = here::here(\"fig_",
+        tolower(self$pheno),
+        "_subdomain.svg\")\n",
+        "    )\n",
+        "    dotplot_",
+        tolower(self$pheno),
+        "$create_plot()\n",
+        "  }\n",
+        "}\n\n",
+
         private$get_plot_title_block(self$domains[1]),
         "```\n\n"
       )
@@ -3205,19 +3339,15 @@ DomainProcessorR6 <- R6::R6Class(
         "```\n\n",
 
         "```{=typst}\n",
-        "// Define the title of the domain\n",
         "#let title = \"",
         self$domains[1],
         "\"\n\n",
-        "// Define the file name of the table\n",
         "#let file_qtbl = \"table_",
         tolower(self$pheno),
         ".png\"\n\n",
-        "// Define the file name of the figure\n",
         "#let file_fig = \"fig_",
         tolower(self$pheno),
         "_subdomain.svg\"\n\n",
-        "// The title is appended with ' Scores'\n",
         "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 

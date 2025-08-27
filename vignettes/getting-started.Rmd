@@ -1,0 +1,158 @@
+---
+title: "Getting Started with NeurotypR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with NeurotypR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(NeurotypR)
+```
+
+# Introduction
+
+The `NeurotypR` package provides tools for generating comprehensive neuropsychological reports using Quarto and Typst templates. This vignette demonstrates the basic workflow for creating reports from neuropsychological test data.
+
+## Key Features
+
+- **Automated report generation** from neuropsychological test data
+- **Domain-specific processing** for cognitive domains (IQ, memory, executive function, etc.)
+- **Flexible templates** supporting multiple output formats (HTML, PDF, Typst)
+- **Standardized reporting** following clinical best practices
+
+## Basic Workflow
+
+### 1. Check Dependencies
+
+Before using the package, ensure all required dependencies are installed:
+
+```{r eval=FALSE}
+check_dependencies()
+```
+
+### 2. Prepare Your Data
+
+The package accepts neuropsychological data in CSV or RDA format. Your data should include test results organized by cognitive domains.
+
+```{r eval=FALSE}
+# Example data structure
+data_file <- system.file(
+  "extdata",
+  "neurocog.rda",
+  package = "NeurotypR"
+)
+```
+
+### 3. Process Domain Data
+
+Process your neuropsychological data by cognitive domains:
+
+```{r eval=FALSE}
+processed_data <- process_domains(data_file)
+```
+
+### 4. Generate Report
+
+Create a comprehensive neuropsychological report:
+
+```{r eval=FALSE}
+report_file <- generate_report(
+  data_file = data_file,
+  template_name = "report-template",
+  output_dir = "output",
+  output_format = "html"
+)
+```
+
+## Available Templates
+
+The package includes several templates:
+
+- `report-template`: Comprehensive neuropsychological report
+- `domain-specific`: Individual domain reports
+- `feedback`: Client feedback reports
+
+## Cognitive Domains
+
+The package processes the following cognitive domains:
+
+- **IQ**: Intelligence and general cognitive ability
+- **Academics**: Reading, writing, and math skills
+- **Verbal**: Language and verbal processing
+- **Spatial**: Visuospatial and visuoconstructional abilities
+- **Memory**: Learning and memory functions
+- **Executive**: Executive functions and cognitive control
+- **Motor**: Motor and psychomotor functions
+- **Social**: Social cognition and emotional processing
+- **ADHD**: Attention and hyperactivity measures
+- **Emotion**: Emotional and behavioral functioning
+- **Adaptive**: Adaptive behavior and daily living skills
+
+## Customization
+
+### Custom Templates
+
+You can create custom templates by placing Quarto (.qmd) files in the `inst/templates/` directory.
+
+### Custom Processing
+
+Domain processing can be customized by modifying the `process_domains()` function or creating domain-specific processing functions.
+
+## Advanced Usage
+
+### Batch Processing
+
+Process multiple reports:
+
+```{r eval=FALSE}
+data_files <- list.files("data", pattern = "*.csv", full.names = FALSE)
+reports <- lapply(data_files, generate_report)
+```
+
+### Custom Output Directories
+
+Organize reports by client or date:
+
+```{r eval=FALSE}
+client_dir <- create_output_dir(
+  "reports",
+  subdirs = c("client_001", "client_002")
+)
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Missing dependencies**: Run `check_dependencies()` to identify missing packages
+2. **Data format issues**: Ensure data follows expected structure
+3. **Template not found**: Verify template names and locations
+
+### Getting Help
+
+For additional help:
+
+- Check function documentation: `?generate_report`
+- View package vignettes: `browseVignettes("NeurotypR")`
+- Report issues on GitHub
+
+## Example Output
+
+When you run `generate_report()`, you'll get a comprehensive neuropsychological report that includes:
+
+- Client demographics and referral information
+- Test administration details
+- Domain-specific results and interpretations
+- Diagnostic impressions
+- Recommendations for treatment and accommodations
+
+The report follows professional standards for neuropsychological assessment and can be customized for different clinical contexts.

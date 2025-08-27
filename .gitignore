@@ -99,3 +99,4 @@ scratch.R
 
 **/*.quarto_ipynb
 .claude/
+_02-05_memory.typ

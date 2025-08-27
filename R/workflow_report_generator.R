@@ -2,7 +2,7 @@
 # Handles report generation for the workflow
 
 #' Generate Workflow Report
-#' 
+#'
 #' @param config Configuration list from load_workflow_config
 #' @return Logical indicating success
 #' @export
