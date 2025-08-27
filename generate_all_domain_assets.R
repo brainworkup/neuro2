@@ -28,8 +28,26 @@ load_neuro2_dev <- function() {
 }
 
 if (!load_neuro2_dev()) {
-  # Fallback to installed package
-  suppressPackageStartupMessages(library(neuro2))
+  # Fallback to installed package; if that fails, source classes directly
+  ok <- FALSE
+  try({
+    suppressPackageStartupMessages(library(neuro2))
+    ok <- TRUE
+  }, silent = TRUE)
+  if (!ok) {
+    classes <- c(
+      "R/ScoreTypeCacheR6.R",
+      "R/score_type_utils.R",
+      "R/DomainProcessorR6.R",
+      "R/NeuropsychResultsR6.R",
+      "R/TableGTR6.R",
+      "R/DotplotR6.R"
+    )
+    for (cls in classes) {
+      fp <- here::here(cls)
+      if (file.exists(fp)) source(fp)
+    }
+  }
 }
 
 cat("Generating all domain table and figure files...\n\n")

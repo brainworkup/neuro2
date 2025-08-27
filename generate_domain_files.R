@@ -29,16 +29,31 @@ load_neuro2_dev <- function() {
 }
 
 if (!load_neuro2_dev()) {
-  suppressPackageStartupMessages(library(neuro2))
+  # Fallback to installed package; if that fails, source minimal classes directly
+  ok <- FALSE
+  try(
+    {
+      suppressPackageStartupMessages(library(neuro2))
+      ok <- TRUE
+    },
+    silent = TRUE
+  )
+  if (!ok) {
+    classes <- c(
+      "R/ScoreTypeCacheR6.R",
+      "R/score_type_utils.R",
+      "R/DomainProcessorR6.R",
+      "R/NeuropsychResultsR6.R",
+      "R/TableGTR6.R",
+      "R/DotplotR6.R"
+    )
+    for (cls in classes) {
+      fp <- here::here(cls)
+      if (file.exists(fp)) source(fp)
+    }
+  }
 }
 
-# Removed source() calls - all functions are available from the neuro2 package:
-# source("R/DomainProcessorR6.R")
-# source("R/NeuropsychResultsR6.R")
-# source("R/DotplotR6.R")
-# source("R/TableGTR6.R")
-# source("R/score_type_utils.R")
-# source("R/domain_validation_utils.R")
 
 # Function to generate placeholder text files
 generate_text_files <- function(generated_files, verbose = TRUE) {
@@ -53,23 +68,24 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
       # Read the QMD file to find text file references
       content <- readLines(qmd_file, warn = FALSE)
 
-      # Look for {{< include patterns (escape the curly braces)
-      include_lines <- grep(
-        '\\{\\{< include.*_text\\.qmd',
-        content,
-        value = TRUE
-      )
+      # Find lines with Quarto include; use fixed matching to avoid escaping '{'
+      include_lines <- grep("{{< include", content, value = TRUE, fixed = TRUE)
+      include_lines <- include_lines[grepl("_text.qmd", include_lines, fixed = TRUE)]
 
       for (include_line in include_lines) {
-        # Extract the text filename
-        text_file_match <- regmatches(
-          include_line,
-          regexpr('[^/\\s]+_text\\.qmd', include_line)
-        )
+        # Extract the text filename appearing after `include`
+        # Example: {{< include _02-01_iq_text.qmd >}}
+        # Extract the text filename token after '{{< include '
+        start_idx <- regexpr("{{< include ", include_line, fixed = TRUE)
+        text_file <- NA_character_
+        if (start_idx > 0) {
+          start <- start_idx + nchar("{{< include ")
+          rest <- substring(include_line, start)
+          # Take characters until first space or '>'
+          text_file <- sub("[ >].*$", "", rest, perl = TRUE)
+        }
 
-        if (length(text_file_match) > 0) {
-          text_file <- text_file_match[1]
-
+        if (!is.na(text_file) && nchar(text_file) > 0) {
           if (!file.exists(text_file)) {
             # Extract domain name from the text file name
             domain_name <- gsub("_[0-9]+-[0-9]+-([^_]+)_.*", "\\1", text_file)

@@ -58,6 +58,7 @@ TableGTR6 <- R6::R6Class(
     vertical_padding = NULL,
     multiline = TRUE,
     row_score_type_map = NULL,
+    score_type_cache = NULL,
 
     #' @description
     #' Initialize a new TableGTR6 object with configuration and data.
@@ -163,17 +164,31 @@ TableGTR6 <- R6::R6Class(
       # Use cached score type mappings instead of rebuilding every time
       existing_groups <- unique(self$data$test_name)
 
-      # Initialize/ensure cache is built (this runs only once across all domains)
-      if (!exists(".ScoreTypeCache")) {
-        # ScoreTypeCacheR6 is available through the package namespace
-        .ScoreTypeCache <- ScoreTypeCacheR6$new()
+      # Initialize/ensure a cache instance available to all methods
+      if (is.null(self$score_type_cache)) {
+        # Try several known locations/names for compatibility
+        cache <- NULL
+        if (exists(".ScoreTypeCache", envir = .GlobalEnv)) {
+          cache <- get(".ScoreTypeCache", envir = .GlobalEnv)
+        } else if (exists(".ScoreTypeCacheR6", envir = .GlobalEnv)) {
+          cache <- get(".ScoreTypeCacheR6", envir = .GlobalEnv)
+        }
+        if (is.null(cache)) {
+          cache <- ScoreTypeCacheR6$new()
+          # Best-effort: expose to GlobalEnv for other legacy code paths
+          try({
+            assign(".ScoreTypeCache", cache, envir = .GlobalEnv)
+            assign(".ScoreTypeCacheR6", cache, envir = .GlobalEnv)
+          }, silent = TRUE)
+        }
+        self$score_type_cache <- cache
       }
-      .ScoreTypeCache$build_mappings()
+      self$score_type_cache$build_mappings()
 
       # Get score type groups efficiently
       if (length(self$grp_list) == 0) {
         # Auto-detect score groups using cache
-        self$grp_list <- .ScoreTypeCache$get_score_groups(existing_groups)
+        self$grp_list <- self$score_type_cache$get_score_groups(existing_groups)
         message(paste(
           "Auto-detected score groups for",
           length(existing_groups),
@@ -184,14 +199,14 @@ TableGTR6 <- R6::R6Class(
       # Get relevant footnotes efficiently
       score_types_needed <- names(self$grp_list)
       if (length(self$fn_list) == 0) {
-        self$fn_list <- .ScoreTypeCache$get_footnotes(score_types_needed)
+        self$fn_list <- self$score_type_cache$get_footnotes(score_types_needed)
       }
 
       # Handle multi-score batteries efficiently - fix the sapply issue
       multi_score_results <- sapply(
         existing_groups,
         function(x) {
-          .ScoreTypeCache$is_multi_score_battery(x)
+          self$score_type_cache$is_multi_score_battery(x)
         },
         USE.NAMES = TRUE,
         simplify = TRUE
@@ -299,7 +314,7 @@ TableGTR6 <- R6::R6Class(
       # Add battery-specific footnotes
       if (length(standard_scales) > 0) {
         fn_key <- paste0(tolower(battery), "_standard")
-        self$fn_list[[fn_key]] <- .ScoreTypeCache$fn_list$standard_score
+        self$fn_list[[fn_key]] <- self$score_type_cache$fn_list$standard_score
 
         tbl <- tbl |>
           gt::tab_footnote(
@@ -310,7 +325,7 @@ TableGTR6 <- R6::R6Class(
 
       if (length(scaled_scales) > 0) {
         fn_key <- paste0(tolower(battery), "_scaled")
-        self$fn_list[[fn_key]] <- .ScoreTypeCache$fn_list$scaled_score
+        self$fn_list[[fn_key]] <- self$score_type_cache$fn_list$scaled_score
 
         tbl <- tbl |>
           gt::tab_footnote(

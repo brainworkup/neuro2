@@ -36,13 +36,38 @@ load_neuro2_dev <- function() {
   return(NULL)
 }
 
-loader <- load_neuro2_dev()
-if (is.null(loader)) {
-  # Fallback to installed package if dev load wasn’t possible
-  suppressPackageStartupMessages(library(neuro2))
-} else {
-  message(sprintf("Loaded neuro2 from source via %s.", loader))
+safe_load_neuro2 <- function() {
+  loader <- load_neuro2_dev()
+  if (!is.null(loader)) {
+    message(sprintf("Loaded neuro2 from source via %s.", loader))
+    return(TRUE)
+  }
+  # Try installed package
+  ok <- FALSE
+  try({
+    suppressPackageStartupMessages(library(neuro2))
+    ok <- TRUE
+  }, silent = TRUE)
+  if (ok) return(TRUE)
+
+  # As a last resort, source the minimal set of classes used by the template
+  files <- c(
+    "R/ScoreTypeCacheR6.R",
+    "R/score_type_utils.R",
+    "R/DomainProcessorR6.R",
+    "R/NeuropsychResultsR6.R",
+    "R/TableGTR6.R",
+    "R/DotplotR6.R"
+  )
+  for (f in files) {
+    if (file.exists(here::here(f))) {
+      source(here::here(f), local = TRUE)
+    }
+  }
+  TRUE
 }
+
+invisible(safe_load_neuro2())
 
 # Set knitr options
 knitr::opts_knit$set(
