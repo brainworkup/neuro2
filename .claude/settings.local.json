@@ -4,7 +4,19 @@
       "Bash(find:*)",
       "Bash(R:*)",
       "Bash(claude mcp add:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(quarto render:*)",
+      "Bash(rm:*)",
+      "Bash(cp:*)",
+      "Bash(grep:*)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(if [[ ! \"$file\" =~ _text ]])",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(sed:*)",
+      "Bash(fi)",
+      "Bash(done)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

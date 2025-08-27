@@ -96,3 +96,6 @@ _02-10_emotion_child.pdf
 .lintr
 settings.json
 scratch.R
+
+**/*.quarto_ipynb
+.claude/

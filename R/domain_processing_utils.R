@@ -222,6 +222,12 @@ process_multi_rater_domain <- function(
 # ============================================================================
 
 #' Process domain data (main processing pipeline)
+#' Process Domain Data
+#' 
+#' @param pheno Phenotype identifier for the domain
+#' @param domains Domain names to process
+#' @return Processed data
+#' @export
 process_domain_data <- function(pheno, domains) {
   # Load and process data
   processor <- DomainProcessorR6$new(

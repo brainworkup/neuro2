@@ -135,8 +135,10 @@ A new TableGTR6 object
 \if{html}{\out{<a id="method-TableGTR6-build_table"></a>}}
 \if{latex}{\out{\hypertarget{method-TableGTR6-build_table}{}}}
 \subsection{Method \code{build_table()}}{
-Construct and return the formatted \code{gt} table using optimized score type handling.
-This method builds the table without automatically saving it, using cached score type
+Construct and return the formatted \code{gt} table
+using optimized score type handling.
+This method builds the table without
+automatically saving it, using cached score type
 mappings for improved performance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TableGTR6$build_table()}\if{html}{\out{</div>}}

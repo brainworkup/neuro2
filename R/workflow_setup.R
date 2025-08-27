@@ -80,7 +80,7 @@ setup_project_directories <- function(base_dir = ".") {
 }
 
 copy_template_files <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   log_message("Copying template files to working directory...", "SETUP")
 
@@ -169,7 +169,7 @@ copy_template_files <- function() {
 }
 
 find_template_directory <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # First try using system.file (for installed package)
   template_dir <- system.file(
@@ -201,7 +201,7 @@ find_template_directory <- function() {
 }
 
 verify_essential_files <- function(template_dir) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   essential_files <- c(
     "template.qmd",
@@ -238,7 +238,7 @@ verify_essential_files <- function(template_dir) {
 }
 
 setup_quarto_extensions <- function(report_format) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   log_message("Setting up Quarto extensions...", "SETUP")
 
@@ -292,7 +292,7 @@ setup_quarto_extensions <- function(report_format) {
 }
 
 find_extensions_directory <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # First try using system.file (for installed package)
   extensions_dir <- system.file("quarto/_extensions", package = "neuro2")
@@ -321,7 +321,7 @@ find_extensions_directory <- function() {
 }
 
 copy_extensions <- function(brainworkup_dir) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # Create brainworkup directory in _extensions
   if (!dir.exists("_extensions/brainworkup")) {
@@ -371,7 +371,7 @@ copy_extensions <- function(brainworkup_dir) {
 }
 
 check_r6_files <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   r6_files <- c(
     "R/ReportTemplateR6.R",
@@ -397,7 +397,7 @@ check_r6_files <- function() {
 }
 
 check_input_files <- function(input_dir) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   csv_files <- list.files(input_dir, pattern = "\\.csv$")
   if (length(csv_files) == 0) {

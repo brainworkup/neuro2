@@ -203,7 +203,7 @@ for (number in names(domain_config)) {
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
         # Determine if child or adult ADHD
         is_child <- any(grepl(
-          "child|adolescent",
+          "child|adult",
           processor$data$test_name,
           ignore.case = TRUE
         ))
@@ -248,7 +248,7 @@ for (number in names(domain_config)) {
 # Get list of all generated domain files (include all domain files except _text.qmd)
 available_domains <- unique(list.files(pattern = "^_02-[0-9]{2}_.*\\.qmd$"))
 # Filter out _text.qmd files specifically, but keep all others including emotion_child.qmd
-# available_domains <- unique(list.files(pattern = "^_02-[0-9]{2}_[^_]+\\.qmd$"))
+
 
 available_domains <- available_domains[
   !grepl("_text\\.qmd$", available_domains)

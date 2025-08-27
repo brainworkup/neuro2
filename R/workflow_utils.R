@@ -2,12 +2,23 @@
 # Common utilities for the neuropsychological workflow
 
 # Logging setup and functions
+#' Setup Logging
+#' 
+#' @param log_file Path to log file
+#' @return Log file path
+#' @export
 setup_logging <- function(log_file = "workflow.log") {
   cat("NEURO2 UNIFIED WORKFLOW LOG\n", file = log_file)
   cat(paste("Date:", Sys.time(), "\n\n"), file = log_file, append = TRUE)
   return(log_file)
 }
 
+#' Log Message
+#' 
+#' @param message Message to log
+#' @param type Type of message (INFO, WARNING, ERROR, etc)
+#' @param log_file Path to log file
+#' @export
 log_message <- function(message, type = "INFO", log_file = "workflow.log") {
   timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
   log_entry <- paste0("[", timestamp, "] [", type, "] ", message, "\n")

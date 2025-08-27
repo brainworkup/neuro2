@@ -2,10 +2,20 @@
 % Please edit documentation in R/domain_processing_utils.R
 \name{process_domain_data}
 \alias{process_domain_data}
-\title{Process domain data (main processing pipeline)}
+\title{Process domain data (main processing pipeline)
+Process Domain Data}
 \usage{
 process_domain_data(pheno, domains)
 }
+\arguments{
+\item{pheno}{Phenotype identifier for the domain}
+
+\item{domains}{Domain names to process}
+}
+\value{
+Processed data
+}
 \description{
 Process domain data (main processing pipeline)
+Process Domain Data
 }

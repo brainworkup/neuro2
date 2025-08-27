@@ -1,6 +1,11 @@
 # Data Processing Module
 # Handles data loading and processing for the workflow
 
+#' Process Workflow Data
+#' 
+#' @param config Configuration list from load_workflow_config
+#' @return Logical indicating success
+#' @export
 process_workflow_data <- function(config) {
   # Removed: source("R/workflow_utils.R") - not needed in R package
 

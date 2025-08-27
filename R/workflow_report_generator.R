@@ -1,15 +1,18 @@
 # Report Generation Module
 # Handles report generation for the workflow
 
+#' Generate Workflow Report
+#' 
+#' @param config Configuration list from load_workflow_config
+#' @return Logical indicating success
+#' @export
 generate_workflow_report <- function(config) {
-  # Removed: source("R/workflow_utils.R") - not needed in R package
-
   log_message("Generating report...", "WORKFLOW")
 
   # Source the report generator module if it exists
-  if (file.exists("inst/scripts/report_generator_module.R")) {
+  if (file.exists("scripts/report_generator_module.R")) {
     log_message("Running report_generator_module.R", "REPORT")
-    source("inst/scripts/report_generator_module.R") # External script, so kept
+    source("scripts/report_generator_module.R") # External script, so kept
     return(TRUE)
   }
 
@@ -51,7 +54,7 @@ print_report_summary <- function(config) {
   # Check for generated files
   output_files <- list.files(
     path = config$output$dir,
-    pattern = "\\.(pdf|html)$",
+    pattern = "\\.(pdf|html|typ|docx)$",
     full.names = TRUE
   )
 
@@ -67,8 +70,6 @@ print_report_summary <- function(config) {
 
 # Ensure template file exists
 ensure_template_file <- function(template_file, log_type = "INFO") {
-  # Removed: source("R/workflow_utils.R") - not needed in R package
-
   if (file.exists(template_file)) {
     return(template_file)
   }

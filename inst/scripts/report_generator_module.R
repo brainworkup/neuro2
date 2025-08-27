@@ -29,7 +29,7 @@ if (exists("self") && inherits(self, "R6")) {
 }
 
 # Load required packages
-required_packages <- c("quarto", "yaml")
+required_packages <- c("quarto", "yaml", "neuro2")
 for (pkg in required_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     log_message(paste("Installing package:", pkg), "REPORT")

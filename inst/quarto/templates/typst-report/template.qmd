@@ -20,13 +20,6 @@ suppressPackageStartupMessages({
   library(neuro2)
 })
 
-# Source the domain processor
-# source("R/DomainProcessorR6.R")
-# source("R/NeuropsychResultsR6.R")
-# source("R/DotplotR6.R")
-# source("R/TableGTR6.R")
-# source("R/score_type_utils.R")
-
 # Set knitr options
 knitr::opts_knit$set(
   width = 80,
@@ -210,7 +203,7 @@ for (number in names(domain_config)) {
       if (!is.null(processor$data) && nrow(processor$data) > 0) {
         # Determine if child or adult ADHD
         is_child <- any(grepl(
-          "child|adolescent",
+          "child|adult",
           processor$data$test_name,
           ignore.case = TRUE
         ))

@@ -641,12 +641,8 @@ DomainProcessorR6 <- R6::R6Class(
         "\n",
         "#| include: false\n\n",
 
-        "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
-        "source(\"R/NeuropsychResultsR6.R\")\n",
-        "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGTR6.R\")\n",
-        "source(\"R/score_type_utils.R\")\n\n",
+        "# R6 classes are available through the neuro2 package\n",
+        "# which is already loaded in the parent template\n\n",
 
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -1095,12 +1091,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-adhd-adult\n",
         "#| include: false\n\n",
 
-        "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
-        "source(\"R/NeuropsychResultsR6.R\")\n",
-        "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGTR6.R\")\n",
-        "source(\"R/score_type_utils.R\")\n\n",
+        "# R6 classes are available through the neuro2 package\n",
+        "# which is already loaded in the parent template\n\n",
 
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -1514,12 +1506,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-adhd-child\n",
         "#| include: false\n\n",
 
-        "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
-        "source(\"R/NeuropsychResultsR6.R\")\n",
-        "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGTR6.R\")\n",
-        "source(\"R/score_type_utils.R\")\n\n",
+        "# R6 classes are available through the neuro2 package\n",
+        "# which is already loaded in the parent template\n\n",
 
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -1928,6 +1916,7 @@ DomainProcessorR6 <- R6::R6Class(
       # Multiple domains for emotion (based on master template)
       multiple_domains <- c(
         "Behavioral/Emotional/Social",
+        "Emotional/Behavioral/Personality",
         "Psychiatric Symptoms",
         "Substance Use",
         "Personality Disorders",
@@ -1948,12 +1937,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-emotion-child\n",
         "#| include: false\n\n",
 
-        "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
-        "source(\"R/NeuropsychResultsR6.R\")\n",
-        "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGTR6.R\")\n",
-        "source(\"R/score_type_utils.R\")\n\n",
+        "# R6 classes are available through the neuro2 package\n",
+        "# which is already loaded in the parent template\n\n",
 
         "# Filter by domain\n",
         "domains <- c(\n",
@@ -2709,12 +2694,8 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: setup-emotion-adult\n",
         "#| include: false\n\n",
 
-        "# Source R6 classes\n",
-        "source(\"R/DomainProcessorR6.R\")\n",
-        "source(\"R/NeuropsychResultsR6.R\")\n",
-        "source(\"R/DotplotR6.R\")\n",
-        "source(\"R/TableGTR6.R\")\n",
-        "source(\"R/score_type_utils.R\")\n\n",
+        "# R6 classes are available through the neuro2 package\n",
+        "# which is already loaded in the parent template\n\n",
 
         "# Filter by domain\n",
         "domains <- c(\"",
@@ -3166,7 +3147,8 @@ DomainProcessorR6 <- R6::R6Class(
         "\n",
         "#| include: false\n\n",
         "# Process data and generate table/figures\n",
-        "source('R/domain_processing_utils.R')\n",
+        "# Ensure neuro2 package is loaded for R6 classes\n", 
+        "library(neuro2)\n",
         "process_domain_data('",
         self$pheno,
         "', ",

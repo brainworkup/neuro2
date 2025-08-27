@@ -1,9 +1,14 @@
 # Domain Generation Module
 # Handles generating domain-specific QMD files
 
+#' Generate Workflow Domains
+#'
+#' @param config Configuration list from load_workflow_config
+#' @return Logical indicating success
+#' @export
 generate_workflow_domains <- function(config) {
-  source("R/workflow_utils.R")
-  source("R/workflow_data_processor.R")
+  # workflow_utils functions are available through neuro2 package
+  # workflow_data_processor functions are available through neuro2 package
 
   log_message("Generating domain files...", "WORKFLOW")
 
@@ -30,18 +35,12 @@ generate_workflow_domains <- function(config) {
   # Process domains
   success <- process_all_domains(config, patient_type, data_status)
 
-  # Skip verification - we already validated domains before processing
-  # if (!verify_essential_domain_files(patient_type)) {
-  #   log_message("Some essential domain files are missing, running fallback", "DOMAINS")
-  #   return(run_fallback_domain_generation(config, patient_type))
-  # }
-
   log_message("Domain generation complete", "DOMAINS")
   return(success)
 }
 
 check_domain_r6_files <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   log_message(
     "Checking for required R6 classes for domain processing...",
@@ -73,15 +72,13 @@ check_domain_r6_files <- function() {
 }
 
 load_domain_r6_classes <- function() {
-  source("R/NeuropsychResultsR6.R")
-  source("R/DomainProcessorR6.R")
-  source("R/TableGTR6.R")
-  source("R/DotplotR6.R")
+  # R6 classes are available through the neuro2 package namespace
+  # No need to source them individually
 }
 
 process_all_domains <- function(config, patient_type, data_status) {
-  source("R/workflow_utils.R")
-  source("R/domain_validation_utils.R")
+  # workflow_utils functions are available through neuro2 package
+  # domain_validation_utils functions are available through neuro2 package
 
   tryCatch(
     {
@@ -479,7 +476,7 @@ process_single_domain <- function(
   emotion_processed,
   data_type = "neurocog"
 ) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # Skip if already processed
   if (domain %in% processed_domains) {
@@ -673,7 +670,7 @@ get_domain_output_file <- function(domain_name, patient_type) {
 }
 
 list_generated_domain_files <- function() {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   domain_files <- list.files(".", pattern = "_02-.*\\.qmd$")
   if (length(domain_files) > 0) {
@@ -732,7 +729,7 @@ verify_essential_domain_files <- function(patient_type) {
 }
 
 run_fallback_domain_generation <- function(config, patient_type) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # Source the domain generator module as a fallback
   if (file.exists("scripts/domain_generator_module.R")) {

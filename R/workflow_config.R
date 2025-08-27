@@ -2,7 +2,7 @@
 # Handles loading and validating workflow configuration
 
 load_workflow_config <- function(config_file = "config.yml") {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   log_message(paste0("Loading configuration from: ", config_file), "CONFIG")
 
@@ -25,7 +25,7 @@ load_workflow_config <- function(config_file = "config.yml") {
 }
 
 create_default_config <- function(config_file) {
-  source("R/workflow_utils.R")
+  # workflow_utils functions are available through neuro2 package
 
   # Check if config.yml exists in template directory before creating default
   template_dir <- "inst/quarto/templates/typst-report"
@@ -50,7 +50,7 @@ create_default_config <- function(config_file) {
 
     default_config <- list(
       patient = list(
-        name = "Isabella",
+        name = "Biggie",
         age = 21,
         doe = format(Sys.Date(), "%Y-%m-%d")
       ),
@@ -63,7 +63,7 @@ create_default_config <- function(config_file) {
       report = list(
         template = "template.qmd",
         format = "neurotyp-adult-typst",
-        output_dir = "output/report"
+        output_dir = "output"
       )
     )
 
@@ -116,7 +116,7 @@ validate_config <- function(config) {
   }
 
   if (is.null(config$report$output_dir)) {
-    config$report$output_dir <- "output/report"
+    config$report$output_dir <- "output"
   }
 
   return(config)
