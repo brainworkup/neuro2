@@ -304,8 +304,3 @@ ScoreTypeCacheR6 <- R6::R6Class(
 if (!exists(".ScoreTypeCacheR6")) {
   .ScoreTypeCacheR6 <- ScoreTypeCacheR6$new()
 }
-
-# Create global cache instance
-if (!exists(".score_type_cache")) {
-  .score_type_cache <- ScoreTypeCacheR6$new()
-}

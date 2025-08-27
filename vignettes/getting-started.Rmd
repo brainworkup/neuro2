@@ -1,8 +1,8 @@
 ---
-title: "Getting Started with NeurotypR"
+title: "Getting Started with neuro2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started with NeurotypR}
+  %\VignetteIndexEntry{Getting Started with neuro2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,12 +15,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(NeurotypR)
+library(neuro2)
 ```
 
 # Introduction
 
-The `NeurotypR` package provides tools for generating comprehensive neuropsychological reports using Quarto and Typst templates. This vignette demonstrates the basic workflow for creating reports from neuropsychological test data.
+The `neuro2` package provides tools for generating comprehensive neuropsychological reports using Quarto and Typst templates. This vignette demonstrates the basic workflow for creating reports from neuropsychological test data.
 
 ## Key Features
 
@@ -48,7 +48,7 @@ The package accepts neuropsychological data in CSV or RDA format. Your data shou
 data_file <- system.file(
   "extdata",
   "neurocog.rda",
-  package = "NeurotypR"
+  package = "neuro2"
 )
 ```
 
@@ -142,7 +142,7 @@ client_dir <- create_output_dir(
 For additional help:
 
 - Check function documentation: `?generate_report`
-- View package vignettes: `browseVignettes("NeurotypR")`
+- View package vignettes: `browseVignettes("neuro2")`
 - Report issues on GitHub
 
 ## Example Output

@@ -1,8 +1,6 @@
 # Score Type Cache Initialization
 # This file ensures the score type cache is properly initialized for the package
 
-# Removed: source("R/ScoreTypeCacheR6.R") - not needed in R package
-
 #' Ensure Score Type Utils
 #'
 #' Ensures that the score type utilities are loaded and available

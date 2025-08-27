@@ -11,7 +11,7 @@ source("R/NeuropsychResultsR6.R")
 source("R/NeuropsychReportSystemR6.R")
 source("R/DomainProcessorR6Combo.R")
 
-# Load utility functions (replacements for NeurotypR functions)
+# Load utility functions (replacements for neuro2 functions)
 source("R/utils.R")
 
 # Source the test workflow script

@@ -18,7 +18,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2.9000
 Depends:
-    R (>= 4.5.1)
+    R (>= 4.5)
 Imports:
     arrow (>= 10.0.0),
     cli,
@@ -59,10 +59,10 @@ Imports:
     utils,
     webshot2,
     xfun,
-    yaml
-Suggests:
+    yaml,
     magrittr,
-    usethis,
+    usethis
+Suggests:
     testthat (>= 3.0.0),
 SystemRequirements: 
     Quarto (>= 1.3) for report generation,

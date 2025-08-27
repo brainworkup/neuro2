@@ -88,7 +88,7 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
     file_info <- file.info(template_file)
     log_message(paste0("File size: ", file_info$size, " bytes"), log_type)
     log_message(paste0("Last modified: ", file_info$mtime), log_type)
-    return(TRUE)
+    return(template_file) # Return the file path, not TRUE
   }
 
   template_dir <- "inst/quarto/templates/typst-report"
@@ -104,18 +104,18 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
 
     if (file.exists(template_file)) {
       log_message("Template file copied successfully", log_type)
-      return(TRUE)
+      return(template_file) # Return the file path, not TRUE
     } else {
       log_message(
         paste0("Failed to copy template file from: ", alt_template_path),
         "ERROR"
       )
-      return(FALSE)
+      return(NULL) # Return NULL instead of FALSE
     }
   } else {
     log_message(paste0("Template file not found: ", template_file), "ERROR")
     log_message(paste0("Also checked: ", alt_template_path), "ERROR")
-    return(FALSE)
+    return(NULL) # Return NULL instead of FALSE
   }
 }
 

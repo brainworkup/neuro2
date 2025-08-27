@@ -1,19 +1,12 @@
 # score_type_utils.R - Score Type Utilities and Compatibility
 # This file provides utility functions and ensures the score type cache is properly initialized
 
-# Removed: source("R/ScoreTypeCacheR6.R") - not needed in proper R package
-# The ScoreTypeCacheR6 class is automatically available from the R/ directory
-
 # Initialize the global cache if it doesn't exist
 if (!exists(".ScoreTypeCacheR6")) {
   .ScoreTypeCacheR6 <- ScoreTypeCacheR6$new()
   .ScoreTypeCacheR6$build_mappings()
 }
 
-# Compatibility shim for old .score_type_cache references
-if (!exists(".score_type_cache")) {
-  .score_type_cache <- .ScoreTypeCacheR6
-}
 
 #' Get score type groups for test names
 #' @param test_names Character vector of test names
@@ -49,10 +42,6 @@ init_score_type_cache <- function() {
       }
       if (!.ScoreTypeCacheR6$initialized) {
         .ScoreTypeCacheR6$build_mappings()
-      }
-      # Compatibility
-      if (!exists(".score_type_cache")) {
-        .score_type_cache <<- .ScoreTypeCacheR6
       }
       return(TRUE)
     },
