@@ -154,6 +154,8 @@ DomainProcessorR6 <- R6::R6Class(
         "pass",
         "verbal",
         "timed",
+        "test_type",
+        "score_type",
         "result",
         "z",
         "z_mean_domain",
@@ -250,25 +252,71 @@ DomainProcessorR6 <- R6::R6Class(
         return(FALSE)
       }
 
-      # Check if there's a column that indicates rater type
-      rater_columns <- c("rater", "informant", "reporter")
-      rater_col <- NULL
-
-      for (col in rater_columns) {
-        if (col %in% names(self$data)) {
-          rater_col <- col
-          break
-        }
+      # For self-report data, check test variable for specific tests
+      if (rater == "self") {
+        self_report_tests <- c(
+          "basc3_srp_child",
+          "basc3_srp_adolescent",
+          "basc3_srp_college",
+          "brown_efa_self",
+          "caars_self",
+          "caars2_self",
+          "cefi_self_12-18",
+          "cefi_self",
+          "conners4_self",
+          "pai_adol_clinical",
+          "pai_adol_validity",
+          "pai_adol",
+          "pai_clinical",
+          "pai_inatt",
+          "pai_validity",
+          "pai",
+          "mmpi3"
+        )
+        return(any(self$data$test %in% self_report_tests))
       }
 
-      if (is.null(rater_col)) {
-        # If no rater column, assume data exists for all raters
-        return(TRUE)
+      # For parent report data, check test variable for specific tests
+      if (rater == "parent") {
+        parent_report_tests <- c(
+          "basc3_prs_preschool",
+          "basc3_prs_child",
+          "basc3_prs_adolescent",
+          "basc3_prs_college",
+          "cefi_parent_5-18",
+          "brown_efa_parent",
+          "conners4_parent"
+        )
+        return(any(self$data$test %in% parent_report_tests))
       }
 
-      # Check if this rater has any data
-      rater_data <- self$data[self$data[[rater_col]] == rater, ]
-      return(nrow(rater_data) > 0)
+      # For teacher report data, check test variable for specific tests
+      if (rater == "teacher") {
+        teacher_report_tests <- c(
+          "basc3_trs_preschool",
+          "basc3_trs_child",
+          "basc3_trs_adolescent",
+          "basc3_trs_college",
+          "cefi_teacher_5-18",
+          "brown_efa_teacher",
+          "conners4_teacher"
+        )
+        return(any(self$data$test %in% teacher_report_tests))
+      }
+
+      # For other raters (observer), check test variable for specific tests
+      if (rater == "observer") {
+        observer_tests <- c(
+          "caars_observer",
+          "cefi_observer",
+          "caars2_observer",
+          "brown_efa_observer"
+        )
+        return(any(self$data$test %in% observer_tests))
+      }
+
+      # Default case
+      return(FALSE)
     },
 
     #' @description

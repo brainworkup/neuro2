@@ -83,3 +83,10 @@ config.yml
 template1.pdf
 template1.typ
 fix_conflicts.md
+R/cohere_embed.py
+.venv/
+__pycache__/app.cpython-311.pyc
+.gitignore
+.python-version
+app.py
+figs/

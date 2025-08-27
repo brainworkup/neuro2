@@ -2,7 +2,7 @@
 
 # Generate emotion child QMD corrected
 
-generate_emotion_child_qmd_corrected <- function(
+generate_emotion_child_qmd_00 <- function(
   output_file = "_02-10_emotion_child.qmd"
 ) {
   # Removed source() calls - all functions are available from the neuro2 package:
@@ -83,7 +83,7 @@ if (nrow(emotion_self) > 0) {
   )
   tbl_self <- table_self$build_table()
   table_self$save_table(tbl_self, dir = here::here())
-  
+
   # Generate figure for self-report
   if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_self))) {
     dotplot_self <- DotplotR6$new(
@@ -104,7 +104,7 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
 #let domain(title: none, file_qtbl, file_fig) = {
   let font = (font: "Roboto Slab", size: 0.7em)
   set text(..font)
-  
+
   show figure.caption: it => {
     context {
       let supplement = it.supplement
@@ -112,7 +112,7 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
       block[*#supplement #counter:* #it.body]
     }
   }
-  
+
   pad(top: 0.5em)[]
   grid(
     columns: (50%, 50%),
@@ -148,9 +148,7 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
 // Define the file name of the figure
 #let file_fig = "fig_emotion_child_self_subdomain.svg"
 
-// The title is appended with '
-  Scores
-  '
+// The title is appended with " Scores"
 #domain(title: [#title Scores], file_qtbl, file_fig)
 ```
 
@@ -180,7 +178,7 @@ if (nrow(emotion_parent) > 0) {
   )
   tbl_parent <- table_parent$build_table()
   table_parent$save_table(tbl_parent, dir = here::here())
-  
+
   # Generate figure for parent ratings
   if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_parent))) {
     dotplot_parent <- DotplotR6$new(
