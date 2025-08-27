@@ -92,3 +92,7 @@ app.py
 figs/
 _02-10_emotion_child.pdf
 .dbxignore
+.editorconfig
+.lintr
+settings.json
+scratch.R

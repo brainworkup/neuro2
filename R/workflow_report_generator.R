@@ -7,9 +7,9 @@ generate_workflow_report <- function(config) {
   log_message("Generating report...", "WORKFLOW")
 
   # Source the report generator module if it exists
-  if (file.exists("scripts/report_generator_module.R")) {
+  if (file.exists("inst/scripts/report_generator_module.R")) {
     log_message("Running report_generator_module.R", "REPORT")
-    source("scripts/report_generator_module.R") # External script, so kept
+    source("inst/scripts/report_generator_module.R") # External script, so kept
     return(TRUE)
   }
 
@@ -25,7 +25,9 @@ generate_workflow_report <- function(config) {
   if (requireNamespace("quarto", quietly = TRUE)) {
     tryCatch(
       {
-        quarto::quarto_render(template_file)
+        # Use absolute path to avoid 'invalid file argument' error
+        template_abs_path <- normalizePath(template_file)
+        quarto::quarto_render(template_abs_path)
         log_message("Report generated successfully", "REPORT")
         return(TRUE)
       },
