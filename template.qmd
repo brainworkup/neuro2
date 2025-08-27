@@ -1,7 +1,7 @@
 ---
 title: NEUROCOGNITIVE EXAMINATION
-patient: Biggie
-name: Smalls, Biggie
+patient: Ethan
+name: Smalls, Ethan
 doe: "YYYY-MM-DD"
 date_of_report: last-modified
 ---
@@ -17,14 +17,8 @@ suppressPackageStartupMessages({
   library(readr)
   library(here)
   library(yaml)
+  library(neuro2)
 })
-
-# Source the domain processor
-source("R/DomainProcessorR6.R")
-source("R/NeuropsychResultsR6.R")
-source("R/DotplotR6.R")
-source("R/TableGTR6.R")
-source("R/score_type_utils.R")
 
 # Set knitr options
 knitr::opts_knit$set(
@@ -68,7 +62,6 @@ patient <- Sys.getenv("PATIENT")
 ```{r}
 #| label: generate-domain-files
 #| include: false
-#| cache: false
 
 # Track which files have been generated to avoid duplicates
 generated_files <- character()
@@ -122,6 +115,7 @@ domain_config <- list(
   "10" = list(
     domains = c(
       "Behavioral/Emotional/Social",
+      "Emotional/Behavioral/Personality",
       "Psychiatric Disorders",
       "Personality Disorders",
       "Psychosocial Problems",
