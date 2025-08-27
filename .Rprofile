@@ -26,5 +26,5 @@ if (interactive()) {
 options(conflicts.policy = list(warn = FALSE))
 
 # Load conflicted package but don't auto-prefer neuro2 functions
-library(conflicted)
+# library(conflicted)
 # Removed: conflict_prefer_all("neuro2", quiet = TRUE)

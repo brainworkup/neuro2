@@ -54,7 +54,6 @@ PackageManagerR6 Class
 \item \href{#method-PackageManagerR6-show_summary}{\code{PackageManagerR6$show_summary()}}
 \item \href{#method-PackageManagerR6-get_missing_packages}{\code{PackageManagerR6$get_missing_packages()}}
 \item \href{#method-PackageManagerR6-install_missing_packages}{\code{PackageManagerR6$install_missing_packages()}}
-\item \href{#method-PackageManagerR6-check_conflicts}{\code{PackageManagerR6$check_conflicts()}}
 \item \href{#method-PackageManagerR6-create_package_loading_script}{\code{PackageManagerR6$create_package_loading_script()}}
 \item \href{#method-PackageManagerR6-clone}{\code{PackageManagerR6$clone()}}
 }
@@ -257,28 +256,6 @@ Install missing packages (optionally restricted to groups).
 }
 \subsection{Returns}{
 Invisibly returns self.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PackageManagerR6-check_conflicts"></a>}}
-\if{latex}{\out{\hypertarget{method-PackageManagerR6-check_conflicts}{}}}
-\subsection{Method \code{check_conflicts()}}{
-Check for function name conflicts across loaded packages.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PackageManagerR6$check_conflicts(verbose = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{verbose}}{Logical; print detailed progress messages if TRUE.}
-
-\item{\code{packages}}{Optional character vector; if NULL, check currently loaded packages.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A data.frame (or list) describing conflicts.
 }
 }
 \if{html}{\out{<hr>}}
