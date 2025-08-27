@@ -392,7 +392,7 @@ DomainProcessorR6 <- R6::R6Class(
           "MMPI-A"
         )
 
-        adult_test_patterns <- c("BAI", "BDI-2", "MMPI", "PAI")
+        adult_test_patterns <- c("BAI", "BDI-2", "MMPI-3", "PAI")
 
         # Check test names for age indicators
         if ("test_name" %in% names(self$data)) {
@@ -2113,7 +2113,11 @@ DomainProcessorR6 <- R6::R6Class(
         qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-self\n",
-        "#| include: false\n\n",
+        "#| dev: tikz\n",
+        "#| fig-process: pdf2png\n",
+        "#| include: false\n",
+        "#| eval: true\n",
+        "options(tikzDefaultEngine = \"xetex\")\n\n",
 
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_self\"\n",
@@ -2192,7 +2196,11 @@ DomainProcessorR6 <- R6::R6Class(
         qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-parent\n",
-        "#| include: false\n\n",
+        "#| dev: tikz\n",
+        "#| fig-process: pdf2png\n",
+        "#| include: false\n",
+        "#| eval: true\n",
+        "options(tikzDefaultEngine = \"xetex\")\n\n",
 
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_parent\"\n",
@@ -2271,8 +2279,11 @@ DomainProcessorR6 <- R6::R6Class(
         qmd_content,
         "```{r}\n",
         "#| label: qtbl-emotion-child-teacher\n",
+        "#| dev: tikz\n",
+        "#| fig-process: pdf2png\n",
         "#| include: false\n",
-        "#| eval: false\n\n",
+        "#| eval: false\n",
+        "options(tikzDefaultEngine = \"xetex\")\n\n",
 
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_teacher\"\n",

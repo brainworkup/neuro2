@@ -1,23 +1,12 @@
-# Save this as generate_emotion_child_corrected.R
-
 # Generate emotion child QMD corrected
 
 generate_emotion_child_qmd <- function(
   output_file = "_02-10_emotion_child.qmd"
 ) {
-  # Removed source() calls - all functions are available from the neuro2 package:
-  # source(here::here("R", "DomainProcessorR6.R"))
-  # source(here::here("R", "NeuropsychResultsR6.R"))
-  # source(here::here("R", "DotplotR6.R"))
-  # source(here::here("R", "TableGTR6.R"))
-  # source(here::here("R", "domain_processing_utils.R"))
-
-  # ...existing code...
-
   qmd_content <- '## Behavioral/Emotional/Social {#sec-emotion}
 
 ```{r}
-#| label: setup-emotion
+#| label: setup-emotion-child
 #| include: false
 
 # Load required packages
@@ -28,8 +17,6 @@ suppressPackageStartupMessages({
   library(gtExtras)
   library(neuro2)
 })
-
-# Note: R6 classes and utilities are now available from the neuro2 package
 
 # Define domains
 domains <- c(
@@ -54,16 +41,26 @@ processor$select_columns()
 # Main data object
 emotion_data <- processor$data
 
-# Separate data by rater
-if ("rater" %in% names(emotion_data)) {
-  emotion_self <- emotion_data[tolower(emotion_data$rater) == "self", ]
-  emotion_parent <- emotion_data[tolower(emotion_data$rater) == "parent", ]
-  emotion_teacher <- emotion_data[tolower(emotion_data$rater) == "teacher", ]
-} else {
-  emotion_self <- emotion_data
-  emotion_parent <- data.frame()
-  emotion_teacher <- data.frame()
-}
+# Separate data by test type (which determines rater)
+self_report_tests <- c(
+  "basc3_srp_child", "basc3_srp_adolescent", "basc3_srp_college",
+  "brown_efa_self", "caars_self", "caars2_self", "cefi_self_12-18",
+  "cefi_self", "conners4_self", "pai_adol_clinical", "pai_adol_validity",
+  "pai_adol", "pai_clinical", "pai_inatt", "pai_validity", "pai", "mmpi3"
+)
+
+parent_report_tests <- c(
+  "basc3_prs_preschool", "basc3_prs_child", "basc3_prs_adolescent",
+  "basc3_prs_college", "cefi_parent_5-18", "brown_efa_parent", "conners4_parent"
+)
+
+teacher_report_tests <- c(
+  "basc3_trs_preschool", "basc3_trs_child", "basc3_trs_adolescent", "basc3_trs_college"
+)
+
+emotion_self <- emotion_data[emotion_data$test %in% self_report_tests, ]
+emotion_parent <- emotion_data[emotion_data$test %in% parent_report_tests, ]
+emotion_teacher <- emotion_data[emotion_data$test %in% teacher_report_tests, ]
 ```
 
 ### SELF-REPORT
@@ -71,8 +68,33 @@ if ("rater" %in% names(emotion_data)) {
 {{< include _02-10_emotion_child_text_self.qmd >}}
 
 ```{r}
-#| label: process-emotion-self
+#| label: text-emotion-child-self
+#| cache: true
 #| include: false
+#| results: asis
+
+# Filter data for this rater
+data_emotion_self <- emotion_self
+if ("rater" %in% names(data_emotion_self)) {
+  data_emotion_self <- data_emotion_self[data_emotion_self$rater == lf]
+}
+# Generate text using R6 class
+if (nrow(data_emotion_self) > 0) {
+  results_processor_self <- NeuropsychResultsR6$new(
+    data = data_emotion_self,
+    file = "_02-10_emotion_child_text_self.qmd"
+  )
+  results_processor_self$process()
+}
+```
+
+```{r}
+#| label: qtbl-emotion-child-self
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+#| eval: true
+options(tikzDefaultEngine = "xetex")
 
 if (nrow(emotion_self) > 0) {
   # Generate table for self-report
@@ -84,6 +106,15 @@ if (nrow(emotion_self) > 0) {
   )
   tbl_self <- table_self$build_table()
   table_self$save_table(tbl_self, dir = here::here())
+}
+```
+
+```{r}
+#| label: fig-emotion-child-self
+#| include: false
+#| eval: true
+
+if (nrow(emotion_self) > 0) {
 
   # Generate figure for self-report
   if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_self))) {
@@ -128,7 +159,7 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
       [#image(file_fig, width: auto)],
       caption: figure.caption(
         position: bottom,
-        [`{r} plot_title_emotion_child_self`],
+        ["{r} plot_title_emotion_child_self"],
       ),
       placement: none,
       kind: "image",
@@ -140,25 +171,10 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
 ```
 
 ```{=typst}
-// Define the title of the domain
-#let title = "Behavioral/Emotional/Social Scores"
-
-// Define the file name of the table
+#let title = "Behavioral/Emotional/Social"
 #let file_qtbl = "table_emotion_child_self.png"
-
-// Define the file name of the figure
 #let file_fig = "fig_emotion_child_self_subdomain.svg"
-
-// The title is appended with " Scores"
 #domain(title: [#title Scores], file_qtbl, file_fig)
-```
-
-```{=typst}
-#domain(
-  title: [Behavioral/Emotional/Social Scores],
-  file_qtbl: "table_emotion_child_self.png",
-  file_fig: "fig_emotion_child_self_subdomain.svg"
-)
 ```
 
 ### PARENT RATINGS
@@ -166,11 +182,37 @@ plot_title_emotion_child_self <- "Emotional and behavioral functioning (self-rep
 {{< include _02-10_emotion_child_text_parent.qmd >}}
 
 ```{r}
-#| label: process-emotion-parent
+#| label: text-emotion-child-parent
+#| cache: true
 #| include: false
+#| results: asis
+
+# Filter data for this rater
+data_emotion_parent <- emotion_parent
+if ("rater" %in% names(data_emotion_parent)) {
+  data_emotion_parent <- data_emotion_parent[data_emotion_parent$rater == lf]
+}
+# Generate text using R6 class
+if (nrow(data_emotion_parent) > 0) {
+  results_processor_parent <- NeuropsychResultsR6$new(
+    data = data_emotion_parent,
+    file = "_02-10_emotion_child_text_parent.qmd"
+  )
+  results_processor_parent$process()
+}
+```
+
+
+```{r}
+#| label: qtbl-emotion-child-parent
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+#| eval: true
+options(tikzDefaultEngine = "xetex")
 
 if (nrow(emotion_parent) > 0) {
-  # Generate table for parent ratings
+  # Generate table for parent-report
   table_parent <- TableGTR6$new(
     data = emotion_parent,
     pheno = "emotion",
@@ -179,8 +221,17 @@ if (nrow(emotion_parent) > 0) {
   )
   tbl_parent <- table_parent$build_table()
   table_parent$save_table(tbl_parent, dir = here::here())
+}
+```
 
-  # Generate figure for parent ratings
+```{r}
+#| label: fig-emotion-child-parent
+#| include: false
+#| eval: true
+
+if (nrow(emotion_parent) > 0) {
+
+  # Generate figure for parent-report
   if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_parent))) {
     dotplot_parent <- DotplotR6$new(
       data = emotion_parent,
@@ -193,15 +244,166 @@ if (nrow(emotion_parent) > 0) {
 }
 
 # Set plot title
-plot_title_emotion_child_parent <- "Emotional and behavioral functioning (parent report) reflects observed behaviors."
+plot_title_emotion_child_parent <- "Emotional and behavioral functioning (parent-report) reflects psychological adjustment."
 ```
 
 ```{=typst}
-#domain(
-  title: [Behavioral/Emotional/Social Scores]
-  file_qtbl: "table_emotion_child_parent.png"
-  file_fig: "fig_emotion_child_parent_subdomain.svg"
-)
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        ["{r} plot_title_emotion_child_parent"],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+#let title = "Behavioral/Emotional/Social"
+#let file_qtbl = "table_emotion_child_parent.png"
+#let file_fig = "fig_emotion_child_parent_subdomain.svg"
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
+
+### TEACHER RATINGS
+
+{{< include _02-10_emotion_child_text_teacher.qmd >}}
+
+```{r}
+#| label: text-emotion-child-teacher
+#| cache: true
+#| include: false
+#| results: asis
+
+# Filter data for this rater
+data_emotion_teacher <- emotion_teacher
+if ("rater" %in% names(data_emotion_teacher)) {
+  data_emotion_teacher <- data_emotion_teacher[data_emotion_teacher$rater == lf]
+}
+# Generate text using R6 class
+if (nrow(data_emotion_teacher) > 0) {
+  results_processor_teacher <- NeuropsychResultsR6$new(
+    data = data_emotion_teacher,
+    file = "_02-10_emotion_child_text_teacher.qmd"
+  )
+  results_processor_teacher$process()
+}
+```
+
+```{r}
+#| label: qtbl-emotion-child-teacher
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+#| eval: false
+options(tikzDefaultEngine = "xetex")
+
+if (nrow(emotion_teacher) > 0) {
+  # Generate table for teacher-report
+  table_teacher <- TableGTR6$new(
+    data = emotion_teacher,
+    pheno = "emotion",
+    table_name = "table_emotion_child_teacher",
+    vertical_padding = 0
+  )
+  tbl_teacher <- table_teacher$build_table()
+  table_teacher$save_table(tbl_teacher, dir = here::here())
+}
+```
+
+```{r}
+#| label: fig-emotion-child-teacher
+#| include: false
+#| eval: false
+
+if (nrow(emotion_teacher) > 0) {
+
+  # Generate figure for teacher-report
+  if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_teacher))) {
+    dotplot_teacher <- DotplotR6$new(
+      data = emotion_teacher,
+      x = "z_mean_subdomain",
+      y = "subdomain",
+      filename = here::here("fig_emotion_child_teacher_subdomain.svg")
+    )
+    dotplot_teacher$create_plot()
+  }
+}
+
+# Set plot title
+plot_title_emotion_child_teacher <- "Emotional and behavioral functioning (teacher-report) reflects psychological adjustment."
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        ["{r} plot_title_emotion_child_teacher"],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+#let title = "Behavioral/Emotional/Social"
+#let file_qtbl = "table_emotion_child_teacher.png"
+#let file_fig = "fig_emotion_child_teacher_subdomain.svg"
+#domain(title: [#title Scores], file_qtbl, file_fig)
 ```
 '
   writeLines(qmd_content, output_file)

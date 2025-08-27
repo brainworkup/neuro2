@@ -98,7 +98,7 @@ NeuropsychResultsR6 <- R6::R6Class(
       lines <- c(
         "```{r}",
         paste0("#| label: ", lbl),
-        "#| cache: false",
+        "#| cache: tue",
         "#| include: false",
         "",
         "# Define the text file path",
