@@ -1,39 +1,45 @@
 # File: R/setup_neuro2.R
 # Main loader for neuro2 functionality
 
-#' Setup neuro2 environment
-#'
-#' @description Sets up the neuro2 environment and loads required functionality
-#' @param verbose Logical, whether to show verbose output
-#' @return TRUE if successful
+#' Setup neuro2 package environment
 #' @export
-setup_neuro2 <- function(verbose = TRUE) {
-  if (verbose) {
-    message("🏗️  Setting up neuro2...")
-  }
+setup_neuro2 <- function() {
+  # Load required packages
+  required_packages <- c("here", "tidyverse", "gt", "gtExtras", "R6")
 
-  # Check if we're in a package development environment
-  if (!"neuro2" %in% loadedNamespaces()) {
-    if (verbose) {
-      message("  📦 Loading neuro2 package...")
+  for (pkg in required_packages) {
+    if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+      stop(paste("Required package not found:", pkg))
     }
   }
 
-  # Create essential directories if they don't exist
-  dirs <- c("data", "figs", "output", "tmp")
-  for (dir in dirs) {
-    if (!dir.exists(dir)) {
-      dir.create(dir, recursive = TRUE)
-      if (verbose) message("  📁 Created: ", dir)
+  # Source R6 classes in correct order
+  r_files <- c(
+    "R/DomainProcessorR6.R",
+    "R/NeuropsychResultsR6.R",
+    "R/TableGTR6.R",
+    "R/DotplotR6.R",
+    "R/score_type_utils.R",
+    "R/tidy_data.R"
+  )
+
+  for (file in r_files) {
+    if (file.exists(here::here(file))) {
+      source(here::here(file))
+    } else {
+      warning(paste("R file not found:", file))
     }
   }
 
-  if (verbose) {
-    message("✅ neuro2 setup complete!")
-  }
-
-  invisible(TRUE)
+  message("✅ neuro2 environment setup complete")
 }
+
+# Fix the setup chunk in QMD files to use this:
+# Instead of:
+#   library(neuro2)
+# Use:
+#   source(here::here("R", "setup_neuro2.R"))
+#   setup_neuro2()
 
 #' Quick setup check for neuro2
 #' @description Checks if all essential components are available
@@ -102,6 +108,3 @@ init_neuro2_workspace <- function(patient_name = NULL, verbose = TRUE) {
   }
   invisible(TRUE)
 }
-
-# Remove the problematic auto-loading code that was causing issues
-# Package functions should not execute code when the package loads

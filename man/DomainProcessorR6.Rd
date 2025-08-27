@@ -163,6 +163,8 @@ R6 class for processing neuropsychological domain data
 \item \href{#method-DomainProcessorR6-select_columns}{\code{DomainProcessorR6$select_columns()}}
 \item \href{#method-DomainProcessorR6-save_data}{\code{DomainProcessorR6$save_data()}}
 \item \href{#method-DomainProcessorR6-has_multiple_raters}{\code{DomainProcessorR6$has_multiple_raters()}}
+\item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
+\item \href{#method-DomainProcessorR6-get_rater_tests}{\code{DomainProcessorR6$get_rater_tests()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
@@ -387,6 +389,24 @@ Invisibly returns \code{self} for method chaining.
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_rater_types"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_types}{}}}
+\subsection{Method \code{get_rater_types()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_types()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-get_rater_tests"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_tests}{}}}
+\subsection{Method \code{get_rater_tests()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_tests(rater)}\if{html}{\out{</div>}}
 }
 
 }

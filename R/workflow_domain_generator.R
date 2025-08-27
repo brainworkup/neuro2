@@ -76,199 +76,296 @@ load_domain_r6_classes <- function() {
   # No need to source them individually
 }
 
-process_all_domains <- function(config, patient_type, data_status) {
-  # workflow_utils functions are available through neuro2 package
-  # domain_validation_utils functions are available through neuro2 package
+# Replace your current domain processing with this approach:
 
-  tryCatch(
-    {
-      log_message("Using DomainProcessorR6 to generate domain files", "DOMAINS")
+#' Process domains using the factory pattern
+#' @param domain_keys Vector of domain keys (e.g., c("iq", "memory", "emotion"))
+#' @param age_group "adult" or "child"
+#' @param base_dir Base directory for outputs
+process_all_domains <- function(
+  domain_keys,
+  age_group = "adult",
+  base_dir = "."
+) {
+  # Setup environment
+  source(here::here("R", "setup_neuro2.R"))
+  setup_neuro2()
 
-      # Load data for validation
-      neurocog_data <- NULL
-      neurobehav_data <- NULL
+  # Create factory
+  factory <- DomainProcessorFactoryR6$new()
 
-      # Read data files for validation
-      data_format <- get_data_format(config, "neurocog")
-      neurocog_file <- file.path(
-        config$data$output_dir,
-        paste0("neurocog.", data_format)
-      )
-      if (file.exists(neurocog_file)) {
-        if (data_format == "parquet") {
-          neurocog_data <- arrow::read_parquet(neurocog_file)
-        } else {
-          neurocog_data <- readr::read_csv(
-            neurocog_file,
-            show_col_types = FALSE
-          )
-        }
-      }
-
-      if (data_status$neurobehav) {
-        neurobehav_format <- get_data_format(config, "neurobehav")
-        neurobehav_file <- file.path(
-          config$data$output_dir,
-          paste0("neurobehav.", neurobehav_format)
-        )
-        if (file.exists(neurobehav_file)) {
-          if (neurobehav_format == "parquet") {
-            neurobehav_data <- arrow::read_parquet(neurobehav_file)
-          } else {
-            neurobehav_data <- readr::read_csv(
-              neurobehav_file,
-              show_col_types = FALSE
-            )
-          }
-        }
-      }
-
-      # Define domain configuration
-      domain_config <- list(
-        "General Cognitive Ability" = list(
-          pheno = "iq",
-          input_file = "data/neurocog.csv"
-        ),
-        "Academic Skills" = list(
-          pheno = "academics",
-          input_file = "data/neurocog.csv"
-        ),
-        "Verbal/Language" = list(
-          pheno = "verbal",
-          input_file = "data/neurocog.csv"
-        ),
-        "Visual Perception/Construction" = list(
-          pheno = "spatial",
-          input_file = "data/neurocog.csv"
-        ),
-        "Memory" = list(pheno = "memory", input_file = "data/neurocog.csv"),
-        "Attention/Executive" = list(
-          pheno = "executive",
-          input_file = "data/neurocog.csv"
-        ),
-        "Motor" = list(pheno = "motor", input_file = "data/neurocog.csv"),
-        "Social Cognition" = list(
-          pheno = "social",
-          input_file = "data/neurocog.csv"
-        ),
-        "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.csv"),
-        "Behavioral/Emotional/Social" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Psychiatric Disorders" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Personality Disorders" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Psychosocial Problems" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Substance Use" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Emotional/Behavioral/Personality" = list(
-          pheno = "emotion",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Adaptive Functioning" = list(
-          pheno = "adaptive",
-          input_file = "data/neurobehav.csv"
-        ),
-        "Daily Living" = list(
-          pheno = "daily_living",
-          input_file = "data/neurocog.csv"
-        )
-      )
-
-      # Validate which domains have data BEFORE processing
-      valid_domains_only <- get_domains_with_data(
-        neurocog_data,
-        neurobehav_data,
-        domain_config
-      )
-
-      if (length(valid_domains_only) == 0) {
-        log_message("No domains found with valid data", "WARNING")
-        return(FALSE)
-      }
-
-      log_message(
-        paste0("Found ", length(valid_domains_only), " domains with data"),
-        "DOMAINS"
-      )
-
-      # Track processed domains
-      processed_domains <- character()
-      emotion_processed <- FALSE
-      is_child <- patient_type == "child"
-
-      # Process only validated domains
-      for (domain_name in names(valid_domains_only)) {
-        domain_info <- valid_domains_only[[domain_name]]
-        config_info <- domain_info$config
-
-        log_message(
-          paste("Processing validated domain:", domain_name),
-          "DOMAINS"
-        )
-
-        # Handle emotion domains specially
-        emotion_domains <- c(
-          "Behavioral/Emotional/Social",
-          "Psychiatric Disorders",
-          "Personality Disorders",
-          "Psychosocial Problems",
-          "Substance Use",
-          "Emotional/Behavioral/Personality"
-        )
-
-        if (domain_name %in% emotion_domains) {
-          if (!emotion_processed) {
-            result <- process_emotion_domains_validated(
-              is_child,
-              emotion_domains,
-              neurobehav_data
-            )
-            emotion_processed <- TRUE
-            processed_domains <- c(processed_domains, emotion_domains)
-          } else {
-            log_message(
-              paste("Skipping already processed emotion domain:", domain_name),
-              "DOMAINS"
-            )
-          }
-        } else if (domain_name == "ADHD") {
-          result <- process_adhd_domain_validated(is_child, neurobehav_data)
-          processed_domains <- c(processed_domains, domain_name)
-        } else {
-          result <- process_single_domain_validated(
-            domain_name,
-            config_info,
-            neurocog_data,
-            neurobehav_data
-          )
-          processed_domains <- c(processed_domains, domain_name)
-        }
-      }
-
-      # List generated files
-      list_generated_domain_files()
-
-      return(TRUE)
-    },
-    error = function(e) {
-      log_message(paste0("Error processing domains: ", e$message), "ERROR")
-      log_message("Will use fallback domain generation method", "WARNING")
-      return(FALSE)
+  # Validate domains have data first
+  valid_domains <- c()
+  for (domain_key in domain_keys) {
+    validation <- factory$validate_domain_data(domain_key, detailed = TRUE)
+    if (validation$valid) {
+      valid_domains <- c(valid_domains, domain_key)
+      message(paste("✅", domain_key, "has data"))
+    } else {
+      message(paste("❌", domain_key, "skipped:", validation$details$error))
     }
-  )
+  }
+
+  if (length(valid_domains) == 0) {
+    stop("No valid domains found with data")
+  }
+
+  # Process each valid domain
+  results <- list()
+
+  for (domain_key in valid_domains) {
+    message(paste("\n📊 Processing", domain_key, "..."))
+
+    # Get domain config
+    config <- factory$get_processor_config(domain_key)
+
+    if (is.null(config)) {
+      message(paste("❌ No configuration for", domain_key))
+      next
+    }
+
+    # Check if multi-rater
+    if (config$multi_rater) {
+      processors <- factory$create_multi_processor(domain_key, age_group)
+      if (!is.null(processors)) {
+        for (rater in names(processors)) {
+          processor <- processors[[rater]]
+          result <- tryCatch(
+            {
+              processor$process(generate_domain_files = TRUE)
+              message(paste("  ✅", rater, "processed successfully"))
+              processor
+            },
+            error = function(e) {
+              message(paste("  ❌", rater, "failed:", e$message))
+              NULL
+            }
+          )
+          results[[paste(domain_key, rater, sep = "_")]] <- result
+        }
+      }
+    } else {
+      # Single rater domain
+      processor <- factory$create_processor(domain_key, age_group)
+      if (!is.null(processor)) {
+        result <- tryCatch(
+          {
+            processor$process(generate_domain_files = TRUE)
+            message(paste("  ✅", domain_key, "processed successfully"))
+            processor
+          },
+          error = function(e) {
+            message(paste("  ❌", domain_key, "failed:", e$message))
+            NULL
+          }
+        )
+        results[[domain_key]] <- result
+      }
+    }
+  }
+
+  return(results)
 }
+
+# Example usage:
+# results <- process_all_domains(
+#   domain_keys = c("iq", "memory", "executive", "emotion", "adhd"),
+#   age_group = "child"
+# )
+
+# process_all_domains <- function(config, patient_type, data_status) {
+#   # workflow_utils functions are available through neuro2 package
+#   # domain_validation_utils functions are available through neuro2 package
+
+#   tryCatch(
+#     {
+#       log_message("Using DomainProcessorR6 to generate domain files", "DOMAINS")
+
+#       # Load data for validation
+#       neurocog_data <- NULL
+#       neurobehav_data <- NULL
+
+#       # Read data files for validation
+#       data_format <- get_data_format(config, "neurocog")
+#       neurocog_file <- file.path(
+#         config$data$output_dir,
+#         paste0("neurocog.", data_format)
+#       )
+#       if (file.exists(neurocog_file)) {
+#         if (data_format == "parquet") {
+#           neurocog_data <- arrow::read_parquet(neurocog_file)
+#         } else {
+#           neurocog_data <- readr::read_csv(
+#             neurocog_file,
+#             show_col_types = FALSE
+#           )
+#         }
+#       }
+
+#       if (data_status$neurobehav) {
+#         neurobehav_format <- get_data_format(config, "neurobehav")
+#         neurobehav_file <- file.path(
+#           config$data$output_dir,
+#           paste0("neurobehav.", neurobehav_format)
+#         )
+#         if (file.exists(neurobehav_file)) {
+#           if (neurobehav_format == "parquet") {
+#             neurobehav_data <- arrow::read_parquet(neurobehav_file)
+#           } else {
+#             neurobehav_data <- readr::read_csv(
+#               neurobehav_file,
+#               show_col_types = FALSE
+#             )
+#           }
+#         }
+#       }
+
+#       # Define domain configuration
+#       domain_config <- list(
+#         "General Cognitive Ability" = list(
+#           pheno = "iq",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "Academic Skills" = list(
+#           pheno = "academics",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "Verbal/Language" = list(
+#           pheno = "verbal",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "Visual Perception/Construction" = list(
+#           pheno = "spatial",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "Memory" = list(pheno = "memory", input_file = "data/neurocog.csv"),
+#         "Attention/Executive" = list(
+#           pheno = "executive",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "Motor" = list(pheno = "motor", input_file = "data/neurocog.csv"),
+#         "Social Cognition" = list(
+#           pheno = "social",
+#           input_file = "data/neurocog.csv"
+#         ),
+#         "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.csv"),
+#         "Behavioral/Emotional/Social" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Psychiatric Disorders" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Personality Disorders" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Psychosocial Problems" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Substance Use" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Emotional/Behavioral/Personality" = list(
+#           pheno = "emotion",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Adaptive Functioning" = list(
+#           pheno = "adaptive",
+#           input_file = "data/neurobehav.csv"
+#         ),
+#         "Daily Living" = list(
+#           pheno = "daily_living",
+#           input_file = "data/neurocog.csv"
+#         )
+#       )
+
+#       # Validate which domains have data BEFORE processing
+#       valid_domains_only <- get_domains_with_data(
+#         neurocog_data,
+#         neurobehav_data,
+#         domain_config
+#       )
+
+#       if (length(valid_domains_only) == 0) {
+#         log_message("No domains found with valid data", "WARNING")
+#         return(FALSE)
+#       }
+
+#       log_message(
+#         paste0("Found ", length(valid_domains_only), " domains with data"),
+#         "DOMAINS"
+#       )
+
+#       # Track processed domains
+#       processed_domains <- character()
+#       emotion_processed <- FALSE
+#       is_child <- patient_type == "child"
+
+#       # Process only validated domains
+#       for (domain_name in names(valid_domains_only)) {
+#         domain_info <- valid_domains_only[[domain_name]]
+#         config_info <- domain_info$config
+
+#         log_message(
+#           paste("Processing validated domain:", domain_name),
+#           "DOMAINS"
+#         )
+
+#         # Handle emotion domains specially
+#         emotion_domains <- c(
+#           "Behavioral/Emotional/Social",
+#           "Psychiatric Disorders",
+#           "Personality Disorders",
+#           "Psychosocial Problems",
+#           "Substance Use",
+#           "Emotional/Behavioral/Personality"
+#         )
+
+#         if (domain_name %in% emotion_domains) {
+#           if (!emotion_processed) {
+#             result <- process_emotion_domains_validated(
+#               is_child,
+#               emotion_domains,
+#               neurobehav_data
+#             )
+#             emotion_processed <- TRUE
+#             processed_domains <- c(processed_domains, emotion_domains)
+#           } else {
+#             log_message(
+#               paste("Skipping already processed emotion domain:", domain_name),
+#               "DOMAINS"
+#             )
+#           }
+#         } else if (domain_name == "ADHD") {
+#           result <- process_adhd_domain_validated(is_child, neurobehav_data)
+#           processed_domains <- c(processed_domains, domain_name)
+#         } else {
+#           result <- process_single_domain_validated(
+#             domain_name,
+#             config_info,
+#             neurocog_data,
+#             neurobehav_data
+#           )
+#           processed_domains <- c(processed_domains, domain_name)
+#         }
+#       }
+
+#       # List generated files
+#       list_generated_domain_files()
+
+#       return(TRUE)
+#     },
+#     error = function(e) {
+#       log_message(paste0("Error processing domains: ", e$message), "ERROR")
+#       log_message("Will use fallback domain generation method", "WARNING")
+#       return(FALSE)
+#     }
+#   )
+# }
 
 # Validated domain processing functions
 process_single_domain_validated <- function(

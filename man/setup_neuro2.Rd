@@ -2,16 +2,10 @@
 % Please edit documentation in R/setup_neuro2.R
 \name{setup_neuro2}
 \alias{setup_neuro2}
-\title{Setup neuro2 environment}
+\title{Setup neuro2 package environment}
 \usage{
-setup_neuro2(verbose = TRUE)
-}
-\arguments{
-\item{verbose}{Logical, whether to show verbose output}
-}
-\value{
-TRUE if successful
+setup_neuro2()
 }
 \description{
-Sets up the neuro2 environment and loads required functionality
+Setup neuro2 package environment
 }
