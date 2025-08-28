@@ -5,7 +5,7 @@
 #'
 #' @param config Configuration list from .load_workflow_config
 #' @return Logical indicating success
-.process_workflow_data <- function(config) {
+process_workflow_data <- function(config) {
   log_message("Processing data...", "WORKFLOW")
 
   # Source the data processor module if it exists
