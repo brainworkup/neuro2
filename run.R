@@ -1,18 +1,24 @@
 # Load the neuro2 package
 library(neuro2)
 
-# Source the required modules
+# Source the required modules in dependency order
+# Utils and config first (they have helper functions)
 source("R/workflow_utils.R")
 source("R/workflow_config.R")
-source("R/WorkflowRunnerR6.R")
+source("R/workflow_data_processor.R") # Critical: this was missing!
 
-# Source additional R6 classes that might be needed during Quarto rendering
+# Source R6 classes (these may have interdependencies)
 source("R/ScoreTypeCacheR6.R")
+source("R/NeuropsychResultsR6.R") # Before DomainProcessor if it uses this
 source("R/DomainProcessorR6.R")
+source("R/DomainProcessorFactoryR6.R")
 source("R/TableGTR6.R")
 source("R/DotplotR6.R")
 
-# Load configuration (this will use default config.yml if no args provided)
+# Source the main workflow runner last (it depends on everything else)
+source("R/WorkflowRunnerR6.R")
+
+# Load configuration using internal function (with dot)
 config <- .load_workflow_config("config.yml")
 
 # Create and run the workflow

@@ -368,7 +368,7 @@ process_all_domains <- function(
 # }
 
 # Validated domain processing functions
-..process_single_domain_validated <- function(
+.process_single_domain_validated <- function(
   domain_name,
   config,
   neurocog_data,

@@ -107,7 +107,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       }
 
       # Get available raters
-      raters <- private$.get_available_raters(domain_info, age_group)
+      raters <- private$get_available_raters(domain_info, age_group)
       self$logger$info(paste(
         "Creating multi-rater processors for",
         domain_key,
@@ -325,7 +325,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     # Create error handler
     create_error_handler = function() {
       # Private error handling functions
-      .handle_error <- function(error, context = NULL) {
+      handle_error <- function(error, context = NULL) {
         msg <- if (!is.null(context)) {
           paste0("[", context, "] ", error$message)
         } else {
@@ -334,7 +334,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
         self$logger$error(msg)
       }
 
-      .handle_warning <- function(warning, context = NULL) {
+      handle_warning <- function(warning, context = NULL) {
         msg <- if (!is.null(context)) {
           paste0("[", context, "] ", warning$message)
         } else {
@@ -344,17 +344,17 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       }
 
       list(
-        handle_error = .handle_error,
-        handle_warning = .handle_warning,
+        handle_error = handle_error,
+        handle_warning = handle_warning,
         safe_execute = function(expr, context = NULL, fallback = NULL) {
           tryCatch(
             expr(),
             error = function(e) {
-              .handle_error(e, context)
+              handle_error(e, context)
               return(fallback)
             },
             warning = function(w) {
-              .handle_warning(w, context)
+              handle_warning(w, context)
               invokeRestart("muffleWarning")
             }
           )
@@ -582,16 +582,24 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Get available raters for domain and age
-    .get_available_raters = function(domain_info, age_group) {
+    get_available_raters = function(domain_info, age_group) {
       if (!private$is_multi_rater(domain_info)) {
         return("self")
       }
 
       raters <- domain_info$raters
 
-      # Handle age-specific raters
+      # Handle age-specific raters (this is where the list issue might be)
       if (is.list(raters) && age_group %in% names(raters)) {
-        return(raters[[age_group]])
+        result <- raters[[age_group]]
+        # Ensure we always return a character vector, not a list
+        if (is.list(result)) {
+          warning(
+            "Raters configuration returned a list, converting to character vector"
+          )
+          result <- unlist(result, use.names = FALSE)
+        }
+        return(result)
       }
 
       # Handle simple rater list
@@ -599,6 +607,10 @@ DomainProcessorFactoryR6 <- R6::R6Class(
         return(raters)
       }
 
+      # If raters is still a list at this point, unlist it
+      if (is.list(raters)) {
+        return(unlist(raters, use.names = FALSE))
+      }
       return("self")
     },
 

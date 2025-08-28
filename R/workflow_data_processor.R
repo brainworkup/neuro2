@@ -5,9 +5,7 @@
 #'
 #' @param config Configuration list from .load_workflow_config
 #' @return Logical indicating success
-#' @rdname process_workflow_data
-#' @export
-process_workflow_data <- function(config) {
+.process_workflow_data <- function(config) {
   log_message("Processing data...", "WORKFLOW")
 
   # Source the data processor module if it exists
@@ -38,7 +36,6 @@ process_workflow_data <- function(config) {
   return(TRUE)
 }
 
-# ...existing code...
 
 # Simple query function for neuropsych data (for basic operations)
 # Note: For SQL queries, use query_neuropsych from duckdb_neuropsych_loader.R
@@ -74,8 +71,6 @@ process_workflow_data <- function(config) {
 
   return(data.frame())
 }
-
-# ...rest of existing code...
 
 # Load neuropsych data (neurocog)
 .load_neuropsych_data <- function(data_dir) {
