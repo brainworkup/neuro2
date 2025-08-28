@@ -71,7 +71,7 @@ validate_and_load_data <- function(
       }
 
       # Load the data
-      data_files[[file_type]] <- load_data_file(file_path, verbose = verbose)
+      data_files[[file_type]] <- .load_data_file(file_path, verbose = verbose)
     } else if (file_name %in% required_files) {
       stop("Required data file not found: ", file_path)
     } else {
@@ -84,7 +84,7 @@ validate_and_load_data <- function(
   # Validate data content
   for (file_type in names(data_files)) {
     data <- data_files[[file_type]]
-    validation <- validate_data_content(data, file_type, verbose = verbose)
+    validation <- .validate_data_content(data, file_type, verbose = verbose)
     validation_results[[file_type]]$content_valid <- validation$valid
     validation_results[[file_type]]$content_issues <- validation$issues
   }
@@ -119,7 +119,7 @@ validate_and_load_data <- function(
 #' @param verbose Whether to show loading messages
 #'
 #' @return Data frame
-load_data_file <- function(file_path, verbose = TRUE) {
+.load_data_file <- function(file_path, verbose = TRUE) {
   file_ext <- tolower(tools::file_ext(file_path))
 
   if (verbose) {
@@ -170,7 +170,7 @@ load_data_file <- function(file_path, verbose = TRUE) {
 #' @param verbose Whether to show validation messages
 #'
 #' @return List with validation results
-validate_data_content <- function(data, data_type, verbose = TRUE) {
+.validate_data_content <- function(data, data_type, verbose = TRUE) {
   validation <- list(valid = TRUE, issues = character())
 
   # Required columns for each data type
@@ -255,7 +255,7 @@ validate_data_content <- function(data, data_type, verbose = TRUE) {
 #' @param verbose Whether to show messages
 #'
 #' @return Character vector of available domains
-get_available_domains <- function(data_files, verbose = TRUE) {
+.get_available_domains <- function(data_files, verbose = TRUE) {
   all_domains <- character()
 
   for (file_type in names(data_files)) {

@@ -66,7 +66,7 @@ Create a lazy reference to a table for dplyr operations.
 domain, data_type = "neurocog", scales = NULL)}}{
 Process a specific domain using SQL.
 }
-\item{\code{calculate_z_stats(table_name, group_vars)}}{
+\item{\code{.calculate_z_stats(table_name, group_vars)}}{
 Calculate z-score statistics.
 }
 \item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6")}}{
@@ -112,7 +112,7 @@ Create optimized indexes for faster queries.
 \item \href{#method-DuckDBProcessorR6-execute}{\code{DuckDBProcessorR6$execute()}}
 \item \href{#method-DuckDBProcessorR6-query_lazy}{\code{DuckDBProcessorR6$query_lazy()}}
 \item \href{#method-DuckDBProcessorR6-process_domain}{\code{DuckDBProcessorR6$process_domain()}}
-\item \href{#method-DuckDBProcessorR6-calculate_z_stats}{\code{DuckDBProcessorR6$calculate_z_stats()}}
+\item \href{#method-DuckDBProcessorR6-.calculate_z_stats}{\code{DuckDBProcessorR6$.calculate_z_stats()}}
 \item \href{#method-DuckDBProcessorR6-export_to_r6}{\code{DuckDBProcessorR6$export_to_r6()}}
 \item \href{#method-DuckDBProcessorR6-get_domain_summary}{\code{DuckDBProcessorR6$get_domain_summary()}}
 \item \href{#method-DuckDBProcessorR6-create_indexes}{\code{DuckDBProcessorR6$create_indexes()}}
@@ -418,13 +418,13 @@ A data.frame with processed domain data.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DuckDBProcessorR6-calculate_z_stats"></a>}}
-\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-calculate_z_stats}{}}}
-\subsection{Method \code{calculate_z_stats()}}{
+\if{html}{\out{<a id="method-DuckDBProcessorR6-.calculate_z_stats"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-.calculate_z_stats}{}}}
+\subsection{Method \code{.calculate_z_stats()}}{
 Compute z-score statistics grouped by
 variables for a given table.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$calculate_z_stats(table_name, group_vars)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$.calculate_z_stats(table_name, group_vars)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

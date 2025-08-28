@@ -307,7 +307,7 @@ extract_wisc5_data <- function(
 #' @param save_intermediate Logical, whether to save intermediate CSV files
 #' @return A processed dataframe with test results
 #'
-process_wais5_data <- function(
+.process_wais5_data <- function(
   patient,
   file_path = NULL,
   test_type = c("subtest", "index"),
@@ -506,14 +506,14 @@ process_wais5_data <- function(
 #' @param save_to_g Logical, whether to append to g.csv file
 #' @return A combined dataframe with both subtest and index results
 #'
-process_wais5_complete <- function(
+.process_wais5_complete <- function(
   patient,
   file_path = NULL,
   save_to_g = TRUE
 ) {
   # Process subtests
   message("Processing WAIS-5 subtests...")
-  wais5_subtest <- process_wais5_data(
+  wais5_subtest <- .process_wais5_data(
     patient = patient,
     file_path = file_path,
     test_type = "subtest",
@@ -522,7 +522,7 @@ process_wais5_complete <- function(
 
   # Process indexes (will prompt for file if file_path is NULL)
   message("Processing WAIS-5 indexes...")
-  wais5_index <- process_wais5_data(
+  wais5_index <- .process_wais5_data(
     patient = patient,
     file_path = file_path,
     test_type = "index",

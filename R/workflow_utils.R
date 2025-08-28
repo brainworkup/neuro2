@@ -27,7 +27,7 @@ log_message <- function(message, type = "INFO", log_file = "workflow.log") {
 }
 
 # Console output functions
-print_colored <- function(message, color = "blue") {
+.print_colored <- function(message, color = "blue") {
   colors <- list(
     red = "\033[0;31m",
     green = "\033[0;32m",
@@ -39,20 +39,20 @@ print_colored <- function(message, color = "blue") {
   cat(paste0(colors[[color]], message, colors$reset, "\n"))
 }
 
-print_header <- function() {
-  print_colored(
+.print_header <- function() {
+  .print_colored(
     "🧠 NEUROPSYCHOLOGICAL REPORT GENERATION - UNIFIED WORKFLOW",
     "blue"
   )
-  print_colored(
+  .print_colored(
     "===========================================================",
     "blue"
   )
-  print_colored("")
+  .print_colored("")
 }
 
 # File and directory utilities
-find_directory <- function(
+.find_directory <- function(
   primary_dir,
   alternative_dirs,
   dir_type = "directory"
@@ -62,7 +62,7 @@ find_directory <- function(
   }
 
   log_message(
-    paste0(capitalize(dir_type), " directory not found: ", primary_dir),
+    paste0(.capitalize(dir_type), " directory not found: ", primary_dir),
     "WARNING"
   )
 
@@ -79,7 +79,7 @@ find_directory <- function(
   return(NULL)
 }
 
-ensure_template_file <- function(template_file, log_type = "INFO") {
+.ensure_template_file <- function(template_file, log_type = "INFO") {
   log_message(paste0("Checking for template file: ", template_file), log_type)
   log_message(paste0("Current working directory: ", getwd()), log_type)
 
@@ -119,7 +119,7 @@ ensure_template_file <- function(template_file, log_type = "INFO") {
   }
 }
 
-create_directories <- function(dirs) {
+.create_directories <- function(dirs) {
   for (dir in dirs) {
     if (!dir.exists(dir)) {
       dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -129,12 +129,12 @@ create_directories <- function(dirs) {
 }
 
 # Helper functions
-capitalize <- function(str) {
+.capitalize <- function(str) {
   paste0(toupper(substring(str, 1, 1)), substring(str, 2))
 }
 
 # Package management
-ensure_packages <- function(required_packages) {
+.ensure_packages <- function(required_packages) {
   for (pkg in required_packages) {
     if (!requireNamespace(pkg, quietly = TRUE)) {
       log_message(paste("Installing package:", pkg), "SETUP")
@@ -145,7 +145,7 @@ ensure_packages <- function(required_packages) {
 }
 
 # Template file checking
-check_essential_files <- function(
+.check_essential_files <- function(
   essential_files,
   template_dir = "inst/quarto/templates/typst-report"
 ) {
@@ -154,14 +154,14 @@ check_essential_files <- function(
   for (file in essential_files) {
     if (!file.exists(file)) {
       if (file.exists(file.path(template_dir, file))) {
-        print_colored(
+        .print_colored(
           paste0(
             "⚠️ Essential template file not found in working directory: ",
             file
           ),
           "yellow"
         )
-        print_colored(
+        .print_colored(
           paste0(
             "  This file exists in ",
             template_dir,
@@ -170,11 +170,11 @@ check_essential_files <- function(
           "yellow"
         )
       } else {
-        print_colored(
+        .print_colored(
           paste0("⚠️ Essential template file not found: ", file),
           "red"
         )
-        print_colored(
+        .print_colored(
           paste0(
             "  This file is required and should be created before running the workflow."
           ),
@@ -189,7 +189,7 @@ check_essential_files <- function(
 }
 
 # Data loading utilities
-load_neurocog_data <- function(data_dir) {
+.load_neurocog_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurocog.parquet")
   feather_file <- file.path(data_dir, "neurocog.feather")
   csv_file <- file.path(data_dir, "neurocog.csv")
@@ -207,7 +207,7 @@ load_neurocog_data <- function(data_dir) {
   }
 }
 
-load_neurobehav_data <- function(data_dir) {
+.load_neurobehav_data <- function(data_dir) {
   parquet_file2 <- file.path(data_dir, "neurobehav.parquet")
   feather_file2 <- file.path(data_dir, "neurobehav.feather")
   csv_file2 <- file.path(data_dir, "neurobehav.csv")
@@ -225,7 +225,7 @@ load_neurobehav_data <- function(data_dir) {
   }
 }
 
-load_validity_data <- function(data_dir) {
+.load_validity_data <- function(data_dir) {
   parquet_file3 <- file.path(data_dir, "validity.parquet")
   feather_file3 <- file.path(data_dir, "validity.feather")
   csv_file3 <- file.path(data_dir, "validity.csv")
@@ -243,10 +243,10 @@ load_validity_data <- function(data_dir) {
   }
 }
 
-get_domains_from_data <- function(data_dir) {
-  neurocog_data <- load_neurocog_data(data_dir)
-  neurobehav_data <- load_neurobehav_data(data_dir)
-  validity_data <- load_validity_data(data_dir)
+.get_domains_from_data <- function(data_dir) {
+  neurocog_data <- .load_neurocog_data(data_dir)
+  neurobehav_data <- .load_neurobehav_data(data_dir)
+  validity_data <- .load_validity_data(data_dir)
 
   domains <- character(0)
 
@@ -276,7 +276,7 @@ get_domains_from_data <- function(data_dir) {
 }
 
 # Patient type determination
-determine_patient_type <- function(age) {
+.determine_patient_type <- function(age) {
   if (is.null(age)) {
     return("child")
   }

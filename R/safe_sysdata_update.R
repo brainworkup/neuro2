@@ -4,7 +4,7 @@
 #' @param file Path to the .rda file (default: "R/sysdata.rda")
 #' @param overwrite Character vector of object names that should be overwritten
 #' @param add_only Logical, if TRUE only add new objects, never overwrite
-safe_use_data_internal <- function(
+.safe_use_data_internal <- function(
   ...,
   file = "R/sysdata.rda",
   overwrite = NULL,

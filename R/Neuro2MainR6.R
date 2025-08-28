@@ -13,13 +13,13 @@
 #'   \item{\code{$check_environment}}{See method docs below.}
 #'   \item{\code{$load_data}}{See method docs below.}
 #'   \item{\code{$process_domains}}{See method docs below.}
-#'   \item{\code{$process_single_domain}}{See method docs below.}
+#'   \item{\code{$.process_single_domain}}{See method docs below.}
 #'   \item{\code{$generate_report}}{See method docs below.}
 #'   \item{\code{$run_full_workflow}}{See method docs below.}
 #'   \item{\code{$detect_age_group}}{See method docs below.}
 #'   \item{\code{$validate_domains}}{See method docs below.}
 #'   \item{\code{$show_summary}}{See method docs below.}
-#'   \item{\code{$get_available_domains}}{See method docs below.}
+#'   \item{\code{$.get_available_domains}}{See method docs below.}
 #'   \item{\code{$get_status}}{See method docs below.}
 #' }
 #'
@@ -279,14 +279,14 @@ Neuro2MainR6 <- R6::R6Class(
         # Handle multi-rater processors
         if (is.list(processor_item) && !inherits(processor_item, "R6")) {
           for (rater in names(processor_item)) {
-            self$process_single_domain(
+            self$.process_single_domain(
               processor_item[[rater]],
               domain_key,
               rater
             )
           }
         } else {
-          self$process_single_domain(processor_item, domain_key)
+          self$.process_single_domain(processor_item, domain_key)
         }
       }
 
@@ -310,7 +310,7 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param rater Optional rater label for behavioral measures (e.g., 'self','parent','teacher').
     #' @return The created/updated domain processor (invisibly).
 
-    process_single_domain = function(processor, domain_key, rater = "self") {
+    .process_single_domain = function(processor, domain_key, rater = "self") {
       self$error_handler$safe_execute(
         {
           # Load and process data
@@ -322,7 +322,7 @@ Neuro2MainR6 <- R6::R6Class(
           # Generate QMD files if enabled
           if (self$config$get("report.generate_qmd", TRUE)) {
             if (processor$has_multiple_raters()) {
-              processor$generate_emotion_child_qmd()
+              processor$.generate_emotion_child_qmd()
             } else {
               processor$generate_domain_qmd()
             }
@@ -545,7 +545,7 @@ Neuro2MainR6 <- R6::R6Class(
 
     #' @return Character vector of domain names.
 
-    get_available_domains = function() {
+    .get_available_domains = function() {
       self$factory$get_registry_info()
     },
 

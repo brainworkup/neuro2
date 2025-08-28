@@ -11,7 +11,7 @@ Manages score type mappings with caching to avoid repetitive lookups
 \describe{
 \item{initialize}{Initialize the cache with default footnotes and empty mappings.}
 \item{build_mappings}{Build the score type mappings from lookup data (runs once).}
-\item{get_score_groups}{Get score type groups for specific test names.}
+\item{.get_score_groups}{Get score type groups for specific test names.}
 \item{get_footnotes}{Get footnotes for specified score types.}
 \item{is_multi_score_battery}{Check if a test uses multiple score types.}
 }
@@ -35,7 +35,7 @@ Manages score type mappings with caching to avoid repetitive lookups
 \itemize{
 \item \href{#method-ScoreTypeCacheR6-new}{\code{ScoreTypeCacheR6$new()}}
 \item \href{#method-ScoreTypeCacheR6-build_mappings}{\code{ScoreTypeCacheR6$build_mappings()}}
-\item \href{#method-ScoreTypeCacheR6-get_score_groups}{\code{ScoreTypeCacheR6$get_score_groups()}}
+\item \href{#method-ScoreTypeCacheR6-.get_score_groups}{\code{ScoreTypeCacheR6$.get_score_groups()}}
 \item \href{#method-ScoreTypeCacheR6-get_footnotes}{\code{ScoreTypeCacheR6$get_footnotes()}}
 \item \href{#method-ScoreTypeCacheR6-is_multi_score_battery}{\code{ScoreTypeCacheR6$is_multi_score_battery()}}
 \item \href{#method-ScoreTypeCacheR6-clone}{\code{ScoreTypeCacheR6$clone()}}
@@ -69,13 +69,13 @@ Invisibly returns self for method chaining
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ScoreTypeCacheR6-get_score_groups"></a>}}
-\if{latex}{\out{\hypertarget{method-ScoreTypeCacheR6-get_score_groups}{}}}
-\subsection{Method \code{get_score_groups()}}{
+\if{html}{\out{<a id="method-ScoreTypeCacheR6-.get_score_groups"></a>}}
+\if{latex}{\out{\hypertarget{method-ScoreTypeCacheR6-.get_score_groups}{}}}
+\subsection{Method \code{.get_score_groups()}}{
 Get score type groups for specific test names. Returns a list where each
 element is a score type with its associated test names.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ScoreTypeCacheR6$get_score_groups(test_names)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ScoreTypeCacheR6$.get_score_groups(test_names)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

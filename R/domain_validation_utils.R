@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
 #' @param data_source Data frame to check
 #' @param min_rows Minimum number of rows required (default: 1)
 #' @return List with validation results
-validate_domain_data_exists <- function(
+.validate_domain_data_exists <- function(
   domain_name,
   data_source,
   min_rows = 1
@@ -69,7 +69,7 @@ validate_domain_data_exists <- function(
 #' @param neurobehav_data Neurobehavioral data
 #' @param domain_config Domain configuration list
 #' @return List of domains with data
-get_domains_with_data <- function(
+.get_domains_with_data <- function(
   neurocog_data,
   neurobehav_data,
   domain_config
@@ -87,7 +87,7 @@ get_domains_with_data <- function(
     }
 
     # Validate data exists
-    validation <- validate_domain_data_exists(domain_name, data_source)
+    validation <- .validate_domain_data_exists(domain_name, data_source)
 
     if (validation$has_data) {
       domains_with_data[[domain_name]] <- list(

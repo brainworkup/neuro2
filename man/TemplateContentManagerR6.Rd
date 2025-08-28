@@ -25,7 +25,7 @@ The class categorizes template files into domains:
 \examples{
 # Example 1: Initialize and list available domains
 template_mgr <- TemplateContentManagerR6$new()
-domains <- template_mgr$get_available_domains()
+domains <- template_mgr$.get_available_domains()
 print(domains$domains) # List available domain templates
 
 # Example 2: Retrieve content from a specific template file
@@ -54,7 +54,7 @@ if (!is.null(iq_content)) {
 \item \href{#method-TemplateContentManagerR6-new}{\code{TemplateContentManagerR6$new()}}
 \item \href{#method-TemplateContentManagerR6-refresh_content_list}{\code{TemplateContentManagerR6$refresh_content_list()}}
 \item \href{#method-TemplateContentManagerR6-get_content}{\code{TemplateContentManagerR6$get_content()}}
-\item \href{#method-TemplateContentManagerR6-get_available_domains}{\code{TemplateContentManagerR6$get_available_domains()}}
+\item \href{#method-TemplateContentManagerR6-.get_available_domains}{\code{TemplateContentManagerR6$.get_available_domains()}}
 \item \href{#method-TemplateContentManagerR6-clone}{\code{TemplateContentManagerR6$clone()}}
 }
 }
@@ -123,12 +123,12 @@ with a warning
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TemplateContentManagerR6-get_available_domains"></a>}}
-\if{latex}{\out{\hypertarget{method-TemplateContentManagerR6-get_available_domains}{}}}
-\subsection{Method \code{get_available_domains()}}{
+\if{html}{\out{<a id="method-TemplateContentManagerR6-.get_available_domains"></a>}}
+\if{latex}{\out{\hypertarget{method-TemplateContentManagerR6-.get_available_domains}{}}}
+\subsection{Method \code{.get_available_domains()}}{
 Get a categorized list of available template domains
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TemplateContentManagerR6$get_available_domains()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TemplateContentManagerR6$.get_available_domains()}\if{html}{\out{</div>}}
 }
 
 \subsection{Details}{

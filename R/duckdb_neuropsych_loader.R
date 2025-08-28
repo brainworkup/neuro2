@@ -187,9 +187,9 @@ load_data_duckdb <- function(
   neurobehav_groups <- c("domain", "subdomain", "narrow")
   validity_groups <- c("domain", "subdomain", "narrow")
 
-  neurocog <- calculate_z_stats(neurocog, neurocog_groups)
-  neurobehav <- calculate_z_stats(neurobehav, neurobehav_groups)
-  validity <- calculate_z_stats(validity, validity_groups)
+  neurocog <- .calculate_z_stats(neurocog, neurocog_groups)
+  neurobehav <- .calculate_z_stats(neurobehav, neurobehav_groups)
+  validity <- .calculate_z_stats(validity, validity_groups)
 
   # Prepare the list of result tables
   result_list <- list(
@@ -508,7 +508,7 @@ run_example_query <- function(query_name, data_dir = "data") {
 #' @param data Data frame containing neuropsychological test data
 #' @param groups Character vector of grouping variables
 #' @return Data frame with added z-statistics
-calculate_z_stats <- function(data, groups) {
+.calculate_z_stats <- function(data, groups) {
   # Filter out NA group variables to avoid unnecessary computations
   valid_vars <- groups[groups %in% names(data)]
 

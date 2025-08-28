@@ -3,7 +3,7 @@
 
 # Workflow Setup Functions
 
-setup_workflow_environment <- function(config) {
+.setup_workflow_environment <- function(config) {
   # Removed: source("R/workflow_utils.R") - functions available from package
 
   tryCatch(
@@ -23,7 +23,7 @@ setup_workflow_environment <- function(config) {
 }
 
 # Load required libraries for the workflow
-load_workflow_libraries <- function() {
+.load_workflow_libraries <- function() {
   # Removed: source("R/workflow_utils.R") - functions available from package
 
   required_packages <- c(
@@ -62,7 +62,7 @@ load_workflow_libraries <- function() {
 }
 
 # Setup project directories
-setup_project_directories <- function(base_dir = ".") {
+.setup_project_directories <- function(base_dir = ".") {
   # Removed: source("R/workflow_utils.R") - functions available from package
 
   required_dirs <- c("data", "figs", "output", "tmp")
@@ -79,13 +79,13 @@ setup_project_directories <- function(base_dir = ".") {
   return(TRUE)
 }
 
-copy_template_files <- function() {
+.copy_template_files <- function() {
   # workflow_utils functions are available through neuro2 package
 
   log_message("Copying template files to working directory...", "SETUP")
 
   # Find template directory
-  template_dir <- find_template_directory()
+  template_dir <- .find_template_directory()
 
   if (is.null(template_dir)) {
     log_message("Could not find template directory in any location", "ERROR")
@@ -163,12 +163,12 @@ copy_template_files <- function() {
   }
 
   # Verify essential files exist after copying
-  verify_essential_files(template_dir)
+  .verify_essential_files(template_dir)
 
   return(TRUE)
 }
 
-find_template_directory <- function() {
+.find_template_directory <- function() {
   # workflow_utils functions are available through neuro2 package
 
   # First try using system.file (for installed package)
@@ -187,7 +187,7 @@ find_template_directory <- function() {
   }
 
   # Check if template directory exists using helper function
-  template_dir <- find_directory(
+  template_dir <- .find_directory(
     template_dir,
     c(
       "inst/quarto/templates/typst-report",
@@ -200,7 +200,7 @@ find_template_directory <- function() {
   return(template_dir)
 }
 
-verify_essential_files <- function(template_dir) {
+.verify_essential_files <- function(template_dir) {
   # workflow_utils functions are available through neuro2 package
 
   essential_files <- c(
@@ -237,13 +237,13 @@ verify_essential_files <- function(template_dir) {
   }
 }
 
-setup_quarto_extensions <- function(report_format) {
+.setup_quarto_extensions <- function(report_format) {
   # workflow_utils functions are available through neuro2 package
 
   log_message("Setting up Quarto extensions...", "SETUP")
 
   # Find extensions directory
-  extensions_dir <- find_extensions_directory()
+  extensions_dir <- .find_extensions_directory()
 
   if (is.null(extensions_dir)) {
     log_message(
@@ -266,7 +266,7 @@ setup_quarto_extensions <- function(report_format) {
   # Copy brainworkup directory with all extensions
   brainworkup_dir <- file.path(extensions_dir, "brainworkup")
   if (dir.exists(brainworkup_dir)) {
-    copy_extensions(brainworkup_dir)
+    .copy_extensions(brainworkup_dir)
 
     # Verify required extension exists
     required_extension <- gsub("-typst$", "", report_format)
@@ -291,7 +291,7 @@ setup_quarto_extensions <- function(report_format) {
   return(TRUE)
 }
 
-find_extensions_directory <- function() {
+.find_extensions_directory <- function() {
   # workflow_utils functions are available through neuro2 package
 
   # First try using system.file (for installed package)
@@ -307,7 +307,7 @@ find_extensions_directory <- function() {
   }
 
   # Check if extensions directory exists using helper function
-  extensions_dir <- find_directory(
+  extensions_dir <- .find_directory(
     extensions_dir,
     c(
       "inst/quarto/_extensions",
@@ -320,7 +320,7 @@ find_extensions_directory <- function() {
   return(extensions_dir)
 }
 
-copy_extensions <- function(brainworkup_dir) {
+.copy_extensions <- function(brainworkup_dir) {
   # workflow_utils functions are available through neuro2 package
 
   # Create brainworkup directory in _extensions
@@ -370,7 +370,7 @@ copy_extensions <- function(brainworkup_dir) {
   }
 }
 
-check_r6_files <- function() {
+.check_r6_files <- function() {
   # workflow_utils functions are available through neuro2 package
 
   r6_files <- c(
@@ -396,7 +396,7 @@ check_r6_files <- function() {
   }
 }
 
-check_input_files <- function(input_dir) {
+.check_input_files <- function(input_dir) {
   # workflow_utils functions are available through neuro2 package
 
   csv_files <- list.files(input_dir, pattern = "\\.csv$")

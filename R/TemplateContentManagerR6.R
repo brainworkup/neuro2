@@ -22,7 +22,7 @@
 #' @examples
 #' # Example 1: Initialize and list available domains
 #' template_mgr <- TemplateContentManagerR6$new()
-#' domains <- template_mgr$get_available_domains()
+#' domains <- template_mgr$.get_available_domains()
 #' print(domains$domains) # List available domain templates
 #'
 #' # Example 2: Retrieve content from a specific template file
@@ -110,7 +110,7 @@ TemplateContentManagerR6 <- R6::R6Class(
     #'
     #' @return A list with four named elements (tests, nse, domains, sirf),
     #'   each containing character vectors of filenames
-    get_available_domains = function() {
+    .get_available_domains = function() {
       # Return list of available domains grouped by type
       sections <- list(
         tests = grep("^_00", self$content_files, value = TRUE),

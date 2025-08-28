@@ -86,7 +86,7 @@
 #' domain, data_type = "neurocog", scales = NULL)}}{
 #'     Process a specific domain using SQL.
 #'   }
-#'   \item{\code{calculate_z_stats(table_name, group_vars)}}{
+#'   \item{\code{.calculate_z_stats(table_name, group_vars)}}{
 #'     Calculate z-score statistics.
 #'   }
 #'   \item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6")}}{
@@ -624,7 +624,7 @@ DuckDBProcessorR6 <- R6::R6Class(
     #' @param group_vars Character vector of column names to group by.
     #' @return A data.frame containing z-score summaries by group.
 
-    calculate_z_stats = function(table_name, group_vars) {
+    .calculate_z_stats = function(table_name, group_vars) {
       # For complex z-score calculations,
       # export to R and use the tidy_data function
       data <- self$query(sprintf(
@@ -632,14 +632,14 @@ DuckDBProcessorR6 <- R6::R6Class(
         table_name
       ))
 
-      # Check if calculate_z_stats function exists
-      if (exists("calculate_z_stats", mode = "function")) {
-        # Use the existing calculate_z_stats function from tidy_data.R
-        result <- calculate_z_stats(data, group_vars)
+      # Check if .calculate_z_stats function exists
+      if (exists(".calculate_z_stats", mode = "function")) {
+        # Use the existing .calculate_z_stats function from tidy_data.R
+        result <- .calculate_z_stats(data, group_vars)
       } else {
         # Basic implementation if the function doesn't exist
         warning(
-          "calculate_z_stats function not found. Using basic calculation."
+          ".calculate_z_stats function not found. Using basic calculation."
         )
         result <- data %>%
           dplyr::group_by(!!!syms(group_vars)) %>%

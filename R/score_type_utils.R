@@ -11,9 +11,9 @@ if (!exists(".ScoreTypeCacheR6")) {
 #' Get score type groups for test names
 #' @param test_names Character vector of test names
 #' @return Named list of score type groups
-get_score_groups <- function(test_names) {
+.get_score_groups <- function(test_names) {
   if (exists(".ScoreTypeCacheR6")) {
-    return(.ScoreTypeCacheR6$get_score_groups(test_names))
+    return(.ScoreTypeCacheR6$.get_score_groups(test_names))
   } else {
     # Fallback - return empty list
     return(list())
@@ -23,7 +23,7 @@ get_score_groups <- function(test_names) {
 #' Get footnotes for score types
 #' @param score_types Character vector of score types
 #' @return Named list of footnotes
-get_score_footnotes <- function(score_types) {
+.get_score_footnotes <- function(score_types) {
   if (exists(".ScoreTypeCacheR6")) {
     return(.ScoreTypeCacheR6$get_footnotes(score_types))
   } else {
@@ -34,7 +34,7 @@ get_score_footnotes <- function(score_types) {
 
 #' Initialize score type cache safely
 #' @return Logical indicating success
-init_score_type_cache <- function() {
+.init_score_type_cache <- function() {
   tryCatch(
     {
       if (!exists(".ScoreTypeCacheR6")) {

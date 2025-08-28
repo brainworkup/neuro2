@@ -8,7 +8,7 @@
 #'
 #' @return A configuration environment object with a get method
 #' @keywords internal
-get_config <- function() {
+.get_config <- function() {
   # Create a config object with get method
   config <- new.env(parent = emptyenv())
 

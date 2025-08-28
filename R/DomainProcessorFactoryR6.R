@@ -107,7 +107,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       }
 
       # Get available raters
-      raters <- private$get_available_raters(domain_info, age_group)
+      raters <- private$.get_available_raters(domain_info, age_group)
       self$logger$info(paste(
         "Creating multi-rater processors for",
         domain_key,
@@ -582,7 +582,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
     },
 
     # Get available raters for domain and age
-    get_available_raters = function(domain_info, age_group) {
+    .get_available_raters = function(domain_info, age_group) {
       if (!private$is_multi_rater(domain_info)) {
         return("self")
       }

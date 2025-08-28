@@ -1,19 +1,19 @@
 # Configuration Management Module
 # Handles loading and validating workflow configuration
 
-load_workflow_config <- function(config_file = "config.yml") {
+.load_workflow_config <- function(config_file = "config.yml") {
   # workflow_utils functions are available through neuro2 package
 
   log_message(paste0("Loading configuration from: ", config_file), "CONFIG")
 
   if (!file.exists(config_file)) {
-    config_file <- create_default_config(config_file)
+    config_file <- .create_default_config(config_file)
   }
 
   config <- yaml::read_yaml(config_file)
 
   # Validate configuration
-  validate_config(config)
+  .validate_config(config)
 
   # Display configuration
   log_message("Configuration loaded successfully", "CONFIG")
@@ -24,7 +24,7 @@ load_workflow_config <- function(config_file = "config.yml") {
   return(config)
 }
 
-create_default_config <- function(config_file) {
+.create_default_config <- function(config_file) {
   # workflow_utils functions are available through neuro2 package
 
   # Check if config.yml exists in template directory before creating default
@@ -77,7 +77,7 @@ create_default_config <- function(config_file) {
   return(config_file)
 }
 
-validate_config <- function(config) {
+.validate_config <- function(config) {
   # Validate required fields
   required_fields <- list(
     patient = c("name", "age", "doe"),
@@ -122,7 +122,7 @@ validate_config <- function(config) {
   return(config)
 }
 
-parse_config_args <- function(args = commandArgs(trailingOnly = TRUE)) {
+.parse_config_args <- function(args = commandArgs(trailingOnly = TRUE)) {
   config_file <- "config.yml"
 
   if (length(args) > 0) {

@@ -4,7 +4,7 @@
 # This script checks for all required template files and creates them if missing
 
 # Function to print colored messages
-print_colored <- function(message, color = "blue") {
+.print_colored <- function(message, color = "blue") {
   colors <- list(
     red = "\033[0;31m",
     green = "\033[0;32m",
@@ -16,22 +16,22 @@ print_colored <- function(message, color = "blue") {
   cat(paste0(colors[[color]], message, colors$reset, "\n"))
 }
 
-print_colored("🔍 CHECKING ALL REQUIRED TEMPLATE FILES", "blue")
-print_colored("=========================================", "blue")
-print_colored("")
+.print_colored("🔍 CHECKING ALL REQUIRED TEMPLATE FILES", "blue")
+.print_colored("=========================================", "blue")
+.print_colored("")
 
 # Define the template directory
 template_dir <- "inst/quarto/templates/typst-report"
 
 # Check if the template directory exists
 if (!dir.exists(template_dir)) {
-  print_colored(paste("Template directory not found:", template_dir), "red")
+  .print_colored(paste("Template directory not found:", template_dir), "red")
   stop("Template directory not found")
 }
 
 # List all files in the template directory
 template_files <- list.files(template_dir, full.names = TRUE)
-print_colored(
+.print_colored(
   paste("Found", length(template_files), "files in template directory"),
   "blue"
 )
@@ -61,23 +61,23 @@ for (file in essential_files) {
 
   if (!file.exists(file)) {
     if (file.exists(source_file)) {
-      print_colored(
+      .print_colored(
         paste("Copying", file, "from template directory..."),
         "yellow"
       )
       file.copy(source_file, file)
       if (file.exists(file)) {
-        print_colored(paste("✓ Successfully copied", file), "green")
+        .print_colored(paste("✓ Successfully copied", file), "green")
       } else {
-        print_colored(paste("✗ Failed to copy", file), "red")
+        .print_colored(paste("✗ Failed to copy", file), "red")
         missing_files <- c(missing_files, file)
       }
     } else {
-      print_colored(paste("✗ Source file not found:", source_file), "red")
+      .print_colored(paste("✗ Source file not found:", source_file), "red")
       missing_files <- c(missing_files, file)
     }
   } else {
-    print_colored(paste("✓ File already exists:", file), "green")
+    .print_colored(paste("✓ File already exists:", file), "green")
   }
 }
 
@@ -94,7 +94,7 @@ domain_files <- c(
 
 for (file in domain_files) {
   if (!file.exists(file)) {
-    print_colored(paste("Creating domain file:", file), "yellow")
+    .print_colored(paste("Creating domain file:", file), "yellow")
 
     # Create a simple domain template
     content <- paste0(
@@ -116,30 +116,30 @@ for (file in domain_files) {
     writeLines(content, file)
 
     if (file.exists(file)) {
-      print_colored(paste("✓ Successfully created", file), "green")
+      .print_colored(paste("✓ Successfully created", file), "green")
     } else {
-      print_colored(paste("✗ Failed to create", file), "red")
+      .print_colored(paste("✗ Failed to create", file), "red")
       missing_files <- c(missing_files, file)
     }
   } else {
-    print_colored(paste("✓ Domain file already exists:", file), "green")
+    .print_colored(paste("✓ Domain file already exists:", file), "green")
   }
 }
 
 # Final check
 if (length(missing_files) > 0) {
-  print_colored("Some essential files are still missing:", "red")
+  .print_colored("Some essential files are still missing:", "red")
   for (file in missing_files) {
-    print_colored(paste("  -", file), "red")
+    .print_colored(paste("  -", file), "red")
   }
-  print_colored(
+  .print_colored(
     "Please create these files manually before running the workflow",
     "red"
   )
   quit(status = 1)
 } else {
-  print_colored("✅ All essential template files are in place", "green")
-  print_colored(
+  .print_colored("✅ All essential template files are in place", "green")
+  .print_colored(
     "You can now run the workflow with: Rscript unified_workflow_runner.R config.yml",
     "green"
   )

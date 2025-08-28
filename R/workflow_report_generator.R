@@ -5,7 +5,7 @@
 #'
 #' @description This function replaces the R code chunks in generated domain files
 #' that depend on R6 classes with simpler code that just sets plot titles
-fix_generated_domain_files <- function() {
+.fix_generated_domain_files <- function() {
   # Find all domain files
   domain_files <- list.files(pattern = "^_02-[0-9]{2}_.*\\.qmd$")
   domain_files <- domain_files[!grepl("_text.*\\.qmd$", domain_files)]
@@ -114,7 +114,7 @@ fix_generated_domain_files <- function() {
 
 #' Generate Workflow Report
 #'
-#' @param config Configuration list from load_workflow_config
+#' @param config Configuration list from .load_workflow_config
 #' @return Logical indicating success
 #' @export
 generate_workflow_report <- function(config) {
@@ -128,15 +128,15 @@ generate_workflow_report <- function(config) {
   }
 
   # Fix domain files to remove R6 dependencies for Quarto rendering
-  fix_generated_domain_files()
+  .fix_generated_domain_files()
 
   # Run default report generation
-  template_file <- ensure_template_file("template.qmd")
+  template_file <- .ensure_template_file("template.qmd")
 
-  # Debug: Show what ensure_template_file returned
+  # Debug: Show what .ensure_template_file returned
   log_message(
     paste(
-      "ensure_template_file returned:",
+      ".ensure_template_file returned:",
       class(template_file),
       "with value:",
       template_file
@@ -187,7 +187,7 @@ generate_workflow_report <- function(config) {
 }
 
 # Print report summary
-print_report_summary <- function(config) {
+.print_report_summary <- function(config) {
   # Removed: source("R/workflow_utils.R") - not needed in R package
 
   log_message("Report generation complete", "REPORT")
@@ -210,7 +210,7 @@ print_report_summary <- function(config) {
 }
 
 # Ensure template file exists
-ensure_template_file <- function(template_file, log_type = "INFO") {
+.ensure_template_file <- function(template_file, log_type = "INFO") {
   log_message(paste("Checking for template file:", template_file), log_type)
   log_message(paste("Current working directory:", getwd()), log_type)
 

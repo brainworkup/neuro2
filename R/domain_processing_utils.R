@@ -43,7 +43,7 @@ create_domain_processor <- function(
   }
 
   # Create clean phenotype name
-  pheno <- clean_phenotype_name(domain_name)
+  pheno <- .clean_phenotype_name(domain_name)
 
   # Create processor with error handling
   processor <- tryCatch(
@@ -66,7 +66,7 @@ create_domain_processor <- function(
     processor$age_group <- age_group
 
     if (!is.null(test_lookup_file) && file.exists(test_lookup_file)) {
-      processor$test_lookup <- load_test_lookup(test_lookup_file)
+      processor$test_lookup <- .load_test_lookup(test_lookup_file)
     }
   }
 
@@ -233,7 +233,7 @@ process_domain_data <- function(pheno, domains) {
   processor <- DomainProcessorR6$new(
     domains = domains,
     pheno = pheno,
-    input_file = determine_input_file(pheno)
+    input_file = .determine_input_file(pheno)
   )
 
   processor$load_data()
@@ -243,22 +243,22 @@ process_domain_data <- function(pheno, domains) {
   data <- processor$data
 
   # Generate outputs
-  generate_text_results(data, pheno)
-  generate_domain_table(data, pheno)
-  generate_domain_figures(data, pheno)
+  .generate_text_results(data, pheno)
+  .generate_domain_table(data, pheno)
+  .generate_domain_figures(data, pheno)
 
   return(data)
 }
 
 #' Generate text results for all rater types
-generate_text_results <- function(data, pheno) {
+.generate_text_results <- function(data, pheno) {
   if (pheno %in% c("emotion", "adhd")) {
     # Multi-rater processing
-    raters <- get_available_raters(data)
+    raters <- .get_available_raters(data)
     for (rater in raters) {
-      rater_data <- filter_by_rater(data, rater)
+      rater_data <- .filter_by_rater(data, rater)
       if (nrow(rater_data) > 0) {
-        text_file <- get_text_filename(pheno, rater)
+        text_file <- .get_text_filename(pheno, rater)
         results_processor <- NeuropsychResultsR6$new(
           data = rater_data,
           file = text_file
@@ -268,7 +268,7 @@ generate_text_results <- function(data, pheno) {
     }
   } else {
     # Single rater
-    text_file <- get_text_filename(pheno)
+    text_file <- .get_text_filename(pheno)
     results_processor <- NeuropsychResultsR6$new(data = data, file = text_file)
     results_processor$process()
   }
@@ -279,7 +279,7 @@ generate_text_results <- function(data, pheno) {
 # ============================================================================
 
 #' Get available raters from data
-# get_available_raters <- function(data) {
+# .get_available_raters <- function(data) {
 #   if ("rater" %in% names(data)) {
 #     return(unique(data$rater[!is.na(data$rater)]))
 #   }
@@ -287,7 +287,7 @@ generate_text_results <- function(data, pheno) {
 # }
 
 # #' Filter data by specific rater
-# filter_by_rater <- function(data, rater) {
+# .filter_by_rater <- function(data, rater) {
 #   if ("rater" %in% names(data)) {
 #     return(data[data$rater == rater & !is.na(data$rater), ])
 #   }
@@ -295,7 +295,7 @@ generate_text_results <- function(data, pheno) {
 # }
 
 #' Determine input file based on phenotype
-determine_input_file <- function(pheno) {
+.determine_input_file <- function(pheno) {
   behavioral_phenos <- c("adhd", "emotion", "adaptive")
   if (pheno %in% behavioral_phenos) {
     return("data/neurobehav.parquet")
@@ -308,7 +308,7 @@ determine_input_file <- function(pheno) {
 # ============================================================================
 
 #' Get text filename for domain and rater
-# get_text_filename <- function(pheno, rater = NULL) {
+# .get_text_filename <- function(pheno, rater = NULL) {
 #   # Get domain number
 #   domain_numbers <- c(
 #     iq = "01",
@@ -343,7 +343,7 @@ determine_input_file <- function(pheno) {
 # ============================================================================
 
 #' Generate domain table
-# generate_domain_table <- function(data, pheno) {
+# .generate_domain_table <- function(data, pheno) {
 #   if (nrow(data) == 0) {
 #     return(NULL)
 #   }
@@ -368,7 +368,7 @@ determine_input_file <- function(pheno) {
 # }
 
 #' Generate domain figures
-# generate_domain_figures <- function(data, pheno) {
+# .generate_domain_figures <- function(data, pheno) {
 #   if (nrow(data) == 0) {
 #     return(NULL)
 #   }
@@ -408,7 +408,7 @@ determine_input_file <- function(pheno) {
 #'
 #' @param data A data frame containing neuropsych test results
 #' @return Character vector of available rater types
-get_available_raters <- function(data) {
+.get_available_raters <- function(data) {
   # First, check if the data even has a rater column
   if (!"rater" %in% names(data)) {
     # If no rater column exists, assume it's self-report data
@@ -441,7 +441,7 @@ get_available_raters <- function(data) {
 #' @param data A data frame containing neuropsych test results
 #' @param rater The specific rater to filter for ("self", "parent", "teacher", etc.)
 #' @return Data frame containing only rows for the specified rater
-filter_by_rater <- function(data, rater) {
+.filter_by_rater <- function(data, rater) {
   # If there's no rater column, just return all the data
   # This happens with single-rater domains like IQ tests
   if (!"rater" %in% names(data)) {
@@ -477,7 +477,7 @@ filter_by_rater <- function(data, rater) {
 #' @param pheno The phenotype/domain identifier (e.g., "memory", "adhd", "emotion")
 #' @param rater The rater type (optional, for multi-rater domains)
 #' @return Character string with the appropriate filename
-get_text_filename <- function(pheno, rater = NULL) {
+.get_text_filename <- function(pheno, rater = NULL) {
   # Map each domain to its number - this keeps files in logical order
   domain_numbers <- c(
     iq = "01",
@@ -530,7 +530,7 @@ get_text_filename <- function(pheno, rater = NULL) {
 #' @param data Processed neuropsych data for a specific domain
 #' @param pheno The phenotype/domain identifier
 #' @return A gt table object (or NULL if no data)
-generate_domain_table <- function(data, pheno) {
+.generate_domain_table <- function(data, pheno) {
   # Don't try to make a table if there's no data
   if (is.null(data) || nrow(data) == 0) {
     warning(paste("No data available to create table for:", pheno))
@@ -629,7 +629,7 @@ generate_domain_table <- function(data, pheno) {
 #' @param data Processed neuropsych data for a specific domain
 #' @param pheno The phenotype/domain identifier
 #' @return List of created plot objects (or empty list if no plots created)
-generate_domain_figures <- function(data, pheno) {
+.generate_domain_figures <- function(data, pheno) {
   # Don't try to make plots if there's no data
   if (is.null(data) || nrow(data) == 0) {
     warning(paste("No data available to create figures for:", pheno))
@@ -733,8 +733,8 @@ generate_domain_figures <- function(data, pheno) {
 
 # [Include all your existing validation and helper functions from domain_processor_utils.R]
 
-# Rest of your existing functions: validate_processor_inputs(), clean_phenotype_name(),
-# get_domain_key(), load_test_lookup(), etc.
+# Rest of your existing functions: validate_processor_inputs(), .clean_phenotype_name(),
+# .get_domain_key(), .load_test_lookup(), etc.
 #' Get domain information from test lookup or registry
 #'
 #' @param test_lookup_file Path to test lookup file (optional)
@@ -757,7 +757,7 @@ get_domain_info <- function(test_lookup_file = NULL, use_factory = TRUE) {
 
   # Fall back to test lookup file
   if (!is.null(test_lookup_file) && file.exists(test_lookup_file)) {
-    return(summarize_test_lookup(test_lookup_file))
+    return(.summarize_test_lookup(test_lookup_file))
   }
 
   # Return empty data frame if no source available
@@ -784,7 +784,7 @@ check_domain_raters <- function(
         factory <- DomainProcessorFactoryR6$new()
 
         # Try to get from registry
-        config <- factory$get_processor_config(get_domain_key(domain_name))
+        config <- factory$get_processor_config(.get_domain_key(domain_name))
 
         if (!is.null(config) && !is.null(config$available_raters)) {
           raters <- if (is.list(config$available_raters)) {
@@ -820,7 +820,7 @@ check_domain_raters <- function(
 
   # Fall back to test lookup if available
   if (!is.null(test_lookup_file) && file.exists(test_lookup_file)) {
-    return(get_raters_from_lookup(test_lookup_file, domain_name, age_group))
+    return(.get_raters_from_lookup(test_lookup_file, domain_name, age_group))
   }
 
   warning("Could not determine available raters")
@@ -994,7 +994,7 @@ validate_processor_inputs <- function(
 
 #' Clean a domain name to create a valid phenotype identifier
 #' @noRd
-clean_phenotype_name <- function(domain_name) {
+.clean_phenotype_name <- function(domain_name) {
   pheno <- tolower(gsub("[^A-Za-z0-9]", "_", domain_name))
   pheno <- gsub("_+", "_", pheno) # Remove multiple underscores
   pheno <- gsub("^_|_$", "", pheno) # Remove leading/trailing underscores
@@ -1003,7 +1003,7 @@ clean_phenotype_name <- function(domain_name) {
 
 #' Get domain key from domain name
 #' @noRd
-get_domain_key <- function(domain_name) {
+.get_domain_key <- function(domain_name) {
   # Map common domain names to keys
   domain_map <- list(
     "General Cognitive Ability" = "iq",
@@ -1036,12 +1036,12 @@ get_domain_key <- function(domain_name) {
   }
 
   # Return cleaned version as fallback
-  return(clean_phenotype_name(domain_name))
+  return(.clean_phenotype_name(domain_name))
 }
 
 #' Load test lookup file
 #' @noRd
-load_test_lookup <- function(file_path) {
+.load_test_lookup <- function(file_path) {
   if (!file.exists(file_path)) {
     return(NULL)
   }
@@ -1057,8 +1057,8 @@ load_test_lookup <- function(file_path) {
 
 #' Summarize test lookup file
 #' @noRd
-summarize_test_lookup <- function(test_lookup_file) {
-  lookup <- load_test_lookup(test_lookup_file)
+.summarize_test_lookup <- function(test_lookup_file) {
+  lookup <- .load_test_lookup(test_lookup_file)
 
   if (is.null(lookup)) {
     return(data.frame())
@@ -1091,8 +1091,8 @@ summarize_test_lookup <- function(test_lookup_file) {
 
 #' Get raters from test lookup
 #' @noRd
-get_raters_from_lookup <- function(test_lookup_file, domain_name, age_group) {
-  lookup <- load_test_lookup(test_lookup_file)
+.get_raters_from_lookup <- function(test_lookup_file, domain_name, age_group) {
+  lookup <- .load_test_lookup(test_lookup_file)
 
   if (is.null(lookup)) {
     return(data.frame())

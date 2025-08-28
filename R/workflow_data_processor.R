@@ -3,7 +3,7 @@
 
 #' Process Workflow Data
 #'
-#' @param config Configuration list from load_workflow_config
+#' @param config Configuration list from .load_workflow_config
 #' @return Logical indicating success
 #' @rdname process_workflow_data
 #' @export
@@ -43,11 +43,11 @@ process_workflow_data <- function(config) {
 # Simple query function for neuropsych data (for basic operations)
 # Note: For SQL queries, use query_neuropsych from duckdb_neuropsych_loader.R
 # IMPORTANT: This function has been renamed to avoid conflicts with DuckDB version
-query_neuropsych_simple <- function(query, data_dir) {
+.query_neuropsych_simple <- function(query, data_dir) {
   # Removed: source("R/workflow_utils.R") - not needed in R package
 
   # Try to load the data
-  neurocog_data <- load_neuropsych_data(data_dir)
+  neurocog_data <- .load_neuropsych_data(data_dir)
 
   if (is.null(neurocog_data)) {
     return(data.frame())
@@ -63,7 +63,7 @@ query_neuropsych_simple <- function(query, data_dir) {
       }
     } else if (grepl("FROM neurobehav", query, ignore.case = TRUE)) {
       # Load neurobehav data
-      neurobehav_data <- load_neurobehav_data(data_dir)
+      neurobehav_data <- .load_neurobehav_data(data_dir)
       if (!is.null(neurobehav_data) && "domain" %in% names(neurobehav_data)) {
         unique_domains <- unique(neurobehav_data$domain)
         unique_domains <- unique_domains[!is.na(unique_domains)]
@@ -78,7 +78,7 @@ query_neuropsych_simple <- function(query, data_dir) {
 # ...rest of existing code...
 
 # Load neuropsych data (neurocog)
-load_neuropsych_data <- function(data_dir) {
+.load_neuropsych_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurocog.parquet")
   csv_file <- file.path(data_dir, "neurocog.csv")
   feather_file <- file.path(data_dir, "neurocog.feather")
@@ -97,7 +97,7 @@ load_neuropsych_data <- function(data_dir) {
 }
 
 # Load neurobehav data
-load_neurobehav_data <- function(data_dir) {
+.load_neurobehav_data <- function(data_dir) {
   parquet_file <- file.path(data_dir, "neurobehav.parquet")
   csv_file <- file.path(data_dir, "neurobehav.csv")
   feather_file <- file.path(data_dir, "neurobehav.feather")
@@ -116,7 +116,7 @@ load_neurobehav_data <- function(data_dir) {
 }
 
 # Check if data exists
-check_data_exists <- function(config) {
+.check_data_exists <- function(config) {
   neurocog_exists <- file.exists(file.path(
     config$data$output_dir,
     "neurocog.csv"
@@ -135,7 +135,7 @@ check_data_exists <- function(config) {
 }
 
 # Get data format
-get_data_format <- function(config, data_type = "neurocog") {
+.get_data_format <- function(config, data_type = "neurocog") {
   input_format <- config$data$format
 
   if (is.null(input_format) || input_format == "all") {

@@ -188,7 +188,7 @@ TableGTR6 <- R6::R6Class(
       # Get score type groups efficiently
       if (length(self$grp_list) == 0) {
         # Auto-detect score groups using cache
-        self$grp_list <- self$score_type_cache$get_score_groups(existing_groups)
+        self$grp_list <- self$score_type_cache$.get_score_groups(existing_groups)
         message(paste(
           "Auto-detected score groups for",
           length(existing_groups),

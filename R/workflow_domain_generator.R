@@ -3,7 +3,7 @@
 
 #' Generate Workflow Domains
 #'
-#' @param config Configuration list from load_workflow_config
+#' @param config Configuration list from .load_workflow_config
 #' @return Logical indicating success
 #' @export
 generate_workflow_domains <- function(config) {
@@ -13,24 +13,24 @@ generate_workflow_domains <- function(config) {
   log_message("Generating domain files...", "WORKFLOW")
 
   # Determine patient type
-  patient_type <- determine_patient_type(config$patient$age)
+  patient_type <- .determine_patient_type(config$patient$age)
   log_message(paste("Determined patient type:", patient_type), "DOMAINS")
 
   # Check for required R6 classes
-  if (!check_domain_r6_files()) {
+  if (!.check_domain_r6_files()) {
     log_message("Will use fallback domain generation method", "WARNING")
-    return(run_fallback_domain_generation(config, patient_type))
+    return(.run_fallback_domain_generation(config, patient_type))
   }
 
   # Check if data exists
-  data_status <- check_data_exists(config)
+  data_status <- .check_data_exists(config)
   if (!data_status$neurocog) {
     log_message("No neurocog data files found", "DOMAINS")
-    return(run_fallback_domain_generation(config, patient_type))
+    return(.run_fallback_domain_generation(config, patient_type))
   }
 
   # Load R6 classes
-  load_domain_r6_classes()
+  .load_domain_r6_classes()
 
   # Process domains
   success <- process_all_domains(config, patient_type, data_status)
@@ -39,7 +39,7 @@ generate_workflow_domains <- function(config) {
   return(success)
 }
 
-check_domain_r6_files <- function() {
+.check_domain_r6_files <- function() {
   # workflow_utils functions are available through neuro2 package
 
   log_message(
@@ -71,7 +71,7 @@ check_domain_r6_files <- function() {
   return(TRUE)
 }
 
-load_domain_r6_classes <- function() {
+.load_domain_r6_classes <- function() {
   # R6 classes are available through the neuro2 package namespace
   # No need to source them individually
 }
@@ -186,7 +186,7 @@ process_all_domains <- function(
 #       neurobehav_data <- NULL
 
 #       # Read data files for validation
-#       data_format <- get_data_format(config, "neurocog")
+#       data_format <- .get_data_format(config, "neurocog")
 #       neurocog_file <- file.path(
 #         config$data$output_dir,
 #         paste0("neurocog.", data_format)
@@ -203,7 +203,7 @@ process_all_domains <- function(
 #       }
 
 #       if (data_status$neurobehav) {
-#         neurobehav_format <- get_data_format(config, "neurobehav")
+#         neurobehav_format <- .get_data_format(config, "neurobehav")
 #         neurobehav_file <- file.path(
 #           config$data$output_dir,
 #           paste0("neurobehav.", neurobehav_format)
@@ -284,7 +284,7 @@ process_all_domains <- function(
 #       )
 
 #       # Validate which domains have data BEFORE processing
-#       valid_domains_only <- get_domains_with_data(
+#       valid_domains_only <- .get_domains_with_data(
 #         neurocog_data,
 #         neurobehav_data,
 #         domain_config
@@ -327,7 +327,7 @@ process_all_domains <- function(
 
 #         if (domain_name %in% emotion_domains) {
 #           if (!emotion_processed) {
-#             result <- process_emotion_domains_validated(
+#             result <- .process_emotion_domains_validated(
 #               is_child,
 #               emotion_domains,
 #               neurobehav_data
@@ -341,10 +341,10 @@ process_all_domains <- function(
 #             )
 #           }
 #         } else if (domain_name == "ADHD") {
-#           result <- process_adhd_domain_validated(is_child, neurobehav_data)
+#           result <- .process_adhd_domain_validated(is_child, neurobehav_data)
 #           processed_domains <- c(processed_domains, domain_name)
 #         } else {
-#           result <- process_single_domain_validated(
+#           result <- ..process_single_domain_validated(
 #             domain_name,
 #             config_info,
 #             neurocog_data,
@@ -355,7 +355,7 @@ process_all_domains <- function(
 #       }
 
 #       # List generated files
-#       list_generated_domain_files()
+#       .list_generated_domain_files()
 
 #       return(TRUE)
 #     },
@@ -368,7 +368,7 @@ process_all_domains <- function(
 # }
 
 # Validated domain processing functions
-process_single_domain_validated <- function(
+..process_single_domain_validated <- function(
   domain_name,
   config,
   neurocog_data,
@@ -384,7 +384,7 @@ process_single_domain_validated <- function(
   }
 
   # Validate data exists BEFORE processing
-  validation <- validate_domain_data_exists(domain_name, data_source)
+  validation <- .validate_domain_data_exists(domain_name, data_source)
 
   if (!validation$has_data) {
     log_message(
@@ -446,7 +446,7 @@ process_single_domain_validated <- function(
 }
 
 # Validated emotion domain processing
-process_emotion_domains_validated <- function(
+.process_emotion_domains_validated <- function(
   is_child,
   emotion_domains,
   neurobehav_data
@@ -456,7 +456,7 @@ process_emotion_domains_validated <- function(
   combined_validation <- list(row_count = 0, has_data = FALSE)
 
   for (domain_name in emotion_domains) {
-    validation <- validate_domain_data_exists(domain_name, neurobehav_data)
+    validation <- .validate_domain_data_exists(domain_name, neurobehav_data)
     if (validation$has_data) {
       emotion_domains_present <- c(emotion_domains_present, domain_name)
       combined_validation$row_count <- combined_validation$row_count +
@@ -519,8 +519,8 @@ process_emotion_domains_validated <- function(
 }
 
 # Validated ADHD domain processing
-process_adhd_domain_validated <- function(is_child, neurobehav_data) {
-  validation <- validate_domain_data_exists("ADHD", neurobehav_data)
+.process_adhd_domain_validated <- function(is_child, neurobehav_data) {
+  validation <- .validate_domain_data_exists("ADHD", neurobehav_data)
 
   if (!validation$has_data) {
     log_message("No ADHD data found - skipping", "DOMAINS")
@@ -565,7 +565,7 @@ process_adhd_domain_validated <- function(is_child, neurobehav_data) {
   )
 }
 
-process_single_domain <- function(
+.process_single_domain <- function(
   domain,
   config,
   patient_type,
@@ -620,7 +620,7 @@ process_single_domain <- function(
   }
 
   # Get input file
-  input_format <- get_data_format(config, data_type)
+  input_format <- .get_data_format(config, data_type)
   input_file <- file.path(
     config$data$output_dir,
     paste0(data_type, ".", input_format)
@@ -629,7 +629,7 @@ process_single_domain <- function(
   # Create domain processor
   domain_processor <- DomainProcessorR6$new(
     domains = domain,
-    pheno = domain_to_pheno(domain),
+    pheno = .domain_to_pheno(domain),
     input_file = input_file,
     output_dir = config$data$output_dir
   )
@@ -637,7 +637,7 @@ process_single_domain <- function(
   # Process the domain
   tryCatch(
     {
-      output_file <- get_domain_output_file(domain, patient_type)
+      output_file <- .get_domain_output_file(domain, patient_type)
 
       domain_processor$process(
         generate_reports = TRUE,
@@ -676,7 +676,7 @@ process_single_domain <- function(
   ))
 }
 
-domain_to_pheno <- function(domain_name) {
+.domain_to_pheno <- function(domain_name) {
   mapping <- list(
     "General Cognitive Ability" = "iq",
     "Academic Skills" = "academics",
@@ -715,7 +715,7 @@ domain_to_pheno <- function(domain_name) {
   return(pheno_value)
 }
 
-get_domain_output_file <- function(domain_name, patient_type) {
+.get_domain_output_file <- function(domain_name, patient_type) {
   # Basic domain file mapping
   domain_files <- list(
     "General Cognitive Ability" = "_02-01_iq.qmd",
@@ -766,7 +766,7 @@ get_domain_output_file <- function(domain_name, patient_type) {
   return(file_name)
 }
 
-list_generated_domain_files <- function() {
+.list_generated_domain_files <- function() {
   # workflow_utils functions are available through neuro2 package
 
   domain_files <- list.files(".", pattern = "_02-.*\\.qmd$")
@@ -780,7 +780,7 @@ list_generated_domain_files <- function() {
   }
 }
 
-verify_essential_domain_files <- function(patient_type) {
+.verify_essential_domain_files <- function(patient_type) {
   # Define essential domain files
   essential_files <- c(
     "_02-01_iq.qmd",
@@ -825,7 +825,7 @@ verify_essential_domain_files <- function(patient_type) {
   return(TRUE)
 }
 
-run_fallback_domain_generation <- function(config, patient_type) {
+.run_fallback_domain_generation <- function(config, patient_type) {
   # workflow_utils functions are available through neuro2 package
 
   # Source the domain generator module as a fallback

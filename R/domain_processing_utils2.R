@@ -62,20 +62,20 @@ process_domain_data2 <- function(pheno, domains, rater = NULL) {
   # Generate tables and figures based on available raters
   if (tolower(pheno) == "emotion" && is.null(rater)) {
     # For emotion domain, process each rater separately
-    generate_emotion_rater_outputs(data, processor)
+    .generate_emotion_rater_outputs(data, processor)
   } else if (tolower(pheno) == "adhd" && is.null(rater)) {
     # For ADHD domain, process each rater separately
-    generate_adhd_rater_outputs(data, processor)
+    .generate_adhd_rater_outputs(data, processor)
   } else {
     # For single-rater or specified rater
-    generate_standard_outputs(data, pheno, rater)
+    .generate_standard_outputs(data, pheno, rater)
   }
 
   invisible(data)
 }
 
 #' Generate outputs for emotion domain with multiple raters
-generate_emotion_rater_outputs <- function(data, processor) {
+.generate_emotion_rater_outputs <- function(data, processor) {
   # Determine if child or adult
   emotion_type <- processor$detect_emotion_type()
 
@@ -106,16 +106,16 @@ generate_emotion_rater_outputs <- function(data, processor) {
 
     # Generate table
     table_name <- paste0("table_emotion_", emotion_type, "_", rater)
-    generate_table(rater_data, "emotion", table_name)
+    .generate_table(rater_data, "emotion", table_name)
 
     # Generate figure
     fig_name <- paste0("fig_emotion_", emotion_type, "_", rater)
-    generate_figure(rater_data, "emotion", fig_name)
+    .generate_figure(rater_data, "emotion", fig_name)
   }
 }
 
 #' Generate outputs for ADHD domain with multiple raters
-generate_adhd_rater_outputs <- function(data, processor) {
+.generate_adhd_rater_outputs <- function(data, processor) {
   # Similar structure to emotion but for ADHD
   # Get available raters
   available_raters <- if ("rater" %in% names(data)) {
@@ -152,29 +152,29 @@ generate_adhd_rater_outputs <- function(data, processor) {
 
     # Generate outputs
     table_name <- paste0("table_adhd_", age_type, "_", rater)
-    generate_table(rater_data, "adhd", table_name)
+    .generate_table(rater_data, "adhd", table_name)
 
     fig_name <- paste0("fig_adhd_", age_type, "_", rater)
-    generate_figure(rater_data, "adhd", fig_name)
+    .generate_figure(rater_data, "adhd", fig_name)
   }
 }
 
 #' Generate standard outputs for single-rater domains
-generate_standard_outputs <- function(data, pheno, rater = NULL) {
+.generate_standard_outputs <- function(data, pheno, rater = NULL) {
   # Determine table and figure names
   suffix <- if (!is.null(rater)) paste0("_", rater) else ""
   table_name <- paste0("table_", pheno, suffix)
   fig_name <- paste0("fig_", pheno, suffix)
 
   # Generate table
-  generate_table(data, pheno, table_name)
+  .generate_table(data, pheno, table_name)
 
   # Generate figure
-  generate_figure(data, pheno, fig_name)
+  .generate_figure(data, pheno, fig_name)
 }
 
 #' Generate a table using TableGTR6
-generate_table <- function(data, pheno, table_name) {
+.generate_table <- function(data, pheno, table_name) {
   # Only generate if we have data
   if (is.null(data) || nrow(data) == 0) {
     warning(paste("No data available for table:", table_name))
@@ -205,7 +205,7 @@ generate_table <- function(data, pheno, table_name) {
 }
 
 #' Generate a figure using DotplotR6
-generate_figure <- function(data, pheno, fig_name) {
+.generate_figure <- function(data, pheno, fig_name) {
   # Only generate if we have required columns
   if (is.null(data) || nrow(data) == 0) {
     warning(paste("No data available for figure:", fig_name))
@@ -266,7 +266,7 @@ ensure_score_type_utils <- function() {
 # The get_score_types_from_lookup function should be available from the packageet
 #' @param rater Specific rater to process
 #' @param output_file Path to output text file
-generate_rater_text <- function(data, rater, output_file) {
+.generate_rater_text <- function(data, rater, output_file) {
   # Filter data for specific rater FIRST
   if ("rater" %in% names(data)) {
     rater_data <- data[tolower(data$rater) == tolower(rater), ]
@@ -295,7 +295,7 @@ generate_rater_text <- function(data, rater, output_file) {
 }
 
 #' Regenerate emotion child text files with proper separation
-fix_emotion_child_text_files <- function() {
+.fix_emotion_child_text_files <- function() {
   # Load the emotion data
   if (file.exists("data/neurobehav.parquet")) {
     data <- arrow::read_parquet("data/neurobehav.parquet")
@@ -317,19 +317,19 @@ fix_emotion_child_text_files <- function() {
   emotion_data <- data[data$domain %in% emotion_domains, ]
 
   # Generate text for each rater
-  generate_rater_text(
+  .generate_rater_text(
     emotion_data,
     "self",
     "_02-10_emotion_child_text_self.qmd"
   )
 
-  generate_rater_text(
+  .generate_rater_text(
     emotion_data,
     "parent",
     "_02-10_emotion_child_text_parent.qmd"
   )
 
-  generate_rater_text(
+  .generate_rater_text(
     emotion_data,
     "teacher",
     "_02-10_emotion_child_text_teacher.qmd"

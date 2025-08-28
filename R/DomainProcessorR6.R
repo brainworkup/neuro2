@@ -67,7 +67,7 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param plot The plot object to save
     #' @param filename The filename to save the plot as
     #' @return List with paths to saved PNG and PDF files
-    save_plot = function(plot, filename) {
+    .save_plot = function(plot, filename) {
       png_file <- file.path(self$dirs$figs, paste0(filename, ".png"))
       pdf_file <- file.path(self$dirs$figs, paste0(filename, ".pdf"))
 
@@ -1619,9 +1619,9 @@ DomainProcessorR6 <- R6::R6Class(
     #' @examples
     #' \dontrun{
     #'   obj <- DomainProcessorR6$new()
-    #'   obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
+    #'   obj$.generate_emotion_child_qmd(domain_name=..., output_file=...)
     #' }
-    generate_emotion_child_qmd = function(domain_name, output_file) {
+    .generate_emotion_child_qmd = function(domain_name, output_file) {
       # Fix the output filename to include "_child"
       if (is.null(output_file)) {
         output_file <- paste0("_02-", self$number, "_emotion_child.qmd")

@@ -130,7 +130,7 @@ create_patient_workspace <- function(
       verbose = getOption("neuro2.verbose", TRUE),
       parallel = getOption("neuro2.parallel", FALSE),
       generate_plots = TRUE,
-      generate_tables = TRUE
+      .generate_tables = TRUE
     ),
     output = list(
       format = "typst",
@@ -384,7 +384,7 @@ generate_assessment_report <- function(
   report_qmd <- file.path(output_dir, "assessment_report.qmd")
 
   # Generate report content
-  report_content <- generate_report_content(results, patient_info, template)
+  report_content <- .generate_report_content(results, patient_info, template)
 
   # Write QMD file
   writeLines(report_content, report_qmd)
@@ -440,7 +440,7 @@ summary.neuro2_results <- function(object, ...) {
 }
 
 # Helper function to generate report content
-generate_report_content <- function(results, patient_info, template) {
+.generate_report_content <- function(results, patient_info, template) {
   # This would generate the actual QMD content
   # Implementation depends on your specific template structure
 

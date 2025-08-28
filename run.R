@@ -13,7 +13,7 @@ source("R/TableGTR6.R")
 source("R/DotplotR6.R")
 
 # Load configuration (this will use default config.yml if no args provided)
-config <- load_workflow_config("config.yml")
+config <- .load_workflow_config("config.yml")
 
 # Create and run the workflow
 workflow <- WorkflowRunnerR6$new(config)

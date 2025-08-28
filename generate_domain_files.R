@@ -221,7 +221,7 @@ tryCatch(
     )
 
     # Get domains with data using validation
-    valid_domains_only <- get_domains_with_data(
+    valid_domains_only <- .get_domains_with_data(
       neurocog_data,
       neurobehav_data,
       domain_config

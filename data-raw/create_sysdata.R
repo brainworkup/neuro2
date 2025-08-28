@@ -11,14 +11,14 @@ source("R/safe_sysdata_update_fixed.R")
 # You would use:
 
 # Example 1: Only add new objects, never overwrite existing ones
-safe_use_data_internal(
+.safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
   add_only = TRUE
 )
 
 # Example 2: Only overwrite specific objects
-safe_use_data_internal(
+.safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
   dots = dots, # This exists in the file
@@ -27,7 +27,7 @@ safe_use_data_internal(
 
 # Example 3: Update create_sysdata.R to use this function
 # For the scales data
-safe_use_data_internal(
+.safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
   scales_verbal = scales_verbal,
@@ -67,7 +67,7 @@ safe_use_data_internal(
 )
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_neurocognition = plot_title_neurocognition,
   plot_title_iq = plot_title_iq,
   plot_title_academics = plot_title_academics,
@@ -1321,7 +1321,7 @@ logic."
 
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_iq = plot_title_iq,
   overwrite = c("plot_title_iq")
 )
@@ -1341,7 +1341,7 @@ safe_use_data_internal(
 plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_academics = plot_title_academics,
   overwrite = c("plot_title_academics")
 )
@@ -1468,7 +1468,7 @@ common to treat them together, or even to refer to both processes when talking
 about one or the other."
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_adhd_child = plot_title_adhd_child,
   overwrite = c("plot_title_adhd_child")
 )
@@ -1487,7 +1487,7 @@ safe_use_data_internal(
 plot_title_emotion_child_self <- "Mood, Behavioral, and Social-Emotional Reports. Self-reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_emotion_child_self = plot_title_emotion_child_self,
   overwrite = c("plot_title_emotion_child_self", add_only = TRUE)
 )
@@ -1504,7 +1504,7 @@ safe_use_data_internal(
 plot_title_emotion_child_parent <- "Mood, Behavioral, and Social-Emotional Reports. Parent reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_emotion_child_parent = plot_title_emotion_child_parent,
   overwrite = c("plot_title_emotion_child_parent")
 )
@@ -1521,7 +1521,7 @@ safe_use_data_internal(
 plot_title_emotion_child_teacher <- "Mood, Behavioral, and Social-Emotional Reports. Teacher reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-safe_use_data_internal(
+.safe_use_data_internal(
   plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
   overwrite = c("plot_title_emotion_child_teacher")
 )
@@ -1586,8 +1586,8 @@ plot_title_daily_living <- "Daily Living tests evaluate functional abilities req
 #' @keywords internal data
 plot_title_validity <- "Effort/validity tests can be performed by patient's with severe neurocognitive impairment, etc."
 
-# Using safe_use_data_internal instead of usethis::use_data
-safe_use_data_internal(
+# Using .safe_use_data_internal instead of usethis::use_data
+.safe_use_data_internal(
   plot_title_neurocognition = plot_title_neurocognition,
   plot_title_iq = plot_title_iq,
   plot_title_academics = plot_title_academics,
@@ -1730,8 +1730,8 @@ domain_validity <- c("Performance Validity", "Symptom Validity")
 
 # Save domain labels --------------------------------------------------------
 
-# Using safe_use_data_internal instead of usethis::use_data
-safe_use_data_internal(
+# Using .safe_use_data_internal instead of usethis::use_data
+.safe_use_data_internal(
   domain_iq = domain_iq,
   domain_academics = domain_academics,
   domain_verbal = domain_verbal,
@@ -1751,14 +1751,14 @@ safe_use_data_internal(
 )
 
 # Example 2: Only overwrite specific objects
-safe_use_data_internal(
+.safe_use_data_internal(
   scales_iq = scales_iq,
   scales_academics = scales_academics,
   dots = dots, # This exists in the file
   overwrite = c("dots") # Only allow overwriting 'dots'
 )
 
-safe_use_data_internal(
+.safe_use_data_internal(
   domain_adhd_adult = domain_adhd_adult,
   domain_adhd_child = domain_adhd_child,
   domain_emotion_adult = domain_emotion_adult,
@@ -1770,12 +1770,12 @@ safe_use_data_internal(
     "domain_emotion_child"
   )
 )
-safe_use_data_internal(
+.safe_use_data_internal(
   domain_emotion_adult = domain_emotion_adult,
   overwrite = c("domain_emotion_adult")
 )
 
-safe_use_data_internal(
+.safe_use_data_internal(
   domain_validity = domain_validity,
   overwrite = c("domain_validity")
 )
@@ -1798,7 +1798,7 @@ lookup_neuropsych_scales <- readr::read_csv(
 # usethis::use_data(lookup_neuropsych_scales, internal = TRUE, overwrite = TRUE)
 
 # For other data
-safe_use_data_internal(
+.safe_use_data_internal(
   lookup_neuropsych_scales = lookup_neuropsych_scales,
   overwrite = c("lookup_neuropsych_scales")
 )
@@ -1822,7 +1822,7 @@ lookup_score_conversions <- readr::read_csv(
 )
 
 # For other data
-safe_use_data_internal(
+.safe_use_data_internal(
   lookup_neuropsych_scales = lookup_neuropsych_scales,
   # lookup_score_conversions = lookup_score_conversions,
   overwrite = c("lookup_neuropsych_scales")
@@ -1832,34 +1832,34 @@ safe_use_data_internal(
 #' @name categories
 #' @docType data internal
 categories <- readRDS("inst/extdata/categories.rds")
-safe_use_data_internal(categories = categories, add_only = TRUE)
+.safe_use_data_internal(categories = categories, add_only = TRUE)
 
 #' @name letters
 #' @docType data internal
 letters <- readRDS("inst/extdata/letters.rds")
-safe_use_data_internal(letters = letters, add_only = TRUE)
+.safe_use_data_internal(letters = letters, add_only = TRUE)
 
 #' @name pegboard.dom
 #' @docType data internal
 pegboard.dom <- readRDS("inst/extdata/pegboard.dom.rds")
-safe_use_data_internal(pegboard.dom = pegboard.dom, add_only = TRUE)
+.safe_use_data_internal(pegboard.dom = pegboard.dom, add_only = TRUE)
 
 #' @name pegboard.nondom
 #' @docType data internal
 pegboard.nondom <- readRDS("inst/extdata/pegboard.nondom.rds")
-safe_use_data_internal(pegboard.nondom = pegboard.nondom, add_only = TRUE)
+.safe_use_data_internal(pegboard.nondom = pegboard.nondom, add_only = TRUE)
 
 #' @name rocft.copy
 #' @docType data internal
 rocft.copy <- readRDS("inst/extdata/rocft.copy.rds")
-safe_use_data_internal(rocft.copy = rocft.copy, add_only = TRUE)
+.safe_use_data_internal(rocft.copy = rocft.copy, add_only = TRUE)
 
 #' @name rocft.recall
 #' @docType data internal
 rocft.recall <- readRDS("inst/extdata/rocft.recall.rds")
-safe_use_data_internal(rocft.recall = rocft.recall, add_only = TRUE)
+.safe_use_data_internal(rocft.recall = rocft.recall, add_only = TRUE)
 
 #' @name ut
 #' @docType data internal
 ut <- readRDS("inst/extdata/ut.rds")
-safe_use_data_internal(ut = ut, add_only = TRUE)
+.safe_use_data_internal(ut = ut, add_only = TRUE)

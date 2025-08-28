@@ -11,7 +11,7 @@
 #' \describe{
 #'   \item{initialize}{Initialize the cache with default footnotes and empty mappings.}
 #'   \item{build_mappings}{Build the score type mappings from lookup data (runs once).}
-#'   \item{get_score_groups}{Get score type groups for specific test names.}
+#'   \item{.get_score_groups}{Get score type groups for specific test names.}
 #'   \item{get_footnotes}{Get footnotes for specified score types.}
 #'   \item{is_multi_score_battery}{Check if a test uses multiple score types.}
 #' }
@@ -125,7 +125,7 @@ ScoreTypeCacheR6 <- R6::R6Class(
     #'
     #' @param test_names Vector of test names to classify by score type
     #' @return Named list of score type groups with matching test names
-    get_score_groups = function(test_names) {
+    .get_score_groups = function(test_names) {
       if (!self$initialized) {
         self$build_mappings()
       }

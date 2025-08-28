@@ -91,7 +91,7 @@ main_analysis <- function() {
   
   # Step 2: Get available domains
   message("🔍 Discovering available domains...")
-  available_domains <- get_available_domains(
+  available_domains <- .get_available_domains(
     data_files, 
     verbose = config$processing$verbose
   )

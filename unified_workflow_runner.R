@@ -23,10 +23,10 @@ source("R/WorkflowRunnerR6.R")
 log_file <- setup_logging()
 
 # Print header
-print_header()
+.print_header()
 
 # Check for essential template files before starting
-print_colored("Checking for essential template files...", "blue")
+.print_colored("Checking for essential template files...", "blue")
 essential_files <- c(
   "template.qmd",
   "_quarto.yml",
@@ -34,10 +34,10 @@ essential_files <- c(
   "config.yml"
 )
 
-missing_files <- check_essential_files(essential_files)
+missing_files <- .check_essential_files(essential_files)
 
 if (length(missing_files) > 0) {
-  print_colored(
+  .print_colored(
     "Some essential template files are missing. Would you like to copy them from the template directory? (y/n)",
     "yellow"
   )
@@ -49,12 +49,12 @@ if (length(missing_files) > 0) {
       source_file <- file.path(template_dir, file)
       if (file.exists(source_file)) {
         file.copy(source_file, file)
-        print_colored(
+        .print_colored(
           paste0("✓ Copied ", file, " from template directory"),
           "green"
         )
       } else {
-        print_colored(
+        .print_colored(
           paste0("⚠️ Could not find ", file, " in template directory"),
           "red"
         )
@@ -64,8 +64,8 @@ if (length(missing_files) > 0) {
 }
 
 # Parse command line arguments and load configuration
-config_file <- parse_config_args()
-config <- load_workflow_config(config_file)
+config_file <- .parse_config_args()
+config <- .load_workflow_config(config_file)
 
 # Create and run the workflow
 workflow <- WorkflowRunnerR6$new(config)

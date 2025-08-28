@@ -45,7 +45,7 @@ ConfigManagerR6 <- R6::R6Class(
       self$apply_env_overrides()
 
       # Validate configuration
-      self$validate_config()
+      self$.validate_config()
     },
 
     #' @noRd
@@ -155,7 +155,7 @@ ConfigManagerR6 <- R6::R6Class(
     },
 
     #' @noRd
-    validate_config = function() {
+    .validate_config = function() {
       # Check required directories exist or can be created
       dirs_to_check <- c(
         self$config$data$input_dir,
@@ -204,7 +204,7 @@ ConfigManagerR6 <- R6::R6Class(
     },
 
     #' @noRd
-    save_config = function(file = "neuro2_config.yml") {
+    save_config = function(file = ".neuro2_config.yml") {
       yaml::write_yaml(self$config, file)
       if (self$config$processing$verbose) {
         message("Configuration saved to: ", file)

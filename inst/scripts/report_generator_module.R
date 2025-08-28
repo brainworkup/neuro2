@@ -47,7 +47,7 @@ log_message(paste0("Using template file: ", template_file), "REPORT")
 log_message(paste0("Current working directory: ", getwd()), "REPORT")
 
 # Helper function to ensure template file exists (for standalone usage)
-ensure_template_file <- function(template_file) {
+.ensure_template_file <- function(template_file) {
   if (file.exists(template_file)) {
     log_message(paste0("Template file found: ", template_file), "REPORT")
     # Get file info for additional verification
@@ -87,7 +87,7 @@ ensure_template_file <- function(template_file) {
 }
 
 # Ensure template file exists
-if (!ensure_template_file(template_file)) {
+if (!.ensure_template_file(template_file)) {
   stop("Template file not found")
 }
 

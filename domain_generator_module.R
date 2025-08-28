@@ -134,7 +134,7 @@ domains <- unique(domains)
 log_message(paste("Found", length(domains), "unique domains"), "DOMAINS")
 
 # Function to determine patient type (adult or child) based on age
-determine_patient_type <- function() {
+.determine_patient_type <- function() {
   config <- yaml::read_yaml("config.yml")
   age <- config$patient$age
 
@@ -152,7 +152,7 @@ determine_patient_type <- function() {
 }
 
 # Get patient type
-patient_type <- determine_patient_type()
+patient_type <- .determine_patient_type()
 log_message(paste("Determined patient type:", patient_type), "DOMAINS")
 
 # Map domains to phenotypes and file names
@@ -229,7 +229,7 @@ emotion_domains <- c(
 )
 
 # Function to process a single domain with proper validation
-process_single_domain_validated <- function(
+..process_single_domain_validated <- function(
   domain_name,
   config,
   neurocog_data,
@@ -245,7 +245,7 @@ process_single_domain_validated <- function(
   }
 
   # Validate data exists BEFORE processing
-  validation <- validate_domain_data_exists(domain_name, data_source)
+  validation <- .validate_domain_data_exists(domain_name, data_source)
 
   if (!validation$has_data) {
     log_message(
@@ -433,7 +433,7 @@ main_processing_improved <- function() {
   log_message("Starting improved domain processing with validation", "DOMAINS")
 
   # Get only domains with actual data
-  domains_with_data <- get_domains_with_data(
+  domains_with_data <- .get_domains_with_data(
     neurocog_data,
     neurobehav_data,
     domain_config
@@ -471,7 +471,7 @@ main_processing_improved <- function() {
     }
 
     config <- domains_with_data[[domain_name]]$config
-    success <- process_single_domain_validated(
+    success <- ..process_single_domain_validated(
       domain_name,
       config,
       neurocog_data,
@@ -493,7 +493,7 @@ main_processing_improved <- function() {
   )
   if (length(emotion_domains_with_data) > 0) {
     log_message("Processing consolidated emotion domains", "DOMAINS")
-    emotion_success <- process_emotion_domains_validated(
+    emotion_success <- .process_emotion_domains_validated(
       is_child,
       emotion_domains_with_data,
       neurobehav_data
@@ -504,7 +504,7 @@ main_processing_improved <- function() {
   # Process ADHD domain only if it has data
   if ("ADHD" %in% names(domains_with_data)) {
     log_message("Processing ADHD domain", "DOMAINS")
-    adhd_success <- process_adhd_domain_validated(is_child, neurobehav_data)
+    adhd_success <- .process_adhd_domain_validated(is_child, neurobehav_data)
     if (adhd_success) processed_count <- processed_count + 1
   }
 
@@ -515,13 +515,13 @@ main_processing_improved <- function() {
 }
 
 # Validated emotion domain processing
-process_emotion_domains_validated <- function(
+.process_emotion_domains_validated <- function(
   is_child,
   emotion_domains_present,
   neurobehav_data
 ) {
   # Validate that emotion domains actually have data
-  combined_validation <- validate_domain_data_exists(
+  combined_validation <- .validate_domain_data_exists(
     paste(emotion_domains_present, collapse = " OR "),
     neurobehav_data %>% filter(domain %in% emotion_domains_present)
   )
@@ -580,8 +580,8 @@ process_emotion_domains_validated <- function(
 }
 
 # Validated ADHD domain processing
-process_adhd_domain_validated <- function(is_child, neurobehav_data) {
-  validation <- validate_domain_data_exists("ADHD", neurobehav_data)
+.process_adhd_domain_validated <- function(is_child, neurobehav_data) {
+  validation <- .validate_domain_data_exists("ADHD", neurobehav_data)
 
   if (!validation$has_data) {
     log_message("No ADHD data found - skipping", "DOMAINS")

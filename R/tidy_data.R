@@ -79,19 +79,19 @@ load_data <- function(
   # Process neurocognitive data
   neurocog <- neuropsych |>
     dplyr::filter(test_type == "npsych_test") |>
-    calculate_z_stats(neurocog_groups)
+    .calculate_z_stats(neurocog_groups)
 
   # Process neurobehavioral data
   neurobehav <- neuropsych |>
     dplyr::filter(test_type == "rating_scale") |>
-    calculate_z_stats(neurobehav_groups)
+    .calculate_z_stats(neurobehav_groups)
 
   # Process validity data
   validity <- neuropsych |>
     dplyr::filter(
       test_type %in% c("performance_validity", "symptom_validity")
     ) |>
-    calculate_z_stats(validity_groups)
+    .calculate_z_stats(validity_groups)
 
   # Prepare output
   result_list <- list(

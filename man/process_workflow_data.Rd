@@ -7,7 +7,7 @@
 process_workflow_data(config)
 }
 \arguments{
-\item{config}{Configuration list from load_workflow_config}
+\item{config}{Configuration list from .load_workflow_config}
 }
 \value{
 Logical indicating success

@@ -40,7 +40,7 @@
 #' @return Data frame or NULL on error
 #' @export
 safe_read_csv <- function(file, ...) {
-  cfg <- get_config()
+  cfg <- .get_config()
 
   tryCatch(
     {
@@ -76,7 +76,7 @@ safe_read_csv <- function(file, ...) {
 #' @return Combined data frame
 #' @export
 read_multiple_csv <- function(files, .id = NULL, ...) {
-  cfg <- get_config()
+  cfg <- .get_config()
 
   if (length(files) == 0) {
     cli::cli_alert_warning("No files provided")
@@ -184,7 +184,7 @@ cache_function <- function(fn, cache_dir = NULL) {
 #' @return List of results
 #' @export
 parallel_map <- function(items, fn, ...) {
-  cfg <- get_config()
+  cfg <- .get_config()
 
   use_parallel <- cfg$get("parallel_processing", FALSE)
   n_cores <- cfg$get("n_cores", 1)
@@ -376,7 +376,7 @@ create_temp_dir <- function(prefix = "neurotypr_", cleanup = TRUE) {
 #' @return Result of expression
 #' @export
 time_it <- function(expr, message = NULL) {
-  cfg <- get_config()
+  cfg <- .get_config()
 
   if (!cfg$get("verbose", FALSE)) {
     return(expr)
@@ -482,7 +482,7 @@ batch_process <- function(items, fn, batch_size = 100) {
 }
 
 #' Ensure required directories exist
-ensure_output_directories <- function(base_dir = ".") {
+.ensure_output_directories <- function(base_dir = ".") {
   dirs <- c("figs", "output", "tmp")
 
   for (dir in dirs) {
@@ -497,36 +497,36 @@ ensure_output_directories <- function(base_dir = ".") {
 }
 
 #' Get package resource path
-get_resource_path <- function(filename) {
+.get_resource_path <- function(filename) {
   system.file("resources", filename, package = "neuro2")
 }
 
 #' Get output file paths
-get_fig_path <- function(filename, base_dir = ".") {
+.get_fig_path <- function(filename, base_dir = ".") {
   file.path(base_dir, "figs", filename)
 }
 
-get_output_path <- function(filename, base_dir = ".") {
+.get_output_path <- function(filename, base_dir = ".") {
   file.path(base_dir, "output", filename)
 }
 
 #' Example usage in your processor
-save_plot <- function(plot, filename, base_dir = ".") {
-  ensure_output_directories(base_dir)
+.save_plot <- function(plot, filename, base_dir = ".") {
+  .ensure_output_directories(base_dir)
 
   # Save PNG for web/reports
-  png_path <- get_fig_path(paste0(filename, ".png"), base_dir)
+  png_path <- .get_fig_path(paste0(filename, ".png"), base_dir)
   ggplot2::ggsave(png_path, plot, width = 8, height = 6, dpi = 300)
 
   # Save PDF for print quality
-  pdf_path <- get_fig_path(paste0(filename, ".pdf"), base_dir)
+  pdf_path <- .get_fig_path(paste0(filename, ".pdf"), base_dir)
   ggplot2::ggsave(pdf_path, plot, width = 8, height = 6)
 
   return(list(png = png_path, pdf = pdf_path))
 }
 
 #' Allow users to configure output directories
-neuro2_config <- function(
+.neuro2_config <- function(
   figs_dir = "figs",
   output_dir = "output",
   tmp_dir = "tmp",

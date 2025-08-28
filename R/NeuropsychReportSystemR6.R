@@ -326,7 +326,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       for (domain_name in domains) {
         # Get the correct domain key from the domain name
-        domain_key <- get_domain_key(domain_name)
+        domain_key <- .get_domain_key(domain_name)
 
         message(paste("Mapping domain:", domain_name, "->", domain_key))
 
@@ -377,7 +377,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         message("Processing domain: ", domain_name)
 
         # Get the domain key correctly
-        domain_key <- get_domain_key(domain_name)
+        domain_key <- .get_domain_key(domain_name)
         message(paste("Domain key:", domain_key))
 
         # Get config from factory
@@ -562,7 +562,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
     },
 
     # Get domain key from domain name
-    get_domain_key = function(domain_name) {
+    .get_domain_key = function(domain_name) {
       # Map common domain names to keys
       domain_map <- list(
         "General Cognitive Ability" = "iq",
