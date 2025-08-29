@@ -796,7 +796,13 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       )
 
       if (!is.null(data_sample)) {
-        available_domains <- unique(data_sample$domain)
+        # Ensure we get the domain column as a vector
+        domain_column <- data_sample[["domain"]]
+        if (is.list(domain_column)) {
+          # If it's a list, unlist it
+          domain_column <- unlist(domain_column, use.names = FALSE)
+        }
+        available_domains <- unique(domain_column)
         domain_matches <- any(domain_info$domains %in% available_domains)
 
         result$available <- domain_matches

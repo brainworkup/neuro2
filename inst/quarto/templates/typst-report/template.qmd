@@ -58,10 +58,15 @@ patient <- Sys.getenv("PATIENT")
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
-
 ```{r}
 #| label: generate-domain-files
 #| include: false
+
+# Make sure all R6 classes are properly loaded
+# source("R/DomainProcessorR6.R")
+# source("R/TableGTR6.R")
+# source("R/DotplotR6.R")
+# source("R/ScoreTypeCacheR6.R")
 
 # Track which files have been generated to avoid duplicates
 generated_files <- character()

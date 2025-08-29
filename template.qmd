@@ -62,6 +62,12 @@ patient <- Sys.getenv("PATIENT")
 #| label: generate-domain-files
 #| include: false
 
+# Make sure all R6 classes are properly loaded
+# source("R/DomainProcessorR6.R")
+# source("R/TableGTR6.R")
+# source("R/DotplotR6.R")
+# source("R/ScoreTypeCacheR6.R")
+
 # Track which files have been generated to avoid duplicates
 generated_files <- character()
 
@@ -153,7 +159,7 @@ for (number in names(domain_config)) {
 
     # Check if data exists
     if (file.exists(config$input_file)) {
-      processor <- neuro2::DomainProcessorR6$new(
+      processor <- DomainProcessorR6$new(
         domains = config$domains, # Pass ALL emotion domains
         pheno = config$pheno,
         input_file = config$input_file,
@@ -189,7 +195,7 @@ for (number in names(domain_config)) {
     }
 
     if (file.exists(config$input_file)) {
-      processor <- neuro2::DomainProcessorR6$new(
+      processor <- DomainProcessorR6$new(
         domains = config$domains,
         pheno = config$pheno,
         input_file = config$input_file,
@@ -225,7 +231,7 @@ for (number in names(domain_config)) {
     }
 
     if (file.exists(config$input_file)) {
-      processor <- neuro2::DomainProcessorR6$new(
+      processor <- DomainProcessorR6$new(
         domains = config$domains,
         pheno = config$pheno,
         input_file = config$input_file,

@@ -41,7 +41,12 @@ DomainProcessorR6 <- R6::R6Class(
       number = NULL,
       output_base = "."
     ) {
-      self$domains <- domains
+      # Ensure domains is always a character vector, never a list
+      if (is.list(domains)) {
+        domains <- unlist(domains, use.names = FALSE)
+      }
+      self$domains <- as.character(domains)
+
       self$pheno <- pheno
       self$input_file <- input_file
       self$output_dir <- output_dir
@@ -552,6 +557,12 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_domain_qmd(domain_name=..., output_file=...)
     #' }
     generate_domain_qmd = function(domain_name = NULL, output_file = NULL) {
+      # Defensive check: ensure domains is a character vector
+      if (is.list(self$domains)) {
+        self$domains <- unlist(self$domains, use.names = FALSE)
+      }
+      self$domains <- as.character(self$domains)
+
       if (is.null(domain_name)) {
         domain_name <- self$domains[1]
       }
@@ -2826,29 +2837,13 @@ DomainProcessorR6 <- R6::R6Class(
 
   # Private methods
   private = list(
-    # Get domain number from phenotype
-    get_domain_number = function() {
-      domain_numbers <- c(
-        iq = "01",
-        academics = "02",
-        verbal = "03",
-        spatial = "04",
-        memory = "05",
-        executive = "06",
-        motor = "07",
-        social = "08",
-        adhd = "09",
-        emotion = "10",
-        adaptive = "11",
-        daily_living = "12",
-        validity = "13"
-      )
-
-      num <- domain_numbers[tolower(self$pheno)]
-      if (is.na(num) || is.null(num)) "99" else num
-    },
-
     build_unified_qmd_template = function(domain_name, text_files) {
+      # Defensive check: ensure domains is a character vector
+      if (is.list(self$domains)) {
+        self$domains <- unlist(self$domains, use.names = FALSE)
+      }
+      self$domains <- as.character(self$domains)
+
       # Create the basic structure
       header <- paste0(
         "## ",
@@ -3091,6 +3086,12 @@ DomainProcessorR6 <- R6::R6Class(
 
     # Replace the build_typst_display_block method in the private section with this:
     build_typst_display_block = function() {
+      # Defensive check: ensure domains is a character vector
+      if (is.list(self$domains)) {
+        self$domains <- unlist(self$domains, use.names = FALSE)
+      }
+      self$domains <- as.character(self$domains)
+
       # Build complete Typst blocks with function definition and two figure displays
       paste0(
         # First block - subdomain figure
@@ -3613,6 +3614,48 @@ DomainProcessorR6 <- R6::R6Class(
       }
 
       return(content)
+    },
+
+    # Get domain number based on phenotype
+    get_domain_number = function() {
+      # Map phenotypes to domain numbers
+      domain_numbers <- list(
+        "iq" = "01",
+        "academics" = "02",
+        "verbal" = "03",
+        "spatial" = "04",
+        "memory" = "05",
+        "executive" = "06",
+        "motor" = "07",
+        "social" = "08",
+        "adhd" = "09",
+        "emotion" = "10",
+        "adaptive" = "11",
+        "daily_living" = "12",
+        "validity" = "13"
+      )
+
+      pheno_lower <- tolower(self$pheno)
+
+      # Strip age suffix if present (e.g., "emotion_child" -> "emotion")
+      base_pheno <- sub("_.*$", "", pheno_lower)
+
+      number <- domain_numbers[[base_pheno]]
+
+      if (is.null(number)) {
+        # Try to extract number from domain name if it contains one
+        if (grepl("^\\d+", self$domains[1])) {
+          number <- sprintf(
+            "%02d",
+            as.numeric(gsub("^(\\d+).*", "\\1", self$domains[1]))
+          )
+        } else {
+          # Default fallback
+          number <- "99"
+        }
+      }
+
+      return(number)
     }
   )
 )
