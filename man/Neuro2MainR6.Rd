@@ -22,7 +22,7 @@ Neuro2MainR6 Class
 \item{\code{$check_environment}}{See method docs below.}
 \item{\code{$load_data}}{See method docs below.}
 \item{\code{$process_domains}}{See method docs below.}
-\item{\code{$.process_single_domain}}{See method docs below.}
+\item{\code{$process_single_domain}}{See method docs below.}
 \item{\code{$generate_report}}{See method docs below.}
 \item{\code{$run_full_workflow}}{See method docs below.}
 \item{\code{$detect_age_group}}{See method docs below.}
@@ -56,7 +56,7 @@ Neuro2MainR6 Class
 \item \href{#method-Neuro2MainR6-check_environment}{\code{Neuro2MainR6$check_environment()}}
 \item \href{#method-Neuro2MainR6-load_data}{\code{Neuro2MainR6$load_data()}}
 \item \href{#method-Neuro2MainR6-process_domains}{\code{Neuro2MainR6$process_domains()}}
-\item \href{#method-Neuro2MainR6-.process_single_domain}{\code{Neuro2MainR6$.process_single_domain()}}
+\item \href{#method-Neuro2MainR6-process_single_domain}{\code{Neuro2MainR6$process_single_domain()}}
 \item \href{#method-Neuro2MainR6-generate_report}{\code{Neuro2MainR6$generate_report()}}
 \item \href{#method-Neuro2MainR6-run_full_workflow}{\code{Neuro2MainR6$run_full_workflow()}}
 \item \href{#method-Neuro2MainR6-detect_age_group}{\code{Neuro2MainR6$detect_age_group()}}
@@ -178,12 +178,12 @@ Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Neuro2MainR6-.process_single_domain"></a>}}
-\if{latex}{\out{\hypertarget{method-Neuro2MainR6-.process_single_domain}{}}}
-\subsection{Method \code{.process_single_domain()}}{
+\if{html}{\out{<a id="method-Neuro2MainR6-process_single_domain"></a>}}
+\if{latex}{\out{\hypertarget{method-Neuro2MainR6-process_single_domain}{}}}
+\subsection{Method \code{process_single_domain()}}{
 Process a single domain and register its processor in \code{self$processors}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Neuro2MainR6$.process_single_domain(processor, domain_key, rater = "self")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Neuro2MainR6$process_single_domain(processor, domain_key, rater = "self")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

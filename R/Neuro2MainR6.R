@@ -13,7 +13,7 @@
 #'   \item{\code{$check_environment}}{See method docs below.}
 #'   \item{\code{$load_data}}{See method docs below.}
 #'   \item{\code{$process_domains}}{See method docs below.}
-#'   \item{\code{$.process_single_domain}}{See method docs below.}
+#'   \item{\code{$process_single_domain}}{See method docs below.}
 #'   \item{\code{$generate_report}}{See method docs below.}
 #'   \item{\code{$run_full_workflow}}{See method docs below.}
 #'   \item{\code{$detect_age_group}}{See method docs below.}
@@ -40,15 +40,10 @@ Neuro2MainR6 <- R6::R6Class(
     status = NULL,
 
     #' @description Constructor. Initialize the main orchestrator and supporting components.
-
     #' @param config_file Path to config YAML file.
-
     #' @param variables_file Path to auxiliary variables YAML.
-
     #' @param verbose Optional logical to override `processing.verbose`.
-
     #' @return A new Neuro2MainR6 object (invisible).
-
     initialize = function(
       config_file = "config.yml",
       variables_file = "_variables.yml",
@@ -104,9 +99,7 @@ Neuro2MainR6 <- R6::R6Class(
     },
 
     #' @description Verify required packages, binaries, and directories are available.
-
     #' @return Logical; TRUE if environment is OK.
-
     check_environment = function() {
       checks <- list(
         data_dir = self$config$get("data.input_dir"),
@@ -158,7 +151,6 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param use_duckdb Logical; use DuckDB-backed loading if TRUE, otherwise in-memory.
     #' @param output_format Character specifying the target format for loaded data (e.g., 'arrow', 'parquet').
     #' @return Invisibly returns `self`.
-
     load_data = function(
       data_dir = NULL,
       use_duckdb = NULL,
@@ -211,14 +203,10 @@ Neuro2MainR6 <- R6::R6Class(
     },
 
     #' @description Process all configured domains using the factory and store processors in `self$processors`.
-
     #' @param domains Optional character vector of domains to process (defaults from config).
-
     #' @param age_group Optional character ('child' or 'adult') to control measure selection.
-
     #' @param include_multi_rater Logical; if TRUE, include multi-rater behavioral measures.
     #' @return Invisibly returns `self`.
-
     process_domains = function(
       domains = NULL,
       age_group = NULL,
@@ -279,14 +267,14 @@ Neuro2MainR6 <- R6::R6Class(
         # Handle multi-rater processors
         if (is.list(processor_item) && !inherits(processor_item, "R6")) {
           for (rater in names(processor_item)) {
-            self$.process_single_domain(
+            self$process_single_domain(
               processor_item[[rater]],
               domain_key,
               rater
             )
           }
         } else {
-          self$.process_single_domain(processor_item, domain_key)
+          self$process_single_domain(processor_item, domain_key)
         }
       }
 
@@ -309,8 +297,7 @@ Neuro2MainR6 <- R6::R6Class(
     #' @param domain_key Character key identifying a domain variant (e.g., narrow domain id).
     #' @param rater Optional rater label for behavioral measures (e.g., 'self','parent','teacher').
     #' @return The created/updated domain processor (invisibly).
-
-    .process_single_domain = function(processor, domain_key, rater = "self") {
+    process_single_domain = function(processor, domain_key, rater = "self") {
       self$error_handler$safe_execute(
         {
           # Load and process data
@@ -322,7 +309,7 @@ Neuro2MainR6 <- R6::R6Class(
           # Generate QMD files if enabled
           if (self$config$get("report.generate_qmd", TRUE)) {
             if (processor$has_multiple_raters()) {
-              processor$.generate_emotion_child_qmd()
+              processor$generate_emotion_child_qmd()
             } else {
               processor$generate_domain_qmd()
             }

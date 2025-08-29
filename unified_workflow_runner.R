@@ -17,6 +17,17 @@ for (pkg in required_packages) {
 # Source utility modules
 source("R/workflow_utils.R")
 source("R/workflow_config.R")
+source("R/workflow_data_processor.R")
+source("R/workflow_domain_generator.R")
+source("R/workflow_report_generator.R")
+source("R/duckdb_neuropsych_loader.R")
+source("R/ScoreTypeCacheR6.R")
+source("R/DomainProcessorFactoryR6.R")
+source("R/DomainProcessorR6.R")
+source("R/NeuropsychResultsR6.R")
+source("R/TableGTR6.R")
+source("R/DotplotR6.R")
+source("R/domain_validation_utils.R")
 source("R/WorkflowRunnerR6.R")
 
 # Initialize logging

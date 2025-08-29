@@ -108,12 +108,12 @@ R6 class for processing neuropsychological domain data
 }
 
 ## ------------------------------------------------
-## Method `DomainProcessorR6$.generate_emotion_child_qmd`
+## Method `DomainProcessorR6$generate_emotion_child_qmd`
 ## ------------------------------------------------
 
 \dontrun{
   obj <- DomainProcessorR6$new()
-  obj$.generate_emotion_child_qmd(domain_name=..., output_file=...)
+  obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
 }
 
 ## ------------------------------------------------
@@ -172,7 +172,7 @@ R6 class for processing neuropsychological domain data
 \item \href{#method-DomainProcessorR6-generate_standard_qmd}{\code{DomainProcessorR6$generate_standard_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_adult_qmd}{\code{DomainProcessorR6$generate_adhd_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_adhd_child_qmd}{\code{DomainProcessorR6$generate_adhd_child_qmd()}}
-\item \href{#method-DomainProcessorR6-.generate_emotion_child_qmd}{\code{DomainProcessorR6$.generate_emotion_child_qmd()}}
+\item \href{#method-DomainProcessorR6-generate_emotion_child_qmd}{\code{DomainProcessorR6$generate_emotion_child_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_emotion_adult_qmd}{\code{DomainProcessorR6$generate_emotion_adult_qmd()}}
 \item \href{#method-DomainProcessorR6-process}{\code{DomainProcessorR6$process()}}
 \item \href{#method-DomainProcessorR6-clone}{\code{DomainProcessorR6$clone()}}
@@ -628,15 +628,15 @@ Invisibly returns the path to the generated file.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-.generate_emotion_child_qmd"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-.generate_emotion_child_qmd}{}}}
-\subsection{Method \code{.generate_emotion_child_qmd()}}{
+\if{html}{\out{<a id="method-DomainProcessorR6-generate_emotion_child_qmd"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-generate_emotion_child_qmd}{}}}
+\subsection{Method \code{generate_emotion_child_qmd()}}{
 Generate emotion child QMD file
 
 
 Generate a Quarto (.qmd) file tailored for child emotion/affect measures.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$.generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$generate_emotion_child_qmd(domain_name, output_file)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -655,7 +655,7 @@ Invisibly returns the path to the generated file.
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
   obj <- DomainProcessorR6$new()
-  obj$.generate_emotion_child_qmd(domain_name=..., output_file=...)
+  obj$generate_emotion_child_qmd(domain_name=..., output_file=...)
 }
 }
 \if{html}{\out{</div>}}

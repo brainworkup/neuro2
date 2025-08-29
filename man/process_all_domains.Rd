@@ -4,18 +4,20 @@
 \alias{process_all_domains}
 \title{Process All Assessment Domains}
 \usage{
-process_all_domains(domain_keys, age_group = "adult", base_dir = ".")
+process_all_domains(config, patient_type, data_status)
 
-process_all_domains(domain_keys, age_group = "adult", base_dir = ".")
+process_all_domains(config, patient_type, data_status)
 }
 \arguments{
-\item{domain_keys}{Vector of domain keys (e.g., c("iq", "memory", "emotion"))}
+\item{config}{Configuration object from workflow}
 
-\item{age_group}{"adult" or "child"}
+\item{patient_type}{"adult" or "child"}
 
-\item{base_dir}{Base directory for outputs}
+\item{data_status}{Data availability status}
 
 \item{data_dir}{Directory containing assessment data files}
+
+\item{age_group}{Age group for processing ("adult", "child", or "auto")}
 
 \item{domains}{Specific domains to process (NULL for all available)}
 

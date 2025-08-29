@@ -9,13 +9,13 @@ library(here)
 source("R/ReportTemplateR6.R")
 source("R/NeuropsychResultsR6.R")
 source("R/NeuropsychReportSystemR6.R")
-source("R/DomainProcessorR6Combo.R")
+source("R/DomainProcessorR6.R")
 
 # Load utility functions (replacements for neuro2 functions)
 source("R/utils.R")
 
 # Source the test workflow script
-source("test_unified_workflow.R")
+source("unified_workflow_runner.R")
 
 # The test_workflow.R script performs the following steps:
 # 1. Imports and processes individual CSV files from data-raw to generate neurocog and neurobehav datasets

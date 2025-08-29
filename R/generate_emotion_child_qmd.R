@@ -1,6 +1,6 @@
 # Generate emotion child QMD corrected
 
-.generate_emotion_child_qmd <- function(
+generate_emotion_child_qmd <- function(
   output_file = "_02-10_emotion_child.qmd"
 ) {
   qmd_content <- '## Behavioral/Emotional/Social {#sec-emotion}
