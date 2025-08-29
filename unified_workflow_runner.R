@@ -48,11 +48,19 @@ if (length(missing_files) > 0) {
     for (file in missing_files) {
       source_file <- file.path(template_dir, file)
       if (file.exists(source_file)) {
-        file.copy(source_file, file)
-        .print_colored(
-          paste0("✓ Copied ", file, " from template directory"),
-          "green"
-        )
+        # Only copy if destination doesn't exist
+        if (!file.exists(file)) {
+          file.copy(source_file, file, overwrite = FALSE)
+          .print_colored(
+            paste0("✓ Copied ", file, " from template directory"),
+            "green"
+          )
+        } else {
+          .print_colored(
+            paste0("⚠️ ", file, " already exists, skipping copy"),
+            "yellow"
+          )
+        }
       } else {
         .print_colored(
           paste0("⚠️ Could not find ", file, " in template directory"),

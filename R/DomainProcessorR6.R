@@ -586,6 +586,15 @@ DomainProcessorR6 <- R6::R6Class(
         }
       }
 
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "Domain file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
+      }
+
       # Generate text files first
       text_files <- self$generate_domain_text_qmd()
 
@@ -698,6 +707,15 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_standard_qmd(domain_name=..., output_file=...)
     #' }
     generate_standard_qmd = function(domain_name, output_file) {
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "Standard QMD file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
+      }
+
       # Ensure text files exist first
       self$generate_domain_text_qmd()
 
@@ -802,6 +820,15 @@ DomainProcessorR6 <- R6::R6Class(
         if (!grepl("_adult", output_file)) {
           output_file <- gsub("_adhd", "_adhd_adult", output_file)
         }
+      }
+
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "ADHD adult QMD file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
       }
 
       # Create text files for different raters
@@ -1218,6 +1245,15 @@ DomainProcessorR6 <- R6::R6Class(
         }
       }
 
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "ADHD child QMD file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
+      }
+
       # Create text files for different raters
       self_text <- paste0("_02-", self$number, "_adhd_child_text_self.qmd")
       parent_text <- paste0("_02-", self$number, "_adhd_child_text_parent.qmd")
@@ -1630,6 +1666,15 @@ DomainProcessorR6 <- R6::R6Class(
         if (!grepl("_child", output_file)) {
           output_file <- gsub("_emotion", "_emotion_child", output_file)
         }
+      }
+
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "Emotion child QMD file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
       }
 
       # Use correct header for child emotion domain
@@ -2403,6 +2448,15 @@ DomainProcessorR6 <- R6::R6Class(
         if (!grepl("_adult", output_file)) {
           output_file <- gsub("_emotion", "_emotion_adult", output_file)
         }
+      }
+
+      # Check if file already exists - if so, skip generation
+      if (file.exists(output_file)) {
+        message(
+          "Emotion adult QMD file already exists, skipping generation: ",
+          output_file
+        )
+        return(output_file)
       }
 
       # Use correct header for adult emotion domain

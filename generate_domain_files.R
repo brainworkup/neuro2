@@ -109,10 +109,15 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
               "- Relevant observations\n"
             )
 
-            writeLines(placeholder_content, text_file)
-            text_files_created <- c(text_files_created, text_file)
+            # Only write if file doesn't exist
+            if (!file.exists(text_file)) {
+              writeLines(placeholder_content, text_file)
+              text_files_created <- c(text_files_created, text_file)
 
-            if (verbose) cat("  ✓ Created placeholder:", text_file, "\n")
+              if (verbose) cat("  ✓ Created placeholder:", text_file, "\n")
+            } else {
+              if (verbose) cat("  - Skipped existing file:", text_file, "\n")
+            }
           }
         }
       }

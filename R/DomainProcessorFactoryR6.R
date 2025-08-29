@@ -548,7 +548,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
       return(domain_info)
     },
 
-    # Build processor instance
+    # In DomainProcessorFactoryR6.R, private section, around line 476
     build_processor = function(domain_info, age_group, rater) {
       # Determine input file
       input_file <- private$get_input_file(domain_info$data_source)
@@ -560,18 +560,19 @@ DomainProcessorFactoryR6 <- R6::R6Class(
         age_group
       )
 
-      # Create processor
+      # Create processor with ONLY the parameters it expects
+      # Check your DomainProcessorR6$initialize to see exact parameters
       processor <- DomainProcessorR6$new(
         domains = domain_info$domains,
         pheno = pheno,
         input_file = input_file,
-        output_dir = self$config$data$output_dir %||% "data",
-        config = list(
-          age_group = age_group,
-          rater = rater,
-          domain_info = domain_info
-        )
+        output_dir = self$config$data$output_dir %||% "data"
+        # Don't add anything else unless DomainProcessorR6$initialize accepts it
       )
+
+      # Don't try to add fields that don't exist
+      # If you need to store age_group and rater,
+      # they should be parameters in DomainProcessorR6$initialize
 
       return(processor)
     },
@@ -589,28 +590,47 @@ DomainProcessorFactoryR6 <- R6::R6Class(
 
       raters <- domain_info$raters
 
-      # Handle age-specific raters (this is where the list issue might be)
-      if (is.list(raters) && age_group %in% names(raters)) {
-        result <- raters[[age_group]]
-        # Ensure we always return a character vector, not a list
-        if (is.list(result)) {
-          warning(
-            "Raters configuration returned a list, converting to character vector"
-          )
-          result <- unlist(result, use.names = FALSE)
-        }
-        return(result)
+      # Debug output to understand the structure
+      if (getOption("debug", FALSE)) {
+        message("DEBUG: raters structure: ", str(raters))
+        message("DEBUG: age_group requested: ", age_group)
       }
 
-      # Handle simple rater list
+      # Handle different possible structures
+      if (is.null(raters)) {
+        warning("No raters defined for multi-rater domain")
+        return("self")
+      }
+
+      # If raters is already a character vector, return it
       if (is.character(raters)) {
         return(raters)
       }
 
-      # If raters is still a list at this point, unlist it
+      # If raters is a list with age groups
       if (is.list(raters)) {
-        return(unlist(raters, use.names = FALSE))
+        # Check if the age_group exists in the list
+        if (age_group %in% names(raters)) {
+          age_raters <- raters[[age_group]]
+
+          # Ensure we return a character vector
+          if (is.character(age_raters)) {
+            return(age_raters)
+          } else if (is.list(age_raters)) {
+            return(unlist(age_raters, use.names = FALSE))
+          }
+        }
+
+        # Try to get any available raters if age_group not found
+        warning(paste("Age group", age_group, "not found in raters config"))
+        all_raters <- unlist(raters, use.names = FALSE)
+        if (length(all_raters) > 0) {
+          return(unique(all_raters))
+        }
       }
+
+      # Final fallback
+      warning("Could not determine raters, defaulting to 'self'")
       return("self")
     },
 

@@ -204,6 +204,16 @@ update_domain_file_with_r6 <- function(domain_info) {
       "No data available for this domain.\n\n"
     )
 
+    # Check if file already exists - if so, skip generation
+    if (file.exists(qmd_file)) {
+      message(paste(
+        "Domain file already exists, skipping generation:",
+        qmd_file
+      ))
+      log_message(paste("Skipped existing file:", qmd_file), "DOMAINS")
+      return(qmd_file)
+    }
+
     writeLines(qmd_content, qmd_file)
     log_message(paste("Created placeholder for", qmd_file), "DOMAINS")
 
@@ -507,6 +517,13 @@ update_domain_file_with_r6 <- function(domain_info) {
     )
   }
 
+  # Check if file already exists - if so, skip generation
+  if (file.exists(qmd_file)) {
+    message(paste("✅ Domain file already exists, skipping update:", qmd_file))
+    log_message(paste("Skipped existing file:", qmd_file), "DOMAINS")
+    return(qmd_file)
+  }
+
   # Write the updated file
   writeLines(qmd_content, qmd_file)
   message(paste("✅ Updated", qmd_file, "with R6 classes"))
@@ -627,6 +644,13 @@ update_sirf_with_r6 <- function() {
     "overall_plot$create_plot()\n",
     "```\n"
   )
+
+  # Check if file already exists - if so, skip generation
+  if (file.exists(sirf_file)) {
+    message(paste("✅ SIRF file already exists, skipping update:", sirf_file))
+    log_message(paste("Skipped existing SIRF file:", sirf_file), "DOMAINS")
+    return(invisible(NULL))
+  }
 
   writeLines(sirf_content, sirf_file)
   message(paste("✅ Updated", sirf_file, "with R6 classes"))

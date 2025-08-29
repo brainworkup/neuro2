@@ -160,3 +160,10 @@ process_workflow_data <- function(config) {
 
   return(input_format)
 }
+
+# In workflow_data_processor.R, at the end of the file, add:
+if (!exists("process_workflow_data")) {
+  warning("process_workflow_data function was not created!")
+} else {
+  message("process_workflow_data function is available")
+}
