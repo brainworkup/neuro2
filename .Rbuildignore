@@ -139,3 +139,4 @@
 ^src$
 ^\.venv$
 ^[.]?air[.]toml$
+^docker$

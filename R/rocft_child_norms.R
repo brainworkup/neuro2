@@ -64,6 +64,11 @@ rocft_child_score <- function(trial = c("copy", "recall"), age, raw_score) {
     return(NULL)
   }
 
+  # Ensure dataset is available when called from examples or fresh sessions
+  if (!exists("rocft_child_norms", inherits = TRUE)) {
+    utils::data("rocft_child_norms", package = "neuro2", envir = environment())
+  }
+
   age_r <- round(age)
   if (age_r < 6 || age_r > 15) {
     return(NULL)

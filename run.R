@@ -22,7 +22,7 @@ source("R/WorkflowRunnerR6.R")
 config <- .load_workflow_config("config.yml")
 
 # Create and run the workflow
-workflow <- WorkflowRunnerR6$new(config)
+workflow <- neuro2::WorkflowRunnerR6$new(config)
 result <- workflow$run()
 
 # Print summary
@@ -45,12 +45,7 @@ neuropsych_data <- paste0(
 summary_bullets <- generate_neuropsych_summary(neuropsych_data)
 
 # 3. Inject into Quarto document (example)
-quarto_yaml <- c(
-  "---",
-  "title: 'Neuropsych Report'",
-  "editor: source",
-  "---"
-)
+quarto_yaml <- c("---", "title: 'Neuropsych Report'", "editor: source", "---")
 
 report_content <- c(
   "# Executive Summary",
@@ -62,4 +57,3 @@ report_content <- c(
 
 # Write to .qmd file
 writeLines(c(quarto_yaml, report_content), "report.qmd")
-
