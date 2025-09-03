@@ -1,0 +1,20 @@
+---
+title: 'Neuropsych Report'
+editor: source
+---
+
+\
+
+# Executive Summary
+
+<think>
+
+</think>
+
+-   *Summary of Cognitive Domains (Source: WMS-IV)*: Memory function shows impairment in both immediate and delayed recall.\
+-   **Summary of Test Results (Source: CVLT-II)**: Performance indicates significant difficulty with learning slope, scoring at the 5th percentile.\
+-   **Summary of Clinical Impressions (Source: Clinical Interview)**: Disorientation to time was noted during the clinical interview.
+
+# Full Assessment
+
+...\[rest of report\]...
