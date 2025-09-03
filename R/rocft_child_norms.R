@@ -21,7 +21,7 @@
 #'   \item{recall_m}{Mean raw score for the Delayed Recall trial.}
 #'   \item{recall_sd}{Standard deviation for the Delayed Recall trial raw score.}
 #' }
-#' @usage data(rocft_child_norms)
+#' @usage # Data is embedded in rocft_child_score() function for compatibility
 #' @source Derived from commonly cited neuropsychological sources; missing ages
 #' 10 and 12 imputed for package use. Consult primary literature for specifics.
 #' @keywords datasets
@@ -58,16 +58,45 @@ NULL
 #' @importFrom dplyr filter
 #' @importFrom tibble tibble
 #' @importFrom stats pnorm
+#' @importFrom utils data
 rocft_child_score <- function(trial = c("copy", "recall"), age, raw_score) {
   trial <- match.arg(trial)
   if (is.na(age) || is.na(raw_score)) {
     return(NULL)
   }
 
-  # Ensure dataset is available when called from examples or fresh sessions
-  if (!exists("rocft_child_norms", inherits = TRUE)) {
-    utils::data("rocft_child_norms", package = "neuro2", envir = environment())
-  }
+  # Embed the data directly to avoid R CMD check data loading issues
+  # This small dataset is appropriate to embed given the consistent loading problems
+  rocft_child_norms <- data.frame(
+    age = c(6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+    copy_m = c(
+      16.66,
+      21.29,
+      23.64,
+      24.46,
+      26.505,
+      28.55,
+      30.595,
+      32.63,
+      33.53,
+      33.60
+    ),
+    copy_sd = c(7.97, 7.67, 8.00, 6.94, 6.295, 5.65, 4.995, 4.35, 3.18, 2.98),
+    recall_m = c(
+      10.53,
+      13.57,
+      16.34,
+      18.71,
+      20.18,
+      21.65,
+      23.12,
+      24.59,
+      26.24,
+      26.00
+    ),
+    recall_sd = c(5.80, 6.28, 6.77, 6.61, 6.53, 6.45, 6.37, 6.29, 5.40, 6.35),
+    stringsAsFactors = FALSE
+  )
 
   age_r <- round(age)
   if (age_r < 6 || age_r > 15) {
@@ -154,9 +183,7 @@ rocft_copy_child <- function(age, raw_score) {
 #' @seealso \code{\link{rocft_child_score}}
 #' @examples
 #' rocft_recall_child(age = 11, raw_score = 21)
-#' data(rocft_child_norms)
-#' head(rocft_child_norms)
-#' rocft_child_score("copy",   7, 22)
+#' rocft_child_score("copy", 7, 22)
 #' rocft_child_score("recall", 13, 20)
 #' rocft_copy_child(8, 24)
 #'

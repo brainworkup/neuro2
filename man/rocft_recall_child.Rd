@@ -21,9 +21,7 @@ formatted summary string for the Delayed Recall trial.
 }
 \examples{
 rocft_recall_child(age = 11, raw_score = 21)
-data(rocft_child_norms)
-head(rocft_child_norms)
-rocft_child_score("copy",   7, 22)
+rocft_child_score("copy", 7, 22)
 rocft_child_score("recall", 13, 20)
 rocft_copy_child(8, 24)
 

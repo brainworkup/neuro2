@@ -109,3 +109,8 @@ fig_*_*.png
 notes/
 report.pdf
 docker/neuro2_0.1.7.tar.gz
+neuro2.Rcheck/
+neuro2_0.1.7.tar.gz
+template2.qmd
+# template_neuro2_holy_grail.typ
+neuro2-report.typ

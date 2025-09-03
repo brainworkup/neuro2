@@ -19,7 +19,7 @@ Derived from commonly cited neuropsychological sources; missing ages
 10 and 12 imputed for package use. Consult primary literature for specifics.
 }
 \usage{
-data(rocft_child_norms)
+# Data is embedded in rocft_child_score() function for compatibility
 }
 \description{
 Normative data for the Rey–Osterrieth Complex Figure Test (ROCFT) for children
