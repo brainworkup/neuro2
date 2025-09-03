@@ -32,7 +32,7 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("pak", "rcmdcheck", "remotes"), repos = "https://cloud.r-project.org/")
+          install.packages(c("pak", "rcmdcheck", "remotes", "knitr"), repos = "https://cloud.r-project.org/")
           remotes::install_deps(dependencies = FALSE)
         shell: Rscript {0}
       - name: Check
