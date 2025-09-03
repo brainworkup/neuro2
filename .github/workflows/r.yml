@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("pak", "rcmdcheck", "remotes"), repos = "https://cloud.r-project.org/")
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = FALSE)
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
