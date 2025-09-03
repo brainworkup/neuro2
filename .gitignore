@@ -79,7 +79,6 @@ template_streamline.qmd
 _variables.yml
 config.yml
 # template.qmd
-
 template1.pdf
 template1.typ
 fix_conflicts.md
@@ -96,7 +95,6 @@ _02-10_emotion_child.pdf
 .lintr
 settings.json
 scratch.R
-
 **/*.quarto_ipynb
 .claude/
 _02-05_memory.typ
@@ -107,3 +105,5 @@ _03-00_sirf.pdf
 .continue/
 _tests/
 fig_*_*.png
+2025-09-02.md
+notes/
