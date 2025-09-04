@@ -36,11 +36,11 @@ Creates necessary directories, configuration files, and analysis scripts.
 \examples{
 \dontrun{
 # Basic setup
-workspace <- create_patient_workspace("Isabella", age = 12)
+workspace <- create_patient_workspace("Biggie", age = 12)
 
 # With custom data files
 workspace <- create_patient_workspace(
-  "Isabella",
+  "Biggie",
   age = 12,
   data_files = list(
     neurocog = "path/to/cognitive_data.csv",

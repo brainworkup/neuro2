@@ -55,11 +55,11 @@
 #' @examples
 #' \dontrun{
 #' # Basic setup
-#' workspace <- create_patient_workspace("Isabella", age = 12)
+#' workspace <- create_patient_workspace("Biggie", age = 12)
 #'
 #' # With custom data files
 #' workspace <- create_patient_workspace(
-#'   "Isabella",
+#'   "Biggie",
 #'   age = 12,
 #'   data_files = list(
 #'     neurocog = "path/to/cognitive_data.csv",
@@ -357,7 +357,7 @@ process_all_domains <- function(
 #' results <- process_all_domains("data")
 #' report <- generate_assessment_report(
 #'   results,
-#'   patient_info = list(name = "Isabella", age = 12)
+#'   patient_info = list(name = "Biggie", age = 12)
 #' )
 #' }
 #'

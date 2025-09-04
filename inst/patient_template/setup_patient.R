@@ -164,6 +164,6 @@ if (!interactive()) {
     setup_patient_workspace(patient_name, age)
   } else {
     cat("Usage: Rscript setup_patient.R PATIENT_NAME [AGE]\n")
-    cat("Example: Rscript setup_patient.R Isabella 12\n")
+    cat("Example: Rscript setup_patient.R Biggie 12\n")
   }
 }

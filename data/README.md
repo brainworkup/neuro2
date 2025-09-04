@@ -1,4 +1,4 @@
-# Data Directory for Isabella
+# Data Directory for Biggie
 
 ## Required Files
 

@@ -601,11 +601,11 @@ extract_wisc5_data <- function(
 #' @examples
 #' \dontrun{
 #' # Basic usage with file chooser dialog
-#' results <- pluck_wiat4(patient = "Isabella")
+#' results <- pluck_wiat4(patient = "Biggie")
 #'
 #' # Specify file path and other parameters
 #' results <- pluck_wiat4(
-#'   patient = "Isabella",
+#'   patient = "Biggie",
 #'   file = "path/to/wiat4.pdf",
 #'   pages = c(20),
 #'   extract_columns = c(1, 2, 3, 4, 5),
