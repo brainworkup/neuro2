@@ -427,37 +427,47 @@ DomainProcessorR6 <- R6::R6Class(
     detect_age_group = function() {
       # 1) Prefer explicit config setting if present
       # Try config.yml first
-      config_age <- tryCatch({
-        if (file.exists("config.yml")) {
-          cfg <- yaml::read_yaml("config.yml")
-          ag <- cfg$processing$age_group %||% cfg$patient$age_group
-          if (!is.null(ag) && tolower(ag) %in% c("adult", "child")) {
-            return(tolower(ag))
+      config_age <- tryCatch(
+        {
+          if (file.exists("config.yml")) {
+            cfg <- yaml::read_yaml("config.yml")
+            ag <- cfg$processing$age_group %||% cfg$patient$age_group
+            if (!is.null(ag) && tolower(ag) %in% c("adult", "child")) {
+              return(tolower(ag))
+            }
+            # Fall back to numeric patient age if provided
+            age_num <- cfg$patient$age
+            if (
+              !is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))
+            ) {
+              return(if (as.numeric(age_num) < 18) "child" else "adult")
+            }
           }
-          # Fall back to numeric patient age if provided
-          age_num <- cfg$patient$age
-          if (!is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))) {
-            return(if (as.numeric(age_num) < 18) "child" else "adult")
-          }
-        }
-        NULL
-      }, error = function(...) NULL)
+          NULL
+        },
+        error = function(...) NULL
+      )
 
       if (!is.null(config_age)) {
         return(config_age)
       }
 
       # Try _variables.yml as secondary source
-      vars_age <- tryCatch({
-        if (file.exists("_variables.yml")) {
-          vars <- yaml::read_yaml("_variables.yml")
-          age_num <- vars$age
-          if (!is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))) {
-            return(if (as.numeric(age_num) < 18) "child" else "adult")
+      vars_age <- tryCatch(
+        {
+          if (file.exists("_variables.yml")) {
+            vars <- yaml::read_yaml("_variables.yml")
+            age_num <- vars$age
+            if (
+              !is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))
+            ) {
+              return(if (as.numeric(age_num) < 18) "child" else "adult")
+            }
           }
-        }
-        NULL
-      }, error = function(...) NULL)
+          NULL
+        },
+        error = function(...) NULL
+      )
 
       if (!is.null(vars_age)) {
         return(vars_age)
@@ -472,16 +482,27 @@ DomainProcessorR6 <- R6::R6Class(
           if (any(c("parent", "teacher") %in% raters)) has_child_rater <- TRUE
         } else {
           # If rater column absent, infer via known tests per rater
-          if (self$check_rater_data_exists("parent") || self$check_rater_data_exists("teacher")) {
+          if (
+            self$check_rater_data_exists("parent") ||
+              self$check_rater_data_exists("teacher")
+          ) {
             has_child_rater <- TRUE
           }
         }
-        if (has_child_rater) return("child")
+        if (has_child_rater) {
+          return("child")
+        }
 
         # Heuristic: test_name patterns
         if ("test_name" %in% names(self$data)) {
           tnames <- unique(self$data$test_name)
-          if (any(grepl("adolescent|child|teacher|parent|PRS|TRS|SRP", tnames, ignore.case = TRUE))) {
+          if (
+            any(grepl(
+              "adolescent|child|teacher|parent|PRS|TRS|SRP",
+              tnames,
+              ignore.case = TRUE
+            ))
+          ) {
             return("child")
           }
           if (any(grepl("adult|MMPI-3|PAI", tnames, ignore.case = TRUE))) {
@@ -2990,6 +3011,7 @@ DomainProcessorR6 <- R6::R6Class(
       return(content)
     },
 
+    # Updated build_r_processing_block method in DomainProcessorR6
     build_r_processing_block = function() {
       # Format domains properly as a vector if multiple
       domains_arg <- if (length(self$domains) == 1) {
@@ -3113,36 +3135,80 @@ DomainProcessorR6 <- R6::R6Class(
         "}\n",
         "```\n\n",
 
-        # Figure generation block
+        # SUBDOMAIN Figure generation block
         "```{r}\n",
         "#| label: fig-",
         tolower(self$pheno),
-        "\n",
+        "-subdomain\n",
         "#| include: false\n",
         "#| eval: true\n\n",
 
         "if (nrow(",
         tolower(self$pheno),
         "_data) > 0) {\n",
-        "  # Generate figure\n",
+        "  # Generate subdomain figure\n",
         "  if (all(c(\"z_mean_subdomain\", \"subdomain\") %in% names(",
         tolower(self$pheno),
         "_data))) {\n",
-        "    dotplot_",
+        "    # Remove NA values for plotting\n",
+        "    data_subdomain <- ",
         tolower(self$pheno),
-        " <- DotplotR6$new(\n",
-        "      data = ",
+        "_data[!is.na(",
         tolower(self$pheno),
-        "_data,\n",
-        "      x = \"z_mean_subdomain\",\n",
-        "      y = \"subdomain\",\n",
-        "      filename = here::here(\"fig_",
+        "_data$z_mean_subdomain) & !is.na(",
+        tolower(self$pheno),
+        "_data$subdomain), ]\n",
+        "    \n",
+        "    if (nrow(data_subdomain) > 0) {\n",
+        "      dotplot_subdomain <- DotplotR6$new(\n",
+        "        data = data_subdomain,\n",
+        "        x = \"z_mean_subdomain\",\n",
+        "        y = \"subdomain\",\n",
+        "        filename = here::here(\"figs\", \"fig_",
         tolower(self$pheno),
         "_subdomain.svg\")\n",
-        "    )\n",
-        "    dotplot_",
+        "      )\n",
+        "      dotplot_subdomain$create_plot()\n",
+        "    }\n",
+        "  }\n",
+        "}\n",
+        "```\n\n",
+
+        # NARROW Figure generation block
+        "```{r}\n",
+        "#| label: fig-",
         tolower(self$pheno),
-        "$create_plot()\n",
+        "-narrow\n",
+        "#| include: false\n",
+        "#| eval: true\n\n",
+
+        "if (nrow(",
+        tolower(self$pheno),
+        "_data) > 0) {\n",
+        "  # Generate narrow figure\n",
+        "  if (all(c(\"z_mean_narrow\", \"narrow\") %in% names(",
+        tolower(self$pheno),
+        "_data))) {\n",
+        "    # Remove NA values for plotting\n",
+        "    data_narrow <- ",
+        tolower(self$pheno),
+        "_data[!is.na(",
+        tolower(self$pheno),
+        "_data$z_mean_narrow) & !is.na(",
+        tolower(self$pheno),
+        "_data$narrow), ]\n",
+        "    \n",
+        "    if (nrow(data_narrow) > 0) {\n",
+        "      dotplot_narrow <- DotplotR6$new(\n",
+        "        data = data_narrow,\n",
+        "        x = \"z_mean_narrow\",\n",
+        "        y = \"narrow\",\n",
+        "        filename = here::here(\"figs\", \"fig_",
+        tolower(self$pheno),
+        "_narrow.svg\")\n",
+        "      )\n",
+        "      dotplot_narrow$create_plot()\n",
+        "    }\n",
         "  }\n",
         "}\n\n",
 
@@ -3151,7 +3217,7 @@ DomainProcessorR6 <- R6::R6Class(
       )
     },
 
-    # Replace the build_typst_display_block method in the private section with this:
+    # Updated build_typst_display_block method
     build_typst_display_block = function() {
       # Defensive check: ensure domains is a character vector
       if (is.list(self$domains)) {
@@ -3161,7 +3227,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Build complete Typst blocks with function definition and two figure displays
       paste0(
-        # First block - subdomain figure
+        # First block - SUBDOMAIN figure
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -3203,19 +3269,23 @@ DomainProcessorR6 <- R6::R6Class(
         "```\n\n",
 
         "```{=typst}\n",
+        "// Define the title of the domain\n",
         "#let title = \"",
         self$domains[1],
         "\"\n\n",
+        "// Define the file name of the table\n",
         "#let file_qtbl = \"table_",
         tolower(self$pheno),
         ".png\"\n\n",
+        "// Define the file name of the figure\n",
         "#let file_fig = \"fig_",
         tolower(self$pheno),
         "_subdomain.svg\"\n\n",
+        "// The title is appended with ' Scores'\n",
         "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
 
-        # Second block - narrow figure (if applicable)
+        # Second block - NARROW figure
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -3274,8 +3344,8 @@ DomainProcessorR6 <- R6::R6Class(
         "```\n"
       )
     },
-    # Add this to the private section of DomainProcessorR6:
 
+    # Add this to the private section of DomainProcessorR6:
     get_plot_title_block = function(domain_name) {
       pheno_lower <- tolower(self$pheno)
 
