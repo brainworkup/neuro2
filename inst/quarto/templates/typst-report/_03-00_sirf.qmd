@@ -93,7 +93,7 @@ overall_plot <- DotplotR6$new(
   y = "domain",
   filename = "fig_sirf_overall.svg",
   theme = "fivethirtyeight",
-  point_size = 8
+  point_size = 7
 )
 overall_plot$create_plot()
 ```

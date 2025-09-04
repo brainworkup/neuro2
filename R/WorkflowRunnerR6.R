@@ -40,7 +40,7 @@ WorkflowRunnerR6 <- R6::R6Class(
 
     #' @description Process data for the workflow
     process_data = function() {
-      process_workflow_data(self$config)
+      .process_workflow_data(self$config)
     },
 
     #' @description Generate domain files

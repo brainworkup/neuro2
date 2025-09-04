@@ -49,7 +49,7 @@ update_template_with_domains <- function(
   }
 
   # Create include statements
-  # domain_includes <- paste0("{{< include ", domain_files, " >}}")
+  domain_includes <- paste0("{{< include ", domain_files, " >}}")
 
   # Find marker position
   marker_line <- which(grepl(domain_marker, template_lines, fixed = TRUE))
@@ -127,6 +127,7 @@ create_workflow_template <- function(
     "  library(gtExtras)",
     "  library(glue)",
     "  library(here)",
+    "  library(neuro2)",
     "})",
     "",
     "# Set global options",
@@ -204,8 +205,8 @@ run_complete_workflow <- function(verbose = TRUE) {
   }
 
   # Step 2: Check for template or create one
-  # template_file <- "template.qmd"
-  template_file <- "neuropsych_report.qmd"
+  template_file <- "template.qmd"
+  # template_file <- "neuropsych_report.qmd"
   template_path <- here::here(template_file)
 
   if (!file.exists(template_path)) {
@@ -368,7 +369,7 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
       # Read the QMD file to find text file references
       content <- readLines(qmd_file, warn = FALSE)
 
-      # Look for {{< include patterns - more precise regex
+      # Look for {{< include >}} patterns - more precise regex
       include_lines <- grep(
         '\\{\\{<\\s*include\\s+[^}]+_text\\.qmd',
         content,
@@ -404,7 +405,7 @@ generate_text_files <- function(generated_files, verbose = TRUE) {
               domain_name <- tools::toTitleCase(gsub("_", " ", domain_name))
             } else {
               # Fallback - use a generic name
-              domain_name <- "Assessment"
+              domain_name <- "Results"
             }
 
             # Create placeholder content

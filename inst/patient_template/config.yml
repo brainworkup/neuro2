@@ -2,7 +2,7 @@ patient:
   name: Biggie
   age: 20
   dob: "XXXX-XX-XX"
-  doe: "2025-07-21"
+  doe: "2025-01-01"
 data:
   input_dir: data-raw/csv
   output_dir: data
@@ -18,5 +18,5 @@ output:
   generate_tables: yes
 report:
   template: template.qmd
-  format: neurotyp-forensic-typst
+  format: neurotyp-adult-typst
   output_dir: output

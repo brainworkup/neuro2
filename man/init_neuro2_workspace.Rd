@@ -7,13 +7,24 @@
 init_neuro2_workspace(patient_name = NULL, verbose = TRUE)
 }
 \arguments{
-\item{patient_name}{Character string for patient name (optional)}
+\item{patient_name}{character; optional patient name to include in a
+generated \code{config.yml} if it does not already exist.}
 
-\item{verbose}{Logical, whether to show verbose output}
+\item{verbose}{logical; whether to print progress messages. Default \code{TRUE}.}
 }
 \value{
-TRUE if successful
+Invisibly returns \code{TRUE} on success.
 }
 \description{
-Sets up directories and loads functionality
+Creates commonly used directories (\verb{data/}, \verb{figs/}, \verb{output/}, \verb{tmp/}),
+loads neuro2 helpers via \code{\link[=setup_neuro2]{setup_neuro2()}}, and optionally writes a minimal
+\code{config.yml} seeded with \code{patient_name}.
+}
+\examples{
+\dontrun{
+init_neuro2_workspace(patient_name = "Jane Doe")
+}
+}
+\seealso{
+\code{\link[=setup_neuro2]{setup_neuro2()}}, \code{\link[=check_neuro2_setup]{check_neuro2_setup()}}
 }

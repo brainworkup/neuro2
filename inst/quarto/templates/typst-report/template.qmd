@@ -45,13 +45,13 @@ patient <- Sys.getenv("PATIENT")
 *CASE NUMBER:* #case_number \
 *PATIENT NAME:* #name \
 *DATE OF BIRTH:* {{< var dob >}}, Age {{< var age >}} \
-*DATES OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
+*DATE(S) OF EXAM:* {{< var doe >}}, {{< var doe2 >}}, and {{< var doe3 >}} \
 *DATE OF REPORT*: {{< var date_of_report >}} \
 ]
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_forensic.qmd >}}
+{{< include _01-00_nse_adult.qmd >}}
 
 {{< include _01-01_behav_obs.qmd >}}
 
@@ -253,7 +253,6 @@ for (number in names(domain_config)) {
 # Get list of all generated domain files (include all domain files except _text.qmd)
 available_domains <- unique(list.files(pattern = "^_02-[0-9]{2}_.*\\.qmd$"))
 # Filter out _text.qmd files specifically, but keep all others including emotion_child.qmd
-# available_domains <- unique(list.files(pattern = "^_02-[0-9]{2}_[^_]+\\.qmd$"))
 
 available_domains <- available_domains[
   !grepl("_text\\.qmd$", available_domains)

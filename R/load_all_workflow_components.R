@@ -43,7 +43,7 @@
     ".load_workflow_config", # Internal functions with dots
     ".print_header",
     ".print_colored",
-    "process_workflow_data" # Or .process_workflow_data if you make it internal
+    ".process_workflow_data" # Or .process_workflow_data if you make it internal
   )
 
   missing <- character()

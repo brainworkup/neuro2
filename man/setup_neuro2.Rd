@@ -4,8 +4,28 @@
 \alias{setup_neuro2}
 \title{Setup neuro2 package environment}
 \usage{
-setup_neuro2()
+setup_neuro2(verbose = TRUE)
+}
+\arguments{
+\item{verbose}{logical; whether to print progress messages. Default \code{TRUE}.}
+}
+\value{
+Invisibly returns \code{NULL}.
 }
 \description{
-Setup neuro2 package environment
+Loads required packages and sources the R6 classes/utilities used by
+neuro2 reporting. Intended to be called from Quarto documents or
+interactive sessions to ensure needed helpers are available.
+}
+\details{
+For Quarto, prefer sourcing this file and calling \code{setup_neuro2()}
+instead of attaching the package with \code{library(neuro2)} to avoid
+polluting the search path during document rendering.
+}
+\examples{
+\dontrun{
+# In a Quarto setup chunk
+source(here::here("R", "setup_neuro2.R"))
+setup_neuro2()
+}
 }

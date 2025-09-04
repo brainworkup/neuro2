@@ -6,24 +6,11 @@ In conclusion, the cognitive profile is ...
 
 ### Diagnostic Impression
 
-- {{< var dsm5_dx1 >}}
-- {{< var dsm5_dx2 >}}
-- {{< var dsm5_dx3 >}}
-- {{< var dsm5_dx4 >}}
-- {{< var dsm5_dx5 >}}
-
-- [DSM-5/ICD-10 Codes](_03-00_dsm5_icd10_dx.qmd)
-
-
-## Overall Evaluation Interpretation
-
-Neuropsychological evaluation revealed a pattern of cognitive strengths and weaknesses characterized by below-average overall neuropsychological functioning. Notable strengths emerged in visuoperceptual processing and visuoconstructional abilities, where performance reached the high average range for focused spatial tasks. The patient demonstrated average capabilities in basic judgment, decision-making, and orientation to person, place, time, and situation.
-
-## Diagnostic Impression
-
 - 294.11 (F02.81) Major Neurocognitive Disorder Due to Another Medical Condition, Moderate, With behavioral disturbance
 - 8A68.4 Generalized tonic-clonic seizure
 - V61.10 (Z63.0) Relational Problems
+
+- [DSM-5/ICD-10 Codes](_03-00_dsm5_icd10_dx.qmd)
 
 ## Mental Health Diversion: Contextual Analysis and Interpretation
 

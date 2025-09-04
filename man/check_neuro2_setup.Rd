@@ -7,8 +7,18 @@
 check_neuro2_setup()
 }
 \value{
-TRUE if setup is valid, FALSE otherwise
+Logical: \code{TRUE} if basic setup looks valid; otherwise \code{FALSE}.
 }
 \description{
-Checks if all essential components are available
+Checks for common prerequisites used by the neuro2 workflow
+(e.g., a \verb{data/} directory and an optional \code{config.yml}).
+}
+\examples{
+\dontrun{
+ok <- check_neuro2_setup()
+if (!ok) message("Please create missing folders/files and retry.")
+}
+}
+\seealso{
+\code{\link[=init_neuro2_workspace]{init_neuro2_workspace()}} to create the expected folders.
 }

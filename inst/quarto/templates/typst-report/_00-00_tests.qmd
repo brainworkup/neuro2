@@ -4,7 +4,7 @@
 ```{=typst}
 - Comprehensive Neuropsychiatric Symptom and History Interview
 - Conners' Adult ADHD Diagnostic Interview for DSM-IV, Part I: History (CAADID Part 1)
-- Conners' Adult ADHD Diagnostic Interview for DSM-IV, Part II: Symptoms? (CAADID Part 2)
+- Conners' Adult ADHD Diagnostic Interview for DSM-IV, Part II: Symptoms (CAADID Part 2)
 - Structured Clinical Interview for DSM-5 Disorders, Clinician Version (SCID-5-CV)
 - Beck Anxiety Inventory (BAI)
 - Beck Depression Inventory, 2nd ed (BDI-2)

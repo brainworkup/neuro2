@@ -68,15 +68,15 @@ config <- yaml::read_yaml("config.yml")
 # Run complete assessment pipeline
 main_analysis <- function() {
   message("🚀 Starting neuropsychological assessment pipeline")
-  
+
   # Step 1: Load and validate data
   message("📊 Loading and validating data...")
-  data_success <- process_workflow_data(config)
-  
+  data_success <- .process_workflow_data(config)
+
   if (!data_success) {
     stop("❌ Data processing failed. Please check your data files and config.")
   }
-  
+
   # Step 2: Process all domains
   message("🧠 Processing cognitive and behavioral domains...")
   results <- process_all_domains(
@@ -84,7 +84,7 @@ main_analysis <- function() {
     age_group = config$processing$age_group,
     verbose = config$processing$verbose
   )
-  
+
   # Step 3: Generate report
   message("📄 Generating assessment report...")
   report_path <- generate_assessment_report(
@@ -93,7 +93,7 @@ main_analysis <- function() {
     output_dir = config$data$output_dir,
     format = config$output$format
   )
-  
+
   message("✅ Assessment complete! Report saved to: ", report_path)
   return(report_path)
 }
@@ -121,7 +121,7 @@ if (!interactive()) {
 Place your assessment data files in this directory:
 
 - `neurocog.parquet` - Neurocognitive test data
-- `neurobehav.parquet` - Neurobehavioral/emotional data  
+- `neurobehav.parquet` - Neurobehavioral/emotional data
 - `validity.parquet` - Performance/symptom validity data (optional)
 
 ## Data Format
