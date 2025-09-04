@@ -597,6 +597,9 @@ DomainProcessorR6 <- R6::R6Class(
         }
       }
 
+      # Ensure companion text files exist before any early return
+      text_files <- self$generate_domain_text_qmd()
+
       # Check if file already exists - if so, skip generation
       if (file.exists(output_file)) {
         message(
@@ -605,9 +608,6 @@ DomainProcessorR6 <- R6::R6Class(
         )
         return(output_file)
       }
-
-      # Generate text files first
-      text_files <- self$generate_domain_text_qmd()
 
       # Build QMD content using template
       qmd_content <- private$build_unified_qmd_template(domain_name, text_files)
@@ -718,6 +718,9 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_standard_qmd(domain_name=..., output_file=...)
     #' }
     generate_standard_qmd = function(domain_name, output_file) {
+      # Ensure text files exist first (even if QMD already exists)
+      self$generate_domain_text_qmd()
+
       # Check if file already exists - if so, skip generation
       if (file.exists(output_file)) {
         message(
@@ -726,9 +729,6 @@ DomainProcessorR6 <- R6::R6Class(
         )
         return(output_file)
       }
-
-      # Ensure text files exist first
-      self$generate_domain_text_qmd()
 
       # Determine if this is a multi-rater domain
       is_multi_rater <- self$has_multiple_raters()
