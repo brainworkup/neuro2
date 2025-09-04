@@ -5,10 +5,11 @@
 #' This script integrates generated domain QMD files into the main template
 #' and ensures the workflow runs correctly.
 
+# Load common utilities
+source("common_utils.R")
+
 # Load required packages
-suppressPackageStartupMessages({
-  library(here)
-})
+load_packages(c("here"), verbose = FALSE)
 
 #' Update main template with generated domain includes
 update_template_with_domains <- function(

@@ -4,12 +4,11 @@
 # This module handles the final report generation for the neuropsychological workflow
 # It renders the Quarto template into the final report format
 
-# Function to log messages
-log_message <- function(message, type = "INFO") {
-  timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  log_entry <- paste0("[", timestamp, "] [", type, "] ", message, "\n")
-  cat(log_entry)
-}
+# Load common utilities
+source("common_utils.R")
+
+# Load required packages
+load_packages(c("quarto", "yaml", "neuro2"), verbose = FALSE)
 
 # Get configuration from the parent environment
 # This assumes this script is sourced from the WorkflowRunner
@@ -17,26 +16,10 @@ if (exists("self") && inherits(self, "R6")) {
   config <- self$config
 } else {
   # Fallback if not called from WorkflowRunner
-  if (file.exists("config.yml")) {
-    if (!requireNamespace("yaml", quietly = TRUE)) {
-      install.packages("yaml")
-      library(yaml)
-    }
-    config <- yaml::read_yaml("config.yml")
-  } else {
-    stop("Configuration not available")
-  }
+  config <- load_config("config.yml", "inst/quarto/templates/typst-report/config.yml")
 }
 
-# Load required packages
-required_packages <- c("quarto", "yaml", "neuro2")
-for (pkg in required_packages) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    log_message(paste("Installing package:", pkg), "REPORT")
-    install.packages(pkg)
-  }
-  library(pkg, character.only = TRUE, quietly = TRUE)
-}
+# Packages loaded via common_utils.R
 
 # Log the report generation start
 log_message("Starting report generation", "REPORT")

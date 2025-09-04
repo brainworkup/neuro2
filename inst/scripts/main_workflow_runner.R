@@ -6,10 +6,11 @@
 #' Usage: Rscript main_workflow_runner.R
 #'    or: source("main_workflow_runner.R"); main()
 
+# Load common utilities
+source("common_utils.R")
+
 # Load required packages
-suppressPackageStartupMessages({
-  library(here)
-})
+load_packages(c("here"), verbose = FALSE)
 
 #' Check if required files exist and report status
 check_required_files <- function() {

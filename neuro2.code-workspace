@@ -16,6 +16,7 @@
     },
     "peacock.surpriseMeFromFavoritesOnly": false,
     "peacock.affectTabActiveBorder": false,
-    "path-intellisense.showHiddenFiles": true
+    "path-intellisense.showHiddenFiles": true,
+    "chatgpt.openOnStartup": true
   }
 }

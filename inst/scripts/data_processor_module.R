@@ -4,12 +4,14 @@
 # This module handles data processing for the neuropsychological workflow
 # It loads raw data from CSV files and processes them into the required format
 
+# Load common utilities
+source("common_utils.R")
+
+# Load required packages
+load_packages(c("yaml"), verbose = FALSE)
+
 # Load the DuckDB processor
-if (file.exists("R/duckdb_neuropsych_loader.R")) {
-  source("R/duckdb_neuropsych_loader.R")
-} else {
-  stop("Required file R/duckdb_neuropsych_loader.R not found")
-}
+safe_source("R/duckdb_neuropsych_loader.R")
 
 # Get configuration from the parent environment
 # This assumes this script is sourced from the WorkflowRunner
@@ -17,23 +19,11 @@ if (exists("self") && inherits(self, "R6")) {
   config <- self$config
 } else {
   # Fallback if not called from WorkflowRunner
-  if (file.exists("config.yml")) {
-    if (!requireNamespace("yaml", quietly = TRUE)) {
-      install.packages("yaml")
-      library(yaml)
-    }
-    config <- yaml::read_yaml("config.yml")
-  } else {
-    stop("Configuration not available")
-  }
+  config <- load_config("config.yml", "inst/quarto/templates/typst-report/config.yml")
 }
 
 # Log the data processing start
-if (exists("log_message")) {
-  log_message("Starting data processing with DuckDB", "DATA")
-} else {
-  cat("[DATA] Starting data processing with DuckDB\n")
-}
+log_message("Starting data processing with DuckDB", "DATA")
 
 # Process the data using DuckDB
 # Temporarily set warn option to prevent warnings from becoming errors
@@ -56,8 +46,4 @@ tryCatch({
 })
 
 # Log completion
-if (exists("log_message")) {
-  log_message("Data processing completed successfully", "DATA")
-} else {
-  cat("[DATA] Data processing completed successfully\n")
-}
+log_message("Data processing completed successfully", "DATA")

@@ -33,8 +33,8 @@ setup_patient_workspace <- function(
   if (file.exists(config_path)) {
     config <- yaml::read_yaml(config_path)
   } else {
-    # Create default config
-    config <- yaml::read_yaml("inst/patient_template/config.yml")
+    # Create default config from main template
+    config <- yaml::read_yaml("inst/quarto/templates/typst-report/config.yml")
   }
 
   # Update patient-specific info

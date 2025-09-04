@@ -11,19 +11,15 @@
 #' 3. Generates QMD files following the memory template structure
 #' 4. Creates an include list for the main template
 
+# Load common utilities
+source("common_utils.R")
+
 # Load required packages
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(readr)
-  library(here)
-  if (requireNamespace("arrow", quietly = TRUE)) {
-    library(arrow)
-  }
-})
+load_packages(c("dplyr", "readr", "here", "arrow"), verbose = FALSE)
 
 # Source the DomainProcessorR6 class (only if not already loaded)
 if (!exists("DomainProcessorR6")) {
-  source(here::here("R", "DomainProcessorR6.R"))
+  safe_source(here::here("R", "DomainProcessorR6.R"))
 }
 
 #' Domain registry with mappings
@@ -165,43 +161,14 @@ check_domain_has_data <- function(domain_names, data_file) {
   return(any(domain_names %in% data$domain))
 }
 
-#' Get available data files
+#' Get available data files (using common utility)
 get_data_files <- function() {
-  data_dir <- here::here("data")
-
-  # Look for different formats in order of preference
-  files <- list()
-
-  for (basename in c("neurocog", "neurobehav", "validity")) {
-    # Try parquet first (best performance)
-    parquet_file <- file.path(data_dir, paste0(basename, ".parquet"))
-    if (file.exists(parquet_file)) {
-      files[[basename]] <- parquet_file
-      next
-    }
-
-    # Try feather
-    feather_file <- file.path(data_dir, paste0(basename, ".feather"))
-    if (file.exists(feather_file)) {
-      files[[basename]] <- feather_file
-      next
-    }
-
-    # Try CSV
-    csv_file <- file.path(data_dir, paste0(basename, ".csv"))
-    if (file.exists(csv_file)) {
-      files[[basename]] <- csv_file
-    }
-  }
-
-  files
+  get_data_files(here::here("data"))
 }
 
 #' Process all domains with available data
 process_all_domains <- function(verbose = TRUE) {
-  if (verbose) {
-    cat("🚀 Starting batch domain processing...\n\n")
-  }
+  log_message("Starting batch domain processing", "INFO", verbose)
 
   registry <- get_domain_registry()
   data_files <- get_data_files()
@@ -211,11 +178,10 @@ process_all_domains <- function(verbose = TRUE) {
   }
 
   if (verbose) {
-    cat("📁 Found data files:\n")
+    log_message("Found data files", "INFO", verbose)
     for (name in names(data_files)) {
-      cat("  -", name, ":", data_files[[name]], "\n")
+      log_message(paste(name, ":", data_files[[name]]), "INFO", verbose)
     }
-    cat("\n")
   }
 
   # Track results
