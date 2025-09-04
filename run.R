@@ -28,32 +28,31 @@ result <- workflow$run()
 # Print summary
 workflow$print_summary(result)
 
+# # Qwen generate report ----------------------------------------------------
 
-# Qwen generate report ----------------------------------------------------
+# # 1. Process raw data into required format
+# neuropsych_data <- paste0(
+#   "### Cognitive Domains\n",
+#   "- Memory: Impaired immediate/delayed recall (WMS-IV)\n",
+#   "### Test Results\n",
+#   "- CVLT-II: 5th percentile for learning slope\n",
+#   "### Clinical Impressions\n",
+#   "- Disorientation to time observed during interview"
+# )
 
-# 1. Process raw data into required format
-neuropsych_data <- paste0(
-  "### Cognitive Domains\n",
-  "- Memory: Impaired immediate/delayed recall (WMS-IV)\n",
-  "### Test Results\n",
-  "- CVLT-II: 5th percentile for learning slope\n",
-  "### Clinical Impressions\n",
-  "- Disorientation to time observed during interview"
-)
+# # 2. Generate AI summary
+# summary_bullets <- generate_neuropsych_summary(neuropsych_data)
 
-# 2. Generate AI summary
-summary_bullets <- generate_neuropsych_summary(neuropsych_data)
+# # 3. Inject into Quarto document (example)
+# quarto_yaml <- c("---", "title: 'Neuropsych Report'", "editor: source", "---")
 
-# 3. Inject into Quarto document (example)
-quarto_yaml <- c("---", "title: 'Neuropsych Report'", "editor: source", "---")
+# report_content <- c(
+#   "# Executive Summary",
+#   summary_bullets,
+#   "",
+#   "# Full Assessment",
+#   "...[rest of report]..."
+# )
 
-report_content <- c(
-  "# Executive Summary",
-  summary_bullets,
-  "",
-  "# Full Assessment",
-  "...[rest of report]..."
-)
-
-# Write to .qmd file
-writeLines(c(quarto_yaml, report_content), "report.qmd")
+# # Write to .qmd file
+# writeLines(c(quarto_yaml, report_content), "report.qmd")

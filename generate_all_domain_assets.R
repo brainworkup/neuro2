@@ -50,6 +50,16 @@ if (!load_neuro2_dev()) {
   }
 }
 
+# Always override DotplotR6 with local source if available to avoid
+# old installed versions that use svglite directly for SVG (can segfault)
+local_dotplot <- here::here("R", "DotplotR6.R")
+if (file.exists(local_dotplot)) {
+  source(local_dotplot)
+}
+
+# Disable font embedding in svglite if it is invoked indirectly
+Sys.setenv(SVGLITE_NO_FONTS = "true")
+
 cat("Generating all domain table and figure files...\n\n")
 
 # Load sysdata.rda once

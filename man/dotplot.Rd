@@ -66,6 +66,14 @@ options include 'minimal' and 'classic'}
 \item{filename}{The filename to save the plot to, Default: NULL}
 
 \item{...}{Additional arguments to be passed to the function.}
+
+\item{width}{Plot width in inches, Default: 10}
+
+\item{height}{Plot height in inches, Default: 6}
+
+\item{dpi}{Resolution for raster outputs, Default: 300}
+
+\item{na.rm}{Whether to remove NA values, Default: FALSE}
 }
 \value{
 An object of class 'ggplot' representing the dotplot.

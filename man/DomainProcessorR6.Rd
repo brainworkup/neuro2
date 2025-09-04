@@ -166,6 +166,7 @@ R6 class for processing neuropsychological domain data
 \item \href{#method-DomainProcessorR6-get_rater_types}{\code{DomainProcessorR6$get_rater_types()}}
 \item \href{#method-DomainProcessorR6-get_rater_tests}{\code{DomainProcessorR6$get_rater_tests()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
+\item \href{#method-DomainProcessorR6-detect_age_group}{\code{DomainProcessorR6$detect_age_group()}}
 \item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
@@ -428,6 +429,19 @@ Check if a specific rater has data
 }
 \subsection{Returns}{
 Logical indicating if the rater has data
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DomainProcessorR6-detect_age_group"></a>}}
+\if{latex}{\out{\hypertarget{method-DomainProcessorR6-detect_age_group}{}}}
+\subsection{Method \code{detect_age_group()}}{
+Detect age group (child/adult) using config and data heuristics
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$detect_age_group()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Character scalar: 'child' or 'adult'
 }
 }
 \if{html}{\out{<hr>}}

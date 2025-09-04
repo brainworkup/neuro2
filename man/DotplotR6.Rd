@@ -49,6 +49,12 @@ pre-defined color palette)}
 \item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
 
 \item{\code{filename}}{The filename to save the plot to, Default: NULL}
+
+\item{\code{width}}{Plot width in inches, Default: 10}
+
+\item{\code{height}}{Plot height in inches, Default: 6}
+
+\item{\code{dpi}}{Resolution for raster outputs, Default: 300}
 }
 \if{html}{\out{</div>}}
 }
@@ -79,6 +85,9 @@ Initialize a new DotplotR6 object with configuration and data.
   theme = "fivethirtyeight",
   return_plot = TRUE,
   filename = NULL,
+  width = 10,
+  height = 6,
+  dpi = 300,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -112,6 +121,12 @@ pre-defined color palette)}
 \item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
 
 \item{\code{filename}}{The filename to save the plot to, Default: NULL}
+
+\item{\code{width}}{Plot width in inches, Default: 10}
+
+\item{\code{height}}{Plot height in inches, Default: 6}
+
+\item{\code{dpi}}{Resolution for raster outputs, Default: 300}
 
 \item{\code{...}}{Additional arguments (ignored).}
 }

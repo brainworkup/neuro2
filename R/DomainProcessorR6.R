@@ -422,6 +422,79 @@ DomainProcessorR6 <- R6::R6Class(
     },
 
     #' @description
+    #' Detect age group (child/adult) using config and data heuristics
+    #' @return Character scalar: 'child' or 'adult'
+    detect_age_group = function() {
+      # 1) Prefer explicit config setting if present
+      # Try config.yml first
+      config_age <- tryCatch({
+        if (file.exists("config.yml")) {
+          cfg <- yaml::read_yaml("config.yml")
+          ag <- cfg$processing$age_group %||% cfg$patient$age_group
+          if (!is.null(ag) && tolower(ag) %in% c("adult", "child")) {
+            return(tolower(ag))
+          }
+          # Fall back to numeric patient age if provided
+          age_num <- cfg$patient$age
+          if (!is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))) {
+            return(if (as.numeric(age_num) < 18) "child" else "adult")
+          }
+        }
+        NULL
+      }, error = function(...) NULL)
+
+      if (!is.null(config_age)) {
+        return(config_age)
+      }
+
+      # Try _variables.yml as secondary source
+      vars_age <- tryCatch({
+        if (file.exists("_variables.yml")) {
+          vars <- yaml::read_yaml("_variables.yml")
+          age_num <- vars$age
+          if (!is.null(age_num) && suppressWarnings(!is.na(as.numeric(age_num)))) {
+            return(if (as.numeric(age_num) < 18) "child" else "adult")
+          }
+        }
+        NULL
+      }, error = function(...) NULL)
+
+      if (!is.null(vars_age)) {
+        return(vars_age)
+      }
+
+      # 2) Infer from data characteristics if present
+      if (!is.null(self$data) && nrow(self$data) > 0) {
+        # Heuristic: parent/teacher raters indicate child
+        has_child_rater <- FALSE
+        if ("rater" %in% names(self$data)) {
+          raters <- tolower(unique(self$data$rater))
+          if (any(c("parent", "teacher") %in% raters)) has_child_rater <- TRUE
+        } else {
+          # If rater column absent, infer via known tests per rater
+          if (self$check_rater_data_exists("parent") || self$check_rater_data_exists("teacher")) {
+            has_child_rater <- TRUE
+          }
+        }
+        if (has_child_rater) return("child")
+
+        # Heuristic: test_name patterns
+        if ("test_name" %in% names(self$data)) {
+          tnames <- unique(self$data$test_name)
+          if (any(grepl("adolescent|child|teacher|parent|PRS|TRS|SRP", tnames, ignore.case = TRUE))) {
+            return("child")
+          }
+          if (any(grepl("adult|MMPI-3|PAI", tnames, ignore.case = TRUE))) {
+            return("adult")
+          }
+        }
+      }
+
+      # 3) Safe default
+      return("adult")
+    },
+
+    #' @description
     #' Detect emotion type (child/adult)
     #' @description Infer whether the dataset represents child or adult emotion measures.
     #' @return Invisibly returns \code{self} for method chaining.
@@ -535,14 +608,8 @@ DomainProcessorR6 <- R6::R6Class(
         }
       }
 
-      # If we have both child and adult domain patterns, or can't determine from data,
-      # prefer child as default (more common in neuropsych practice)
-      if (child_domain_match || length(self$domains) > 1) {
-        return("child")
-      }
-
-      # Final fallback
-      return("child")
+      # If still ambiguous, fall back to configured age group (or adult)
+      return(self$detect_age_group())
     },
 
     #' @description

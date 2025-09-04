@@ -1,7 +1,7 @@
 ---
 title: NEUROCOGNITIVE EXAMINATION
-patient: Biggie
-name: Smalls, Biggie
+patient: Isabella
+name: Chen, Isabella
 doe: "YYYY-MM-DD"
 date_of_report: last-modified
 ---
@@ -71,8 +71,10 @@ result <- process_all_domains(verbose = FALSE)
 # Create include file for template
 available_domains <- sort(result$generated)
 if (length(available_domains) > 0) {
-  include_content <- paste0("{{< include ", available_domains, " >}}")
-  writeLines(include_content, "_domains_to_include.qmd")
+  include_lines <- paste0("{{< include ", available_domains, " >}}")
+  # Ensure a blank line between includes for proper Quarto rendering
+  spaced <- as.vector(rbind(include_lines, ""))
+  writeLines(spaced, "_domains_to_include.qmd")
 } else {
   writeLines("", "_domains_to_include.qmd")
   warning("No domain files were generated!")

@@ -54,6 +54,16 @@ if (!load_neuro2_dev()) {
   }
 }
 
+# Always override DotplotR6 with local source if available to ensure
+# robust SVG handling on systems where svglite may segfault
+local_dotplot <- here::here("R", "DotplotR6.R")
+if (file.exists(local_dotplot)) {
+  source(local_dotplot)
+}
+
+# Defensive: ask svglite not to embed fonts if it gets used indirectly
+Sys.setenv(SVGLITE_NO_FONTS = "true")
+
 
 # Function to generate placeholder text files
 generate_text_files <- function(generated_files, verbose = TRUE) {

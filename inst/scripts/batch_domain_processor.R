@@ -316,7 +316,8 @@ create_include_list <- function(generated_files, verbose = TRUE) {
   }
 
   include_file <- here::here("domain_includes.txt")
-  writeLines(generated_files, include_file)
+  # Sort to ensure stable ordering by section number
+  writeLines(sort(generated_files), include_file)
 
   if (verbose) {
     cat("\n📝 Created include list:", include_file, "\n")
