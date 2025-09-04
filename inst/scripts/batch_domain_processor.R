@@ -12,7 +12,7 @@
 #' 4. Creates an include list for the main template
 
 # Load common utilities
-source("common_utils.R")
+source("inst/scripts/common_utils.R")
 
 # Load required packages
 load_packages(c("dplyr", "readr", "here", "arrow"), verbose = FALSE)
@@ -162,7 +162,7 @@ check_domain_has_data <- function(domain_names, data_file) {
 }
 
 #' Get available data files (using common utility)
-get_data_files <- function() {
+get_available_data_files <- function() {
   get_data_files(here::here("data"))
 }
 
@@ -171,7 +171,7 @@ process_all_domains <- function(verbose = TRUE) {
   log_message("Starting batch domain processing", "INFO", verbose)
 
   registry <- get_domain_registry()
-  data_files <- get_data_files()
+  data_files <- get_available_data_files()
 
   if (length(data_files) == 0) {
     stop("No data files found in data/ directory")

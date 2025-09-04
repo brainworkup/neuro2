@@ -7,7 +7,7 @@
 #'    or: source("main_workflow_runner.R"); main()
 
 # Load common utilities
-source("common_utils.R")
+source("inst/scripts/common_utils.R")
 
 # Load required packages
 load_packages(c("here"), verbose = FALSE)

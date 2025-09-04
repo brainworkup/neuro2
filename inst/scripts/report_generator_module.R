@@ -5,7 +5,7 @@
 # It renders the Quarto template into the final report format
 
 # Load common utilities
-source("common_utils.R")
+source("inst/scripts/common_utils.R")
 
 # Load required packages
 load_packages(c("quarto", "yaml", "neuro2"), verbose = FALSE)
@@ -16,7 +16,10 @@ if (exists("self") && inherits(self, "R6")) {
   config <- self$config
 } else {
   # Fallback if not called from WorkflowRunner
-  config <- load_config("config.yml", "inst/quarto/templates/typst-report/config.yml")
+  config <- load_config(
+    "config.yml",
+    "inst/quarto/templates/typst-report/config.yml"
+  )
 }
 
 # Packages loaded via common_utils.R
