@@ -18,9 +18,6 @@
 #' @field theme The ggplot theme to be used, Default: 'fivethirtyeight'
 #' @field return_plot Whether to return the plot object, Default: TRUE
 #' @field filename The filename to save the plot to, Default: NULL
-#' @field width Plot width in inches, Default: 10
-#' @field height Plot height in inches, Default: 6
-#' @field dpi Resolution for raster outputs, Default: 300
 #'
 #' @section Methods:
 #' \describe{
@@ -51,9 +48,6 @@ DotplotR6 <- R6::R6Class(
     theme = "fivethirtyeight",
     return_plot = TRUE,
     filename = NULL,
-    width = 10,
-    height = 6,
-    dpi = 300,
 
     #' @description
     #' Initialize a new DotplotR6 object with configuration and data.
@@ -73,9 +67,6 @@ DotplotR6 <- R6::R6Class(
     #' @param theme The ggplot theme to be used, Default: 'fivethirtyeight'
     #' @param return_plot Whether to return the plot object, Default: TRUE
     #' @param filename The filename to save the plot to, Default: NULL
-    #' @param width Plot width in inches, Default: 10
-    #' @param height Plot height in inches, Default: 6
-    #' @param dpi Resolution for raster outputs, Default: 300
     #' @param ... Additional arguments (ignored).
     #'
     #' @return A new DotplotR6 object
@@ -92,9 +83,6 @@ DotplotR6 <- R6::R6Class(
       theme = "fivethirtyeight",
       return_plot = TRUE,
       filename = NULL,
-      width = 10,
-      height = 6,
-      dpi = 300,
       ...
     ) {
       self$data <- data
@@ -109,9 +97,6 @@ DotplotR6 <- R6::R6Class(
       self$theme <- theme
       self$return_plot <- return_plot
       self$filename <- filename
-      self$width <- width
-      self$height <- height
-      self$dpi <- dpi
     },
 
     #' @description
@@ -120,14 +105,6 @@ DotplotR6 <- R6::R6Class(
     #' @return If return_plot is TRUE, returns an object of class 'ggplot' representing the dotplot.
     #'   Otherwise returns invisible(NULL).
     create_plot = function() {
-      # Remove NA values if they exist
-      if (any(is.na(self$data[[self$x]]) | is.na(self$data[[self$y]]))) {
-        message("Removing rows with NA values in x or y columns")
-        self$data <- self$data[
-          !is.na(self$data[[self$x]]) & !is.na(self$data[[self$y]]),
-        ]
-      }
-
       # Define the color palette
       color_palette <- if (is.null(self$colors)) {
         c(
@@ -159,7 +136,8 @@ DotplotR6 <- R6::R6Class(
       fill_var <- if (identical(self$fill, self$x)) self$x else self$fill
 
       # Make the plot
-      plot_object <- ggplot2::ggplot() +
+      plot_object <-
+        ggplot2::ggplot() +
         ggplot2::geom_segment(
           data = self$data,
           ggplot2::aes(
@@ -201,11 +179,11 @@ DotplotR6 <- R6::R6Class(
           panel.background = ggplot2::element_rect(fill = "white"),
           plot.background = ggplot2::element_rect(fill = "white"),
           panel.border = ggplot2::element_rect(color = "white"),
-          plot.margin = ggplot2::margin(t = 5, r = 5, b = 5, l = 10),
-          axis.text.y = ggplot2::element_text(size = 10, hjust = 1)
+          # Add this line to increase the left margin
+          plot.margin = ggplot2::margin(t = 5, r = 5, b = 5, l = 10)
         )
 
-      # Add x-axis expansion
+      # Add this after creating your plot object
       plot_object <- plot_object +
         ggplot2::scale_x_continuous(
           expand = ggplot2::expansion(mult = c(0.2, 0.1))
@@ -221,47 +199,31 @@ DotplotR6 <- R6::R6Class(
             filename = self$filename,
             plot = plot_object,
             device = "pdf",
-            width = self$width,
-            height = self$height,
-            dpi = self$dpi
+            width = 10, # Try a wider width
+            height = 6,
+            dpi = 300
           )
         } else if (ext == "png") {
           ggplot2::ggsave(
             filename = self$filename,
             plot = plot_object,
             device = "png",
-            width = self$width,
-            height = self$height,
-            dpi = self$dpi
+            width = 10, # Try a wider width
+            height = 6,
+            dpi = 300
           )
         } else if (ext == "svg") {
-          # SVG requires the svglite package or built-in svg device
-          if (requireNamespace("svglite", quietly = TRUE)) {
-            ggplot2::ggsave(
-              filename = self$filename,
-              plot = plot_object,
-              device = svglite::svglite,
-              width = self$width,
-              height = self$height
-            )
-          } else {
-            # Fall back to base R svg device
-            ggplot2::ggsave(
-              filename = self$filename,
-              plot = plot_object,
-              device = "svg",
-              width = self$width,
-              height = self$height
-            )
-          }
+          ggplot2::ggsave(
+            filename = self$filename,
+            plot = plot_object,
+            device = "svg"
+          )
         } else {
           warning(
-            "File extension not recognized. ",
-            "Supported extensions are 'pdf', 'png', and 'svg'."
+            "File extension not recognized.
+                  Supported extensions are 'pdf', 'png', and 'svg'."
           )
         }
-
-        message(paste("Plot saved to:", self$filename))
       }
 
       # Return the plot if return_plot is TRUE
@@ -295,10 +257,6 @@ DotplotR6 <- R6::R6Class(
 #'   options include 'minimal' and 'classic'
 #' @param return_plot Whether to return the plot object, Default: TRUE
 #' @param filename The filename to save the plot to, Default: NULL
-#' @param width Plot width in inches, Default: 10
-#' @param height Plot height in inches, Default: 6
-#' @param dpi Resolution for raster outputs, Default: 300
-#' @param na.rm Whether to remove NA values, Default: FALSE
 #' @param ... Additional arguments to be passed to the function.
 #'
 #' @return An object of class 'ggplot' representing the dotplot.
@@ -317,10 +275,6 @@ dotplot <- function(
   theme = "fivethirtyeight",
   return_plot = TRUE,
   filename = NULL,
-  width = 10,
-  height = 6,
-  dpi = 300,
-  na.rm = FALSE,
   ...
 ) {
   # Create a DotplotR6 object and generate the plot
@@ -336,10 +290,7 @@ dotplot <- function(
     colors = colors,
     theme = theme,
     return_plot = return_plot,
-    filename = filename,
-    width = width,
-    height = height,
-    dpi = dpi
+    filename = filename
   )
 
   return(dot_plot_obj$create_plot())

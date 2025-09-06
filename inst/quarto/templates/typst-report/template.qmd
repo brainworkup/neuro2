@@ -32,6 +32,21 @@ knitr::opts_knit$set(
 # Set environment variables with default values
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
+
+# Lock svglite's font mapping to known-good fonts
+options(
+  svglite.system_fonts = list(
+    sans = "Helvetica",
+    serif = "Times",
+    mono = "Menlo"
+  )
+)
+
+# Also tell ggplot2 to use that same family by default
+ggplot2::theme_set(
+  ggplot2::theme_get() +
+    ggplot2::theme(text = ggplot2::element_text(family = "sans"))
+)
 ```
 
 ```{=typst}
