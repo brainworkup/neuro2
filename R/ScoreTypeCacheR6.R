@@ -33,10 +33,10 @@ ScoreTypeCacheR6 <- R6::R6Class(
     #' @return A new ScoreTypeCacheR6 object
     initialize = function() {
       self$fn_list <- list(
-        standard_score = "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]",
-        scaled_score = "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]",
-        t_score = "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]",
-        z_score = "z-score: Mean = 0 [50th‰], SD ± 1 [16th‰, 84th‰]",
+        standard_score = "Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]",
+        scaled_score = "Scaled score: Mean = 10 [50th\u2030], SD \u00B1 3 [16th\u2030, 84th\u2030]",
+        t_score = "T score: Mean = 50 [50th\u2030], SD \u00B1 10 [16th\u2030, 84th\u2030]",
+        z_score = "z-score: Mean = 0 [50th\u2030], SD \u00B1 1 [16th\u2030, 84th\u2030]",
         raw_score = "Raw score: Untransformed test score",
         base_rate = "Base rate: Percentage of the normative sample at or below this score",
         percentile = "Percentile rank: Percentage of normative sample scoring at or below this level",

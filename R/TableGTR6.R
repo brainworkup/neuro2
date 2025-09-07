@@ -149,7 +149,7 @@ TableGTR6 <- R6::R6Class(
           test_name = gt::md("**Test**"),
           scale = gt::md("**Scale**"),
           score = gt::md("**Score**"),
-          percentile = gt::md("**‰ Rank**"),
+          percentile = gt::md("**\u2030 Rank**"),
           range = gt::md("**Range**")
         ) |>
         gt::tab_header(title = self$title) |>

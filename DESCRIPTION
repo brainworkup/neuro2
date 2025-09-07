@@ -11,6 +11,8 @@ Description: A comprehensive toolkit for generating neuropsychological
     behavioral test data, generating publication-quality tables and figures,
     and creating formatted reports using Quarto and Typst. Designed for
     pediatric and adult neuropsychological assessments.
+Author: Joey Trampush [aut, cre]
+Maintainer: Joey Trampush <joey.trampush@brainworkup.org>
 License: MIT + file LICENSE
 URL: https://github.com/brainworkup/neuro2
 BugReports: https://github.com/brainworkup/neuro2/issues
@@ -36,6 +38,7 @@ Imports:
     gtExtras (>= 0.5.0),
     here,
     highcharter,
+    httr,
     janitor,
     jsonlite,
     kableExtra,
@@ -48,7 +51,6 @@ Imports:
     readr,
     readxl,
     rlang,
-    rmarkdown (>= 2.20),
     stats,
     stringr,
     tabulapdf,

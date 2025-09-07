@@ -572,19 +572,19 @@ process_domain_data <- function(pheno, domains) {
 
     # Add appropriate footnotes
     if ("t_score" %in% names(grp_list)) {
-      fn_list$t_score <- "T score: Mean = 50 [50th‰], SD ± 10 [16th‰, 84th‰]"
+      fn_list$t_score <- "T score: Mean = 50 [50th\u2030], SD \u00B1 10 [16th\u2030, 84th\u2030]"
     }
     if ("scaled_score" %in% names(grp_list)) {
-      fn_list$scaled_score <- "Scaled score: Mean = 10 [50th‰], SD ± 3 [16th‰, 84th‰]"
+      fn_list$scaled_score <- "Scaled score: Mean = 10 [50th\u2030], SD \u00B1 3 [16th\u2030, 84th\u2030]"
     }
     if ("standard_score" %in% names(grp_list)) {
-      fn_list$standard_score <- "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+      fn_list$standard_score <- "Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]"
     }
   }
 
   # Default source note if we don't have specific footnotes
   source_note <- if (length(fn_list) == 0) {
-    "Standard score: Mean = 100 [50th‰], SD ± 15 [16th‰, 84th‰]"
+    "Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]"
   } else {
     NULL
   }

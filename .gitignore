@@ -118,3 +118,6 @@ _02-01_iq.rmarkdown
 template_neuro2_holy_grail.pdf
 domain_includes.txt
 _01-00_nse_adult.pdf
+..Rcheck/
+~$problems.xlsx
+problems.xlsx
