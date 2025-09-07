@@ -27,6 +27,15 @@ jobs:
           install.packages(c("pak", "rcmdcheck", "remotes", "knitr"), repos = "https://cloud.r-project.org/")
           remotes::install_deps(dependencies = FALSE)
         shell: Rscript {0}
+      - name: Install all dependencies
+        run: |
+          install.packages(c(
+            'arrow', 'DBI', 'dplyr', 'duckdb', 'fs', 'future', 'future.apply',
+            'ggplot2', 'ggtext', 'ggthemes', 'glue', 'gt', 'gtExtras', 'here',
+            'highcharter', 'httr', 'janitor', 'jsonlite', 'kableExtra', 'memoise',
+            'progress', 'purrr', 'quarto', 'readr', 'readxl'
+          ), repos = "https://cloud.r-project.org/")
+        shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
