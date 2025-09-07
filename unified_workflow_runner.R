@@ -4,6 +4,9 @@
 # Refactored main controller script for the neuropsychological report generation workflow
 # This script orchestrates the entire workflow using modular components
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 # Load required packages
 required_packages <- c("yaml", "R6", "dplyr", "readr", "here", "quarto")
 

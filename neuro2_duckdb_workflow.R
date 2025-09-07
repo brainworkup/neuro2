@@ -4,6 +4,9 @@
 # This script demonstrates how to use DuckDB for efficient data processing
 # combined with R6 classes for maximum performance
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 # Clear workspace and load packages
 rm(list = ls())
 

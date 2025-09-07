@@ -4,6 +4,9 @@
 # This script updates existing domain QMD files to use R6 classes
 # while maintaining the original file structure and naming conventions
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 # Clear workspace and load packages
 rm(list = ls())
 

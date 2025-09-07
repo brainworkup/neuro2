@@ -13,6 +13,7 @@ Respectfully submitted,
 #| fig-align: left
 #| out-width: 7em
 #| echo: false
+#| cache: true
 
 sig_path <- file.path(here::here("inst", "resources", "img", "jwt_sig.png"))
 knitr::include_graphics(sig_path)

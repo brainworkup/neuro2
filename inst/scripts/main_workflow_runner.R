@@ -31,7 +31,7 @@ run_neuropsych_workflow <- function(
   suppressPackageStartupMessages({
     library(here)
     library(dplyr)
-    library(readr)
+    library(arrow)
   })
 
   # Source R6 classes (check they exist first)
@@ -45,7 +45,7 @@ run_neuropsych_workflow <- function(
   )
 
   for (file in r_files) {
-    file_path <- here::here("R", file)
+    file_path <- here::here("../R", file)
     if (file.exists(file_path)) {
       message("Loading: ", file)
       source(file_path)
@@ -59,8 +59,8 @@ run_neuropsych_workflow <- function(
 
   # Load data ONCE
   message("\n--- Loading Data ---")
-  neurocog_data <- load_data_safely("data/neurocog.csv")
-  neurobehav_data <- load_data_safely("data/neurobehav.csv")
+  neurocog_data <- load_data_safely("data/neurocog.parquet")
+  neurobehav_data <- load_data_safely("data/neurobehav.parquet")
 
   if (is.null(neurocog_data) || is.null(neurobehav_data)) {
     stop("Failed to load required data files")
@@ -71,55 +71,55 @@ run_neuropsych_workflow <- function(
     iq = list(
       name = "General Cognitive Ability",
       pheno = "iq",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "01"
     ),
     academics = list(
       name = "Academic Skills",
       pheno = "academics",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "02"
     ),
     verbal = list(
       name = "Verbal/Language",
       pheno = "verbal",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "03"
     ),
     spatial = list(
       name = "Visual Perception/Construction",
       pheno = "spatial",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "04"
     ),
     memory = list(
       name = "Memory",
       pheno = "memory",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "05"
     ),
     executive = list(
       name = "Attention/Executive",
       pheno = "executive",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "06"
     ),
     motor = list(
       name = "Motor",
       pheno = "motor",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "07"
     ),
     emotion = list(
       name = "Behavioral/Emotional/Social",
       pheno = "emotion",
-      input_file = "data/neurobehav.csv",
+      input_file = "data/neurobehav.parquet",
       number = "08"
     ),
     validity = list(
       name = "Performance Validity",
       pheno = "validity",
-      input_file = "data/neurocog.csv",
+      input_file = "data/neurocog.parquet",
       number = "09"
     )
   )
@@ -212,7 +212,7 @@ load_data_safely <- function(file_path) {
 
   tryCatch(
     {
-      readr::read_csv(file_path, show_col_types = FALSE)
+      arrow::read_parquet(file_path)
     },
     error = function(e) {
       warning("Failed to load ", file_path, ": ", e$message)

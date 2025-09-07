@@ -2,6 +2,9 @@
 # Neuropsychological Assessment Analysis
 # This version handles missing files gracefully
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 #' Safe file sourcing with error handling
 #' @param file_path Path to R file to source
 #' @param required Whether file is required (stops execution if missing)

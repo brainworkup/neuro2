@@ -22,6 +22,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
+#| cache: true
 
 # Load required packages
 suppressPackageStartupMessages({

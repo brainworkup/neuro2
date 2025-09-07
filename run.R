@@ -1,6 +1,9 @@
 # Load the neuro2 package
 library(neuro2)
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 # Source the required modules in dependency order
 # Utils and config first (they have helper functions)
 source("R/workflow_utils.R")

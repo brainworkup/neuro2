@@ -2,6 +2,9 @@
 # This script demonstrates the workflow for processing neuropsychological data
 # and generating a forensic report for a test patient named Biggie
 
+# Source workflow lock to prevent multiple executions
+source("workflow_lock.R")
+
 # Load required libraries
 library(here)
 
