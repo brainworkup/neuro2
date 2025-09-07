@@ -1,6 +1,8 @@
 # Load the neuro2 package
 library(neuro2)
 
+source('R/load_components_once.R')
+
 # Source workflow lock to prevent multiple executions
 source("workflow_lock.R")
 

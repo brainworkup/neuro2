@@ -46,7 +46,8 @@ setup_neuro2 <- function(verbose = TRUE) {
       if (isTRUE(verbose)) {
         message("• Sourcing: ", file)
       }
-      source(here::here(file))
+  # Use require() or check if object exists instead
+  # FIXED: source(here::here(file)) # Moved to lazy loading
     } else {
       warning(paste("R file not found:", file))
     }

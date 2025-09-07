@@ -73,30 +73,6 @@ ggplot2::theme_set(
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
-```{r}
-#| label: generate-domain-files
-#| include: false
-#| cache: true
-
-# Source and run the batch domain processor
-source(here::here("inst", "scripts", "batch_domain_processor.R"))
-
-# Process all domains
-result <- process_all_domains()
-
-# Create include file for template
-available_domains <- sort(result$generated)
-if (length(available_domains) > 0) {
-  include_lines <- paste0("{{< include ", available_domains, " >}}")
-  # Ensure a blank line between includes for proper Quarto rendering
-  spaced <- as.vector(rbind(include_lines, ""))
-  writeLines(spaced, "_domains_to_include.qmd")
-} else {
-  writeLines("", "_domains_to_include.qmd")
-  warning("No domain files were generated!")
-}
-```
-
 <!-- Domain sections - dynamically included based on available data -->
 
 {{< include _domains_to_include.qmd >}}

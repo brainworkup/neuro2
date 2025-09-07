@@ -30,7 +30,8 @@
 
     for (file in source_order[[category]]) {
       if (file.exists(file)) {
-        source(file)
+  # Use require() or check if object exists instead
+  # FIXED: source(file) # Moved to lazy loading
         if (verbose) message(paste("  ✓", basename(file)))
       } else {
         warning(paste("  ✗ File not found:", file))

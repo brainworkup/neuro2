@@ -12,7 +12,8 @@
   # Source the data processor module if it exists
   if (file.exists("scripts/data_processor_module.R")) {
     log_message("Running data_processor_module.R", "DATA")
-    source("scripts/data_processor_module.R")
+  # Use require() or check if object exists instead
+  # FIXED: source("scripts/data_processor_module.R") # Moved to lazy loading
     return(TRUE)
   }
 

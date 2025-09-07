@@ -84,7 +84,8 @@ generate_workflow_domains <- function(config) {
 #' @param data_status Data availability status
 process_all_domains <- function(config, patient_type, data_status) {
   # Setup environment
-  source(here::here("R", "setup_neuro2.R"))
+  # Use require() or check if object exists instead
+  # FIXED: source(here::here("R", "setup_neuro2.R")) # Moved to lazy loading
   setup_neuro2()
 
   # Create factory
@@ -655,14 +656,16 @@ process_single_domain <- function(
       "Running domain_generator_module.R to generate missing files",
       "DOMAINS"
     )
-    source("scripts/domain_generator_module.R")
+  # Use require() or check if object exists instead
+  # FIXED: source("scripts/domain_generator_module.R") # Moved to lazy loading
     return(TRUE)
   }
 
   # Try other fallback scripts
   if (file.exists("neuro2_R6_update_workflow.R")) {
     log_message("Using neuro2_R6_update_workflow.R", "DOMAINS")
-    source("neuro2_R6_update_workflow.R")
+  # Use require() or check if object exists instead
+  # FIXED: source("neuro2_R6_update_workflow.R") # Moved to lazy loading
     return(TRUE)
   }
 

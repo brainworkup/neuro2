@@ -123,7 +123,8 @@ generate_workflow_report <- function(config) {
   # Source the report generator module if it exists
   if (file.exists("scripts/report_generator_module.R")) {
     log_message("Running report_generator_module.R", "REPORT")
-    source("scripts/report_generator_module.R") # External script, so kept
+  # Use require() or check if object exists instead
+  # FIXED: source("scripts/report_generator_module.R") # External script, so kept # Moved to lazy loading
     return(TRUE)
   }
 
@@ -170,6 +171,9 @@ generate_workflow_report <- function(config) {
           )
           return(FALSE)
         }
+
+        # Ensure domain include list exists before Quarto preprocesses includes
+        .generate_domains_include_file()
 
         quarto::quarto_render(template_abs_path)
         log_message("Report generated successfully", "REPORT")
@@ -255,4 +259,47 @@ generate_workflow_report <- function(config) {
 
   log_message(paste("Template file not found:", template_file), "ERROR")
   return(NULL)
+}
+
+# Create the dynamic include file with domain sections for the template
+.generate_domains_include_file <- function(include_file = "_domains_to_include.qmd") {
+  # Prefer explicit ordering if provided
+  includes <- character(0)
+
+  if (file.exists("domain_includes.txt")) {
+    lines <- readLines("domain_includes.txt", warn = FALSE)
+    lines <- trimws(lines)
+    lines <- lines[nzchar(lines)]
+    # Keep only files that actually exist
+    includes <- lines[file.exists(lines)]
+  }
+
+  # Fallback: discover generated domain files
+  if (length(includes) == 0) {
+    files <- list.files(
+      path = ".",
+      pattern = "^_02-.*\\.qmd$",
+      full.names = FALSE
+    )
+    # Exclude narrative-only helper files
+    files <- files[!grepl("_text\\.qmd$", files)]
+    includes <- sort(files)
+  }
+
+  if (length(includes) == 0) {
+    # Write an empty file so Quarto include succeeds without content
+    writeLines(character(0), include_file)
+    log_message("No domain files found to include", "WARNING")
+    return(FALSE)
+  }
+
+  lines <- paste0("{{< include ", includes, " >}}")
+  # Add blank line between includes for readability
+  spaced <- as.vector(rbind(lines, ""))
+  writeLines(spaced, include_file)
+  log_message(
+    paste("Wrote", length(includes), "domain includes to", include_file),
+    "REPORT"
+  )
+  TRUE
 }

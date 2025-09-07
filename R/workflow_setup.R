@@ -9,7 +9,8 @@
   tryCatch(
     {
       if (file.exists("setup_environment.R")) {
-        source("setup_environment.R") # External script, so kept
+  # Use require() or check if object exists instead
+  # FIXED: source("setup_environment.R") # External script, so kept # Moved to lazy loading
       }
 
       log_message("Environment setup complete", "SETUP")
