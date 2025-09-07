@@ -1,14 +1,14 @@
-Add the following step before the "Check" step in your `r.yml` workflow file to ensure the required dependencies (tabulapdf, webshot2, usethis) are installed and the job will pass:
+name: R
 
-```yaml
-      - name: Install missing dependencies
-        run: |
-          install.packages(c('tabulapdf', 'webshot2', 'usethis'), repos = "https://cloud.r-project.org/")
-        shell: Rscript {0}
-```
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
-**Updated snippet for your workflow:**
-```yaml
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: macos-latest
@@ -36,13 +36,6 @@ jobs:
             'progress', 'purrr', 'quarto', 'readr', 'readxl'
           ), repos = "https://cloud.r-project.org/")
         shell: Rscript {0}
-      - name: Install missing dependencies
-        run: |
-          install.packages(c('tabulapdf', 'webshot2', 'usethis'), repos = "https://cloud.r-project.org/")
-        shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
-```
-
-This will resolve the failed job caused by missing dependencies.

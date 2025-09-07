@@ -4,7 +4,7 @@ library(usethis)
 
 # Safe way to update sysdata.rda without overwriting existing variables
 # This addresses the issue mentioned about create_sysdata.R overwriting the entire file
-source("R/safe_sysdata_update_fixed.R")
+source("R/safe_sysdata_update.R")
 
 # Example usage for your create_sysdata.R script:
 # Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
