@@ -7,6 +7,12 @@ set -e  # Exit on error
 set -u  # Exit on undefined variable
 set -o pipefail  # Exit on pipe failure
 
+# Ensure R can see user-installed libraries even with --vanilla
+# Many packages (e.g., arrow) are installed in ~/.R on this machine.
+export R_LIBS_USER="${R_LIBS_USER:-$HOME/.R}"
+export R_LIBS="${R_LIBS:-$R_LIBS_USER}"
+echo "Using R libraries from: $R_LIBS_USER"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
