@@ -82,7 +82,7 @@ ggplot2::theme_set(
 source(here::here("inst", "scripts", "batch_domain_processor.R"))
 
 # Process all domains
-result <- process_all_domains(verbose = FALSE)
+result <- process_all_domains()
 
 # Create include file for template
 available_domains <- sort(result$generated)
