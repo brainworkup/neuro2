@@ -112,19 +112,41 @@ Invisibly returns self for method chaining.
 \if{html}{\out{<a id="method-NeuropsychReportSystemR6-create_processor_configs"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychReportSystemR6-create_processor_configs}{}}}
 \subsection{Method \code{create_processor_configs()}}{
+Create processor configurations based on requested domains
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$create_processor_configs(domains)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domains}}{Character vector of domain names to create configurations for}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+List of processor configurations keyed by domain name
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychReportSystemR6-get_processor_config"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychReportSystemR6-get_processor_config}{}}}
 \subsection{Method \code{get_processor_config()}}{
+Get processor configuration for a specific domain
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychReportSystemR6$get_processor_config(domain_name)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{domain_name}}{Character scalar specifying the domain name}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Processor configuration list or NULL if not found
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychReportSystemR6-generate_domain_files"></a>}}

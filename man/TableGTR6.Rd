@@ -54,6 +54,8 @@ This class is identical to TableGT but removes the automatic saving in the build
 \item{\code{multiline}}{Logical; whether footnotes should wrap onto multiple lines.}
 
 \item{\code{row_score_type_map}}{A named list mapping test batteries to their scale-specific score types.}
+
+\item{\code{score_type_cache}}{An instance of ScoreTypeCacheR6 for caching score type mappings and footnotes.}
 }
 \if{html}{\out{</div>}}
 }
@@ -152,10 +154,24 @@ A formatted \code{gt} table object
 \if{html}{\out{<a id="method-TableGTR6-handle_multi_score_battery"></a>}}
 \if{latex}{\out{\hypertarget{method-TableGTR6-handle_multi_score_battery}{}}}
 \subsection{Method \code{handle_multi_score_battery()}}{
+Handle multi-score battery data formatting by adding appropriate footnotes
+for different scale types within a battery.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TableGTR6$handle_multi_score_battery(battery, tbl)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{battery}}{The name of the battery to process.}
+
+\item{\code{tbl}}{The gt table object to modify.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified gt table object with battery-specific footnotes added.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TableGTR6-save_table"></a>}}

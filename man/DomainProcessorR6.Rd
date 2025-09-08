@@ -397,19 +397,34 @@ Invisibly returns \code{self} for method chaining.
 \if{html}{\out{<a id="method-DomainProcessorR6-get_rater_types"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_types}{}}}
 \subsection{Method \code{get_rater_types()}}{
+Get the types of raters available for this domain
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_types()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+Character vector of rater types (e.g., "self", "parent", "teacher") or NULL if no multiple raters
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-get_rater_tests"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-get_rater_tests}{}}}
 \subsection{Method \code{get_rater_tests()}}{
+Get the test codes associated with a specific rater
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$get_rater_tests(rater)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{rater}}{The rater type to get tests for ("self", "parent", "teacher", "observer")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Character vector of test codes for the specified rater
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-check_rater_data_exists"></a>}}

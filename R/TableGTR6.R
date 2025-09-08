@@ -18,6 +18,7 @@
 #' @field vertical_padding Numeric scale for vertical padding in the table.
 #' @field multiline Logical; whether footnotes should wrap onto multiple lines.
 #' @field row_score_type_map A named list mapping test batteries to their scale-specific score types.
+#' @field score_type_cache An instance of ScoreTypeCacheR6 for caching score type mappings and footnotes.
 #'
 #' @section Methods:
 #' \describe{
@@ -176,10 +177,13 @@ TableGTR6 <- R6::R6Class(
         if (is.null(cache)) {
           cache <- ScoreTypeCacheR6$new()
           # Best-effort: expose to GlobalEnv for other legacy code paths
-          try({
-            assign(".ScoreTypeCache", cache, envir = .GlobalEnv)
-            assign(".ScoreTypeCacheR6", cache, envir = .GlobalEnv)
-          }, silent = TRUE)
+          try(
+            {
+              assign(".ScoreTypeCache", cache, envir = .GlobalEnv)
+              assign(".ScoreTypeCacheR6", cache, envir = .GlobalEnv)
+            },
+            silent = TRUE
+          )
         }
         self$score_type_cache <- cache
       }
@@ -188,7 +192,9 @@ TableGTR6 <- R6::R6Class(
       # Get score type groups efficiently
       if (length(self$grp_list) == 0) {
         # Auto-detect score groups using cache
-        self$grp_list <- self$score_type_cache$.get_score_groups(existing_groups)
+        self$grp_list <- self$score_type_cache$.get_score_groups(
+          existing_groups
+        )
         message(paste(
           "Auto-detected score groups for",
           length(existing_groups),
@@ -287,7 +293,14 @@ TableGTR6 <- R6::R6Class(
       return(tbl)
     },
 
-    # Add this private method to handle multi-score batteries
+    #' @description
+    #' Handle multi-score battery data formatting by adding appropriate footnotes
+    #' for different scale types within a battery.
+    #'
+    #' @param battery The name of the battery to process.
+    #' @param tbl The gt table object to modify.
+    #'
+    #' @return The modified gt table object with battery-specific footnotes added.
     handle_multi_score_battery = function(battery, tbl) {
       # Simplified multi-score battery handling
       battery_scales <- self$data$scale[self$data$test_name == battery]

@@ -319,7 +319,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       invisible(self)
     },
 
-    # Create processor configurations based on requested domains
+    #' @description
+    #' Create processor configurations based on requested domains
+    #' @param domains Character vector of domain names to create configurations for
+    #' @return List of processor configurations keyed by domain name
     create_processor_configs = function(domains) {
       factory <- DomainProcessorFactoryR6$new()
       configs <- list()
@@ -344,7 +347,10 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       return(configs)
     },
 
-    # Get processor configuration
+    #' @description
+    #' Get processor configuration for a specific domain
+    #' @param domain_name Character scalar specifying the domain name
+    #' @return Processor configuration list or NULL if not found
     get_processor_config = function(domain_name) {
       if (is.null(private$processor_configs)) {
         private$processor_configs <- self$create_processor_configs(

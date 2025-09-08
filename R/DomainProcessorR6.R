@@ -250,6 +250,9 @@ DomainProcessorR6 <- R6::R6Class(
       return(tolower(self$pheno) %in% multi_rater_domains)
     },
 
+    #' @description
+    #' Get the types of raters available for this domain
+    #' @return Character vector of rater types (e.g., "self", "parent", "teacher") or NULL if no multiple raters
     get_rater_types = function() {
       if (!self$has_multiple_raters()) {
         return(NULL)
@@ -299,6 +302,10 @@ DomainProcessorR6 <- R6::R6Class(
       return(NULL)
     },
 
+    #' @description
+    #' Get the test codes associated with a specific rater
+    #' @param rater The rater type to get tests for ("self", "parent", "teacher", "observer")
+    #' @return Character vector of test codes for the specified rater
     get_rater_tests = function(rater) {
       if (is.null(self$data) || nrow(self$data) == 0) {
         return(character(0))
