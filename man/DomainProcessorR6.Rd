@@ -124,6 +124,7 @@ R6 class for processing neuropsychological domain data
   obj <- DomainProcessorR6$new()
   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
 }
+Run the complete processing pipeline
 
 ## ------------------------------------------------
 ## Method `DomainProcessorR6$process`
@@ -722,6 +723,7 @@ Invisibly returns the path to the generated file.
   obj <- DomainProcessorR6$new()
   obj$generate_emotion_adult_qmd(domain_name=..., output_file=...)
 }
+Run the complete processing pipeline
 }
 \if{html}{\out{</div>}}
 
@@ -732,9 +734,6 @@ Invisibly returns the path to the generated file.
 \if{html}{\out{<a id="method-DomainProcessorR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-DomainProcessorR6-process}{}}}
 \subsection{Method \code{process()}}{
-Run the complete processing pipeline
-
-
 Run the full processing pipeline and (optionally) generate domain files.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$process(generate_domain_files = TRUE)}\if{html}{\out{</div>}}

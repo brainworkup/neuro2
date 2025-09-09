@@ -155,9 +155,11 @@ scales_iq <- c(
   "Executive Functions Index (EXE)"
 )
 
+## Academics -----------------------------------------------------------------
+
 #' @name scales_academics
 #' @docType data
-#' @title Academic Achievement Scales
+#' @title Academic Skills
 #' @description A character vector of scale names related to academic skills including reading, writing, mathematics, and academic fluency from various achievement tests.
 #' @keywords data internal
 scales_academics <- c(
@@ -229,9 +231,11 @@ scales_academics <- c(
   "Written Language Composite"
 )
 
+## Verbal/language ------------------------------------------------------------
+
 #' @name scales_verbal
 #' @docType data
-#' @title Verbal and Language Function Scales
+#' @title Verbal/Language
 #' @description A character vector of scale names related to verbal abilities, language functions, word knowledge, verbal comprehension, and expressive language from various neuropsychological tests.
 #' @keywords data internal
 scales_verbal <- c(
@@ -303,9 +307,11 @@ scales_verbal <- c(
   "Word Structure"
 )
 
+## Spatial -------------------------------------------------------------
+
 #' @name scales_spatial
 #' @docType data
-#' @title Spatial and Visual-Constructional Scales
+#' @title Visual Perception/Construction
 #' @description A character vector of scale names related to spatial abilities, visual-perceptual skills, and constructional tasks from various neuropsychological tests.
 #' @keywords data internal
 scales_spatial <- c(
@@ -354,10 +360,9 @@ scales_spatial <- c(
 
 ## Memory ------------------------------------------------------------------
 
-
 #' @name scales_memory
 #' @docType data
-#' @title Memory Scales
+#' @title Memory
 #' @description A character vector of scale names related to memory functions, including recall, recognition, and learning, from various tests like CVLT, NAB, etc.
 #' @keywords data internal
 scales_memory <- c(
@@ -644,7 +649,6 @@ scales_memory_order <- c(
 
 ## Attention/Executive -----------------------------------------------------
 
-
 #' @name scales_executive
 #' @docType data
 #' @title Executive Function and Attention Scales
@@ -762,7 +766,6 @@ scales_executive <- c(
 )
 
 ## Motor -------------------------------------------------------------------
-
 
 #' @name scales_motor
 #' @docType data
@@ -1163,7 +1166,6 @@ scales_emotion_child <- c(
   "Somatization",
   "Withdrawal"
 )
-
 
 ## Adaptive ----------------------------------------------------------------
 
@@ -1672,14 +1674,14 @@ domain_social <- "Social Cognition"
 #' @title Adult ADHD Domain
 #' @description A character string label representing the adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to adult ADHD symptoms.
 #' @keywords data internal
-domain_adhd_adult <- "ADHD"
+domain_adhd_adult <- c("ADHD", "Executive Functions")
 
 #' @name domain_adhd_child
 #' @docType data
 #' @title Child ADHD Domain
 #' @description A character string label representing the child attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to child ADHD symptoms.
 #' @keywords data internal
-domain_adhd_child <- "ADHD"
+domain_adhd_child <- c("ADHD", "Executive Functions")
 
 #' @name domain_emotion_adult
 #' @docType data
@@ -1770,6 +1772,7 @@ domain_validity <- c("Performance Validity", "Symptom Validity")
     "domain_emotion_child"
   )
 )
+
 .safe_use_data_internal(
   domain_emotion_adult = domain_emotion_adult,
   overwrite = c("domain_emotion_adult")
@@ -1779,6 +1782,7 @@ domain_validity <- c("Performance Validity", "Symptom Validity")
   domain_validity = domain_validity,
   overwrite = c("domain_validity")
 )
+
 # Lookup tables ---------------------------------------------
 
 #' @name lookup_neuropsych_scales

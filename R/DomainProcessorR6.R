@@ -2906,7 +2906,6 @@ DomainProcessorR6 <- R6::R6Class(
       return(output_file)
     },
 
-    #' @description
     #' Run the complete processing pipeline
     #' @description Run the full processing pipeline and (optionally) generate domain files.
     #' @param generate_domain_files Character scalar or vector of domain names.
