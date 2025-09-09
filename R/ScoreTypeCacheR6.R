@@ -282,14 +282,7 @@ ScoreTypeCacheR6 <- R6::R6Class(
           "Attention Index",
           "Delayed Memory Index"
         ),
-        "t_score" = c(
-          "BASC3",
-          "BASC-3",
-          "Conners",
-          "Conners-3",
-          "BRIEF",
-          "BRIEF-2"
-        ),
+        "t_score" = c("BASC-3", "Conners", "Conners-4", "CEFI"),
         "z_score" = character(0),
         "percentile" = character(0),
         "raw_score" = character(0),

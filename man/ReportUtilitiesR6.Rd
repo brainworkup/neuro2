@@ -167,7 +167,7 @@ Invisible NULL. Called for side effects.
 \subsection{Method \code{process_domains()}}{
 Process neuropsychological domains for reporting
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$process_domains(domains, output_dir = "output/domains")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$process_domains(domains, output_dir = "output")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

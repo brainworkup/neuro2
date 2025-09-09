@@ -119,7 +119,7 @@ ReportUtilitiesR6 <- R6::R6Class(
     #' @param output_dir Character string specifying the directory where processed domain files will be saved (default: "output/domains")
     #'
     #' @return Invisible NULL. Called for side effects.
-    process_domains = function(domains, output_dir = "output/domains") {
+    process_domains = function(domains, output_dir = "output") {
       # Logic from process_domains.R
     },
 
