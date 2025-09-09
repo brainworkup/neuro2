@@ -39,12 +39,12 @@ format:
   neurotyp-adult-typst:
     keep-typ: true
     keep-md: true
-    papersize: "us-letter"
+    # papersize: "us-letter"
     bodyfont: "IBM Plex Serif"
     sansfont: "IBM Plex Sans"
     # bodyfont: "Source Serif 4"
     # sansfont: "Source Sans 3"
-    fontsize: 12pt
+    fontsize: 11pt
     number-sections: false
     number-offset: 1
     shift-heading-level-by: 0
@@ -60,8 +60,11 @@ format:
     keep-typ: true
     keep-md: true
     papersize: "us-letter"
-    bodyfont: "IBM Plex Serif"
-    sansfont: "IBM Plex Sans"
+    # bodyfont: TeX Gyre Termes # Classic, readable body
+    sansfont: IBM Plex Sans # Clean, precise headings
+    monofont: IBM Plex Mono # Perfectly aligned tables
+    # bodyfont: "IBM Plex Serif"
+    # sansfont: "IBM Plex Sans"
     fontsize: 12pt
     number-sections: false
     number-offset: 1

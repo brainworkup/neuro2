@@ -202,41 +202,47 @@ TableGTR6 <- R6::R6Class(
         ))
       }
 
+      # Only consider primary score types that define the Score column
+      primary_types <- c("standard_score", "scaled_score", "t_score", "z_score")
+
       # Get relevant footnotes efficiently
-      score_types_needed <- names(self$grp_list)
+      score_types_needed <- intersect(names(self$grp_list), primary_types)
       if (length(self$fn_list) == 0) {
         self$fn_list <- self$score_type_cache$get_footnotes(score_types_needed)
       }
 
-      # Handle multi-score batteries efficiently - fix the sapply issue
-      multi_score_results <- sapply(
-        existing_groups,
-        function(x) {
-          self$score_type_cache$is_multi_score_battery(x)
-        },
-        USE.NAMES = TRUE,
-        simplify = TRUE
-      )
+      # Handle multi-score batteries only when score_type not present in data
+      if (!"score_type" %in% names(self$data)) {
+        # Handle multi-score batteries efficiently - fix the sapply issue
+        multi_score_results <- sapply(
+          existing_groups,
+          function(x) {
+            self$score_type_cache$is_multi_score_battery(x)
+          },
+          USE.NAMES = TRUE,
+          simplify = TRUE
+        )
 
-      # Ensure we get a logical vector and filter properly
-      if (is.logical(multi_score_results)) {
-        multi_score_batteries <- existing_groups[multi_score_results]
-      } else {
-        # Fallback: convert to logical if needed
-        multi_score_batteries <- existing_groups[as.logical(
-          multi_score_results
-        )]
-      }
+        # Ensure we get a logical vector and filter properly
+        if (is.logical(multi_score_results)) {
+          multi_score_batteries <- existing_groups[multi_score_results]
+        } else {
+          # Fallback: convert to logical if needed
+          multi_score_batteries <- existing_groups[as.logical(
+            multi_score_results
+          )]
+        }
 
-      if (length(multi_score_batteries) > 0) {
-        message(paste(
-          "Found multi-score batteries:",
-          paste(multi_score_batteries, collapse = ", ")
-        ))
+        if (length(multi_score_batteries) > 0) {
+          message(paste(
+            "Found multi-score batteries:",
+            paste(multi_score_batteries, collapse = ", ")
+          ))
 
-        # Process multi-score batteries with simplified logic
-        for (battery in multi_score_batteries) {
-          tbl <- self$handle_multi_score_battery(battery, tbl)
+          # Process multi-score batteries with simplified logic
+          for (battery in multi_score_batteries) {
+            tbl <- self$handle_multi_score_battery(battery, tbl)
+          }
         }
       }
 
@@ -245,13 +251,12 @@ TableGTR6 <- R6::R6Class(
         footnote <- self$fn_list[[score_type]]
         groups <- intersect(self$grp_list[[score_type]], existing_groups)
 
-        # Skip battery-specific groups
-        if (
-          any(sapply(multi_score_batteries, function(b) {
-            grepl(paste0("^", tolower(b), "_"), score_type)
-          }))
-        ) {
-          next
+        # If a score_type column exists, only add footnotes for groups
+        # where that score_type actually appears in the data
+        if ("score_type" %in% names(self$data) && length(groups) > 0) {
+          groups <- groups[sapply(groups, function(g) {
+            any(self$data$test_name == g & self$data$score_type == score_type, na.rm = TRUE)
+          })]
         }
 
         if (!is.null(footnote) && length(groups) > 0) {
