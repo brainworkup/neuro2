@@ -135,3 +135,5 @@ rbans_extractor.R
 data-raw/csv/cefi_self_12-18.csv
 codex.txt
 neuro2_0.1.10.tar.gz
+backups_20250907_095303/
+backups_*_*/

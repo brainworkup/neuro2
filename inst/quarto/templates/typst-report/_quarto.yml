@@ -12,6 +12,29 @@ project:
 metadata-files:
   - _variables.yml
 
+execute:
+  warning: false
+  echo: false
+  eval: true
+  message: false
+  freeze: auto
+  cache: true
+  engine: knitr
+  tools:
+    r: "/usr/local/bin/R"
+
+editor:
+  markdown:
+    wrap: sentence
+    canonical: true
+fig-width: 6
+fig-asp: 0.618
+out-width: 70%
+fig-align: center
+fig-format: svg
+fig-dpi: 270
+df-print: kable
+
 format:
   neurotyp-adult-typst:
     keep-typ: true
@@ -84,26 +107,3 @@ format:
     fig-width: 6
     fig-height: 4
     fig-format: svg
-
-execute:
-  warning: false
-  echo: false
-  eval: true
-  message: false
-  freeze: auto
-  cache: true
-  engine: knitr
-  tools:
-    r: "/usr/local/bin/R"
-
-editor:
-  markdown:
-    wrap: sentence
-    canonical: true
-fig-width: 6
-fig-asp: 0.618
-out-width: 70%
-fig-align: center
-fig-format: svg
-fig-dpi: 270
-df-print: kable
