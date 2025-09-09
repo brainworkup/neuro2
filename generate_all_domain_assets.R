@@ -30,10 +30,13 @@ load_neuro2_dev <- function() {
 if (!load_neuro2_dev()) {
   # Fallback to installed package; if that fails, source classes directly
   ok <- FALSE
-  try({
-    suppressPackageStartupMessages(library(neuro2))
-    ok <- TRUE
-  }, silent = TRUE)
+  try(
+    {
+      suppressPackageStartupMessages(library(neuro2))
+      ok <- TRUE
+    },
+    silent = TRUE
+  )
   if (!ok) {
     classes <- c(
       "R/ScoreTypeCacheR6.R",
@@ -385,7 +388,58 @@ for (config in domains_config) {
 # Also generate SIRF figure if needed
 cat("Checking SIRF figure...\n")
 if (!file.exists("fig_sirf_overall.svg")) {
-  cat("  ⚠ fig_sirf_overall.svg missing, but this may be generated elsewhere\n")
+  cat("  ⚠ fig_sirf_overall.svg missing; generating overall SIRF plot now...\n")
+
+  # Try to generate the overall SIRF figure using currently available data
+  tryCatch(
+    {
+      # Prefer parquet if available
+      neurocog_path <- NULL
+      if (file.exists("data/neurocog.parquet")) {
+        neurocog_path <- "data/neurocog.parquet"
+        neurocog <- arrow::read_parquet(neurocog_path)
+      } else if (file.exists("data/neurocog.feather")) {
+        neurocog_path <- "data/neurocog.feather"
+        neurocog <- arrow::read_feather(neurocog_path)
+      } else if (file.exists("data/neurocog.csv")) {
+        neurocog_path <- "data/neurocog.csv"
+        neurocog <- readr::read_csv(neurocog_path, show_col_types = FALSE)
+      } else {
+        stop("No neurocog dataset found in data/ (parquet/feather/csv)")
+      }
+
+      # Build a simple domain summary
+      domain_summary <- neurocog |>
+        dplyr::group_by(domain) |>
+        dplyr::summarize(
+          mean_z = mean(z, na.rm = TRUE),
+          mean_percentile = mean(percentile, na.rm = TRUE)
+        ) |>
+        dplyr::filter(!is.na(mean_z))
+
+      # Create the plot to the expected filename in project root
+      dot <- DotplotR6$new(
+        data = domain_summary,
+        x = "mean_z",
+        y = "domain",
+        filename = here::here("fig_sirf_overall.svg"),
+        theme = "fivethirtyeight",
+        point_size = 7
+      )
+      dot$create_plot()
+
+      if (file.exists("fig_sirf_overall.svg")) {
+        cat("  ✓ fig_sirf_overall.svg generated\n")
+      } else {
+        cat(
+          "  ✗ Attempted to generate fig_sirf_overall.svg but it was not created\n"
+        )
+      }
+    },
+    error = function(e) {
+      cat("  ✗ Failed to generate SIRF figure:", e$message, "\n")
+    }
+  )
 } else {
   cat("  ✓ fig_sirf_overall.svg exists\n")
 }

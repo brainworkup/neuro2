@@ -128,5 +128,7 @@ analyze_batch_processor.R
 compare_batch_processor.R
 neuropsych_report.qmd
 template_KindOfWorks.pdf
-rbans_extractor.r
 doc_output.txt
+backups_20250908_212742/
+.run_report_log*.txt
+rbans_extractor.R

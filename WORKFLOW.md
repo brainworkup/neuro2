@@ -14,9 +14,10 @@
 ## Creating a new patient repo
 - Use the template:
   ```
-  gh repo create neuro2-<ALIAS> --template brainworkup/neuro2 --private --clone
+  gh repo create <PATIENT> --template brainworkup/neuro2 --private --clone
   ```
 - Optionally copy `.gitignore.patient` into the new repo if you want aggressive ignoring of data and exports.
 
 ## Sharing improvements back
-- If you find a generalizable improvement while working in a patient repo, redo it in a `feature/` branch in the template repo and open a PR there.
+- If you find a generalizable improvement while working in a patient repo, redo
+  it in a `feature/` branch in the template repo and open a PR there.
