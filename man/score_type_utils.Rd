@@ -2,38 +2,10 @@
 % Please edit documentation in R/score_type_utils.R
 \name{score_type_utils}
 \alias{score_type_utils}
-\alias{get_source_note_by_score_type}
 \title{Score Type Utilities}
-\usage{
-get_source_note_by_score_type(data, default_note = NULL)
-}
-\arguments{
-\item{data}{A data frame containing a score_type column}
-
-\item{default_note}{The default source note to use if no score types are found}
-}
-\value{
-A character string containing the appropriate source note
-}
 \description{
-Functions to handle dynamic score type footnotes and source notes
+Functions to handle dynamic score type footnotes and source notes. This file
+provides utility functions and ensures the score type cache is properly
+initialized
 }
-\keyword{Based}
-\keyword{Determines}
-\keyword{Get}
-\keyword{Note}
-\keyword{Score}
-\keyword{Source}
-\keyword{Type}
-\keyword{appropriate}
-\keyword{based}
-\keyword{data}
-\keyword{in}
 \keyword{internal}
-\keyword{note}
-\keyword{on}
-\keyword{present}
-\keyword{score}
-\keyword{source}
-\keyword{the}
-\keyword{types}
