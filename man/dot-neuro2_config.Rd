@@ -14,3 +14,4 @@
 \description{
 Allow users to configure output directories
 }
+\keyword{internal}

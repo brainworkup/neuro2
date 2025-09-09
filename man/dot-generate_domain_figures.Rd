@@ -19,3 +19,4 @@ This function creates the dot plots showing test performance
 across subdomains and narrow abilities. It's like creating a visual report
 card that shows strengths and weaknesses at a glance.
 }
+\keyword{internal}

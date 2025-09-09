@@ -482,6 +482,7 @@ batch_process <- function(items, fn, batch_size = 100) {
 }
 
 #' Ensure required directories exist
+#' @keywords internal
 .ensure_output_directories <- function(base_dir = ".") {
   dirs <- c("figs", "output", "tmp")
 
@@ -497,11 +498,13 @@ batch_process <- function(items, fn, batch_size = 100) {
 }
 
 #' Get package resource path
+#' @keywords internal
 .get_resource_path <- function(filename) {
   system.file("resources", filename, package = "neuro2")
 }
 
 #' Get output file paths
+#' @keywords internal
 .get_fig_path <- function(filename, base_dir = ".") {
   file.path(base_dir, "figs", filename)
 }
@@ -511,6 +514,7 @@ batch_process <- function(items, fn, batch_size = 100) {
 }
 
 #' Example usage in your processor
+#' @keywords internal
 .save_plot <- function(plot, filename, base_dir = ".") {
   .ensure_output_directories(base_dir)
 
@@ -526,6 +530,7 @@ batch_process <- function(items, fn, batch_size = 100) {
 }
 
 #' Allow users to configure output directories
+#' @keywords internal
 .neuro2_config <- function(
   figs_dir = "figs",
   output_dir = "output",

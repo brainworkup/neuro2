@@ -70,8 +70,8 @@ create_patient_workspace("Jane Smith", assessment_date = "2024-02-01")
 
 }
 \seealso{
-\code{\link{setup_patient_workspace}} for creating complete patient workspaces
-\code{\link{validate_and_load_data}} for data validation functions
-\code{\link{process_all_domains}} for domain processing functions
-\code{\link{generate_assessment_report}} for report generation
+\code{setup_patient_workspace} for creating complete patient workspaces
+\code{validate_and_load_data} for data validation functions
+\code{process_all_domains} for domain processing functions
+\code{generate_assessment_report} for report generation
 }

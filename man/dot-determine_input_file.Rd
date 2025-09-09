@@ -2,12 +2,11 @@
 % Please edit documentation in R/domain_processing_utils.R
 \name{.determine_input_file}
 \alias{.determine_input_file}
-\title{Get available raters from data
-Determine input file based on phenotype}
+\title{Determine input file based on phenotype}
 \usage{
 .determine_input_file(pheno)
 }
 \description{
-Get available raters from data
 Determine input file based on phenotype
 }
+\keyword{internal}

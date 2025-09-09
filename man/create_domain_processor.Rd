@@ -31,5 +31,5 @@ create_domain_processor(
 A DomainProcessorR6 object or NULL on error
 }
 \description{
-Create a domain processor with smart defaults and validation
+Complete utility functions for neuropsychological domain processing.
 }

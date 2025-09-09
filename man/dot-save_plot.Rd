@@ -9,3 +9,4 @@
 \description{
 Example usage in your processor
 }
+\keyword{internal}

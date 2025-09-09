@@ -2,10 +2,7 @@
 % Please edit documentation in R/domain_processing_utils.R
 \name{.get_available_raters}
 \alias{.get_available_raters}
-\title{Get text filename for domain and rater
-Generate domain table
-Generate domain figures
-Get available raters from data}
+\title{Get available raters from data}
 \usage{
 .get_available_raters(data)
 }
@@ -20,3 +17,4 @@ This function looks at your data and figures out which types of
 raters (self, parent, teacher, observer) actually have data. It's like taking
 attendance - who actually showed up with data?
 }
+\keyword{internal}

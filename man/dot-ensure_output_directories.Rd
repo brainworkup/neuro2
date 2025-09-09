@@ -9,3 +9,4 @@
 \description{
 Ensure required directories exist
 }
+\keyword{internal}

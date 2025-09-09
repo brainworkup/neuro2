@@ -186,3 +186,5 @@
 ^\.bak$
 ^\.continue$
 ^\.lintr$
+^R/\.history$
+^inst/\.history$

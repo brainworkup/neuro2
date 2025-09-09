@@ -132,3 +132,6 @@ doc_output.txt
 backups_20250908_212742/
 .run_report_log*.txt
 rbans_extractor.R
+data-raw/csv/cefi_self_12-18.csv
+codex.txt
+neuro2_0.1.10.tar.gz

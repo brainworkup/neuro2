@@ -9,3 +9,4 @@
 \description{
 Get package resource path
 }
+\keyword{internal}

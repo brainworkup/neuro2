@@ -9,3 +9,4 @@
 \description{
 Generate text results for all rater types
 }
+\keyword{internal}

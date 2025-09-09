@@ -19,3 +19,4 @@ This function takes your big dataset and pulls out only the rows
 that belong to a specific rater (like just the parent ratings, or just the
 self-report data). It's like sorting a deck of cards by suit.
 }
+\keyword{internal}

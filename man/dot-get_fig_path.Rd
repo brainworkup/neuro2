@@ -9,3 +9,4 @@
 \description{
 Get output file paths
 }
+\keyword{internal}

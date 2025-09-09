@@ -19,3 +19,4 @@ This function takes your processed data and creates a formatted
 table using the TableGTR6 class. It handles all the complex formatting,
 footnotes, and styling automatically.
 }
+\keyword{internal}

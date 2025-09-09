@@ -4,7 +4,23 @@
 #' @description Centralized configuration management for neuro2 package.
 #'   Consolidates settings from YAML files, environment variables, and defaults.
 #'
-#' @field config List containing all configuration settings
+#' @details
+#' Use this class to load and manage neuro2 configuration from multiple sources.
+#' Typical usage:
+#' 
+#' - Load defaults and optional YAML files
+#' - Apply environment variable overrides
+#' - Retrieve or set nested values safely
+#' - Persist configuration to disk
+#'
+#' @section Fields:
+#' - `config`: List containing all configuration settings
+#'
+#' @section Methods:
+#' - `new(config_file, variables_file)`: Create a new manager
+#' - `get(path, default)`: Read a nested value
+#' - `set(path, value)`: Set a nested value
+#' - `save_config(file)`: Write config to disk
 #'
 #' @param config_file Path to configuration YAML file (optional)
 #' @param variables_file Path to variables YAML file (default: "_variables.yml")
@@ -16,7 +32,9 @@
 #' @param file Path to save the configuration file
 #' @importFrom R6 R6Class
 #'
-#' @export
+#' @docType class
+#' @name ConfigManagerR6
+#' @keywords internal
 ConfigManagerR6 <- R6::R6Class(
   classname = "ConfigManagerR6",
   public = list(

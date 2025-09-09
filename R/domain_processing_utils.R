@@ -1,11 +1,9 @@
-# R/domain_processing_utils.R
-# Complete utility functions for neuropsychological domain processing
-
 # ============================================================================
 # HIGH-LEVEL WORKFLOW FUNCTIONS
 # ============================================================================
 
 #' Create a domain processor with smart defaults and validation
+#' @description Complete utility functions for neuropsychological domain processing.
 #'
 #' @param domain_name The domain name
 #'  (e.g., "ADHD", "Behavioral/Emotional/Social")
@@ -251,6 +249,7 @@ process_domain_data <- function(pheno, domains) {
 }
 
 #' Generate text results for all rater types
+#' @keywords internal
 .generate_text_results <- function(data, pheno) {
   if (pheno %in% c("emotion", "adhd")) {
     # Multi-rater processing
@@ -278,23 +277,8 @@ process_domain_data <- function(pheno, domains) {
 # DATA MANIPULATION HELPERS
 # ============================================================================
 
-#' Get available raters from data
-# .get_available_raters <- function(data) {
-#   if ("rater" %in% names(data)) {
-#     return(unique(data$rater[!is.na(data$rater)]))
-#   }
-#   return("self") # Default fallback
-# }
-
-# #' Filter data by specific rater
-# .filter_by_rater <- function(data, rater) {
-#   if ("rater" %in% names(data)) {
-#     return(data[data$rater == rater & !is.na(data$rater), ])
-#   }
-#   return(data) # Return all data if no rater column
-# }
-
 #' Determine input file based on phenotype
+#' @keywords internal
 .determine_input_file <- function(pheno) {
   behavioral_phenos <- c("adhd", "emotion", "adaptive")
   if (pheno %in% behavioral_phenos) {
@@ -303,104 +287,8 @@ process_domain_data <- function(pheno, domains) {
   return("data/neurocog.parquet")
 }
 
-# ============================================================================
-# FILE NAMING FUNCTIONS
-# ============================================================================
-
-#' Get text filename for domain and rater
-# .get_text_filename <- function(pheno, rater = NULL) {
-#   # Get domain number
-#   domain_numbers <- c(
-#     iq = "01",
-#     academics = "02",
-#     verbal = "03",
-#     spatial = "04",
-#     memory = "05",
-#     executive = "06",
-#     motor = "07",
-#     social = "08",
-#     adhd = "09",
-#     emotion = "10",
-#     adaptive = "11",
-#     daily_living = "12"
-#   )
-
-#   number <- domain_numbers[pheno] %||% "99"
-
-#   if (is.null(rater)) {
-#     return(paste0("_02-", number, "_", pheno, "_text.qmd"))
-#   } else {
-#     # Handle age-specific emotion domains
-#     if (pheno == "emotion") {
-#       return(paste0("_02-", number, "_emotion_child_text_", rater, ".qmd"))
-#     }
-#     return(paste0("_02-", number, "_", pheno, "_text_", rater, ".qmd"))
-#   }
-# }
-
-# ============================================================================
-# TABLE AND FIGURE GENERATION
-# ============================================================================
-
-#' Generate domain table
-# .generate_domain_table <- function(data, pheno) {
-#   if (nrow(data) == 0) {
-#     return(NULL)
-#   }
-
-#   # Get score types and create table
-#   score_type_map <- get_score_types_from_lookup(data)
-
-#   # Create table using TableGTR6
-#   table_name <- paste0("table_", pheno)
-#   table_gt <- TableGTR6$new(
-#     data = data,
-#     pheno = pheno,
-#     table_name = table_name,
-#     vertical_padding = 0,
-#     multiline = TRUE
-#   )
-
-#   tbl <- table_gt$build_table()
-#   table_gt$save_table(tbl, dir = here::here())
-
-#   return(tbl)
-# }
-
-#' Generate domain figures
-# .generate_domain_figures <- function(data, pheno) {
-#   if (nrow(data) == 0) {
-#     return(NULL)
-#   }
-
-#   # Generate subdomain plot if possible
-#   if ("z_mean_subdomain" %in% names(data) && "subdomain" %in% names(data)) {
-#     dotplot_subdomain <- DotplotR6$new(
-#       data = data,
-#       x = "z_mean_subdomain",
-#       y = "subdomain",
-#       filename = here::here(paste0("fig_", pheno, "_subdomain.svg"))
-#     )
-#     dotplot_subdomain$create_plot()
-#   }
-
-#   # Generate narrow plot if possible
-#   if ("z_mean_narrow" %in% names(data) && "narrow" %in% names(data)) {
-#     dotplot_narrow <- DotplotR6$new(
-#       data = data,
-#       x = "z_mean_narrow",
-#       y = "narrow",
-#       filename = here::here(paste0("fig_", pheno, "_narrow.svg"))
-#     )
-#     dotplot_narrow$create_plot()
-#   }
-# }
-
-# ============================================================================
-# MISSING FUNCTIONS - CORE DATA HELPERS
-# ============================================================================
-
 #' Get available raters from data
+#' @keywords internal
 #'
 #' @description This function looks at your data and figures out which types of
 #' raters (self, parent, teacher, observer) actually have data. It's like taking
@@ -433,6 +321,7 @@ process_domain_data <- function(pheno, domains) {
 }
 
 #' Filter data by specific rater
+#' @keywords internal
 #'
 #' @description This function takes your big dataset and pulls out only the rows
 #' that belong to a specific rater (like just the parent ratings, or just the
@@ -468,7 +357,12 @@ process_domain_data <- function(pheno, domains) {
   return(filtered_data)
 }
 
+# ============================================================================
+# FILE NAMING FUNCTIONS
+# ============================================================================
+
 #' Get text filename for domain and rater
+#' @keywords internal
 #'
 #' @description This function creates the correct filename for where the narrative
 #' text should be saved. It follows the naming convention like "_02-05_memory_text.qmd"
@@ -521,7 +415,12 @@ process_domain_data <- function(pheno, domains) {
   return(paste0("_02-", number, "_", tolower(pheno), "_text_", rater, ".qmd"))
 }
 
+# ============================================================================
+# TABLE AND FIGURE GENERATION
+# ============================================================================
+
 #' Generate domain table
+#' @keywords internal
 #'
 #' @description This function takes your processed data and creates a formatted
 #' table using the TableGTR6 class. It handles all the complex formatting,
@@ -621,6 +520,7 @@ process_domain_data <- function(pheno, domains) {
 }
 
 #' Generate domain figures
+#' @keywords internal
 #'
 #' @description This function creates the dot plots showing test performance
 #' across subdomains and narrow abilities. It's like creating a visual report

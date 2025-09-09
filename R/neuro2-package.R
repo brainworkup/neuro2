@@ -35,6 +35,7 @@
 #' @name neuro2-package
 #' @aliases neuro2
 #' @keywords internal
+#' @importFrom utils install.packages modifyList
 "_PACKAGE"
 
 #' Create Patient Workspace
