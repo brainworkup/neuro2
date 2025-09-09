@@ -54,6 +54,14 @@ NeuropsychResultsR6 <- R6::R6Class(
     #'
     #' @return Invisibly returns NULL after writing to the file.
     process = function() {
+      # Guard against recursive processing
+      if (isTRUE(private$processing_flag)) {
+        message('Already processing, skipping to prevent recursion')
+        return(invisible(self))
+      }
+      private$processing_flag <- TRUE
+      on.exit(private$processing_flag <- FALSE, add = TRUE)
+
       # Create the text placeholder file first
       self$create_text_placeholder()
 
@@ -131,6 +139,11 @@ NeuropsychResultsR6 <- R6::R6Class(
       )
       paste(lines, collapse = "\n")
     }
+  )
+  ,
+  private = list(
+    # Flag to prevent recursive processing within `process()`
+    processing_flag = FALSE
   )
 )
 

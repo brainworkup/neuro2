@@ -139,4 +139,5 @@ backups_*_*/
 _quarto.yml
 template.tex
 _02-09_adhd_adult.pdf
-_quarto.yml
+data-raw/neurocog_composite_scores_*.xlsx
+isabella_scores.csv

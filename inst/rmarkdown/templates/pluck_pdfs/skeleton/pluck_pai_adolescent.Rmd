@@ -56,7 +56,7 @@ Specify date range to exclude entire database.
 ## Parameters
 
 ```{r}
-file_path <- file.path(here::here("data-raw", "pdf", "pai-a.pdf"))
+file_path <- file.path(here::here("data-raw", "pdf", "pai_adol.pdf"))
 # read_content <- readLines(file_path)
 ```
 
