@@ -18,6 +18,7 @@ suppressPackageStartupMessages({
   library(here)
   library(yaml)
   library(neuro2)
+  neuro2::setup_neuro2()
 })
 
 # Set knitr options
@@ -33,19 +34,43 @@ knitr::opts_knit$set(
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
 
-# Lock svglite's font mapping to known-good fonts
+# Prefer document fonts for figures (Source or IBM Plex)
+pick_font <- function(candidates) {
+  if (requireNamespace("systemfonts", quietly = TRUE)) {
+    for (f in candidates) {
+      ok <- FALSE
+      try({
+        info <- systemfonts::font_info(family = f)
+        ok <- is.data.frame(info) && nrow(info) > 0
+      }, silent = TRUE)
+      if (ok) return(f)
+    }
+    return(utils::tail(candidates, 1))
+  }
+  candidates[[1]]
+}
+
+preferred_sans  <- c("Source Sans 3", "IBM Plex Sans", "Helvetica", "Arial")
+preferred_serif <- c("Source Serif 4", "IBM Plex Serif", "Times", "Times New Roman")
+preferred_mono  <- c("IBM Plex Mono", "Menlo", "Courier")
+
+sans_font  <- pick_font(preferred_sans)
+serif_font <- pick_font(preferred_serif)
+mono_font  <- pick_font(preferred_mono)
+
+# Map svglite generics to selected families so SVG text uses them
 options(
   svglite.system_fonts = list(
-    sans = "Helvetica",
-    serif = "Times",
-    mono = "Menlo"
+    sans  = sans_font,
+    serif = serif_font,
+    mono  = mono_font
   )
 )
 
-# Also tell ggplot2 to use that same family by default
+# Set ggplot2 default text family to the selected sans family
 ggplot2::theme_set(
   ggplot2::theme_get() +
-    ggplot2::theme(text = ggplot2::element_text(family = "sans"))
+    ggplot2::theme(text = ggplot2::element_text(family = sans_font))
 )
 ```
 
@@ -73,6 +98,7 @@ ggplot2::theme_set(
 ```{=typst}
 = NEUROCOGNITIVE FINDINGS
 ```
+
 <!-- Domain sections - dynamically included based on available data -->
 
 {{< include _domains_to_include.qmd >}}

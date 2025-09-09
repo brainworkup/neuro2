@@ -1,3 +1,4 @@
+#' @keywords internal
 #' @importFrom fs dir_create dir_exists path
 #' @importFrom janitor clean_names
 #' @importFrom kableExtra kable_styling column_spec
@@ -12,6 +13,8 @@
 #' @importFrom utils installed.packages packageVersion head
 #' @importFrom webshot2 webshot
 #' @importFrom xfun session_info file_ext
+#' @importFrom here here
 #' @importFrom magrittr `%>%`
 #' @importFrom glue glue
+#' @importFrom utils install.packages modifyList
 NULL

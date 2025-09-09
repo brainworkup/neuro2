@@ -1,14 +1,7 @@
-#' Enhanced Utility Functions for `neuro2`
-#'
-#' @description
-#' Core utility functions that provide common operations used throughout
-#' the `neuro2` package. These functions improve performance, reduce
-#' code duplication, and provide consistent behavior.
-#'
-#' @name neurotypr_utils
-#' @keywords internal
-
 #' Null Coalescing Operator
+#'
+#' @name null-coalescing-operator
+#' @aliases %||%
 #'
 #' @description
 #' Returns the first non-null value from left to right.
