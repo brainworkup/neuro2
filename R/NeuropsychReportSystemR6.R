@@ -329,7 +329,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       for (domain_name in domains) {
         # Get the correct domain key from the domain name
-        domain_key <- .get_domain_key(domain_name)
+        domain_key <- private$.get_domain_key(domain_name)
 
         message(paste("Mapping domain:", domain_name, "->", domain_key))
 
