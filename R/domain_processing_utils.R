@@ -229,8 +229,8 @@ process_multi_rater_domain <- function(
 process_domain_data <- function(pheno, domains) {
   # Load and process data
   processor <- DomainProcessorR6$new(
-    domains = domains,
     pheno = pheno,
+    domains = domains,
     input_file = .determine_input_file(pheno)
   )
 
