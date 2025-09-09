@@ -1,0 +1,182 @@
+## Emotional/Behavioral/Personality {#sec-emotion}
+
+```{r}
+#| label: setup-emotion-adult
+#| include: false
+
+# Load required packages
+suppressPackageStartupMessages({
+  library(here)
+  library(tidyverse)
+  library(gt)
+  library(gtExtras)
+  library(neuro2)
+})
+
+# Define domains
+domains <- c(
+  "Emotional/Behavioral/Personality",
+  "Psychiatric Disorders",
+  "Substance Use",
+  "Personality Disorders",
+  "Psychosocial Problems"
+)
+
+# Load and process data
+processor <- DomainProcessorR6$new(
+  domains = domains,
+  pheno = "emotion",
+  input_file = "data/neurobehav.parquet"
+)
+
+processor$load_data()
+processor$filter_by_domain()
+processor$select_columns()
+
+# Main data object
+emotion_data <- processor$data
+
+# Separate data by test type (which determines rater)
+self_report_tests <- c(
+  "basc3_srp_college",
+  "pai_clinical",
+  "pai_validity",
+  "pai_inatt",
+  "pai",
+  "mmpi3"
+)
+
+emotion_data <- emotion_data[emotion_data$test %in% self_report_tests, ]
+```
+
+{{< include _02-10_emotion_adult_text.qmd >}}
+
+```{r}
+#| label: text-emotion-adult
+#| cache: true
+#| include: false
+
+# Generate text using R6 class
+if (nrow(emotion_data) > 0) {
+  results_processor_emotion <- NeuropsychResultsR6$new(
+    data = emotion_data,
+    file = "_02-10_emotion_adult_text.qmd"
+  )
+  results_processor_emotion$process()
+}
+```
+
+```{r}
+#| label: qtbl-emotion-adult
+#| dev: tikz
+#| fig-process: pdf2png
+#| include: false
+options(tikzDefaultEngine = "xetex")
+
+# Define the specific order of scales
+scale_order <- c(
+  "Somatic Complaints",
+  "Anxiety",
+  "Anxiety-Related Disorders",
+  "Depression",
+  "Mania",
+  "Paranoia",
+  "Social Detachment",
+  "Schizophrenia",
+  "Borderline Features",
+  "Antisocial Features",
+  "Alcohol Problems",
+  "Drug Problems",
+  "Stress",
+  "Nonsupport"
+)
+
+# Filter and arrange the data in the specified order for the table
+emotion_data_table <- emotion_data |>
+  dplyr::filter(scale %in% scale_order) |>
+  dplyr::mutate(scale = factor(scale, levels = scale_order)) |>
+  dplyr::arrange(scale)
+
+if (nrow(emotion_data_table) > 0) {
+  # Generate table
+  table_emotion <- TableGTR6$new(
+    data = emotion_data_table,
+    pheno = "emotion",
+    table_name = "table_emotion_adult",
+    vertical_padding = 0
+  )
+  tbl <- table_emotion$build_table()
+  table_emotion$save_table(tbl, dir = here::here())
+}
+```
+
+```{r}
+#| label: fig-emotion-adult
+#| include: false
+#| cache: true
+
+if (nrow(emotion_data) > 0) {
+  # Generate subdomain figure
+  if (all(c("z_mean_subdomain", "subdomain") %in% names(emotion_data))) {
+    # Remove NA values for plotting
+    data_subdomain <- emotion_data[
+      !is.na(emotion_data$z_mean_subdomain) & !is.na(emotion_data$subdomain),
+    ]
+
+    if (nrow(data_subdomain) > 0) {
+      dotplot_subdomain <- DotplotR6$new(
+        data = data_subdomain,
+        x = "z_mean_subdomain",
+        y = "subdomain",
+        filename = here::here("figs", "fig_emotion_adult.svg")
+      )
+      dotplot_subdomain$create_plot()
+    }
+  }
+}
+```
+
+```{=typst}
+#let domain(title: none, file_qtbl, file_fig) = {
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
+
+  show figure.caption: it => {
+    context {
+      let supplement = it.supplement
+      let counter = it.counter.display(it.numbering)
+      block[*#supplement #counter:* #it.body]
+    }
+  }
+
+  pad(top: 0.5em)[]
+  grid(
+    columns: (50%, 50%),
+    gutter: 8pt,
+    figure(
+      [#image(file_qtbl)],
+      caption: figure.caption(position: top, [#title]),
+      kind: "qtbl",
+      supplement: [*Table*],
+    ),
+    figure(
+      [#image(file_fig, width: auto)],
+      caption: figure.caption(
+        position: bottom,
+        ["{r} plot_title_emotion_adult_self"],
+      ),
+      placement: none,
+      kind: "image",
+      supplement: [*Figure*],
+      gap: 0.5em,
+    ),
+  )
+}
+```
+
+```{=typst}
+#let title = "Emotional/Behavioral/Personality"
+#let file_qtbl = "table_emotion_adult.png"
+#let file_fig = "figs/fig_emotion_adult.svg"
+#domain(title: [#title Scores], file_qtbl, file_fig)
+```
