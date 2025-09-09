@@ -63,18 +63,12 @@ neurocog_data <- NULL
 neurobehav_data <- NULL
 
 if (file.exists("data/neurocog.parquet")) {
-  neurocog_data <- arrow::read_parquet(
-    "data/neurocog.parquet",
-    show_col_types = FALSE
-  )
+  neurocog_data <- arrow::read_parquet("data/neurocog.parquet")
   cat("  ✓ Loaded neurocog data:", nrow(neurocog_data), "rows\n")
 }
 
 if (file.exists("data/neurobehav.parquet")) {
-  neurobehav_data <- arrow::read_parquet(
-    "data/neurobehav.parquet",
-    show_col_types = FALSE
-  )
+  neurobehav_data <- arrow::read_parquet("data/neurobehav.parquet")
   cat("  ✓ Loaded neurobehav data:", nrow(neurobehav_data), "rows\n")
 }
 
@@ -118,7 +112,7 @@ domains <- list(
   list(key = "adhd", name = "ADHD", data = "neurobehav", num = "09"),
   list(
     key = "emotion",
-    name = "Emotional/Behavioral/Personality",
+    name = c("Behavioral/Emotional/Social", "Emotional/Behavioral/Personality"),
     data = "neurobehav",
     num = "10"
   )

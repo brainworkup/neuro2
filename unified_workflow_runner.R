@@ -18,6 +18,7 @@ for (pkg in required_packages) {
 }
 
 # Source utility modules
+source("R/setup_neuro2.R")
 source("R/workflow_utils.R")
 source("R/workflow_config.R")
 source("R/workflow_data_processor.R")
