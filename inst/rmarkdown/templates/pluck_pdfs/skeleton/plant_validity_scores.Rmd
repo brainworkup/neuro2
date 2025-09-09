@@ -3,7 +3,7 @@ title: "Plant Validity Indicators"
 params:
   patient:
     label: "Patient First Name:"
-    value: Biggie
+    value: Isabella
     input: text
   test_name:
     label: "Full Name of Test/Test Battery:"
@@ -14,10 +14,12 @@ params:
         - ACS Word Choice
         - Reliable Digit Span
         - CVLT-3
-        - PAI
+        - CVLT-3 Brief
         - TOMM
-        - DCT
+        - Dot Counting Test (DCT)
       Symptom Validity:
+        - Personality Assessment Inventory (PAI)
+        - Personality Assessment Inventory, Adolescent (PAI Adolescent)
         - CAARS Self-Report
         - CAARS Observer-Report
         - CEFI Self-Report
@@ -27,16 +29,20 @@ params:
     value: ""
     input: radio
     choices:
-      - caars_sr
       - caars_or
-      - cefi_sr
-      - cefi_or
-      - word_choice
-      - rds
+      - caars_sr
+      - caars2_observer
+      - caars2_self
+      - cefi_observer
+      - cefi_self
+      - cvlt3
       - cvlt3_brief
-      - pai
-      - tomm
       - dct
+      - pai
+      - pai_adol
+      - rds
+      - tomm
+      - word_choice
   scale:
     label: "Scale/Subtest:"
     value: Select Scale
@@ -48,6 +54,7 @@ params:
         - Reliable Digit Span
       CVLT3:
         - CVLT-3 Forced-Choice Recognition Hits
+        - Forced-Choice Recognition Hits
       DCT:
         - E-Score
       TOMM:
@@ -102,6 +109,7 @@ params:
       - t_score
       - standard_score
       - beta_coefficient
+      - e_score
   domain:
     label: "Domain:"
     value: Select domain
@@ -198,7 +206,7 @@ output:
     highlight: kate
 ---
 
-## Setup
+# Setup
 
 ```{r setup, include = FALSE}
 Sys.setenv(
@@ -212,7 +220,6 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE
 )
-library(neuro2)
 library(here)
 library(knitr)
 library(magrittr)
@@ -226,6 +233,7 @@ library(tibble)
 library(tidyr)
 library(dplyr)
 library(tidyverse)
+library(neuro2)
 ```
 
 ## Patient
