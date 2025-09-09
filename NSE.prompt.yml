@@ -165,6 +165,6 @@ messages:
       Please proceed with your analysis and summary of the NSE transcript. Your
       final output should consist only of the Markdown summary and should not
       duplicate or rehash any of the work you did in the thinking block.
-model: openai/gpt-4o
+model: openai/gpt-5
 modelParameters:
-  temperature: 0.06
+  max_completion_tokens: 82841
