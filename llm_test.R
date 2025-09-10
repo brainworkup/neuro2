@@ -27,7 +27,7 @@ base_dir <- "." # where your *_text.qmd live
 
 res_iq <- generate_domain_summary_from_master(
   master_json = master_json,
-  domain_keyword = "priq",
+  domain_keyword = "prsirf",
   model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
   temperature = 1,
   base_dir = base_dir,
@@ -35,6 +35,18 @@ res_iq <- generate_domain_summary_from_master(
 )
 
 cat("\n--- GENERATED IQ SUMMARY ---\n", res_iq$text, "\n")
+
+res_iq <- generate_domain_summary_from_master(
+  master_json = master_json,
+  domain_keyword = "prsirf",
+  model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
+  temperature = 1,
+  base_dir = base_dir,
+  echo = "none"
+)
+
+cat("\n--- GENERATED SIRF SUMMARY ---\n", res_iq$text, "\n")
+
 
 # or batch across major cognitive domains:
 all_out <- run_llm_for_all_domains(
