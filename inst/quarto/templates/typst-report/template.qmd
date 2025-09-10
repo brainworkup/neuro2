@@ -64,10 +64,10 @@ pick_font <- function(candidates) {
   candidates[[1]]
 }
 
-preferred_sans <- c("Source Sans 3", "IBM Plex Sans", "Helvetica", "Arial")
+preferred_sans <- c("IBM Plex Sans", "Source Sans 3", "Helvetica", "Arial")
 preferred_serif <- c(
-  "Source Serif 4",
   "IBM Plex Serif",
+  "Source Serif 4",
   "Times",
   "Times New Roman"
 )
