@@ -130,6 +130,8 @@ fi
 
 # Ask about PDF extraction
 print_step "Step 4: PDF Data Extraction"
+echo "📚 For detailed file upload instructions, see: FILE_UPLOAD_GUIDE.md"
+echo
 echo "Available extraction templates:"
 echo "  - pluck_wisc5.Rmd (WISC-V Child Intelligence)"
 echo "  - pluck_wais5.Rmd (WAIS-5 Adult Intelligence)"
@@ -150,9 +152,13 @@ if [[ $run_extraction =~ ^[Yy]$ ]]; then
     echo "4. Knit the document to generate CSV files"
     echo "5. Move generated CSV files to data-raw/csv/"
     echo
+    echo "💡 Alternative: Use R upload helpers:"
+    echo "   upload_files(method = 'pdf', test_type = 'wisc5', patient_name = '$PATIENT_NAME')"
+    echo
     read -p "Press Enter when PDF extraction is complete..."
 else
     print_warning "Skipping PDF extraction - ensure CSV files are in data-raw/csv/"
+    echo "💡 Use upload helpers: upload_files(method = 'csv', patient_name = '$PATIENT_NAME')"
 fi
 
 # Run the unified workflow

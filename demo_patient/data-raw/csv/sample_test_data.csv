@@ -1,0 +1,6 @@
+test,test_name,scale,raw_score,score,percentile,range,domain,subdomain
+wisc5,WISC-V,Similarities,25,12,75,High Average,General Cognitive Ability,Verbal Comprehension
+wisc5,WISC-V,Block Design,45,11,63,Average,General Cognitive Ability,Visual Spatial
+wisc5,WISC-V,Matrix Reasoning,23,13,84,High Average,General Cognitive Ability,Fluid Reasoning
+wisc5,WISC-V,Digit Span,16,10,50,Average,General Cognitive Ability,Working Memory
+wisc5,WISC-V,Coding,65,9,37,Average,General Cognitive Ability,Processing Speed
