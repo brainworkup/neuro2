@@ -20,9 +20,11 @@ if (!requireNamespace("neuro2", quietly = TRUE)) {
 }
 
 suppressPackageStartupMessages({
-  # profvis is optional
+  # profvis is optional; htmlwidgets needed to save HTML
   if (!quiet_req("profvis")) {
     message("profvis not found; will use base R profiling (Rprof)")
+  } else if (!quiet_req("htmlwidgets")) {
+    message("htmlwidgets not found; profvis HTML save will be skipped")
   }
 })
 
@@ -83,12 +85,29 @@ run_rprof <- function() {
 }
 
 if (quiet_req("profvis")) {
-  message("Using profvis (interactive HTML) — saving to tmp/profvis.html")
+  message("Using profvis (interactive HTML) — attempting to save under tmp/")
   if (!dir.exists("tmp")) dir.create("tmp", recursive = TRUE)
-  p <- run_profvis()
-  html_file <- file.path("tmp", paste0("profvis_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".html"))
-  htmlwidgets::saveWidget(p, html_file, selfcontained = TRUE)
-  message("Profile saved: ", html_file)
+  ok <- FALSE
+  err <- NULL
+  p <- NULL
+  tryCatch({ p <- run_profvis(); ok <- TRUE }, error = function(e) err <<- e)
+  if (ok && quiet_req("htmlwidgets")) {
+    html_file <- file.path("tmp", paste0("profvis_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".html"))
+    save_ok <- FALSE
+    tryCatch({ htmlwidgets::saveWidget(p, html_file, selfcontained = TRUE); save_ok <- TRUE }, error = function(e) err <<- e)
+    if (save_ok) {
+      message("Profile saved: ", html_file)
+    } else {
+      message("profvis run ok, but failed to save HTML (", err$message, ") — falling back to Rprof summary")
+      run_rprof()
+    }
+  } else if (!ok) {
+    message("profvis failed (", err$message, ") — falling back to Rprof summary")
+    run_rprof()
+  } else {
+    message("profvis ran, but htmlwidgets missing — falling back to Rprof summary")
+    run_rprof()
+  }
 } else {
   message("Using base R profiling (Rprof)")
   run_rprof()

@@ -1,7 +1,14 @@
 #!/usr/bin/env Rscript
 
 # Lightweight micro-benchmarks for hot paths without heavy dependencies
-library(neuro2)
+# Try to load neuro2; fall back to sourcing R/ files if running in-source
+if (!requireNamespace("neuro2", quietly = TRUE)) {
+  message("neuro2 not installed; sourcing package files from R/ …")
+  r_files <- Sys.glob(file.path("R", "*.R"))
+  invisible(lapply(r_files, source))
+} else {
+  suppressPackageStartupMessages(library(neuro2))
+}
 
 bench <- function(label, expr, reps = 1000L) {
   gc()
@@ -21,17 +28,42 @@ keys_input <- c(
   "emotional/behavioral/social", "UNKNOWN DOMAIN", "Social  Cognition"
 )
 
-# Reuse the private mapping via the system instance
-rs <- NeuropsychReportSystemR6$new(config = list(domains = keys_input))
+# Resolve domain key mapping without instantiating the full report system
+resolve_domain_key <- function(x) {
+  # Prefer internal helper if available in current environment
+  if (exists(".get_domain_key", mode = "function")) {
+    return(.get_domain_key(x))
+  }
+  # Fall back to accessing the internal helper in the package namespace
+  if ("neuro2" %in% loadedNamespaces()) {
+    f <- try(get(".get_domain_key", envir = asNamespace("neuro2")), silent = TRUE)
+    if (!inherits(f, "try-error") && is.function(f)) return(f(x))
+  }
+  # Minimal local fallback (covers common domains only)
+  m <- c(
+    "General Cognitive Ability" = "iq",
+    "Academic Skills" = "academics",
+    "Verbal/Language" = "verbal",
+    "Visual Perception/Construction" = "spatial",
+    "Memory" = "memory",
+    "Attention/Executive" = "executive",
+    "Motor" = "motor",
+    "Social Cognition" = "social",
+    "ADHD" = "adhd",
+    "Emotional/Behavioral/Personality" = "emotion",
+    "Adaptive Functioning" = "adaptive",
+    "Daily Living" = "daily_living",
+    "Performance Validity" = "validity"
+  )
+  m[[x]] %||% tolower(gsub("[^A-Za-z0-9]", "_", x))
+}
 
 cat("\n== Mapping Benchmarks ==\n")
-bench(".get_domain_key() mix", {
+bench("domain name -> key (mix)", {
   for (nm in keys_input) {
-    # Access the private method through the public wrapper via create_processor_configs
-    # (this exercises the same path used in orchestration)
-    invisible(rs$create_processor_configs(nm))
+    invisible(resolve_domain_key(nm))
   }
-}, reps = 250L)
+}, reps = 1000L)
 
 # 2) Factory lookups
 factory <- DomainProcessorFactoryR6$new()
