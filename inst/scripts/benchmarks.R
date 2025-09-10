@@ -1,7 +1,14 @@
 #!/usr/bin/env Rscript
 
 # Lightweight micro-benchmarks for hot paths without heavy dependencies
-library(neuro2)
+# Try to load neuro2; fall back to sourcing R/ files if running in-source
+if (!requireNamespace("neuro2", quietly = TRUE)) {
+  message("neuro2 not installed; sourcing package files from R/ …")
+  r_files <- Sys.glob(file.path("R", "*.R"))
+  invisible(lapply(r_files, source))
+} else {
+  suppressPackageStartupMessages(library(neuro2))
+}
 
 bench <- function(label, expr, reps = 1000L) {
   gc()
