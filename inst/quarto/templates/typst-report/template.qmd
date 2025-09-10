@@ -110,7 +110,7 @@ ggplot2::theme_set(
 ```
 {{< include _00-00_tests.qmd >}}
 
-{{< include _01-00_nse_adult.qmd >}}
+{{< include _01-00_nse.qmd >}}
 
 {{< include _01-01_behav_obs.qmd >}}
 

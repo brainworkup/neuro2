@@ -1,6 +1,7 @@
-# deps: jsonlite, readr, stringr, digest, ellmer
-# usethis::use_package(c("jsonlite","readr","stringr","digest","ellmer"))
-
+#' @title LLM Cache Directory
+#' @description Returns the path to the LLM cache directory, creating it if it doesn't exist.
+#' @return Character string of the cache directory path.
+#' @export
 llm_cache_dir <- function() {
   d <- file.path(tempdir(), "neuro2_llm_cache")
   if (!dir.exists(d)) {
@@ -9,6 +10,11 @@ llm_cache_dir <- function() {
   d
 }
 
+#' @title Read Master Prompts
+#' @description Reads prompts from a JSON file and filters for those with keyword, text, and target qmd.
+#' @param json_path Character string path to the JSON file.
+#' @return List of filtered prompt objects.
+#' @export
 read_master_prompts <- function(json_path) {
   stopifnot(file.exists(json_path))
   # Force list-of-lists; stable even if items have different fields
@@ -35,13 +41,22 @@ read_master_prompts <- function(json_path) {
   items[has_target]
 }
 
-# Get first @_02-*.qmd line (declares the target file for this domain)
+#' @title Detect Target QMD
+#' @description Extracts the target @_02-*.qmd file from the prompt text.
+#' @param prompt_text Character string of the prompt text.
+#' @return Character string of the target qmd filename or NA.
+#' @export
 detect_target_qmd <- function(prompt_text) {
   m <- stringr::str_match(prompt_text, "(?m)^\\s*@\\s*(_02-[^\\s]+\\.qmd)\\s*$")
   if (!is.na(m[1, 2])) m[1, 2] else NA_character_
 }
 
-# Replace {{@file}} refs with the file content; collect dependency paths
+#' @title Expand Includes in Text
+#' @description Replaces {{@file}} references with file content and collects dependencies.
+#' @param text Character string to expand.
+#' @param base_dir Base directory for file paths, default ".".
+#' @return List with expanded text and dependency paths.
+#' @export
 expand_includes <- function(text, base_dir = ".") {
   deps <- character(0)
   expanded <- stringr::str_replace_all(
@@ -60,7 +75,11 @@ expand_includes <- function(text, base_dir = ".") {
   list(text = expanded, deps = deps)
 }
 
-# Trim chain-of-thought-ish directions from system prompt before sending
+#' @title Sanitize System Prompt
+#' @description Removes chain-of-thought directions from system prompt.
+#' @param text Character string of the system prompt.
+#' @return Sanitized character string.
+#' @export
 sanitize_system_prompt <- function(text) {
   # Remove sections that instruct the model to reveal "analysis/thinking" blocks
   text <- stringr::str_replace_all(
@@ -76,10 +95,21 @@ sanitize_system_prompt <- function(text) {
   text
 }
 
+#' @title Read File or Return Empty
+#' @description Reads file content if exists, otherwise returns empty string.
+#' @param path Character string path to file.
+#' @return Character string of file content or "".
+#' @export
 read_file_or_empty <- function(path) {
   if (file.exists(path)) readr::read_file(path) else ""
 }
 
+#' @title Inject Summary Block into QMD
+#' @description Injects or replaces the <summary> block in a QMD file.
+#' @param qmd_path Path to the QMD file.
+#' @param generated Generated summary text.
+#' @return Invisible, writes to file.
+#' @export
 inject_summary_block <- function(qmd_path, generated) {
   raw_qmd <- read_file_or_empty(qmd_path)
   if (!nzchar(raw_qmd)) {
@@ -105,6 +135,13 @@ inject_summary_block <- function(qmd_path, generated) {
   readr::write_file(new_qmd, qmd_path)
 }
 
+#' @title Hash Inputs for Caching
+#' @description Creates a hash key from system prompt, user text, and dependencies.
+#' @param system_prompt Character string.
+#' @param user_text Character string.
+#' @param deps Character vector of dependency paths.
+#' @return Character string hash.
+#' @export
 hash_inputs <- function(system_prompt, user_text, deps) {
   # cache key changes if prompt, user text, or any dep content changes
   dep_txt <- paste0(
@@ -117,6 +154,15 @@ hash_inputs <- function(system_prompt, user_text, deps) {
   )
 }
 
+#' @title Call OpenAI Once
+#' @description Makes a single call to OpenAI LLM and returns the response.
+#' @param system_prompt System prompt.
+#' @param user_text User message.
+#' @param model Model name, default "gpt-5-mini-2025-08-07".
+#' @param temperature Temperature parameter, default 1.
+#' @param echo Echo parameter, default "none".
+#' @return Character string response.
+#' @export
 call_openai_once <- function(
   system_prompt,
   user_text,
@@ -147,6 +193,16 @@ call_openai_once <- function(
   out
 }
 
+#' @title Generate Domain Summary from Master
+#' @description Generates a summary for a domain using master prompts and injects into QMD.
+#' @param master_json Path to master JSON.
+#' @param domain_keyword Keyword for the domain.
+#' @param model LLM model.
+#' @param temperature Temperature.
+#' @param base_dir Base directory.
+#' @param echo Echo.
+#' @return Invisible list with keyword, qmd, text.
+#' @export
 generate_domain_summary_from_master <- function(
   master_json,
   domain_keyword,
@@ -222,7 +278,16 @@ generate_domain_summary_from_master <- function(
   invisible(list(keyword = domain_keyword, qmd = target_path, text = generated))
 }
 
-# Batch runner for common domains (edit as needed)
+#' @title Run LLM for All Domains
+#' @description Batch runs LLM generation for multiple domains.
+#' @param master_json Path to master JSON.
+#' @param domain_keywords Vector of domain keywords.
+#' @param model LLM model.
+#' @param temperature Temperature.
+#' @param base_dir Base directory.
+#' @param echo Echo.
+#' @return List of results per domain.
+#' @export
 run_llm_for_all_domains <- function(
   master_json,
   domain_keywords = c(

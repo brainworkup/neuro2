@@ -27,6 +27,7 @@ Imports:
     DBI (>= 1.1.0),
     dplyr,
     duckdb (>= 0.8.0),
+    ellmer,
     fs,
     future (>= 1.33.0),
     future.apply,

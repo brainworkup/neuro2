@@ -27,7 +27,7 @@ base_dir <- "." # where your *_text.qmd live
 
 res_iq <- generate_domain_summary_from_master(
   master_json = master_json,
-  domain_keyword = "prsirf",
+  domain_keyword = "priq",
   model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
   temperature = 1,
   base_dir = base_dir,
@@ -38,7 +38,7 @@ cat("\n--- GENERATED IQ SUMMARY ---\n", res_iq$text, "\n")
 
 res_iq <- generate_domain_summary_from_master(
   master_json = master_json,
-  domain_keyword = "prsirf",
+  domain_keyword = "pr.sirf",
   model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
   temperature = 1,
   base_dir = base_dir,
