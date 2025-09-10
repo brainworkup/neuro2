@@ -38,7 +38,7 @@ DuckDB/Parquet, and beautiful typesetting with Quarto/Typst.
 
 ### Prerequisites
 
-1.  **R** (version 4.1 or higher)
+1.  **R** (version 4.5 or higher)
 2.  **Quarto** (version 1.4.0 or higher) - [Install
     Quarto](https://quarto.org/docs/get-started/)
 3.  **CMake** (version 3.10 or higher) - Required for some dependencies
@@ -333,14 +333,12 @@ for (patient in patients) {
 
 ## 📚 Documentation
 
-- [Unified Workflow Guide](UNIFIED_WORKFLOW_README.md) - **Recommended
-  workflow**
-- [Unified Workflow Architecture](unified_workflow_architecture.md) -
-  Technical design
-- [Domain File Generation Workflow](DOMAIN_GENERATION_FIXES.md)
-- [DuckDB Integration Guide](DUCKDB_INTEGRATION_GUIDE.md)
-- [R6 Implementation Guide](R6_IMPLEMENTATION_GUIDE.md)
-- [Dependency Setup Guide](DEPENDENCY_SETUP_GUIDE.md)
+- [Unified Workflow Guide](UNIFIED_WORKFLOW_README.md) — recommended workflow
+- [Unified Workflow Architecture](unified_workflow_architecture.md)
+- [Workflow Guide](WORKFLOW.md) and [Workflow Run Notes](WORKFLOW_RUN.md)
+- [Domain Generation Fixes](DOMAIN_GENERATION_FIXES.md)
+- [Integrated Workflow Fixes](INTEGRATED_WORKFLOW_FIXES.md)
+- [Neuropsych Score Types](docs/NEUROPSYCH_SCORE_TYPES.md)
 
 ## 🤝 Contributing
 
