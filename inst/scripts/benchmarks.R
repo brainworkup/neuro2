@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 # Lightweight micro-benchmarks for hot paths without heavy dependencies
+library(neuro2)
 
 bench <- function(label, expr, reps = 1000L) {
   gc()
@@ -39,4 +40,3 @@ bench("get_processor_config('verbal')", factory$get_processor_config("verbal"), 
 bench("get_processor_config('adhd')", factory$get_processor_config("adhd"), reps = 5000L)
 
 cat("\nDone.\n")
-

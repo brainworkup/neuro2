@@ -10,6 +10,15 @@ ensure <- function(pkgs) {
   if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
 }
 
+# Try to load neuro2; if not installed (running in-source), source R/ files
+if (!requireNamespace("neuro2", quietly = TRUE)) {
+  message("neuro2 not installed; sourcing package files from R/ …")
+  r_files <- Sys.glob(file.path("R", "*.R"))
+  invisible(lapply(r_files, source))
+} else {
+  suppressPackageStartupMessages(library(neuro2))
+}
+
 suppressPackageStartupMessages({
   # profvis is optional
   if (!quiet_req("profvis")) {
@@ -47,9 +56,12 @@ workload <- function() {
 
   invisible(rs$create_processor_configs(rs$config$domains))
 
-  # 3) Attempt generate_domain_files: should warn/skip missing files fast
-  #    We keep warnings on; the point is to exercise orchestration cost.
-  try(rs$generate_domain_files(), silent = TRUE)
+  # 3) Optionally attempt generate_domain_files (off by default)
+  # Enable by setting env var NEURO2_PROFILE_GENERATE=true
+  run_gen <- isTRUE(as.logical(Sys.getenv("NEURO2_PROFILE_GENERATE", "FALSE")))
+  if (run_gen) {
+    try(rs$generate_domain_files(), silent = TRUE)
+  }
 }
 
 run_profvis <- function() {
@@ -83,4 +95,3 @@ if (quiet_req("profvis")) {
 }
 
 message("Profiling complete at ", Sys.time())
-
