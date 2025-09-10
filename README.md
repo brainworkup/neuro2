@@ -66,7 +66,36 @@ install.packages(c(
 
 ## 🏃 Quick Start
 
-### Option 1: Unified Workflow Scripts (Recommended)
+### Step 1: Upload Your Files
+
+**Option A: Interactive Upload (Easiest)**
+```r
+library(neuro2)
+# Interactive file upload with prompts
+upload_files(method = "interactive")
+```
+
+**Option B: Direct CSV Upload**
+```r
+# Upload CSV files directly
+upload_files(method = "csv", 
+            file_path = "path/to/your/data.csv",
+            patient_name = "Patient Name")
+```
+
+**Option C: PDF Extraction**
+```r
+# Extract data from PDF reports
+upload_files(method = "pdf", 
+            test_type = "wisc5",  # or "wais5", "wiat4", etc.
+            patient_name = "Patient Name")
+```
+
+**📚 For detailed upload instructions, see:** [File Upload Guide](FILE_UPLOAD_GUIDE.md)
+
+### Step 2: Generate Reports
+
+**Option 1: Unified Workflow Scripts (Recommended)**
 
 ``` bash
 # Interactive shell workflow (with guided prompts)
