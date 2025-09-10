@@ -37,6 +37,7 @@
     "windowsaistudio.enableRemoteFine-tuningAndInference": true,
     "python.analysis.aiHoverSummaries": true,
     "editor.wordWrap": "on",
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "makefile.configureOnOpen": false
   }
 }

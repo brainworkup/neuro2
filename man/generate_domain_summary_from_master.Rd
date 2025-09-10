@@ -5,10 +5,10 @@
 \title{Generate Domain Summary from Master}
 \usage{
 generate_domain_summary_from_master(
-  master_json,
+  master_json = NULL,
   domain_keyword,
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
-  temperature = 1,
+  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  temperature = 0.2,
   base_dir = ".",
   echo = "none"
 )

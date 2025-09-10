@@ -10,31 +10,38 @@ llm_cache_dir <- function() {
   d
 }
 
+# Canonicalize keys so "pr.sirf" == "prsirf"
+.canon <- function(x) gsub("[^A-Za-z0-9]+", "", x)
+
 #' @title Read Master Prompts
 #' @description Reads prompts from a JSON file and filters for those with keyword, text, and target qmd.
 #' @param json_path Character string path to the JSON file.
 #' @return List of filtered prompt objects.
 #' @export
 read_master_prompts <- function(json_path) {
-  stopifnot(file.exists(json_path))
-  # Force list-of-lists; stable even if items have different fields
+  if (!file.exists(json_path)) {
+    stop("Master JSON not found: ", json_path)
+  }
   items <- jsonlite::fromJSON(json_path, simplifyVector = FALSE)
-
   if (!is.list(items)) {
     stop("Expected a JSON array of objects at: ", json_path)
   }
 
-  # Keep only prompt-like entries with 'keyword' and 'text' fields
+  # Keep only entries that look like prompts
   items <- Filter(
     function(x) is.list(x) && !is.null(x$keyword) && !is.null(x$text),
     items
   )
 
-  # Optional: keep only prompts that declare a target @_02-*.qmd line
+  # Accept ANY @_NN-*.qmd (covers _02-… domains and _03-… SIRF)
   has_target <- vapply(
     items,
     function(x) {
-      isTRUE(grepl("(?m)^@(_02-[^\\s]+\\.qmd)\\s*$", x$text, perl = TRUE))
+      isTRUE(grepl(
+        "(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$",
+        x$text,
+        perl = TRUE
+      ))
     },
     logical(1)
   )
@@ -47,9 +54,13 @@ read_master_prompts <- function(json_path) {
 #' @return Character string of the target qmd filename or NA.
 #' @export
 detect_target_qmd <- function(prompt_text) {
-  m <- stringr::str_match(prompt_text, "(?m)^\\s*@\\s*(_02-[^\\s]+\\.qmd)\\s*$")
+  m <- stringr::str_match(
+    prompt_text,
+    "(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$"
+  )
   if (!is.na(m[1, 2])) m[1, 2] else NA_character_
 }
+
 
 #' @title Expand Includes in Text
 #' @description Replaces {{@file}} references with file content and collects dependencies.
@@ -63,17 +74,19 @@ expand_includes <- function(text, base_dir = ".") {
     text,
     "\\{\\{@([^}]+)\\}\\}",
     function(m) {
-      fn <- file.path(base_dir, sub("\\{\\{@([^}]+)\\}\\}", "\\1", m))
+      rel <- sub("\\{\\{@([^}]+)\\}\\}", "\\1", m)
+      fn <- file.path(base_dir, rel)
       if (file.exists(fn)) {
         deps <<- unique(c(deps, fn))
         readr::read_file(fn)
       } else {
-        paste0("[[MISSING FILE: ", fn, "]]")
+        paste0("[[MISSING FILE: ", rel, "]]")
       }
     }
   )
   list(text = expanded, deps = deps)
 }
+
 
 #' @title Sanitize System Prompt
 #' @description Removes chain-of-thought directions from system prompt.
@@ -140,7 +153,6 @@ inject_summary_block <- function(qmd_path, generated) {
 #' @param system_prompt Character string.
 #' @param user_text Character string.
 #' @param deps Character vector of dependency paths.
-#' @importFrom digest digest
 #' @return Character string hash.
 #' @export
 hash_inputs <- function(system_prompt, user_text, deps) {
@@ -205,18 +217,36 @@ call_openai_once <- function(
 #' @return Invisible list with keyword, qmd, text.
 #' @export
 generate_domain_summary_from_master <- function(
-  master_json,
+  master_json = NULL,
   domain_keyword,
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
-  temperature = 1,
+  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  temperature = 0.2,
   base_dir = ".",
   echo = "none"
 ) {
+  # Resolve master_json lazily here (safe during load_all)
+
+  if (is.null(master_json)) {
+    master_json <- system.file(
+      "prompts",
+      "neuro2_prompts.json",
+      package = "neuro2"
+    )
+  }
+  if (!nzchar(master_json) || !file.exists(master_json)) {
+    stop(
+      "Master JSON not found. Tried: ",
+      master_json,
+      "\nIf you’re running from source, pass the local path, e.g. master_json = 'prompt/neuro2_prompts.json'"
+    )
+  }
+
   prompts <- read_master_prompts(master_json)
 
+  # In generate_domain_summary_from_master() when selecting the prompt:
   idx <- which(vapply(
     prompts,
-    function(x) identical(x$keyword, domain_keyword),
+    function(x) .canon(x$keyword) == .canon(domain_keyword),
     logical(1)
   ))
   if (length(idx) == 0) {
@@ -224,9 +254,10 @@ generate_domain_summary_from_master <- function(
       "No prompt found in master JSON for keyword: ",
       domain_keyword,
       "\nAvailable keywords: ",
-      paste0(vapply(prompts, `[[`, "", "keyword"), collapse = ", ")
+      paste0(vapply(prompts, function(x) x$keyword, ""), collapse = ", ")
     )
   }
+
   p <- prompts[[idx]]
   ptx <- p$text
 
@@ -290,7 +321,7 @@ generate_domain_summary_from_master <- function(
 #' @return List of results per domain.
 #' @export
 run_llm_for_all_domains <- function(
-  master_json,
+  master_json = NULL,
   domain_keywords = c(
     "priq",
     "pracad",
@@ -306,13 +337,26 @@ run_llm_for_all_domains <- function(
     "premotadult",
     "pradapt",
     "prdaily",
-    "prsirf"
+    "prsirf",
+    "prrecs"
   ),
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
-  temperature = 1,
+  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  temperature = 0.2,
   base_dir = ".",
   echo = "none"
 ) {
+  if (is.null(master_json)) {
+    master_json <- system.file(
+      "prompts",
+      "neuro2_prompts.json",
+      package = "neuro2"
+    )
+  }
+  if (!nzchar(master_json) || !file.exists(master_json)) {
+    stop("Master JSON not found. Tried: ", master_json)
+  }
+
+  prompts <- read_master_prompts(master_json)
   out <- lapply(domain_keywords, function(k) {
     try(
       {

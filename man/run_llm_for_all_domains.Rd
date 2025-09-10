@@ -5,12 +5,12 @@
 \title{Run LLM for All Domains}
 \usage{
 run_llm_for_all_domains(
-  master_json,
+  master_json = NULL,
   domain_keywords = c("priq", "pracad", "prverb", "prspt", "prmem", "prexe", "prmot",
     "prsoc", "pradhdchild", "pradhdadult", "premotchild", "premotadult", "pradapt",
-    "prdaily", "prsirf"),
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-5-mini-2025-08-07"),
-  temperature = 1,
+    "prdaily", "prsirf", "prrecs"),
+  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  temperature = 0.2,
   base_dir = ".",
   echo = "none"
 )
