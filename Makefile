@@ -1,4 +1,4 @@
-.PHONY: help deps test check docs report clean
+.PHONY: help deps test check docs report clean bench profile
 
 help:
 	@echo "Common targets:"
@@ -7,6 +7,8 @@ help:
 	@echo "  make check  - R CMD check (no manual)"
 	@echo "  make docs   - build website docs with altdoc"
 	@echo "  make report - run unified report workflow (template)"
+	@echo "  make bench  - run lightweight micro-benchmarks"
+	@echo "  make profile- profile typical run (profvis/Rprof)"
 	@echo "  make clean  - remove build artifacts"
 
 deps:
@@ -28,3 +30,8 @@ report:
 clean:
 	rm -rf neuro2_*.tar.gz neuro2.Rcheck docs/ .quarto/ _freeze/ *_cache/ */*_cache/
 
+bench:
+	Rscript inst/scripts/benchmarks.R
+
+profile:
+	Rscript inst/scripts/profile_report.R

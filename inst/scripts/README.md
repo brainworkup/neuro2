@@ -28,7 +28,14 @@ This folder contains modular scripts used by the neuro2 workflow. They are prima
   - Invoked by `make docs` to build the documentation site using the `altdoc` package (with a Quarto fallback).
   - Usage: `Rscript inst/scripts/build_docs.R` or simply `make docs`.
 
+- `benchmarks.R`
+  - Lightweight micro-benchmarks for hot paths (domain mapping, factory lookups). No extra packages required.
+  - Usage: `Rscript inst/scripts/benchmarks.R` or `make bench`.
+
+- `profile_report.R`
+  - Profiles a typical orchestration run; uses `profvis` if available (saves HTML under `tmp/`), otherwise falls back to `Rprof` summary.
+  - Usage: `Rscript inst/scripts/profile_report.R` or `make profile`.
+
 Tips
 - Prefer running top‑level workflows via `make` targets for reproducibility: `make deps`, `make test`, `make check`, `make docs`.
 - For end‑to‑end runs with prompts, see `unified_neuropsych_workflow.sh` and `unified_workflow_runner.R` in the repo root.
-
