@@ -30,6 +30,17 @@ knitr::opts_knit$set(
   optipng = knitr::hook_optipng
 )
 
+# Enable chunk caching for faster re-renders
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.comments = FALSE)
+
+# Make render faster by default: skip regenerating assets if present,
+# suppress verbose logging, and avoid PDF duplicates of tables
+options(
+  neuro2.skip_if_exists = TRUE,
+  neuro2.verbose = FALSE,
+  neuro2.tables.pdf = FALSE
+)
+
 # Set environment variables with default values
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
@@ -39,10 +50,13 @@ pick_font <- function(candidates) {
   if (requireNamespace("systemfonts", quietly = TRUE)) {
     for (f in candidates) {
       ok <- FALSE
-      try({
-        info <- systemfonts::font_info(family = f)
-        ok <- is.data.frame(info) && nrow(info) > 0
-      }, silent = TRUE)
+      try(
+        {
+          info <- systemfonts::font_info(family = f)
+          ok <- is.data.frame(info) && nrow(info) > 0
+        },
+        silent = TRUE
+      )
       if (ok) return(f)
     }
     return(utils::tail(candidates, 1))
@@ -50,20 +64,25 @@ pick_font <- function(candidates) {
   candidates[[1]]
 }
 
-preferred_sans  <- c("Source Sans 3", "IBM Plex Sans", "Helvetica", "Arial")
-preferred_serif <- c("Source Serif 4", "IBM Plex Serif", "Times", "Times New Roman")
-preferred_mono  <- c("IBM Plex Mono", "Menlo", "Courier")
+preferred_sans <- c("Source Sans 3", "IBM Plex Sans", "Helvetica", "Arial")
+preferred_serif <- c(
+  "Source Serif 4",
+  "IBM Plex Serif",
+  "Times",
+  "Times New Roman"
+)
+preferred_mono <- c("IBM Plex Mono", "Menlo", "Courier")
 
-sans_font  <- pick_font(preferred_sans)
+sans_font <- pick_font(preferred_sans)
 serif_font <- pick_font(preferred_serif)
-mono_font  <- pick_font(preferred_mono)
+mono_font <- pick_font(preferred_mono)
 
 # Map svglite generics to selected families so SVG text uses them
 options(
   svglite.system_fonts = list(
-    sans  = sans_font,
+    sans = sans_font,
     serif = serif_font,
-    mono  = mono_font
+    mono = mono_font
   )
 )
 

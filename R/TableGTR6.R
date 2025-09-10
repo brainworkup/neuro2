@@ -361,17 +361,30 @@ TableGTR6 <- R6::R6Class(
     #' @param dir Directory to save the files in (default: current directory).
     #' @return Invisibly returns self for method chaining.
     save_table = function(tbl, dir = ".") {
-      # Save PNG
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".png"))
-      )
+      skip_if_exists <- getOption("neuro2.skip_if_exists", TRUE)
+      save_pdf <- getOption("neuro2.tables.pdf", FALSE)
 
-      # Save PDF
-      gt::gtsave(
-        tbl,
-        filename = file.path(dir, paste0(self$table_name, ".pdf"))
-      )
+      png_path <- file.path(dir, paste0(self$table_name, ".png"))
+      pdf_path <- file.path(dir, paste0(self$table_name, ".pdf"))
+
+      # Skip generation if cached assets exist and skipping is enabled
+      if (skip_if_exists && file.exists(png_path) && (!save_pdf || file.exists(pdf_path))) {
+        if (getOption("neuro2.verbose", TRUE)) {
+          message("  ✓ ", basename(png_path), " (cached)")
+          if (save_pdf) message("  ✓ ", basename(pdf_path), " (cached)")
+        }
+        return(invisible(self))
+      }
+
+      # Save PNG (primary asset)
+      gt::gtsave(tbl, filename = png_path)
+      if (getOption("neuro2.verbose", TRUE)) message("  ✓ ", basename(png_path), " generated")
+
+      # Optional PDF
+      if (isTRUE(save_pdf)) {
+        gt::gtsave(tbl, filename = pdf_path)
+        if (getOption("neuro2.verbose", TRUE)) message("  ✓ ", basename(pdf_path), " generated")
+      }
 
       invisible(self)
     }

@@ -191,6 +191,15 @@ DotplotR6 <- R6::R6Class(
 
       # Save the plot to a file if filename is provided
       if (!is.null(self$filename)) {
+        # Skip saving if target exists and skipping is enabled
+        skip_if_exists <- getOption("neuro2.skip_if_exists", TRUE)
+        if (skip_if_exists && file.exists(self$filename)) {
+          if (getOption("neuro2.verbose", TRUE)) {
+            message("  ✓ ", basename(self$filename), " (cached)")
+          }
+          return(if (self$return_plot) plot_object else invisible(NULL))
+        }
+
         # Determine file extension to save accordingly
         ext <- tools::file_ext(self$filename)
 

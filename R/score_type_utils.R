@@ -215,13 +215,15 @@ get_score_types_from_lookup <- function(data) {
   wisc_subtests <- c("Similarities", "Vocabulary", "Comprehension")
 
   # Log the current state for debugging
-  message("Before WISC-V fix, score_type_map contains:")
-  for (name in names(score_type_map)) {
-    message(sprintf(
-      "  %s: %s",
-      name,
-      paste(score_type_map[[name]], collapse = ", ")
-    ))
+  if (getOption("neuro2.verbose", TRUE)) {
+    message("Before WISC-V fix, score_type_map contains:")
+    for (name in names(score_type_map)) {
+      message(sprintf(
+        "  %s: %s",
+        name,
+        paste(score_type_map[[name]], collapse = ", ")
+      ))
+    }
   }
 
   # Apply fix for WISC-V subtests - case insensitive matching
@@ -237,19 +239,23 @@ get_score_types_from_lookup <- function(data) {
 
     # If it's a WISC-V subtest, ensure it only has scaled_score
     if (is_wisc_subtest) {
-      message(sprintf(
-        "Found WISC-V subtest: %s with score types: %s",
-        test_name,
-        paste(score_type_map[[test_name]], collapse = ", ")
-      ))
+      if (getOption("neuro2.verbose", TRUE)) {
+        message(sprintf(
+          "Found WISC-V subtest: %s with score types: %s",
+          test_name,
+          paste(score_type_map[[test_name]], collapse = ", ")
+        ))
+      }
 
       # Force it to be only scaled_score, regardless of what was in the lookup table
       score_type_map[[test_name]] <- "scaled_score"
 
-      message(sprintf(
-        "  After fix: %s",
-        paste(score_type_map[[test_name]], collapse = ", ")
-      ))
+      if (getOption("neuro2.verbose", TRUE)) {
+        message(sprintf(
+          "  After fix: %s",
+          paste(score_type_map[[test_name]], collapse = ", ")
+        ))
+      }
     }
   }
 
@@ -263,13 +269,15 @@ get_score_types_from_lookup <- function(data) {
   }
 
   # Log the final state
-  message("After WISC-V fix, score_type_map contains:")
-  for (name in names(score_type_map)) {
-    message(sprintf(
-      "  %s: %s",
-      name,
-      paste(score_type_map[[name]], collapse = ", ")
-    ))
+  if (getOption("neuro2.verbose", TRUE)) {
+    message("After WISC-V fix, score_type_map contains:")
+    for (name in names(score_type_map)) {
+      message(sprintf(
+        "  %s: %s",
+        name,
+        paste(score_type_map[[name]], collapse = ", ")
+      ))
+    }
   }
 
   return(score_type_map)

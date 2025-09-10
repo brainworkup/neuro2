@@ -30,6 +30,17 @@ knitr::opts_knit$set(
   optipng = knitr::hook_optipng
 )
 
+# Enable chunk caching for faster re-renders
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.comments = FALSE)
+
+# Make render faster by default: skip regenerating assets if present,
+# suppress verbose logging, and avoid PDF duplicates of tables
+options(
+  neuro2.skip_if_exists = TRUE,
+  neuro2.verbose = FALSE,
+  neuro2.tables.pdf = FALSE
+)
+
 # Set environment variables with default values
 Sys.setenv(PATIENT = "{{< var patient >}}")
 patient <- Sys.getenv("PATIENT")
