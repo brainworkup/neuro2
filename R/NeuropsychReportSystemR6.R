@@ -180,14 +180,12 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       for (domain in flat_domains) {
         # Get proper pheno name from mapping, or create a safe default
         pheno <- domain_pheno_map[[domain]]
-        if (is.null(pheno)) {
+        if (is.null(pheno) || !nzchar(pheno)) {
           # Fallback: create safe pheno from domain name
-          pheno <- gsub("[/ ]", "_", tolower(domain))
+          pheno <- gsub("[^A-Za-z0-9]", "_", tolower(domain))
+          pheno <- gsub("_+", "_", pheno)
+          pheno <- gsub("^_|_$", "", pheno)
         }
-
-        # Select appropriate input file based on domain type using the domain_pheno_map
-        # This is more maintainable than hardcoding specific domain names
-        pheno <- domain_pheno_map[[domain]]
 
         # Create a mapping of data file types based on domain categories
         # This is more maintainable than hardcoding specific phenotypes
@@ -246,11 +244,19 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           input_file <- self$config$data_files[[file_type]]
         }
 
-        self$domain_processors[[pheno]] <- DomainProcessorR6$new(
-          domains = domain,
-          pheno = pheno,
-          input_file = input_file
-        )
+        # Only instantiate a processor if we resolved a valid phenotype and input file
+        if (!is.null(pheno) && nzchar(pheno) && !is.null(input_file) && nzchar(input_file)) {
+          self$domain_processors[[pheno]] <- DomainProcessorR6$new(
+            domains = domain,
+            pheno = pheno,
+            input_file = input_file
+          )
+        } else {
+          warning(sprintf(
+            "Skipping processor init for domain '%s' (pheno='%s', input='%s')",
+            as.character(domain), as.character(pheno), as.character(input_file)
+          ))
+        }
       }
     },
 
