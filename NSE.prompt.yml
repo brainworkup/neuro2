@@ -167,4 +167,922 @@ messages:
       duplicate or rehash any of the work you did in the thinking block.
 model: openai/gpt-5
 modelParameters:
-  max_completion_tokens: 82841
+  max_completion_tokens: 131072
+testData:
+  - FILE: >-
+      *Isabella**: Okay, so I think it would make more sense to start from the
+      first one.
+
+      *02:40-02:43*
+
+
+      **Isabella**: So September 29th, 2021.
+
+      *02:43-02:46*
+
+
+      **Isabella**: is when I had a sports-related concussion.
+
+      *02:47-02:50*
+
+
+      **Isabella**: I used to be a competitive swimmer.
+
+      *02:50-02:52*
+
+
+      **Isabella**: So, yeah, so I had an athletics-related concussion then.
+
+      *02:53-02:56*
+
+
+      **Isabella**: And so, basically, I didn't really know too much about
+      concussions at the time, so I didn't really take it too seriously.
+
+      *02:57-03:03*
+
+
+      **Isabella**: I just, like, hit my head super hard on the wall when I was,
+      like, racing.
+
+      *03:03-03:07*
+
+
+      **Joey**: Oh.
+
+      *03:06-03:08*
+
+
+      **Isabella**: Yeah, but I didn't pass out or anything like that. So I just
+      didn't think it was super big deal.
+
+      *03:09-03:14*
+
+
+      **Isabella**: However, in like the coming weeks and things like that, I
+      would notice that my balance would be horrible.
+
+      *03:15-03:19*
+
+
+      **Isabella**: Like at school, I would just like almost fall off the stairs
+      or something like that.
+
+      *03:19-03:22*
+
+
+      **Isabella**: So eventually I went to like my school trainer and he told
+      me that I definitely like probably got concussed at the time and.
+
+      *03:22-03:31*
+
+
+      **Joey**: Okay.
+
+      *03:23-03:25*
+
+
+      **Joey**: Thank you.
+
+      *03:25-03:25*
+
+
+      **Joey**: Thank you.
+
+      *03:29-03:49*
+
+
+      **Isabella**: But he told me to just like take it easy a little bit and
+      just like I could just take some time off of swimming, I believe.
+
+      *03:31-03:39*
+
+
+      **Isabella**: And I so I took a couple of days off of swimming, but I
+      ended up going back to swim because I just didn't feel like too much was
+      wrong with me at the time.
+
+      *03:39-03:46*
+
+
+      **Isabella**: And then I went back to swimming and then a month later I
+      was driving and then I passed out while driving.
+
+      *03:48-03:53*
+
+
+      **Joey**: While you were driving?
+
+      *03:54-03:55*
+
+
+      **Isabella**: Yeah, I was the one driving, but thankfully I was going
+      super, super slow.
+
+      *03:55-03:59*
+
+
+      **Isabella**: So this was October 27th, 2021.
+
+      *04:00-04:03*
+
+
+      **Isabella**: This was...
+
+      *04:01-04:01*
+
+
+      **Isabella**: So a month later.
+
+      *04:04-04:05*
+
+
+      **Joey**: And so you were out, so were you 16, 17?
+
+      *04:05-04:09*
+
+
+      **Isabella**: Let me calculate my age really quickly.
+
+      *04:11-04:12*
+
+
+      **Isabella**: This is 16, I believe.
+
+      *04:15-04:20*
+
+
+      **Joey**: And how long have you had your lessons?
+
+      *04:20-04:22*
+
+
+      **Isabella**: 16, 16.
+
+      *04:21-04:21*
+
+
+      **Joey**: Okay.
+
+      *04:31-04:31*
+
+
+      **Joey**: And so what happened?
+
+      *04:32-04:35*
+
+
+      **Joey**: Do you have recollection of it?
+
+      *04:35-04:38*
+
+
+      **Joey**: Wow.
+
+      *05:02-05:03*
+
+
+      **Isabella**: And then I think I just remember, yeah, I don't really
+      remember how that came about, if I'm being really honest with you.
+
+      *05:02-05:11*
+
+
+      **Isabella**: And then by the time I woke up, I remember like, she had
+      already got the car in front of me had already gotten out of her car and
+      was like by my window already.
+
+      *05:13-05:21*
+
+
+      **Joey**: So did you lose consciousness for a minute or two, do you think?
+
+      *05:22-05:26*
+
+
+      **Joey**: What was the last thing you remember before that happened?
+
+      *05:33-05:37*
+
+
+      **Joey**: And then all of a sudden you kind of wake up and you realize
+      something happened and this person's out your window.
+
+      *05:41-05:51*
+
+
+      **Joey**: Do you, and that was, you said two months later, about two
+      months later?
+
+      *06:03-06:08*
+
+
+      **Isabella**: One month later. This is October 27, 2021.
+
+      *06:05-06:11*
+
+
+      **Joey**: How were you feeling that day?
+
+      *06:14-06:16*
+
+
+      **Joey**: Do you remember anything about the day that stands out?
+
+      *06:16-06:20*
+
+
+      **Joey**: Or the couple days before that?
+
+      *06:20-06:21*
+
+
+      **Joey**: Were you feeling sick?
+
+      *06:21-06:23*
+
+
+      **Joey**: Were you feeling...
+
+      *06:23-06:27*
+
+
+      **Joey**: Yeah.
+
+      *06:34-06:34*
+
+
+      **Joey**: Yeah.
+
+      *06:35-06:35*
+
+
+      **Joey**: No, I was a football player, and then I actually used to work,
+      trained with the New York Jets doing concussion testing.
+
+      *06:41-06:48*
+
+
+      **Joey**: So I know exactly what you're talking about.
+
+      *06:49-06:51*
+
+
+      **Joey**: Luckily, it's being acknowledged and taken more seriously, I
+      think, more now than it ever was in the past.
+
+      *06:53-07:00*
+
+
+      **Joey**: Okay.
+
+      *06:56-06:56*
+
+
+      **Joey**: But athletes are tough.
+
+      *07:01-07:02*
+
+
+      **Joey**: Like, you're tough.
+
+      *07:02-07:03*
+
+
+      **Joey**: You're always told, like, play through the pain and all that
+      stuff.
+
+      *07:04-07:07*
+
+
+      **Joey**: So it's like a mixed message that you're getting.
+
+      *07:07-07:11*
+
+
+      **Isabella**: Exactly.
+
+      *07:08-07:08*
+
+
+      **Isabella**: Right.
+
+      *07:12-07:13*
+
+
+      **Isabella**: And at the time I was trying to get like recruited for
+      college for swimming.
+
+      *07:13-07:16*
+
+
+      **Joey**: Yeah.
+
+      *07:15-07:15*
+
+
+      **Isabella**: So I was like taking it pretty seriously.
+
+      *07:16-07:17*
+
+
+      **Joey**: Okay.
+
+      *07:17-07:18*
+
+
+      **Isabella**: And I probably looking back, I probably should have taken
+      more time off than I did.
+
+      *07:18-07:22*
+
+
+      **Isabella**: I only took like a couple of days off or something like
+      that.
+
+      *07:22-07:24*
+
+
+      **Isabella**: Obviously, it's a while ago, but yeah.
+
+      *07:25-07:28*
+
+
+      **Isabella**: I think I should have taken it a lot more serious than I
+      did.
+
+      *07:28-07:30*
+
+
+      **Isabella**: And then I was still trying to do school normally.
+
+      *07:31-07:33*
+
+
+      **Joey**: Okay.
+
+      *07:32-07:33*
+
+
+      **Isabella**: I just didn't really take any days off.
+
+      *07:34-07:35*
+
+
+      **Joey**: So you didn't take any time off school, you didn't take any time
+      off of training and practice after the first one?
+
+      *07:35-07:43*
+
+
+      **Isabella**: Like after the.
+
+      *07:36-07:38*
+
+
+      **Isabella**: I think I took.
+
+      *07:42-07:43*
+
+
+      **Isabella**: I think after the first one, I might have taken like a
+      couple days off.
+
+      *07:43-07:46*
+
+
+      **Isabella**: But this is after the trainer told me to take a couple days
+      off, like two weeks after the concussion even happened.
+
+      *07:47-07:51*
+
+
+      **Joey**: Were you like sensitive to light and your environment and that
+      sort of thing?
+
+      *08:05-08:12*
+
+
+      **Isabella**: I think so.
+
+      *08:13-08:14*
+
+
+      **Isabella**: This was like four years ago, so I'm not super clear on
+      that.
+
+      *08:15-08:18*
+
+
+      **Isabella**: But I do think that what made me go to the school trainer in
+      the first place was that I lost my balance on the stairs multiple times.
+
+      *08:19-08:26*
+
+
+      **Joey**: Did you ever fall?
+
+      *08:24-08:27*
+
+
+      **Joey**: Did you ever fall?
+
+      *08:28-08:32*
+
+
+      **Isabella**: So, yeah, I think I tripped on the stairs, actually, and I
+      never trip on the stairs.
+
+      *08:29-08:32*
+
+
+      **Isabella**: Okay.
+
+      *08:34-08:34*
+
+
+      **Joey**: Okay, so...
+
+      *08:35-08:36*
+
+
+      **Joey**: So after when you after the, the the car accident, when you
+      passed out did you go to the hospital?
+
+      *08:58-09:04*
+
+
+      **Isabella**: No, I literally went home.
+
+      *09:04-09:08*
+
+
+      **Isabella**: And then we the conclusion we came to is that I need to
+      rest, I need to take a couple days off of school, and then I need to not
+      drive.
+
+      *09:08-09:14*
+
+
+      **Isabella**: I think I did. Let me. I think we did see a doctor because
+      we were really concerned.
+
+      *09:16-09:23*
+
+
+      **Joey**: Did you go see your doctor?
+
+      *09:17-09:19*
+
+
+      **Joey**: You didn't do anything?
+
+      *09:19-09:20*
+
+
+      **Isabella**: This is why I sent you all the like documentation because
+      it's been so long that I don't exactly remember everything.
+
+      *09:24-09:30*
+
+
+      **Joey**: So, without a minute, the Seattle Children's notes.
+
+      *09:30-09:33*
+
+
+      **Isabella**: It definitely is Seattle Children's. I've just been going to
+      Seattle Children's like this whole time. Let me see. October.
+
+      *09:33-09:39*
+
+
+      **Isabella**: October 2021.
+
+      *09:43-09:45*
+
+
+      **Isabella**: Give me one second.
+
+      *09:50-09:51*
+
+
+      **Isabella**: Oh, I think that I did go to the hospital.
+
+      *09:58-10:02*
+
+
+      **Joey**: So it looks like on the November 5th, you went to the emergency
+      room.
+
+      *10:17-10:22*
+
+
+      **Isabella**: Yeah, but that was because that day I had a car accident.
+
+      *10:22-10:25*
+
+
+      **Joey**: Oh, so that was even, okay, yeah, I see the date, okay.
+
+      *10:25-10:28*
+
+
+      **Isabella**: So yeah, so it doesn't look like I went to I don't think so.
+
+      *10:25-10:37*
+
+
+      **Isabella**: November, October.
+
+      *10:38-10:39*
+
+
+      **Isabella**: Oh, I guess I actually know I did October 28th emergency
+      department.
+
+      *10:40-10:44*
+
+
+      **Isabella**: I did.
+
+      *10:46-10:46*
+
+
+      **Isabella**: Yeah, I think the next day, I think I was like really
+      rattled.
+
+      *10:49-10:52*
+
+
+      **Isabella**: I went home, I went to bed, and then the next day my parents
+      were kind of like, "Oh, we need to get this checked out because you don't
+      just like pass out at the wheel." So I do
+
+      have my doctor's like emergency department report from the next day.
+
+      *10:52-11:07*
+
+
+      **Joey**: October 28th or 18th?
+
+      *11:15-11:18*
+
+
+      **Joey**: I see a note from 11-18-21.
+
+      *11:25-11:27*
+
+
+      **Isabella**: Maybe I didn't download this one. I can send this to you
+      right now.
+
+      *11:29-11:32*
+
+
+      **Joey**: It's okay.
+
+      *11:32-11:33*
+
+
+      **Joey**: You've said more than enough.
+
+      *11:33-11:34*
+
+
+      **Isabella**: OK. But yes, I did. OK, sorry to answer to answer your
+      question, I did go to the emergency department the next day.
+
+      *11:37-11:42*
+
+
+      **Joey**: Okay.
+
+      *11:42-11:43*
+
+
+      **Isabella**: Yeah.
+
+      *11:43-11:44*
+
+
+      **Isabella**: Um, so essentially they didn't find anything at the
+      emergency department.
+
+      *11:45-11:50*
+
+
+      **Isabella**: They just said that I shouldn't swim and that like, they
+      just said I need to like take an actual break.
+
+      *11:51-11:56*
+
+
+      **Isabella**: that I should just not drive for the foreseeable like bit
+      because it's concerning that I would pass out so thereby it brings us to
+      the next accident so basically I had one
+
+      of my friends drive me to and from school and so this is the next accident
+      was a week later November 5th 2021 it was like a car like pileup accident
+      and we were the last car
+
+      some of my classmates were the car in front of us.
+
+      *11:59-13:46*
+
+
+      **Joey**: Thank you.
+
+      *12:07-12:18*
+
+
+      **Joey**: So that's very unfortunate.
+
+      *12:37-12:42*
+
+
+      **Joey**: It's very ironic that you're having somebody drive you and then
+      they got into an accident because you were afraid of getting into an
+      accident.
+
+      *12:46-12:54*
+
+
+      **Joey**: I don't mean to laugh, but that's, I mean, that's crazy.
+
+      *12:54-12:56*
+
+
+      **Joey**: Yeah, I bet.
+
+      *13:00-13:01*
+
+
+      **Joey**: Can you explain that in a little bit more detail?
+
+      *13:20-13:23*
+
+
+      **Joey**: What do you mean by that?
+
+      *13:23-13:24*
+
+
+      **Joey**: Okay.
+
+      *13:30-13:31*
+
+
+      **Isabella**: So, cause we were all on the way to school.
+
+      *13:46-13:48*
+
+
+      **Isabella**: So they ended up, we all drove to school in their car
+      together.
+
+      *13:49-13:52*
+
+
+      **Isabella**: Cause the car I was in was totaled.
+
+      *13:52-13:54*
+
+
+      **Joey**: That was that bad?
+
+      *13:53-13:56*
+
+
+      **Isabella**: So the police that, that, yeah, it was like the airbag
+      deployed and everything.
+
+      *13:54-13:59*
+
+
+      **Isabella**: And, um, yeah, the car was totaled and then the car in front
+      of us could still drive.
+
+      *14:00-14:03*
+
+
+      **Isabella**: So we went with my classmates and, I think I was feeling
+      super lightheaded and brain fog at that point.
+
+      *14:03-14:50*
+
+
+      **Joey**: Oh wow.
+
+      *14:23-14:26*
+
+
+      **Isabella**: But I still wasn't really processing that well what was
+      going on.
+
+      *14:51-14:55*
+
+
+      **Isabella**: Immediately, they just do an x-ray, send me to the
+      orthopedics the next day, everything like that.
+
+      *14:55-14:59*
+
+
+      **Isabella**: But essentially, in the coming week was when I realized a
+      lot of my symptoms were getting super bad.
+
+      *15:00-15:05*
+
+
+      **Isabella**: So I'm not really like, I don't usually take naps.
+
+      *15:06-15:08*
+
+
+      **Isabella**: And I think at that point, I was taking a five-hour nap
+      every single day.
+
+      *15:08-15:11*
+
+
+      **Isabella**: And I couldn't really sleep at night very well.
+
+      *15:12-15:15*
+
+
+      **Isabella**: I couldn't have deep sleep.
+
+      *15:15-15:16*
+
+
+      **Isabella**: My head was really hurting.
+
+      *15:17-15:18*
+
+
+      **Isabella**: And like I was getting a lot of like brain fog,
+      lightheadedness, and I kept having like ringing in my ears.
+
+      *15:19-15:24*
+
+
+      **Isabella**: And then I think I was also because I knew that I would like
+      fall behind and everything like that.
+
+      *15:27-16:45*
+
+
+      **Joey**: And that was all, those were all like kind of new onset symptoms
+      from the third incident.
+
+      *15:27-15:34*
+
+
+      **Joey**: For how long do so that's still problem.
+
+      *16:00-16:03*
+
+
+      **Joey**: Okay.
+
+      *16:06-16:08*
+
+
+      **Joey**: Right.
+
+      *16:37-16:39*
+
+
+      **Isabella**: And I was super concerned about that.
+
+      *16:45-16:46*
+
+
+      **Isabella**: And yeah, I think like in the coming weeks, a lot more
+      symptoms developed.
+
+      *16:48-16:52*
+
+
+      **Joey**: Okay.
+
+      *16:52-16:53*
+
+
+      **Isabella**: Obviously my dominant hand like was broken too.
+
+      *16:52-16:55*
+
+
+      **Isabella**: So I couldn't really write.
+
+      *16:55-16:56*
+
+
+      **Isabella**: and I couldn't do anything.
+
+      *16:56-16:57*
+
+
+      **Isabella**: So that made me take a break, if I'm being honest.
+
+      *16:58-17:00*
+
+
+      **Isabella**: My dominant hand not being able to write made me take a
+      break and stay at home and actually rest.
+
+      *17:00-17:04*
+
+
+      **Isabella**: But I was resting an abnormal amount.
+
+      *17:05-17:07*
+
+
+      **Isabella**: I think I caught myself unable to...
+
+      *17:08-17:11*
+
+
+      **Isabella**: It's like every time my head would hurt, I would wanna take
+      a nap.
+
+      *17:12-17:14*
+
+
+      **Isabella**: Then every time I'd take a nap, I couldn't wake up.
+
+      *17:15-17:16*
+
+
+      **Isabella**: And then every time I had to go to sleep at night, I
+      couldn't fully go to sleep well either.
+
+      *17:17-17:20*
+
+
+      **Isabella**: So it was kind of just like a cycle.
+
+      *17:21-17:23*
+
+
+      **Isabella**: And then slowly but surely, I went to quite a few
+      neurologists and different doctors and concussion rehab places.
+
+      *17:24-17:35*
+
+
+      **Isabella**: And I did biofeedback. I went to a chiropractor. I tried a
+      billion different things.
+
+      *17:35-17:40*
+
+
+      **Joey**: Thank you.
+
+      *17:38-17:41*
+
+
+      **Isabella**: And eventually, I would say, I felt like at least that it
+      took a while, but by the time it was next year, It's easier and easier.
+
+      *17:40-18:53*
+
+
+      **Joey**: Thank you.
+
+      *17:48-17:49*
+
+
+      **Joey**: Yeah, I mean, that's like, you had, you know, a mild to moderate
+      TBI traumatic brain injury.
+
+      *18:10-18:20*
+
+
+      **Joey**: Those are very real and very challenging symptoms and people
+      call it post-concussive syndrome and all that.
+
+      *18:22-18:33*
+
+
+      **Joey**: But this is like – these are – There's a lot here that you had
+      to deal with and that because you know they probably told you many times
+      like after you get like a first
+
+      concussion then the threshold for getting a second one and if they're
+      going to it's much lower yeah it's easier.
+
+      *18:36-18:54*
+
+
+      **Isabella**: Yeah, yeah.
+
+      *18:54-18:55*
+
+
+      **Isabella**: So I feel like it also has to do with the fact that these
+      were like back to back.
+evaluators: []
