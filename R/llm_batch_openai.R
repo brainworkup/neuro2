@@ -140,6 +140,7 @@ inject_summary_block <- function(qmd_path, generated) {
 #' @param system_prompt Character string.
 #' @param user_text Character string.
 #' @param deps Character vector of dependency paths.
+#' @importFrom digest digest
 #' @return Character string hash.
 #' @export
 hash_inputs <- function(system_prompt, user_text, deps) {
