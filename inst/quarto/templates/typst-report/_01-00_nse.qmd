@@ -1,4 +1,4 @@
-# NEUROBEHAVIORAL STATUS EXAM {#nse}
+# NEUROBEHAVIORAL STATUS EXAM {#sec-nse}
 
 ## Reason for Referral
 
@@ -8,7 +8,7 @@
 • Concerns of parent, caregiver, teacher, or examinee (if applicable)
 • Previous diagnoses, disabilities, or medical concerns -->
 
-{{< var first_name >}} {{< var last_name >}} is a {{< var age >}}-year-old, {{< var handedness >}}right-handed research assistant with {{< var education >}} years of education, including a B.A. in rapping from the University of Brooklyn. {{< var he_she_cap >}} was referred in order to determine the nature and extent of neurocognitive sequelae emerging from a history of attention-deficit/hyperactivity disorder (ADHD).
+{{< var first_name >}} {{< var last_name >}} is a {{< var age >}}-year-old, {{< var handedness >}}right-handed research assistant with {{< var education >}} years of education, including a B.A. in Rapping from the University of Brooklyn. {{< var he_she_cap >}} was referred in order to determine the nature and extent of neurocognitive sequelae emerging from a history of attention-deficit/hyperactivity disorder (ADHD).
 
 The purpose of the current evaluation is {{< var dx1 >}}, {{< var dx2 >}}, and {{< var dx3 >}}. This report is based on a review of available medical records and information gathered across multiple days of evaluation. Treatment planning and plans for test accommodations were discussed with {{< var first_name >}} during the feedback visit on the final day of the examination.
 
@@ -24,7 +24,6 @@ Provide pertinent information that has been obtained from all sources, including
 • Previous therapeutic intervention
 • Current stressors
 • Summary of past evaluations -->
-
 
 The following information was obtained during an interview with {{< var patient >}} and from review of available medical records. {{< var first_name >}} has been doing well in {{< var his_her >}} classes since starting law school and has never failed. However, issues have begun to arise that {{< var he_she >}} has been unable to avoid, including being easily distracted, restlessness, constantly fidgeting, procrastination, and variable attention. {{< var he_she_cap >}} suspects having ADHD and has always struggled with aspects of it. {{< var first_name >}}'s mother tried to get {{< var his_her >}} evaluated and tested when {{< var he_she >}} was younger, but was never able to do so because {{< var his_her >}} school at the time did not agree that there were major concerns. {{< var he_she_cap >}} has noticed increasing difficulty initiating tasks, especially when it comes to writing long research papers, and has been procrastinating more and more. {{< var first_name >}} has read up on ADHD and believes {{< var he_she >}} may have it, but has been able to hide it from others, as {{< var he_she >}} has "gotten good at pretending to pay attention." {{< var he_she_cap >}} seeks further assessment and evaluation to identify any underlying neurocognitive factors influencing {{< var his_her >}} academic motivations and performance.
 
