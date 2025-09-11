@@ -598,11 +598,9 @@ neuro2_llm_smoke_test <- function(
   if (!requireNamespace("ellmer", quietly = TRUE)) {
     stop("The 'ellmer' package is required.")
   }
-  bot <- ellmer::chat_openai(
+  bot <- ellmer::chat_ollama(
     system_prompt = system_prompt,
-    base_url = "http://localhost:11434/v1",
-    api_key = "ollama",
-    model = model,
+    model = "qwen3:8b-q4_K_M",
     params = ellmer::params(temperature = 0.2),
     api_args = list(stream = FALSE),
     echo = "none"
