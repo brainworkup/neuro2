@@ -73,9 +73,9 @@ config <- yaml::read_yaml("config.yml")
 
 # Main analysis function
 main_analysis <- function() {
-  
+
   message("🧠 Starting assessment analysis for ", config$patient$name)
-  
+
   # Step 1: Load and validate data (FIXED - now uses actual function)
   message("📊 Loading and validating data...")
   data_files <- validate_and_load_data(
@@ -83,23 +83,23 @@ main_analysis <- function() {
     config = config,
     verbose = config$processing$verbose
   )
-  
+
   # Check if we have any data
   if (length(data_files) == 0) {
     stop("No valid data files found. Please check your data directory.")
   }
-  
+
   # Step 2: Get available domains
   message("🔍 Discovering available domains...")
   available_domains <- .get_available_domains(
-    data_files, 
+    data_files,
     verbose = config$processing$verbose
   )
-  
+
   if (length(available_domains) == 0) {
     stop("No domains found in data. Please check your data format.")
   }
-  
+
   # Step 3: Process all domains
   message("🧠 Processing domains: ", paste(available_domains, collapse = ", "))
   results <- process_all_domains(
@@ -107,7 +107,7 @@ main_analysis <- function() {
     age_group = config$patient$age_group,
     verbose = config$processing$verbose
   )
-  
+
   # Step 4: Generate report
   message("📄 Generating assessment report...")
   report_path <- generate_assessment_report(
@@ -116,10 +116,10 @@ main_analysis <- function() {
     output_dir = config$data$output_dir,
     format = config$output$format
   )
-  
+
   message("✅ Analysis complete! Report: ", report_path)
   message("📁 Generated files:")
-  
+
   # List generated files
   if (dir.exists("figs")) {
     fig_files <- list.files("figs", pattern = "\\\\.(png|pdf)$")
@@ -127,14 +127,14 @@ main_analysis <- function() {
       message("  📊 Figures: ", paste(fig_files, collapse = ", "))
     }
   }
-  
+
   if (dir.exists("output")) {
     output_files <- list.files("output", pattern = "\\\\.(pdf|html|qmd)$")
     if (length(output_files) > 0) {
       message("  📄 Reports: ", paste(output_files, collapse = ", "))
     }
   }
-  
+
   return(list(
     report_path = report_path,
     results = results,
@@ -153,12 +153,12 @@ safe_main_analysis <- function() {
     message("  2. Verify data format matches requirements (see data/README.md)")
     message("  3. Ensure config.yml is properly configured")
     message("  4. Run: validate_and_load_data() to test data loading")
-    
+
     # Try to provide specific guidance
     if (file.exists("config.yml")) {
       config <- yaml::read_yaml("config.yml")
       data_dir <- config$data$input_dir
-      
+
       if (!dir.exists(data_dir)) {
         message("  ❌ Data directory not found: ", data_dir)
       } else {
@@ -170,7 +170,7 @@ safe_main_analysis <- function() {
         }
       }
     }
-    
+
     return(NULL)
   })
 }

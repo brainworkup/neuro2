@@ -79,6 +79,8 @@ generate_domain_summary_from_master(
   model = "gpt-4.1-mini"
 )
 
+# sirf
+
 res_sirf <- generate_domain_summary_from_master(
   master_json = system.file(
     "prompts",
@@ -92,6 +94,7 @@ res_sirf <- generate_domain_summary_from_master(
   echo = "none"
 )
 
+# recs
 
 res_recs <- generate_domain_summary_from_master(
   master_json = system.file(
@@ -105,5 +108,3 @@ res_recs <- generate_domain_summary_from_master(
   base_dir = ".",
   echo = "none"
 )
-
-

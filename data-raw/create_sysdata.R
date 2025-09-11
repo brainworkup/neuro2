@@ -1,108 +1,9 @@
 # Safe sysdata update -----------------------------------------------------
-
-library(usethis)
-
 # Safe way to update sysdata.rda without overwriting existing variables
 # This addresses the issue mentioned about create_sysdata.R overwriting the entire file
+
+library(usethis)
 source("R/safe_sysdata_update.R")
-
-# Example usage for your create_sysdata.R script:
-# Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
-# You would use:
-
-# Example 1: Only add new objects, never overwrite existing ones
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  add_only = TRUE
-)
-
-# Example 2: Only overwrite specific objects
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  dots = dots, # This exists in the file
-  overwrite = c("dots") # Only allow overwriting 'dots'
-)
-
-# Example 3: Update create_sysdata.R to use this function
-# For the scales data
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  scales_verbal = scales_verbal,
-  scales_spatial = scales_spatial,
-  scales_memory = scales_memory,
-  scales_memory_order = scales_memory_order,
-  scales_executive = scales_executive,
-  scales_motor = scales_motor,
-  scales_social = scales_social,
-  scales_adhd_adult = scales_adhd_adult,
-  scales_adhd_child = scales_adhd_child,
-  scales_emotion_adult = scales_emotion_adult,
-  scales_emotion_child = scales_emotion_child,
-  scales_adaptive = scales_adaptive,
-  scales_daily_living = scales_daily_living,
-  scales_validity = scales_validity,
-  scales_all = scales_all,
-  overwrite = c(
-    "scales_iq",
-    "scales_academics",
-    "scales_verbal",
-    "scales_spatial",
-    "scales_memory",
-    "scales_memory_order",
-    "scales_executive",
-    "scales_motor",
-    "scales_social",
-    "scales_adhd_adult",
-    "scales_adhd_child",
-    "scales_emotion_adult",
-    "scales_emotion_child",
-    "scales_adaptive",
-    "scales_daily_living",
-    "scales_validity",
-    "scales_all"
-  )
-)
-
-# For the plot titles
-.safe_use_data_internal(
-  plot_title_neurocognition = plot_title_neurocognition,
-  plot_title_iq = plot_title_iq,
-  plot_title_academics = plot_title_academics,
-  plot_title_verbal = plot_title_verbal,
-  plot_title_spatial = plot_title_spatial,
-  plot_title_memory = plot_title_memory,
-  plot_title_executive = plot_title_executive,
-  plot_title_motor = plot_title_motor,
-  plot_title_social = plot_title_social,
-  plot_title_adhd_child = plot_title_adhd_child,
-  plot_title_adhd_adult = plot_title_adhd_adult,
-  plot_title_emotion_adult = plot_title_emotion_adult,
-  plot_title_emotion_child = plot_title_emotion_child,
-  plot_title_adaptive = plot_title_adaptive,
-  plot_title_daily_living = plot_title_daily_living,
-  plot_title_validity = plot_title_validity,
-  overwrite = c(
-    "plot_title_neurocognition",
-    "plot_title_iq",
-    "plot_title_academics",
-    "plot_title_verbal",
-    "plot_title_spatial",
-    "plot_title_memory",
-    "plot_title_executive",
-    "plot_title_motor",
-    "plot_title_social",
-    "plot_title_adhd_adult",
-    "plot_title_adhd_child",
-    "plot_title_emotion_adult",
-    "plot_title_emotion_child",
-    "plot_title_adaptive",
-    "plot_title_daily_living",
-    "plot_title_validity"
-  )
-)
 
 # Scales ------------------------------------------------------------------
 
@@ -873,298 +774,290 @@ scales_social <- c(
 
 ## ADHD --------------------------------------------------------------------
 
-#' @name scales_adhd_adult
+#' @name scales_adhd
 #' @docType data
-#' @title ADHD Adult Scales
+#' @title ADHD Scales
 #' @description A character vector of scale names related to adult ADHD symptoms, attention problems, hyperactivity, impulsivity, executive functioning, and emotional regulation from various rating scales and assessment instruments.
 #' @keywords data internal
-scales_adhd_adult <- c(
-  # Brown EF/A
-  "Activation",
-  "Focus",
-  "Effort",
-  "Emotion",
-  "Memory",
-  "Action",
-  "Total Composite",
-  # CAARS
-  "Inattention/Memory Problems",
-  "Hyperactivity/Restlessness",
-  "Impulsivity/Emotional Lability",
-  "Problems with Self-Concept",
-  "DSM-5 Inattentive Symptoms",
-  "DSM-5 Hyperactive-Impulsive Symptoms",
-  "DSM-5 ADHD Symptoms Total",
-  "ADHD Index",
-  # CEFI
-  "Full Scale",
-  "Attention",
-  "Emotion Regulation",
-  "Flexibility",
-  "Inhibitory Control",
-  "Initiation",
-  "Organization",
-  "Planning",
-  "Self-Monitoring",
-  "Working Memory",
-  # PAI
-  "Inattention (INATTN) Index",
-  # CAARS-2
-  "ADHD Hyperactive/Impulsive Symptoms",
-  "ADHD Inattentive Symptoms",
-  "CAARS-2 ADHD Index",
-  "Emotional Dysregulation",
-  "Hyperactivity",
-  "Impulsivity",
-  "Inattention/Executive Dysfunction",
-  "Negative Self-Concept",
-  "Total ADHD Symptoms",
-  # FRSBE
-  "Apathy (Before)",
-  "Apathy (After)",
-  "Disinhibition (Before)",
-  "Disinhibition (After)",
-  "Executive Dysfunction (Before)",
-  "Executive Dysfunction (After)",
-  "Total (Before)",
-  "Total (After)"
-)
-
-#' @name scales_adhd_child
-#' @docType data
-#' @title ADHD Child Scales
-#' @description A character vector of scale names related to child and adolescent ADHD symptoms, attention problems, hyperactivity, impulsivity, executive functioning, and emotional regulation from various rating scales and assessment instruments.
-#' @keywords data internal
-scales_adhd_child <- c(
-  # Brown EF/A
-  "Activation",
-  "Focus",
-  "Effort",
-  "Emotion",
-  "Memory",
-  "Action",
-  "Total Composite",
-  # CEFI
-  "Full Scale",
-  "Attention",
-  "Emotion Regulation",
-  "Flexibility",
-  "Inhibitory Control",
-  "Initiation",
-  "Organization",
-  "Planning",
-  "Self-Monitoring",
-  "Working Memory",
-  # Conners 4
-  "Inattention/Executive Dysfunction",
-  "Hyperactivity",
-  "Impulsivity",
-  "Emotional Dysregulation",
-  "Negative Self-Concept",
-  "ADHD Inattentive Symptoms",
-  "ADHD Hyperactive/Impulsive Symptoms",
-  "Total ADHD Symptoms",
-  "ADHD Index",
-  # FRSBE
-  "Apathy (Before)",
-  "Apathy (After)",
-  "Disinhibition (Before)",
-  "Disinhibition (After)",
-  "Executive Dysfunction (Before)",
-  "Executive Dysfunction (After)",
-  "Total (Before)",
-  "Total (After)"
+scales_adhd <- list(
+  "scales_adhd_adult" = c(
+    # Brown EF/A
+    "Activation",
+    "Focus",
+    "Effort",
+    "Emotion",
+    "Memory",
+    "Action",
+    "Total Composite",
+    # CAARS
+    "Inattention/Memory Problems",
+    "Hyperactivity/Restlessness",
+    "Impulsivity/Emotional Lability",
+    "Problems with Self-Concept",
+    "DSM-5 Inattentive Symptoms",
+    "DSM-5 Hyperactive-Impulsive Symptoms",
+    "DSM-5 ADHD Symptoms Total",
+    "ADHD Index",
+    # CEFI
+    "Full Scale",
+    "Attention",
+    "Emotion Regulation",
+    "Flexibility",
+    "Inhibitory Control",
+    "Initiation",
+    "Organization",
+    "Planning",
+    "Self-Monitoring",
+    "Working Memory",
+    # PAI
+    "Inattention (INATTN) Index",
+    # CAARS-2
+    "ADHD Hyperactive/Impulsive Symptoms",
+    "ADHD Inattentive Symptoms",
+    "CAARS-2 ADHD Index",
+    "Emotional Dysregulation",
+    "Hyperactivity",
+    "Impulsivity",
+    "Inattention/Executive Dysfunction",
+    "Negative Self-Concept",
+    "Total ADHD Symptoms",
+    # FRSBE
+    "Apathy (Before)",
+    "Apathy (After)",
+    "Disinhibition (Before)",
+    "Disinhibition (After)",
+    "Executive Dysfunction (Before)",
+    "Executive Dysfunction (After)",
+    "Total (Before)",
+    "Total (After)"
+  ),
+  "scales_adhd_child" = c(
+    # Brown EF/A
+    "Activation",
+    "Focus",
+    "Effort",
+    "Emotion",
+    "Memory",
+    "Action",
+    "Total Composite",
+    # CEFI
+    "Full Scale",
+    "Attention",
+    "Emotion Regulation",
+    "Flexibility",
+    "Inhibitory Control",
+    "Initiation",
+    "Organization",
+    "Planning",
+    "Self-Monitoring",
+    "Working Memory",
+    # Conners 4
+    "Inattention/Executive Dysfunction",
+    "Hyperactivity",
+    "Impulsivity",
+    "Emotional Dysregulation",
+    "Negative Self-Concept",
+    "ADHD Inattentive Symptoms",
+    "ADHD Hyperactive/Impulsive Symptoms",
+    "Total ADHD Symptoms",
+    "ADHD Index",
+    # FRSBE
+    "Apathy (Before)",
+    "Apathy (After)",
+    "Disinhibition (Before)",
+    "Disinhibition (After)",
+    "Executive Dysfunction (Before)",
+    "Executive Dysfunction (After)",
+    "Total (Before)",
+    "Total (After)"
+  )
 )
 
 ## Emotion --------------------------------------------------------
 
-#' @name scales_emotion_adult
+#' @name scales_emotion
 #' @docType data
-#' @title Adult Emotional and Behavioral Scales
-#' @description A character vector of scale names related to adult emotional functioning, mood disorders, personality assessment, behavioral symptoms, and psychological distress from various clinical assessment instruments.
+#' @title Emotional/Behavioral/Social/Personality Scales
+#' @description A character vector of scale names related to child and adult emotional functioning, mood disorders, personality assessment, behavioral symptoms, and psychological distress from various clinical assessment instruments.
 #' @keywords data internal
-scales_emotion_adult <- c(
-  "Activity Level",
-  "Affective (A)",
-  "Affective (D)",
-  "Affective Instability",
-  "Aggression",
-  "Aggressive Attitude",
-  "ALC Estimated Score",
-  "Alcohol Problems",
-  "Antisocial Behaviors",
-  "Antisocial Features",
-  "Anxiety-Related Disorders",
-  "Anxiety",
-  "Borderline Features",
-  "Cognitive (A)",
-  "Cognitive (D)",
-  "Conversion",
-  "Depression",
-  "Dominance",
-  "DRG Estimated Score",
-  "Drug Problems",
-  "Egocentricity",
-  "Grandiosity",
-  "Health Concerns",
-  "Hypervigilance",
-  "Identity Problems",
-  "Irritability",
-  "Mania",
-  "Negative Relationships",
-  "Nonsupport",
-  "Obsessive-Compulsive",
-  "Paranoia",
-  "Persecution",
-  "Phobias",
-  "Physical Aggression",
-  "Physiological (A)",
-  "Physiological (D)",
-  "Psychotic Experiences",
-  "Resentment",
-  "Schizophrenia",
-  "Self-Harm",
-  "Social Detachment",
-  "Somatic Complaints",
-  "Somatization",
-  "Stimulus-Seeking",
-  "Stress",
-  "Suicidal Ideation",
-  "Thought Disorder",
-  "Traumatic Stress",
-  "Treatment Rejection",
-  "Verbal Aggression",
-  "Warmth",
-  "BAI Total Score",
-  "BDI-2 Total Score",
-  "Activities of Daily Living",
-  "Adaptability",
-  "Adaptive Skills",
-  "Aggression",
-  "Anxiety",
-  "Attention Problems",
-  "Attitude to School",
-  "Attitude to Teachers",
-  "Atypicality",
-  "Behavioral Symptoms Index",
-  "Conduct Problems",
-  "Depression",
-  "Emotional Symptoms Index",
-  "Externalizing Problems",
-  "Functional Communication",
-  "Hyperactivity",
-  "Inattention/Hyperactivity",
-  "Internalizing Problems",
-  "Interpersonal Relations",
-  "Leadership",
-  "Locus of Control",
-  "Personal Adjustment",
-  "Relations with Parents",
-  "School Problems",
-  "Self-Esteem",
-  "Self-Reliance",
-  "Sensation Seeking",
-  "Sense of Inadequacy",
-  "Social Skills",
-  "Social Stress",
-  "Somatization",
-  "Withdrawal"
-)
-
-#' @name scales_emotion_child
-#' @docType data
-#' @title Child and Adolescent Emotional and Behavioral Scales
-#' @description A character vector of scale names related to child and adolescent emotional functioning, mood disorders, behavioral problems, social-emotional development, and psychological symptoms from various clinical assessment instruments.
-#' @keywords data internal
-scales_emotion_child <- c(
-  # PAI
-  "Activity Level",
-  "Affective (A)",
-  "Affective (D)",
-  "Affective Instability",
-  "Aggression",
-  "Aggressive Attitude",
-  "ALC Estimated Score",
-  "Alcohol Problems",
-  "Antisocial Behaviors",
-  "Antisocial Features",
-  "Anxiety-Related Disorders",
-  "Anxiety",
-  "Borderline Features",
-  "Cognitive (A)",
-  "Cognitive (D)",
-  "Conversion",
-  "Depression",
-  "Dominance",
-  "DRG Estimated Score",
-  "Drug Problems",
-  "Egocentricity",
-  "Grandiosity",
-  "Health Concerns",
-  "Hypervigilance",
-  "Identity Problems",
-  "Irritability",
-  "Mania",
-  "Negative Relationships",
-  "Nonsupport",
-  "Obsessive-Compulsive",
-  "Paranoia",
-  "Persecution",
-  "Phobias",
-  "Physical Aggression",
-  "Physiological (A)",
-  "Physiological (D)",
-  "Psychotic Experiences",
-  "Resentment",
-  "Schizophrenia",
-  "Self-Harm",
-  "Social Detachment",
-  "Somatic Complaints",
-  "Somatization",
-  "Stimulus-Seeking",
-  "Stress",
-  "Suicidal Ideation",
-  "Thought Disorder",
-  "Traumatic Stress",
-  "Treatment Rejection",
-  "Verbal Aggression",
-  "Warmth",
-  # Beck
-  "BAI Total Score",
-  "BDI-2 Total Score",
-  # BASC-3
-  "Activities of Daily Living",
-  "Adaptability",
-  "Adaptive Skills",
-  "Aggression",
-  "Anxiety",
-  "Attention Problems",
-  "Attitude to School",
-  "Attitude to Teachers",
-  "Atypicality",
-  "Behavioral Symptoms Index",
-  "Conduct Problems",
-  "Depression",
-  "Emotional Symptoms Index",
-  "Externalizing Problems",
-  "Functional Communication",
-  "Hyperactivity",
-  "Inattention/Hyperactivity",
-  "Internalizing Problems",
-  "Interpersonal Relations",
-  "Leadership",
-  "Locus of Control",
-  "Personal Adjustment",
-  "Relations with Parents",
-  "School Problems",
-  "Self-Esteem",
-  "Self-Reliance",
-  "Sensation Seeking",
-  "Sense of Inadequacy",
-  "Social Skills",
-  "Social Stress",
-  "Somatization",
-  "Withdrawal"
+scales_emotion <- list(
+  "scales_emotion_adult" = c(
+    "Activity Level",
+    "Affective (A)",
+    "Affective (D)",
+    "Affective Instability",
+    "Aggression",
+    "Aggressive Attitude",
+    "ALC Estimated Score",
+    "Alcohol Problems",
+    "Antisocial Behaviors",
+    "Antisocial Features",
+    "Anxiety-Related Disorders",
+    "Anxiety",
+    "Borderline Features",
+    "Cognitive (A)",
+    "Cognitive (D)",
+    "Conversion",
+    "Depression",
+    "Dominance",
+    "DRG Estimated Score",
+    "Drug Problems",
+    "Egocentricity",
+    "Grandiosity",
+    "Health Concerns",
+    "Hypervigilance",
+    "Identity Problems",
+    "Irritability",
+    "Mania",
+    "Negative Relationships",
+    "Nonsupport",
+    "Obsessive-Compulsive",
+    "Paranoia",
+    "Persecution",
+    "Phobias",
+    "Physical Aggression",
+    "Physiological (A)",
+    "Physiological (D)",
+    "Psychotic Experiences",
+    "Resentment",
+    "Schizophrenia",
+    "Self-Harm",
+    "Social Detachment",
+    "Somatic Complaints",
+    "Somatization",
+    "Stimulus-Seeking",
+    "Stress",
+    "Suicidal Ideation",
+    "Thought Disorder",
+    "Traumatic Stress",
+    "Treatment Rejection",
+    "Verbal Aggression",
+    "Warmth",
+    "BAI Total Score",
+    "BDI-2 Total Score",
+    "Activities of Daily Living",
+    "Adaptability",
+    "Adaptive Skills",
+    "Aggression",
+    "Anxiety",
+    "Attention Problems",
+    "Attitude to School",
+    "Attitude to Teachers",
+    "Atypicality",
+    "Behavioral Symptoms Index",
+    "Conduct Problems",
+    "Depression",
+    "Emotional Symptoms Index",
+    "Externalizing Problems",
+    "Functional Communication",
+    "Hyperactivity",
+    "Inattention/Hyperactivity",
+    "Internalizing Problems",
+    "Interpersonal Relations",
+    "Leadership",
+    "Locus of Control",
+    "Personal Adjustment",
+    "Relations with Parents",
+    "School Problems",
+    "Self-Esteem",
+    "Self-Reliance",
+    "Sensation Seeking",
+    "Sense of Inadequacy",
+    "Social Skills",
+    "Social Stress",
+    "Somatization",
+    "Withdrawal"
+  ),
+  "scales_emotion_child" = c(
+    # PAI
+    "Activity Level",
+    "Affective (A)",
+    "Affective (D)",
+    "Affective Instability",
+    "Aggression",
+    "Aggressive Attitude",
+    "ALC Estimated Score",
+    "Alcohol Problems",
+    "Antisocial Behaviors",
+    "Antisocial Features",
+    "Anxiety-Related Disorders",
+    "Anxiety",
+    "Borderline Features",
+    "Cognitive (A)",
+    "Cognitive (D)",
+    "Conversion",
+    "Depression",
+    "Dominance",
+    "DRG Estimated Score",
+    "Drug Problems",
+    "Egocentricity",
+    "Grandiosity",
+    "Health Concerns",
+    "Hypervigilance",
+    "Identity Problems",
+    "Irritability",
+    "Mania",
+    "Negative Relationships",
+    "Nonsupport",
+    "Obsessive-Compulsive",
+    "Paranoia",
+    "Persecution",
+    "Phobias",
+    "Physical Aggression",
+    "Physiological (A)",
+    "Physiological (D)",
+    "Psychotic Experiences",
+    "Resentment",
+    "Schizophrenia",
+    "Self-Harm",
+    "Social Detachment",
+    "Somatic Complaints",
+    "Somatization",
+    "Stimulus-Seeking",
+    "Stress",
+    "Suicidal Ideation",
+    "Thought Disorder",
+    "Traumatic Stress",
+    "Treatment Rejection",
+    "Verbal Aggression",
+    "Warmth",
+    # Beck
+    "BAI Total Score",
+    "BDI-2 Total Score",
+    # BASC-3
+    "Activities of Daily Living",
+    "Adaptability",
+    "Adaptive Skills",
+    "Aggression",
+    "Anxiety",
+    "Attention Problems",
+    "Attitude to School",
+    "Attitude to Teachers",
+    "Atypicality",
+    "Behavioral Symptoms Index",
+    "Conduct Problems",
+    "Depression",
+    "Emotional Symptoms Index",
+    "Externalizing Problems",
+    "Functional Communication",
+    "Hyperactivity",
+    "Inattention/Hyperactivity",
+    "Internalizing Problems",
+    "Interpersonal Relations",
+    "Leadership",
+    "Locus of Control",
+    "Personal Adjustment",
+    "Relations with Parents",
+    "School Problems",
+    "Self-Esteem",
+    "Self-Reliance",
+    "Sensation Seeking",
+    "Sense of Inadequacy",
+    "Social Skills",
+    "Social Stress",
+    "Somatization",
+    "Withdrawal"
+  )
 )
 
 ## Adaptive ----------------------------------------------------------------
@@ -1277,10 +1170,8 @@ scales_all <- c(
   scales_memory,
   scales_executive,
   scales_motor,
-  scales_adhd_adult,
-  scales_adhd_child,
-  scales_emotion_adult,
-  scales_emotion_child,
+  scales_adhd,
+  scales_emotion,
   scales_social,
   scales_adaptive,
   scales_daily_living,
@@ -1288,6 +1179,8 @@ scales_all <- c(
 )
 
 # Plot Titles --------------------------------------------------------------
+
+## Neurocognition --------------------------------------------------------------
 
 #' Neurocognitive Index Plot Title
 #'
@@ -1348,6 +1241,7 @@ plot_title_academics <- "Reading, writing, and math are the three main academic 
   overwrite = c("plot_title_academics")
 )
 
+## Verbal/language ------------------------------------------------------------
 #' Verbal and Language Functioning Plot Title
 #'
 #' @description
@@ -1379,6 +1273,7 @@ different angles, visualizing how to put objects together so that they fit
 correctly, and being able to accurately and efficiently copy and/or reproduce
 visual-spatial information onto paper."
 
+## Memory ------------------------------------------------------------
 #' Learning and Memory Plot Title
 #'
 #' @description
@@ -1421,6 +1316,7 @@ plot_title_motor <- "Sensorimotor tasks refer to the capacity to control hand
 movements quickly, smoothly, and with adequate precision, which are required to
 engage in activities such as writing and drawing."
 
+## Social ------------------------------------------------------------
 #' Social Cognition Plot Title
 #'
 #' @description
@@ -1437,61 +1333,113 @@ aptitude (sometimes referred to as _emotional intelligence_), which are
 important facets of how individuals process social information about other
 children, adults, groups, and social contexts."
 
-#' Adult ADHD and Attention Plot Title
+## ADHD ------------------------------------------------------------
+
+#' ADHD and Attention Plot Title
 #'
 #' @description
 #' Descriptive text for adult ADHD domain plots explaining attention and
 #' executive functions as multidimensional, overlapping concepts.
 #'
 #' @docType data
-#' @name plot_title_adhd_adult
+#' @name plot_title_adhd
 #' @format A character string
 #' @keywords internal data
-plot_title_adhd_adult <- "Attention and executive functions are multidimensional
+plot_title_adhd <- "Attention and executive functions are multidimensional
 concepts that contain several related processes. Both concepts require
 self-regulatory skills and have some common subprocesses; therefore, it is
 common to treat them together, or even to refer to both processes when talking
 about one or the other."
 
-#' Child ADHD and Attention Plot Title
+# For the plot titles
+.safe_use_data_internal(
+  plot_title_adhd = plot_title_adhd,
+  overwrite = c("plot_title_adhd")
+)
+
+#' ADHD and Attention Plot Title - Observer
 #'
 #' @description
 #' Descriptive text for child ADHD domain plots explaining attention and
 #' executive functions as multidimensional, overlapping concepts.
 #'
 #' @docType data
-#' @name plot_title_adhd_child
+#' @name plot_title_adhd_observer
 #' @format A character string
 #' @keywords internal data
-plot_title_adhd_child <- "Attention and executive functions are multidimensional
+plot_title_adhd_observer <- "Attention and executive functions are multidimensional
 concepts that contain several related processes. Both concepts require
 self-regulatory skills and have some common subprocesses; therefore, it is
 common to treat them together, or even to refer to both processes when talking
-about one or the other."
+about one or the other (OBS)."
 
 # For the plot titles
 .safe_use_data_internal(
-  plot_title_adhd_child = plot_title_adhd_child,
-  overwrite = c("plot_title_adhd_child")
+  plot_title_adhd_observer = plot_title_adhd_observer,
+  overwrite = c("plot_title_adhd_observer")
 )
 
-## Emotion child ------------------------------------------------------
-
-#' Child Emotional and Behavioral Plot Title - Self
+#' ADHD and Attention Plot Title Parent
 #'
 #' @description
-#' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
+#' Descriptive text for child ADHD parent domain plots explaining attention and
+#' executive functions as multidimensional, overlapping concepts.
 #'
 #' @docType data
-#' @name plot_title_emotion_child_self
+#' @name plot_title_adhd_parent
 #' @format A character string
 #' @keywords internal data
-plot_title_emotion_child_self <- "Mood, Behavioral, and Social-Emotional Reports. Self-reports of behavioral, emotional, and social difficulties."
+plot_title_adhd_parent <- "Attention and executive functions are multidimensional
+concepts that contain several related processes. Both concepts require
+self-regulatory skills and have some common subprocesses; therefore, it is
+common to treat them together, or even to refer to both processes when talking
+about one or the other (P)."
 
 # For the plot titles
 .safe_use_data_internal(
-  plot_title_emotion_child_self = plot_title_emotion_child_self,
-  overwrite = c("plot_title_emotion_child_self", add_only = TRUE)
+  plot_title_adhd_parent = plot_title_adhd_parent,
+  overwrite = c("plot_title_adhd_parent")
+)
+
+#' ADHD and Attention Plot Title Teacher
+#' @description
+#' Descriptive text for child ADHD teacher domain plots explaining attention and
+#' executive functions as multidimensional, overlapping concepts.
+#'
+#' @docType data
+#' @name plot_title_adhd_teacher
+#' @format A character string
+#' @keywords internal data
+plot_title_adhd_teacher <- "Attention and executive functions are multidimensional
+concepts that contain several related processes. Both concepts require
+self-regulatory skills and have some common subprocesses; therefore, it is
+common to treat them together, or even to refer to both processes when talking
+about one or the other (T)."
+
+# For the plot titles
+.safe_use_data_internal(
+  plot_title_adhd_teacher = plot_title_adhd_teacher,
+  overwrite = c("plot_title_adhd_teacher")
+)
+
+
+## Emotion ------------------------------------------------------
+
+#' Emotional and Behavioral Plot Title - Self
+#'
+#' @description
+#' Descriptive text for child/adult social-emotional domain plots explaining emotional, behavioral, and personality functioning.
+#'
+#' @docType data
+#' @name plot_title_emotion
+#' @format A character string
+#' @keywords internal data
+plot_title_emotion <- "Mood, Behavioral, and Social-Emotional Reports. Self-reports of behavioral, emotional, and social difficulties."
+
+# For the plot titles
+.safe_use_data_internal(
+  plot_title_emotion = plot_title_emotion,
+  overwrite = c("plot_title_emotion", add_only = FALSE)
 )
 
 #' Child Emotional and Behavioral Plot Title - Parent
@@ -1500,15 +1448,15 @@ plot_title_emotion_child_self <- "Mood, Behavioral, and Social-Emotional Reports
 #' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
 #'
 #' @docType data
-#' @name plot_title_emotion_child_parent
+#' @name plot_title_emotion_parent
 #' @format A character string
 #' @keywords internal data
-plot_title_emotion_child_parent <- "Mood, Behavioral, and Social-Emotional Reports. Parent reports of behavioral, emotional, and social difficulties."
+plot_title_emotion_parent <- "Mood, Behavioral, and Social-Emotional Reports. Parent reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
 .safe_use_data_internal(
-  plot_title_emotion_child_parent = plot_title_emotion_child_parent,
-  overwrite = c("plot_title_emotion_child_parent")
+  plot_title_emotion_parent = plot_title_emotion_parent,
+  overwrite = c("plot_title_emotion_parent")
 )
 
 #' Child Emotional and Behavioral Plot Title - Teacher
@@ -1517,30 +1465,16 @@ plot_title_emotion_child_parent <- "Mood, Behavioral, and Social-Emotional Repor
 #' Descriptive text for child social-emotional domain plots explaining emotional, behavioral, and personality functioning.
 #'
 #' @docType data
-#' @name plot_title_emotion_child_teacher
+#' @name plot_title_emotion_teacher
 #' @format A character string
 #' @keywords internal data
-plot_title_emotion_child_teacher <- "Mood, Behavioral, and Social-Emotional Reports. Teacher reports of behavioral, emotional, and social difficulties."
+plot_title_emotion_teacher <- "Mood, Behavioral, and Social-Emotional Reports. Teacher reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
 .safe_use_data_internal(
-  plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
-  overwrite = c("plot_title_emotion_child_teacher")
+  plot_title_emotion_teacher = plot_title_emotion_teacher,
+  overwrite = c("plot_title_emotion_teacher")
 )
-
-## Emotion adult -----------------------------------------------------------
-
-#' Adult Emotional and Behavioral Plot Title
-#'
-#' @description
-#' Descriptive text for adult emotional domain plots explaining emotional,
-#' behavioral, and personality functioning.
-#'
-#' @docType data
-#' @name plot_title_emotion_adult
-#' @format A character string
-#' @keywords internal data
-plot_title_emotion_adult <- "Emotional, behavioral, and personality scores collapsed across broad domains of functioning."
 
 ## Adaptive ----------------------------------------------------
 
@@ -1617,171 +1551,92 @@ plot_title_validity <- "Effort/validity tests can be performed by patient's with
 #' @docType data
 #' @title General Cognitive Ability Domain
 #' @description A character string label representing the general cognitive ability/intelligence domain for grouping and categorizing neuropsychological test scales.
-#' @keywords data internal
+#' @keywords internal
 domain_iq <- "General Cognitive Ability"
 
 #' @name domain_academics
 #' @docType data
 #' @title Academic Skills Domain
 #' @description A character string label representing the academic skills domain for grouping and categorizing neuropsychological test scales related to reading, writing, and mathematics.
-#' @keywords data internal
+#' @keywords internal
 domain_academics <- "Academic Skills"
 
 #' @name domain_verbal
 #' @docType data
 #' @title Verbal and Language Domain
 #' @description A character string label representing the verbal and language functioning domain for grouping and categorizing neuropsychological test scales related to language abilities.
-#' @keywords data internal
+#' @keywords internal
 domain_verbal <- "Verbal/Language"
 
 #' @name domain_spatial
 #' @docType data
 #' @title Visual Perception and Construction Domain
 #' @description A character string label representing the visual-spatial perception and construction domain for grouping and categorizing neuropsychological test scales related to spatial abilities.
-#' @keywords data internal
+#' @keywords internal
 domain_spatial <- "Visual Perception/Construction"
 
 #' @name domain_memory
 #' @docType data
 #' @title Memory Domain
 #' @description A character string label representing the learning and memory domain for grouping and categorizing neuropsychological test scales related to memory functions.
-#' @keywords data internal
+#' @keywords internal
 domain_memory <- "Memory"
 
 #' @name domain_executive
 #' @docType data
 #' @title Attention and Executive Functions Domain
 #' @description A character string label representing the attention and executive functions domain for grouping and categorizing neuropsychological test scales related to attentional control, cognitive flexibility, and higher-order cognitive processes.
-#' @keywords data internal
+#' @keywords internal
 domain_executive <- "Attention/Executive"
 
 #' @name domain_motor
 #' @docType data
 #' @title Motor Domain
 #' @description A character string label representing the motor and sensorimotor domain for grouping and categorizing neuropsychological test scales related to fine motor control and coordination.
-#' @keywords data internal
+#' @keywords internal
 domain_motor <- "Motor"
 
 #' @name domain_social
 #' @docType data
 #' @title Social Cognition Domain
 #' @description A character string label representing the social cognition domain for grouping and categorizing neuropsychological test scales related to social-emotional processing and understanding.
-#' @keywords data internal
+#' @keywords internal
 domain_social <- "Social Cognition"
 
-#' @name domain_adhd_adult
+#' @name domain_adhd
 #' @docType data
-#' @title Adult ADHD Domain
-#' @description A character string label representing the adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to adult ADHD symptoms.
-#' @keywords data internal
-domain_adhd_adult <- c("ADHD", "Executive Functions")
+#' @title ADHD Domain
+#' @description A character string label representing the child/adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to ADHD symptoms.
+#' @keywords internal
+domain_adhd <- "ADHD/Executive Function"
 
-#' @name domain_adhd_child
+#' @name domain_emotion
 #' @docType data
-#' @title Child ADHD Domain
-#' @description A character string label representing the child attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to child ADHD symptoms.
-#' @keywords data internal
-domain_adhd_child <- c("ADHD", "Executive Functions")
-
-#' @name domain_emotion_adult
-#' @docType data
-#' @title Adult Emotional and Behavioral Domain
-#' @description A character vector of labels representing the adult emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
-#' @keywords data internal
-domain_emotion_adult <- c(
-  "Emotional/Behavioral/Personality",
-  "Psychiatric Symptoms",
-  "Substance Use",
-  "Personality Disorders",
-  "Psychosocial Problems"
-)
-
-#' @name domain_emotion_child
-#' @docType data
-#' @title Child Emotional and Behavioral Domain
-#' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
-#' @keywords data internal
-domain_emotion_child <- c(
-  "Behavioral/Emotional/Social",
-  "Psychiatric Symptoms",
-  "Substance Use",
-  "Personality Disorders",
-  "Psychosocial Problems"
-)
+#' @title Child/Adult Emotional and Behavioral Domain
+#' @description A character vector of labels representing the emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
+#' @keywords internal
+domain_emotion <- c("Emotional/Behavioral/Social/Personality")
 
 #' @name domain_adaptive
 #' @docType data
 #' @title Adaptive Functioning Domain
 #' @description A character string label representing the adaptive functioning domain for grouping and categorizing assessment scales related to conceptual, social, and practical skills required for everyday independent functioning.
-#' @keywords data internal
+#' @keywords internal
 domain_adaptive <- "Adaptive Functioning"
 
 #' @name domain_daily_living
 #' @docType data
 #' @title Daily Living Domain
 #' @description A character string label representing the daily living domain for grouping and categorizing neuropsychological test scales related to functional abilities required for independent living tasks.
-#' @keywords data internal
+#' @keywords internal
 domain_daily_living <- "Daily Living"
 
 #' @name domain_validity
 #' @docType data
 #' @title Validity Domain
 #' @description A character string label representing the validity domain for grouping neuropsychological tests and rating scales by indicators of validity and adequate effort.
-#' @keywords data internal
-domain_validity <- c("Performance Validity", "Symptom Validity")
-
-# Save domain labels --------------------------------------------------------
-
-# Using .safe_use_data_internal instead of usethis::use_data
-.safe_use_data_internal(
-  domain_iq = domain_iq,
-  domain_academics = domain_academics,
-  domain_verbal = domain_verbal,
-  domain_spatial = domain_spatial,
-  domain_memory = domain_memory,
-  domain_executive = domain_executive,
-  domain_motor = domain_motor,
-  domain_social = domain_social,
-  domain_adhd_adult = domain_adhd_adult,
-  domain_adhd_child = domain_adhd_child,
-  domain_emotion_adult = domain_emotion_adult,
-  domain_emotion_child = domain_emotion_child,
-  domain_adaptive = domain_adaptive,
-  domain_daily_living = domain_daily_living,
-  domain_validity = domain_validity,
-  add_only = TRUE
-)
-
-# Example 2: Only overwrite specific objects
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  dots = dots, # This exists in the file
-  overwrite = c("dots") # Only allow overwriting 'dots'
-)
-
-.safe_use_data_internal(
-  domain_adhd_adult = domain_adhd_adult,
-  domain_adhd_child = domain_adhd_child,
-  domain_emotion_adult = domain_emotion_adult,
-  domain_emotion_child = domain_emotion_child,
-  overwrite = c(
-    "domain_adhd_adult",
-    "domain_adhd_child",
-    "domain_emotion_adult",
-    "domain_emotion_child"
-  )
-)
-
-.safe_use_data_internal(
-  domain_emotion_adult = domain_emotion_adult,
-  overwrite = c("domain_emotion_adult")
-)
-
-.safe_use_data_internal(
-  domain_validity = domain_validity,
-  overwrite = c("domain_validity")
-)
+#' @keywords internal
+domain_validity <- "Validity"
 
 # Lookup tables ---------------------------------------------
 
@@ -1807,8 +1662,8 @@ lookup_neuropsych_scales <- readr::read_csv(
   overwrite = c("lookup_neuropsych_scales")
 )
 
-# Lookup score ranges
-#' @name lookup_score_ranges
+# Lookup Score Range
+#' @name lookup_score_range
 #' @docType data
 #' @title Neuropsychological Test Score Ranges Lookup Table
 #' @description Lookup z, t, ss, SS, and percentile score ranges for neuropsychological tests.
@@ -1821,18 +1676,12 @@ lookup_neuropsych_scales <- readr::read_csv(
 #' \item \code{scaled_score}: Scaled score M=10, SD=3.
 #' \item \code{range}: The score range for the specified score type.
 #' }
-lookup_score_conversions <- readr::read_csv(
+lookup_score_range <- readr::read_csv(
   "/Users/joey/neuro2/inst/extdata/lookup_score_range.csv"
 )
 
-# For other data
-.safe_use_data_internal(
-  lookup_neuropsych_scales = lookup_neuropsych_scales,
-  # lookup_score_conversions = lookup_score_conversions,
-  overwrite = c("lookup_neuropsych_scales")
-)
+# Normative data -----------------------------------------------------
 
-# Normative test data -----------------------------------------------------
 #' @name categories
 #' @docType data internal
 categories <- readRDS("inst/extdata/categories.rds")
@@ -1867,3 +1716,140 @@ rocft.recall <- readRDS("inst/extdata/rocft.recall.rds")
 #' @docType data internal
 ut <- readRDS("inst/extdata/ut.rds")
 .safe_use_data_internal(ut = ut, add_only = TRUE)
+
+#' #' @name rocft_child_norms
+#' #' @docType data internal
+#' rocft_child_norms <- readRDS("inst/extdata/rocft_child_norms.rda")
+#' .safe_use_data_internal(rocft_child_norms = rocft_child_norms, add_only = FALSE)
+
+# Execute --------------------------------------------------------
+
+# Example usage for your create_sysdata.R script:
+# Instead of using usethis::use_data(..., internal = TRUE, overwrite = TRUE)
+# You would use:
+
+# Example 1: Only add new objects, never overwrite existing ones
+.safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  add_only = TRUE
+)
+
+# Example 2: Only overwrite specific objects
+.safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  dots = dots, # This exists in the file
+  overwrite = c("dots") # Only allow overwriting 'dots'
+)
+
+# Example 3: Update create_sysdata.R to use this function
+# For the scales data
+.safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  scales_verbal = scales_verbal,
+  scales_spatial = scales_spatial,
+  scales_memory = scales_memory,
+  scales_memory_order = scales_memory_order,
+  scales_executive = scales_executive,
+  scales_motor = scales_motor,
+  scales_social = scales_social,
+  scales_adhd = scales_adhd,
+  scales_emotion = scales_emotion,
+  scales_adaptive = scales_adaptive,
+  scales_daily_living = scales_daily_living,
+  scales_validity = scales_validity,
+  scales_all = scales_all,
+  overwrite = c(
+    "scales_iq",
+    "scales_academics",
+    "scales_verbal",
+    "scales_spatial",
+    "scales_memory",
+    "scales_memory_order",
+    "scales_executive",
+    "scales_motor",
+    "scales_social",
+    "scales_adhd",
+    "scales_emotion",
+    "scales_adaptive",
+    "scales_daily_living",
+    "scales_validity",
+    "scales_all"
+  )
+)
+
+# For the plot titles
+.safe_use_data_internal(
+  plot_title_neurocognition = plot_title_neurocognition,
+  plot_title_iq = plot_title_iq,
+  plot_title_academics = plot_title_academics,
+  plot_title_verbal = plot_title_verbal,
+  plot_title_spatial = plot_title_spatial,
+  plot_title_memory = plot_title_memory,
+  plot_title_executive = plot_title_executive,
+  plot_title_motor = plot_title_motor,
+  plot_title_social = plot_title_social,
+  plot_title_adhd = plot_title_adhd,
+  plot_title_emotion = plot_title_emotion,
+  plot_title_adaptive = plot_title_adaptive,
+  plot_title_daily_living = plot_title_daily_living,
+  plot_title_validity = plot_title_validity,
+  overwrite = c(
+    "plot_title_neurocognition",
+    "plot_title_iq",
+    "plot_title_academics",
+    "plot_title_verbal",
+    "plot_title_spatial",
+    "plot_title_memory",
+    "plot_title_executive",
+    "plot_title_motor",
+    "plot_title_social",
+    "plot_title_adhd",
+    "plot_title_emotion",
+    "plot_title_adaptive",
+    "plot_title_daily_living",
+    "plot_title_validity"
+  )
+)
+
+
+# Using .safe_use_data_internal instead of usethis::use_data
+.safe_use_data_internal(
+  domain_iq = domain_iq,
+  domain_academics = domain_academics,
+  domain_verbal = domain_verbal,
+  domain_spatial = domain_spatial,
+  domain_memory = domain_memory,
+  domain_executive = domain_executive,
+  domain_motor = domain_motor,
+  domain_social = domain_social,
+  domain_adhd = domain_adhd,
+  domain_emotion = domain_emotion,
+  domain_adaptive = domain_adaptive,
+  domain_daily_living = domain_daily_living,
+  domain_validity = domain_validity,
+  overwrite = TRUE
+)
+
+# Example 2: Only overwrite specific objects
+.safe_use_data_internal(
+  scales_iq = scales_iq,
+  scales_academics = scales_academics,
+  dots = dots, # This exists in the file
+  overwrite = c("dots") # Only allow overwriting 'dots'
+)
+
+# .safe_use_data_internal(
+#   domain_adhd = domain_adhd_adult,
+#   domain_adhd = domain_adhd_child,
+#   domain_emotion = domain_emotion_adult,
+#   domain_emotion = domain_emotion_child,
+#   overwrite = c("domain_adhd", "domain_emotion")
+# )
+
+.safe_use_data_internal(
+  domain_validity = domain_validity,
+  overwrite = c("domain_validity")
+)
