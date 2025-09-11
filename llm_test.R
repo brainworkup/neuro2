@@ -79,9 +79,6 @@ generate_domain_summary_from_master(
   model = "gpt-4.1-mini"
 )
 
-json_path <- system.file("prompts", "neuro2_prompts.json", package = "neuro2")
-
-
 res_sirf <- generate_domain_summary_from_master(
   master_json = system.file(
     "prompts",
@@ -91,18 +88,22 @@ res_sirf <- generate_domain_summary_from_master(
   domain_keyword = "prsirf", # now matches pr.sirf
   model = "gpt-4.1-mini",
   temperature = 0.2,
-  base_dir = your_qmd_root, # e.g., "." or the path where *_text.qmd live
+  base_dir = ".",
   echo = "none"
 )
 
 
-res_sirf <- neuro2::generate_domain_summary_from_master(
+res_recs <- generate_domain_summary_from_master(
   master_json = system.file(
     "prompts",
     "neuro2_prompts.json",
     package = "neuro2"
   ),
-  domain_keyword = "prsirf", # also works with "pr.sirf"
+  domain_keyword = "prrecs",
   model = "gpt-4.1-mini",
-  base_dir = "." # wherever your *_text.qmd live
+  temperature = 0.2,
+  base_dir = ".",
+  echo = "none"
 )
+
+

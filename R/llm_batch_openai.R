@@ -366,7 +366,7 @@ run_llm_for_all_domains <- function(
           model,
           temperature,
           base_dir,
-          echo
+          echo =
         )
       },
       silent = TRUE

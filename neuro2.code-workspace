@@ -38,6 +38,25 @@
     "python.analysis.aiHoverSummaries": true,
     "editor.wordWrap": "on",
     "editor.tabSize": 2,
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "peacock.color": "#65c89b",
+    "workbench.colorCustomizations": {
+      "editorError.foreground": "#000000ff",
+      "editorInfo.foreground": "#000000ff",
+      "editorWarning.foreground": "#000000ff",
+      "sash.hoverBorder": "#8bd5b3",
+      "activityBar.activeBackground": "#8bd5b3",
+      "activityBar.background": "#8bd5b3",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#a373cc",
+      "activityBarBadge.foreground": "#15202b"
+    },
+    "workbench.colorTheme": "One Dark Pro Night Flat",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.preferredDarkColorTheme": "Codemos Modern (Dark)"
+  },
+  "extensions": {
+    "recommendations": ["atomashevic.vscode-working-memory"]
   }
 }

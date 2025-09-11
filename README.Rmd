@@ -204,13 +204,13 @@ plot$build_plot()
 
 Place CSV files in `data-raw/csv/` with required columns:
 
-- `test`: Test abbreviation
-- `test_name`: Full test name
-- `scale`: Subtest/scale name
-- `raw_score`: Raw score
-- `score`: Standardized score (z, t, scaled, standard)
-- `percentile`: Percentile rank
-- `domain`: Cognitive and/or behavioral domain
+-   `test`: Test abbreviation
+-   `test_name`: Full test name
+-   `scale`: Subtest/scale name
+-   `raw_score`: Raw score
+-   `score`: Standardized score (z, t, scaled, standard)
+-   `percentile`: Percentile rank
+-   `domain`: Cognitive and/or behavioral domain
 
 ### 2. Process with DuckDB
 
@@ -251,14 +251,14 @@ handedness: "right"
 ### Customize Domains
 
 The system automatically detects available domains from your data.
-Domain mappings are defined in `data-raw/create_sysdata.R`. 
+Domain mappings are defined in `data-raw/create_sysdata.R`.
 For example:
 
-- General Cognitive Ability → `iq`
-- Academic Skills → `academics`
-- Verbal/Language → `verbal`
-- Memory → `memory`
-- Attention/Executive → `executive`
+-   General Cognitive Ability → `iq`
+-   Academic Skills → `academics`
+-   Verbal/Language → `verbal`
+-   Memory → `memory`
+-   Attention/Executive → `executive`
 
 ### Add Custom Tests
 
