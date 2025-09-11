@@ -30,12 +30,12 @@ knitr::opts_knit$set(
   optipng = knitr::hook_optipng
 )
 
-# options(
-#   neuro2.llm.backend        = "ollama",
-#   neuro2.llm.temperature    = 0.2,
-#   neuro2.llm.model_override = NULL,
-#   neuro2.llm.mega_for_sirf  = FALSE
-# )
+options(
+  neuro2.llm.backend        = "ollama",
+  neuro2.llm.temperature    = 0.2,
+  neuro2.llm.model_override = NULL,
+  neuro2.llm.mega_for_sirf  = FALSE
+)
 
 # Enable chunk caching for faster re-renders
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.comments = FALSE)

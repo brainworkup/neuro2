@@ -39,10 +39,11 @@ format:
   neurotyp-adult-typst:
     keep-typ: true
     keep-md: true
-    papersize: "us-letter"
-    bodyfont: TeX Gyre Termes # Classic, readable body
-    sansfont: IBM Plex Sans # Clean, precise headings
-    monofont: IBM Plex Mono # Perfectly aligned tables
+    # papersize: "us-letter"
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
+    # bodyfont: "Source Serif 4"
+    # sansfont: "Source Sans 3"
     fontsize: 11pt
     number-sections: false
     number-offset: 1
@@ -59,11 +60,12 @@ format:
     keep-typ: true
     keep-md: true
     papersize: "us-letter"
-    # bodyfont: "Linux Libertine O"
-    # sansfont: "Iosevka Aile"
-    bodyfont: "IBM Plex Serif"
-    sansfont: "IBM Plex Sans"
-    fontsize: 11pt
+    # bodyfont: TeX Gyre Termes # Classic, readable body
+    sansfont: IBM Plex Sans # Clean, precise headings
+    monofont: IBM Plex Mono # Perfectly aligned tables
+    # bodyfont: "IBM Plex Serif"
+    # sansfont: "IBM Plex Sans"
+    fontsize: 12pt
     number-sections: false
     number-offset: 1
     citeproc: true
@@ -74,12 +76,6 @@ format:
     fig-width: 6
     fig-height: 4
     fig-format: svg
-
-  pdf:
-    mainfont: TeX Gyre Termes # Classic, readable body
-    sansfont: IBM Plex Sans # Clean, precise headings
-    monofont: IBM Plex Mono # Perfectly aligned tables
-    fontsize: 11pt
 
   neurotyp-pediatric-typst:
     keep-typ: true
@@ -103,9 +99,8 @@ format:
     keep-typ: true
     keep-md: true
     papersize: "a4"
-    mainfont: TeX Gyre Termes # Classic, readable body
-    sansfont: IBM Plex Sans # Clean, precise headings
-    monofont: IBM Plex Mono # Perfectly aligned tables
+    bodyfont: "IBM Plex Serif"
+    sansfont: "IBM Plex Sans"
     fontsize: 11pt
     number-sections: false
     number-offset: 1

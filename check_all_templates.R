@@ -39,10 +39,7 @@ template_files <- list.files(template_dir, full.names = TRUE)
 # Define essential template files
 essential_files <- c(
   "_00-00_tests.qmd",
-  "_01-00_nse_adult.qmd",
-  "_01-00_nse_pediatric.qmd",
-  "_01-00_nse_forensic.qmd",
-  "_01-00_nse_referral.qmd",
+  "_01-00_nse.qmd",
   "_01-01_behav_obs.qmd",
   "_03-00_sirf_text.qmd",
   "_03-00_sirf.qmd",
