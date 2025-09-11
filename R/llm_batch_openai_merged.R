@@ -1,4 +1,3 @@
-
 # llm_batch_openai.R (merged, QMD-only)
 # neuro2 LLM workflow utilities
 # - Loads prompts exclusively from one-prompt-per-file QMDs under inst/prompts/
@@ -14,7 +13,9 @@
 #' @export
 llm_cache_dir <- function() {
   d <- file.path(tempdir(), "neuro2_llm_cache")
-  if (!dir.exists(d)) dir.create(d, recursive = TRUE)
+  if (!dir.exists(d)) {
+    dir.create(d, recursive = TRUE)
+  }
   d
 }
 
@@ -23,14 +24,18 @@ llm_cache_dir <- function() {
 
 # Safe defaulting
 #' @keywords internal
-`%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || !nzchar(x)) y else x
+`%||%` <- function(x, y) {
+  if (is.null(x) || length(x) == 0 || !nzchar(x)) y else x
+}
 
 # Small helper to read YAML front matter + body from a QMD
 #' @keywords internal
 .read_qmd_front_matter <- function(text) {
   m <- stringr::str_match(text, "(?s)^\\s*---\\s*(.*?)\\s*---\\s*(.*)$")
-  if (is.na(m[1,2])) return(NULL)
-  list(front = yaml::yaml.load(m[1,2]), body = m[1,3])
+  if (is.na(m[1, 2])) {
+    return(NULL)
+  }
+  list(front = yaml::yaml.load(m[1, 2]), body = m[1, 3])
 }
 
 # ---------------------- prompt loader (QMD only) ----------------
@@ -40,25 +45,48 @@ llm_cache_dir <- function() {
 #' @param dir Directory path. Defaults to the installed `inst/prompts` via `system.file("prompts", package = "neuro2")`.
 #' @return List of prompts with fields `name`, `keyword`, `text`.
 #' @export
-read_prompts_from_dir <- function(dir = system.file("prompts", package = "neuro2")) {
-  if (!nzchar(dir) || !dir.exists(dir)) stop("Prompts directory not found: ", dir)
+read_prompts_from_dir <- function(
+  dir = system.file("prompts", package = "neuro2")
+) {
+  if (!nzchar(dir) || !dir.exists(dir)) {
+    stop("Prompts directory not found: ", dir)
+  }
   files <- fs::dir_ls(dir, regexp = "\\.qmd$", type = "file")
-  if (!length(files)) stop("No .qmd prompt files found in: ", dir)
+  if (!length(files)) {
+    stop("No .qmd prompt files found in: ", dir)
+  }
 
   out <- lapply(files, function(f) {
-    x  <- readr::read_file(f)
+    x <- readr::read_file(f)
     qb <- .read_qmd_front_matter(x)
-    if (is.null(qb)) stop("Missing YAML front matter in: ", f)
-    fm <- qb$front; body <- qb$body
-    if (is.null(fm$keyword) || !nzchar(fm$keyword)) stop("Missing 'keyword' in YAML: ", f)
-    if (is.null(fm$name)) fm$name <- fm$keyword
-    list(name = as.character(fm$name), keyword = as.character(fm$keyword), text = as.character(body))
+    if (is.null(qb)) {
+      stop("Missing YAML front matter in: ", f)
+    }
+    fm <- qb$front
+    body <- qb$body
+    if (is.null(fm$keyword) || !nzchar(fm$keyword)) {
+      stop("Missing 'keyword' in YAML: ", f)
+    }
+    if (is.null(fm$name)) {
+      fm$name <- fm$keyword
+    }
+    list(
+      name = as.character(fm$name),
+      keyword = as.character(fm$keyword),
+      text = as.character(body)
+    )
   })
 
   # Keep only those that declare a target @_NN-*.qmd line
   has_target <- vapply(
     out,
-    function(x) isTRUE(grepl("(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$", x$text, perl = TRUE)),
+    function(x) {
+      isTRUE(grepl(
+        "(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$",
+        x$text,
+        perl = TRUE
+      ))
+    },
     logical(1)
   )
   out[has_target]
@@ -72,7 +100,10 @@ read_prompts_from_dir <- function(dir = system.file("prompts", package = "neuro2
 #' @return Character string of the target qmd filename or `NA_character_`.
 #' @export
 detect_target_qmd <- function(prompt_text) {
-  m <- stringr::str_match(prompt_text, "(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$")
+  m <- stringr::str_match(
+    prompt_text,
+    "(?m)^\\s*@\\s*(_\\d{2}-[^\\s]+\\.qmd)\\s*$"
+  )
   if (!is.na(m[1, 2])) m[1, 2] else NA_character_
 }
 
@@ -83,7 +114,11 @@ detect_target_qmd <- function(prompt_text) {
 #' @param on_missing `"note"` inserts the literal marker ``[[MISSING FILE: ...]]``; `"skip"` drops silently.
 #' @return List with expanded `text` and dependency `deps`.
 #' @export
-expand_includes <- function(text, base_dir = ".", on_missing = c("note","skip")) {
+expand_includes <- function(
+  text,
+  base_dir = ".",
+  on_missing = c("note", "skip")
+) {
   on_missing <- match.arg(on_missing)
   deps <- character(0)
   expanded <- stringr::str_replace_all(
@@ -91,7 +126,7 @@ expand_includes <- function(text, base_dir = ".", on_missing = c("note","skip"))
     "\\{\\{@([^}]+)\\}\\}",
     function(m) {
       rel <- sub("\\{\\{@([^}]+)\\}\\}", "\\1", m)
-      fn  <- file.path(base_dir, rel)
+      fn <- file.path(base_dir, rel)
       if (file.exists(fn)) {
         deps <<- unique(c(deps, fn))
         readr::read_file(fn)
@@ -109,8 +144,16 @@ expand_includes <- function(text, base_dir = ".", on_missing = c("note","skip"))
 #' @return Sanitized character string.
 #' @export
 sanitize_system_prompt <- function(text) {
-  text <- stringr::str_replace_all(text, "(?is)Before writing.*?<summary>.*?</summary>\\s*", "")
-  text <- stringr::str_replace_all(text, "(?is)<neurocognitive_assessment_analysis>.*?</neurocognitive_assessment_analysis>", "")
+  text <- stringr::str_replace_all(
+    text,
+    "(?is)Before writing.*?<summary>.*?</summary>\\s*",
+    ""
+  )
+  text <- stringr::str_replace_all(
+    text,
+    "(?is)<neurocognitive_assessment_analysis>.*?</neurocognitive_assessment_analysis>",
+    ""
+  )
   text
 }
 
@@ -119,7 +162,9 @@ sanitize_system_prompt <- function(text) {
 #' @param path Character string path to file.
 #' @return Character string of file content or empty string.
 #' @export
-read_file_or_empty <- function(path) if (file.exists(path)) readr::read_file(path) else ""
+read_file_or_empty <- function(path) {
+  if (file.exists(path)) readr::read_file(path) else ""
+}
 
 #' @title Inject Summary Block into QMD
 #' @description Injects or replaces the `<summary>` block in a QMD file.
@@ -129,22 +174,31 @@ read_file_or_empty <- function(path) if (file.exists(path)) readr::read_file(pat
 #' @export
 inject_summary_block <- function(qmd_path, generated) {
   raw_qmd <- read_file_or_empty(qmd_path)
-  if (!nzchar(raw_qmd)) raw_qmd <- ""
+  if (!nzchar(raw_qmd)) {
+    raw_qmd <- ""
+  }
 
-  has_block <- grepl("<summary>\\s*.*?\\s*</summary>", raw_qmd, perl = TRUE, ignore.case = TRUE)
+  has_block <- grepl(
+    "<summary>\\s*.*?\\s*</summary>",
+    raw_qmd,
+    perl = TRUE,
+    ignore.case = TRUE
+  )
   if (has_block) {
     new_qmd <- sub(
-      pattern     = "<summary>\\s*.*?\\s*</summary>",
+      pattern = "<summary>\\s*.*?\\s*</summary>",
       replacement = paste0("<summary>\n\n", generated, "\n\n</summary>"),
-      x           = raw_qmd,
-      perl        = TRUE
+      x = raw_qmd,
+      perl = TRUE
     )
-  } else if (grepl("<summary\\s*/>", raw_qmd, perl = TRUE, ignore.case = TRUE)) {
+  } else if (
+    grepl("<summary\\s*/>", raw_qmd, perl = TRUE, ignore.case = TRUE)
+  ) {
     new_qmd <- sub(
-      pattern     = "<summary\\s*/>",
+      pattern = "<summary\\s*/>",
       replacement = paste0("<summary>\n\n", generated, "\n\n</summary>"),
-      x           = raw_qmd,
-      perl        = TRUE
+      x = raw_qmd,
+      perl = TRUE
     )
   } else {
     new_qmd <- paste0("<summary>\n\n", generated, "\n\n</summary>\n\n", raw_qmd)
@@ -161,40 +215,51 @@ inject_summary_block <- function(qmd_path, generated) {
 #' @return Character string hash.
 #' @export
 hash_inputs <- function(system_prompt, user_text, deps) {
-  dep_txt <- paste0(vapply(deps, read_file_or_empty, ""), collapse = "\n<<FILE>>\n")
-  digest::digest(paste(system_prompt, user_text, dep_txt, sep = "\n---\n"), algo = "xxhash64")
+  dep_txt <- paste0(
+    vapply(deps, read_file_or_empty, ""),
+    collapse = "\n<<FILE>>\n"
+  )
+  digest::digest(
+    paste(system_prompt, user_text, dep_txt, sep = "\n---\n"),
+    algo = "xxhash64"
+  )
 }
 
 # --------------------- model selection (Ollama) -----------------
 
-#' @title Create a chat bot for neuro2 using Ollama (default)
-#' @description Selects an Ollama model by section: `"domain"` (8B), `"sirf"` (14B instruct), `"mega"` (30B instruct).
+#' @title Create a chat bot for neuro2 using Ollama (official ellmer interface)
+#' @description Uses ellmer::chat_ollama() — the officially supported Ollama interface.
 #' @param system_prompt System prompt string.
-#' @param section One of `"domain"`, `"sirf"`, `"mega"`.
+#' @param section One of "domain", "sirf", "mega".
 #' @param model_override Optional exact model name to force.
-#' @param temperature Numeric temperature (default `0.2`).
-#' @param echo ellmer echo mode (default `"none"`).
+#' @param temperature Numeric temperature (default 0.2).
+#' @param echo ellmer echo mode (default "none").
 #' @return ellmer chat object.
 #' @export
-neuro2_llm_bot <- function(system_prompt,
-                           section = c("domain","sirf","mega"),
-                           model_override = NULL,
-                           temperature = 0.2,
-                           echo = "none") {
+neuro2_llm_bot <- function(
+  system_prompt,
+  section = c("domain", "sirf", "mega"),
+  model_override = NULL,
+  temperature = 0.2,
+  echo = "none"
+) {
   section <- match.arg(section)
-  model <- model_override %||% switch(section,
-    domain = "qwen3:8b-q4_K_M",
-    sirf   = "qwen2.5:14b-instruct",
-    mega   = "qwen3:30b-a3b-instruct-2507-q4_K_M"
-  )
+  model <- model_override %||%
+    switch(
+      section,
+      domain = "qwen3:8b-q4_K_M",
+      sirf = "qwen2.5:14b-instruct",
+      mega = "qwen3:30b-a3b-instruct-2507-q4_K_M"
+    )
 
-  ellmer::chat_openai(
+  # ✅ Use the official Ollama interface
+  ellmer::chat_ollama(
     system_prompt = system_prompt,
-    base_url = "http://localhost:11434/v1",
-    api_key  = "ollama",
-    model    = model,
-    params   = ellmer::params(temperature = temperature),
-    echo     = echo
+    model = model,
+    params = ellmer::params(temperature = temperature),
+    api_args = list(stream = FALSE), # important: avoid streaming unless needed
+    echo = echo
+    # base_url and api_key auto-configured by chat_ollama()
   )
 }
 
@@ -213,40 +278,65 @@ neuro2_llm_bot <- function(system_prompt,
 #' @param backoff Initial backoff seconds (default 1; doubles each retry).
 #' @return Character text output.
 #' @export
-call_openai_once <- function(system_prompt,
-                             user_text,
-                             section = "domain",
-                             model_override = NULL,
-                             temperature = 0.2,
-                             echo = "none",
-                             max_output_tokens = NULL,
-                             retries = 3,
-                             backoff = 1) {
-  if (!requireNamespace("ellmer", quietly = TRUE)) stop("The 'ellmer' package is required.")
+call_openai_once <- function(
+  system_prompt,
+  user_text,
+  section = "domain",
+  model_override = NULL,
+  temperature = 0.2,
+  echo = "none",
+  max_output_tokens = NULL,
+  retries = 3,
+  backoff = 1
+) {
+  if (!requireNamespace("ellmer", quietly = TRUE)) {
+    stop("The 'ellmer' package is required.")
+  }
 
   params <- ellmer::params(temperature = temperature)
-  if (!is.null(max_output_tokens)) params$max_output_tokens <- max_output_tokens
+  if (!is.null(max_output_tokens)) {
+    params$max_output_tokens <- max_output_tokens
+  }
 
   attempt <- 0
   repeat {
     attempt <- attempt + 1
-    bot <- neuro2_llm_bot(system_prompt = system_prompt,
-                          section = section,
-                          model_override = model_override,
-                          temperature = temperature,
-                          echo = echo)
+    bot <- neuro2_llm_bot(
+      system_prompt = system_prompt,
+      section = section,
+      model_override = model_override,
+      temperature = temperature,
+      echo = echo
+    )
     res <- tryCatch(bot$chat(user_text), error = identity)
     if (inherits(res, "error")) {
-      if (attempt <= retries) { Sys.sleep(backoff); backoff <- backoff * 2; next }
+      if (attempt <= retries) {
+        Sys.sleep(backoff)
+        backoff <- backoff * 2
+        next
+      }
       stop("LLM call failed after retries: ", conditionMessage(res))
     }
-    out <- tryCatch({
-      if (is.function(ellmer::as_text)) ellmer::as_text(res) else as.character(res)
-    }, error = identity)
-    if (inherits(out, "error")) out <- ""
+    out <- tryCatch(
+      {
+        if (is.function(ellmer::as_text)) {
+          ellmer::as_text(res)
+        } else {
+          as.character(res)
+        }
+      },
+      error = identity
+    )
+    if (inherits(out, "error")) {
+      out <- ""
+    }
     out <- trimws(stringr::str_squish(paste(out, collapse = " ")))
     if (!nzchar(out)) {
-      if (attempt <= retries) { Sys.sleep(backoff); backoff <- backoff * 2; next }
+      if (attempt <= retries) {
+        Sys.sleep(backoff)
+        backoff <- backoff * 2
+        next
+      }
       stop("LLM returned empty content after retries.")
     }
     return(out)
@@ -268,36 +358,51 @@ call_openai_once <- function(system_prompt,
 #' @return Invisible list with `keyword`, `qmd`, `text`, `section`.
 #' @export
 generate_domain_summary_from_master <- function(
-  prompts_dir    = NULL,
+  prompts_dir = NULL,
   domain_keyword,
   model_override = NULL,
-  temperature    = 0.2,
-  base_dir       = ".",
-  echo           = "none",
-  mega           = FALSE
+  temperature = 0.2,
+  base_dir = ".",
+  echo = "none",
+  mega = FALSE
 ) {
   # Load QMD prompts (installed copy by default)
-  prompts <- read_prompts_from_dir(prompts_dir %||% system.file("prompts", package = "neuro2"))
+  prompts <- read_prompts_from_dir(
+    prompts_dir %||% system.file("prompts", package = "neuro2")
+  )
 
   # Select prompt by canonicalized keyword
-  idx <- which(vapply(prompts, function(x) .canon(x$keyword) == .canon(domain_keyword), logical(1)))
+  idx <- which(vapply(
+    prompts,
+    function(x) .canon(x$keyword) == .canon(domain_keyword),
+    logical(1)
+  ))
   if (length(idx) == 0) {
-    stop("No prompt found for keyword: ", domain_keyword,
-         "\nAvailable: ", paste0(vapply(prompts, function(x) x$keyword, ""), collapse = ", "))
+    stop(
+      "No prompt found for keyword: ",
+      domain_keyword,
+      "\nAvailable: ",
+      paste0(vapply(prompts, function(x) x$keyword, ""), collapse = ", ")
+    )
   }
   p <- prompts[[idx]]
   ptx <- p$text
 
   # Detect target QMD
   target_qmd <- detect_target_qmd(ptx)
-  if (is.na(target_qmd)) stop("Prompt lacks a target @_NN-*.qmd line for keyword: ", domain_keyword)
+  if (is.na(target_qmd)) {
+    stop("Prompt lacks a target @_NN-*.qmd line for keyword: ", domain_keyword)
+  }
   target_path <- file.path(base_dir, target_qmd)
-  if (!file.exists(target_path)) { dir.create(dirname(target_path), recursive = TRUE, showWarnings = FALSE); file.create(target_path) }
+  if (!file.exists(target_path)) {
+    dir.create(dirname(target_path), recursive = TRUE, showWarnings = FALSE)
+    file.create(target_path)
+  }
 
   # Build system prompt (sanitized) and user content
-  sys_prompt   <- sanitize_system_prompt(ptx)
-  inc          <- expand_includes(ptx, base_dir = base_dir, on_missing = "skip")
-  target_text  <- read_file_or_empty(target_path)
+  sys_prompt <- sanitize_system_prompt(ptx)
+  inc <- expand_includes(ptx, base_dir = base_dir, on_missing = "skip")
+  target_text <- read_file_or_empty(target_path)
   user_text <- paste(
     "Use the following patient/domain text to produce a single-paragraph clinical summary.",
     "Avoid test names and raw/standard/T/Scaled scores; sparingly use percentiles only if extreme.",
@@ -313,30 +418,43 @@ generate_domain_summary_from_master <- function(
   )
 
   # Determine section/model from keyword
-  key_can  <- .canon(domain_keyword)
-  section  <- if (identical(key_can, "prsirf")) if (isTRUE(mega)) "mega" else "sirf" else "domain"
+  key_can <- .canon(domain_keyword)
+  section <- if (identical(key_can, "prsirf")) {
+    if (isTRUE(mega)) "mega" else "sirf"
+  } else {
+    "domain"
+  }
 
   # Cache
-  key  <- hash_inputs(paste(sys_prompt, section, model_override %||% "", temperature, sep = "\n"),
-                      user_text,
-                      deps = c(target_path, inc$deps))
+  key <- hash_inputs(
+    paste(sys_prompt, section, model_override %||% "", temperature, sep = "\n"),
+    user_text,
+    deps = c(target_path, inc$deps)
+  )
   cpath <- file.path(llm_cache_dir(), paste0(domain_keyword, "_", key, ".txt"))
   if (file.exists(cpath)) {
     generated <- readr::read_file(cpath)
   } else {
-    generated <- call_openai_once(system_prompt = sys_prompt,
-                                  user_text    = user_text,
-                                  section      = section,
-                                  model_override = model_override,
-                                  temperature  = temperature,
-                                  echo         = echo,
-                                  max_output_tokens = NULL)
+    generated <- call_openai_once(
+      system_prompt = sys_prompt,
+      user_text = user_text,
+      section = section,
+      model_override = model_override,
+      temperature = temperature,
+      echo = echo,
+      max_output_tokens = NULL
+    )
     readr::write_file(generated, cpath)
   }
 
   # Inject into the domain QMD
   inject_summary_block(target_path, generated)
-  invisible(list(keyword = domain_keyword, qmd = target_path, text = generated, section = section))
+  invisible(list(
+    keyword = domain_keyword,
+    qmd = target_path,
+    text = generated,
+    section = section
+  ))
 }
 
 #' @title Run LLM for All Domains (QMD-only)
@@ -351,28 +469,46 @@ generate_domain_summary_from_master <- function(
 #' @return List of results per domain (invisible).
 #' @export
 run_llm_for_all_domains <- function(
-  prompts_dir     = NULL,
-  domain_keywords = c("priq","pracad","prverb","prspt","prmem","prexe","prmot","prsoc",
-                      "pradhdchild","pradhdadult","premotchild","premotadult",
-                      "pradapt","prdaily","prsirf","prrecs"),
-  model_override  = NULL,
-  temperature     = 0.2,
-  base_dir        = ".",
-  echo            = "none",
-  mega_for_sirf   = FALSE
+  prompts_dir = NULL,
+  domain_keywords = c(
+    "priq",
+    "pracad",
+    "prverb",
+    "prspt",
+    "prmem",
+    "prexe",
+    "prmot",
+    "prsoc",
+    "pradhdchild",
+    "pradhdadult",
+    "premotchild",
+    "premotadult",
+    "pradapt",
+    "prdaily",
+    "prsirf",
+    "prrecs"
+  ),
+  model_override = NULL,
+  temperature = 0.2,
+  base_dir = ".",
+  echo = "none",
+  mega_for_sirf = FALSE
 ) {
   out <- lapply(domain_keywords, function(k) {
-    try({
-      generate_domain_summary_from_master(
-        prompts_dir    = prompts_dir,
-        domain_keyword = k,
-        model_override = model_override,
-        temperature    = temperature,
-        base_dir       = base_dir,
-        echo           = echo,
-        mega           = if (.canon(k) == "prsirf") isTRUE(mega_for_sirf) else FALSE
-      )
-    }, silent = TRUE)
+    try(
+      {
+        generate_domain_summary_from_master(
+          prompts_dir = prompts_dir,
+          domain_keyword = k,
+          model_override = model_override,
+          temperature = temperature,
+          base_dir = base_dir,
+          echo = echo,
+          mega = if (.canon(k) == "prsirf") isTRUE(mega_for_sirf) else FALSE
+        )
+      },
+      silent = TRUE
+    )
   })
   names(out) <- domain_keywords
   invisible(out)

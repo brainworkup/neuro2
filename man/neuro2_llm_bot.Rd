@@ -2,7 +2,7 @@
 % Please edit documentation in R/llm_batch_openai_merged.R
 \name{neuro2_llm_bot}
 \alias{neuro2_llm_bot}
-\title{Create a chat bot for neuro2 using Ollama (default)}
+\title{Create a chat bot for neuro2 using Ollama (official ellmer interface)}
 \usage{
 neuro2_llm_bot(
   system_prompt,
@@ -15,17 +15,17 @@ neuro2_llm_bot(
 \arguments{
 \item{system_prompt}{System prompt string.}
 
-\item{section}{One of \code{"domain"}, \code{"sirf"}, \code{"mega"}.}
+\item{section}{One of "domain", "sirf", "mega".}
 
 \item{model_override}{Optional exact model name to force.}
 
-\item{temperature}{Numeric temperature (default \code{0.2}).}
+\item{temperature}{Numeric temperature (default 0.2).}
 
-\item{echo}{ellmer echo mode (default \code{"none"}).}
+\item{echo}{ellmer echo mode (default "none").}
 }
 \value{
 ellmer chat object.
 }
 \description{
-Selects an Ollama model by section: \code{"domain"} (8B), \code{"sirf"} (14B instruct), \code{"mega"} (30B instruct).
+Uses ellmer::chat_ollama() — the officially supported Ollama interface.
 }
