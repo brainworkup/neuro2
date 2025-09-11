@@ -1,10 +1,9 @@
-# llm_batch_openai.R (merged, QMD-only, generic extraction)
-# neuro2 LLM workflow utilities
-# - Loads prompts exclusively from one-prompt-per-file QMDs under inst/prompts/
-# - Routes models automatically (domain -> 8B, SIRF -> 14B, SIRF mega -> 30B)
-# - Uses Ollama (OpenAI-compatible) by default
-# - Retries/backoff; caching; safe file injection; include expansion
-# - Generic text extraction (no dependency on ellmer::as_text)
+# neuro2_llm.R — consolidated LLM implementation for neuro2
+# Public API:
+#   - neuro2_llm_smoke_test()
+#   - generate_domain_summary_from_master()
+#   - run_llm_for_all_domains()
+#   - neuro2_run_llm_then_render()
 
 # -------------------------- utilities --------------------------
 
@@ -112,7 +111,7 @@ detect_target_qmd <- function(prompt_text) {
 #' @description Replaces `{{@file}}` references with file content and collects dependencies.
 #' @param text Character string to expand.
 #' @param base_dir Base directory for file paths, default `"."`.
-#' @param on_missing `"note"` inserts the literal marker ``[[MISSING FILE: ...]]``; `"skip"` drops silently.
+#' @param on_missing `"note"` inserts the literal marker `[[MISSING FILE: ...]]`; `"skip"` drops silently.
 #' @return List with expanded `text` and dependency `deps`.
 #' @export
 expand_includes <- function(
@@ -226,25 +225,28 @@ hash_inputs <- function(system_prompt, user_text, deps) {
   )
 }
 
-# --------------------- model selection (Ollama) -----------------
+# --------------------- model selection (backend) -----------------
 
-#' @title Create a chat bot for neuro2 using Ollama (official ellmer interface)
-#' @description Uses ellmer::chat_ollama() — the officially supported Ollama interface.
+#' @title Create a chat bot for neuro2 (Ollama by default; OpenAI optional)
+#' @description Selects an LLM backend and model by section: `"domain"` (8B), `"sirf"` (14B instruct), `"mega"` (30B instruct).
 #' @param system_prompt System prompt string.
-#' @param section One of "domain", "sirf", "mega".
+#' @param section One of `"domain"`, `"sirf"`, `"mega"`.
 #' @param model_override Optional exact model name to force.
-#' @param temperature Numeric temperature (default 0.2).
-#' @param echo ellmer echo mode (default "none").
+#' @param backend `"ollama"` (default) or `"openai"`.
+#' @param temperature Numeric temperature (default `0.2`).
+#' @param echo ellmer echo mode (default `"none"`).
 #' @return ellmer chat object.
 #' @export
 neuro2_llm_bot <- function(
   system_prompt,
   section = c("domain", "sirf", "mega"),
   model_override = NULL,
+  backend = c("ollama", "openai"),
   temperature = 0.2,
   echo = "none"
 ) {
   section <- match.arg(section)
+  backend <- match.arg(backend)
   model <- model_override %||%
     switch(
       section,
@@ -253,40 +255,100 @@ neuro2_llm_bot <- function(
       mega = "qwen3:30b-a3b-instruct-2507-q4_K_M"
     )
 
-  # ✅ Use the official Ollama interface
-  ellmer::chat_ollama(
-    system_prompt = system_prompt,
-    model = model,
-    params = ellmer::params(temperature = temperature),
-    api_args = list(stream = FALSE), # important: avoid streaming unless needed
-    echo = echo
-    # base_url and api_key auto-configured by chat_ollama()
-  )
+  if (backend == "ollama") {
+    ellmer::chat_ollama(
+      system_prompt = system_prompt,
+      model = model,
+      params = ellmer::params(temperature = temperature),
+      api_args = list(stream = FALSE), # non-streaming
+      echo = echo
+    )
+  } else {
+    ellmer::chat_openai(
+      system_prompt = system_prompt,
+      model = model,
+      params = ellmer::params(temperature = temperature),
+      api_args = list(stream = FALSE),
+      echo = echo
+    )
+  }
 }
 
 # ---------------------- LLM call wrapper -----------------------
 
-#' @title Call LLM Once with retries (Ollama backend)
+# Generic extractor (no ellmer::as_text dependency)
+.extract_text_generic <- function(obj) {
+  if (identical(Sys.getenv("NEURO2_LLM_DEBUG"), "1")) {
+    tf <- file.path(
+      tempdir(),
+      sprintf("neuro2_llm_debug_%s.txt", format(Sys.time(), "%Y%m%d_%H%M%S"))
+    )
+    writeLines(c(capture.output(str(obj, max.level = 3)), ""), tf)
+  }
+  if (is.list(obj)) {
+    ch <- obj$choices
+    if (is.list(ch) && length(ch) > 0) {
+      parts <- vapply(
+        ch,
+        function(c1) {
+          if (!is.null(c1$message$content)) {
+            return(paste(c1$message$content, collapse = " "))
+          }
+          if (!is.null(c1$text)) {
+            return(paste(c1$text, collapse = " "))
+          }
+          if (!is.null(c1$delta$content)) {
+            return(paste(c1$delta$content, collapse = " "))
+          }
+          ""
+        },
+        character(1)
+      )
+      cand <- trimws(stringr::str_squish(paste(parts, collapse = " ")))
+      if (nzchar(cand)) return(cand)
+    }
+    if (!is.null(obj$content) && is.character(obj$content)) {
+      cand <- trimws(stringr::str_squish(paste(obj$content, collapse = " ")))
+      if (nzchar(cand)) return(cand)
+    }
+    if (!is.null(obj$output) && is.character(obj$output)) {
+      cand <- trimws(stringr::str_squish(paste(obj$output, collapse = " ")))
+      if (nzchar(cand)) return(cand)
+    }
+    flat <- try(unlist(obj, use.names = FALSE), silent = TRUE)
+    if (!inherits(flat, "try-error") && is.character(flat) && length(flat)) {
+      cand <- trimws(stringr::str_squish(paste(flat, collapse = " ")))
+      if (nzchar(cand)) return(cand)
+    }
+  }
+  if (is.character(obj) && length(obj)) {
+    cand <- trimws(stringr::str_squish(paste(obj, collapse = " ")))
+    if (nzchar(cand)) return(cand)
+  }
+  trimws(stringr::str_squish(paste(capture.output(print(obj)), collapse = " ")))
+}
+
+#' @title Call LLM Once with retries
 #' @description Calls the selected model and returns text; retries on transient errors.
 #' @param system_prompt System prompt string.
 #' @param user_text User content string.
 #' @param section `"domain"`, `"sirf"`, or `"mega"`.
 #' @param model_override Optional exact model name (bypasses routing).
+#' @param backend `"ollama"` or `"openai"`.
 #' @param temperature Numeric temperature.
 #' @param echo Echo mode for streaming.
-#' @param max_output_tokens Optional token cap (if backend supports it).
 #' @param retries Number of retries (default 3).
 #' @param backoff Initial backoff seconds (default 1; doubles each retry).
 #' @return Character text output.
 #' @export
-call_openai_once <- function(
+call_llm_once <- function(
   system_prompt,
   user_text,
   section = "domain",
   model_override = NULL,
+  backend = "ollama",
   temperature = 0.2,
   echo = "none",
-  max_output_tokens = NULL,
   retries = 3,
   backoff = 1
 ) {
@@ -301,6 +363,7 @@ call_openai_once <- function(
       system_prompt = system_prompt,
       section = section,
       model_override = model_override,
+      backend = backend,
       temperature = temperature,
       echo = echo
     )
@@ -313,91 +376,7 @@ call_openai_once <- function(
       }
       stop("LLM call failed after retries: ", conditionMessage(res))
     }
-
-    # --- robust extraction without ellmer::as_text dependency ---
-    extract_text <- function(obj) {
-      # Optional debug: set NEURO2_LLM_DEBUG=1 to dump structure
-      if (identical(Sys.getenv("NEURO2_LLM_DEBUG"), "1")) {
-        tf <- file.path(
-          tempdir(),
-          sprintf(
-            "neuro2_llm_debug_%s.txt",
-            format(Sys.time(), "%Y%m%d_%H%M%S")
-          )
-        )
-        writeLines(c(capture.output(str(obj, max.level = 3)), ""), tf)
-      }
-      # 1) If it's a list that looks like OpenAI completion
-      if (is.list(obj)) {
-        # try common OpenAI-style paths
-        # choices -> message$content
-        try1 <- try(
-          {
-            ch <- obj$choices
-            if (is.list(ch) && length(ch) > 0) {
-              parts <- vapply(
-                ch,
-                function(c1) {
-                  if (!is.null(c1$message$content)) {
-                    return(paste(c1$message$content, collapse = " "))
-                  }
-                  if (!is.null(c1$text)) {
-                    return(paste(c1$text, collapse = " "))
-                  }
-                  if (!is.null(c1$delta$content)) {
-                    return(paste(c1$delta$content, collapse = " "))
-                  }
-                  ""
-                },
-                character(1)
-              )
-              cand <- trimws(stringr::str_squish(paste(parts, collapse = " ")))
-              if (nzchar(cand)) return(cand)
-            }
-            NULL
-          },
-          silent = TRUE
-        )
-        if (!is.null(try1)) {
-          return(try1)
-        }
-
-        # generic $content
-        if (!is.null(obj$content) && is.character(obj$content)) {
-          cand <- trimws(stringr::str_squish(paste(
-            obj$content,
-            collapse = " "
-          )))
-          if (nzchar(cand)) return(cand)
-        }
-        # generic $output
-        if (!is.null(obj$output) && is.character(obj$output)) {
-          cand <- trimws(stringr::str_squish(paste(obj$output, collapse = " ")))
-          if (nzchar(cand)) return(cand)
-        }
-        # any nested character fields
-        flat <- try(unlist(obj, use.names = FALSE), silent = TRUE)
-        if (
-          !inherits(flat, "try-error") && is.character(flat) && length(flat)
-        ) {
-          cand <- trimws(stringr::str_squish(paste(flat, collapse = " ")))
-          if (nzchar(cand)) return(cand)
-        }
-      }
-      # 2) If it's already character
-      if (is.character(obj) && length(obj)) {
-        cand <- trimws(stringr::str_squish(paste(obj, collapse = " ")))
-        if (nzchar(cand)) return(cand)
-      }
-      # 3) Last resort: deparse
-      cand <- trimws(stringr::str_squish(paste(
-        capture.output(print(obj)),
-        collapse = " "
-      )))
-      cand
-    }
-
-    out <- extract_text(res)
+    out <- .extract_text_generic(res)
     if (!nzchar(out)) {
       if (attempt <= retries) {
         Sys.sleep(backoff)
@@ -413,11 +392,11 @@ call_openai_once <- function(
 # --------------------- main entry points -----------------------
 
 #' @title Generate Domain Summary from QMD Prompts
-#' @description
-#' Generates a summary for a domain using QMD prompts and injects `<summary>` into the target QMD.
+#' @description Generates a summary for a domain using QMD prompts and injects `<summary>` into the target QMD.
 #' @param prompts_dir Directory of QMD prompts. Defaults to installed `inst/prompts/`.
 #' @param domain_keyword Keyword for the domain (e.g., `"priq"`, `"prsirf"`).
 #' @param model_override Optional exact model name; otherwise chosen by keyword (SIRF → 14B/30B; others → 8B).
+#' @param backend `"ollama"` (default) or `"openai"`.
 #' @param temperature Temperature (default `0.2`).
 #' @param base_dir Base directory where `*_text.qmd` files live (default `"."`).
 #' @param echo Echo mode for ellmer (default `"none"`).
@@ -428,17 +407,16 @@ generate_domain_summary_from_master <- function(
   prompts_dir = NULL,
   domain_keyword,
   model_override = NULL,
+  backend = "ollama",
   temperature = 0.2,
   base_dir = ".",
   echo = "none",
   mega = FALSE
 ) {
-  # Load QMD prompts (installed copy by default)
   prompts <- read_prompts_from_dir(
     prompts_dir %||% system.file("prompts", package = "neuro2")
   )
 
-  # Select prompt by canonicalized keyword
   idx <- which(vapply(
     prompts,
     function(x) .canon(x$keyword) == .canon(domain_keyword),
@@ -455,7 +433,6 @@ generate_domain_summary_from_master <- function(
   p <- prompts[[idx]]
   ptx <- p$text
 
-  # Detect target QMD
   target_qmd <- detect_target_qmd(ptx)
   if (is.na(target_qmd)) {
     stop("Prompt lacks a target @_NN-*.qmd line for keyword: ", domain_keyword)
@@ -466,7 +443,6 @@ generate_domain_summary_from_master <- function(
     file.create(target_path)
   }
 
-  # Build system prompt (sanitized) and user content
   sys_prompt <- sanitize_system_prompt(ptx)
   inc <- expand_includes(ptx, base_dir = base_dir, on_missing = "skip")
   target_text <- read_file_or_empty(target_path)
@@ -484,7 +460,6 @@ generate_domain_summary_from_master <- function(
     sep = "\n"
   )
 
-  # Determine section/model from keyword
   key_can <- .canon(domain_keyword)
   section <- if (identical(key_can, "prsirf")) {
     if (isTRUE(mega)) "mega" else "sirf"
@@ -492,9 +467,15 @@ generate_domain_summary_from_master <- function(
     "domain"
   }
 
-  # Cache
   key <- hash_inputs(
-    paste(sys_prompt, section, model_override %||% "", temperature, sep = "\n"),
+    paste(
+      sys_prompt,
+      section,
+      backend,
+      model_override %||% "",
+      temperature,
+      sep = "\n"
+    ),
     user_text,
     deps = c(target_path, inc$deps)
   )
@@ -502,19 +483,18 @@ generate_domain_summary_from_master <- function(
   if (file.exists(cpath)) {
     generated <- readr::read_file(cpath)
   } else {
-    generated <- call_openai_once(
+    generated <- call_llm_once(
       system_prompt = sys_prompt,
       user_text = user_text,
       section = section,
       model_override = model_override,
+      backend = backend,
       temperature = temperature,
-      echo = echo,
-      max_output_tokens = NULL
+      echo = echo
     )
     readr::write_file(generated, cpath)
   }
 
-  # Inject into the domain QMD
   inject_summary_block(target_path, generated)
   invisible(list(
     keyword = domain_keyword,
@@ -529,6 +509,7 @@ generate_domain_summary_from_master <- function(
 #' @param prompts_dir Optional prompts directory. Defaults to installed `inst/prompts/`.
 #' @param domain_keywords Vector of domain keywords.
 #' @param model_override Optional exact model name to force for all.
+#' @param backend `"ollama"` or `"openai"`.
 #' @param temperature Temperature.
 #' @param base_dir Base directory for `*_text.qmd`.
 #' @param echo Echo.
@@ -556,6 +537,7 @@ run_llm_for_all_domains <- function(
     "prrecs"
   ),
   model_override = NULL,
+  backend = "ollama",
   temperature = 0.2,
   base_dir = ".",
   echo = "none",
@@ -568,6 +550,7 @@ run_llm_for_all_domains <- function(
           prompts_dir = prompts_dir,
           domain_keyword = k,
           model_override = model_override,
+          backend = backend,
           temperature = temperature,
           base_dir = base_dir,
           echo = echo,
@@ -584,73 +567,118 @@ run_llm_for_all_domains <- function(
 # --------------------- diagnostics / smoke test ---------------------
 
 #' @title neuro2 LLM smoke test
-#' @description Pings the configured Ollama model and returns a short response plus timing.
-#' @param model Ollama model name (default "qwen3:8b-q4_K_M").
+#' @description Pings the configured model (Ollama by default) and returns a short response plus timing.
+#' @param model Model name (Ollama by default, e.g., "qwen3:8b-q4_K_M").
+#' @param backend "ollama" or "openai".
 #' @param prompt User prompt string.
 #' @param system_prompt System prompt string.
 #' @return A list with fields `seconds`, `preview`, and `raw`.
 #' @export
 neuro2_llm_smoke_test <- function(
   model = "qwen3:8b-q4_K_M",
+  backend = "ollama",
   prompt = "Reply with the single word: OK",
   system_prompt = "Be terse."
 ) {
   if (!requireNamespace("ellmer", quietly = TRUE)) {
     stop("The 'ellmer' package is required.")
   }
-  bot <- ellmer::chat_ollama(
-    system_prompt = system_prompt,
-    model = "qwen3:8b-q4_K_M",
-    params = ellmer::params(temperature = 0.2),
-    api_args = list(stream = FALSE),
-    echo = "none"
-  )
+  if (match.arg(backend, c("ollama", "openai")) == "ollama") {
+    bot <- ellmer::chat_ollama(
+      system_prompt = system_prompt,
+      model = model,
+      params = ellmer::params(temperature = 0.2),
+      api_args = list(stream = FALSE),
+      echo = "none"
+    )
+  } else {
+    bot <- ellmer::chat_openai(
+      system_prompt = system_prompt,
+      model = model,
+      params = ellmer::params(temperature = 0.2),
+      api_args = list(stream = FALSE),
+      echo = "none"
+    )
+  }
   t0 <- Sys.time()
   res <- bot$chat(prompt)
   dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  # reuse extractor
-  extract_text <- function(obj) {
-    if (is.list(obj)) {
-      ch <- obj$choices
-      if (is.list(ch) && length(ch) > 0) {
-        parts <- vapply(
-          ch,
-          function(c1) {
-            if (!is.null(c1$message$content)) {
-              return(paste(c1$message$content, collapse = " "))
-            }
-            if (!is.null(c1$text)) {
-              return(paste(c1$text, collapse = " "))
-            }
-            if (!is.null(c1$delta$content)) {
-              return(paste(c1$delta$content, collapse = " "))
-            }
-            ""
-          },
-          character(1)
-        )
-        cand <- trimws(stringr::str_squish(paste(parts, collapse = " ")))
-        if (nzchar(cand)) return(cand)
-      }
-      if (!is.null(obj$content) && is.character(obj$content)) {
-        cand <- trimws(stringr::str_squish(paste(obj$content, collapse = " ")))
-        if (nzchar(cand)) return(cand)
-      }
-      flat <- try(unlist(obj, use.names = FALSE), silent = TRUE)
-      if (!inherits(flat, "try-error") && is.character(flat) && length(flat)) {
-        cand <- trimws(stringr::str_squish(paste(flat, collapse = " ")))
-        if (nzchar(cand)) return(cand)
-      }
-    }
-    if (is.character(obj) && length(obj)) {
-      cand <- trimws(stringr::str_squish(paste(obj, collapse = " ")))
-      if (nzchar(cand)) return(cand)
-    }
-    trimws(stringr::str_squish(paste(
-      capture.output(print(obj)),
-      collapse = " "
-    )))
-  }
-  out <- extract_text(res)
+  out <- .extract_text_generic(res)
   list(seconds = dt, preview = substr(out, 1, 240), raw = out)
+}
+
+# --------------------- glue: run + render ---------------------
+
+#' @title Run LLM then render Quarto
+#' @description Executes the LLM stage first, then renders one or more Quarto documents.
+#' @param base_dir Base directory where `*_text.qmd` live.
+#' @param prompts_dir Prompts directory (default installed).
+#' @param render_paths Character vector of paths to `.qmd` files to render after LLM runs.
+#' @param quarto_profile Optional Quarto profile (e.g., "prod").
+#' @param domain_keywords Vector of keywords to generate; default is a standard set including "prsirf".
+#' @param backend `"ollama"` (default) or `"openai"`.
+#' @param mega_for_sirf Use the mega model for SIRF.
+#' @param temperature LLM temperature.
+#' @param echo ellmer echo mode.
+#' @return Invisibly returns a list with `llm` results and `rendered` output paths.
+#' @export
+neuro2_run_llm_then_render <- function(
+  base_dir = ".",
+  prompts_dir = NULL,
+  render_paths = character(0),
+  quarto_profile = NULL,
+  domain_keywords = c(
+    "priq",
+    "pracad",
+    "prverb",
+    "prspt",
+    "prmem",
+    "prexe",
+    "prmot",
+    "prsoc",
+    "pradhdchild",
+    "pradhdadult",
+    "premotchild",
+    "premotadult",
+    "pradapt",
+    "prdaily",
+    "prsirf",
+    "prrecs"
+  ),
+  backend = "ollama",
+  mega_for_sirf = FALSE,
+  temperature = 0.2,
+  echo = "none"
+) {
+  llm_res <- run_llm_for_all_domains(
+    prompts_dir = prompts_dir,
+    domain_keywords = domain_keywords,
+    backend = backend,
+    temperature = temperature,
+    base_dir = base_dir,
+    echo = echo,
+    mega_for_sirf = mega_for_sirf
+  )
+
+  rendered <- character(0)
+  if (length(render_paths)) {
+    if (!requireNamespace("quarto", quietly = TRUE)) {
+      stop("The 'quarto' package is required to render.")
+    }
+    for (rp in render_paths) {
+      if (!file.exists(rp)) {
+        next
+      }
+      if (is.null(quarto_profile)) {
+        quarto::quarto_render(rp)
+      } else {
+        withr::with_envvar(c(QUARTO_PROFILE = quarto_profile), {
+          quarto::quarto_render(rp)
+        })
+      }
+      rendered <- c(rendered, rp)
+    }
+  }
+
+  invisible(list(llm = llm_res, rendered = rendered))
 }
