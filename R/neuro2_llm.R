@@ -166,6 +166,14 @@ read_file_or_empty <- function(path) {
   if (file.exists(path)) readr::read_file(path) else ""
 }
 
+#' @title Strip <think> blocks
+#' @description Remove any <think>…</think> traces from LLM output.
+#' @param text Character string
+#' @return Cleaned character string
+strip_think_blocks <- function(text) {
+  stringr::str_replace_all(text, "(?is)<think>.*?</think>", "") |> trimws()
+}
+
 #' @title Inject Summary Block into QMD
 #' @description Injects or replaces the `<summary>` block in a QMD file.
 #' @param qmd_path Path to the QMD file.
@@ -486,13 +494,14 @@ generate_domain_summary_from_master <- function(
     generated <- call_llm_once(
       system_prompt = sys_prompt,
       user_text = user_text,
-      section = section,
-      model_override = model_override,
-      backend = backend,
+      model = model,
       temperature = temperature,
       echo = echo
     )
-    readr::write_file(generated, cpath)
+
+    # 🚫 Remove reasoning traces
+    generated <- strip_think_blocks(generated)
+    readr::write_file(generated, path)
   }
 
   inject_summary_block(target_path, generated)
