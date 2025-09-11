@@ -15,7 +15,6 @@ Your current JSON (e.g., the “Adaptive Functioning” item you pasted) is exac
 
 ```{r}
 # R/convert_prompts_json_to_qmd.R
-# deps: jsonlite, fs, readr
 library(jsonlite)
 library(fs)
 library(readr)
@@ -71,7 +70,7 @@ Run once to convert your existing JSON (working copy or the installed one—your
 ```{r}
 # from your package root
 convert_prompts_json_to_qmd(
-  json_path = "prompt/neuro2_prompts.json",   # or system.file(...), if you prefer
+  json_path = "prompt/neuro2_prompts.json",
   out_dir   = "inst/prompts",
   overwrite = TRUE
 )
@@ -255,8 +254,6 @@ generate_domain_summary_from_master <- function(
   inject_summary_block(target_path, generated)
   invisible(list(keyword = domain_keyword, qmd = target_path, text = generated))
 }
-
-
 ```
 
 In run_llm_for_all_domains() do the same:

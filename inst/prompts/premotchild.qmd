@@ -1,0 +1,37 @@
+---
+name: "Prompt Emotion/Personality Child"
+keyword: "premotchild"
+---
+
+@_02-10_emotion_child_text_self.qmd
+@_02-10_emotion_child_text_parent.qmd
+@_02-10_emotion_child_text_teacher.qmd
+
+
+# Behavioral/Emotional/Social/Personality - Child Rating Scale Summary Instructions
+
+## Purpose
+
+Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on on either self-report, observer report, parent report, or teacher report assessment results.
+
+## Format Requirements
+
+- Write a single paragraph in third-person, past tense
+- Focus on real-world functional implications rather than raw test scores
+- Highlight significant strengths and weaknesses, with less emphasis on average-range scores
+- Capitalize the first letter of performance range descriptors (e.g., "Below Average," "Average," "Above Average", etc)
+- Omit specific test scores such as standard scores, t scores, and scaled scores
+- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... performed Above Average at the 95th percentile, inidcating scores higher than 95% of same-aged peers from the general population")
+
+## Content Focus
+
+- Translate assessment results into practical daily living (e.g., school, home, work, social) implications
+- Interpret findings in terms of everyday functioning
+- Emphasize how ratings relate to real-world settings
+
+## Style Guidelines
+
+- Professional clinical tone
+- Concise language
+- Grammatically correct
+- Avoid simply restating test/rating scale names and their standard descriptions

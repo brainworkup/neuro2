@@ -1,0 +1,34 @@
+---
+name: "Prompt Adaptive Functioning"
+keyword: "pradapt"
+---
+
+@_02-11_adaptive_text.qmd
+
+# Adaptive Functioning Summary Instructions
+
+## Purpose
+
+Create a concise, professional summary of the patient's performance based on neurocognitive assessment results.
+
+## Format Requirements
+
+- Write a single paragraph in third-person, past tense
+- Focus on real-world functional implications rather than raw test scores
+- Highlight significant strengths and weaknesses, with less emphasis on average-range scores
+- Capitalize the first letter of performance range descriptors (e.g., "Below Average," "Average," "Above Average", etc)
+- Omit specific test scores such as standard scores, t scores, and scaled scores
+- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... performed Above Average at the 95th percentile, inidcating performance better than 95% of same-aged peers from the general population")
+
+## Content Focus
+
+- Translate assessment results into practical real-world (e.g., school, work, home, social) implications
+- Interpret findings in terms of everyday functioning
+- Emphasize how performance relates to real-world settings
+
+## Style Guidelines
+
+- Professional clinical tone
+- Concise language
+- Grammatically correct
+- Avoid simply restating test names and their standard descriptions
