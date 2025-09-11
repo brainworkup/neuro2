@@ -13,5 +13,5 @@ detect_target_qmd(prompt_text)
 Character string of the target qmd filename or NA.
 }
 \description{
-Extracts the target @_02-*.qmd file from the prompt text.
+Extracts the target @_NN-*.qmd file from the prompt text.
 }

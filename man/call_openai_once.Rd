@@ -2,30 +2,42 @@
 % Please edit documentation in R/llm_batch_openai.R
 \name{call_openai_once}
 \alias{call_openai_once}
-\title{Call OpenAI Once}
+\title{Call LLM Once with retries}
 \usage{
 call_openai_once(
   system_prompt,
   user_text,
-  model = "gpt-5-mini-2025-08-07",
-  temperature = 1,
-  echo = "none"
+  section = "domain",
+  model_override = NULL,
+  temperature = 0.2,
+  echo = "none",
+  max_output_tokens = NULL,
+  retries = 3,
+  backoff = 1
 )
 }
 \arguments{
 \item{system_prompt}{System prompt.}
 
-\item{user_text}{User message.}
+\item{user_text}{User content.}
 
-\item{model}{Model name, default "gpt-5-mini-2025-08-07".}
+\item{section}{"domain","sirf","mega".}
 
-\item{temperature}{Temperature parameter, default 1.}
+\item{model_override}{Optional exact model name.}
 
-\item{echo}{Echo parameter, default "none".}
+\item{temperature}{Temperature.}
+
+\item{echo}{Echo.}
+
+\item{max_output_tokens}{Optional token cap (if supported by backend).}
+
+\item{retries}{Retries.}
+
+\item{backoff}{Initial backoff seconds.}
 }
 \value{
-Character string response.
+Character text output.
 }
 \description{
-Makes a single call to OpenAI LLM and returns the response.
+Calls the provided provider/model (Ollama by default) and returns text.
 }

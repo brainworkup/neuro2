@@ -6,27 +6,33 @@
 \usage{
 run_llm_for_all_domains(
   master_json = NULL,
+  prompts_dir = NULL,
   domain_keywords = c("priq", "pracad", "prverb", "prspt", "prmem", "prexe", "prmot",
     "prsoc", "pradhdchild", "pradhdadult", "premotchild", "premotadult", "pradapt",
     "prdaily", "prsirf", "prrecs"),
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  model_override = NULL,
   temperature = 0.2,
   base_dir = ".",
-  echo = "none"
+  echo = "none",
+  mega_for_sirf = FALSE
 )
 }
 \arguments{
-\item{master_json}{Path to master JSON.}
+\item{master_json}{Optional JSON path.}
+
+\item{prompts_dir}{Optional prompts directory (preferred).}
 
 \item{domain_keywords}{Vector of domain keywords.}
 
-\item{model}{LLM model.}
+\item{model_override}{Optional exact model name to force for all.}
 
 \item{temperature}{Temperature.}
 
 \item{base_dir}{Base directory.}
 
 \item{echo}{Echo.}
+
+\item{mega_for_sirf}{logical; if TRUE, SIRF uses the "mega" model.}
 }
 \value{
 List of results per domain.

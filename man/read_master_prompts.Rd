@@ -2,7 +2,7 @@
 % Please edit documentation in R/llm_batch_openai.R
 \name{read_master_prompts}
 \alias{read_master_prompts}
-\title{Read Master Prompts}
+\title{Read Master Prompts (JSON)}
 \usage{
 read_master_prompts(json_path)
 }
@@ -10,7 +10,7 @@ read_master_prompts(json_path)
 \item{json_path}{Character string path to the JSON file.}
 }
 \value{
-List of filtered prompt objects.
+List of filtered prompt objects with fields name, keyword, text.
 }
 \description{
 Reads prompts from a JSON file and filters for those with keyword, text, and target qmd.

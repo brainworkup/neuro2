@@ -6,29 +6,35 @@
 \usage{
 generate_domain_summary_from_master(
   master_json = NULL,
+  prompts_dir = NULL,
   domain_keyword,
-  model = Sys.getenv("LLM_MODEL", unset = "gpt-4.1-mini"),
+  model_override = NULL,
   temperature = 0.2,
   base_dir = ".",
-  echo = "none"
+  echo = "none",
+  mega = FALSE
 )
 }
 \arguments{
-\item{master_json}{Path to master JSON.}
+\item{master_json}{Optional path to master JSON. If NULL and prompts_dir is NULL, uses installed inst/prompts/ via system.file().}
 
-\item{domain_keyword}{Keyword for the domain.}
+\item{prompts_dir}{Optional directory of QMD prompt files (preferred).}
 
-\item{model}{LLM model.}
+\item{domain_keyword}{Keyword for the domain (e.g., "priq","prsirf").}
+
+\item{model_override}{Optional exact model name; otherwise chosen by keyword (SIRF → 14B/30B; others → 8B).}
 
 \item{temperature}{Temperature.}
 
-\item{base_dir}{Base directory.}
+\item{base_dir}{Base directory where *_text.qmd files live.}
 
 \item{echo}{Echo.}
+
+\item{mega}{logical; if TRUE and keyword is SIRF, use the "mega" model section.}
 }
 \value{
 Invisible list with keyword, qmd, text.
 }
 \description{
-Generates a summary for a domain using master prompts and injects into QMD.
+Generates a summary for a domain using master prompts (JSON) or QMD prompts directory, then injects \if{html}{\out{<summary>}} into target QMD.
 }

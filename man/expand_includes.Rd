@@ -4,12 +4,14 @@
 \alias{expand_includes}
 \title{Expand Includes in Text}
 \usage{
-expand_includes(text, base_dir = ".")
+expand_includes(text, base_dir = ".", on_missing = c("note", "skip"))
 }
 \arguments{
 \item{text}{Character string to expand.}
 
 \item{base_dir}{Base directory for file paths, default ".".}
+
+\item{on_missing}{"note" -> insert \verb{[[MISSING FILE: ...]]}, "skip" -> drop silently.}
 }
 \value{
 List with expanded text and dependency paths.

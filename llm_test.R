@@ -108,3 +108,13 @@ res_recs <- generate_domain_summary_from_master(
   base_dir = ".",
   echo = "none"
 )
+
+
+bot <- ellmer::chat_openai(
+  system_prompt = system_prompt,
+  base_url = "http://localhost:11434/v1",
+  api_key = "ollama", # any non-empty string
+  model = "llama3.1:8b-instruct", # or "llama3.1-8b-ctx8k"
+  params = ellmer::params(temperature = 0.2)
+)
+txt <- ellmer::as_text(ellmer::chat(bot, user_text))
