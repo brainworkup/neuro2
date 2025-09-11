@@ -19,6 +19,25 @@ llm_cache_dir <- function() {
   d
 }
 
+#' Strip <think> blocks that some local models emit
+strip_think_blocks <- function(text) {
+  stringr::str_replace_all(text, "(?is)<think>.*?</think>", "") |> trimws()
+}
+
+#' Write text atomically and defensively (avoids "invalid connection")
+safe_write_text <- function(text, filepath) {
+  dir.create(dirname(filepath), recursive = TRUE, showWarnings = FALSE)
+  tmp <- paste0(filepath, ".tmp")
+  con <- file(tmp, open = "wb")
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  # ensure UTF-8 and binary write (no newline munging)
+  writeBin(charToRaw(enc2utf8(paste(text, collapse = ""))), con)
+  # atomic rename
+  file.rename(tmp, filepath)
+  invisible(filepath)
+}
+
+
 # Canonicalize keys so "pr.sirf" == "prsirf"
 .canon <- function(x) gsub("[^A-Za-z0-9]+", "", x %||% "")
 
@@ -166,14 +185,6 @@ read_file_or_empty <- function(path) {
   if (file.exists(path)) readr::read_file(path) else ""
 }
 
-#' @title Strip <think> blocks
-#' @description Remove any <think>…</think> traces from LLM output.
-#' @param text Character string
-#' @return Cleaned character string
-strip_think_blocks <- function(text) {
-  stringr::str_replace_all(text, "(?is)<think>.*?</think>", "") |> trimws()
-}
-
 #' @title Inject Summary Block into QMD
 #' @description Injects or replaces the `<summary>` block in a QMD file.
 #' @param qmd_path Path to the QMD file.
@@ -213,6 +224,14 @@ inject_summary_block <- function(qmd_path, generated) {
   }
   readr::write_file(new_qmd, qmd_path)
   invisible(TRUE)
+}
+
+#' @title Strip <think> blocks
+#' @description Remove any <think>…</think> traces from LLM output.
+#' @param text Character string
+#' @return Cleaned character string
+strip_think_blocks <- function(text) {
+  stringr::str_replace_all(text, "(?is)<think>.*?</think>", "") |> trimws()
 }
 
 #' @title Hash Inputs for Caching
@@ -313,25 +332,35 @@ neuro2_llm_bot <- function(
         character(1)
       )
       cand <- trimws(stringr::str_squish(paste(parts, collapse = " ")))
-      if (nzchar(cand)) return(cand)
+      if (nzchar(cand)) {
+        return(cand)
+      }
     }
     if (!is.null(obj$content) && is.character(obj$content)) {
       cand <- trimws(stringr::str_squish(paste(obj$content, collapse = " ")))
-      if (nzchar(cand)) return(cand)
+      if (nzchar(cand)) {
+        return(cand)
+      }
     }
     if (!is.null(obj$output) && is.character(obj$output)) {
       cand <- trimws(stringr::str_squish(paste(obj$output, collapse = " ")))
-      if (nzchar(cand)) return(cand)
+      if (nzchar(cand)) {
+        return(cand)
+      }
     }
     flat <- try(unlist(obj, use.names = FALSE), silent = TRUE)
     if (!inherits(flat, "try-error") && is.character(flat) && length(flat)) {
       cand <- trimws(stringr::str_squish(paste(flat, collapse = " ")))
-      if (nzchar(cand)) return(cand)
+      if (nzchar(cand)) {
+        return(cand)
+      }
     }
   }
   if (is.character(obj) && length(obj)) {
     cand <- trimws(stringr::str_squish(paste(obj, collapse = " ")))
-    if (nzchar(cand)) return(cand)
+    if (nzchar(cand)) {
+      return(cand)
+    }
   }
   trimws(stringr::str_squish(paste(capture.output(print(obj)), collapse = " ")))
 }
@@ -475,34 +504,31 @@ generate_domain_summary_from_master <- function(
     "domain"
   }
 
-  key <- hash_inputs(
-    paste(
-      sys_prompt,
-      section,
-      backend,
-      model_override %||% "",
-      temperature,
-      sep = "\n"
-    ),
-    user_text,
-    deps = c(target_path, inc$deps)
+  key <- hash_inputs(sys_prompt, user_text, deps = c(target_path, inc$deps))
+  cache_file <- file.path(
+    llm_cache_dir(),
+    paste0(.canon(domain_keyword), "_", key, ".txt")
   )
-  cpath <- file.path(llm_cache_dir(), paste0(domain_keyword, "_", key, ".txt"))
-  if (file.exists(cpath)) {
-    generated <- readr::read_file(cpath)
+
+  if (file.exists(cache_file)) {
+    generated <- readr::read_file(cache_file)
   } else {
+    # FIX: Pass the correct parameters to call_llm_once
     generated <- call_llm_once(
       system_prompt = sys_prompt,
       user_text = user_text,
-      model = model,
+      section = section, # <- Pass the section we calculated
+      model_override = model_override, # <- Use model_override, not model
+      backend = backend, # <- Add backend parameter
       temperature = temperature,
       echo = echo
     )
-
-    # 🚫 Remove reasoning traces
+    # remove any reasoning traces BEFORE caching
     generated <- strip_think_blocks(generated)
-    readr::write_file(generated, path)
+    # robust, atomic write to avoid "invalid connection"
+    safe_write_text(generated, cache_file)
   }
+  generated <- strip_think_blocks(generated)
 
   inject_summary_block(target_path, generated)
   invisible(list(

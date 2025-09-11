@@ -2,8 +2,10 @@
 % Please edit documentation in R/neuro2_llm.R
 \name{strip_think_blocks}
 \alias{strip_think_blocks}
-\title{Strip \if{html}{\out{<think>}} blocks}
+\title{Strip \if{html}{\out{<think>}} blocks that some local models emit}
 \usage{
+strip_think_blocks(text)
+
 strip_think_blocks(text)
 }
 \arguments{
