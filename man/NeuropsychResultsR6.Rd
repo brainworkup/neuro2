@@ -9,25 +9,27 @@ NeuropsychResultsR6 Class
 NeuropsychResultsR6 Class
 }
 \details{
-An R6 class that concatenates and flattens neuropsych results by scale.
-This is an R6 implementation of the cat_neuropsych_results function with identical functionality.
+An R6 class that concatenates and flattens neuropsych results by scale,
+optionally runs an LLM (via Ollama) to generate a summary, and writes
+output to a Quarto text file.
 }
 \section{Methods}{
 
 \describe{
 \item{initialize}{Initialize a new NeuropsychResultsR6 object with data and file path.}
-\item{process}{Sort the data by percentile, remove duplicates, convert to text, and append to file.}
+\item{process}{Sort data by percentile, remove duplicates, write to file, and optionally run LLM.}
 \item{create_text_placeholder}{Create placeholder text file if it doesn't exist.}
-\item{emit_quarto_text_chunk}{Static method to emit a Quarto text chunk with file creation.}
+\item{emit_quarto_text_chunk}{Static method to emit a Quarto R chunk for generating this file.}
+\item{run_llm}{Internal method: Run Ollama LLM to generate a domain summary and inject into file.}
 }
 }
 
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{data}}{A dataframe containing the data}
+\item{\code{data}}{A dataframe containing the neuropsych results with at least a \code{result} column.}
 
-\item{\code{file}}{A character string specifying the name of the file}
+\item{\code{file}}{A character string specifying the path to the target QMD text file (e.g., "_02-01_iq.qmd").}
 }
 \if{html}{\out{</div>}}
 }
@@ -38,6 +40,7 @@ This is an R6 implementation of the cat_neuropsych_results function with identic
 \item \href{#method-NeuropsychResultsR6-create_text_placeholder}{\code{NeuropsychResultsR6$create_text_placeholder()}}
 \item \href{#method-NeuropsychResultsR6-process}{\code{NeuropsychResultsR6$process()}}
 \item \href{#method-NeuropsychResultsR6-emit_quarto_text_chunk}{\code{NeuropsychResultsR6$emit_quarto_text_chunk()}}
+\item \href{#method-NeuropsychResultsR6-run_llm}{\code{NeuropsychResultsR6$run_llm()}}
 \item \href{#method-NeuropsychResultsR6-clone}{\code{NeuropsychResultsR6$clone()}}
 }
 }
@@ -53,57 +56,83 @@ Initialize a new NeuropsychResultsR6 object with data and file path.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{A dataframe containing the data}
+\item{\code{data}}{A dataframe containing the neuropsych results.}
 
-\item{\code{file}}{A character string specifying the name of the file}
+\item{\code{file}}{A character string specifying the path to the output QMD text file.}
 
-\item{\code{...}}{Additional arguments (ignored)}
+\item{\code{...}}{Additional arguments (ignored).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new NeuropsychResultsR6 object
+A new NeuropsychResultsR6 object.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-create_text_placeholder"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-create_text_placeholder}{}}}
 \subsection{Method \code{create_text_placeholder()}}{
-Create a placeholder text file for a given domain if it doesn't already exist.
+Create a placeholder text file for the domain if it doesn't already exist.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$create_text_placeholder()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{domain_file}}{The domain QMD file (e.g., "_02-01_iq.qmd")}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-The text filename that was created or already existed
+The file path that was created or already existed (invisibly).
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-process"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-process}{}}}
 \subsection{Method \code{process()}}{
-Sort the data by percentile, remove duplicates, convert to text, and write to file as proper QMD content.
-Also creates the corresponding text placeholder file.
+Sort the data by percentile, remove duplicates, convert to text, write to file,
+and optionally invoke an LLM to generate a summary block.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$process()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$process(
+  llm = TRUE,
+  prompts_dir = NULL,
+  backend = getOption("neuro2.llm.backend", "ollama"),
+  temperature = getOption("neuro2.llm.temperature", 0.2),
+  model_override = getOption("neuro2.llm.model_override", NULL),
+  mega_for_sirf = getOption("neuro2.llm.mega_for_sirf", FALSE),
+  echo = "none",
+  base_dir = ".",
+  domain_keyword = NULL
+)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{llm}}{Logical; whether to run an LLM after writing the raw results. Default: \code{TRUE}.}
+
+\item{\code{prompts_dir}}{Path to directory containing prompt templates. Defaults to \code{system.file("prompts", package = "neuro2")}.}
+
+\item{\code{backend}}{LLM backend to use. Default: \code{"ollama"}.}
+
+\item{\code{temperature}}{Temperature setting for LLM sampling. Default: \code{0.2}.}
+
+\item{\code{model_override}}{Optional model name override. Default: \code{NULL}.}
+
+\item{\code{mega_for_sirf}}{Logical; if \code{TRUE}, use 'mega' model for SIRF domains. Default: \code{FALSE}.}
+
+\item{\code{echo}}{Control for \code{knitr} chunk echoing. Default: \code{"none"}.}
+
+\item{\code{base_dir}}{Base directory where QMD files are located. Default: \code{"."}.}
+
+\item{\code{domain_keyword}}{Explicit keyword for prompt matching. If \code{NULL}, inferred from \code{self$file}.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-Invisibly returns NULL after writing to the file.
+Invisibly returns \code{TRUE} on success.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NeuropsychResultsR6-emit_quarto_text_chunk"></a>}}
 \if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-emit_quarto_text_chunk}{}}}
 \subsection{Method \code{emit_quarto_text_chunk()}}{
-Static method to emit a Quarto text chunk with file creation code
+Static method to emit a Quarto R code chunk that will generate the QMD file using this class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$emit_quarto_text_chunk(domain_key, data_var, file_path)}\if{html}{\out{</div>}}
 }
@@ -111,16 +140,60 @@ Static method to emit a Quarto text chunk with file creation code
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{domain_key}}{Character scalar domain key for chunk label}
+\item{\code{domain_key}}{Character scalar; domain identifier (e.g., "iq", "executive").}
 
-\item{\code{data_var}}{Character scalar data variable name}
+\item{\code{data_var}}{Character scalar; name of the data variable in the Quarto document.}
 
-\item{\code{file_path}}{Character scalar file path for output}
+\item{\code{file_path}}{Character scalar; path to the output .qmd text file.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Character string containing the complete chunk
+Character string containing a complete Quarto R chunk.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NeuropsychResultsR6-run_llm"></a>}}
+\if{latex}{\out{\hypertarget{method-NeuropsychResultsR6-run_llm}{}}}
+\subsection{Method \code{run_llm()}}{
+Internal method: Run an LLM (via Ollama) to generate a domain summary and inject it
+into the QMD file as a \if{html}{\out{<summary>}}...\if{html}{\out{</summary>}} block.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NeuropsychResultsR6$run_llm(
+  prompts_dir = NULL,
+  backend = "ollama",
+  temperature = 0.2,
+  model_override = NULL,
+  mega_for_sirf = FALSE,
+  echo = "none",
+  base_dir = ".",
+  domain_keyword = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{prompts_dir}}{Path to prompt templates. Defaults to \code{system.file("prompts", package = "neuro2")}.}
+
+\item{\code{backend}}{LLM backend (e.g., "ollama"). Default: \code{getOption("neuro2.llm.backend", "ollama")}.}
+
+\item{\code{temperature}}{Sampling temperature. Default: \code{0.2}.}
+
+\item{\code{model_override}}{Optional model name. Default: \code{NULL}.}
+
+\item{\code{mega_for_sirf}}{Logical; if \code{TRUE}, use 'mega' model for SIRF domains. Default: \code{FALSE}.}
+
+\item{\code{echo}}{\code{knitr} chunk echo control. Default: \code{"none"}.}
+
+\item{\code{base_dir}}{Base directory where QMD files reside. Default: \code{"."}.}
+
+\item{\code{domain_keyword}}{Explicit domain keyword for prompt matching. If \code{NULL}, inferred from \code{self$file}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisibly returns \code{TRUE}.
 }
 }
 \if{html}{\out{<hr>}}

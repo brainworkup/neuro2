@@ -16,13 +16,14 @@ cat_neuropsych_results(data, file, ...)
 \item{...}{Additional arguments passed to other functions}
 }
 \value{
-A file containing the flattened and scaled text
+Invisibly returns \code{NULL}.
 
 A file containing the flattened and scaled text
 }
 \description{
-This function sorts the data by percentile, removes duplicates and converts the data to text.
-Finally, it appends the converted data to a file. It's a wrapper around the NeuropsychResultsR6 class.
+This function sorts the data by percentile, removes duplicates, converts to text,
+writes to a file, and optionally invokes an LLM to generate a summary.
+It's a wrapper around the \code{NeuropsychResultsR6} class.
 
 This function sorts the data by percentile, removes duplicates and converts the data to text. Finally, it appends the converted data to a file.
 }
