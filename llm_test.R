@@ -118,3 +118,34 @@ bot <- ellmer::chat_openai(
   params = ellmer::params(temperature = 0.2)
 )
 txt <- ellmer::as_text(ellmer::chat(bot, user_text))
+
+
+# one domain
+res <- generate_domain_summary_from_master(
+  prompts_dir = "inst/prompts",
+  domain_keyword = "prverb", # any keyword, e.g., "prsirf"
+  base_dir = "." # where *_text.qmd live
+)
+
+# or batch
+run_llm_for_all_domains(
+  prompts_dir = "inst/prompts",
+  base_dir = ".",
+  mega_for_sirf = FALSE # TRUE uses the 30B / 256k model
+)
+
+
+# Develop quickly with local prompts, no render
+neuro2_llm_dev(
+  base_dir = ".", # patient working dir
+  mega_for_sirf = FALSE
+)
+
+# Full run: LLM stage then render reports
+neuro2_run_llm_then_render(
+  base_dir = ".",
+  prompts_dir = "inst/prompts", # omit if using installed prompts
+  render_paths = c("report.qmd"), # any QMDs to render after LLM writes summaries
+  quarto_profile = NULL, # or "prod" etc.
+  mega_for_sirf = FALSE
+)
