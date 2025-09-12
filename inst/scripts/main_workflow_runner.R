@@ -49,7 +49,7 @@ run_neuropsych_workflow <- function(
   )
 
   # Get the package root directory
-  pkg_root <- normalizePath(file.path(here::here(), "..", ".."))
+  pkg_root <- normalizePath(file.path(here::here(), ".", "."))
   
   # Helper function to source files into a specific environment
   safe_source <- function(file_path, env) {
