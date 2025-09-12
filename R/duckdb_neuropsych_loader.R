@@ -1,13 +1,13 @@
 #' Load neuropsychological data using DuckDB for efficient processing
 #'
-#' This function replaces the traditional load_data() with DuckDB-powered loading
-#' that doesn't require loading entire CSVs into memory.
+#' This function replaces the traditional load_data() with DuckDB-powered
+#' loading that doesn't require loading entire CSVs into memory.
 #'
 #' @param file_path Path to directory containing CSV files
 #' @param output_dir Output directory for processed files
 #' @param return_data Whether to return data or write to files
 #' @param use_duckdb Whether to use DuckDB (default: TRUE)
-#' @param output_format Output format: "csv", "parquet", "arrow", or "all" (default: "csv")
+#' @param output_format Output format: "csv", "parquet", "arrow", or "all" (default: "all")
 #' @param patient Patient name (if NULL, will try to read from _variables.yml)
 #'
 #' @return List of processed data or NULL if writing to files
@@ -17,7 +17,7 @@ load_data_duckdb <- function(
   output_dir = here::here("data"),
   return_data = FALSE,
   use_duckdb = TRUE,
-  output_format = "csv",
+  output_format = "all",
   patient = NULL
 ) {
   # Input validation
@@ -65,7 +65,7 @@ load_data_duckdb <- function(
     # Ensure numeric columns are properly typed
     # Note: z_score, scaled_score, t_score, standard_score, and base_rate
     # are values in the score_type column, not separate columns
-    numeric_cols <- c("raw_score", "score", "ci_95", "percentile")
+    numeric_cols <- c("raw_score", "score", "percentile")
 
     for (col in numeric_cols) {
       if (col %in% names(df)) {
@@ -132,7 +132,7 @@ load_data_duckdb <- function(
     "
     CREATE OR REPLACE TABLE validity_final AS
     SELECT * FROM neuropsych_processed
-    WHERE test_type IN ('performance_validity', 'symptom_validity')
+    WHERE test_type IN 'validity_indicator'
   "
   )
 
