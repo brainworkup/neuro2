@@ -12,18 +12,18 @@ if (exists(".WORKFLOW_RUNNING")) {
 on.exit(rm(.WORKFLOW_RUNNING, envir = .GlobalEnv))
 
 #' Run the complete neuropsych workflow
-#' @param patient_name Patient identifier
+#' @param patient Patient identifier
 #' @param generate_qmd Whether to generate QMD files
 #' @param render_report Whether to render the final report
 run_neuropsych_workflow <- function(
-  patient_name = "TEST_PATIENT",
+  patient = "Biggie",
   generate_qmd = TRUE,
   render_report = FALSE
 ) {
   # Setup message
   message("\n==========================================")
   message("NEUROPSYCH WORKFLOW - SINGLE EXECUTION")
-  message("Patient: ", patient_name)
+  message("Patient: ", patient)
   message("Time: ", Sys.time())
   message("==========================================\n")
 
@@ -32,8 +32,12 @@ run_neuropsych_workflow <- function(
     library(here)
     library(dplyr)
     library(arrow)
+    library(neuro2)
   })
 
+  # Create a new environment for R6 classes to avoid namespace conflicts
+  r6_env <- new.env()
+  
   # Source R6 classes (check they exist first)
   r_files <- c(
     "DomainProcessorR6.R",
@@ -44,83 +48,160 @@ run_neuropsych_workflow <- function(
     "tidy_data.R"
   )
 
-  for (file in r_files) {
-    file_path <- here::here("../R", file)
+  # Get the package root directory
+  pkg_root <- normalizePath(file.path(here::here(), "..", ".."))
+  
+  # Helper function to source files into a specific environment
+  safe_source <- function(file_path, env) {
     if (file.exists(file_path)) {
-      message("Loading: ", file)
-      source(file_path)
-    } else {
-      warning("File not found: ", file_path)
+      message("Loading: ", file_path)
+      sys.source(file_path, envir = env, chdir = TRUE)
+      return(TRUE)
+    }
+    return(FALSE)
+  }
+  
+  # Try to source files from package R directory first, then inst/scripts
+  for (file in r_files) {
+    file_loaded <- FALSE
+    
+    # Try package R directory
+    file_path <- file.path(pkg_root, "R", file)
+    file_loaded <- safe_source(file_path, r6_env)
+    
+    # If not found, try inst/scripts
+    if (!file_loaded) {
+      file_path <- file.path(pkg_root, "inst", "scripts", file)
+      file_loaded <- safe_source(file_path, r6_env)
+    }
+    
+    if (!file_loaded) {
+      stop(
+        "Required file not found: ", file,
+        "\nSearched in:\n- ", 
+        file.path(pkg_root, "R", file),
+        "\n- ",
+        file.path(pkg_root, "inst", "scripts", file)
+      )
     }
   }
+  
+  # Attach the environment with R6 classes
+  attach(r6_env, name = "neuro2_r6_classes", warn.conflicts = FALSE)
+  on.exit(detach("neuro2_r6_classes"), add = TRUE)
 
   # Create output directories
   ensure_output_directories()
 
   # Load data ONCE
   message("\n--- Loading Data ---")
-  neurocog_data <- load_data_safely("data/neurocog.parquet")
-  neurobehav_data <- load_data_safely("data/neurobehav.parquet")
 
-  if (is.null(neurocog_data) || is.null(neurobehav_data)) {
-    stop("Failed to load required data files")
+  # Define data paths relative to package root
+  data_paths <- list(
+    neurocog = file.path(pkg_root, "data", "neurocog.parquet"),
+    neurobehav = file.path(pkg_root, "data", "neurobehav.parquet")
+  )
+
+  # Check if data files exist
+  for (data_name in names(data_paths)) {
+    if (!file.exists(data_paths[[data_name]])) {
+      stop(
+        "Data file not found: ",
+        data_paths[[data_name]],
+        "\nPlease ensure the data files exist in the package's data/ directory."
+      )
+    }
   }
 
-  # Define domains to process
+  # Load data
+  neurocog_data <- load_data_safely(data_paths$neurocog)
+  neurobehav_data <- load_data_safely(data_paths$neurobehav)
+
+  if (is.null(neurocog_data) || is.null(neurobehav_data)) {
+    stop(
+      "Failed to load required data files. Check file formats and permissions."
+    )
+  }
+
+  # Define domains to process with absolute paths
   domain_config <- list(
     iq = list(
       name = "General Cognitive Ability",
       pheno = "iq",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "01"
     ),
     academics = list(
       name = "Academic Skills",
       pheno = "academics",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "02"
     ),
     verbal = list(
       name = "Verbal/Language",
       pheno = "verbal",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "03"
     ),
     spatial = list(
       name = "Visual Perception/Construction",
       pheno = "spatial",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "04"
     ),
     memory = list(
       name = "Memory",
       pheno = "memory",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "05"
     ),
     executive = list(
       name = "Attention/Executive",
       pheno = "executive",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "06"
     ),
     motor = list(
       name = "Motor",
       pheno = "motor",
-      input_file = "data/neurocog.parquet",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "07"
     ),
     emotion = list(
-      name = "Behavioral/Emotional/Social",
-      pheno = "emotion",
-      input_file = "data/neurobehav.parquet",
+      name = "Social Cognition",
+      pheno = "social",
+      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
       number = "08"
     ),
-    validity = list(
-      name = "Performance Validity",
-      pheno = "validity",
-      input_file = "data/neurocog.parquet",
+    emotion = list(
+      name = "ADHD/Executive Functions",
+      pheno = "adhd",
+      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
       number = "09"
+    ),
+    emotion = list(
+      name = "Emotional/Behavioral/Social/Personality",
+      pheno = "emotion",
+      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
+      number = "10"
+    ),
+    emotion = list(
+      name = "Adaptive Functioning",
+      pheno = "adaptive",
+      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
+      number = "11"
+    ),
+    emotion = list(
+      name = "Daily Living",
+      pheno = "daily_living",
+      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
+      number = "12"
+    ),
+    validity = list(
+      name = "Validity",
+      pheno = "validity",
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
+      number = "13"
     )
   )
 
@@ -151,12 +232,16 @@ run_neuropsych_workflow <- function(
 
     tryCatch(
       {
-        # Create processor
-        processor <- DomainProcessorR6$new(
-          domains = config$name,
-          pheno = config$pheno,
-          input_file = config$input_file
-        )
+        # Create processor in the correct environment
+        processor <- with(r6_env, {
+          DomainProcessorR6$new(
+            domains = config$name,
+            pheno = config$pheno,
+            input_file = file.path(pkg_root, "data", basename(config$input_file)),
+            output_dir = file.path(pkg_root, "output"),
+            number = config$number
+          )
+        })
 
         # Process domain
         processor$process()
@@ -191,7 +276,7 @@ run_neuropsych_workflow <- function(
     message("\nRendering final report...")
     quarto::quarto_render(
       "template.qmd",
-      execute_params = list(patient = patient_name),
+      execute_params = list(patient = patient),
       quiet = FALSE
     )
   }
@@ -199,7 +284,7 @@ run_neuropsych_workflow <- function(
   return(list(
     successful = successful_domains,
     failed = failed_domains,
-    patient = patient_name
+    patient = patient
   ))
 }
 
