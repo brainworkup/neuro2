@@ -19,7 +19,6 @@ Processes each cognitive/behavioral domain sequentially
 Generates QMD files for each domain
 Optionally renders the final report
 
-
 Key function: run_neuropsych_workflow(patient, generate_qmd, render_report)
 Output: Domain-specific QMD files and processed data
 

@@ -684,6 +684,7 @@ DuckDBProcessorR6 <- R6::R6Class(
           "Emotional/Behavioral/Social/Personality" = "emotion",
           "Adaptive Functioning" = "adaptive",
           "Daily Living" = "daily_living",
+          "Validity" = "validity",
           # Deprecated aliases retained for backward compatibility
           "ADHD" = "adhd",
           "Psychiatric Disorders" = "emotion",
@@ -692,7 +693,6 @@ DuckDBProcessorR6 <- R6::R6Class(
           "Psychosocial Problems" = "emotion",
           "Emotional/Behavioral/Personality" = "emotion",
           "Behavioral/Emotional/Social" = "emotion",
-          "Validity" = "validity",
           "Performance Validity" = "validity",
           "Symptom Validity" = "validity",
           "Effort/Validity" = "validity"
@@ -726,29 +726,122 @@ DuckDBProcessorR6 <- R6::R6Class(
       return(processor)
     },
 
-    # Get domain summary statistics using SQL
-    #' @description Return summary statistics across domains via SQL.
-    #' @param include_all If TRUE, include all domains;
-    #'  otherwise, restrict to those with data.
+    #' @description Return summary statistics across domains (neurocog + neurobehav).
+    #' @param include_all If TRUE, include all known domains (requires a domain
+    #'   reference table; otherwise falls back to domains with data).
+    #' @param by_stream If TRUE, return one row per (domain, stream) where stream
+    #'   is 'neurocog' or 'neurobehav'. If FALSE, streams are combined.
     #' @return A data.frame with domain-level summary metrics.
+    get_domain_summary = function(include_all = TRUE, by_stream = FALSE) {
+      # Helper: which tables exist?
+      tbls <- self$query(
+        "
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'main'
+  "
+      )$table_name
 
-    get_domain_summary = function(include_all = TRUE) {
-      query <- "
+      has_cog <- "neurocog" %in% tbls
+      has_behav <- "neurobehav" %in% tbls
+
+      if (!has_cog && !has_behav) {
+        stop("Neither 'neurocog' nor 'neurobehav' tables are present.")
+      }
+
+      # Build the UNION source
+      sources <- c()
+      if (has_cog) {
+        sources <- c(
+          sources,
+          "SELECT 'neurocog' AS stream, domain, percentile, z FROM neurocog"
+        )
+      }
+      if (has_behav) {
+        sources <- c(
+          sources,
+          "SELECT 'neurobehav' AS stream, domain, percentile, z FROM neurobehav"
+        )
+      }
+
+      union_sql <- paste(sources, collapse = "\nUNION ALL\n")
+
+      # Core summary SQL (optionally grouped by stream)
+      grp_cols <- if (by_stream) "domain, stream" else "domain"
+      sel_cols <- if (by_stream) "domain, stream" else "domain"
+
+      summarize_sql <- sprintf(
+        "
+    WITH all_rows AS (
+      %s
+    )
+    SELECT
+      %s,
+      COUNT(*)                         AS n_tests,
+      AVG(percentile)                  AS mean_percentile,
+      AVG(z)                           AS mean_z,
+      STDDEV(z)                        AS sd_z,
+      MIN(percentile)                  AS min_percentile,
+      MAX(percentile)                  AS max_percentile
+    FROM all_rows
+    WHERE percentile IS NOT NULL
+    GROUP BY %s
+    ORDER BY mean_percentile DESC
+  ",
+        union_sql,
+        sel_cols,
+        grp_cols
+      )
+
+      # If include_all=TRUE and you maintain a domain reference table (e.g. 'domains_ref'
+      # with a column 'domain'), left-join it so domains with zero data still appear.
+      # If that table doesn't exist, we just return the summarized rows.
+      if (include_all) {
+        has_ref <- "domains_ref" %in% tbls
+        if (has_ref) {
+          # Ensure one row per domain in the reference
+          summarize_sql <- sprintf(
+            "
+        WITH all_rows AS (
+          %s
+        ),
+        agg AS (
+          SELECT
+            %s,
+            COUNT(*)        AS n_tests,
+            AVG(percentile) AS mean_percentile,
+            AVG(z)          AS mean_z,
+            STDDEV(z)       AS sd_z,
+            MIN(percentile) AS min_percentile,
+            MAX(percentile) AS max_percentile
+          FROM all_rows
+          WHERE percentile IS NOT NULL
+          GROUP BY %s
+        )
         SELECT
-          domain,
-          COUNT(*) as n_tests,
-          AVG(percentile) as mean_percentile,
-          AVG(z) as mean_z,
-          STDDEV(z) as sd_z,
-          MIN(percentile) as min_percentile,
-          MAX(percentile) as max_percentile
-        FROM neurocog
-        WHERE percentile IS NOT NULL
-        GROUP BY domain
-        ORDER BY mean_percentile DESC
-      "
+          %s,
+          COALESCE(agg.n_tests, 0)            AS n_tests,
+          agg.mean_percentile,
+          agg.mean_z,
+          agg.sd_z,
+          agg.min_percentile,
+          agg.max_percentile
+        FROM domains_ref ref
+        LEFT JOIN agg
+          ON ref.domain = agg.domain
+          %s
+        ORDER BY mean_percentile DESC NULLS LAST, ref.domain
+      ",
+            union_sql,
+            sel_cols,
+            grp_cols,
+            sel_cols,
+            if (by_stream) "AND agg.stream IN ('neurocog','neurobehav')" else ""
+          )
+        }
+      }
 
-      return(self$query(query))
+      self$query(summarize_sql)
     },
 
     # Create optimized indexes for faster queries
@@ -922,7 +1015,487 @@ DuckDBProcessorR6 <- R6::R6Class(
           return(FALSE)
         }
       )
+    },
+    #' @description Ensure a domains_ref table exists in DuckDB based on the internal
+    #'   lookup_neuropsych_scales. Includes domain, subdomain, narrow for all rows,
+    #'   and pass/verbal/timed only for neurocog rows (NA for neurobehav).
+    #' @return Invisibly TRUE if (re)created, FALSE if left unchanged.
+    ensure_domains_ref = function(force = FALSE) {
+      # Pull internal data from sysdata.rda
+      get_lookup <- function() {
+        # Works whether object is exported or not
+        if (
+          exists(
+            "lookup_neuropsych_scales",
+            where = asNamespace("neuro2"),
+            inherits = FALSE
+          )
+        ) {
+          get(
+            "lookup_neuropsych_scales",
+            envir = asNamespace("neuro2"),
+            inherits = FALSE
+          )
+        } else if (exists("lookup_neuropsych_scales")) {
+          lookup_neuropsych_scales
+        } else {
+          stop("lookup_neuropsych_scales not found in neuro2 namespace.")
+        }
+      }
+
+      # Check if table exists
+      tbls <- self$query(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema='main'"
+      )$table_name
+      if (!force && "domains_ref" %in% tbls) {
+        return(invisible(FALSE))
+      }
+
+      lkp <- get_lookup()
+
+      # Expect lkp to have at least: scale/test identifiers + domain/subdomain/narrow + stream
+      # Optionally: pass, verbal, timed (mostly neurocog). If missing, create as NA.
+      if (!"pass" %in% names(lkp)) {
+        lkp$pass <- NA
+      }
+      if (!"verbal" %in% names(lkp)) {
+        lkp$verbal <- NA
+      }
+      if (!"timed" %in% names(lkp)) {
+        lkp$timed <- NA
+      }
+      if (!"stream" %in% names(lkp)) {
+        stop(
+          "lookup_neuropsych_scales must contain a 'stream' column (e.g., 'neurocog'/'neurobehav')."
+        )
+      }
+
+      # Minimal reference set, one row per unique (domain, subdomain, narrow, stream),
+      # with neurocog-only attributes carried along; NA for neurobehav.
+      ref <- lkp |>
+        dplyr::distinct(
+          .data$domain,
+          .data$subdomain,
+          .data$narrow,
+          .data$stream,
+          .data$pass,
+          .data$verbal,
+          .data$timed
+        ) |>
+        # enforce NA for non-cog streams on pass/verbal/timed
+        dplyr::mutate(
+          pass = dplyr::if_else(.data$stream == "neurocog", .data$pass, NA),
+          verbal = dplyr::if_else(.data$stream == "neurocog", .data$verbal, NA),
+          timed = dplyr::if_else(.data$stream == "neurocog", .data$timed, NA)
+        )
+
+      DBI::dbExecute(self$conn, "DROP TABLE IF EXISTS domains_ref")
+      duckdb::duckdb_register(self$conn, "ref_tmp", ref)
+      DBI::dbExecute(
+        self$conn,
+        "
+    CREATE TABLE domains_ref AS
+    SELECT * FROM ref_tmp
+  "
+      )
+      DBI::dbRemoveTable(self$conn, "ref_tmp")
+      invisible(TRUE)
+    },
+    #' @description Create/replace views that enrich neurocog/neurobehav with
+    #'   domain/subdomain/narrow and (for neurocog) pass/verbal/timed via the lookup.
+    #'   Adjust the join key as needed (e.g., 'scale' or 'measure').
+    refresh_enriched_views = function() {
+      ensure_domains_ref()
+
+      # neurocog_enriched
+      DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurocog_enriched")
+      DBI::dbExecute(
+        self$conn,
+        "
+    CREATE VIEW neurocog_enriched AS
+    SELECT
+      c.*,
+      l.domain,
+      l.subdomain,
+      l.narrow,
+      l.pass,
+      l.verbal,
+      l.timed,
+      'neurocog' AS stream
+    FROM neurocog c
+    LEFT JOIN lookup_neuropsych_scales l
+      ON c.scale = l.scale
+    WHERE l.stream = 'neurocog'
+  "
+      )
+
+      # neurobehav_enriched
+      DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurobehav_enriched")
+      DBI::dbExecute(
+        self$conn,
+        "
+    CREATE VIEW neurobehav_enriched AS
+    SELECT
+      b.*,
+      l.domain,
+      l.subdomain,
+      l.narrow,
+      NULL::BOOLEAN AS pass,
+      NULL::BOOLEAN AS verbal,
+      NULL::BOOLEAN AS timed,
+      'neurobehav' AS stream
+    FROM neurobehav b
+    LEFT JOIN lookup_neuropsych_scales l
+      ON b.scale = l.scale
+    WHERE l.stream = 'neurobehav'
+  "
+      )
+    },
+    #' @description Summary across neurocog + neurobehav at a chosen granularity.
+    #' @param level One of 'domain', 'subdomain', 'narrow'.
+    #' @param by_stream If TRUE, split rows by stream (neurocog/neurobehav).
+    #' @param include_all If TRUE, left-join to domains_ref so all expected
+    #'   (level, stream) combos appear even with zero data.
+    #' @return data.frame with counts and central tendency.
+    get_domain_summary = function(
+      level = c("domain", "subdomain", "narrow"),
+      by_stream = FALSE,
+      include_all = TRUE
+    ) {
+      level <- match.arg(level)
+
+      # Make sure supporting artifacts exist
+      refresh_enriched_views()
+      ensure_domains_ref()
+
+      # Build union of enriched views
+      union_sql <- "
+    SELECT domain, subdomain, narrow, stream, percentile, z FROM neurocog_enriched
+    UNION ALL
+    SELECT domain, subdomain, narrow, stream, percentile, z FROM neurobehav_enriched
+  "
+
+      grp_cols <- if (by_stream) sprintf("%s, stream", level) else level
+      sel_cols <- if (by_stream) sprintf("%s, stream", level) else level
+
+      agg_sql <- sprintf(
+        "
+    WITH all_rows AS (
+      %s
+    ),
+    agg AS (
+      SELECT
+        %s,
+        COUNT(*)                  AS n_tests,
+        AVG(percentile)           AS mean_percentile,
+        AVG(z)                    AS mean_z,
+        STDDEV(z)                 AS sd_z,
+        MIN(percentile)           AS min_percentile,
+        MAX(percentile)           AS max_percentile
+      FROM all_rows
+      WHERE percentile IS NOT NULL
+      GROUP BY %s
+    )
+    SELECT * FROM agg
+    ORDER BY mean_percentile DESC NULLS LAST
+  ",
+        union_sql,
+        sel_cols,
+        grp_cols
+      )
+
+      if (!include_all) {
+        return(self$query(agg_sql))
+      }
+
+      # Expand to full (level[, stream]) cartesian set from domains_ref
+      # so domains with no data still appear.
+      base_ref <- switch(
+        level,
+        domain = "SELECT DISTINCT domain, stream, pass, verbal, timed FROM domains_ref",
+        subdomain = "SELECT DISTINCT subdomain AS key, stream, pass, verbal, timed FROM domains_ref",
+        narrow = "SELECT DISTINCT narrow   AS key, stream, pass, verbal, timed FROM domains_ref"
+      )
+
+      # For joining, standardize to alias 'key' = chosen level
+      ref_sql <- switch(
+        level,
+        domain = "SELECT DISTINCT domain AS key, stream, pass, verbal, timed FROM domains_ref",
+        subdomain = "SELECT DISTINCT subdomain AS key, stream, pass, verbal, timed FROM domains_ref",
+        narrow = "SELECT DISTINCT narrow AS key, stream, pass, verbal, timed FROM domains_ref"
+      )
+
+      join_on <- if (by_stream) {
+        "r.key = a.%s AND r.stream = a.stream"
+      } else {
+        "r.key = a.%s"
+      }
+
+      final_sql <- sprintf(
+        "
+    WITH all_rows AS (%s),
+    agg AS (
+      SELECT
+        %s,
+        COUNT(*)        AS n_tests,
+        AVG(percentile) AS mean_percentile,
+        AVG(z)          AS mean_z,
+        STDDEV(z)       AS sd_z,
+        MIN(percentile) AS min_percentile,
+        MAX(percentile) AS max_percentile
+      FROM all_rows
+      WHERE percentile IS NOT NULL
+      GROUP BY %s
+    ),
+    ref AS (%s)
+    SELECT
+      r.key AS %s%s,
+      COALESCE(a.n_tests, 0)       AS n_tests,
+      a.mean_percentile,
+      a.mean_z,
+      a.sd_z,
+      a.min_percentile,
+      a.max_percentile,
+      r.pass,
+      r.verbal,
+      r.timed
+    FROM ref r
+    LEFT JOIN agg a
+      ON %s
+    ORDER BY a.mean_percentile DESC NULLS LAST, r.key, %s
+  ",
+        union_sql,
+        sel_cols,
+        grp_cols,
+        ref_sql,
+        level,
+        if (by_stream) ", r.stream AS stream" else "",
+        sprintf(join_on, level),
+        if (by_stream) "r.stream" else "r.key"
+      )
+
+      self$query(final_sql)
+    },
+    #' @description True/False: does a DuckDB table or view exist?
+duckdb_has_relation <- function(conn, name) {
+  out <- DBI::dbGetQuery(conn, "
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'main' AND table_name = ?
+    UNION ALL
+    SELECT 1
+    FROM information_schema.views
+    WHERE table_schema = 'main' AND table_name = ?
+    LIMIT 1
+  ", params = list(name, name))
+  nrow(out) > 0
+}
+
+#' @description Get the in-memory lookup df from the neuro2 namespace.
+get_lookup_df <- function() {
+  if (exists("lookup_neuropsych_scales", where = asNamespace("neuro2"), inherits = FALSE)) {
+    get("lookup_neuropsych_scales", envir = asNamespace("neuro2"), inherits = FALSE)
+  } else if (exists("lookup_neuropsych_scales")) {
+    lookup_neuropsych_scales
+  } else {
+    stop("lookup_neuropsych_scales not found in neuro2 namespace.")
+  }
+}
+
+#' @description Normalized COALESCE join key expression for SQL.
+#'   Uses lower(trim()) on scale, test, test_name (in that order).
+#'   Example: sql_join_key("c") -> "COALESCE(NULLIF(lower(trim(c.scale)),''),
+#'                                        NULLIF(lower(trim(c.test)),''),
+#'                                        NULLIF(lower(trim(c.test_name)),'')
+#'                                  )"
+sql_join_key <- function(alias) {
+  sprintf(
+    "COALESCE(
+       NULLIF(lower(trim(%1$s.scale)), ''),
+       NULLIF(lower(trim(%1$s.test)), ''),
+       NULLIF(lower(trim(%1$s.test_name)), '')
+     )", alias
+  )
+},
+#' @description Make sure DuckDB can "see" lookup_neuropsych_scales.
+#' Registers an in-memory df and exposes a stable view name 'lookup_neuropsych_scales'.
+#' @param force Re-register even if already present.
+ensure_lookup_registered = function(force = FALSE) {
+  # If a stable view already exists and force = FALSE, quick check it’s queryable
+  if (!force && duckdb_has_relation(self$conn, "lookup_neuropsych_scales")) {
+    ok <- tryCatch({
+      invisible(DBI::dbGetQuery(self$conn, "SELECT COUNT(*) AS n FROM lookup_neuropsych_scales"))
+      TRUE
+    }, error = function(e) FALSE)
+    if (ok) return(invisible(FALSE))
+  }
+
+  # Pull in-memory df
+  lkp <- get_lookup_df()
+
+  # Ensure expected columns exist (stream, domain, subdomain, narrow; pass/verbal/timed optional)
+  req_cols <- c("stream","domain","subdomain","narrow","scale","test","test_name")
+  missing <- setdiff(req_cols, names(lkp))
+  if (length(missing)) {
+    stop("lookup_neuropsych_scales is missing required columns: ", paste(missing, collapse=", "))
+  }
+  if (!"pass"   %in% names(lkp)) lkp$pass   <- NA
+  if (!"verbal" %in% names(lkp)) lkp$verbal <- NA
+  if (!"timed"  %in% names(lkp)) lkp$timed  <- NA
+
+  # Register a temp table and create a canonical view name
+  # (drop old artifacts if present)
+  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS lookup_neuropsych_scales")
+  if (duckdb_has_relation(self$conn, "lookup_neuropsych_scales_mem")) {
+    DBI::dbExecute(self$conn, "DROP TABLE lookup_neuropsych_scales_mem")
+  }
+
+  duckdb::duckdb_register(self$conn, "lookup_neuropsych_scales_mem", lkp)
+
+  # Create a stable view with normalized join key column 'join_key'
+  DBI::dbExecute(self$conn, sprintf("
+    CREATE VIEW lookup_neuropsych_scales AS
+    SELECT
+      *,
+      COALESCE(
+        NULLIF(lower(trim(scale)),     ''),
+        NULLIF(lower(trim(test)),      ''),
+        NULLIF(lower(trim(test_name)), '')
+      ) AS join_key
+    FROM lookup_neuropsych_scales_mem
+  "))
+
+  invisible(TRUE)
+},
+#' @description Refresh enriched views and record any unmapped keys.
+refresh_enriched_views = function() {
+  ensure_lookup_registered()
+
+  # Drop views if exist
+  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurocog_enriched")
+  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurobehav_enriched")
+
+  # Create neurocog_enriched
+  DBI::dbExecute(self$conn, sprintf("
+    CREATE VIEW neurocog_enriched AS
+    WITH src AS (
+      SELECT
+        c.*,
+        %1$s AS join_key
+      FROM neurocog c
+    )
+    SELECT
+      s.* EXCLUDE join_key,
+      l.domain,
+      l.subdomain,
+      l.narrow,
+      l.pass,
+      l.verbal,
+      l.timed,
+      'neurocog' AS stream
+    FROM src s
+    LEFT JOIN lookup_neuropsych_scales l
+      ON s.join_key = l.join_key AND l.stream = 'neurocog'
+  ", sql_join_key("c")))
+
+  # Create neurobehav_enriched
+  DBI::dbExecute(self$conn, sprintf("
+    CREATE VIEW neurobehav_enriched AS
+    WITH src AS (
+      SELECT
+        b.*,
+        %1$s AS join_key
+      FROM neurobehav b
+    )
+    SELECT
+      s.* EXCLUDE join_key,
+      l.domain,
+      l.subdomain,
+      l.narrow,
+      NULL::BOOLEAN AS pass,
+      NULL::BOOLEAN AS verbal,
+      NULL::BOOLEAN AS timed,
+      'neurobehav' AS stream
+    FROM src s
+    LEFT JOIN lookup_neuropsych_scales l
+      ON s.join_key = l.join_key AND l.stream = 'neurobehav'
+  ", sql_join_key("b")))
+
+  # Log unmapped for each stream
+  log_unmapped_keys <- function(stream, view_name) {
+    # rows where domain is NULL after join => no match
+    df <- DBI::dbGetQuery(self$conn, sprintf("
+      WITH src AS (
+        SELECT
+          *,
+          %s AS join_key_norm
+        FROM %s
+      )
+      SELECT
+        CURRENT_TIMESTAMP AS ts,
+        '%s' AS stream,
+        join_key_norm AS join_key,
+        COUNT(*) AS n_rows
+      FROM src
+      WHERE domain IS NULL AND join_key_norm IS NOT NULL
+      GROUP BY join_key_norm
+      ORDER BY n_rows DESC, join_key_norm
+    ", sql_join_key("src"),  # recompute in case the view didn't expose keys
+         if (stream == "neurocog") "neurocog" else "neurobehav",
+         stream))
+
+    if (nrow(df)) {
+      if (!duckdb_has_relation(self$conn, "unmapped_tests_log")) {
+        DBI::dbExecute(self$conn, "
+          CREATE TABLE unmapped_tests_log(
+            ts TIMESTAMP,
+            stream TEXT,
+            join_key TEXT,
+            n_rows BIGINT
+          )
+        ")
+      }
+      duckdb::duckdb_register(self$conn, "unmapped_tmp", df)
+      on.exit(try(DBI::dbRemoveTable(self$conn, "unmapped_tmp"), silent = TRUE), add = TRUE)
+      DBI::dbExecute(self$conn, "INSERT INTO unmapped_tests_log SELECT * FROM unmapped_tmp")
+
+      # Friendly warning (head of offending keys)
+      sample_keys <- head(df$join_key, 10)
+      warning(sprintf(
+        "[%s] %d unmapped key(s). Examples: %s. See table 'unmapped_tests_log'.",
+        stream, nrow(df), paste(sample_keys, collapse = ", ")
+      ), call. = FALSE)
     }
+  }
+
+  # Run guards
+  log_unmapped_keys("neurocog",   "neurocog")
+  log_unmapped_keys("neurobehav", "neurobehav")
+
+  invisible(TRUE)
+},
+#' @description Rebuild domains_ref from lookup (idempotent).
+ensure_domains_ref = function(force = FALSE) {
+  ensure_lookup_registered()
+
+  if (!force && duckdb_has_relation(self$conn, "domains_ref")) return(invisible(FALSE))
+
+  DBI::dbExecute(self$conn, "DROP TABLE IF EXISTS domains_ref")
+  DBI::dbExecute(self$conn, "
+    CREATE TABLE domains_ref AS
+    SELECT DISTINCT
+      domain,
+      subdomain,
+      narrow,
+      stream,
+      CASE WHEN stream = 'neurocog' THEN pass   ELSE NULL END AS pass,
+      CASE WHEN stream = 'neurocog' THEN verbal ELSE NULL END AS verbal,
+      CASE WHEN stream = 'neurocog' THEN timed  ELSE NULL END AS timed
+    FROM lookup_neuropsych_scales
+    WHERE domain IS NOT NULL
+  ")
+  invisible(TRUE)
+}
   )
 )
 

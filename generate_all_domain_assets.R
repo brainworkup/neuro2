@@ -299,57 +299,22 @@ domains_config <- list(
     plot_title_var = "plot_title_motor"
   ),
   list(
-    domain_name = "ADHD/Executive Function",
-    pheno = "adhd",
-    scales_var = "scales_adhd_adult",
-    plot_title_var = "plot_title_adhd_adult"
-  ),
-  list(
-    domain_name = "ADHD/Executive Function",
-    pheno = "adhd",
-    scales_var = "scales_adhd_child",
-    plot_title_var = "plot_title_adhd_child"
-  ),
-  list(
-    domain_name = c(
-      "Emotional/Behavioral/Social/Personality"
-    ),
-    pheno = "emotion",
-    scales_var = "scales_emotion_adult",
-    plot_title_var = "plot_title_emotion_adult"
-  ),
-  # Emotion child domain - self report
-  list(
-    domain_name = "Emotional/Behavioral/Social/Personality",
-    pheno = "emotion",
-    scales_var = "scales_emotion_child",
-    plot_title_var = "plot_title_emotion_child_self",
-    informant_type = "self",
-    test_filter = c(
-      "pai_adol",
-      "pai_adol_clinical",
-      "basc3_srp_adolescent",
-      "basc3_srp_child"
-    )
-  ),
-  # Emotion child domain - parent report
-  list(
-    domain_name = "Emotional/Behavioral/Social/Personality",
-    pheno = "emotion",
-    scales_var = "scales_emotion_child",
-    plot_title_var = "plot_title_emotion_child_parent",
-    informant_type = "parent",
-    test_filter = c(
-      "basc3_prs_adolescent",
-      "basc3_prs_child",
-      "basc3_prs_preschool"
-    )
-  ),
-  list(
     domain_name = "Social Cognition",
     pheno = "social",
     scales_var = "scales_social",
     plot_title_var = "plot_title_social"
+  ),
+  list(
+    domain_name = "ADHD/Executive Function",
+    pheno = "adhd",
+    scales_var = "scales_adhd",
+    plot_title_var = "plot_title_adhd"
+  ),
+  list(
+    domain_name = c("Emotional/Behavioral/Social/Personality"),
+    pheno = "emotion",
+    scales_var = "scales_emotion",
+    plot_title_var = "plot_title_emotion"
   )
 )
 

@@ -154,3 +154,4 @@ neuro2_llm_setup.qmd
 altdoc/freeze.rds
 _quarto/*
 !_quarto/_freeze/
+runtime.R

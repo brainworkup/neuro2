@@ -1498,10 +1498,10 @@ logic."
 
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_iq = plot_title_iq,
-  overwrite = c("plot_title_iq")
-)
+# .safe_use_data_internal(
+#   plot_title_iq = plot_title_iq,
+#   overwrite = c("plot_title_iq")
+# )
 
 ## Academics ---------------------------------------------------------------
 
@@ -1518,10 +1518,10 @@ logic."
 plot_title_academics <- "Reading, writing, and math are the three main academic skills assessed on exam. Reading ability consists of three interrelated abilities: decoding, comprehension, and fluency. Writing ability can be described in terms of spelling, grammar, expression of ideas, and writing fluency. Math ability can be described in terms of calculation skills, applied problem solving, and math fluency."
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_academics = plot_title_academics,
-  overwrite = c("plot_title_academics")
-)
+# .safe_use_data_internal(
+#   plot_title_academics = plot_title_academics,
+#   overwrite = c("plot_title_academics")
+# )
 
 ## Verbal/language ------------------------------------------------------------
 #' Verbal and Language Functioning Plot Title
@@ -1634,10 +1634,10 @@ common to treat them together, or even to refer to both processes when talking
 about one or the other."
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_adhd = plot_title_adhd,
-  overwrite = c("plot_title_adhd")
-)
+# .safe_use_data_internal(
+#   plot_title_adhd = plot_title_adhd,
+#   overwrite = c("plot_title_adhd")
+# )
 
 #' ADHD and Attention Plot Title - Observer
 #'
@@ -1649,11 +1649,7 @@ about one or the other."
 #' @name plot_title_adhd_observer
 #' @format A character string
 #' @keywords internal data
-plot_title_adhd_observer <- "Attention and executive functions are multidimensional
-concepts that contain several related processes. Both concepts require
-self-regulatory skills and have some common subprocesses; therefore, it is
-common to treat them together, or even to refer to both processes when talking
-about one or the other (OBS)."
+plot_title_adhd_observer <- "Attention and executive functions are multidimensional concepts that contain several related processes. Both concepts require self-regulatory skills and have some common subprocesses; therefore, it is common to treat them together, or even to refer to both processes when talking about one or the other (OBS)."
 
 # For the plot titles
 .safe_use_data_internal(
@@ -1718,10 +1714,10 @@ about one or the other (T)."
 plot_title_emotion <- "Mood, Behavioral, and Social-Emotional Reports. Self-reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_emotion = plot_title_emotion,
-  overwrite = c("plot_title_emotion", add_only = FALSE)
-)
+# .safe_use_data_internal(
+#   plot_title_emotion = plot_title_emotion,
+#   overwrite = c("plot_title_emotion", add_only = FALSE)
+# )
 
 #' Child Emotional and Behavioral Plot Title - Parent
 #'
@@ -1735,10 +1731,10 @@ plot_title_emotion <- "Mood, Behavioral, and Social-Emotional Reports. Self-repo
 plot_title_emotion_parent <- "Mood, Behavioral, and Social-Emotional Reports. Parent reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_emotion_parent = plot_title_emotion_parent,
-  overwrite = c("plot_title_emotion_parent")
-)
+# .safe_use_data_internal(
+#   plot_title_emotion_parent = plot_title_emotion_parent,
+#   overwrite = c("plot_title_emotion_parent")
+# )
 
 #' Child Emotional and Behavioral Plot Title - Teacher
 #'
@@ -1752,10 +1748,10 @@ plot_title_emotion_parent <- "Mood, Behavioral, and Social-Emotional Reports. Pa
 plot_title_emotion_teacher <- "Mood, Behavioral, and Social-Emotional Reports. Teacher reports of behavioral, emotional, and social difficulties."
 
 # For the plot titles
-.safe_use_data_internal(
-  plot_title_emotion_teacher = plot_title_emotion_teacher,
-  overwrite = c("plot_title_emotion_teacher")
-)
+# .safe_use_data_internal(
+#   plot_title_emotion_teacher = plot_title_emotion_teacher,
+#   overwrite = c("plot_title_emotion_teacher")
+# )
 
 ## Adaptive ----------------------------------------------------
 
@@ -1803,37 +1799,13 @@ plot_title_daily_living <- "Daily Living tests evaluate functional abilities req
 #' @keywords internal data
 plot_title_validity <- "Effort/validity tests can be performed by patient's with severe neurocognitive impairment, etc."
 
-# Using .safe_use_data_internal instead of usethis::use_data
-.safe_use_data_internal(
-  plot_title_neurocognition = plot_title_neurocognition,
-  plot_title_iq = plot_title_iq,
-  plot_title_academics = plot_title_academics,
-  plot_title_verbal = plot_title_verbal,
-  plot_title_spatial = plot_title_spatial,
-  plot_title_memory = plot_title_memory,
-  plot_title_executive = plot_title_executive,
-  plot_title_motor = plot_title_motor,
-  plot_title_social = plot_title_social,
-  plot_title_adhd = plot_title_adhd,
-  plot_title_adhd_observer = plot_title_adhd_observer,
-  plot_title_adhd_parent = plot_title_adhd_parent,
-  plot_title_adhd_teacher = plot_title_adhd_teacher,
-  plot_title_emotion = plot_title_emotion,
-  plot_title_emotion_child_parent = plot_title_emotion_child_parent,
-  plot_title_emotion_child_teacher = plot_title_emotion_child_teacher,
-  plot_title_adaptive = plot_title_adaptive,
-  plot_title_daily_living = plot_title_daily_living,
-  plot_title_validity = plot_title_validity,
-  add_only = FALSE
-)
-
 # Domains ------------------------------------------------------------------
 
 #' @name domain_iq
 #' @docType data
 #' @title General Cognitive Ability Domain
 #' @description A character string label representing the general cognitive ability/intelligence domain for grouping and categorizing neuropsychological test scales.
-#' @keywords internal
+#' @keywords data internal
 domain_iq <- "General Cognitive Ability"
 
 #' @name domain_academics
@@ -1889,7 +1861,7 @@ domain_social <- "Social Cognition"
 #' @docType data
 #' @title ADHD Domain
 #' @description A character string label representing the child/adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to ADHD symptoms.
-#' @keywords internal
+#' @keywords data internal
 domain_adhd <- "ADHD/Executive Function"
 
 #' @name domain_emotion
@@ -1897,7 +1869,7 @@ domain_adhd <- "ADHD/Executive Function"
 #' @title Child/Adult Emotional and Behavioral Domain
 #' @description A character vector of labels representing the emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
 #' @keywords internal
-domain_emotion <- c("Emotional/Behavioral/Social/Personality")
+domain_emotion <- "Emotional/Behavioral/Social/Personality"
 
 #' @name domain_adaptive
 #' @docType data
@@ -2011,19 +1983,19 @@ ut <- readRDS("inst/extdata/ut.rds")
 # You would use:
 
 # Example 1: Only add new objects, never overwrite existing ones
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  add_only = TRUE
-)
+# .safe_use_data_internal(
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   add_only = TRUE
+# )
 
 # Example 2: Only overwrite specific objects
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  dots = dots, # This exists in the file
-  overwrite = c("dots") # Only allow overwriting 'dots'
-)
+# .safe_use_data_internal(
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   dots = dots, # This exists in the file
+#   overwrite = c("dots") # Only allow overwriting 'dots'
+# )
 
 # Example 3: Update create_sysdata.R to use this function
 # For the scales data
@@ -2074,7 +2046,12 @@ ut <- readRDS("inst/extdata/ut.rds")
   plot_title_motor = plot_title_motor,
   plot_title_social = plot_title_social,
   plot_title_adhd = plot_title_adhd,
+  plot_title_adhd_observer = plot_title_adhd_observer,
+  plot_title_adhd_parent = plot_title_adhd_parent,
+  plot_title_adhd_teacher = plot_title_adhd_teacher,
   plot_title_emotion = plot_title_emotion,
+  plot_title_emotion_parent = plot_title_emotion_parent,
+  plot_title_emotion_teacher = plot_title_emotion_teacher,
   plot_title_adaptive = plot_title_adaptive,
   plot_title_daily_living = plot_title_daily_living,
   plot_title_validity = plot_title_validity,
@@ -2089,12 +2066,18 @@ ut <- readRDS("inst/extdata/ut.rds")
     "plot_title_motor",
     "plot_title_social",
     "plot_title_adhd",
+    "plot_title_adhd_observer",
+    "plot_title_adhd_parent",
+    "plot_title_adhd_teacher",
     "plot_title_emotion",
+    "plot_title_emotion_parent",
+    "plot_title_emotion_teacher",
     "plot_title_adaptive",
     "plot_title_daily_living",
     "plot_title_validity"
   )
 )
+
 
 
 # Using .safe_use_data_internal instead of usethis::use_data
@@ -2112,26 +2095,32 @@ ut <- readRDS("inst/extdata/ut.rds")
   domain_adaptive = domain_adaptive,
   domain_daily_living = domain_daily_living,
   domain_validity = domain_validity,
-  overwrite = TRUE
+  overwrite = c(
+    "domain_iq",
+    "domain_academics",
+    "domain_verbal",
+    "domain_spatial",
+    "domain_memory",
+    "domain_executive",
+    "domain_motor",
+    "domain_social",
+    "domain_adhd",
+    "domain_emotion",
+    "domain_adaptive",
+    "domain_daily_living",
+    "domain_validity"
+  )
 )
 
 # Example 2: Only overwrite specific objects
-.safe_use_data_internal(
-  scales_iq = scales_iq,
-  scales_academics = scales_academics,
-  dots = dots, # This exists in the file
-  overwrite = c("dots") # Only allow overwriting 'dots'
-)
-
 # .safe_use_data_internal(
-#   domain_adhd = domain_adhd_adult,
-#   domain_adhd = domain_adhd_child,
-#   domain_emotion = domain_emotion_adult,
-#   domain_emotion = domain_emotion_child,
-#   overwrite = c("domain_adhd", "domain_emotion")
+#   scales_iq = scales_iq,
+#   scales_academics = scales_academics,
+#   dots = dots, # This exists in the file
+#   overwrite = c("dots") # Only allow overwriting 'dots'
 # )
 
-.safe_use_data_internal(
-  domain_validity = domain_validity,
-  overwrite = c("domain_validity")
-)
+# .safe_use_data_internal(
+#   domain_validity = domain_validity,
+#   overwrite = c("domain_validity")
+# )
