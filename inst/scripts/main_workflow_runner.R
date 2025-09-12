@@ -37,7 +37,7 @@ run_neuropsych_workflow <- function(
 
   # Create a new environment for R6 classes to avoid namespace conflicts
   r6_env <- new.env()
-  
+
   # Source R6 classes (check they exist first)
   r_files <- c(
     "DomainProcessorR6.R",
@@ -50,7 +50,7 @@ run_neuropsych_workflow <- function(
 
   # Get the package root directory
   pkg_root <- normalizePath(file.path(here::here(), ".", "."))
-  
+
   # Helper function to source files into a specific environment
   safe_source <- function(file_path, env) {
     if (file.exists(file_path)) {
@@ -60,32 +60,33 @@ run_neuropsych_workflow <- function(
     }
     return(FALSE)
   }
-  
+
   # Try to source files from package R directory first, then inst/scripts
   for (file in r_files) {
     file_loaded <- FALSE
-    
+
     # Try package R directory
     file_path <- file.path(pkg_root, "R", file)
     file_loaded <- safe_source(file_path, r6_env)
-    
+
     # If not found, try inst/scripts
     if (!file_loaded) {
       file_path <- file.path(pkg_root, "inst", "scripts", file)
       file_loaded <- safe_source(file_path, r6_env)
     }
-    
+
     if (!file_loaded) {
       stop(
-        "Required file not found: ", file,
-        "\nSearched in:\n- ", 
+        "Required file not found: ",
+        file,
+        "\nSearched in:\n- ",
         file.path(pkg_root, "R", file),
         "\n- ",
         file.path(pkg_root, "inst", "scripts", file)
       )
     }
   }
-  
+
   # Attach the environment with R6 classes
   attach(r6_env, name = "neuro2_r6_classes", warn.conflicts = FALSE)
   on.exit(detach("neuro2_r6_classes"), add = TRUE)
@@ -174,7 +175,7 @@ run_neuropsych_workflow <- function(
       number = "08"
     ),
     emotion = list(
-      name = "ADHD/Executive Functions",
+      name = "ADHD/Executive Function",
       pheno = "adhd",
       input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
       number = "09"
@@ -237,7 +238,11 @@ run_neuropsych_workflow <- function(
           DomainProcessorR6$new(
             domains = config$name,
             pheno = config$pheno,
-            input_file = file.path(pkg_root, "data", basename(config$input_file)),
+            input_file = file.path(
+              pkg_root,
+              "data",
+              basename(config$input_file)
+            ),
             output_dir = file.path(pkg_root, "output"),
             number = config$number
           )
