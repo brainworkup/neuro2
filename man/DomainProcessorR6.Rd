@@ -63,15 +63,6 @@ R6 class for processing neuropsychological domain data
 }
 
 ## ------------------------------------------------
-## Method `DomainProcessorR6$detect_emotion_type`
-## ------------------------------------------------
-
-\dontrun{
-  obj <- DomainProcessorR6$new()
-  obj$detect_emotion_type()
-}
-
-## ------------------------------------------------
 ## Method `DomainProcessorR6$generate_domain_qmd`
 ## ------------------------------------------------
 
@@ -139,7 +130,7 @@ R6 class for processing neuropsychological domain data
 \describe{
 \item{\code{domains}}{Character vector of domain names to process}
 
-\item{\code{pheno}}{The phenotype identifier (e.g., "emotion", "adhd")}
+\item{\code{pheno}}{The phenotype identifier (e.g., "emotion", "adhd", "memory")}
 
 \item{\code{input_file}}{Path to the input data file}
 
@@ -167,7 +158,6 @@ R6 class for processing neuropsychological domain data
 \item \href{#method-DomainProcessorR6-get_rater_tests}{\code{DomainProcessorR6$get_rater_tests()}}
 \item \href{#method-DomainProcessorR6-check_rater_data_exists}{\code{DomainProcessorR6$check_rater_data_exists()}}
 \item \href{#method-DomainProcessorR6-detect_age_group}{\code{DomainProcessorR6$detect_age_group()}}
-\item \href{#method-DomainProcessorR6-detect_emotion_type}{\code{DomainProcessorR6$detect_emotion_type()}}
 \item \href{#method-DomainProcessorR6-generate_domain_qmd}{\code{DomainProcessorR6$generate_domain_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_domain_text_qmd}{\code{DomainProcessorR6$generate_domain_text_qmd()}}
 \item \href{#method-DomainProcessorR6-generate_standard_qmd}{\code{DomainProcessorR6$generate_standard_qmd()}}
@@ -403,7 +393,7 @@ Get the types of raters available for this domain
 }
 
 \subsection{Returns}{
-Character vector of rater types (e.g., "self", "parent", "teacher") or NULL if no multiple raters
+Character vector of rater types (e.g., "parent", "teacher") or NULL if no multiple raters
 }
 }
 \if{html}{\out{<hr>}}
@@ -458,33 +448,6 @@ Detect age group (child/adult) using config and data heuristics
 \subsection{Returns}{
 Character scalar: 'child' or 'adult'
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DomainProcessorR6-detect_emotion_type"></a>}}
-\if{latex}{\out{\hypertarget{method-DomainProcessorR6-detect_emotion_type}{}}}
-\subsection{Method \code{detect_emotion_type()}}{
-Detect emotion type (child/adult)
-
-
-Infer whether the dataset represents child or adult emotion measures.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DomainProcessorR6$detect_emotion_type()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Invisibly returns \code{self} for method chaining.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-  obj <- DomainProcessorR6$new()
-  obj$detect_emotion_type()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DomainProcessorR6-generate_domain_qmd"></a>}}

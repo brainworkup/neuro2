@@ -1,7 +1,7 @@
 #' @title DomainProcessorR6
 #' @description R6 class for processing neuropsychological domain data
 #' @field domains Character vector of domain names to process
-#' @field pheno The phenotype identifier (e.g., "emotion", "adhd")
+#' @field pheno The phenotype identifier (e.g., "emotion", "adhd", "memory")
 #' @field input_file Path to the input data file
 #' @field output_dir Directory path for output files (default: "data")
 #' @field number Numeric identifier for domain ordering
@@ -245,15 +245,15 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$has_multiple_raters()
     #' }
     has_multiple_raters = function() {
-      # Check if this domain typically has multiple raters
-      multi_rater_domains <- c("emotion", "adhd")
-      return(tolower(self$pheno) %in% multi_rater_domains)
+      # Simplified: only ADHD is treated as multi-rater by default.
+      return(tolower(self$pheno) == "adhd")
     },
 
     #' @description
     #' Get the types of raters available for this domain
-    #' @return Character vector of rater types (e.g., "self", "parent", "teacher") or NULL if no multiple raters
+    #' @return Character vector of rater types (e.g., "parent", "teacher") or NULL if no multiple raters
     get_rater_types = function() {
+      # Only ADHD is considered multi-rater going forward.
       if (!self$has_multiple_raters()) {
         return(NULL)
       }
@@ -265,14 +265,14 @@ DomainProcessorR6 <- R6::R6Class(
           return(unique(self$data$rater))
         }
 
-        # Otherwise, infer from test names
+        # Otherwise, infer from test name patterns
         raters <- c()
         test_names <- unique(self$data$test_name)
 
         # Define test patterns for different raters
         if (
           any(grepl(
-            "self|srp|adolescent|adult",
+            "self|srp|adolescent|adult|college",
             test_names,
             ignore.case = TRUE
           ))
@@ -289,14 +289,14 @@ DomainProcessorR6 <- R6::R6Class(
           raters <- c(raters, "observer")
         }
 
+        # Ensure at least self is present
+        raters <- unique(c("self", raters))
         return(raters)
       }
 
-      # Default raters based on domain
-      if (tolower(self$pheno) == "emotion") {
-        return(c("self", "parent"))
-      } else if (tolower(self$pheno) == "adhd") {
-        return(c("self", "parent", "teacher"))
+      # Default raters for ADHD when data inference is unavailable
+      if (tolower(self$pheno) == "adhd") {
+        return(c("self", "parent", "teacher", "observer"))
       }
 
       return(NULL)
@@ -364,23 +364,22 @@ DomainProcessorR6 <- R6::R6Class(
       # For self-report data, check test variable for specific tests
       if (rater == "self") {
         self_report_tests <- c(
-          "basc3_srp_child",
+          "abas3_self",
+          "bai",
           "basc3_srp_adolescent",
+          "basc3_srp_child",
           "basc3_srp_college",
+          "bdi2",
           "brown_efa_self",
           "caars_self",
           "caars2_self",
           "cefi_self_12-18",
           "cefi_self",
           "conners4_self",
-          "pai_adol_clinical",
-          "pai_adol_validity",
+          "frsbe_self",
+          "mmpi3",
           "pai_adol",
-          "pai_clinical",
-          "pai_inatt",
-          "pai_validity",
-          "pai",
-          "mmpi3"
+          "pai"
         )
         return(any(self$data$test %in% self_report_tests))
       }
@@ -393,8 +392,10 @@ DomainProcessorR6 <- R6::R6Class(
           "basc3_prs_adolescent",
           "basc3_prs_college",
           "cefi_parent_5-18",
+          "cefi_parent",
           "brown_efa_parent",
-          "conners4_parent"
+          "conners4_parent",
+          "abas3_parent"
         )
         return(any(self$data$test %in% parent_report_tests))
       }
@@ -408,7 +409,8 @@ DomainProcessorR6 <- R6::R6Class(
           "basc3_trs_college",
           "cefi_teacher_5-18",
           "brown_efa_teacher",
-          "conners4_teacher"
+          "conners4_teacher",
+          "abas3_teacher"
         )
         return(any(self$data$test %in% teacher_report_tests))
       }
@@ -419,7 +421,8 @@ DomainProcessorR6 <- R6::R6Class(
           "caars_observer",
           "cefi_observer",
           "caars2_observer",
-          "brown_efa_observer"
+          "brown_efa_observer",
+          "frsbe_observer"
         )
         return(any(self$data$test %in% observer_tests))
       }
@@ -522,125 +525,119 @@ DomainProcessorR6 <- R6::R6Class(
       return("adult")
     },
 
-    #' @description
-    #' Detect emotion type (child/adult)
-    #' @description Infer whether the dataset represents child or adult emotion measures.
-    #' @return Invisibly returns \code{self} for method chaining.
-    #' @examples
-    #' \dontrun{
-    #'   obj <- DomainProcessorR6$new()
-    #'   obj$detect_emotion_type()
-    #' }
-    detect_emotion_type = function() {
-      if (tolower(self$pheno) != "emotion") {
-        return(NULL)
-      }
+    # #' @description
+    # #' Detect emotion type (child/adult)
+    # #' @description Infer whether the dataset represents child or adult emotion measures.
+    # #' @return Invisibly returns \code{self} for method chaining.
+    # #' @examples
+    # #' \dontrun{
+    # #'   obj <- DomainProcessorR6$new()
+    # #'   obj$detect_emotion_type()
+    # #' }
+    # detect_emotion_type = function() {
+    #   if (tolower(self$pheno) != "emotion") {
+    #     return(NULL)
+    #   }
 
-      # Check domains first (most reliable method)
-      child_domain_patterns <- c(
-        "Emotional/Behavioral/Social/Personality",
-        "Behavioral/Emotional/Social",
-        "Personality Disorders",
-        "Psychiatric Disorders",
-        "Psychosocial Problems",
-        "Substance Use"
-      )
+    # # Check domains first (most reliable method)
+    # child_domain_patterns <- c(
+    #   "Emotional/Behavioral/Social/Personality"      )
 
-      adult_domain_patterns <- c(
-        "Emotional/Behavioral/Social/Personality",
-        "Emotional/Behavioral/Personality",
-        "Personality Disorders",
-        "Psychiatric Disorders",
-        "Psychosocial Problems",
-        "Substance Use"
-      )
+    # adult_domain_patterns <- c(
+    #   "Emotional/Behavioral/Social/Personality",
+    #   "Emotional/Behavioral/Personality",
+    #   "Personality Disorders",
+    #   "Psychiatric Disorders",
+    #   "Psychosocial Problems",
+    #   "Substance Use"
+    # )
 
-      # Check if any child-specific domains are present
-      child_domain_match <- any(sapply(
-        child_domain_patterns,
-        function(pattern) {
-          any(grepl(pattern, self$domains, fixed = TRUE))
-        }
-      ))
+    # # Check if any child-specific domains are present
+    # child_domain_match <- any(sapply(
+    #   child_domain_patterns,
+    #   function(pattern) {
+    #     any(grepl(pattern, self$domains, fixed = TRUE))
+    #   }
+    # ))
 
-      # Check if any adult-specific domains are present
-      adult_domain_match <- any(sapply(
-        adult_domain_patterns,
-        function(pattern) {
-          any(grepl(pattern, self$domains, fixed = TRUE))
-        }
-      ))
+    # # Check if any adult-specific domains are present
+    # adult_domain_match <- any(sapply(
+    #   adult_domain_patterns,
+    #   function(pattern) {
+    #     any(grepl(pattern, self$domains, fixed = TRUE))
+    #   }
+    # ))
 
-      # If we have clear domain matches, use those
-      if (child_domain_match && !adult_domain_match) {
-        return("child")
-      } else if (adult_domain_match && !child_domain_match) {
-        return("adult")
-      }
+    # # If we have clear domain matches, use those
+    # if (child_domain_match && !adult_domain_match) {
+    #   return("child")
+    # } else if (adult_domain_match && !child_domain_match) {
+    #   return("adult")
+    # }
 
-      # If domains are ambiguous, check the data if available
-      if (!is.null(self$data) && nrow(self$data) > 0) {
-        # Check for child-specific test patterns
-        child_test_patterns <- c(
-          "BAI",
-          "BASC-3 PRS Adolescent",
-          "BASC-3 PRS Child",
-          "BASC-3 PRS Preschool",
-          "BASC-3 SRP Adolescent",
-          "BASC-3 SRP Child",
-          "BASC-3 TRS Child",
-          "BASC-3 TRS Preschool",
-          "BASC-3 TRS Adolescent",
-          "BDI-2",
-          "Rating Scale of Impairment",
-          "PAI Adolescent",
-          "MMPI-A"
-        )
+    # # If domains are ambiguous, check the data if available
+    # if (!is.null(self$data) && nrow(self$data) > 0) {
+    #   # Check for child-specific test patterns
+    #   child_test_patterns <- c(
+    #     "BAI",
+    #     "BASC-3 PRS Adolescent",
+    #     "BASC-3 PRS Child",
+    #     "BASC-3 PRS Preschool",
+    #     "BASC-3 SRP Adolescent",
+    #     "BASC-3 SRP Child",
+    #     "BASC-3 TRS Child",
+    #     "BASC-3 TRS Preschool",
+    #     "BASC-3 TRS Adolescent",
+    #     "BDI-2",
+    #     "Rating Scale of Impairment",
+    #     "PAI Adolescent",
+    #     "MMPI-A"
+    #   )
 
-        adult_test_patterns <- c("BAI", "BDI-2", "MMPI-3", "PAI")
+    #   adult_test_patterns <- c("BAI", "BDI-2", "MMPI-3", "PAI")
 
-        # Check test names for age indicators
-        if ("test_name" %in% names(self$data)) {
-          test_names <- unique(self$data$test_name)
+    #   # Check test names for age indicators
+    #   if ("test_name" %in% names(self$data)) {
+    #     test_names <- unique(self$data$test_name)
 
-          child_test_match <- any(sapply(
-            child_test_patterns,
-            function(pattern) {
-              any(grepl(pattern, test_names, ignore.case = TRUE))
-            }
-          ))
+    #     child_test_match <- any(sapply(
+    #       child_test_patterns,
+    #       function(pattern) {
+    #         any(grepl(pattern, test_names, ignore.case = TRUE))
+    #       }
+    #     ))
 
-          adult_test_match <- any(sapply(
-            adult_test_patterns,
-            function(pattern) {
-              any(grepl(pattern, test_names, ignore.case = TRUE))
-            }
-          ))
+    #     adult_test_match <- any(sapply(
+    #       adult_test_patterns,
+    #       function(pattern) {
+    #         any(grepl(pattern, test_names, ignore.case = TRUE))
+    #       }
+    #     ))
 
-          if (child_test_match && !adult_test_match) {
-            return("child")
-          } else if (adult_test_match && !child_test_match) {
-            return("adult")
-          }
-        }
+    #     if (child_test_match && !adult_test_match) {
+    #       return("child")
+    #     } else if (adult_test_match && !child_test_match) {
+    #       return("adult")
+    #     }
+    #   }
 
-        # Check for rater types (children typically have parent/teacher raters)
-        if ("rater" %in% names(self$data)) {
-          raters <- unique(self$data$rater)
-          has_parent_teacher <- any(c("parent", "teacher") %in% tolower(raters))
-          has_only_self <- length(raters) == 1 && "self" %in% tolower(raters)
+    #     # Check for rater types (children typically have parent/teacher raters)
+    #     if ("rater" %in% names(self$data)) {
+    #       raters <- unique(self$data$rater)
+    #       has_parent_teacher <- any(c("parent", "teacher") %in% tolower(raters))
+    #       has_only_self <- length(raters) == 1 && "self" %in% tolower(raters)
 
-          if (has_parent_teacher) {
-            return("child")
-          } else if (has_only_self) {
-            return("adult")
-          }
-        }
-      }
+    #       if (has_parent_teacher) {
+    #         return("child")
+    #       } else if (has_only_self) {
+    #         return("adult")
+    #       }
+    #     }
+    #   }
 
-      # If still ambiguous, fall back to configured age group (or adult)
-      return(self$detect_age_group())
-    },
+    #   # If still ambiguous, fall back to configured age group (or adult)
+    #   return(self$detect_age_group())
+    # },
 
     #' @description
     #' Generate domain QMD file (unified method)
@@ -668,21 +665,22 @@ DomainProcessorR6 <- R6::R6Class(
       if (is.null(output_file)) {
         # Handle special cases
         if (tolower(self$pheno) == "emotion") {
-          emotion_type <- self$detect_emotion_type()
+          # emotion_type <- self$detect_emotion_type()
           output_file <- paste0(
             "_02-",
             self$number,
-            "_emotion_",
-            emotion_type,
+            "_emotion",
+            # emotion_type,
             ".qmd"
           )
         } else if (tolower(self$pheno) == "adhd") {
-          age_type <- if (self$detect_age_group() == "child") {
-            "child"
-          } else {
-            "adult"
-          }
-          output_file <- paste0("_02-", self$number, "_adhd_", age_type, ".qmd")
+          # age_type <- if (self$detect_age_group() == "child") {
+          #   "child"
+          # } else {
+          #   "adult"
+          # }
+          output_file <- paste0("_02-", self$number, "_adhd", ".qmd")
+          # output_file <- paste0("_02-", self$number, "_adhd_", age_type, ".qmd")
         } else {
           output_file <- paste0(
             "_02-",
@@ -743,55 +741,21 @@ DomainProcessorR6 <- R6::R6Class(
       created <- character()
 
       if (ph == "emotion") {
-        etype <- tryCatch(self$detect_emotion_type(), error = function(e) NULL)
-        if (is.null(etype)) {
-          etype <- "adult"
-        }
-        if (etype == "child") {
-          raters <- c("self", "parent", "teacher")
-          for (r in raters) {
-            if (self$check_rater_data_exists(r)) {
-              f <- paste0(
-                "_02-",
-                self$number,
-                "_emotion_child_text_",
-                r,
-                ".qmd"
-              )
-              created <- c(created, create_if_missing(f))
-            }
-          }
-        } else {
-          f <- paste0("_02-", self$number, "_emotion_adult_text.qmd")
-          created <- c(created, create_if_missing(f))
-        }
+        # Simplified: treat emotion like any other domain with self as default
+        f <- paste0("_02-", self$number, "_emotion_text.qmd")
+        created <- c(created, create_if_missing(f))
         return(invisible(created))
       }
 
       if (ph == "adhd") {
-        is_child <- any(grepl("child", tolower(self$domains))) ||
-          (!is.null(self$data) &&
-            any(grepl(
-              "child|adolescent",
-              self$data$test_name,
-              ignore.case = TRUE
-            )))
+        # Always create self text; add optional raters if data exists
+        f_self <- paste0("_02-", self$number, "_adhd_text_self.qmd")
+        created <- c(created, create_if_missing(f_self))
 
-        if (is_child) {
-          raters <- c("self", "parent", "teacher")
-          for (r in raters) {
-            if (self$check_rater_data_exists(r)) {
-              f <- paste0("_02-", self$number, "_adhd_child_text_", r, ".qmd")
-              created <- c(created, create_if_missing(f))
-            }
-          }
-        } else {
-          raters <- c("self", "observer")
-          for (r in raters) {
-            if (self$check_rater_data_exists(r)) {
-              f <- paste0("_02-", self$number, "_adhd_adult_text_", r, ".qmd")
-              created <- c(created, create_if_missing(f))
-            }
+        for (r in c("parent", "teacher", "observer")) {
+          if (self$check_rater_data_exists(r)) {
+            f <- paste0("_02-", self$number, "_adhd_text_", r, ".qmd")
+            created <- c(created, create_if_missing(f))
           }
         }
         return(invisible(created))
