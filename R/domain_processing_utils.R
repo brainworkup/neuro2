@@ -389,11 +389,11 @@ process_domain_data <- function(pheno, domains) {
     validity = "13"
   )
 
-  # Get the number for this domain, or use "99" if it's not found
-  number <- domain_numbers[tolower(pheno)]
-  if (is.na(number) || is.null(number)) {
-    number <- "99"
-  }
+  # # Get the number for this domain, or use "99" if it's not found
+  # number <- domain_numbers[tolower(pheno)]
+  # if (is.na(number) || is.null(number)) {
+  #   number <- "99"
+  # }
 
   # For single-rater domains (like IQ, memory), create simple filename
   if (is.null(rater)) {
@@ -408,7 +408,7 @@ process_domain_data <- function(pheno, domains) {
   if (tolower(pheno) == "emotion") {
     # Emotion domains need to specify child vs adult
     # For now, assume child (this could be made smarter later)
-    return(paste0("_02-", number, "_emotion_child_text_", rater, ".qmd"))
+    return(paste0("_02-", number, "_", tolower(pheno), "_text_", rater, ".qmd"))
   }
 
   # For other multi-rater domains (like ADHD)
@@ -914,23 +914,23 @@ validate_processor_inputs <- function(
     "Attention/Executive" = "executive",
     "Motor" = "motor",
     "Social Cognition" = "social",
+    "Adaptive Functioning" = "adaptive",
+    "Daily Living" = "daily_living",
     # New preferred labels
     "ADHD/Executive Function" = "adhd",
     "Emotional/Behavioral/Social/Personality" = "emotion",
-    "Adaptive Functioning" = "adaptive",
-    "Daily Living" = "daily_living",
-    "Validity" = "validity",
+    "Validity" = "validity"
     # Backward-compatibility aliases (deprecated)
-    "ADHD" = "adhd",
-    "Emotional/Behavioral/Personality" = "emotion",
-    "Behavioral/Emotional/Social" = "emotion",
-    "Psychiatric Disorders" = "emotion",
-    "Personality Disorders" = "emotion",
-    "Psychosocial Problems" = "emotion",
-    "Substance Use" = "emotion",
-    "Performance Validity" = "validity",
-    "Symptom Validity" = "validity",
-    "Effort/Validity" = "validity"
+    # "ADHD" = "adhd",
+    # "Emotional/Behavioral/Personality" = "emotion",
+    # "Behavioral/Emotional/Social" = "emotion",
+    # "Psychiatric Disorders" = "emotion",
+    # "Personality Disorders" = "emotion",
+    # "Psychosocial Problems" = "emotion",
+    # "Substance Use" = "emotion",
+    # "Performance Validity" = "validity",
+    # "Symptom Validity" = "validity",
+    # "Effort/Validity" = "validity"
   )
 
   # Try exact match first

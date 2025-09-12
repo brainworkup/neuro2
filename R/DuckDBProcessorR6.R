@@ -569,17 +569,7 @@ DuckDBProcessorR6 <- R6::R6Class(
           "Emotional/Behavioral/Social/Personality" = "emotion",
           "Adaptive Functioning" = "adaptive",
           "Daily Living" = "daily_living",
-          "Validity" = "validity",
-          "ADHD" = "adhd",
-          "Psychiatric Disorders" = "emotion",
-          "Personality Disorders" = "emotion",
-          "Substance Use" = "emotion",
-          "Psychosocial Problems" = "emotion",
-          "Emotional/Behavioral/Personality" = "emotion",
-          "Behavioral/Emotional/Social" = "emotion",
-          "Performance Validity" = "validity",
-          "Symptom Validity" = "validity",
-          "Effort/Validity" = "validity"
+          "Validity" = "validity"
         )
         pheno <- if (domain %in% names(pheno_map)) {
           pheno_map[[domain]]

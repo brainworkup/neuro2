@@ -1750,20 +1750,12 @@ DomainProcessorR6 <- R6::R6Class(
       }
 
       # Use correct header for child emotion domain
-      correct_domain_name <- "Behavioral/Emotional/Social"
+      correct_domain_name <- "Emotional/Behavioral/Social/Personality"
 
       # Create text files for different raters
-      self_text <- paste0("_02-", self$number, "_emotion_child_text_self.qmd")
-      parent_text <- paste0(
-        "_02-",
-        self$number,
-        "_emotion_child_text_parent.qmd"
-      )
-      teacher_text <- paste0(
-        "_02-",
-        self$number,
-        "_emotion_child_text_teacher.qmd"
-      )
+      self_text <- paste0("_02-", self$number, "_emotion_text.qmd")
+      parent_text <- paste0("_02-", self$number, "_emotion_text_parent.qmd")
+      teacher_text <- paste0("_02-", self$number, "_emotion_text_teacher.qmd")
 
       # Get input file path
       input_path <- if (grepl("^data/", self$input_file)) {
@@ -1773,14 +1765,7 @@ DomainProcessorR6 <- R6::R6Class(
       }
 
       # Multiple domains for emotion (based on master template)
-      multiple_domains <- c(
-        "Behavioral/Emotional/Social",
-        "Emotional/Behavioral/Personality",
-        "Psychiatric Symptoms",
-        "Substance Use",
-        "Personality Disorders",
-        "Psychosocial Problems"
-      )
+      multiple_domains <- "Emotional/Behavioral/Social/Personality"
 
       # Start building QMD content with complete R processing blocks
       qmd_content <- paste0(

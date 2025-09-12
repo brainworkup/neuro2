@@ -166,18 +166,18 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Emotional/Behavioral/Social/Personality" = "emotion",
         "Adaptive Functioning" = "adaptive",
         "Daily Living" = "daily_living",
-        "Validity" = "validity",
+        "Validity" = "validity"
         # Backward-compatibility aliases
-        "ADHD" = "adhd",
-        "Psychiatric Disorders" = "emotion",
-        "Personality Disorders" = "emotion",
-        "Substance Use" = "emotion",
-        "Psychosocial Problems" = "emotion",
-        "Behavioral/Emotional/Social" = "emotion",
-        "Emotional/Behavioral/Personality" = "emotion",
-        "Performance Validity" = "validity",
-        "Symptom Validity" = "validity",
-        "Effort/Validity" = "validity"
+        # "ADHD" = "adhd",
+        # "Psychiatric Disorders" = "emotion",
+        # "Personality Disorders" = "emotion",
+        # "Substance Use" = "emotion",
+        # "Psychosocial Problems" = "emotion",
+        # "Behavioral/Emotional/Social" = "emotion",
+        # "Emotional/Behavioral/Personality" = "emotion",
+        # "Performance Validity" = "validity",
+        # "Symptom Validity" = "validity",
+        # "Effort/Validity" = "validity"
       )
 
       # Determine the appropriate data file based on domain type
@@ -249,7 +249,12 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         }
 
         # Only instantiate a processor if we resolved a valid phenotype and input file
-        if (!is.null(pheno) && nzchar(pheno) && !is.null(input_file) && nzchar(input_file)) {
+        if (
+          !is.null(pheno) &&
+            nzchar(pheno) &&
+            !is.null(input_file) &&
+            nzchar(input_file)
+        ) {
           self$domain_processors[[pheno]] <- DomainProcessorR6$new(
             domains = domain,
             pheno = pheno,
@@ -258,7 +263,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         } else {
           warning(sprintf(
             "Skipping processor init for domain '%s' (pheno='%s', input='%s')",
-            as.character(domain), as.character(pheno), as.character(input_file)
+            as.character(domain),
+            as.character(pheno),
+            as.character(input_file)
           ))
         }
       }
@@ -608,20 +615,20 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Emotional/Behavioral/Social/Personality" = "emotion",
         "Adaptive Functioning" = "adaptive",
         "Daily Living" = "daily_living",
-        "Validity" = "validity",
+        "Validity" = "validity"
         # Deprecated aliases
-        "ADHD" = "adhd",
-        "ADHD Adult" = "adhd_adult",
-        "ADHD Child" = "adhd_child",
-        "Emotional/Behavioral/Personality" = "emotion",
-        "Behavioral/Emotional/Social" = "emotion",
-        "Psychiatric Disorders" = "emotion",
-        "Personality Disorders" = "emotion",
-        "Substance Use" = "emotion",
-        "Psychosocial Problems" = "emotion",
-        "Performance Validity" = "validity",
-        "Symptom Validity" = "validity",
-        "Effort/Validity" = "validity"
+        # "ADHD" = "adhd",
+        # "ADHD Adult" = "adhd_adult",
+        # "ADHD Child" = "adhd_child",
+        # "Emotional/Behavioral/Personality" = "emotion",
+        # "Behavioral/Emotional/Social" = "emotion",
+        # "Psychiatric Disorders" = "emotion",
+        # "Personality Disorders" = "emotion",
+        # "Substance Use" = "emotion",
+        # "Psychosocial Problems" = "emotion",
+        # "Performance Validity" = "validity",
+        # "Symptom Validity" = "validity",
+        # "Effort/Validity" = "validity"
       )
 
       # Try exact match first

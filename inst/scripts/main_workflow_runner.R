@@ -197,7 +197,7 @@ run_neuropsych_workflow <- function(
     daily_living = list(
       name = "Daily Living",
       pheno = "daily_living",
-      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "12"
     ),
     validity = list(
@@ -219,10 +219,10 @@ run_neuropsych_workflow <- function(
     # Check if domain has data
     data_source <- if (grepl("neurocog", config$input_file)) {
       neurocog_data
-    } else if (grepl("validity", config$input_file)) {
-      validity_data
-    } else {
+    } else if (grepl("neurobehav", config$input_file)) {
       neurobehav_data
+    } else {
+      validity_data
     }
 
     validation <- validate_domain_data_exists(config$name, data_source)
