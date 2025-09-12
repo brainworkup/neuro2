@@ -3,8 +3,8 @@ name: "Prompt ADHD/Executive Function Adult"
 keyword: "pradhd_a"
 ---
 
-@_02-09_adhd_adult_text_self.qmd
-@_02-09_adhd_adult_text_observer.qmd
+@_02-09_adhd_text_self.qmd
+@_02-09_adhd_text_observer.qmd
 
 
 # ADHD/Executive Function - Adult Behavioral Rating Scale Summary Instructions
