@@ -45,6 +45,7 @@ Imports:
     kableExtra,
     knitr (>= 1.42),
     memoise,
+    methods,
     progress,
     purrr,
     quarto (>= 1.4.0),
