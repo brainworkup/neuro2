@@ -44,8 +44,8 @@ workload <- function() {
       domains = c(
         "General Cognitive Ability", "Academic Skills", "Verbal/Language",
         "Visual Perception/Construction", "Memory", "Attention/Executive",
-        "Motor", "Social Cognition", "ADHD", "Emotional/Behavioral/Personality",
-        "Adaptive Functioning", "Daily Living", "Performance Validity"
+        "Motor", "Social Cognition", "ADHD/Executive Function", "Emotional/Behavioral/Social/Personality",
+        "Adaptive Functioning", "Daily Living", "Validity"
       ),
       data_files = list(
         neurocog = "data/neurocog.parquet",

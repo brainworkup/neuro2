@@ -236,7 +236,7 @@ table <- neuro2::gpluck_make_columns(
   ci_95 = "",
   test = params$test,
   test_name = params$test_name,
-  domain = "ADHD",
+  domain = "ADHD/Executive Function",
   subdomain = "",
   narrow = "",
   pass = "",
@@ -294,8 +294,8 @@ table <-
   table |>
   dplyr::mutate(
     domain = dplyr::case_when(
-      scale == "CAARS-SR Inconsistency Index" ~ "Symptom Validity",
-      scale == "CAARS-OR Inconsistency Index" ~ "Symptom Validity",
+      scale == "CAARS-SR Inconsistency Index" ~ "Validity",
+      scale == "CAARS-OR Inconsistency Index" ~ "Validity",
       TRUE ~ as.character(domain)
     )
   )
@@ -312,7 +312,7 @@ table[5, 10] <- c("Inattention")
 table[6, 10] <- c("Hyperactivity")
 table[7, 10] <- c("Combined Symptoms")
 table[8, 10] <- c("ADHD Index")
-table[9, 10] <- c("Symptom Validity")
+table[9, 10] <- c("Validity")
 ```
 
 ## Narrow subdomains

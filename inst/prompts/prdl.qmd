@@ -1,6 +1,6 @@
 ---
 name: "Prompt Daily Living"
-keyword: "prdaily"
+keyword: "prdl"
 ---
 
 @_02-12_daily_living_text.qmd

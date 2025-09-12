@@ -22,8 +22,8 @@ bench <- function(label, expr, reps = 1000L) {
 keys_input <- c(
   "General Cognitive Ability", "Academic Skills", "Verbal/Language",
   "Visual Perception/Construction", "Memory", "Attention/Executive",
-  "Motor", "Social Cognition", "ADHD", "Emotional/Behavioral/Personality",
-  "Adaptive Functioning", "Daily Living", "Performance Validity",
+  "Motor", "Social Cognition", "ADHD/Executive Function", "Emotional/Behavioral/Social/Personality",
+  "Adaptive Functioning", "Daily Living", "Validity",
   # edge cases
   "emotional/behavioral/social", "UNKNOWN DOMAIN", "Social  Cognition"
 )
@@ -49,11 +49,11 @@ resolve_domain_key <- function(x) {
     "Attention/Executive" = "executive",
     "Motor" = "motor",
     "Social Cognition" = "social",
-    "ADHD" = "adhd",
-    "Emotional/Behavioral/Personality" = "emotion",
+    "ADHD/Executive Function" = "adhd",
+    "Emotional/Behavioral/Social/Personality" = "emotion",
     "Adaptive Functioning" = "adaptive",
     "Daily Living" = "daily_living",
-    "Performance Validity" = "validity"
+    "Validity" = "validity"
   )
   m[[x]] %||% tolower(gsub("[^A-Za-z0-9]", "_", x))
 }

@@ -182,7 +182,7 @@ df <- neuro2::gpluck_make_columns(
   test_name = params$test_name,
   raw_score = "",
   range = "",
-  domain = "ADHD",
+  domain = "ADHD/Executive Function",
   subdomain = "Executive Function",
   narrow = "",
   pass = "",

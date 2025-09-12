@@ -1,5 +1,5 @@
 ---
-name: "Prompt SIRF"
+name: "Prompt Summary/Impression/Results/Feedback (SIRF)"
 keyword: "prsirf"
 ---
 
@@ -64,7 +64,7 @@ Instructions:
 
    f. Synthesize information into a coherent narrative
 
-   
+
 
    Focus on:
 

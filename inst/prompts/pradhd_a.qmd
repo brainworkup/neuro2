@@ -1,14 +1,13 @@
 ---
-name: "Prompt ADHD/Executive Function Child"
-keyword: "pradhdchild"
+name: "Prompt ADHD/Executive Function Adult"
+keyword: "pradhd_a"
 ---
 
-@_02-09_adhd_child_text_self.qmd
-@_02-09_adhd_child_text_parent.qmd
-@_02-09_adhd_child_text_teacher.qmd
+@_02-09_adhd_adult_text_self.qmd
+@_02-09_adhd_adult_text_observer.qmd
 
 
-# ADHD/Executive Function - Child Behavioral Rating Scale Summary Instructions
+# ADHD/Executive Function - Adult Behavioral Rating Scale Summary Instructions
 
 ## Purpose
 

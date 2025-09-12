@@ -1,5 +1,5 @@
 ---
-name: "Prompt Academics"
+name: "Prompt Academic Skills"
 keyword: "pracad"
 ---
 

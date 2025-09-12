@@ -272,7 +272,7 @@ table <- neuro2::gpluck_make_columns(
   ci_95 = "",
   percentile = "",
   range = "",
-  domain = "ADHD",
+  domain = "ADHD/Executive Function",
   subdomain = "",
   narrow = "",
   pass = "",

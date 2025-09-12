@@ -55,7 +55,7 @@ Initialize a new DrilldownR6 object with configuration and data.
   data,
   patient,
   neuro_domain = c("Neuropsychological Test Scores", "Behavioral Rating Scales",
-    "Effort/Validity Test Scores"),
+    "Validity Test Scores"),
   theme
 )}\if{html}{\out{</div>}}
 }

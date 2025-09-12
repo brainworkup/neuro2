@@ -299,24 +299,20 @@ domains_config <- list(
     plot_title_var = "plot_title_motor"
   ),
   list(
-    domain_name = "ADHD",
+    domain_name = "ADHD/Executive Function",
     pheno = "adhd",
     scales_var = "scales_adhd_adult",
     plot_title_var = "plot_title_adhd_adult"
   ),
   list(
-    domain_name = "ADHD",
+    domain_name = "ADHD/Executive Function",
     pheno = "adhd",
     scales_var = "scales_adhd_child",
     plot_title_var = "plot_title_adhd_child"
   ),
   list(
     domain_name = c(
-      "Emotional/Behavioral/Personality",
-      "Psychiatric Symptoms",
-      "Substance Use",
-      "Personality Disorders",
-      "Psychosocial Problems"
+      "Emotional/Behavioral/Social/Personality"
     ),
     pheno = "emotion",
     scales_var = "scales_emotion_adult",
@@ -324,7 +320,7 @@ domains_config <- list(
   ),
   # Emotion child domain - self report
   list(
-    domain_name = "Behavioral/Emotional/Social",
+    domain_name = "Emotional/Behavioral/Social/Personality",
     pheno = "emotion",
     scales_var = "scales_emotion_child",
     plot_title_var = "plot_title_emotion_child_self",
@@ -338,7 +334,7 @@ domains_config <- list(
   ),
   # Emotion child domain - parent report
   list(
-    domain_name = "Behavioral/Emotional/Social",
+    domain_name = "Emotional/Behavioral/Social/Personality",
     pheno = "emotion",
     scales_var = "scales_emotion_child",
     plot_title_var = "plot_title_emotion_child_parent",

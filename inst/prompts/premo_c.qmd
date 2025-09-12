@@ -1,11 +1,14 @@
 ---
-name: "Prompt Emotion/Personality Adult"
-keyword: "premotadult"
+name: "Prompt Emotional/Behavioral/Social/Personality Child"
+keyword: "premo_c"
 ---
 
-@_02-10_emotion_adult_text.qmd
+@_02-10_emotion_child_text_self.qmd
+@_02-10_emotion_child_text_parent.qmd
+@_02-10_emotion_child_text_teacher.qmd
 
-# Behavioral/Emotional/Social/Personality - Adult  Rating Scale Summary Instructions
+
+# Behavioral/Emotional/Social/Personality - Child Rating Scale Summary Instructions
 
 ## Purpose
 

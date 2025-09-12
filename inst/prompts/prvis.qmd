@@ -1,6 +1,6 @@
 ---
 name: "Prompt Visual Perception/Construction"
-keyword: "prspt"
+keyword: "prvis"
 ---
 
 @_02-04_spatial_text.qmd

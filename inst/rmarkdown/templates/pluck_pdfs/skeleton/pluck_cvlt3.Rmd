@@ -458,7 +458,7 @@ table7 <- neuro2::gpluck_make_columns(
   ci_95 = "",
   test = params$test,
   test_name = params$test_name,
-  domain = "Performance Validity",
+  domain = "Validity",
   subdomain = "Cognitive Effort",
   narrow = "Forced-Choice Recognition Memory",
   pass = "",

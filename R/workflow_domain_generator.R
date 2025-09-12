@@ -507,18 +507,28 @@ process_single_domain <- function(
     "Memory" = "memory",
     "Attention/Executive" = "executive",
     "Motor" = "motor",
+    "ADHD/Executive Function" = "adhd",
+    "Emotional/Behavioral/Social/Personality" = "emotion",
+    # Deprecated aliases
     "ADHD" = "adhd",
     "Behavioral/Emotional/Social" = "emotion",
-    "Emotional/Behavioral/Personality" = "emotion"
+    "Emotional/Behavioral/Personality" = "emotion",
+    "Psychiatric Disorders" = "emotion",
+    "Personality Disorders" = "emotion",
+    "Psychosocial Problems" = "emotion",
+    "Substance Use" = "emotion"
   )
 
   # Check if domain should be combined into emotion
   emotion_domains <- c(
+    "Emotional/Behavioral/Social/Personality",
+    # Deprecated aliases for backward compatibility
     "Substance Use",
     "Psychosocial Problems",
     "Psychiatric Disorders",
     "Personality Disorders",
-    "Emotional/Behavioral/Personality"
+    "Emotional/Behavioral/Personality",
+    "Behavioral/Emotional/Social"
   )
 
   if (domain_name %in% emotion_domains) {

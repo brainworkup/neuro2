@@ -1400,14 +1400,14 @@ domain_social <- "Social Cognition"
 #' @title Adult ADHD Domain
 #' @description A character string label representing the adult attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to adult ADHD symptoms.
 #' @keywords data internal
-domain_adhd_adult <- "ADHD"
+domain_adhd_adult <- "ADHD/Executive Function"  # deprecated alias; prefer domain_adhd
 
 #' @name domain_adhd_child
 #' @docType data
 #' @title Child ADHD Domain
 #' @description A character string label representing the child attention-deficit/hyperactivity disorder domain for grouping and categorizing assessment scales related to child ADHD symptoms.
 #' @keywords data internal
-domain_adhd_child <- "ADHD"
+domain_adhd_child <- "ADHD/Executive Function"  # deprecated alias; prefer domain_adhd
 
 #' @name domain_emotion_adult
 #' @docType data
@@ -1415,12 +1415,7 @@ domain_adhd_child <- "ADHD"
 #' @description A character vector of labels representing the adult emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, personality traits, substance use, and psychosocial functioning in adults.
 #' @keywords data internal
 domain_emotion_adult <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Behavioral/Emotional/Social",
-  "Emotional/Behavioral/Personality"
+  "Emotional/Behavioral/Social/Personality"  # deprecated alias; prefer domain_emotion
 )
 #' @name domain_emotion_child
 #' @docType data
@@ -1428,12 +1423,7 @@ domain_emotion_adult <- c(
 #' @description A character vector of labels representing the child emotional, behavioral, and personality functioning domain for grouping and categorizing clinical assessment scales related to psychiatric symptoms, behavioral issues, and psychosocial functioning in children and adolescents.
 #' @keywords data internal
 domain_emotion_child <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Behavioral/Emotional/Social",
-  "Emotional/Behavioral/Personality"
+  "Emotional/Behavioral/Social/Personality"  # deprecated alias; prefer domain_emotion
 )
 #' @name domain_adaptive
 #' @docType data
@@ -1460,10 +1450,8 @@ domain_daily_living <- "Daily Living"
 #   domain_executive,
 #   domain_motor,
 #   domain_social,
-#   domain_adhd_adult,
-#   domain_adhd_child,
-#   domain_emotion_adult,
-#   domain_emotion_child,
+#   domain_adhd,
+#   domain_emotion,
 #   domain_adaptive,
 #   domain_daily_living,
 #   internal = TRUE,

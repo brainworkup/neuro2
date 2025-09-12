@@ -1,11 +1,11 @@
 ---
-name: "Prompt Recs"
-keyword: "prrecs"
+name: "Prompt General Cognitive Ability"
+keyword: "prcog"
 ---
 
-@_03-01_recs.qmd
+@_02-01_iq_text.qmd
 
-# Recommendations Instructions
+# General Cognitive Ability/IQ Performance Summary Instructions
 
 ## Purpose
 

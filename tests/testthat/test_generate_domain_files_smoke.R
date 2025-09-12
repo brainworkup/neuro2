@@ -1,7 +1,7 @@
 test_that("generate_domain_files runs without error for basic domains", {
   rs <- NeuropsychReportSystemR6$new(
     config = list(
-      domains = c("Verbal/Language", "ADHD"),
+      domains = c("Verbal/Language", "ADHD/Executive Function"),
       data_files = list(
         neurocog = "data/neurocog.parquet",
         neurobehav = "data/neurobehav.parquet",
@@ -16,4 +16,3 @@ test_that("generate_domain_files runs without error for basic domains", {
   # Should not error even if data files are missing; function warns and skips
   expect_error(rs$generate_domain_files(), NA)
 })
-

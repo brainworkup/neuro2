@@ -8,7 +8,7 @@ drilldown(
   data,
   patient,
   neuro_domain = c("Neuropsychological Test Scores", "Behavioral Rating Scales",
-    "Effort/Validity Test Scores"),
+    "Validity Test Scores"),
   theme
 )
 }

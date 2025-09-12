@@ -478,7 +478,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
 
         # Behavioral domains
         adhd = list(
-          domains = "ADHD",
+          domains = "ADHD/Executive Function",
           pheno = "adhd",
           data_source = "neurobehav",
           number = "09",
@@ -492,8 +492,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
         ),
         emotion = list(
           domains = c(
-            "Emotional/Behavioral/Personality",
-            "Behavioral/Emotional/Social"
+            "Emotional/Behavioral/Social/Personality"
           ),
           pheno = "emotion",
           data_source = "neurobehav",
@@ -523,7 +522,7 @@ DomainProcessorFactoryR6 <- R6::R6Class(
 
         # Validity
         validity = list(
-          domains = c("Performance Validity", "Symptom Validity"),
+          domains = c("Validity"),
           pheno = "validity",
           data_source = "validity",
           number = "13",

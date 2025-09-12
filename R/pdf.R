@@ -67,7 +67,7 @@ gpluck_extract_tables <- function(
 #' @param domain Domain of the test, e.g. Academic Skills. Default: c("General
 #' Cognitive Ability", "Academic Skills", "Verbal/Language", "Visual
 #' Perception/Construction", "Attention/Executive", "Memory", "Motor", "Social
-#' Cognition", "Emotional/Behavioral/Personality", "Behavioral/Emotional/Social", "Personality Disorders", "Psychiatric Disorders", "Substance Use", "Psychosocial Problems", "ADHD", "Executive Function", "Adaptive Function", "Effort/Validity")
+#' Cognition", "Emotional/Behavioral/Social/Personality", "ADHD/Executive Function", "Adaptive Function", "Validity")
 #' @param subdomain Cognitive subdomain of the scale. Default: NULL
 #' @param narrow Narrow cognitive domain of the scale. Default: NULL
 #' @param pass PASS Cognitive Model. Default: c("Planning", "Attention", "Sequential", "Simultaneous", "Knowledge",
@@ -107,16 +107,10 @@ gpluck_make_columns <- function(
     "Memory",
     "Motor",
     "Social Cognition",
-    "Emotional/Behavioral/Personality",
-    "Behavioral/Emotional/Social",
-    "Psychiatric Disorders",
-    "Personality Disorders",
-    "Substance Use",
-    "Psychosocial Problems",
-    "ADHD",
-    "Executive Functioning",
+    "Emotional/Behavioral/Social/Personality",
+    "ADHD/Executive Function",
     "Adaptive Functioning",
-    "Effort/Validity"
+    "Validity"
   ),
   subdomain = NULL,
   narrow = NULL,

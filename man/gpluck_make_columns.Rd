@@ -17,10 +17,8 @@ gpluck_make_columns(
   domain = c("General Cognitive Ability", "Intelligence/General Ability",
     "Academic Skills", "Verbal/Language", "Visual Perception/Construction",
     "Attention/Executive", "Memory", "Motor", "Social Cognition",
-    "Emotional/Behavioral/Personality", "Behavioral/Emotional/Social",
-    "Psychiatric Disorders", "Personality Disorders", "Substance Use",
-    "Psychosocial Problems", "ADHD", "Executive Functioning", "Adaptive Functioning",
-    "Effort/Validity"),
+    "Emotional/Behavioral/Social/Personality", "ADHD/Executive Function",
+    "Adaptive Functioning", "Validity"),
   subdomain = NULL,
   narrow = NULL,
   pass = c("Planning", "Attention", "Sequential", "Simultaneous", "Knowledge", NA),
@@ -58,7 +56,7 @@ Average, etc the given test or subscale. Default: NULL}
 \item{domain}{Domain of the test, e.g. Academic Skills. Default: c("General
 Cognitive Ability", "Academic Skills", "Verbal/Language", "Visual
 Perception/Construction", "Attention/Executive", "Memory", "Motor", "Social
-Cognition", "Emotional/Behavioral/Personality", "Behavioral/Emotional/Social", "Personality Disorders", "Psychiatric Disorders", "Substance Use", "Psychosocial Problems", "ADHD", "Executive Function", "Adaptive Function", "Effort/Validity")}
+Cognition", "Emotional/Behavioral/Social/Personality", "ADHD/Executive Function", "Adaptive Function", "Validity")}
 
 \item{subdomain}{Cognitive subdomain of the scale. Default: NULL}
 

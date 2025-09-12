@@ -100,7 +100,8 @@ run_neuropsych_workflow <- function(
   # Define data paths relative to package root
   data_paths <- list(
     neurocog = file.path(pkg_root, "data", "neurocog.parquet"),
-    neurobehav = file.path(pkg_root, "data", "neurobehav.parquet")
+    neurobehav = file.path(pkg_root, "data", "neurobehav.parquet"),
+    validity = file.path(pkg_root, "data", "validity.parquet")
   )
 
   # Check if data files exist
@@ -117,6 +118,7 @@ run_neuropsych_workflow <- function(
   # Load data
   neurocog_data <- load_data_safely(data_paths$neurocog)
   neurobehav_data <- load_data_safely(data_paths$neurobehav)
+  validity_data <- load_data_safely(data_paths$validity)
 
   if (is.null(neurocog_data) || is.null(neurobehav_data)) {
     stop(
@@ -168,13 +170,13 @@ run_neuropsych_workflow <- function(
       input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "07"
     ),
-    emotion = list(
+    social = list(
       name = "Social Cognition",
       pheno = "social",
       input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "08"
     ),
-    emotion = list(
+    adhd = list(
       name = "ADHD/Executive Function",
       pheno = "adhd",
       input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
@@ -186,13 +188,13 @@ run_neuropsych_workflow <- function(
       input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
       number = "10"
     ),
-    emotion = list(
+    adaptive = list(
       name = "Adaptive Functioning",
       pheno = "adaptive",
       input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
       number = "11"
     ),
-    emotion = list(
+    daily_living = list(
       name = "Daily Living",
       pheno = "daily_living",
       input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
@@ -201,7 +203,7 @@ run_neuropsych_workflow <- function(
     validity = list(
       name = "Validity",
       pheno = "validity",
-      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
+      input_file = file.path(pkg_root, "data", "validity.parquet"),
       number = "13"
     )
   )
@@ -217,6 +219,8 @@ run_neuropsych_workflow <- function(
     # Check if domain has data
     data_source <- if (grepl("neurocog", config$input_file)) {
       neurocog_data
+    } else if (grepl("validity", config$input_file)) {
+      validity_data
     } else {
       neurobehav_data
     }

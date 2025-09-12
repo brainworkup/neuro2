@@ -112,11 +112,10 @@ params:
       - e_score
   domain:
     label: "Domain:"
-    value: Select domain
+    value: Validity
     input: radio
     choices:
-      - Performance Validity
-      - Symptom Validity
+      - Validity
   subdomain:
     label: "Subdomain:"
     value: "NULL"
@@ -133,7 +132,7 @@ params:
     value: Select domain
     input: select
     choices:
-      ADHD/EF:
+      ADHD/Executive Function:
         - CAARS-OR Inconsistency Index
         - CAARS-SR Inconsistency Index
         - CEFI-OR Consistency Index

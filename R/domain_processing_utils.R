@@ -914,13 +914,23 @@ validate_processor_inputs <- function(
     "Attention/Executive" = "executive",
     "Motor" = "motor",
     "Social Cognition" = "social",
+    # New preferred labels
+    "ADHD/Executive Function" = "adhd",
+    "Emotional/Behavioral/Social/Personality" = "emotion",
+    "Adaptive Functioning" = "adaptive",
+    "Daily Living" = "daily_living",
+    "Validity" = "validity",
+    # Backward-compatibility aliases (deprecated)
     "ADHD" = "adhd",
     "Emotional/Behavioral/Personality" = "emotion",
     "Behavioral/Emotional/Social" = "emotion",
-    "Adaptive Functioning" = "adaptive",
-    "Daily Living" = "daily_living",
+    "Psychiatric Disorders" = "emotion",
+    "Personality Disorders" = "emotion",
+    "Psychosocial Problems" = "emotion",
+    "Substance Use" = "emotion",
     "Performance Validity" = "validity",
-    "Symptom Validity" = "validity"
+    "Symptom Validity" = "validity",
+    "Effort/Validity" = "validity"
   )
 
   # Try exact match first

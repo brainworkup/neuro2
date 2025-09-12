@@ -40,12 +40,8 @@ NeuropsychReportSystemR6 <- R6::R6Class(
           domain_executive,
           domain_motor,
           domain_social,
-          # domain_adhd,
-          domain_adhd_adult,
-          domain_adhd_child,
-          # domain_emotion,
-          domain_emotion_adult,
-          domain_emotion_child,
+          domain_adhd,
+          domain_emotion,
           domain_adaptive,
           domain_daily_living,
           domain_validity
@@ -152,7 +148,7 @@ NeuropsychReportSystemR6 <- R6::R6Class(
 
       # Initialize domain processors
       self$domain_processors <- list()
-      # Flatten domains in case some are vectors (like domain_emotion_adult)
+      # Flatten domains in case some are vectors (e.g., legacy domain lists)
       flat_domains <- unlist(self$config$domains)
 
       # Define domain to pheno mapping based on create_sysdata.R
@@ -165,6 +161,13 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Attention/Executive" = "executive",
         "Motor" = "motor",
         "Social Cognition" = "social",
+        # New preferred labels
+        "ADHD/Executive Function" = "adhd",
+        "Emotional/Behavioral/Social/Personality" = "emotion",
+        "Adaptive Functioning" = "adaptive",
+        "Daily Living" = "daily_living",
+        "Validity" = "validity",
+        # Backward-compatibility aliases
         "ADHD" = "adhd",
         "Psychiatric Disorders" = "emotion",
         "Personality Disorders" = "emotion",
@@ -172,8 +175,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Psychosocial Problems" = "emotion",
         "Behavioral/Emotional/Social" = "emotion",
         "Emotional/Behavioral/Personality" = "emotion",
-        "Adaptive Functioning" = "adaptive",
-        "Daily Living" = "daily_living"
+        "Performance Validity" = "validity",
+        "Symptom Validity" = "validity",
+        "Effort/Validity" = "validity"
       )
 
       # Determine the appropriate data file based on domain type
@@ -336,6 +340,20 @@ NeuropsychReportSystemR6 <- R6::R6Class(
       for (domain_name in domains) {
         # Get the correct domain key from the domain name
         domain_key <- private$.get_domain_key(domain_name)
+
+        # Fallback for cleaned forms if mapping wasn't found
+        if (!(domain_key %in% names(factory$registry))) {
+          fallback_map <- c(
+            "adhd_executive_function" = "adhd",
+            "emotional_behavioral_social_personality" = "emotion",
+            "effort_validity" = "validity",
+            "symptom_validity" = "validity",
+            "performance_validity" = "validity"
+          )
+          if (!is.null(fallback_map[[domain_key]])) {
+            domain_key <- fallback_map[[domain_key]]
+          }
+        }
 
         message(paste("Mapping domain:", domain_name, "->", domain_key))
 
@@ -585,6 +603,13 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Attention/Executive" = "executive",
         "Motor" = "motor",
         "Social Cognition" = "social",
+        # Preferred labels
+        "ADHD/Executive Function" = "adhd",
+        "Emotional/Behavioral/Social/Personality" = "emotion",
+        "Adaptive Functioning" = "adaptive",
+        "Daily Living" = "daily_living",
+        "Validity" = "validity",
+        # Deprecated aliases
         "ADHD" = "adhd",
         "ADHD Adult" = "adhd_adult",
         "ADHD Child" = "adhd_child",
@@ -594,10 +619,9 @@ NeuropsychReportSystemR6 <- R6::R6Class(
         "Personality Disorders" = "emotion",
         "Substance Use" = "emotion",
         "Psychosocial Problems" = "emotion",
-        "Adaptive Functioning" = "adaptive",
-        "Daily Living" = "daily_living",
         "Performance Validity" = "validity",
-        "Symptom Validity" = "validity"
+        "Symptom Validity" = "validity",
+        "Effort/Validity" = "validity"
       )
 
       # Try exact match first
@@ -651,10 +675,8 @@ generate_neuropsych_report_system <- function(
     domain_executive,
     domain_motor,
     domain_social,
-    domain_adhd_adult,
-    domain_emotion_adult,
-    domain_adhd_child,
-    domain_emotion_child,
+    domain_adhd,
+    domain_emotion,
     domain_adaptive,
     domain_daily_living,
     domain_validity

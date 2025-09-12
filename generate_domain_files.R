@@ -200,8 +200,8 @@ tryCatch(
         pheno = "social",
         input_file = "data/neurocog.parquet"
       ),
-      "ADHD" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
-      "Behavioral/Emotional/Social" = list(
+      "ADHD/Executive Function" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
+      "Emotional/Behavioral/Social/Personality" = list(
         pheno = "emotion",
         input_file = "data/neurobehav.parquet"
       ),
@@ -221,10 +221,7 @@ tryCatch(
       #   pheno = "emotion",
       #   input_file = "data/neurobehav.parquet"
       # ),
-      "Emotional/Behavioral/Personality" = list(
-        pheno = "emotion",
-        input_file = "data/neurobehav.parquet"
-      ),
+      # Consolidated emotion domain label used throughout system
       "Adaptive Functioning" = list(
         pheno = "adaptive",
         input_file = "data/neurobehav.parquet"

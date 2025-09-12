@@ -111,7 +111,7 @@ domains <- list(
   list(name = "Memory", pheno = "memory", num = "05"),
   list(name = "Attention/Executive", pheno = "executive", num = "06"),
   list(name = "Motor", pheno = "motor", num = "07"),
-  list(name = "Behavioral/Emotional/Social", pheno = "emotion", num = "10")
+  list(name = "Emotional/Behavioral/Social/Personality", pheno = "emotion", num = "10")
 )
 
 # SINGLE LOOP

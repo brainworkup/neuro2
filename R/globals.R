@@ -95,10 +95,7 @@ utils::globalVariables(c(
   "domain_executive",
   "domain_motor",
   "domain_social",
-  "domain_adhd_adult",
-  "domain_adhd_child",
-  "domain_emotion_adult",
-  "domain_emotion_child",
+  # Consolidated domain variables
   "domain_adaptive",
   "domain_daily_living",
   "domain_emotion",

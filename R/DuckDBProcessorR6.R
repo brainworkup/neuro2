@@ -679,6 +679,12 @@ DuckDBProcessorR6 <- R6::R6Class(
           "Attention/Executive" = "executive",
           "Motor" = "motor",
           "Social Cognition" = "social",
+          # New preferred labels
+          "ADHD/Executive Function" = "adhd",
+          "Emotional/Behavioral/Social/Personality" = "emotion",
+          "Adaptive Functioning" = "adaptive",
+          "Daily Living" = "daily_living",
+          # Deprecated aliases retained for backward compatibility
           "ADHD" = "adhd",
           "Psychiatric Disorders" = "emotion",
           "Personality Disorders" = "emotion",
@@ -686,8 +692,10 @@ DuckDBProcessorR6 <- R6::R6Class(
           "Psychosocial Problems" = "emotion",
           "Emotional/Behavioral/Personality" = "emotion",
           "Behavioral/Emotional/Social" = "emotion",
-          "Adaptive Functioning" = "adaptive",
-          "Daily Living" = "daily_living"
+          "Validity" = "validity",
+          "Performance Validity" = "validity",
+          "Symptom Validity" = "validity",
+          "Effort/Validity" = "validity"
         )
 
         # Use mapped name if available, otherwise create from domain

@@ -447,7 +447,7 @@ get_example_queries <- function() {
       ORDER BY mean_percentile DESC
     ",
 
-    # Validity check
+    # Validity check (supports legacy labels)
     validity_check = "
       SELECT
         test_name,
@@ -459,7 +459,7 @@ get_example_queries <- function() {
           ELSE 'Valid'
         END as validity_status
       FROM validity
-      WHERE domain = 'Performance Validity'
+      WHERE domain IN ('Validity','Performance Validity','Symptom Validity','Effort/Validity')
     ",
 
     # ADHD profile

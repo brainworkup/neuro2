@@ -140,15 +140,11 @@ params:
       - Memory
       - Motor
       - Social Cognition
-      - ADHD/Executive Functioning
-      - Behavioral/Emotional/Social
-      - Personality Disorders
-      - Psychiatric Disorders
-      - Substance Use Disorders
-      - Psychosocial Problems
-      - ADHD
-      - Executive Dysfunction
-      - Effort/Validity
+      - ADHD/Executive Function
+      - Emotional/Behavioral/Social/Personality
+      - Adaptive Functioning
+      - Daily Living
+      - Validity
   subdomain:
     label: "Subdomain:"
     value: Select Subdomain
@@ -183,7 +179,7 @@ params:
       Motor:
         - Fine Motor Dexterity
         - Gross Motor Functioning
-      Effort:
+      Validity:
         - Performance Validity
         - Symptom Validity
       Social Cognition:
