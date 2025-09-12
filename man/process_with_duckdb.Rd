@@ -7,15 +7,16 @@
 process_with_duckdb(data_dir = "data", domain = NULL, output_dir = "output")
 }
 \arguments{
-\item{data_dir}{Directory containing CSV files}
+\item{data_dir}{Directory containing CSV files.}
 
-\item{domain}{Domain to process}
+\item{domain}{Domain to process (optional).}
 
-\item{output_dir}{Directory for output files}
+\item{output_dir}{Directory for output files (unused, reserved).}
 }
 \value{
-Processed data
+Processed data (domain) or a domain summary data.frame.
 }
 \description{
-This function provides a high-level interface to DuckDB processing.
+High-level convenience wrapper to create a processor, optionally
+process a domain or return a domain summary, then disconnect.
 }

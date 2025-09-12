@@ -16,15 +16,26 @@ entirely into memory, which is ideal for performance and scalability.
 \details{
 The \code{DuckDBProcessorR6} class handles the connection to a DuckDB database
 (either in-memory or file-based), registration of data files (CSV, Parquet,
-Arrow/Feather) as virtual tables, and execution of SQL queries. It is
-designed to integrate seamlessly with other R6-based components in this
-package.
+Arrow/Feather) as virtual tables, and execution of SQL queries. It also
+registers and uses the package master lookup (\code{lookup_neuropsych_scales})
+to enrich neurocognitive/behavioral data with domain/subdomain/narrow
+(and, for neurocog, pass/verbal/timed), and offers summary helpers.
+
+Core features:
+\itemize{
+\item Connection & extension management
+\item Auto-registration of CSVs (and helpers for Parquet/Arrow)
+\item Lookup registration into DuckDB (with normalized join_key)
+\item \code{domains_ref} materialization from the lookup
+\item Enriched views: \code{neurocog_enriched}, \code{neurobehav_enriched}
+\item Summaries across domain/subdomain/narrow, with optional stream split
+}
 }
 \section{Methods}{
 
 \describe{
-\item{\code{initialize(db_path = ":memory:", data_dir = "data", auto_register = TRUE)}}{
-Initialize a new DuckDBProcessorR6 object.
+\item{\code{initialize(db_path = ":memory:", data_dir = "data", auto_register = TRUE, setup = TRUE, ...)}}{
+Initialize, optionally auto-register data, and bootstrap lookup/domains/views.
 }
 \item{\code{connect()}}{
 Create or reconnect to the DuckDB database.
@@ -44,14 +55,11 @@ Register an Arrow/Feather file as a virtual table.
 \item{\code{register_all_csvs(data_dir = "data", pattern = "*.csv")}}{
 Register all CSV files in a directory.
 }
-\item{\code{register_all_files(
-data_dir = "data",
-formats = c("parquet", "arrow", "csv"))}}{
-Register all data files in a directory.
+\item{\code{register_all_files(data_dir = "data", formats = c("parquet","arrow","csv"))}}{
+Register all supported files in a directory.
 }
-\item{\code{export_to_parquet(
-table_name, output_path, compression = "zstd")}}{
-Export data to Parquet format.
+\item{\code{export_to_parquet(table_name, output_path, compression = "zstd")}}{
+Export a registered table to Parquet.
 }
 \item{\code{query(query, params = NULL)}}{
 Execute a SQL query and return results.
@@ -62,18 +70,23 @@ Execute a SQL statement that doesn't return results.
 \item{\code{query_lazy(table_name)}}{
 Create a lazy reference to a table for dplyr operations.
 }
-\item{\code{process_domain(
-domain, data_type = "neurocog", scales = NULL)}}{
+\item{\code{process_domain(domain, data_type = "neurocog", scales = NULL)}}{
 Process a specific domain using SQL.
 }
-\item{\code{.calculate_z_stats(table_name, group_vars)}}{
-Calculate z-score statistics.
-}
 \item{\code{export_to_r6(domain, processor_class = "DomainProcessorR6")}}{
-Export query results to standard R6 processors.
+Export processed results to a standard R6 processor.
 }
-\item{\code{get_domain_summary(include_all = TRUE)}}{
-Get domain summary statistics using SQL.
+\item{\code{get_domain_summary(include_all = TRUE, by_stream = FALSE)}}{
+Get domain-level summary statistics (wrapper over enriched/union).
+}
+\item{\code{ensure_lookup_registered(force = FALSE)}}{
+Public bootstrap: make lookup available in DuckDB with join_key.
+}
+\item{\code{ensure_domains_ref(force = FALSE)}}{
+Public bootstrap: rebuild domains_ref from the lookup.
+}
+\item{\code{refresh_enriched_views()}}{
+Public bootstrap: create enriched views and log unmapped keys.
 }
 \item{\code{create_indexes()}}{
 Create optimized indexes for faster queries.
@@ -112,9 +125,11 @@ Create optimized indexes for faster queries.
 \item \href{#method-DuckDBProcessorR6-execute}{\code{DuckDBProcessorR6$execute()}}
 \item \href{#method-DuckDBProcessorR6-query_lazy}{\code{DuckDBProcessorR6$query_lazy()}}
 \item \href{#method-DuckDBProcessorR6-process_domain}{\code{DuckDBProcessorR6$process_domain()}}
-\item \href{#method-DuckDBProcessorR6-.calculate_z_stats}{\code{DuckDBProcessorR6$.calculate_z_stats()}}
 \item \href{#method-DuckDBProcessorR6-export_to_r6}{\code{DuckDBProcessorR6$export_to_r6()}}
 \item \href{#method-DuckDBProcessorR6-get_domain_summary}{\code{DuckDBProcessorR6$get_domain_summary()}}
+\item \href{#method-DuckDBProcessorR6-ensure_lookup_registered}{\code{DuckDBProcessorR6$ensure_lookup_registered()}}
+\item \href{#method-DuckDBProcessorR6-ensure_domains_ref}{\code{DuckDBProcessorR6$ensure_domains_ref()}}
+\item \href{#method-DuckDBProcessorR6-refresh_enriched_views}{\code{DuckDBProcessorR6$refresh_enriched_views()}}
 \item \href{#method-DuckDBProcessorR6-create_indexes}{\code{DuckDBProcessorR6$create_indexes()}}
 \item \href{#method-DuckDBProcessorR6-clone}{\code{DuckDBProcessorR6$clone()}}
 }
@@ -123,39 +138,52 @@ Create optimized indexes for faster queries.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-new}{}}}
 \subsection{Method \code{new()}}{
-Constructor. Create a new DuckDBProcessorR6 instance
-and optionally auto-register data files.
+Constructor. Create a new DuckDBProcessorR6 instance and
+optionally auto-register data files, then bootstrap lookup + domains +
+enriched views so summaries/plots are ready to run.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$new(
   db_path = ":memory:",
   data_dir = "data",
-  auto_register = TRUE
+  auto_register = TRUE,
+  setup = TRUE,
+  force_lookup = FALSE,
+  force_domains_ref = FALSE,
+  refresh_views = TRUE,
+  verbose = TRUE
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{db_path}}{Path to the DuckDB database file.
-Use ":memory:" for in-memory DB.}
+\item{\code{db_path}}{Path to the DuckDB database file. Use ":memory:" for in-memory DB.}
 
 \item{\code{data_dir}}{Directory containing data files to register.}
 
-\item{\code{auto_register}}{If TRUE, attempt to auto-register
-supported data files from \code{data_dir}.}
+\item{\code{auto_register}}{If TRUE, attempt to auto-register supported data files from \code{data_dir}.}
+
+\item{\code{setup}}{If TRUE (default), run bootstrap (register lookup, build domains_ref, refresh views).}
+
+\item{\code{force_lookup}}{If TRUE, re-register the in-memory lookup even if present.}
+
+\item{\code{force_domains_ref}}{If TRUE, rebuild domains_ref even if present.}
+
+\item{\code{refresh_views}}{If TRUE (default), (re)create enriched views after data registration.}
+
+\item{\code{verbose}}{If TRUE (default), print progress messages during bootstrap.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new DuckDBProcessorR6 object (invisible).
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-connect}{}}}
 \subsection{Method \code{connect()}}{
-Open (or re-open) a DuckDB connection
-based on \code{db_path} and set up extensions.
+Open (or re-open) a DuckDB connection based on \code{db_path} and set up extensions.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$connect()}\if{html}{\out{</div>}}
 }
@@ -193,13 +221,12 @@ Register a CSV file as a virtual table for SQL access.
 
 \item{\code{table_name}}{Optional table name. If NULL, derived from filename.}
 
-\item{\code{options}}{Named list of DuckDB CSV reader options
-(e.g., header, delim).}
+\item{\code{options}}{Named list of DuckDB CSV reader options (e.g., header, delim).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The name of the registered table (character).
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -221,15 +248,14 @@ Register a Parquet file as a virtual table for SQL access.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The name of the registered table (character).
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-register_arrow"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_arrow}{}}}
 \subsection{Method \code{register_arrow()}}{
-Register an Arrow/Feather file
-as a virtual table for SQL access.
+Register an Arrow/Feather file as a virtual table for SQL access.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_arrow(file_path, table_name = NULL)}\if{html}{\out{</div>}}
 }
@@ -244,7 +270,7 @@ as a virtual table for SQL access.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The name of the registered table (character).
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -266,15 +292,14 @@ Register all CSV files in a directory that match \code{pattern}.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Character vector of registered table names.
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-register_all_files"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-register_all_files}{}}}
 \subsection{Method \code{register_all_files()}}{
-Register all supported files
-(parquet/arrow/csv) in a directory.
+Register all supported files (parquet/arrow/csv) in a directory.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$register_all_files(
   data_dir = "data",
@@ -287,13 +312,12 @@ Register all supported files
 \describe{
 \item{\code{data_dir}}{Directory containing files to register.}
 
-\item{\code{formats}}{Character vector of formats to register
-(subset of c("parquet","arrow","csv")).}
+\item{\code{formats}}{Character vector of formats (subset of c("parquet","arrow","csv")).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Character vector of registered table names.
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -321,7 +345,7 @@ Export a registered table to a Parquet file.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisibly returns the \code{output_path}.
+Invisibly returns \code{self}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -338,8 +362,7 @@ Execute a SQL query and return results as a data frame.
 \describe{
 \item{\code{query}}{SQL query string. May reference registered tables.}
 
-\item{\code{params}}{Optional named list of parameter values
-for parameterized queries.}
+\item{\code{params}}{Optional named list of parameter values for parameterized queries.}
 }
 \if{html}{\out{</div>}}
 }
@@ -351,8 +374,7 @@ A data.frame with query results.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-execute"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-execute}{}}}
 \subsection{Method \code{execute()}}{
-Execute a SQL statement
-that does not return rows (e.g., CREATE INDEX).
+Execute a SQL statement that does not return rows (e.g., CREATE INDEX).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$execute(statement, params = NULL)}\if{html}{\out{</div>}}
 }
@@ -374,8 +396,7 @@ Invisibly returns TRUE on success.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-query_lazy"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-query_lazy}{}}}
 \subsection{Method \code{query_lazy()}}{
-Return a lazy dplyr table reference
-to an existing DuckDB table.
+Return a lazy dplyr table reference to an existing DuckDB table.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$query_lazy(table_name)}\if{html}{\out{</div>}}
 }
@@ -395,8 +416,7 @@ A dplyr tbl_lazy object.
 \if{html}{\out{<a id="method-DuckDBProcessorR6-process_domain"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-process_domain}{}}}
 \subsection{Method \code{process_domain()}}{
-Process and return data for a given domain
-via SQL, optionally filtered by \code{data_type} and \code{scales}.
+Process and return data for a given domain via SQL, optionally filtered by stream and scales.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$process_domain(domain, data_type = "neurocog", scales = NULL)}\if{html}{\out{</div>}}
 }
@@ -408,8 +428,7 @@ via SQL, optionally filtered by \code{data_type} and \code{scales}.
 
 \item{\code{data_type}}{Type of data: "neurocog", "neurobehav", or "validity".}
 
-\item{\code{scales}}{Optional character vector of scales to include;
-NULL includes defaults for the domain.}
+\item{\code{scales}}{Optional character vector of scales to include; NULL includes defaults for the domain.}
 }
 \if{html}{\out{</div>}}
 }
@@ -418,34 +437,10 @@ A data.frame with processed domain data.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DuckDBProcessorR6-.calculate_z_stats"></a>}}
-\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-.calculate_z_stats}{}}}
-\subsection{Method \code{.calculate_z_stats()}}{
-Compute z-score statistics grouped by
-variables for a given table.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$.calculate_z_stats(table_name, group_vars)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{table_name}}{Name of the registered table to summarize.}
-
-\item{\code{group_vars}}{Character vector of column names to group by.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A data.frame containing z-score summaries by group.
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-export_to_r6"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-export_to_r6}{}}}
 \subsection{Method \code{export_to_r6()}}{
-Export processed results into a
-standard R6 processor (e.g., DomainProcessorR6).
+Export processed results into a standard R6 processor (e.g., DomainProcessorR6).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$export_to_r6(domain, processor_class = "DomainProcessorR6")}\if{html}{\out{</div>}}
 }
@@ -455,30 +450,29 @@ standard R6 processor (e.g., DomainProcessorR6).
 \describe{
 \item{\code{domain}}{Domain name to export.}
 
-\item{\code{processor_class}}{R6 class name or generator to use
-(default: "DomainProcessorR6").}
+\item{\code{processor_class}}{R6 class name or generator to use (default: "DomainProcessorR6").}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-An instance of the target R6 processor
-initialized with the domain data.
+An instance of the target R6 processor initialized with the domain data, or a list if class not found.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-get_domain_summary"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-get_domain_summary}{}}}
 \subsection{Method \code{get_domain_summary()}}{
-Return summary statistics across domains via SQL.
+Return summary statistics across domains (neurocog + neurobehav).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$get_domain_summary(include_all = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$get_domain_summary(include_all = TRUE, by_stream = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{include_all}}{If TRUE, include all domains;
-otherwise, restrict to those with data.}
+\item{\code{include_all}}{If TRUE, include all known domains (requires a domain reference table; otherwise falls back to domains with data).}
+
+\item{\code{by_stream}}{If TRUE, return one row per (domain, stream). If FALSE, streams are combined.}
 }
 \if{html}{\out{</div>}}
 }
@@ -487,11 +481,54 @@ A data.frame with domain-level summary metrics.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-ensure_lookup_registered"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-ensure_lookup_registered}{}}}
+\subsection{Method \code{ensure_lookup_registered()}}{
+Public bootstrap: make lookup visible with join_key.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$ensure_lookup_registered(force = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{force}}{If TRUE, re-register even if present.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-ensure_domains_ref"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-ensure_domains_ref}{}}}
+\subsection{Method \code{ensure_domains_ref()}}{
+Public bootstrap: rebuild domains_ref from the lookup; carries pass/verbal/timed only for neurocog.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$ensure_domains_ref(force = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{force}}{If TRUE, rebuild even if domains_ref already exists.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DuckDBProcessorR6-refresh_enriched_views"></a>}}
+\if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-refresh_enriched_views}{}}}
+\subsection{Method \code{refresh_enriched_views()}}{
+Public bootstrap: create/refresh enriched views; logs unmapped keys per stream to \code{unmapped_tests_log}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$refresh_enriched_views()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DuckDBProcessorR6-create_indexes"></a>}}
 \if{latex}{\out{\hypertarget{method-DuckDBProcessorR6-create_indexes}{}}}
 \subsection{Method \code{create_indexes()}}{
-Create useful indexes on commonly-queried
-columns to speed up SQL operations.
+Create useful indexes on commonly-queried columns to speed up SQL operations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DuckDBProcessorR6$create_indexes()}\if{html}{\out{</div>}}
 }

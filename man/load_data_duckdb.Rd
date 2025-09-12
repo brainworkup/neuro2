@@ -9,7 +9,7 @@ load_data_duckdb(
   output_dir = here::here("data"),
   return_data = FALSE,
   use_duckdb = TRUE,
-  output_format = "csv",
+  output_format = "all",
   patient = NULL
 )
 }
@@ -22,7 +22,7 @@ load_data_duckdb(
 
 \item{use_duckdb}{Whether to use DuckDB (default: TRUE)}
 
-\item{output_format}{Output format: "csv", "parquet", "arrow", or "all" (default: "csv")}
+\item{output_format}{Output format: "csv", "parquet", "arrow", or "all" (default: "all")}
 
 \item{patient}{Patient name (if NULL, will try to read from _variables.yml)}
 }
@@ -30,6 +30,6 @@ load_data_duckdb(
 List of processed data or NULL if writing to files
 }
 \description{
-This function replaces the traditional load_data() with DuckDB-powered loading
-that doesn't require loading entire CSVs into memory.
+This function replaces the traditional load_data() with DuckDB-powered
+loading that doesn't require loading entire CSVs into memory.
 }
