@@ -28,15 +28,6 @@ template_mgr <- TemplateContentManagerR6$new()
 domains <- template_mgr$.get_available_domains()
 print(domains$domains) # List available domain templates
 
-# Example 2: Retrieve content from a specific template file
-template_mgr <- TemplateContentManagerR6$new(
-  template_dir = "inst/quarto/_extensions/brainworkup"
-)
-iq_content <- template_mgr$get_content("_02-01_iq.qmd")
-if (!is.null(iq_content)) {
-  # Process or display the IQ section content
-  cat(paste(head(iq_content, 10), collapse = "\n"))
-}
 
 }
 \section{Public fields}{

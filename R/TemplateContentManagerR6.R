@@ -25,15 +25,6 @@
 #' domains <- template_mgr$.get_available_domains()
 #' print(domains$domains) # List available domain templates
 #'
-#' # Example 2: Retrieve content from a specific template file
-#' template_mgr <- TemplateContentManagerR6$new(
-#'   template_dir = "inst/quarto/_extensions/brainworkup"
-#' )
-#' iq_content <- template_mgr$get_content("_02-01_iq.qmd")
-#' if (!is.null(iq_content)) {
-#'   # Process or display the IQ section content
-#'   cat(paste(head(iq_content, 10), collapse = "\n"))
-#' }
 #'
 #' @export
 TemplateContentManagerR6 <- R6::R6Class(
@@ -52,7 +43,9 @@ TemplateContentManagerR6 <- R6::R6Class(
     #'   (default: "inst/quarto/_extensions/brainworkup")
     #'
     #' @return A new `TemplateContentManagerR6` object
-    initialize = function(template_dir = "inst/quarto/_extensions/brainworkup") {
+    initialize = function(
+      template_dir = "inst/quarto/_extensions/brainworkup"
+    ) {
       self$template_dir <- template_dir
       self$refresh_content_list()
     },

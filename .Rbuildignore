@@ -188,3 +188,5 @@
 ^\.lintr$
 ^R/\.history$
 ^inst/\.history$
+^docs$
+^_quarto$

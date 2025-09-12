@@ -1,5 +1,5 @@
 project:
-  type: default
+  type: website
   title: "neuro2"
   execute-dir: project
   pre-render:
