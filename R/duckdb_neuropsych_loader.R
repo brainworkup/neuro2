@@ -153,6 +153,7 @@ load_data_duckdb <- function(
 
   # Calculate z-scores in R (more accurate than SQL approximation)
   if ("percentile" %in% names(neuropsych)) {
+    # Calculate z-scores
     neuropsych$z <- ifelse(
       !is.na(neuropsych$percentile),
       qnorm(neuropsych$percentile / 100),
@@ -171,6 +172,28 @@ load_data_duckdb <- function(
     validity$z <- ifelse(
       !is.na(validity$percentile),
       qnorm(validity$percentile / 100),
+      NA_real_
+    )
+
+    # Round percentiles to 1 decimal
+    neuropsych$percentile <- ifelse(
+      !is.na(neuropsych$percentile),
+      round(neuropsych$percentile, 1),
+      NA_real_
+    )
+    neurocog$percentile <- ifelse(
+      !is.na(neurocog$percentile),
+      round(neurocog$percentile, 1),
+      NA_real_
+    )
+    neurobehav$percentile <- ifelse(
+      !is.na(neurobehav$percentile),
+      round(neurobehav$percentile, 1),
+      NA_real_
+    )
+    validity$percentile <- ifelse(
+      !is.na(validity$percentile),
+      round(validity$percentile, 1),
       NA_real_
     )
   }

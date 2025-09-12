@@ -50,6 +50,12 @@ load_data <- function(
       } else {
         NA_real_
       },
+      # Round percentiles to 1 decimal if they exist
+      percentile = if ("percentile" %in% names(neuropsych)) {
+        ifelse(!is.na(percentile), round(percentile, 1), NA_real_)
+      } else {
+        percentile
+      },
       # Convert to character (only if columns exist)
       dplyr::across(
         dplyr::any_of(c(
@@ -88,9 +94,7 @@ load_data <- function(
 
   # Process validity data
   validity <- neuropsych |>
-    dplyr::filter(
-      test_type %in% c("performance_validity", "symptom_validity")
-    ) |>
+    dplyr::filter(test_type == "validity_indicator") |>
     .calculate_z_stats(validity_groups)
 
   # Prepare output

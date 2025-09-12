@@ -255,7 +255,10 @@ TableGTR6 <- R6::R6Class(
         # where that score_type actually appears in the data
         if ("score_type" %in% names(self$data) && length(groups) > 0) {
           groups <- groups[sapply(groups, function(g) {
-            any(self$data$test_name == g & self$data$score_type == score_type, na.rm = TRUE)
+            any(
+              self$data$test_name == g & self$data$score_type == score_type,
+              na.rm = TRUE
+            )
           })]
         }
 
@@ -368,7 +371,11 @@ TableGTR6 <- R6::R6Class(
       pdf_path <- file.path(dir, paste0(self$table_name, ".pdf"))
 
       # Skip generation if cached assets exist and skipping is enabled
-      if (skip_if_exists && file.exists(png_path) && (!save_pdf || file.exists(pdf_path))) {
+      if (
+        skip_if_exists &&
+          file.exists(png_path) &&
+          (!save_pdf || file.exists(pdf_path))
+      ) {
         if (getOption("neuro2.verbose", TRUE)) {
           message("  ✓ ", basename(png_path), " (cached)")
           if (save_pdf) message("  ✓ ", basename(pdf_path), " (cached)")
@@ -378,12 +385,16 @@ TableGTR6 <- R6::R6Class(
 
       # Save PNG (primary asset)
       gt::gtsave(tbl, filename = png_path)
-      if (getOption("neuro2.verbose", TRUE)) message("  ✓ ", basename(png_path), " generated")
+      if (getOption("neuro2.verbose", TRUE)) {
+        message("  ✓ ", basename(png_path), " generated")
+      }
 
       # Optional PDF
       if (isTRUE(save_pdf)) {
         gt::gtsave(tbl, filename = pdf_path)
-        if (getOption("neuro2.verbose", TRUE)) message("  ✓ ", basename(pdf_path), " generated")
+        if (getOption("neuro2.verbose", TRUE)) {
+          message("  ✓ ", basename(pdf_path), " generated")
+        }
       }
 
       invisible(self)
