@@ -19,6 +19,9 @@ professional neuropsychological evaluation reports using modern R6
 object-oriented design, high-performance data processing with
 DuckDB/Parquet, and beautiful typesetting with Quarto/Typst.
 
+- [Claude
+  explanation](https://claude.ai/share/8fc99931-39b7-4de0-ba80-0c94573ae913)
+
 ### 🎯 Key Features
 
 - **🚀 High-Performance Data Pipeline**: Uses DuckDB and Parquet for

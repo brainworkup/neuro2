@@ -538,6 +538,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       # Check domains first (most reliable method)
       child_domain_patterns <- c(
+        "Emotional/Behavioral/Social/Personality",
         "Behavioral/Emotional/Social",
         "Personality Disorders",
         "Psychiatric Disorders",
@@ -546,6 +547,7 @@ DomainProcessorR6 <- R6::R6Class(
       )
 
       adult_domain_patterns <- c(
+        "Emotional/Behavioral/Social/Personality",
         "Emotional/Behavioral/Personality",
         "Personality Disorders",
         "Psychiatric Disorders",

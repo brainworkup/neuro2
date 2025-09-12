@@ -171,7 +171,7 @@ run_neuropsych_workflow <- function(
     emotion = list(
       name = "Social Cognition",
       pheno = "social",
-      input_file = file.path(pkg_root, "data", "neurobehav.parquet"),
+      input_file = file.path(pkg_root, "data", "neurocog.parquet"),
       number = "08"
     ),
     emotion = list(
