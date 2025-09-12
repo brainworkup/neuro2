@@ -121,21 +121,30 @@ DuckDBProcessorR6 <- R6::R6Class(
     # Available extensions
     available_extensions = NULL,
 
-    # Initialize a new DuckDBProcessorR6 object
-    #' @description Constructor. Create a new DuckDBProcessorR6 instance
-    #' and optionally auto-register data files.
-    #' @param db_path Path to the DuckDB database file.
-    #' Use ":memory:" for in-memory DB.
+    #' @description Constructor. Create a new DuckDBProcessorR6 instance and
+    #'   optionally auto-register data files, then bootstrap lookup + domains +
+    #'   enriched views so summaries/plots are ready to run.
+    #'
+    #' @param db_path Path to the DuckDB database file. Use ":memory:" for in-memory DB.
     #' @param data_dir Directory containing data files to register.
-    #' @param auto_register If TRUE, attempt to auto-register
-    #'  supported data files from `data_dir`.
+    #' @param auto_register If TRUE, attempt to auto-register supported data files from `data_dir`.
+    #' @param setup If TRUE (default), run bootstrap (register lookup, build domains_ref, refresh views).
+    #' @param force_lookup If TRUE, re-register the in-memory lookup even if present.
+    #' @param force_domains_ref If TRUE, rebuild domains_ref even if present.
+    #' @param refresh_views If TRUE (default), (re)create enriched views after data registration.
+    #' @param verbose If TRUE (default), print progress messages during bootstrap.
     #' @return A new DuckDBProcessorR6 object (invisible).
-
     initialize = function(
       db_path = ":memory:",
       data_dir = "data",
-      auto_register = TRUE
+      auto_register = TRUE,
+      setup = TRUE,
+      force_lookup = FALSE,
+      force_domains_ref = FALSE,
+      refresh_views = TRUE,
+      verbose = TRUE
     ) {
+      # --- preserve your existing fields ---
       self$db_path <- db_path
       self$tables <- list()
       self$available_extensions <- character(0)
@@ -146,13 +155,38 @@ DuckDBProcessorR6 <- R6::R6Class(
         neuropsych = file.path(data_dir, "neuropsych.parquet")
       )
 
-      # Connect to database with robust extension handling
+      # --- connect (your existing helper) ---
       self$connect()
 
-      # Auto-register CSV files if requested
-      if (auto_register && dir.exists(data_dir)) {
+      # --- auto-register data (your existing behavior) ---
+      if (isTRUE(auto_register) && dir.exists(data_dir)) {
+        # keep existing CSV registrar; it can be extended to parquet by you later
         self$register_all_csvs(data_dir)
       }
+
+      # --- bootstrap domain mapping (new; idempotent and controllable) ---
+      if (isTRUE(setup)) {
+        if (verbose) {
+          message("• Ensuring lookup is registered …")
+        }
+        self$ensure_lookup_registered(force = force_lookup)
+
+        if (verbose) {
+          message("• Ensuring domains_ref exists …")
+        }
+        self$ensure_domains_ref(force = force_domains_ref)
+
+        if (isTRUE(refresh_views)) {
+          if (verbose) {
+            message("• Refreshing enriched views …")
+          }
+          self$refresh_enriched_views()
+        }
+
+        if (verbose) message("✓ DuckDB bootstrap complete.")
+      }
+
+      invisible(self)
     },
 
     # Create or reconnect to the DuckDB database
@@ -1277,8 +1311,10 @@ DuckDBProcessorR6 <- R6::R6Class(
       self$query(final_sql)
     },
     #' @description True/False: does a DuckDB table or view exist?
-duckdb_has_relation <- function(conn, name) {
-  out <- DBI::dbGetQuery(conn, "
+    duckdb_has_relation <- function(conn, name) {
+      out <- DBI::dbGetQuery(
+        conn,
+        "
     SELECT 1
     FROM information_schema.tables
     WHERE table_schema = 'main' AND table_name = ?
@@ -1287,73 +1323,114 @@ duckdb_has_relation <- function(conn, name) {
     FROM information_schema.views
     WHERE table_schema = 'main' AND table_name = ?
     LIMIT 1
-  ", params = list(name, name))
-  nrow(out) > 0
-}
+  ",
+        params = list(name, name)
+      )
+      nrow(out) > 0
+    },
 
-#' @description Get the in-memory lookup df from the neuro2 namespace.
-get_lookup_df <- function() {
-  if (exists("lookup_neuropsych_scales", where = asNamespace("neuro2"), inherits = FALSE)) {
-    get("lookup_neuropsych_scales", envir = asNamespace("neuro2"), inherits = FALSE)
-  } else if (exists("lookup_neuropsych_scales")) {
-    lookup_neuropsych_scales
-  } else {
-    stop("lookup_neuropsych_scales not found in neuro2 namespace.")
-  }
-}
+    #' @description Get the in-memory lookup df from the neuro2 namespace.
+    get_lookup_df <- function() {
+      if (
+        exists(
+          "lookup_neuropsych_scales",
+          where = asNamespace("neuro2"),
+          inherits = FALSE
+        )
+      ) {
+        get(
+          "lookup_neuropsych_scales",
+          envir = asNamespace("neuro2"),
+          inherits = FALSE
+        )
+      } else if (exists("lookup_neuropsych_scales")) {
+        lookup_neuropsych_scales
+      } else {
+        stop("lookup_neuropsych_scales not found in neuro2 namespace.")
+      }
+    },
 
-#' @description Normalized COALESCE join key expression for SQL.
-#'   Uses lower(trim()) on scale, test, test_name (in that order).
-#'   Example: sql_join_key("c") -> "COALESCE(NULLIF(lower(trim(c.scale)),''),
-#'                                        NULLIF(lower(trim(c.test)),''),
-#'                                        NULLIF(lower(trim(c.test_name)),'')
-#'                                  )"
-sql_join_key <- function(alias) {
-  sprintf(
-    "COALESCE(
+    #' @description Normalized COALESCE join key expression for SQL.
+    #'   Uses lower(trim()) on scale, test, test_name (in that order).
+    #'   Example: sql_join_key("c") -> "COALESCE(NULLIF(lower(trim(c.scale)),''),
+    #'                                        NULLIF(lower(trim(c.test)),''),
+    #'                                        NULLIF(lower(trim(c.test_name)),'')
+    #'                                  )"
+    sql_join_key <- function(alias) {
+      sprintf(
+        "COALESCE(
        NULLIF(lower(trim(%1$s.scale)), ''),
        NULLIF(lower(trim(%1$s.test)), ''),
        NULLIF(lower(trim(%1$s.test_name)), '')
-     )", alias
-  )
-},
-#' @description Make sure DuckDB can "see" lookup_neuropsych_scales.
-#' Registers an in-memory df and exposes a stable view name 'lookup_neuropsych_scales'.
-#' @param force Re-register even if already present.
-ensure_lookup_registered = function(force = FALSE) {
-  # If a stable view already exists and force = FALSE, quick check it’s queryable
-  if (!force && duckdb_has_relation(self$conn, "lookup_neuropsych_scales")) {
-    ok <- tryCatch({
-      invisible(DBI::dbGetQuery(self$conn, "SELECT COUNT(*) AS n FROM lookup_neuropsych_scales"))
-      TRUE
-    }, error = function(e) FALSE)
-    if (ok) return(invisible(FALSE))
-  }
+     )",
+        alias
+      )
+    },
+    #' @description Make sure DuckDB can "see" lookup_neuropsych_scales.
+    #' Registers an in-memory df and exposes a stable view name 'lookup_neuropsych_scales'.
+    #' @param force Re-register even if already present.
+    ensure_lookup_registered = function(force = FALSE) {
+      # If a stable view already exists and force = FALSE, quick check it’s queryable
+      if (
+        !force && duckdb_has_relation(self$conn, "lookup_neuropsych_scales")
+      ) {
+        ok <- tryCatch(
+          {
+            invisible(DBI::dbGetQuery(
+              self$conn,
+              "SELECT COUNT(*) AS n FROM lookup_neuropsych_scales"
+            ))
+            TRUE
+          },
+          error = function(e) FALSE
+        )
+        if (ok) return(invisible(FALSE))
+      }
 
-  # Pull in-memory df
-  lkp <- get_lookup_df()
+      # Pull in-memory df
+      lkp <- get_lookup_df()
 
-  # Ensure expected columns exist (stream, domain, subdomain, narrow; pass/verbal/timed optional)
-  req_cols <- c("stream","domain","subdomain","narrow","scale","test","test_name")
-  missing <- setdiff(req_cols, names(lkp))
-  if (length(missing)) {
-    stop("lookup_neuropsych_scales is missing required columns: ", paste(missing, collapse=", "))
-  }
-  if (!"pass"   %in% names(lkp)) lkp$pass   <- NA
-  if (!"verbal" %in% names(lkp)) lkp$verbal <- NA
-  if (!"timed"  %in% names(lkp)) lkp$timed  <- NA
+      # Ensure expected columns exist (stream, domain, subdomain, narrow; pass/verbal/timed optional)
+      req_cols <- c(
+        "stream",
+        "domain",
+        "subdomain",
+        "narrow",
+        "scale",
+        "test",
+        "test_name"
+      )
+      missing <- setdiff(req_cols, names(lkp))
+      if (length(missing)) {
+        stop(
+          "lookup_neuropsych_scales is missing required columns: ",
+          paste(missing, collapse = ", ")
+        )
+      }
+      if (!"pass" %in% names(lkp)) {
+        lkp$pass <- NA
+      }
+      if (!"verbal" %in% names(lkp)) {
+        lkp$verbal <- NA
+      }
+      if (!"timed" %in% names(lkp)) {
+        lkp$timed <- NA
+      }
 
-  # Register a temp table and create a canonical view name
-  # (drop old artifacts if present)
-  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS lookup_neuropsych_scales")
-  if (duckdb_has_relation(self$conn, "lookup_neuropsych_scales_mem")) {
-    DBI::dbExecute(self$conn, "DROP TABLE lookup_neuropsych_scales_mem")
-  }
+      # Register a temp table and create a canonical view name
+      # (drop old artifacts if present)
+      DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS lookup_neuropsych_scales")
+      if (duckdb_has_relation(self$conn, "lookup_neuropsych_scales_mem")) {
+        DBI::dbExecute(self$conn, "DROP TABLE lookup_neuropsych_scales_mem")
+      }
 
-  duckdb::duckdb_register(self$conn, "lookup_neuropsych_scales_mem", lkp)
+      duckdb::duckdb_register(self$conn, "lookup_neuropsych_scales_mem", lkp)
 
-  # Create a stable view with normalized join key column 'join_key'
-  DBI::dbExecute(self$conn, sprintf("
+      # Create a stable view with normalized join key column 'join_key'
+      DBI::dbExecute(
+        self$conn,
+        sprintf(
+          "
     CREATE VIEW lookup_neuropsych_scales AS
     SELECT
       *,
@@ -1363,20 +1440,26 @@ ensure_lookup_registered = function(force = FALSE) {
         NULLIF(lower(trim(test_name)), '')
       ) AS join_key
     FROM lookup_neuropsych_scales_mem
-  "))
+  "
+        )
+      )
 
-  invisible(TRUE)
-},
-#' @description Refresh enriched views and record any unmapped keys.
-refresh_enriched_views = function() {
-  ensure_lookup_registered()
+      invisible(TRUE)
+    },
 
-  # Drop views if exist
-  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurocog_enriched")
-  DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurobehav_enriched")
+    #' @description Refresh enriched views and record any unmapped keys.
+    refresh_enriched_views = function() {
+      ensure_lookup_registered()
 
-  # Create neurocog_enriched
-  DBI::dbExecute(self$conn, sprintf("
+      # Drop views if exist
+      DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurocog_enriched")
+      DBI::dbExecute(self$conn, "DROP VIEW IF EXISTS neurobehav_enriched")
+
+      # Create neurocog_enriched
+      DBI::dbExecute(
+        self$conn,
+        sprintf(
+          "
     CREATE VIEW neurocog_enriched AS
     WITH src AS (
       SELECT
@@ -1396,10 +1479,16 @@ refresh_enriched_views = function() {
     FROM src s
     LEFT JOIN lookup_neuropsych_scales l
       ON s.join_key = l.join_key AND l.stream = 'neurocog'
-  ", sql_join_key("c")))
+  ",
+          sql_join_key("c")
+        )
+      )
 
-  # Create neurobehav_enriched
-  DBI::dbExecute(self$conn, sprintf("
+      # Create neurobehav_enriched
+      DBI::dbExecute(
+        self$conn,
+        sprintf(
+          "
     CREATE VIEW neurobehav_enriched AS
     WITH src AS (
       SELECT
@@ -1419,12 +1508,18 @@ refresh_enriched_views = function() {
     FROM src s
     LEFT JOIN lookup_neuropsych_scales l
       ON s.join_key = l.join_key AND l.stream = 'neurobehav'
-  ", sql_join_key("b")))
+  ",
+          sql_join_key("b")
+        )
+      )
 
-  # Log unmapped for each stream
-  log_unmapped_keys <- function(stream, view_name) {
-    # rows where domain is NULL after join => no match
-    df <- DBI::dbGetQuery(self$conn, sprintf("
+      # Log unmapped for each stream
+      log_unmapped_keys <- function(stream, view_name) {
+        # rows where domain is NULL after join => no match
+        df <- DBI::dbGetQuery(
+          self$conn,
+          sprintf(
+            "
       WITH src AS (
         SELECT
           *,
@@ -1440,48 +1535,70 @@ refresh_enriched_views = function() {
       WHERE domain IS NULL AND join_key_norm IS NOT NULL
       GROUP BY join_key_norm
       ORDER BY n_rows DESC, join_key_norm
-    ", sql_join_key("src"),  # recompute in case the view didn't expose keys
-         if (stream == "neurocog") "neurocog" else "neurobehav",
-         stream))
+    ",
+            sql_join_key("src"), # recompute in case the view didn't expose keys
+            if (stream == "neurocog") "neurocog" else "neurobehav",
+            stream
+          )
+        )
 
-    if (nrow(df)) {
-      if (!duckdb_has_relation(self$conn, "unmapped_tests_log")) {
-        DBI::dbExecute(self$conn, "
+        if (nrow(df)) {
+          if (!duckdb_has_relation(self$conn, "unmapped_tests_log")) {
+            DBI::dbExecute(
+              self$conn,
+              "
           CREATE TABLE unmapped_tests_log(
             ts TIMESTAMP,
             stream TEXT,
             join_key TEXT,
             n_rows BIGINT
           )
-        ")
+        "
+            )
+          }
+          duckdb::duckdb_register(self$conn, "unmapped_tmp", df)
+          on.exit(
+            try(DBI::dbRemoveTable(self$conn, "unmapped_tmp"), silent = TRUE),
+            add = TRUE
+          )
+          DBI::dbExecute(
+            self$conn,
+            "INSERT INTO unmapped_tests_log SELECT * FROM unmapped_tmp"
+          )
+
+          # Friendly warning (head of offending keys)
+          sample_keys <- head(df$join_key, 10)
+          warning(
+            sprintf(
+              "[%s] %d unmapped key(s). Examples: %s. See table 'unmapped_tests_log'.",
+              stream,
+              nrow(df),
+              paste(sample_keys, collapse = ", ")
+            ),
+            call. = FALSE
+          )
+        }
       }
-      duckdb::duckdb_register(self$conn, "unmapped_tmp", df)
-      on.exit(try(DBI::dbRemoveTable(self$conn, "unmapped_tmp"), silent = TRUE), add = TRUE)
-      DBI::dbExecute(self$conn, "INSERT INTO unmapped_tests_log SELECT * FROM unmapped_tmp")
 
-      # Friendly warning (head of offending keys)
-      sample_keys <- head(df$join_key, 10)
-      warning(sprintf(
-        "[%s] %d unmapped key(s). Examples: %s. See table 'unmapped_tests_log'.",
-        stream, nrow(df), paste(sample_keys, collapse = ", ")
-      ), call. = FALSE)
-    }
-  }
+      # Run guards
+      log_unmapped_keys("neurocog", "neurocog")
+      log_unmapped_keys("neurobehav", "neurobehav")
 
-  # Run guards
-  log_unmapped_keys("neurocog",   "neurocog")
-  log_unmapped_keys("neurobehav", "neurobehav")
+      invisible(TRUE)
+    },
 
-  invisible(TRUE)
-},
-#' @description Rebuild domains_ref from lookup (idempotent).
-ensure_domains_ref = function(force = FALSE) {
-  ensure_lookup_registered()
+    #' @description Rebuild domains_ref from lookup (idempotent).
+    ensure_domains_ref = function(force = FALSE) {
+      ensure_lookup_registered()
 
-  if (!force && duckdb_has_relation(self$conn, "domains_ref")) return(invisible(FALSE))
+      if (!force && duckdb_has_relation(self$conn, "domains_ref")) {
+        return(invisible(FALSE))
+      }
 
-  DBI::dbExecute(self$conn, "DROP TABLE IF EXISTS domains_ref")
-  DBI::dbExecute(self$conn, "
+      DBI::dbExecute(self$conn, "DROP TABLE IF EXISTS domains_ref")
+      DBI::dbExecute(
+        self$conn,
+        "
     CREATE TABLE domains_ref AS
     SELECT DISTINCT
       domain,
@@ -1493,9 +1610,10 @@ ensure_domains_ref = function(force = FALSE) {
       CASE WHEN stream = 'neurocog' THEN timed  ELSE NULL END AS timed
     FROM lookup_neuropsych_scales
     WHERE domain IS NOT NULL
-  ")
-  invisible(TRUE)
-}
+  "
+      )
+      invisible(TRUE)
+    }
   )
 )
 

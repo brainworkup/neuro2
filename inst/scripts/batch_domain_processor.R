@@ -1,7 +1,8 @@
-
 # Simple Batch Processor - Each domain processed ONCE
 
-if (exists(".BATCH_DONE")) stop("Batch already run")
+if (exists(".BATCH_DONE")) {
+  stop("Batch already run")
+}
 .BATCH_DONE <- TRUE
 
 library(here)
@@ -21,9 +22,18 @@ domains <- list(
   list(name = "Memory", pheno = "memory", num = "05"),
   list(name = "Attention/Executive", pheno = "executive", num = "06"),
   list(name = "Motor", pheno = "motor", num = "07"),
-  list(name = "ADHD/Executive Function", pheno = "adhd", num = "09")
-  list(name = "Emotional/Behavioral/Social/Personality", pheno = "emotion", num = "10")
+  list(name = "Social Cognition", pheno = "social", num = "08"),
+  list(name = "ADHD/Executive Function", pheno = "adhd", num = "09"),
+  list(
+    name = "Emotional/Behavioral/Social/Personality",
+    pheno = "emotion",
+    num = "10"
+  ),
+  list(name = "Adaptive Functioning", pheno = "adaptive", num = "11"),
+  list(name = "Daily Living", pheno = "daily_living", num = "12"),
+  list(name = "Validity", pheno = "validity", num = "13")
 )
+
 
 # SINGLE LOOP
 for (d in domains) {
