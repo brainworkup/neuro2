@@ -132,7 +132,7 @@ load_data_duckdb <- function(
     "
     CREATE OR REPLACE TABLE validity_final AS
     SELECT * FROM neuropsych_processed
-    WHERE test_type IN 'validity_indicator'
+    WHERE test_type = 'validity_indicator'
   "
   )
 
