@@ -1,11 +1,11 @@
 ---
-name: "Prompt Recommendations"
-keyword: "prrec"
+name: "Prompt Motor"
+keyword: "instmot"
 ---
 
-@_03-01_recs.qmd
+@_02-07_motor_text.qmd
 
-# Recommendations Instructions
+# Sensorimotor Performance Summary Instructions
 
 ## Purpose
 

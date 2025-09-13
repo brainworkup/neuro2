@@ -1,11 +1,11 @@
 ---
-name: "Prompt Social"
-keyword: "prsoc"
+name: "Prompt Attention/Executive"
+keyword: "instexe"
 ---
 
-@_02-08_social_text.qmd
+@_02-06_executive_text.qmd
 
-# Social Cognition Performance Summary Instructions
+# Attention/Executive Function Performance Summary Instructions
 
 ## Purpose
 

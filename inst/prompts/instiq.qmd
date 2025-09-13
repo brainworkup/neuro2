@@ -1,11 +1,11 @@
 ---
-name: "Prompt Motor"
-keyword: "prmot"
+name: "Prompt General Cognitive Ability/Intelligence"
+keyword: "instiq"
 ---
 
-@_02-07_motor_text.qmd
+@_02-01_iq_text.qmd
 
-# Sensorimotor Performance Summary Instructions
+# General Cognitive Ability/IQ Performance Summary Instructions
 
 ## Purpose
 

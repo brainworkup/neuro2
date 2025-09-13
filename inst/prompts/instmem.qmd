@@ -1,11 +1,11 @@
 ---
-name: "Prompt Visual Perception/Construction"
-keyword: "prvis"
+name: "Prompt Memory"
+keyword: "instmem"
 ---
 
-@_02-04_spatial_text.qmd
+@_02-05_memory_text.qmd
 
-# Visual Perception/Construction Performance Summary Instructions
+# Learning and Memory Performance Summary Instructions
 
 ## Purpose
 

@@ -1,15 +1,15 @@
 ---
-name: "Prompt ADHD/Executive Function"
-keyword: "pradhd"
+name: "Prompt ADHD/Executive Function-Observer Ratings"
+keyword: "instadhd_o"
 ---
 
-@_02-09_adhd_text.qmd
+@_02-09_adhd_text_observer.qmd
 
-# ADHD/Executive Function - Rating Scale Summary Instructions
+# ADHD/Executive Function - Observer Scale Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their self-report assessment results of attentional and executive functioning
+Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their Observer Ratings of attentional and executive functioning
 
 ## Format Requirements
 

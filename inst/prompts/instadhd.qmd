@@ -1,19 +1,15 @@
 ---
-name: "LLM Prompt Emotional/Behavioral/Social/Personality"
-keyword: "premo"
+name: "Prompt ADHD/Executive Function"
+keyword: "instadhd"
 ---
 
-@_02-10_emotion_text.qmd
+@_02-09_adhd_text.qmd
 
-# Emotional/Behavioral/Social/Personality - Rating Scale Summary Instructions
+# ADHD/Executive Function - Rating Scale Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's self-reported:
-- emotional functioning
-- behavioral problems
-- social skils and functionnig
-- for adults, the presence of elevated problematic personality traits or personality disorders
+Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their self-report assessment results of attentional and executive functioning
 
 ## Format Requirements
 
