@@ -525,119 +525,111 @@ DomainProcessorR6 <- R6::R6Class(
       return("adult")
     },
 
-    # #' @description
-    # #' Detect emotion type (child/adult)
-    # #' @description Infer whether the dataset represents child or adult emotion measures.
-    # #' @return Invisibly returns \code{self} for method chaining.
-    # #' @examples
-    # #' \dontrun{
-    # #'   obj <- DomainProcessorR6$new()
-    # #'   obj$detect_emotion_type()
-    # #' }
-    # detect_emotion_type = function() {
-    #   if (tolower(self$pheno) != "emotion") {
-    #     return(NULL)
-    #   }
+    #' @description
+    #' Detect emotion type (child/adult)
+    #' @description Infer whether the dataset represents child or adult emotion measures.
+    #' @return Invisibly returns \code{self} for method chaining.
+    #' @examples
+    #' \dontrun{
+    #'   obj <- DomainProcessorR6$new()
+    #'   obj$detect_emotion_type()
+    #' }
+    detect_emotion_type = function() {
+      if (tolower(self$pheno) != "emotion") {
+        return(NULL)
+      }
 
-    # # Check domains first (most reliable method)
-    # child_domain_patterns <- c(
-    #   "Emotional/Behavioral/Social/Personality"      )
+      # Check domains first (most reliable method)
+      child_domain_patterns <- c("Emotional/Behavioral/Social/Personality")
 
-    # adult_domain_patterns <- c(
-    #   "Emotional/Behavioral/Social/Personality",
-    #   "Emotional/Behavioral/Personality",
-    #   "Personality Disorders",
-    #   "Psychiatric Disorders",
-    #   "Psychosocial Problems",
-    #   "Substance Use"
-    # )
+      adult_domain_patterns <- c("Emotional/Behavioral/Social/Personality")
 
-    # # Check if any child-specific domains are present
-    # child_domain_match <- any(sapply(
-    #   child_domain_patterns,
-    #   function(pattern) {
-    #     any(grepl(pattern, self$domains, fixed = TRUE))
-    #   }
-    # ))
+      # Check if any child-specific domains are present
+      child_domain_match <- any(sapply(
+        child_domain_patterns,
+        function(pattern) {
+          any(grepl(pattern, self$domains, fixed = TRUE))
+        }
+      ))
 
-    # # Check if any adult-specific domains are present
-    # adult_domain_match <- any(sapply(
-    #   adult_domain_patterns,
-    #   function(pattern) {
-    #     any(grepl(pattern, self$domains, fixed = TRUE))
-    #   }
-    # ))
+      # Check if any adult-specific domains are present
+      adult_domain_match <- any(sapply(
+        adult_domain_patterns,
+        function(pattern) {
+          any(grepl(pattern, self$domains, fixed = TRUE))
+        }
+      ))
 
-    # # If we have clear domain matches, use those
-    # if (child_domain_match && !adult_domain_match) {
-    #   return("child")
-    # } else if (adult_domain_match && !child_domain_match) {
-    #   return("adult")
-    # }
+      # If we have clear domain matches, use those
+      if (child_domain_match && !adult_domain_match) {
+        return("child")
+      } else if (adult_domain_match && !child_domain_match) {
+        return("adult")
+      }
 
-    # # If domains are ambiguous, check the data if available
-    # if (!is.null(self$data) && nrow(self$data) > 0) {
-    #   # Check for child-specific test patterns
-    #   child_test_patterns <- c(
-    #     "BAI",
-    #     "BASC-3 PRS Adolescent",
-    #     "BASC-3 PRS Child",
-    #     "BASC-3 PRS Preschool",
-    #     "BASC-3 SRP Adolescent",
-    #     "BASC-3 SRP Child",
-    #     "BASC-3 TRS Child",
-    #     "BASC-3 TRS Preschool",
-    #     "BASC-3 TRS Adolescent",
-    #     "BDI-2",
-    #     "Rating Scale of Impairment",
-    #     "PAI Adolescent",
-    #     "MMPI-A"
-    #   )
+      # If domains are ambiguous, check the data if available
+      if (!is.null(self$data) && nrow(self$data) > 0) {
+        # Check for child-specific test patterns
+        child_test_patterns <- c(
+          "BAI",
+          "BASC-3 PRS Adolescent",
+          "BASC-3 PRS Child",
+          "BASC-3 PRS Preschool",
+          "BASC-3 SRP Adolescent",
+          "BASC-3 SRP Child",
+          "BASC-3 TRS Child",
+          "BASC-3 TRS Preschool",
+          "BASC-3 TRS Adolescent",
+          "BDI-2",
+          "Rating Scale of Impairment",
+          "PAI Adolescent",
+          "MMPI-A"
+        )
 
-    #   adult_test_patterns <- c("BAI", "BDI-2", "MMPI-3", "PAI")
+        adult_test_patterns <- c("BAI", "BDI-2", "MMPI-3", "PAI")
 
-    #   # Check test names for age indicators
-    #   if ("test_name" %in% names(self$data)) {
-    #     test_names <- unique(self$data$test_name)
+        # Check test names for age indicators
+        if ("test_name" %in% names(self$data)) {
+          test_names <- unique(self$data$test_name)
 
-    #     child_test_match <- any(sapply(
-    #       child_test_patterns,
-    #       function(pattern) {
-    #         any(grepl(pattern, test_names, ignore.case = TRUE))
-    #       }
-    #     ))
+          child_test_match <- any(sapply(
+            child_test_patterns,
+            function(pattern) {
+              any(grepl(pattern, test_names, ignore.case = TRUE))
+            }
+          ))
 
-    #     adult_test_match <- any(sapply(
-    #       adult_test_patterns,
-    #       function(pattern) {
-    #         any(grepl(pattern, test_names, ignore.case = TRUE))
-    #       }
-    #     ))
+          adult_test_match <- any(sapply(
+            adult_test_patterns,
+            function(pattern) {
+              any(grepl(pattern, test_names, ignore.case = TRUE))
+            }
+          ))
 
-    #     if (child_test_match && !adult_test_match) {
-    #       return("child")
-    #     } else if (adult_test_match && !child_test_match) {
-    #       return("adult")
-    #     }
-    #   }
+          if (child_test_match && !adult_test_match) {
+            return("child")
+          } else if (adult_test_match && !child_test_match) {
+            return("adult")
+          }
+        }
 
-    #     # Check for rater types (children typically have parent/teacher raters)
-    #     if ("rater" %in% names(self$data)) {
-    #       raters <- unique(self$data$rater)
-    #       has_parent_teacher <- any(c("parent", "teacher") %in% tolower(raters))
-    #       has_only_self <- length(raters) == 1 && "self" %in% tolower(raters)
+        # Check for rater types (children typically have parent/teacher raters)
+        if ("rater" %in% names(self$data)) {
+          raters <- unique(self$data$rater)
+          has_parent_teacher <- any(c("parent", "teacher") %in% tolower(raters))
+          has_only_self <- length(raters) == 1 && "self" %in% tolower(raters)
 
-    #       if (has_parent_teacher) {
-    #         return("child")
-    #       } else if (has_only_self) {
-    #         return("adult")
-    #       }
-    #     }
-    #   }
+          if (has_parent_teacher) {
+            return("child")
+          } else if (has_only_self) {
+            return("adult")
+          }
+        }
+      }
 
-    #   # If still ambiguous, fall back to configured age group (or adult)
-    #   return(self$detect_age_group())
-    # },
+      # If still ambiguous, fall back to configured age group (or adult)
+      return(self$detect_age_group())
+    },
 
     #' @description
     #' Generate domain QMD file (unified method)
@@ -665,7 +657,7 @@ DomainProcessorR6 <- R6::R6Class(
       if (is.null(output_file)) {
         # Handle special cases
         if (tolower(self$pheno) == "emotion") {
-          # emotion_type <- self$detect_emotion_type()
+          emotion_type <- self$detect_emotion_type()
           output_file <- paste0(
             "_02-",
             self$number,
@@ -674,11 +666,11 @@ DomainProcessorR6 <- R6::R6Class(
             ".qmd"
           )
         } else if (tolower(self$pheno) == "adhd") {
-          # age_type <- if (self$detect_age_group() == "child") {
-          #   "child"
-          # } else {
-          #   "adult"
-          # }
+          age_type <- if (self$detect_age_group() == "child") {
+            "child"
+          } else {
+            "adult"
+          }
           output_file <- paste0("_02-", self$number, "_adhd", ".qmd")
           # output_file <- paste0("_02-", self$number, "_adhd_", age_type, ".qmd")
         } else {
@@ -749,7 +741,7 @@ DomainProcessorR6 <- R6::R6Class(
 
       if (ph == "adhd") {
         # Always create self text; add optional raters if data exists
-        f_self <- paste0("_02-", self$number, "_adhd_text_self.qmd")
+        f_self <- paste0("_02-", self$number, "_adhd_text.qmd")
         created <- c(created, create_if_missing(f_self))
 
         for (r in c("parent", "teacher", "observer")) {
@@ -819,13 +811,11 @@ DomainProcessorR6 <- R6::R6Class(
         " {#sec-",
         tolower(self$pheno),
         "}\n\n",
-
         "```{r}\n",
         "#| label: setup-",
         tolower(self$pheno),
         "\n",
         "#| include: false\n\n",
-
         "# Load required packages\n",
         "suppressPackageStartupMessages({\n",
         "  library(here)\n",
@@ -834,12 +824,10 @@ DomainProcessorR6 <- R6::R6Class(
         "  library(gtExtras)\n",
         "  library(neuro2)\n",
         "})\n\n",
-
         "# Define domains\n",
         "domains <- ",
         domains_arg,
         "\n\n",
-
         "# Load and process data\n",
         "processor <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -850,11 +838,9 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "processor$load_data()\n",
         "processor$filter_by_domain()\n",
         "processor$select_columns()\n\n",
-
         "# Main data object\n",
         tolower(self$pheno),
         "_data <- processor$data\n"
@@ -885,7 +871,13 @@ DomainProcessorR6 <- R6::R6Class(
     #'   obj$generate_adhd_adult_qmd(domain_name=..., output_file=...)
     #' }
     generate_adhd_adult_qmd = function(domain_name, output_file) {
-      # Fix the output filename to include "_adult"
+      Fix
+      the
+      output
+      filename
+      to
+      include
+      "_adult"
       if (is.null(output_file)) {
         output_file <- paste0("_02-", self$number, "_adhd_adult.qmd")
       } else {
@@ -904,12 +896,8 @@ DomainProcessorR6 <- R6::R6Class(
       }
 
       # Create text files for different raters
-      self_text <- paste0("_02-", self$number, "_adhd_adult_text_self.qmd")
-      observer_text <- paste0(
-        "_02-",
-        self$number,
-        "_adhd_adult_text_observer.qmd"
-      )
+      self_text <- paste0("_02-", self$number, "_adhd_text.qmd")
+      observer_text <- paste0("_02-", self$number, "_adhd_text_observer.qmd")
 
       # Get input file path
       input_path <- if (grepl("^data/", self$input_file)) {
@@ -931,18 +919,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: setup-adhd-adult\n",
         "#| include: false\n\n",
-
         "# R6 classes are available through the neuro2 package\n",
         "# which is already loaded in the parent template\n\n",
-
         "# Filter by domain\n",
         "domains <- c(\"",
         domain_name,
         "\")\n\n",
-
         "# Target phenotype\n",
         "pheno <- \"adhd\"\n\n",
-
         "# Create R6 processor\n",
         "processor_adhd <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -951,21 +935,16 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "# Load and process data\n",
         "processor_adhd$load_data()\n",
         "processor_adhd$filter_by_domain()\n\n",
-
         "# Create the data object with original name for compatibility\n",
         "adhd <- processor_adhd$data\n\n",
-
         "# Process and export data using R6\n",
         "processor_adhd$select_columns()\n",
         "processor_adhd$save_data()\n\n",
-
         "# Update the original object\n",
         "adhd <- processor_adhd$data\n\n",
-
         "# Load internal data to get standardized scale names\n",
         "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
         "if (!exists(scale_var_name)) {\n",
@@ -984,7 +963,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  ))\n",
         "  scales <- character(0)\n",
         "}\n\n",
-
         "# Filter the data directly\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
@@ -997,7 +975,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  }\n\n",
         "  return(data)\n",
         "}\n\n",
-
         "# Apply the filter function\n",
         "data_adhd <- filter_data(data = adhd, domain = domains, scale = scales)\n",
         "```\n\n"
@@ -1022,7 +999,6 @@ DomainProcessorR6 <- R6::R6Class(
             "{{< include ",
             text_file,
             " >}}\n\n",
-
             "```{r}\n",
             "#| label: text-adhd-adult-",
             rater,
@@ -1030,7 +1006,6 @@ DomainProcessorR6 <- R6::R6Class(
             "#| cache: true\n",
             "#| include: false\n",
             "#| results: asis\n\n",
-
             "# Filter data for this rater\n",
             "data_adhd_",
             rater,
@@ -1048,7 +1023,6 @@ DomainProcessorR6 <- R6::R6Class(
             rater,
             "\", ]\n",
             "}\n\n",
-
             "# Generate text using R6 class\n",
             "if (nrow(data_adhd_",
             rater,
@@ -1078,18 +1052,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: qtbl-adhd-adult\n",
         "#| include: false\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_adhd_adult\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_adhd)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -1100,10 +1070,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -1112,20 +1080,16 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  source_note <- \"T score: Mean = 50 [50th\u2030], SD \u00B1 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_adhd,\n",
@@ -1138,18 +1102,14 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-adhd-adult-subdomain\n",
         "#| include: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\"z_mean_subdomain\" %in% names(data_adhd) && \"subdomain\" %in% names(data_adhd)) {\n",
         "  dotplot_subdomain <- DotplotR6$new(\n",
@@ -1162,7 +1122,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_adhd\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -1171,7 +1130,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_adhd <- get(plot_title_var)\n",
@@ -1181,11 +1139,9 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-adhd-adult-narrow\n",
         "#| include: false\n\n",
-
         "# Create narrow plot using R6 DotplotR6\n",
         "if (\"z_mean_narrow\" %in% names(data_adhd) && \"narrow\" %in% names(data_adhd)) {\n",
         "  dotplot_narrow <- DotplotR6$new(\n",
@@ -1198,7 +1154,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_adhd\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -1207,7 +1162,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_adhd <- get(plot_title_var)\n",
@@ -1217,13 +1171,11 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
         "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
         "  set text(..font)\n\n",
-
         "  // Make all figure labels (Table X:, Figure X:) bold\n",
         "  show figure.caption: it => {\n",
         "    context {\n",
@@ -1232,7 +1184,6 @@ DomainProcessorR6 <- R6::R6Class(
         "      block[*#supplement #counter:* #it.body]\n",
         "    }\n",
         "  }\n\n",
-
         "  pad(top: 0.5em)[]\n",
         "  grid(\n",
         "    columns: (50%, 50%),\n",
@@ -1257,35 +1208,27 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "// #let file_qtbl = \"table_adhd_adult.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_adult_subdomain.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "#let file_qtbl = \"table_adhd_adult.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_adult_narrow.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
@@ -1355,18 +1298,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: setup-adhd-child\n",
         "#| include: false\n\n",
-
         "# R6 classes are available through the neuro2 package\n",
         "# which is already loaded in the parent template\n\n",
-
         "# Filter by domain\n",
         "domains <- c(\"",
         domain_name,
         "\")\n\n",
-
         "# Target phenotype\n",
         "pheno <- \"adhd\"\n\n",
-
         "# Create R6 processor\n",
         "processor_adhd <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -1375,21 +1314,16 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "# Load and process data\n",
         "processor_adhd$load_data()\n",
         "processor_adhd$filter_by_domain()\n\n",
-
         "# Create the data object with original name for compatibility\n",
         "adhd <- processor_adhd$data\n\n",
-
         "# Process and export data using R6\n",
         "processor_adhd$select_columns()\n",
         "processor_adhd$save_data()\n\n",
-
         "# Update the original object\n",
         "adhd <- processor_adhd$data\n\n",
-
         "# Load internal data to get standardized scale names\n",
         "scale_var_name <- paste0(\"scales_\", tolower(pheno))\n",
         "if (!exists(scale_var_name)) {\n",
@@ -1408,7 +1342,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  ))\n",
         "  scales <- character(0)\n",
         "}\n\n",
-
         "# Filter the data directly\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
@@ -1421,7 +1354,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  }\n\n",
         "  return(data)\n",
         "}\n\n",
-
         "# Apply the filter function\n",
         "data_adhd <- filter_data(data = adhd, domain = domains, scale = scales)\n",
         "```\n\n"
@@ -1446,7 +1378,6 @@ DomainProcessorR6 <- R6::R6Class(
             "{{< include ",
             text_file,
             " >}}\n\n",
-
             "```{r}\n",
             "#| label: text-adhd-child-",
             rater,
@@ -1454,7 +1385,6 @@ DomainProcessorR6 <- R6::R6Class(
             "#| cache: true\n",
             "#| include: false\n",
             "#| results: asis\n\n",
-
             "# Filter data for this rater\n",
             "data_adhd_",
             rater,
@@ -1472,7 +1402,6 @@ DomainProcessorR6 <- R6::R6Class(
             rater,
             "\", ]\n",
             "}\n\n",
-
             "# Generate text using R6 class\n",
             "if (nrow(data_adhd_",
             rater,
@@ -1502,18 +1431,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: qtbl-adhd-child\n",
         "#| include: false\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_adhd_child\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_adhd)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -1524,10 +1449,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -1536,20 +1459,16 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  source_note <- \"T score: Mean = 50 [50th\u2030], SD \u00B1 10 [16th\u2030, 84th\u2030]\"\n",
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_adhd,\n",
@@ -1562,18 +1481,14 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-adhd-child-subdomain\n",
         "#| include: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\"z_mean_subdomain\" %in% names(data_adhd) && \"subdomain\" %in% names(data_adhd)) {\n",
         "  dotplot_subdomain <- DotplotR6$new(\n",
@@ -1586,7 +1501,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_adhd\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -1595,7 +1509,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_adhd <- get(plot_title_var)\n",
@@ -1605,11 +1518,9 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-adhd-child-narrow\n",
         "#| include: false\n\n",
-
         "# Create narrow plot using R6 DotplotR6\n",
         "if (\"z_mean_narrow\" %in% names(data_adhd) && \"narrow\" %in% names(data_adhd)) {\n",
         "  dotplot_narrow <- DotplotR6$new(\n",
@@ -1622,7 +1533,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_adhd\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -1631,7 +1541,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_adhd <- get(plot_title_var)\n",
@@ -1641,7 +1550,6 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -1679,35 +1587,27 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "// #let file_qtbl = \"table_adhd_child.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_child_subdomain.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "#let file_qtbl = \"table_adhd_child.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_adhd_child_narrow.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "#domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
@@ -1780,18 +1680,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: setup-emotion-child\n",
         "#| include: false\n\n",
-
         "# R6 classes are available through the neuro2 package\n",
         "# which is already loaded in the parent template\n\n",
-
         "# Filter by domain\n",
         "domains <- c(\n",
         paste0("  \"", multiple_domains, "\"", collapse = ",\n"),
         "\n)\n\n",
-
         "# Target phenotype\n",
         "pheno <- \"emotion\"\n\n",
-
         "# Create R6 processor\n",
         "processor_emotion <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -1800,21 +1696,16 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "# Load and process data\n",
         "processor_emotion$load_data()\n",
         "processor_emotion$filter_by_domain()\n\n",
-
         "# Create the data object with original name for compatibility\n",
         "emotion <- processor_emotion$data\n\n",
-
         "# Process and export data using R6\n",
         "processor_emotion$select_columns()\n",
         "processor_emotion$save_data()\n\n",
-
         "# Update the original object\n",
         "emotion <- processor_emotion$data\n\n",
-
         "# Load internal data to get standardized scale names\n",
         "scale_var_name <- paste0(\"scales_\", tolower(pheno), \"_child\")\n",
         "if (!exists(scale_var_name)) {\n",
@@ -1833,7 +1724,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  ))\n",
         "  scales <- character(0)\n",
         "}\n\n",
-
         "# Filter the data directly\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
@@ -1846,7 +1736,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  }\n\n",
         "  return(data)\n",
         "}\n\n",
-
         "# Apply the filter function\n",
         "data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)\n",
         "```\n\n"
@@ -1861,13 +1750,11 @@ DomainProcessorR6 <- R6::R6Class(
         "#| cache: true\n",
         "#| include: false\n",
         "#| results: asis\n\n",
-
         "# Filter data for this rater\n",
         "data_emotion_self <- data_emotion\n",
         "if (\"rater\" %in% names(data_emotion_self)) {\n",
         "  data_emotion_self <- data_emotion_self[data_emotion_self$rater == \"self\", ]\n",
         "}\n\n",
-
         "# Generate text using R6 class\n",
         "if (nrow(data_emotion_self) > 0) {\n",
         "  results_processor_self <- NeuropsychResultsR6$new(\n",
@@ -1886,7 +1773,6 @@ DomainProcessorR6 <- R6::R6Class(
         "#| cache: true\n",
         "#| include: false\n",
         "#| results: asis\n\n",
-
         "# Filter data for this rater\n",
         "data_emotion_parent <- data_emotion\n",
         "if (\"rater\" %in% names(data_emotion_parent)) {\n",
@@ -1894,7 +1780,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    data_emotion_parent$rater == \"parent\",\n",
         "  ]\n",
         "}\n\n",
-
         "# Generate text using R6 class\n",
         "if (nrow(data_emotion_parent) > 0) {\n",
         "  results_processor_parent <- NeuropsychResultsR6$new(\n",
@@ -1914,7 +1799,6 @@ DomainProcessorR6 <- R6::R6Class(
         "#| include: false\n",
         "#| results: asis\n",
         "#| eval: false\n\n",
-
         "# Filter data for this rater\n",
         "data_emotion_teacher <- data_emotion\n",
         "if (\"rater\" %in% names(data_emotion_teacher)) {\n",
@@ -1922,7 +1806,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    data_emotion_teacher$rater == \"teacher\",\n",
         "  ]\n",
         "}\n\n",
-
         "# Generate text using R6 class\n",
         "if (nrow(data_emotion_teacher) > 0) {\n",
         "  results_processor_teacher <- NeuropsychResultsR6$new(\n",
@@ -1947,18 +1830,14 @@ DomainProcessorR6 <- R6::R6Class(
         "#| include: false\n",
         "#| eval: true\n",
         "options(tikzDefaultEngine = \"xetex\")\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_self\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -1969,10 +1848,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -1984,13 +1861,10 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
@@ -1998,7 +1872,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_emotion_self,\n",
@@ -2011,10 +1884,8 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n"
@@ -2030,18 +1901,14 @@ DomainProcessorR6 <- R6::R6Class(
         "#| include: false\n",
         "#| eval: true\n",
         "options(tikzDefaultEngine = \"xetex\")\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_parent\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -2052,10 +1919,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -2067,13 +1932,10 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
@@ -2081,7 +1943,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_emotion_parent,\n",
@@ -2094,10 +1955,8 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n"
@@ -2113,18 +1972,14 @@ DomainProcessorR6 <- R6::R6Class(
         "#| include: false\n",
         "#| eval: false\n",
         "options(tikzDefaultEngine = \"xetex\")\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_emotion_child_teacher\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -2135,10 +1990,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -2150,13 +2003,10 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
@@ -2164,7 +2014,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_emotion_teacher,\n",
@@ -2177,10 +2026,8 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n"
@@ -2193,7 +2040,6 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: fig-emotion-child-self-subdomain\n",
         "#| include: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\n",
         "  \"z_mean_subdomain\" %in%\n",
@@ -2210,7 +2056,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_emotion_child_self\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -2219,7 +2064,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_emotion <- get(plot_title_var)\n",
@@ -2235,7 +2079,6 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: fig-emotion-child-parent-subdomain\n",
         "#| include: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\n",
         "  \"z_mean_subdomain\" %in%\n",
@@ -2252,7 +2095,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_emotion_child_parent\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -2261,7 +2103,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_emotion <- get(plot_title_var)\n",
@@ -2278,7 +2119,6 @@ DomainProcessorR6 <- R6::R6Class(
         "#| label: fig-emotion-child-teacher-subdomain\n",
         "#| include: false\n",
         "#| eval: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\n",
         "  \"z_mean_subdomain\" %in%\n",
@@ -2295,7 +2135,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_emotion_child_teacher\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -2304,7 +2143,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_emotion <- get(plot_title_var)\n",
@@ -2321,7 +2159,6 @@ DomainProcessorR6 <- R6::R6Class(
         "{{< include ",
         self_text,
         " >}}\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -2359,7 +2196,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
@@ -2370,12 +2206,10 @@ DomainProcessorR6 <- R6::R6Class(
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
-
         "### PARENT RATINGS\n\n",
         "{{< include ",
         parent_text,
         " >}}\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -2413,7 +2247,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
@@ -2424,12 +2257,10 @@ DomainProcessorR6 <- R6::R6Class(
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
-
         "<!-- ### TEACHER RATINGS-->\n\n",
         "<!-- {{< include ",
         teacher_text,
         " >}} -->\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -2467,7 +2298,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"Behavioral/Emotional/Social\"\n\n",
@@ -2537,7 +2367,6 @@ DomainProcessorR6 <- R6::R6Class(
         "\n", # Use correct domain name for adult
         "<sec-emotion-adult>\n",
         "```\n\n",
-
         "{{< include ",
         text_file,
         " >}}\n\n",
@@ -2546,18 +2375,14 @@ DomainProcessorR6 <- R6::R6Class(
         "```{r}\n",
         "#| label: setup-emotion-adult\n",
         "#| include: false\n\n",
-
         "# R6 classes are available through the neuro2 package\n",
         "# which is already loaded in the parent template\n\n",
-
         "# Filter by domain\n",
         "domains <- c(\"",
         correct_domain_name,
         "\")\n\n",
-
         "# Target phenotype\n",
         "pheno <- \"emotion\"\n\n",
-
         "# Create R6 processor\n",
         "processor_emotion <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -2566,21 +2391,16 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "# Load and process data\n",
         "processor_emotion$load_data()\n",
         "processor_emotion$filter_by_domain()\n\n",
-
         "# Create the data object with original name for compatibility\n",
         "emotion <- processor_emotion$data\n\n",
-
         "# Process and export data using R6\n",
         "processor_emotion$select_columns()\n",
         "processor_emotion$save_data()\n\n",
-
         "# Update the original object\n",
         "emotion <- processor_emotion$data\n\n",
-
         "# Load internal data to get standardized scale names\n",
         "scale_var_name <- paste0(\"scales_\", tolower(pheno), \"_adult\")\n",
         "if (!exists(scale_var_name)) {\n",
@@ -2599,7 +2419,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  ))\n",
         "  scales <- character(0)\n",
         "}\n\n",
-
         "# Filter the data directly\n",
         "filter_data <- function(data, domain, scale) {\n",
         "  # Filter by domain if provided\n",
@@ -2612,18 +2431,15 @@ DomainProcessorR6 <- R6::R6Class(
         "  }\n\n",
         "  return(data)\n",
         "}\n\n",
-
         "# Apply the filter function\n",
         "data_emotion <- filter_data(data = emotion, domain = domains, scale = scales)\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: text-emotion-adult\n",
         "#| cache: true\n",
         "#| include: true\n",
         "#| echo: false\n",
         "#| results: asis\n\n",
-
         "# Generate text using R6 class\n",
         "results_processor <- NeuropsychResultsR6$new(\n",
         "  data = data_emotion,\n",
@@ -2633,22 +2449,17 @@ DomainProcessorR6 <- R6::R6Class(
         ")\n",
         "results_processor$process()\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: qtbl-emotion-adult\n",
         "#| include: false\n\n",
-
         "# Table parameters\n",
         "table_name <- \"table_emotion_adult\"\n",
         "vertical_padding <- 0\n",
         "multiline <- TRUE\n\n",
-
         "# Get score types from the lookup table\n",
         "score_type_map <- get_score_types_from_lookup(data_emotion)\n\n",
-
         "# Create a list of test names grouped by score type\n",
         "score_types_list <- list()\n\n",
-
         "# Process the score type map to group tests by score type\n",
         "for (test_name in names(score_type_map)) {\n",
         "  types <- score_type_map[[test_name]]\n",
@@ -2659,10 +2470,8 @@ DomainProcessorR6 <- R6::R6Class(
         "    score_types_list[[type]] <- unique(c(score_types_list[[type]], test_name))\n",
         "  }\n",
         "}\n\n",
-
         "# Get unique score types present\n",
         "unique_score_types <- names(score_types_list)\n\n",
-
         "# Define the score type footnotes\n",
         "fn_list <- list()\n",
         "if (\"t_score\" %in% unique_score_types) {\n",
@@ -2674,13 +2483,10 @@ DomainProcessorR6 <- R6::R6Class(
         "if (\"standard_score\" %in% unique_score_types) {\n",
         "  fn_list$standard_score <- \"Standard score: Mean = 100 [50th\u2030], SD \u00B1 15 [16th\u2030, 84th\u2030]\"\n",
         "}\n\n",
-
         "# Create groups based on test names that use each score type\n",
         "grp_list <- score_types_list\n\n",
-
         "# Define which groups support which score types (for dynamic footnotes)\n",
         "dynamic_grp <- score_types_list\n\n",
-
         "# Default source note if no score types are found\n",
         "if (length(fn_list) == 0) {\n",
         "  # Determine default based on pheno\n",
@@ -2688,7 +2494,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  source_note <- NULL # No general source note when using footnotes\n",
         "}\n\n",
-
         "# Create table using our modified TableGTR6 R6 class\n",
         "table_gt <- TableGTR6$new(\n",
         "  data = data_emotion,\n",
@@ -2701,18 +2506,14 @@ DomainProcessorR6 <- R6::R6Class(
         "  grp_list = grp_list,\n",
         "  dynamic_grp = dynamic_grp\n",
         ")\n\n",
-
         "# Get the table object without automatic saving\n",
         "tbl <- table_gt$build_table()\n\n",
-
         "# Save the table using our save_table method\n",
         "table_gt$save_table(tbl, dir = here::here())\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-emotion-adult-subdomain\n",
         "#| include: false\n\n",
-
         "# Create subdomain plot using R6 DotplotR6\n",
         "if (\"z_mean_subdomain\" %in% names(data_emotion) && \"subdomain\" %in% names(data_emotion)) {\n",
         "  dotplot_subdomain <- DotplotR6$new(\n",
@@ -2725,7 +2526,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Subdomain plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_emotion\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -2734,7 +2534,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_emotion <- get(plot_title_var)\n",
@@ -2744,11 +2543,9 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-emotion-adult-narrow\n",
         "#| include: false\n\n",
-
         "# Create narrow plot using R6 DotplotR6\n",
         "if (\"z_mean_narrow\" %in% names(data_emotion) && \"narrow\" %in% names(data_emotion)) {\n",
         "  dotplot_narrow <- DotplotR6$new(\n",
@@ -2761,7 +2558,6 @@ DomainProcessorR6 <- R6::R6Class(
         "} else {\n",
         "  warning(\"Narrow plot cannot be created: missing required columns\")\n",
         "}\n\n",
-
         "# Load plot title from sysdata.rda\n",
         "plot_title_var <- \"plot_title_emotion\"\n",
         "if (!exists(plot_title_var)) {\n",
@@ -2770,7 +2566,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    load(sysdata_path)\n",
         "  }\n",
         "}\n\n",
-
         "# Get the plot title or use default\n",
         "if (exists(plot_title_var)) {\n",
         "  plot_title_emotion <- get(plot_title_var)\n",
@@ -2780,7 +2575,6 @@ DomainProcessorR6 <- R6::R6Class(
         " scores ... \"\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define a function to create a domain with a title, a table, and a figure\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
@@ -2818,35 +2612,27 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         correct_domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "// #let file_qtbl = \"table_emotion_adult.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_adult_subdomain.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
         correct_domain_name,
         "\"\n\n",
-
         "// Define the file name of the table\n",
         "// #let file_qtbl = \"table_emotion_adult.png\"\n\n",
-
         "// Define the file name of the figure\n",
         "#let file_fig = \"fig_emotion_adult_narrow.svg\"\n\n",
-
         "// The title is appended with ' Scores'\n",
         "// #domain(title: [#title Scores], file_qtbl, file_fig)\n",
         "```\n"
@@ -2905,7 +2691,6 @@ DomainProcessorR6 <- R6::R6Class(
         return(private$build_single_rater_template(domain_name, text_files[1]))
       }
     },
-
     build_single_rater_template = function(domain_name, text_file) {
       paste0(
         "## ",
@@ -2920,7 +2705,6 @@ DomainProcessorR6 <- R6::R6Class(
         private$build_typst_display_block()
       )
     },
-
     build_multi_rater_template = function(domain_name, text_files) {
       # Build sections for each rater
       content <- paste0(
@@ -2995,7 +2779,6 @@ DomainProcessorR6 <- R6::R6Class(
         tolower(self$pheno),
         "\n",
         "#| include: false\n\n",
-
         "# Load required packages\n",
         "suppressPackageStartupMessages({\n",
         "  library(here)\n",
@@ -3004,12 +2787,10 @@ DomainProcessorR6 <- R6::R6Class(
         "  library(gtExtras)\n",
         "  library(neuro2)\n",
         "})\n\n",
-
         "# Define domains\n",
         "domains <- ",
         domains_arg,
         "\n\n",
-
         "# Load and process data\n",
         "processor <- DomainProcessorR6$new(\n",
         "  domains = domains,\n",
@@ -3020,11 +2801,9 @@ DomainProcessorR6 <- R6::R6Class(
         input_path,
         "\"\n",
         ")\n\n",
-
         "processor$load_data()\n",
         "processor$filter_by_domain()\n",
         "processor$select_columns()\n\n",
-
         "# Main data object\n",
         tolower(self$pheno),
         "_data <- processor$data\n",
@@ -3038,7 +2817,6 @@ DomainProcessorR6 <- R6::R6Class(
         "#| cache: true\n",
         "#| include: false\n",
         "#| results: asis\n\n",
-
         "# Generate text using R6 class\n",
         "if (nrow(",
         tolower(self$pheno),
@@ -3064,7 +2842,6 @@ DomainProcessorR6 <- R6::R6Class(
         "\n",
         "#| include: false\n",
         "#| eval: true\n\n",
-
         "if (nrow(",
         tolower(self$pheno),
         "_data) > 0) {\n",
@@ -3088,7 +2865,7 @@ DomainProcessorR6 <- R6::R6Class(
         "$build_table()\n",
         "  table_",
         tolower(self$pheno),
-        "$save_table(tbl, dir = here::here())\n",
+        "$save_table(tbl, dir = here::here('figs'))\n",
         "}\n",
         "```\n\n",
 
@@ -3099,7 +2876,6 @@ DomainProcessorR6 <- R6::R6Class(
         "-subdomain\n",
         "#| include: false\n",
         "#| eval: true\n\n",
-
         "if (nrow(",
         tolower(self$pheno),
         "_data) > 0) {\n",
@@ -3138,7 +2914,6 @@ DomainProcessorR6 <- R6::R6Class(
         "-narrow\n",
         "#| include: false\n",
         "#| eval: true\n\n",
-
         "if (nrow(",
         tolower(self$pheno),
         "_data) > 0) {\n",
@@ -3168,7 +2943,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    }\n",
         "  }\n",
         "}\n\n",
-
         private$get_plot_title_block(self$domains[1]),
         "```\n\n"
       )
@@ -3224,7 +2998,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
@@ -3282,7 +3055,6 @@ DomainProcessorR6 <- R6::R6Class(
         "  )\n",
         "}\n",
         "```\n\n",
-
         "```{=typst}\n",
         "// Define the title of the domain\n",
         "#let title = \"",
@@ -3358,20 +3130,17 @@ DomainProcessorR6 <- R6::R6Class(
 
       content <- paste0(
         "```\n\n",
-
         "{{< include _02-",
         self$number,
         "_",
         pheno_lower,
         "_text.qmd >}}\n\n",
-
         "```{r}\n",
         "#| label: text-",
         pheno_lower,
         "\n",
         "#| cache: true\n",
         "#| include: false\n\n",
-
         "# Generate text using R6 class\n",
         "if (nrow(",
         pheno_lower,
@@ -3389,14 +3158,12 @@ DomainProcessorR6 <- R6::R6Class(
         "  results_processor$process()\n",
         "}\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: qtbl-",
         pheno_lower,
         "\n",
         "#| include: false\n",
         "#| eval: true\n\n",
-
         "if (nrow(",
         pheno_lower,
         "_data) > 0) {\n",
@@ -3423,14 +3190,12 @@ DomainProcessorR6 <- R6::R6Class(
         "$save_table(tbl, dir = here::here())\n",
         "}\n",
         "```\n\n",
-
         "```{r}\n",
         "#| label: fig-",
         pheno_lower,
         "\n",
         "#| include: false\n",
         "#| eval: true\n\n",
-
         "if (nrow(",
         pheno_lower,
         "_data) > 0) {\n",
@@ -3455,7 +3220,6 @@ DomainProcessorR6 <- R6::R6Class(
         "$create_plot()\n",
         "  }\n",
         "}\n\n",
-
         "# Set plot title\n",
         "plot_title_",
         pheno_lower,
@@ -3463,7 +3227,6 @@ DomainProcessorR6 <- R6::R6Class(
         self$domains[1],
         " scores reflect performance across multiple measures.\"\n",
         "```\n\n",
-
         "```{=typst}\n",
         "#let domain(title: none, file_qtbl, file_fig) = {\n",
         "  let font = (font: \"Roboto Slab\", size: 0.7em)\n",
@@ -3500,7 +3263,6 @@ DomainProcessorR6 <- R6::R6Class(
         "    ),\n",
         "  )\n",
         "}\n\n",
-
         "#domain(\n",
         "  title: [",
         self$domains[1],
@@ -3517,7 +3279,6 @@ DomainProcessorR6 <- R6::R6Class(
 
       return(content)
     },
-
     generate_multi_rater_content = function() {
       pheno_lower <- tolower(self$pheno)
       raters <- self$get_rater_types()
@@ -3567,7 +3328,6 @@ DomainProcessorR6 <- R6::R6Class(
           "_text_",
           rater,
           ".qmd >}}\n\n",
-
           "```{r}\n",
           "#| label: text-",
           pheno_lower,
@@ -3576,7 +3336,6 @@ DomainProcessorR6 <- R6::R6Class(
           "\n",
           "#| cache: true\n",
           "#| include: false\n\n",
-
           "if (nrow(",
           rater_var,
           ") > 0) {\n",
@@ -3599,7 +3358,6 @@ DomainProcessorR6 <- R6::R6Class(
           "$process()\n",
           "}\n",
           "```\n\n",
-
           "```{r}\n",
           "#| label: qtbl-",
           pheno_lower,
@@ -3608,7 +3366,6 @@ DomainProcessorR6 <- R6::R6Class(
           "\n",
           "#| include: false\n",
           "#| eval: true\n\n",
-
           "if (nrow(",
           rater_var,
           ") > 0) {\n",
@@ -3640,7 +3397,6 @@ DomainProcessorR6 <- R6::R6Class(
           ", dir = here::here())\n",
           "}\n",
           "```\n\n",
-
           "```{r}\n",
           "#| label: fig-",
           pheno_lower,
@@ -3649,7 +3405,6 @@ DomainProcessorR6 <- R6::R6Class(
           "\n",
           "#| include: false\n",
           "#| eval: true\n\n",
-
           "if (nrow(",
           rater_var,
           ") > 0) {\n",
@@ -3675,7 +3430,6 @@ DomainProcessorR6 <- R6::R6Class(
           "$create_plot()\n",
           "  }\n",
           "}\n\n",
-
           "plot_title_",
           pheno_lower,
           "_",
@@ -3686,7 +3440,6 @@ DomainProcessorR6 <- R6::R6Class(
           rater,
           " report) scores.\"\n",
           "```\n\n",
-
           "```{=typst}\n",
           "#domain(\n",
           "  title: [",

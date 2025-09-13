@@ -183,7 +183,10 @@ domain_config <- list(
     pheno = "social",
     input_file = "data/neurocog.parquet"
   ),
-  "ADHD/Executive Function" = list(pheno = "adhd", input_file = "data/neurobehav.parquet"),
+  "ADHD/Executive Function" = list(
+    pheno = "adhd",
+    input_file = "data/neurobehav.parquet"
+  ),
   "Emotional/Behavioral/Social/Personality" = list(
     pheno = "emotion",
     input_file = "data/neurobehav.parquet"
@@ -195,17 +198,15 @@ domain_config <- list(
   "Daily Living" = list(
     pheno = "daily_living",
     input_file = "data/neurocog.parquet"
-  ),
+  )
   # Consolidated under a single emotion domain label
 )
 
 # Define emotion-related domains that should be processed together
-emotion_domains <- c(
-  "Emotional/Behavioral/Social/Personality"
-)
+emotion_domains <- c("Emotional/Behavioral/Social/Personality")
 
 # Function to process a single domain with proper validation
-..process_single_domain_validated <- function(
+.process_single_domain_validated <- function(
   domain_name,
   config,
   neurocog_data,
@@ -271,7 +272,9 @@ emotion_domains <- c(
       processor$generate_domain_text_qmd()
 
       # Generate rater-specific text files if applicable
-      if (domain_name %in% c("ADHD/Executive Function", "ADHD", emotion_domains)) {
+      if (
+        domain_name %in% c("ADHD/Executive Function", "ADHD", emotion_domains)
+      ) {
         raters <- c("self", "parent", "teacher")
         for (rater in raters) {
           if (
@@ -339,7 +342,7 @@ process_emotion_domains <- function(is_child = TRUE) {
         log_message(paste("Generated:", generated_file), "DOMAINS")
 
         # Generate rater-specific text files
-        raters <- if (is_child) c("self", "parent", "teacher") else c("self")
+        raters <- if (is_child) c("parent", "teacher") else c("observer")
         for (rater in raters) {
           processor$generate_domain_text_qmd(report_type = rater)
         }
@@ -365,15 +368,20 @@ process_adhd_domain <- function(is_child = TRUE) {
     return(FALSE)
   }
 
-  if (!check_domain_has_data("ADHD/Executive Function", neurobehav_data) &&
-      !check_domain_has_data("ADHD", neurobehav_data)) {
+  if (
+    !check_domain_has_data("ADHD/Executive Function", neurobehav_data) &&
+      !check_domain_has_data("ADHD", neurobehav_data)
+  ) {
     return(FALSE)
   }
 
   tryCatch(
     {
       age_type <- if (is_child) "child" else "adult"
-      log_message(paste("Processing ADHD/Executive Function domain for", age_type), "DOMAINS")
+      log_message(
+        paste("Processing ADHD/Executive Function domain for", age_type),
+        "DOMAINS"
+      )
 
       processor <- DomainProcessorR6$new(
         domains = "ADHD/Executive Function",
@@ -573,7 +581,12 @@ main_processing_improved <- function() {
     {
       age_type <- if (is_child) "child" else "adult"
       log_message(
-        paste("Processing", validation$row_count, "ADHD/Executive Function records for", age_type),
+        paste(
+          "Processing",
+          validation$row_count,
+          "ADHD/Executive Function records for",
+          age_type
+        ),
         "DOMAINS"
       )
 
@@ -592,7 +605,9 @@ main_processing_improved <- function() {
 
         # FIXED: Use the updated generate_domain_qmd method
         # The method automatically detects child vs adult ADHD/EF type
-        generated_file <- processor$generate_domain_qmd(domain_name = "ADHD/Executive Function")
+        generated_file <- processor$generate_domain_qmd(
+          domain_name = "ADHD/Executive Function"
+        )
         log_message(paste("Generated:", generated_file), "DOMAINS")
 
         return(TRUE)
