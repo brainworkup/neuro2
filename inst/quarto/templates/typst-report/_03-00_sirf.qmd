@@ -1,9 +1,141 @@
 # SUMMARY/IMPRESSION {#sec-sirf}
 
 ```{r}
+#| label: make-g
+#| include: false
+#| eval: true
+
+patient <- "Ethan"
+
+scales <- c(
+  "Academic Skills",
+  "Attention",
+  "Attention Span",
+  "Attention/Executive",
+  "Attentional Fluency",
+  "Cognitive Efficiency",
+  "Cognitive Proficiency",
+  "Crystallized Knowledge",
+  "Delayed Recall",
+  "Executive Functions",
+  "Global Neurocognitive Index (G)",
+  "Verbal Fluency",
+  "Fluid Reasoning",
+  "General Ability",
+  "Learning Efficiency",
+  "Memory",
+  "Planning",
+  "Processing Speed",
+  "Psychomotor Speed",
+  "Verbal/Language",
+  "Visual Perception/Construction",
+  "Working Memory",
+  "Reading",
+  "Math",
+  "Writing",
+  "Academic Fluency"
+)
+
+# make g
+g <- readxl::read_excel("data-raw/index_scores.xlsx") |>
+  janitor::clean_names() |>
+  dplyr::mutate(z = (index - 100) / 15) |>
+  dplyr::filter(composite_name %in% scales) |>
+  dplyr::rename(
+    scale = composite_name,
+    score = index,
+    ci_95 = x95_percent_ci
+  ) |>
+  dplyr::mutate(
+    test = "index_score",
+    test_name = "Composite Scores",
+    domain = "General Cognitive Ability",
+    subdomain = scale,
+    test_type = "npsych_test"
+  ) |>
+  bwu::gpluck_make_score_ranges(range = "", test_type = "npsych_test") |>
+  dplyr::select(
+    scale,
+    score,
+    ci_95,
+    z,
+    percentile,
+    range,
+    test,
+    test_name,
+    domain,
+    subdomain,
+    test_type,
+    reliability,
+    composition
+  )
+
+# save g.csv
+readr::write_csv(g, "data/g.csv")
+```
+
+```{r}
+#| label: fig-sirf
+#| include: false
+#| eval: true
+#| fig-cap: "Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-Scores have a mean of 0 and a standard deviation of 1."
+
+g <- vroom::vroom("data/g.csv")
+
+# scales
+keep <- c(
+  "General Ability",
+  "Academic Skills",
+  "Fluid Reasoning",
+  # "Attention/Executive",
+  "Attention",
+  "Attention Span",
+  "Attentional Fluency",
+  "Cognitive Efficiency",
+  # "Cognitive Proficiency",
+  "Crystallized Knowledge",
+  "Executive Functions",
+  # "Global Neurocognitive Index (G)",
+  "Verbal Fluency",
+  "Delayed Recall",
+  "Learning Efficiency",
+  # "Memory",
+  "Planning",
+  # "Processing Speed",
+  "Psychomotor Speed",
+  "Verbal/Language",
+  "Visual Perception/Construction",
+  "Working Memory",
+  "Reading",
+  "Math",
+  "Writing",
+  "Academic Fluency"
+)
+
+g <- dplyr::filter(g, scale %in% keep)
+g <- g[complete.cases(g$z), ]
+
+pheno <- "g"
+data <- g
+x <- g$z
+y <- g$scale
+colors <- NULL
+return_plot <- TRUE
+filename <- "fig_g.svg"
+
+bwu::dotplot(
+  data = g,
+  x = x,
+  y = y,
+  colors = colors,
+  return_plot = return_plot,
+  filename = filename
+)
+```
+
+```{r}
 #| label: setup-sirf
 #| include: false
-#| cache: true
 
 # Load required packages
 library(arrow)
@@ -48,22 +180,8 @@ domain_memory <- "Memory"
 domain_executive <- "Attention/Executive"
 domain_motor <- "Motor"
 domain_social <- "Social Cognition"
-domain_adhd_adult <- "ADHD"
-domain_adhd_child <- "ADHD"
-domain_emotion_adult <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Emotional/Behavioral/Personality"
-)
-domain_emotion_child <- c(
-  "Psychiatric Disorders",
-  "Personality Disorders",
-  "Substance Use",
-  "Psychosocial Problems",
-  "Behavioral/Emotional/Social"
-)
+domain_adhd <- "ADHD/Executive Function"
+domain_emotion <- c("Emotional/Behavioral/Social/Personality")
 domain_adaptive <- "Adaptive Functioning"
 domain_daily_living <- "Daily Living"
 
@@ -102,8 +220,8 @@ overall_plot$create_plot()
 
 ```{=typst}
 #let domain(file_fig) = {
-  let font = (font: "Roboto Slab", size: 0.7em)
-  set text(..font)
+  // let font = (font: "Roboto Slab", size: 0.7em)
+  // set text(..font)
   figure(
     [#image(file_fig, width: 85%)],
     placement: none,
@@ -118,5 +236,31 @@ overall_plot$create_plot()
 }
 
 #let file_fig = "fig_sirf_overall.svg"
+#domain(file_fig)
+```
+
+
+```{=typst}
+#let domain(file_fig) = {
+  // let font = (font: "Roboto Slab", size: 0.7em)
+  // set text(..font)
+  figure(
+    [#image(file_fig, width: 70%)],
+    placement: none,
+    caption: figure.caption(
+      position: bottom,
+      [
+        Plots depicting the patient’s strengths and weaknesses across neurocognitive function subdomains. Note: z-scores are standardized with a mean of 0 and a standard deviation of 1.
+        ],
+    ),
+    kind: "image",
+    supplement: [Figure],
+    gap: 0.5em,
+  )
+}
+```
+
+```{=typst}
+#let file_fig = "fig_g.svg"
 #domain(file_fig)
 ```

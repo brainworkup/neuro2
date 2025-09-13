@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+# FIX FOR ASSET GENERATION
+# This script replaces the basic asset generation with proper R6 class usage
+
+cat("========================================\n")
+cat("FIXING ASSET GENERATION\n")
+cat("========================================\n\n")
+
+# Step 1: Replace generate_all_domain_assets.R with proper version
+cat("Creating proper asset generation script...\n")
+
+# Write the corrected asset generation function
+asset_gen_content <- '#!/usr/bin/env Rscript
+
 # Asset Generation using neuro2 R6 Classes
 # Generates properly formatted tables and figures
 
@@ -25,12 +38,12 @@ env_domains <- Sys.getenv("DOMAINS_WITH_DATA")
 if (nzchar(env_domains)) {
   domains_to_process <- strsplit(env_domains, ",")[[1]]
 } else {
-  domain_files <- list.files(pattern = "^_02-[0-9]+_.*\\.qmd$")
-  domains_to_process <- unique(gsub("^_02-[0-9]+_(.+)\\.qmd$", "\\1", domain_files))
+  domain_files <- list.files(pattern = "^_02-[0-9]+_.*\\\\.qmd$")
+  domains_to_process <- unique(gsub("^_02-[0-9]+_(.+)\\\\.qmd$", "\\\\1", domain_files))
   domains_to_process <- domains_to_process[!grepl("_text", domains_to_process)]
 }
 
-cat("Processing domains:", paste(domains_to_process, collapse = ", "), "\n\n")
+cat("Processing domains:", paste(domains_to_process, collapse = ", "), "\\n\\n")
 
 # Domain configurations
 configs <- list(
@@ -49,7 +62,7 @@ dir.create("figs", showWarnings = FALSE)
 for (domain in domains_to_process) {
   if (!domain %in% names(configs)) next
   
-  cat("Processing", domain, "...\n")
+  cat("Processing", domain, "...\\n")
   config <- configs[[domain]]
   
   tryCatch({
@@ -67,7 +80,7 @@ for (domain in domains_to_process) {
     
     data <- processor$data
     if (is.null(data) || nrow(data) == 0) {
-      cat("  No data\n")
+      cat("  No data\\n")
       next
     }
     
@@ -80,7 +93,7 @@ for (domain in domains_to_process) {
     )
     tbl <- table_obj$build_table()
     gt::gtsave(tbl, here::here("figs", paste0("table_", domain, ".png")))
-    cat("  ✓ Table created\n")
+    cat("  ✓ Table created\\n")
     
     # Generate figures
     if (all(c("z_mean_subdomain", "subdomain") %in% names(data))) {
@@ -93,7 +106,7 @@ for (domain in domains_to_process) {
         )
         dotplot$filename <- here::here("figs", paste0("fig_", domain, "_subdomain.svg"))
         dotplot$create_plot()
-        cat("  ✓ Subdomain figure created\n")
+        cat("  ✓ Subdomain figure created\\n")
       }
     }
     
@@ -107,7 +120,7 @@ for (domain in domains_to_process) {
         )
         dotplot$filename <- here::here("figs", paste0("fig_", domain, "_narrow.svg"))
         dotplot$create_plot()
-        cat("  ✓ Narrow figure created\n")
+        cat("  ✓ Narrow figure created\\n")
       }
     }
     
@@ -123,12 +136,12 @@ for (domain in domains_to_process) {
         dotplot$create_plot()
         dotplot$filename <- here::here("figs", paste0("fig_", domain, "_subdomain.svg"))
         dotplot$create_plot()
-        cat("  ✓ Percentile figures created\n")
+        cat("  ✓ Percentile figures created\\n")
       }
     }
     
   }, error = function(e) {
-    cat("  Error:", e$message, "\n")
+    cat("  Error:", e$message, "\\n")
   })
 }
 
@@ -141,8 +154,55 @@ if (!file.exists("figs/fig_sirf_overall.svg")) {
     theme_minimal() +
     labs(title = "Overall Performance", x = "Domain", y = "Score")
   ggsave("figs/fig_sirf_overall.svg", p, width = 10, height = 6)
-  cat("\n✓ SIRF figure created\n")
+  cat("\\n✓ SIRF figure created\\n")
 }
 
-cat("\n✅ Asset generation complete\n")
+cat("\\n✅ Asset generation complete\\n")
+'
 
+# Write the file
+writeLines(asset_gen_content, "generate_all_domain_assets.R")
+cat("✅ Created generate_all_domain_assets.R with R6 classes\n")
+
+# Step 2: Run the asset generation
+cat("\nRunning asset generation with R6 classes...\n")
+source("generate_all_domain_assets.R")
+
+# Step 3: Verify the files
+cat("\n========================================\n")
+cat("VERIFICATION\n")
+cat("========================================\n")
+
+# Check what was created
+figs_files <- list.files("figs", pattern = "\\.(svg|png|pdf)$")
+
+cat("\nGenerated files in figs/:\n")
+for (file in figs_files) {
+  size <- file.info(file.path("figs", file))$size
+  cat(sprintf("  %-40s %8d bytes\n", file, size))
+}
+
+# Check for expected files
+expected_files <- c(
+  "table_emotion.png",
+  "fig_emotion_narrow.svg",
+  "fig_emotion_subdomain.svg",
+  "table_iq.png",
+  "fig_iq_narrow.svg",
+  "fig_iq_subdomain.svg",
+  "fig_sirf_overall.svg"
+)
+
+missing <- setdiff(expected_files, figs_files)
+if (length(missing) > 0) {
+  cat("\n⚠️  Missing expected files:\n")
+  for (file in missing) {
+    cat("  -", file, "\n")
+  }
+} else {
+  cat("\n✅ All expected files generated!\n")
+}
+
+cat("\n========================================\n")
+cat("Fix complete! Your assets should now be properly formatted.\n")
+cat("You can re-run the workflow or render the report.\n")

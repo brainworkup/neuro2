@@ -288,5 +288,24 @@ tryCatch(
   }
 )
 
+# Add to generate_domain_files.R or your workflow script
+
+generate_domains_include_file <- function() {
+  # Find all generated domain files
+  domain_files <- list.files(pattern = "^_02-[0-9]+_[^_]+\\.qmd$")
+  domain_files <- sort(domain_files)
+  
+  # Create include directives
+  includes <- paste0("{{< include ", domain_files, " >}}")
+  
+  # Write the file
+  writeLines(includes, "_domains_to_include.qmd")
+  
+  cat("Generated _domains_to_include.qmd with", length(domain_files), "domains\n")
+}
+
+# Call this after generating domain files
+generate_domains_include_file()
+
 # Restore warning level
 options(warn = old_warn)
