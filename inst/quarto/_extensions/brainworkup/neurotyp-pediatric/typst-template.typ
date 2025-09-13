@@ -6,15 +6,21 @@
   patient: [],
   date: none,
   cols: 1,
-  paper: "a4",
-  margin: (x: 25mm, y: 30mm),
+  margin: (x: 1.25in, y: 1.25in),
+  // margin: (x: 25mm, y: 30mm),
   lang: "en",
   region: "US",
-  font: (),
-  body-font: "Libertinus Serif",
-  sans-font: "Libertinus Sans",
+  paper: "us-letter",
+  font: "libertinus serif",
   fontsize: 11pt,
+  title-size: 1.5em,
+  heading-family: "libertinus serif",
+  heading-weight: "bold",
+  heading-style: "normal",
+  heading-color: black,
+  heading-line-height: 0.65em,
   sectionnumbering: none,
+  toc: false,
   doc,
 ) = {
   // Metadata
@@ -25,7 +31,7 @@
   set page(
     paper: paper,
     margin: margin,
-    header: none, // Start with no header
+    header: none,
     numbering: "1/1",
     number-align: center,
     columns: cols,
@@ -52,20 +58,17 @@
   show heading.where(level: 1): set align(left)
 
   // Set paragraph justification and leading.
-  set par(justify: true, leading: 1em, linebreaks: "optimized")
+  set par(justify: true)
 
   // Set text and body font family.
-  set text(font: body-font, size: fontsize, lang: lang, region: region)
+  set text(font: font, size: fontsize, lang: lang, region: region)
   show math.equation: set text(weight: 400)
 
   // Set heading numbering.
   set heading(numbering: sectionnumbering)
 
-  // Set paragraph spacing.
-  set par(spacing: 1.75em)
-
   // Set heading font.
-  show heading: set text(font: sans-font, weight: "semibold")
+  show heading: set text(font: heading-family)
 
   // Set run-in subheadings, starting at level 4.
   show heading: it => {
@@ -77,16 +80,7 @@
     }
   }
 
-  // Configure lists and links.
-  show enum: set block(above: 1em, below: 1em)
-  // show enum: set par(leading: 0.85em)
-  set enum(indent: 0em, body-indent: 0.25em, tight: false)
-
-  show list: set block(above: 1em, below: 1em)
-  // show list: set par(leading: 0.85em)
-  set list(indent: 0em, body-indent: 0.25em, marker: ([•], [--]), tight: false)
-
-  show link: set text(font: body-font, fill: rgb(4, 1, 23), weight: 450)
+  show link: set text(font: font, fill: rgb(4, 1, 23), weight: 450)
   show link: underline
 
   // Logo
@@ -95,14 +89,14 @@
 
   // Title row.
   align(center)[
-    #block(text(font: sans-font, weight: 600, 1.75em, title))
+    #block(text(font: font, weight: 600, 1.75em, title))
     #v(0em, weak: true)
   ]
 
   if date != none {
     align(center)[#block(inset: 1em)[
-        #date
-      ]]
+      #date
+    ]]
   }
 
   if cols == 1 {
@@ -111,3 +105,8 @@
     columns(cols, doc)
   }
 }
+
+#set table(
+  inset: 6pt,
+  stroke: none,
+)
