@@ -1,11 +1,11 @@
 ---
-name: "Prompt Daily Living"
-keyword: "prdl"
+name: "Prompt Recommendations"
+keyword: "instrec"
 ---
 
-@_02-12_daily_living_text.qmd
+@_03-01_recs.qmd
 
-# Daily Living Summary Instructions
+# Recommendations Instructions
 
 ## Purpose
 

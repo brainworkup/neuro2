@@ -1,11 +1,11 @@
 ---
-name: "Prompt Adaptive Functioning"
-keyword: "pradapt"
+name: "Prompt Social Cognition"
+keyword: "instsoc"
 ---
 
-@_02-11_adaptive_text.qmd
+@_02-08_social_text.qmd
 
-# Adaptive Functioning Summary Instructions
+# Social Cognition Performance Summary Instructions
 
 ## Purpose
 

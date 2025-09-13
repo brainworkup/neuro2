@@ -1,11 +1,11 @@
 ---
-name: "Prompt Attention/Executive"
-keyword: "prexe"
+name: "Prompt Visual Perception/Construction"
+keyword: "instvis"
 ---
 
-@_02-06_executive_text.qmd
+@_02-04_spatial_text.qmd
 
-# Attention/Executive Function Performance Summary Instructions
+# Visual Perception/Construction Performance Summary Instructions
 
 ## Purpose
 

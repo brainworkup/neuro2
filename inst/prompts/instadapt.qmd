@@ -1,11 +1,11 @@
 ---
-name: "Prompt Verbal/Language"
-keyword: "prverb"
+name: "Prompt Adaptive Functioning"
+keyword: "instadapt"
 ---
 
-@_02-03_verbal_text.qmd
+@_02-11_adaptive_text.qmd
 
-# Verbal/Language Performance Summary Instructions
+# Adaptive Functioning Summary Instructions
 
 ## Purpose
 

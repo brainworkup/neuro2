@@ -1,6 +1,6 @@
 ---
 name: "LLM Prompt Emotional/Behavioral/Social/Personality-Parent Ratings"
-keyword: "premo_p"
+keyword: "instemo_p"
 ---
 
 @_02-10_emotion_text_parent.qmd

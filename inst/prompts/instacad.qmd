@@ -1,15 +1,15 @@
 ---
-name: "Prompt General Cognitive Ability"
-keyword: "prcog"
+name: "Prompt Academic Skills"
+keyword: "instacad"
 ---
 
-@_02-01_iq_text.qmd
+@_02-02_academics_text.qmd
 
-# General Cognitive Ability/IQ Performance Summary Instructions
+# Academic Performance Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's performance based on neurocognitive assessment results.
+Create a concise, professional summary of the patient's academic performance based on neurocognitive assessment results.
 
 ## Format Requirements
 
@@ -22,9 +22,9 @@ Create a concise, professional summary of the patient's performance based on neu
 
 ## Content Focus
 
-- Translate assessment results into practical real-world (e.g., school, work, home, social) implications
+- Translate assessment results into practical academic implications
 - Interpret findings in terms of everyday functioning
-- Emphasize how performance relates to real-world settings
+- Emphasize how performance relates to real-world academic settings
 
 ## Style Guidelines
 

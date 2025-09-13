@@ -6,9 +6,10 @@
 \usage{
 run_llm_for_all_domains(
   prompts_dir = NULL,
-  domain_keywords = c("prnse", "prcog", "pracad", "prverb", "prvis", "prmem", "prexe",
-    "prmot", "prsoc", "pradhd", "pradhd_c", "pradhd_a", "premo", "premo_c", "premo_a",
-    "pradapt", "prdl", "prsirf", "prrec"),
+  domain_keywords = c("instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
+    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
+    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt", "instdl", "instsirf",
+    "instrec"),
   model_override = NULL,
   backend = "ollama",
   temperature = 0.2,
