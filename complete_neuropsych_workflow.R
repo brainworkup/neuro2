@@ -104,7 +104,7 @@ tryCatch({
                    stdout = TRUE, stderr = TRUE)
   
   # Verify critical assets exist
-  critical_assets <- c("fig_sirf_overall.svg")
+  critical_assets <- c("figs/fig_sirf_overall.svg")
   if (!all(file.exists(critical_assets))) {
     warning("Some critical assets missing - report may have errors")
   }
