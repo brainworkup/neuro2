@@ -155,3 +155,7 @@ altdoc/freeze.rds
 _quarto/*
 !_quarto/_freeze/
 runtime.R
+files/
+.gitignore
+joey_startup.R
+workflow_windsurf.qmd
