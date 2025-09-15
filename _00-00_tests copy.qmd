@@ -1,0 +1,32 @@
+# TESTS ADMINISTERED
+
+<!-- child -->
+
+```{=typst}
+- Comprehensive Neurodevelopmental Symptom and History Interview
+- Behavioral Assessment System for Children, 3rd ed, Structured Developmental History (BASC-3 SDH)
+- Behavioral Assessment System for Children, 3rd ed, Parent Rating Scales, Adolescent (BASC-3 PRS Adolescent)
+- California Verbal Learning Test, Child ed (CVLT-C)
+- Delis-Kaplan Executive Function System (D-KEFS):
+  - Color-Word Interference Test
+- Grooved Pegboard Test
+- Kaufman Test of Educational Achievement, 3rd ed, Form B (KTEA-3 Form B)
+- NEPSY-II Developmental Neuropsychological Battery
+- PROMIS Sleep Assessments Pediatric Parent Proxy
+- Rating Scale of Impairment (RSI)
+- Repeatable Battery for the Assessment of Neuropsychological Status, Form A (RBANS)
+- Rey-Osterrieth Complex Figure Test (ROCFT)
+- Test of Memory Malingering (TOMM)
+- Trail Making Test (TMT)
+- Wechsler Individual Achievement Test, 4th ed (WIAT-4)
+- Wechsler Individual Achievement Test, 4th ed (WIAT-4): Word Reading, Reading Comprehension, Pseudoword Decoding, Orthographic Fluency, Decoding Fluency
+- Wechsler Intelligence Scale for Children, 5th ed (WISC-V)
+- Wide Range Achievement Test, 5th ed (WRAT-5)
+- Wide Range Achievement Test, 5th ed, Blue Form (WRAT-5): Word Reading
+- Wide Range Achievement Test, 5th ed, Green Form (WRAT-5): Word Reading
+- NIH Executive Abilities--Measures and Instruments for Neurobehavioral Evaluation and Research (NIH EXAMINER):
+  - Behavioral Rating Scale
+  - Word Fluency
+  - Unstructured Task
+- Personality Assessment Inventory, Adolescent (PAI Adolescent)
+```

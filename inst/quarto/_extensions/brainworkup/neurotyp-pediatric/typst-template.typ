@@ -6,11 +6,11 @@
   patient: [],
   date: none,
   cols: 1,
-  margin: (x: 1.25in, y: 1.25in),
-  // margin: (x: 25mm, y: 30mm),
+  margin: auto,
+  // margin: (x: 1.25in, y: 1.25in),
   lang: "en",
   region: "US",
-  paper: "us-letter",
+  // paper: "us-letter",
   font: "libertinus serif",
   fontsize: 11pt,
   title-size: 1.5em,
@@ -29,7 +29,7 @@
   // Set page size, margins, and header.
   // Set up page properties
   set page(
-    paper: paper,
+    // paper: paper,
     margin: margin,
     header: none,
     numbering: "1/1",

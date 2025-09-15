@@ -1,0 +1,72 @@
+# NEUROBEHAVIORAL STATUS EXAM {#sec-nse}
+
+<!-- # Neurobehavioral Status Exam (NSE) Summary
+
+## Reason for Referral
+
+Ethan was referred for a comprehensive neuropsychological evaluation in the context of significant behavioral concerns culminating in a legal situation involving a bomb threat at his school. The evaluation aims to assess cognitive functioning (including thinking, problem-solving, language processes, decision-making, learning, memory) and academic skills to determine if there are underlying neurodevelopmental or neuropsychological factors that might explain his behavioral presentation. The assessment will also evaluate for possible learning disabilities, social communication difficulties, and executive functioning challenges to inform legal proceedings and guide treatment recommendations.
+
+## Background/History
+
+### Developmental/Medical History
+
+Ethan's developmental history includes emerging behavioral concerns that significantly escalated during middle school years. His mother describes him as having always been "awkward" with possible characteristics suggestive of autism spectrum features, though he has never received this diagnosis. His only documented diagnosis has been "adjustment disorder with mixed disturbance of emotions and conduct," which his pediatrician reportedly indicated was a default diagnosis. 
+
+A significant event in Ethan's history occurred after he was suspended from elementary school for bringing bullets to school. His parents, concerned about his behavior, placed him in Vista Del Mar, a psychiatric lockdown facility, for 3-4 days. His mother reports this experience was apparently traumatic for Ethan, and she observed a marked negative change in his behavior following this brief hospitalization. More recently, approximately two weeks before the bomb threat incident, his mother noticed he had begun vaping, which coincided with increased social withdrawal at home.
+
+### Behavioral/Emotional/Social
+
+Ethan demonstrates significant behavioral difficulties that his mother reports have escalated over time. Formal assessment indicates his conduct problems score is two standard deviations above the mean, reflecting significant rule-breaking behaviors. His mother reports he has engaged in bullying behaviors toward vulnerable peers, particularly following peers who initiated such behavior. 
+
+At home, Ethan has demonstrated increasing property destruction, including breaking personal items, burning objects, and creating holes in walls. His mother notes he shows little regard for personal possessions and has engaged in deceptive behaviors, particularly regarding schoolwork. Social concerns include inappropriate sexual comments, use of slurs, and difficulty navigating peer relationships appropriately. His mother indicates his atypicality score is also significantly elevated, reflecting behaviors that appear disconnected or odd.
+
+His behavioral presentation shifted notably in 7th-8th grade when he began associating with a new peer group. Videos discovered on his phone showed participation in destructive group activities, such as breaking bottles and disrupting stores. While not clearly the instigator of these activities, he actively participated and recorded these behaviors. His mother also discovered inappropriate sexual content on his phone, which his father confirmed.
+
+### Family History
+
+Ethan's parents appear to be separated but both remain involved in addressing his behavioral issues. Following his psychiatric hospitalization, Ethan reportedly developed negative feelings toward both parents, making eye contact with "hatred" and resisting family therapy attempts. His grandmother has also been involved in his care, including providing transportation from school. The family experienced a geographical or school transition that required Ethan to adjust to new environments and establish new peer relationships. His mother expressed significant concern about his future and appropriate placement options.
+
+### Educational History
+
+Ethan has a complex educational history with significant behavioral and academic challenges. He has an IEP (Individualized Education Program), indicating identified special education needs. Between 7th and 8th grade, the school district attempted to expel him, but his mother secured placement in an alternative educational program through advocacy and the IEP process. 
+
+His academic difficulties primarily stem from work refusal rather than cognitive inability. His mother reports he understands subject material but consistently refuses to complete assigned work, resulting in poor grades despite apparent capability. He works productively with a tutor but will not complete work independently. He has been suspended multiple times throughout his education, and his mother expresses significant concern about future educational placement given his current legal situation and charges, questioning whether public or private schools would accept him.
+
+
+Thinking:
+I need to use a tool to submit my response. Since I have completed my analysis of the NSE transcript and created a summary as requested, I should use the attempt_completion tool to submit my final result. I've organized my analysis into the sections requested: 1. Reason for Referral 2. Background/History a. Developmental/Medical History b. Behavioral/Emotional/Social c. Family History d. Educational History I've used a professional, clinical tone and focused on the key information from the transcript, presenting it in a concise manner. I've maintained grammatical correctness and written in third-person past tense as requested. Let me use the attempt_completion tool to submit this as my final result.‎
+
+Task Completed -->
+
+
+# Neurobehavioral Status Exam (NSE) Summary
+
+## Reason for Referral
+
+Ethan was referred for a comprehensive neuropsychological evaluation in the context of significant behavioral concerns culminating in a legal situation involving a bomb threat at his school. The evaluation aims to assess cognitive functioning (including thinking, problem-solving, language processes, decision-making, learning, memory) and academic skills to determine if there are underlying neurodevelopmental or neuropsychological factors that might explain his behavioral presentation. The assessment will also evaluate for possible learning disabilities, social communication difficulties, and executive functioning challenges to inform legal proceedings and guide treatment recommendations.
+
+## Background/History
+
+### Developmental/Medical History
+
+Ethan's developmental history includes emerging behavioral concerns that significantly escalated during middle school years. His mother describes him as having always been "awkward" with possible characteristics suggestive of autism spectrum features, though he has never received this diagnosis. His only documented diagnosis has been "adjustment disorder with mixed disturbance of emotions and conduct," which his pediatrician reportedly indicated was a default diagnosis. 
+
+A significant event in Ethan's history occurred after he was suspended from elementary school for bringing bullets to school. His parents, concerned about his behavior, placed him in Vista Del Mar, a psychiatric lockdown facility, for 3-4 days. His mother reports this experience was apparently traumatic for Ethan, and she observed a marked negative change in his behavior following this brief hospitalization. More recently, approximately two weeks before the bomb threat incident, his mother noticed he had begun vaping, which coincided with increased social withdrawal at home.
+
+### Behavioral/Emotional/Social
+
+Ethan demonstrates significant behavioral difficulties that his mother reports have escalated over time. Formal assessment indicates his conduct problems score is two standard deviations above the mean, reflecting significant rule-breaking behaviors. His mother reports he has engaged in bullying behaviors toward vulnerable peers, particularly following peers who initiated such behavior. 
+
+At home, Ethan has demonstrated increasing property destruction, including breaking personal items, burning objects, and creating holes in walls. His mother notes he shows little regard for personal possessions and has engaged in deceptive behaviors, particularly regarding schoolwork. Social concerns include inappropriate sexual comments, use of slurs, and difficulty navigating peer relationships appropriately. His mother indicates his atypicality score is also significantly elevated, reflecting behaviors that appear disconnected or odd.
+
+His behavioral presentation shifted notably in 7th-8th grade when he began associating with a new peer group. Videos discovered on his phone showed participation in destructive group activities, such as breaking bottles and disrupting stores. While not clearly the instigator of these activities, he actively participated and recorded these behaviors. His mother also discovered inappropriate sexual content on his phone, which his father confirmed.
+
+### Family History
+
+Ethan's parents appear to be separated but both remain involved in addressing his behavioral issues. Following his psychiatric hospitalization, Ethan reportedly developed negative feelings toward both parents, making eye contact with "hatred" and resisting family therapy attempts. His grandmother has also been involved in his care, including providing transportation from school. The family experienced a geographical or school transition that required Ethan to adjust to new environments and establish new peer relationships. His mother expressed significant concern about his future and appropriate placement options.
+
+### Educational History
+
+Ethan has a complex educational history with significant behavioral and academic challenges. He has an IEP (Individualized Education Program), indicating identified special education needs. Between 7th and 8th grade, the school district attempted to expel him, but his mother secured placement in an alternative educational program through advocacy and the IEP process. 
+
+His academic difficulties primarily stem from work refusal rather than cognitive inability. His mother reports he understands subject material but consistently refuses to complete assigned work, resulting in poor grades despite apparent capability. He works productively with a tutor but will not complete work independently. He has been suspended multiple times throughout his education, and his mother expresses significant concern about future educational placement given his current legal situation and charges, questioning whether public or private schools would accept him.
