@@ -73,8 +73,8 @@ DomainProcessorR6 <- R6::R6Class(
     #' @param filename The filename to save the plot as
     #' @return List with paths to saved PNG and PDF files
     .save_plot = function(plot, filename) {
-      png_file <- file.path(self$dirs$figs, paste0(filename, ".png"))
-      pdf_file <- file.path(self$dirs$figs, paste0(filename, ".pdf"))
+      png_file <- file.path("figs", paste0(filename, ".png"))
+      pdf_file <- file.path("figs", paste0(filename, ".pdf"))
 
       ggplot2::ggsave(png_file, plot, width = 8, height = 6, dpi = 300)
       ggplot2::ggsave(pdf_file, plot, width = 8, height = 6)
