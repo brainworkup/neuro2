@@ -1,12 +1,15 @@
 {
   "folders": [
     {
+      "name": "neuro2",
       "path": "."
     },
     {
+      "name": "R",
       "path": "R"
     },
     {
+      "name": "inst",
       "path": "inst"
     }
   ],
