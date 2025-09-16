@@ -16,8 +16,8 @@ patch_domain_processor <- function() {
   # Look for the DomainProcessorR6.R file
   possible_locations <- c(
     "R/DomainProcessorR6.R",
-    "inst/R/DomainProcessorR6.R",
-    "DomainProcessorR6.R",
+    # "inst/R/DomainProcessorR6.R",
+    # "DomainProcessorR6.R",
     here::here("R", "DomainProcessorR6.R")
   )
   

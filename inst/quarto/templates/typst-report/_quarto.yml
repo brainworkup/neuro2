@@ -2,9 +2,9 @@ project:
   type: default
   title: "neuro2"
   execute-dir: project
-  pre-render:
-    - generate_all_domain_assets.R
-    - generate_domain_files.R
+  # pre-render:
+  #   - generate_all_domain_assets.R
+  #   - generate_domain_files.R
 
   render:
     - template.qmd
@@ -80,10 +80,10 @@ format:
   neurotyp-pediatric-typst:
     keep-typ: true
     keep-md: true
-    papersize: "a4"
-    bodyfont: "IBM Plex Serif"
-    sansfont: "IBM Plex Sans"
-    fontsize: 11pt
+    # papersize: "a4"
+    # bodyfont: "IBM Plex Serif"
+    # sansfont: "IBM Plex Sans"
+    # fontsize: 11pt
     number-sections: false
     number-offset: 1
     citeproc: true
@@ -91,8 +91,8 @@ format:
     reference-location: document
     bibliography: inst/resources/bib/refs.bib
     shift-heading-level-by: 0
-    fig-width: 6
-    fig-height: 4
+    # fig-width: 6
+    # fig-height: 4
     fig-format: svg
 
   typst:

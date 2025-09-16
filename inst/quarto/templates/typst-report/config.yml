@@ -1,6 +1,6 @@
 patient:
   name: Biggie
-  age: 20
+  age: 15
   dob: "XXXX-XX-XX"
   doe: "2025-01-01"
 data:
@@ -11,7 +11,7 @@ processing:
   use_duckdb: yes
   parallel: yes
   verbose: yes
-  age_group: ""
+  age_group: "child"
 output:
   generate_qmd: yes
   generate_plots: yes

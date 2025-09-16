@@ -34,7 +34,7 @@ options(
   neuro2.llm.backend        = "ollama",
   neuro2.llm.temperature    = 0.2,
   neuro2.llm.model_override = NULL,
-  neuro2.llm.mega_for_sirf  = FALSE
+  neuro2.llm.mega_for_sirf  = TRUE
 )
 
 # Enable chunk caching for faster re-renders
@@ -64,7 +64,9 @@ pick_font <- function(candidates) {
         },
         silent = TRUE
       )
-      if (ok) return(f)
+      if (ok) {
+        return(f)
+      }
     }
     return(utils::tail(candidates, 1))
   }
