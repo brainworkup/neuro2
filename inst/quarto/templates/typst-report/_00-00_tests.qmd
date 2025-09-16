@@ -135,7 +135,6 @@
 - Wechsler Intelligence Scale for Children, 5th ed (WISC-V)
 - Wechsler Preschool and Primary Scale of Intelligence, 4th ed, Ages 2-3 (WPPSI-IV)
 - Wechsler Preschool and Primary Scale of Intelligence, 4th ed, Ages 4-7 (WPPSI-IV)
-- Personality Assessment Inventory, Adolescent (PAI-A)
 - Wide Range Achievement Test, 5th ed (WRAT-5)
 - Wide Range Achievement Test, 5th ed, Blue Form (WRAT-5): Word Reading
 - Wide Range Achievement Test, 5th ed, Green Form (WRAT-5): Word Reading

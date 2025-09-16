@@ -57,7 +57,7 @@ tryCatch(
     }
 
     # Check templates
-    system2("Rscript", "check_all_templates_fixed.R", stdout = TRUE, stderr = TRUE)
+    system2("Rscript", "check_all_templates.R", stdout = TRUE, stderr = TRUE)
     workflow_state$templates_checked <- TRUE
     cat("✅ Templates verified\n")
   },

@@ -6,30 +6,5 @@ In conclusion, the cognitive profile is ...
 
 ### Diagnostic Impression
 
-- 294.11 (F02.81) Major Neurocognitive Disorder Due to Another Medical Condition, Moderate, With behavioral disturbance
-- 8A68.4 Generalized tonic-clonic seizure
-- V61.10 (Z63.0) Relational Problems
-
 - [DSM-5/ICD-10 Codes](_03-00_dsm5_icd10_dx.qmd)
 
-## Mental Health Diversion: Contextual Analysis and Interpretation
-
-1. Does the defendant suffer from any mental disorders as identified in the most recent edition of the Diagnostic and Statistical Manual of Mental Disorders (DSM)?
-
-_Yes, the defendant meets the criteria for multiple mental disorders as defined by DSM-5._
-
-2. Were any mental disorders a motivating, causal, or contributing factor to the defendant’s involvement in the commission of the offense?
-
-_Yes, causal._
-
-3. If any mental disorders were significant factors in the commission of the offense, would the defendant’s symptoms of those mental disorders respond to treatment?
-
-_Yes. The defendant's symptoms related to cognitive impairment and mood problems would respond well to treatment._
-
-4. Does the defendant agree to comply with treatment as a condition of diversion?
-
-_Yes, the defendant agreed to comply with treatment as a condition of diversion._
-
-5. Would the defendant pose an unreasonable risk of danger to public safety (under the meaning of California Penal Code 1001.36), if treated in the community?
-
-_The defendant would not pose "an unreasonable risk of danger to public safety" under the meaning of California Penal Code 1001.36, if treated in the community._

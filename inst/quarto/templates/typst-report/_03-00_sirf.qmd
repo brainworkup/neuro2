@@ -5,8 +5,6 @@
 #| include: false
 #| eval: true
 
-patient <- "Ethan"
-
 scales <- c(
   "Academic Skills",
   "Attention",
@@ -75,12 +73,12 @@ readr::write_csv(g, "data/g.csv")
 ```
 
 ```{r}
-#| label: fig-sirf
+#| label: fig-g
 #| include: false
 #| eval: true
 #| fig-cap: "Overall neurocognitive function subdomain plots of the patient's strengths and weaknesses. _Note:_ _z_-Scores have a mean of 0 and a standard deviation of 1."
 
-g <- vroom::vroom("data/g.csv")
+g <- readr::read_csv("data/g.csv")
 
 # scales
 keep <- c(
@@ -121,8 +119,9 @@ x <- g$z
 y <- g$scale
 colors <- NULL
 return_plot <- TRUE
-filename <- "fig_g.svg"
+filename <- "figs/fig_g.svg"
 
+# this is carry-over code; if going to keep this, then need to update to R6
 bwu::dotplot(
   data = g,
   x = x,
@@ -136,9 +135,6 @@ bwu::dotplot(
 ```{r}
 #| label: setup-sirf
 #| include: false
-
-# Load required packages
-library(arrow)
 
 # Try to load neuro2 package, if not available, source R6 classes directly
 if ("neuro2" %in% rownames(installed.packages())) {
@@ -181,7 +177,7 @@ domain_executive <- "Attention/Executive"
 domain_motor <- "Motor"
 domain_social <- "Social Cognition"
 domain_adhd <- "ADHD/Executive Function"
-domain_emotion <- c("Emotional/Behavioral/Social/Personality")
+domain_emotion <- "Emotional/Behavioral/Social/Personality"
 domain_adaptive <- "Adaptive Functioning"
 domain_daily_living <- "Daily Living"
 
@@ -195,7 +191,6 @@ report_system <- NeuropsychReportSystemR6$new(
 #| label: fig-sirf-overall
 #| fig-cap: "Overall cognitive profile across all domains"
 #| include: false
-#| cache: true
 
 # Create overall summary plot
 domain_summary <- neurocog |>
@@ -211,7 +206,7 @@ overall_plot <- DotplotR6$new(
   data = domain_summary,
   x = "mean_z",
   y = "domain",
-  filename = "fig_sirf_overall.svg",
+  filename = "figs/fig_sirf_overall.svg",
   theme = "fivethirtyeight",
   point_size = 7
 )
@@ -220,8 +215,8 @@ overall_plot$create_plot()
 
 ```{=typst}
 #let domain(file_fig) = {
-  // let font = (font: "Roboto Slab", size: 0.7em)
-  // set text(..font)
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
   figure(
     [#image(file_fig, width: 85%)],
     placement: none,
@@ -235,15 +230,15 @@ overall_plot$create_plot()
   )
 }
 
-#let file_fig = "fig_sirf_overall.svg"
+#let file_fig = "figs/fig_sirf_overall.svg"
 #domain(file_fig)
 ```
 
 
 ```{=typst}
 #let domain(file_fig) = {
-  // let font = (font: "Roboto Slab", size: 0.7em)
-  // set text(..font)
+  let font = (font: "Roboto Slab", size: 0.7em)
+  set text(..font)
   figure(
     [#image(file_fig, width: 70%)],
     placement: none,
@@ -261,6 +256,6 @@ overall_plot$create_plot()
 ```
 
 ```{=typst}
-#let file_fig = "fig_g.svg"
+#let file_fig = "figs/fig_g.svg"
 #domain(file_fig)
 ```
