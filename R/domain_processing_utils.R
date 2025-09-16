@@ -550,12 +550,17 @@ process_domain_data <- function(pheno, domains) {
         ]
 
         if (nrow(subdomain_data) > 0) {
+          fig_path <- here::here("figs", paste0("fig_", pheno_clean, "_subdomain"))
           dotplot_subdomain <- DotplotR6$new(
             data = subdomain_data,
             x = "z_mean_subdomain",
-            y = "subdomain",
-            filename = here::here(paste0("fig_", pheno_clean, "_subdomain.svg"))
+            y = "subdomain"
           )
+          dotplot_subdomain$filename <- paste0(fig_path, ".png")
+          dotplot_subdomain$create_plot()
+          dotplot_subdomain$filename <- paste0(fig_path, ".pdf")
+          dotplot_subdomain$create_plot()
+          dotplot_subdomain$filename <- paste0(fig_path, ".svg")
           dotplot_subdomain$create_plot()
           created_plots$subdomain <- dotplot_subdomain
           message(paste("Created subdomain plot for:", pheno))
@@ -587,12 +592,17 @@ process_domain_data <- function(pheno, domains) {
         narrow_data <- data[!is.na(data$narrow) & !is.na(data$z_mean_narrow), ]
 
         if (nrow(narrow_data) > 0) {
+          fig_path <- here::here("figs", paste0("fig_", pheno_clean, "_narrow"))
           dotplot_narrow <- DotplotR6$new(
             data = narrow_data,
             x = "z_mean_narrow",
-            y = "narrow",
-            filename = here::here(paste0("fig_", pheno_clean, "_narrow.svg"))
+            y = "narrow"
           )
+          dotplot_narrow$filename <- paste0(fig_path, ".png")
+          dotplot_narrow$create_plot()
+          dotplot_narrow$filename <- paste0(fig_path, ".pdf")
+          dotplot_narrow$create_plot()
+          dotplot_narrow$filename <- paste0(fig_path, ".svg")
           dotplot_narrow$create_plot()
           created_plots$narrow <- dotplot_narrow
           message(paste("Created narrow abilities plot for:", pheno))
