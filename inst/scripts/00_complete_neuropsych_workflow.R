@@ -6,10 +6,10 @@
 #' generation process, from raw data to final PDF output.
 #'
 #' Usage:
-#'   Rscript complete_neuropsych_workflow.R [patient_name]
+#'   Rscript inst/scripts/00_complete_neuropsych_workflow.R [patient_name]
 #'
 #' Example:
-#'   Rscript complete_neuropsych_workflow.R "John Doe"
+#'   Rscript inst/scripts/00_complete_neuropsych_workflow.R "John Doe"
 
 # Parse command line arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -33,6 +33,8 @@ workflow_state <- list(
   assets_generated = FALSE,
   report_rendered = FALSE
 )
+
+report_output_file <- NULL
 
 # Error handler
 handle_error <- function(step, e) {
@@ -152,29 +154,72 @@ tryCatch(
 cat("\n📑 STEP 5: Rendering final report...\n")
 tryCatch(
   {
-    # Determine report format from config
+    # Determine report settings from config
+    template_file <- "template.qmd"
+    output_dir <- "output"
+    format <- "neurotyp-pediatric-typst"
+
     if (file.exists("config.yml")) {
       config <- yaml::read_yaml("config.yml")
-      format <- config$report$format %||% "neurotyp-pediatric-typst"
+      format <- config$report$format %||% format
+      template_file <- config$report$template %||% template_file
+      output_dir <- config$report$output_dir %||% output_dir
+    }
+
+    if (is.null(output_dir) || !nzchar(output_dir)) {
+      output_dir <- "."
+    }
+
+    output_name <- sub("\\.[^.]+$", ".pdf", basename(template_file))
+    if (identical(output_name, basename(template_file))) {
+      output_name <- paste0(basename(template_file), ".pdf")
+    }
+
+    output_file <- if (identical(output_dir, ".")) {
+      output_name
     } else {
-      format <- "neurotyp-adult-typst"
+      file.path(output_dir, output_name)
     }
 
     cat("Using format:", format, "\n")
+    cat("Using template:", template_file, "\n")
+    cat("Saving report to:", output_file, "\n")
+
+    if (!identical(output_dir, ".") && !dir.exists(output_dir)) {
+      if (!dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
+        stop("Failed to create report output directory: ", output_dir)
+      }
+    }
+
+    quarto_args <- c("render", template_file, "-t", format)
+    if (!identical(output_dir, ".")) {
+      quarto_args <- c(quarto_args, "--output-dir", output_dir)
+    }
 
     # Render with Quarto
     result <- system2(
       "quarto",
-      args = c("render", "template.qmd", "-t", format),
+      args = quarto_args,
       stdout = TRUE,
       stderr = TRUE
     )
 
-    # Check for output
-    output_file <- "output/template.pdf"
+    status <- attr(result, "status") %||% 0
+    if (status != 0) {
+      stop(
+        paste0(
+          "Quarto render failed with status ",
+          status,
+          ":\n",
+          paste(result, collapse = "\n")
+        )
+      )
+    }
+
     if (file.exists(output_file)) {
       cat("✅ Report rendered successfully:", output_file, "\n")
       workflow_state$report_rendered <- TRUE
+      report_output_file <- output_file
     } else {
       stop("Report rendering failed - no output file created")
     }
@@ -196,7 +241,7 @@ for (step in names(workflow_state)) {
 }
 
 if (workflow_state$report_rendered) {
-  cat("\n🎉 Success! Your report is ready at: output/template.pdf\n")
+  cat("\n🎉 Success! Your report is ready at:", report_output_file, "\n")
 } else {
   cat("\n⚠️  Workflow incomplete. Check the log for errors.\n")
 }
