@@ -57,8 +57,11 @@ tryCatch(
     }
 
     # Check templates
-    system2("Rscript", "inst/scripts/01_check_all_templates.R",
-      stdout = TRUE, stderr = TRUE
+    system2(
+      "Rscript",
+      "inst/scripts/01_check_all_templates.R",
+      stdout = TRUE,
+      stderr = TRUE
     )
     workflow_state$templates_checked <- TRUE
     cat("✅ Templates verified\n")
@@ -71,13 +74,20 @@ cat("\n🔄 STEP 2: Processing raw data...\n")
 tryCatch(
   {
     # Check if data already processed
-    data_files <- c("data/neurocog.parquet", "data/neurobehav.parquet", "data/validity.parquet")
+    data_files <- c(
+      "data/neurocog.parquet",
+      "data/neurobehav.parquet",
+      "data/validity.parquet"
+    )
     if (all(file.exists(data_files))) {
       cat("ℹ️  Data files already exist. Skipping processing.\n")
       cat("   Delete files in data/ to reprocess.\n")
     } else {
-      result <- system2("Rscript", "inst/scripts/02_data_processor_module.R",
-        stdout = TRUE, stderr = TRUE
+      result <- system2(
+        "Rscript",
+        "inst/scripts/02_data_processor_module.R",
+        stdout = TRUE,
+        stderr = TRUE
       )
       if (!all(file.exists(data_files))) {
         stop("Data processing failed - output files not created")
@@ -94,14 +104,19 @@ cat("\n📄 STEP 3: Generating domain files...\n")
 tryCatch(
   {
     # Generate domain QMD files
-    result <- system2("Rscript", "inst/scripts/03_generate_domain_files.R",
-      stdout = TRUE, stderr = TRUE
+    result <- system2(
+      "Rscript",
+      "inst/scripts/03_generate_domain_files.R",
+      stdout = TRUE,
+      stderr = TRUE
     )
 
     # Check if any domain files were created
     domain_files <- list.files(pattern = "^_02-[0-9]+.*\\.qmd$")
     if (length(domain_files) == 0) {
-      warning("No domain files generated - check if data contains valid domains")
+      warning(
+        "No domain files generated - check if data contains valid domains"
+      )
     } else {
       cat("✅ Generated", length(domain_files), "domain files\n")
     }
@@ -114,8 +129,11 @@ tryCatch(
 cat("\n🎨 STEP 4: Generating tables and figures...\n")
 tryCatch(
   {
-    result <- system2("Rscript", "inst/scripts/generate_all_domain_as.R",
-      stdout = TRUE, stderr = TRUE
+    result <- system2(
+      "Rscript",
+      "inst/scripts/04_generate_all_domain_assets.R",
+      stdout = TRUE,
+      stderr = TRUE
     )
 
     # Verify critical assets exist
@@ -145,13 +163,15 @@ tryCatch(
     cat("Using format:", format, "\n")
 
     # Render with Quarto
-    result <- system2("quarto",
+    result <- system2(
+      "quarto",
       args = c("render", "template.qmd", "-t", format),
-      stdout = TRUE, stderr = TRUE
+      stdout = TRUE,
+      stderr = TRUE
     )
 
     # Check for output
-    output_file <- "output/template_report.pdf"
+    output_file <- "output/template.pdf"
     if (file.exists(output_file)) {
       cat("✅ Report rendered successfully:", output_file, "\n")
       workflow_state$report_rendered <- TRUE
@@ -176,7 +196,7 @@ for (step in names(workflow_state)) {
 }
 
 if (workflow_state$report_rendered) {
-  cat("\n🎉 Success! Your report is ready at: output/template_report.pdf\n")
+  cat("\n🎉 Success! Your report is ready at: output/template.pdf\n")
 } else {
   cat("\n⚠️  Workflow incomplete. Check the log for errors.\n")
 }
