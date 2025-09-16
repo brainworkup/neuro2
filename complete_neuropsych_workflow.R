@@ -57,7 +57,9 @@ tryCatch(
     }
 
     # Check templates
-    system2("Rscript", "check_all_templates.R", stdout = TRUE, stderr = TRUE)
+    system2("Rscript", "inst/scripts/01_check_all_templates.R",
+      stdout = TRUE, stderr = TRUE
+    )
     workflow_state$templates_checked <- TRUE
     cat("✅ Templates verified\n")
   },
@@ -74,7 +76,7 @@ tryCatch(
       cat("ℹ️  Data files already exist. Skipping processing.\n")
       cat("   Delete files in data/ to reprocess.\n")
     } else {
-      result <- system2("Rscript", "inst/scripts/data_processor_module.R",
+      result <- system2("Rscript", "inst/scripts/02_data_processor_module.R",
         stdout = TRUE, stderr = TRUE
       )
       if (!all(file.exists(data_files))) {
@@ -92,7 +94,7 @@ cat("\n📄 STEP 3: Generating domain files...\n")
 tryCatch(
   {
     # Generate domain QMD files
-    result <- system2("Rscript", "generate_domain_files.R",
+    result <- system2("Rscript", "inst/scripts/03_generate_domain_files.R",
       stdout = TRUE, stderr = TRUE
     )
 
@@ -112,7 +114,7 @@ tryCatch(
 cat("\n🎨 STEP 4: Generating tables and figures...\n")
 tryCatch(
   {
-    result <- system2("Rscript", "generate_all_domain_assets_fixed.R",
+    result <- system2("Rscript", "inst/scripts/generate_all_domain_as.R",
       stdout = TRUE, stderr = TRUE
     )
 
@@ -135,7 +137,7 @@ tryCatch(
     # Determine report format from config
     if (file.exists("config.yml")) {
       config <- yaml::read_yaml("config.yml")
-      format <- config$report$format %||% "neurotyp-adult-typst"
+      format <- config$report$format %||% "neurotyp-pediatric-typst"
     } else {
       format <- "neurotyp-adult-typst"
     }
@@ -149,7 +151,7 @@ tryCatch(
     )
 
     # Check for output
-    output_file <- "output/template.pdf"
+    output_file <- "output/template_report.pdf"
     if (file.exists(output_file)) {
       cat("✅ Report rendered successfully:", output_file, "\n")
       workflow_state$report_rendered <- TRUE
@@ -174,7 +176,7 @@ for (step in names(workflow_state)) {
 }
 
 if (workflow_state$report_rendered) {
-  cat("\n🎉 Success! Your report is ready at: output/template.pdf\n")
+  cat("\n🎉 Success! Your report is ready at: output/template_report.pdf\n")
 } else {
   cat("\n⚠️  Workflow incomplete. Check the log for errors.\n")
 }

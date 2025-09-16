@@ -94,15 +94,17 @@ process_all_domains <- function(config, patient_type, data_status) {
   # Define domain keys based on typical neuropsychological domains
   domain_keys <- c(
     "iq",
-    "memory",
-    "executive",
-    "emotion",
-    "adhd",
     "academics",
     "verbal",
     "spatial",
+    "memory",
+    "executive",
     "motor",
-    "social"
+    "social",
+    "adhd",
+    "emotion",
+    "adaptive",
+    "daily_living"
   )
 
   # Validate domains have data first
@@ -410,21 +412,14 @@ process_single_domain <- function(
   }
 
   # Handle emotion domains
-  emotion_domains <- c(
-    "Behavioral/Emotional/Social",
-    "Substance Use",
-    "Psychosocial Problems",
-    "Psychiatric Disorders",
-    "Personality Disorders",
-    "Emotional/Behavioral/Personality"
-  )
+  emotion_domains <- c("Emotional/Behavioral/Social/Personality")
 
   if (domain %in% emotion_domains) {
     if (!emotion_processed) {
       log_message("Processing consolidated emotion domain", "DOMAINS")
       emotion_processed <- TRUE
       processed_domains <- c(processed_domains, emotion_domains)
-      domain <- "Behavioral/Emotional/Social"
+      domain <- "Emotional/Behavioral/Social/Personality"
     } else {
       log_message(
         paste0(
@@ -563,16 +558,17 @@ process_single_domain <- function(
   )
 
   # Special handling for ADHD
-  if (domain_name == "ADHD") {
+  if (domain_name == "ADHD/Executive Function") {
     if (patient_type == "adult") {
-      return("_02-09_adhd_adult.qmd")
+      return("_02-09_adhd.qmd")
     } else {
-      return("_02-09_adhd_child.qmd")
+      return("_02-09_adhd.qmd")
     }
   }
 
   # Special handling for emotion domains
   emotion_domains <- c(
+    "Emotional/Behavioral/Social/Personality",
     "Behavioral/Emotional/Social",
     "Substance Use",
     "Psychosocial Problems",
@@ -582,9 +578,9 @@ process_single_domain <- function(
 
   if (domain_name %in% emotion_domains) {
     if (patient_type == "adult") {
-      return("_02-10_emotion_adult.qmd")
+      return("_02-10_emotion.qmd")
     } else {
-      return("_02-10_emotion_child.qmd")
+      return("_02-10_emotion.qmd")
     }
   }
 
@@ -628,14 +624,14 @@ process_single_domain <- function(
   if (patient_type == "adult") {
     essential_files <- c(
       essential_files,
-      "_02-09_adhd_adult.qmd",
-      "_02-10_emotion_adult.qmd"
+      "_02-09_adhd.qmd",
+      "_02-10_emotion.qmd"
     )
   } else {
     essential_files <- c(
       essential_files,
-      "_02-09_adhd_child.qmd",
-      "_02-10_emotion_child.qmd"
+      "_02-09_adhd.qmd",
+      "_02-10_emotion.qmd"
     )
   }
 
@@ -666,16 +662,16 @@ process_single_domain <- function(
       "Running domain_generator_module.R to generate missing files",
       "DOMAINS"
     )
-  # Use require() or check if object exists instead
-  # FIXED: source("scripts/domain_generator_module.R") # Moved to lazy loading
+    # Use require() or check if object exists instead
+    # FIXED: source("scripts/domain_generator_module.R") # Moved to lazy loading
     return(TRUE)
   }
 
   # Try other fallback scripts
-  if (file.exists("neuro2_R6_update_workflow.R")) {
-    log_message("Using neuro2_R6_update_workflow.R", "DOMAINS")
-  # Use require() or check if object exists instead
-  # FIXED: source("neuro2_R6_update_workflow.R") # Moved to lazy loading
+  if (file.exists("neuro2_r6_update_workflow.R")) {
+    log_message("Using neuro2_r6_update_workflow.R", "DOMAINS")
+    # Use require() or check if object exists instead
+    # FIXED: source("neuro2_R6_update_workflow.R") # Moved to lazy loading
     return(TRUE)
   }
 
