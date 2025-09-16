@@ -161,3 +161,5 @@ joey_startup.R
 workflow_windsurf.qmd
 _01-00_nse.qmd
 NSE2_CoD_cline.md
+scripts/
+*.zip

@@ -132,8 +132,10 @@ if (!dir.exists(extensions_source_dir)) {
           paste("Copying", ext_dir, "extension from template directory..."),
           "yellow"
         )
-        success <- file.copy(source_dir, dest_dir, recursive = TRUE)
-        if (all(success) && dir.exists(dest_dir)) {
+        # file.copy requires the destination to be an existing directory when copying
+        # folders; copy into the target root so the extension folder is created there.
+        success <- file.copy(source_dir, extensions_target_dir, recursive = TRUE)
+        if (isTRUE(all(success)) && dir.exists(dest_dir)) {
           .print_colored(paste("✓ Successfully copied", dest_dir), "green")
         } else {
           .print_colored(paste("✗ Failed to copy", ext_dir, "extension"), "red")
