@@ -18,5 +18,5 @@ output:
   generate_tables: yes
 report:
   template: template.qmd
-  format: neurotyp-adult-typst
+  format: neurotyp-pediatric-typst
   output_dir: output

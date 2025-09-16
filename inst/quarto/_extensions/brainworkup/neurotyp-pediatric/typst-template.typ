@@ -84,8 +84,8 @@
   show link: underline
 
   // Logo
-  block(figure(image("inst/resources/img/logo.png")))
-  // block(figure(image("inst/resources/img/bwu_logo.png")))
+  block(figure(image("inst/resources/logo.png")))
+  // block(figure(image("inst/resources/bwu_logo.png")))
 
   // Title row.
   align(center)[

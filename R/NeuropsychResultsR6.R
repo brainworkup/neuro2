@@ -44,19 +44,11 @@ NeuropsychResultsR6 <- R6::R6Class(
       domain_keyword = NULL,
       ...
     ) {
-      # 1) Write your results into self$file (keep your existing approach).
-      #    If you have a package-level writer defined, we'll call it automatically.
-      #    Otherwise, if self$file already has content, we won't touch it.
-      if (isTRUE(file.exists(self$file))) {
-        # do nothing; assume a prior step wrote into self$file
-      } else if (exists("neuro2_write_results", mode = "function")) {
-        # optional hook: implement elsewhere if you want to generate text here
+      # 1) Ensure the text file exists and contains up-to-date context
+      if (exists("neuro2_write_results", mode = "function")) {
         neuro2_write_results(self$data, self$file)
-      } else {
-        # create an empty file so downstream steps can proceed
-        dir.create(dirname(self$file), recursive = TRUE, showWarnings = FALSE)
-        cat("", file = self$file)
       }
+      private$write_default_context()
 
       # 2) LLM stage: inject <summary>…</summary> into self$file
       if (isTRUE(llm)) {
@@ -144,6 +136,171 @@ NeuropsychResultsR6 <- R6::R6Class(
       )
 
       invisible(TRUE)
+    }
+  ),
+  private = list(
+    summary_placeholder = "<summary>\n\n</summary>",
+
+    write_default_context = function() {
+      if (is.null(self$file) || !nzchar(self$file)) {
+        stop("NeuropsychResultsR6$file must be a non-empty path")
+      }
+
+      dir.create(dirname(self$file), recursive = TRUE, showWarnings = FALSE)
+
+      existing <- read_file_or_empty(self$file)
+      summary_block <- private$extract_summary(existing)
+      if (!nzchar(summary_block)) {
+        summary_block <- private$summary_placeholder
+      }
+
+      remainder <- private$remove_summary(existing)
+      remainder <- private$remove_context_block(remainder)
+      remainder <- private$normalize_ws(remainder)
+
+      context_block <- private$build_context_block(self$data)
+
+      parts <- c(
+        private$trim_trailing(summary_block),
+        if (nzchar(context_block)) context_block,
+        remainder
+      )
+      parts <- parts[nzchar(parts)]
+
+      new_content <- paste(parts, collapse = "\n\n")
+      if (!nzchar(new_content)) {
+        new_content <- private$summary_placeholder
+      }
+
+      readr::write_file(paste0(new_content, "\n"), self$file)
+    },
+
+    extract_summary = function(text) {
+      if (!nzchar(text)) return("")
+      m <- regexpr("<summary>\\s*.*?\\s*</summary>", text, perl = TRUE, ignore.case = TRUE)
+      if (m[1] == -1) return("")
+      regmatches(text, m)[[1]]
+    },
+
+    remove_summary = function(text) {
+      if (!nzchar(text)) return("")
+      gsub("<summary>\\s*.*?\\s*</summary>", "", text, perl = TRUE, ignore.case = TRUE)
+    },
+
+    remove_context_block = function(text) {
+      if (!nzchar(text)) return("")
+      gsub(
+        "<!--\\s*LLM_CONTEXT_START\\s*-->.*?<!--\\s*LLM_CONTEXT_END\\s*-->",
+        "",
+        text,
+        perl = TRUE,
+        ignore.case = TRUE
+      )
+    },
+
+    normalize_ws = function(text) {
+      if (!nzchar(text)) return("")
+      trimmed <- trimws(text, which = "both")
+      if (!nzchar(trimmed)) "" else trimmed
+    },
+
+    trim_trailing = function(text) {
+      if (!nzchar(text)) return("")
+      sub("\\s+$", "", text)
+    },
+
+    build_context_block = function(data) {
+      if (is.null(data) || !nrow(data)) return("")
+
+      df <- as.data.frame(data, stringsAsFactors = FALSE)
+      if (!nrow(df)) return("")
+
+      domain_name <- private$first_non_empty(df$domain)
+      raters <- NULL
+      if ("rater" %in% names(df)) {
+        raters <- sort(unique(df$rater[!is.na(df$rater) & nzchar(trimws(df$rater))]))
+      }
+
+      header <- c(
+        "<!-- LLM_CONTEXT_START -->",
+        if (nzchar(domain_name)) paste0("Domain: ", domain_name) else NULL,
+        paste0("Records: ", nrow(df)),
+        if (length(raters)) paste0("Raters: ", paste(raters, collapse = ", ")) else NULL,
+        ""
+      )
+
+      lines <- vapply(
+        seq_len(nrow(df)),
+        function(idx) private$format_context_line(df[idx, , drop = FALSE]),
+        character(1)
+      )
+      lines <- lines[nzchar(lines)]
+
+      paste(
+        c(header, lines, "<!-- LLM_CONTEXT_END -->"),
+        collapse = "\n"
+      )
+    },
+
+    format_context_line = function(row_df) {
+      row <- lapply(row_df, function(x) if (length(x)) x else NA)
+
+      pieces <- character()
+
+      label <- private$first_non_empty(c(row$scale, row$test_name))
+      if (nzchar(label)) pieces <- c(pieces, label)
+
+      descriptor <- private$first_non_empty(c(row$subdomain, row$narrow))
+      if (nzchar(descriptor) && !identical(descriptor, label)) {
+        pieces <- c(pieces, descriptor)
+      }
+
+      range <- private$first_non_empty(row$range)
+      if (nzchar(range)) pieces <- c(pieces, paste0("Range: ", range))
+
+      percentile <- private$format_numeric(row$percentile, prefix = "Percentile: ")
+      if (nzchar(percentile)) pieces <- c(pieces, percentile)
+
+      score_part <- ""
+      if (!is.null(row$score_type) && nzchar(private$first_non_empty(row$score_type))) {
+        score_part <- private$format_numeric(
+          row$score,
+          prefix = paste0(private$first_non_empty(row$score_type), ": ")
+        )
+      }
+      if (!nzchar(score_part) && !is.null(row$score)) {
+        score_part <- private$format_numeric(row$score, prefix = "Score: ")
+      }
+      if (nzchar(score_part)) pieces <- c(pieces, score_part)
+
+      raw_part <- private$format_numeric(row$raw_score, prefix = "Raw: ")
+      if (nzchar(raw_part)) pieces <- c(pieces, raw_part)
+
+      result_text <- private$first_non_empty(row$result)
+      if (nzchar(result_text)) {
+        pieces <- c(pieces, result_text)
+      }
+
+      if (!length(pieces)) return("")
+      paste0("- ", paste(pieces, collapse = " | "))
+    },
+
+    first_non_empty = function(values) {
+      if (is.null(values)) return("")
+      vals <- as.character(values)
+      vals <- vals[!is.na(vals)]
+      vals <- trimws(vals)
+      vals <- vals[nzchar(vals)]
+      if (length(vals) == 0) "" else vals[1]
+    },
+
+    format_numeric = function(value, prefix = "", suffix = "") {
+      if (is.null(value) || length(value) == 0) return("")
+      val <- suppressWarnings(as.numeric(value[1]))
+      if (!is.finite(val)) return("")
+      formatted <- formatC(val, digits = 3, format = "fg", flag = "")
+      formatted <- sub("\\.?0+$", "", formatted)
+      paste0(prefix, formatted, if (nzchar(suffix)) suffix else "")
     }
   )
 )

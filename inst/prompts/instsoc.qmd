@@ -18,7 +18,7 @@ Create a concise, professional summary of the patient's performance based on neu
 - Highlight significant strengths and weaknesses, with less emphasis on average-range scores
 - Capitalize the first letter of performance range descriptors (e.g., "Below Average," "Average," "Above Average", etc)
 - Omit specific test scores such as standard scores, t scores, and scaled scores
-- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... performed Above Average at the 95th percentile, inidcating performance better than 95% of same-aged peers from the general population")
+- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... performed Above Average at the 95th percentile, indicating performance better than 95% of same-aged peers from the general population")
 
 ## Content Focus
 

@@ -6,7 +6,7 @@ keyword: "instnse"
 @_01-00_nse.qmd
 
 **Speech-to-Text Transcription of the Neurobehavioral Status Exam (NSE) using the
-Chain of Densit (CoD) Model**
+Chain of Density (CoD) Model**
 
 # INSTRUCTIONS
 

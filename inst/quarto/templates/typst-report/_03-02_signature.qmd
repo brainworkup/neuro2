@@ -15,7 +15,7 @@ Respectfully submitted,
 #| echo: false
 #| cache: true
 
-sig_path <- file.path(here::here("inst", "resources", "img", "jwt_sig.png"))
+sig_path <- file.path(here::here("inst", "resources", "signature.png"))
 knitr::include_graphics(sig_path)
 ```
 

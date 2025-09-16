@@ -87,9 +87,9 @@ format:
     number-sections: false
     number-offset: 1
     citeproc: true
-    csl: inst/resources/bib/apa.csl
+    csl: inst/resources/apa.csl
     reference-location: document
-    bibliography: inst/resources/bib/refs.bib
+    bibliography: inst/resources/refs.bib
     shift-heading-level-by: 0
     # fig-width: 6
     # fig-height: 4

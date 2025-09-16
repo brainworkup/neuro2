@@ -22,7 +22,7 @@ Create a concise, professional summary of Parent reported:
 - Highlight significant weaknesses, with less emphasis on average-range scores; do talk about strengths if the patient indeed reports them (i.e., scores that are actually below average on these measures, since higher scores represent worse functioning)
 - Capitalize the first letter of the classification range descriptors (e.g., "Average","At-Risk," "Clinically Significant", or else "Relative Strength")
 - Omit specific standardized test scores such as t-scores
-- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... ratings were well above average at the 95th percentile, inidcating they are experiencing impairments in this area more frequently than most other peers")
+- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... ratings were well above average at the 95th percentile, indicating they are experiencing impairments in this area more frequently than most other peers")
 
 ## Content Focus
 

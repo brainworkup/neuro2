@@ -185,6 +185,99 @@ tryCatch(
     cat("Using template:", template_file, "\n")
     cat("Saving report to:", output_file, "\n")
 
+    prepare_domain_text_context <- function() {
+      text_files <- list.files(
+        pattern = "^_02-[0-9]+_.*_text(?:_[a-z]+)?\\.qmd$",
+        full.names = FALSE
+      )
+      if (!length(text_files)) {
+        return(invisible(NULL))
+      }
+
+      domain_lookup <- list(
+        iq = list(domain = "General Cognitive Ability", input = "data/neurocog.parquet"),
+        academics = list(domain = "Academic Skills", input = "data/neurocog.parquet"),
+        verbal = list(domain = "Verbal/Language", input = "data/neurocog.parquet"),
+        spatial = list(domain = "Visual Perception/Construction", input = "data/neurocog.parquet"),
+        memory = list(domain = "Memory", input = "data/neurocog.parquet"),
+        executive = list(domain = "Attention/Executive", input = "data/neurocog.parquet"),
+        motor = list(domain = "Motor", input = "data/neurocog.parquet"),
+        social = list(domain = "Social Cognition", input = "data/neurocog.parquet"),
+        adhd = list(domain = "ADHD/Executive Function", input = "data/neurobehav.parquet"),
+        emotion = list(domain = "Emotional/Behavioral/Social/Personality", input = "data/neurobehav.parquet"),
+        adaptive = list(domain = "Adaptive Functioning", input = "data/neurobehav.parquet"),
+        daily_living = list(domain = "Daily Living", input = "data/neurobehav.parquet"),
+        sirf = list(domain = "Social Impact Rating Form", input = "data/neurobehav.parquet"),
+        recs = list(domain = "Recommendations", input = "data/neurobehav.parquet")
+      )
+
+      for (text_file in text_files) {
+        matches <- regexec(
+          "^_02-([0-9]+)_([a-z_]+)_text(?:_([a-z]+))?\\.qmd$",
+          text_file
+        )
+        parts <- regmatches(text_file, matches)[[1]]
+        if (length(parts) == 0) {
+          next
+        }
+
+        pheno <- parts[3]
+        rater <- if (length(parts) >= 4) parts[4] else ""
+        cfg <- domain_lookup[[pheno]]
+        if (is.null(cfg)) {
+          next
+        }
+
+        processor <- DomainProcessorR6$new(
+          domains = cfg$domain,
+          pheno = pheno,
+          input_file = cfg$input
+        )
+
+        proc_ok <- tryCatch({
+          processor$load_data()
+          processor$filter_by_domain()
+          processor$select_columns()
+          TRUE
+        }, error = function(e) FALSE)
+        if (!proc_ok) {
+          next
+        }
+
+        data <- processor$data
+        if (is.null(data) || !nrow(data)) {
+          next
+        }
+
+        if (nzchar(rater) && "rater" %in% names(data)) {
+          data <- data[
+            tolower(trimws(data$rater)) == tolower(rater),
+            ,
+            drop = FALSE
+          ]
+        }
+
+        if (is.null(data) || !nrow(data)) {
+          next
+        }
+
+        try(
+          {
+            results_processor <- NeuropsychResultsR6$new(
+              data = data,
+              file = text_file
+            )
+            results_processor$process(llm = FALSE)
+          },
+          silent = TRUE
+        )
+      }
+
+      invisible(NULL)
+    }
+
+    prepare_domain_text_context()
+
     if (!identical(output_dir, ".") && !dir.exists(output_dir)) {
       if (!dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
         stop("Failed to create report output directory: ", output_dir)

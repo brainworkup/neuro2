@@ -14,7 +14,7 @@ You are a highly skilled, board-certified clinical neuropsychologist tasked with
 Here is the patient data you need to analyze:
 
 <patient_data>
-{{@_01-00_nse.qmd}}
+{{@_01-00_nse_nse.qmd}}
 {{@_01-01_behav_obs.qmd}}
 {{@_02-01_iq_text.qmd}}
 {{@_02-02_academics_text.qmd}}
@@ -24,15 +24,13 @@ Here is the patient data you need to analyze:
 {{@_02-06_executive_text.qmd}}
 {{@_02-07_motor_text.qmd}}
 {{@_02-08_social_text.qmd}}
-{{@_02-09_adhd_adult_text_self.qmd}}
-{{@_02-09_adhd_adult_text_observer.qmd}}
-{{@_02-09_adhd_child_text_self.qmd}}
-{{@_02-09_adhd_child_text_parent.qmd}}
-{{@_02-09_adhd_child_text_teacher.qmd}}
-{{@_02-10_emotion_child_text_self.qmd}}
-{{@_02-10_emotion_child_text_parent.qmd}}
-{{@_02-10_emotion_child_text_teacher.qmd}}
-{{@_02-10_emotion_adult_text.qmd}}
+{{@_02-09_adhd_text_parent.qmd}}
+{{@_02-09_adhd_text.qmd}}
+{{@_02-09_adhd_text_teacher.qmd}}
+{{@_02-09_adhd_text_observer.qmd}}
+{{@_02-10_emotion_text.qmd}}
+{{@_02-10_emotion_text_parent.qmd}}
+{{@_02-10_emotion_text_teacher.qmd}}
 {{@_02-11_adaptive_text.qmd}}
 {{@_02-12_daily_living_text.qmd}}
 </patient_data>

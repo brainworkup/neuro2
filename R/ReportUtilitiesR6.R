@@ -32,6 +32,7 @@
 #'
 #' # Set up the environment and prepare data
 #' report_utils$setup_environment()
+#' dir.create("raw_data", recursive = TRUE)
 #' report_utils$prepare_data_files("raw_data", "processed_data")
 #'
 #' # Example 2: Process domains and render a report
