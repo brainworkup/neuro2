@@ -11,14 +11,20 @@ dependencies, processing data files, and rendering reports.
 \details{
 The ReportUtilitiesR6 class consolidates various utility scripts into a single
 object-oriented interface, making it easier to manage and execute report generation
-workflows. The class methods correspond to separate script files that were previously
-used independently.
+workflows. The class provides a consistent interface for common neuropsychology
+report generation tasks with proper error handling and logging.
 }
 \section{Configuration}{
 
 The \code{config} field is a list that can contain various configuration options for
 the utilities. These options can be set during initialization and accessed by
-the various methods.
+the various methods. Common configuration options include:
+\itemize{
+\item \code{output_base_dir}: Base directory for output files (default: "reports")
+\item \code{template_dir}: Directory containing report templates (default: "templates")
+\item \code{domains}: Character vector of neuropsychological domains to process
+\item \code{template}: Default template file for report generation
+}
 }
 
 \examples{
@@ -88,7 +94,8 @@ Initialize a new ReportUtilitiesR6 object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{config}}{A list containing configuration options for the utilities}
+\item{\code{config}}{A list containing configuration options for the utilities.
+Common options include \code{output_base_dir}, \code{template_dir}, \code{domains}, and \code{template}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -102,12 +109,20 @@ A new \code{ReportUtilitiesR6} object
 \subsection{Method \code{install_dependencies()}}{
 Install required dependencies for report generation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$install_dependencies()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$install_dependencies(verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{verbose}}{Whether to show detailed installation messages (default: TRUE)}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Details}{
 This method installs R packages required for neuropsychological report generation.
 It checks for the presence of necessary packages and installs missing ones.
+Includes comprehensive error handling and progress reporting.
 }
 
 \subsection{Returns}{
@@ -139,7 +154,7 @@ Invisible NULL. Called for side effects.
 \subsection{Method \code{prepare_data_files()}}{
 Prepare data files for report generation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$prepare_data_files(input_dir, output_dir = "data")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$prepare_data_files(input_dir, output_dir = "data", ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -148,6 +163,8 @@ Prepare data files for report generation
 \item{\code{input_dir}}{Character string specifying the directory containing input data files}
 
 \item{\code{output_dir}}{Character string specifying the directory where processed data files will be saved (default: "data")}
+
+\item{\code{...}}{Additional arguments passed to data processing functions}
 }
 \if{html}{\out{</div>}}
 }
@@ -167,15 +184,22 @@ Invisible NULL. Called for side effects.
 \subsection{Method \code{process_domains()}}{
 Process neuropsychological domains for reporting
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$process_domains(domains, output_dir = "output")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$process_domains(
+  domains = NULL,
+  output_dir = "output/domains",
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{domains}}{Character vector of domain names to process}
+\item{\code{domains}}{Character vector of domain names to process. If NULL, uses
+domains from configuration.}
 
 \item{\code{output_dir}}{Character string specifying the directory where processed domain files will be saved (default: "output/domains")}
+
+\item{\code{...}}{Additional arguments passed to domain processing functions}
 }
 \if{html}{\out{</div>}}
 }
@@ -194,17 +218,25 @@ Invisible NULL. Called for side effects.
 \subsection{Method \code{render_report()}}{
 Render a neuropsychological report from a template
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$render_report(template_file, output_dir, output_name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$render_report(
+  template_file = NULL,
+  output_dir,
+  output_name,
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{template_file}}{Character string specifying the path to the report template file}
+\item{\code{template_file}}{Character string specifying the path to the report template file.
+If NULL, uses the template from configuration.}
 
 \item{\code{output_dir}}{Character string specifying the directory where the rendered report will be saved}
 
 \item{\code{output_name}}{Character string specifying the base name for the output report file (without extension)}
+
+\item{\code{...}}{Additional arguments passed to the rendering engine}
 }
 \if{html}{\out{</div>}}
 }
@@ -223,9 +255,16 @@ Invisible NULL. Called for side effects.
 \subsection{Method \code{setup_environment()}}{
 Set up the environment for report generation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$setup_environment()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ReportUtilitiesR6$setup_environment(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional arguments for environment setup}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Details}{
 This method sets up the R environment for report generation, including
 loading necessary packages, setting options, and ensuring the correct
