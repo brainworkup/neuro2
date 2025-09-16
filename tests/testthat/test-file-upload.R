@@ -54,13 +54,56 @@ test_that("upload workflow integration works", {
 })
 
 test_that("file upload documentation exists", {
-  # Check that key documentation files exist
-  expect_true(file.exists("FILE_UPLOAD_GUIDE.md"))
-  expect_true(file.exists("README.md"))
-  expect_true(file.exists("UNIFIED_WORKFLOW_README.md"))
-  
-  # Check that scripts exist
-  expect_true(file.exists("unified_neuropsych_workflow.sh"))
-  expect_true(file.exists("unified_workflow_runner.R"))
-  expect_true(file.exists("quick_upload.R"))
+  skip_if_not_installed("neuro2")
+
+  pkg_root <- dirname(system.file(package = "neuro2"))
+
+  expect_true(
+    file.exists(file.path(pkg_root, "FILE_UPLOAD_GUIDE.md")),
+    info = "FILE_UPLOAD_GUIDE.md should be available at the repository root"
+  )
+
+  readme_candidates <- file.path(pkg_root, c("README_NEURO2.md", "README.md"))
+  expect_true(
+    any(file.exists(readme_candidates)),
+    info = "A top-level README describing upload workflows should exist"
+  )
+
+  workflow_docs <- file.path(
+    pkg_root,
+    c("UNIFIED_WORKFLOW_README.md", "NEUROPSYCH_WORKFLOW_GUIDE.md", "inst/scripts/README.md")
+  )
+  expect_true(
+    any(file.exists(workflow_docs)),
+    info = "At least one detailed workflow README must be present"
+  )
+
+  shell_scripts <- file.path(
+    pkg_root,
+    c("run_neuropsych_workflow.sh", "run_workflow.sh", "unified_neuropsych_workflow.sh")
+  )
+  expect_true(
+    any(file.exists(shell_scripts)),
+    info = "A workflow shell script entry point should be available"
+  )
+
+  runner_scripts <- file.path(
+    pkg_root,
+    c(
+      "main_workflow_runner.R",
+      "complete_neuropsych_workflow_fixed.R",
+      "complete_neuropsych_workflow.R",
+      "unified_workflow_runner.R",
+      "inst/scripts/main_workflow_runner.R"
+    )
+  )
+  expect_true(
+    any(file.exists(runner_scripts)),
+    info = "An R workflow runner script should be available"
+  )
+
+  expect_true(
+    "quick_upload" %in% getNamespaceExports("neuro2"),
+    info = "quick_upload helper should be exported"
+  )
 })

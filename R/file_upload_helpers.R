@@ -304,11 +304,28 @@ check_upload_requirements <- function() {
     overall = TRUE
   )
   
+  pkg_root <- dirname(system.file(package = "neuro2"))
+
+  dir_exists <- function(path) {
+    dir.exists(path) || dir.exists(file.path(pkg_root, path))
+  }
+
+  resolve_file_path <- function(path) {
+    if (file.exists(path)) {
+      return(normalizePath(path, winslash = "/", mustWork = TRUE))
+    }
+    pkg_path <- file.path(pkg_root, path)
+    if (file.exists(pkg_path)) {
+      return(normalizePath(pkg_path, winslash = "/", mustWork = TRUE))
+    }
+    NA_character_
+  }
+  
   # Check directories
   required_dirs <- c("data-raw/csv", "data", "inst/rmarkdown/templates/pluck_pdfs/skeleton")
   
   for (dir in required_dirs) {
-    exists <- dir.exists(dir)
+    exists <- dir_exists(dir)
     requirements$directories[[dir]] <- exists
     if (!exists && dir != "inst/rmarkdown/templates/pluck_pdfs/skeleton") {
       requirements$overall <- FALSE
@@ -316,15 +333,42 @@ check_upload_requirements <- function() {
   }
   
   # Check key files
-  required_files <- c(
-    "unified_neuropsych_workflow.sh",
-    "unified_workflow_runner.R"
+  required_files <- list(
+    workflow_shell = list(
+      description = "Workflow shell script",
+      candidates = c(
+        "unified_neuropsych_workflow.sh",
+        "run_neuropsych_workflow.sh",
+        "run_workflow.sh"
+      )
+    ),
+    workflow_runner = list(
+      description = "Workflow runner script",
+      candidates = c(
+        "unified_workflow_runner.R",
+        "main_workflow_runner.R",
+        "complete_neuropsych_workflow_fixed.R",
+        "complete_neuropsych_workflow.R",
+        "inst/scripts/main_workflow_runner.R"
+      )
+    )
   )
-  
-  for (file in required_files) {
-    exists <- file.exists(file)
-    requirements$files[[file]] <- exists
-    if (!exists) {
+
+  for (key in names(required_files)) {
+    entry <- required_files[[key]]
+    resolved <- lapply(entry$candidates, resolve_file_path)
+    found_index <- which(!is.na(unlist(resolved)))[1]
+    found <- !is.na(found_index)
+    found_path <- if (found) resolved[[found_index]] else NA_character_
+
+    requirements$files[[key]] <- list(
+      description = entry$description,
+      candidates = entry$candidates,
+      found = found,
+      path = found_path
+    )
+
+    if (!found) {
       requirements$overall <- FALSE
     }
   }
@@ -351,9 +395,14 @@ check_upload_requirements <- function() {
   }
   
   cat("\n📄 Files:\n")
-  for (file in names(requirements$files)) {
-    status <- if(requirements$files[[file]]) "✅" else "❌"
-    cat("  ", status, file, "\n")
+  for (file_info in requirements$files) {
+    status <- if (file_info$found) "✅" else "❌"
+    target <- if (file_info$found) {
+      basename(file_info$path)
+    } else {
+      paste(file_info$candidates, collapse = " | ")
+    }
+    cat("  ", status, " ", file_info$description, ": ", target, "\n", sep = "")
   }
   
   cat("\n📦 Packages:\n")
