@@ -56,4 +56,4 @@ if (FALSE) {
 usethis::use_build_ignore(c("ignore.R", "_arxiv/", "data-raw/"))
 
 usethis::use_build_ignore("R/.history/")
-usethis::use_build_ignore("inst/.history/")
+usethis::use_build_ignore("altdoc/")
