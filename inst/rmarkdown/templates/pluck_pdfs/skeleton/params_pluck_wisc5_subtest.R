@@ -192,4 +192,4 @@ w2 <- as.data.frame(wisc5_subtest)
 
 # Save csv ----------------------------------------------------------------
 
-readr::write_excel_csv(w2, "data/wisc5_subtest.csv")
+readr::write_excel_csv(w2, "data-raw/wisc5_subtest.csv")

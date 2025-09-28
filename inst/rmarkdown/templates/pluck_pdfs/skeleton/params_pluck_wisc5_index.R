@@ -183,7 +183,7 @@ wisc5_index <- df
 # Save csv ----------------------------------------------------------------
 
 w1 <- wisc5_index
-readr::write_excel_csv(w1, "data/wisc5_index.csv")
+readr::write_excel_csv(w1, "data-raw/wisc5_index.csv")
 
 # Write out final csv --------------------------------------------------
 
@@ -196,7 +196,7 @@ wisc5 <- as.data.frame(rbind(w1, w2, w3))
 test <- "wisc5"
 readr::write_excel_csv(
   wisc5,
-  here::here("data", "csv", paste0(test, ".csv")),
+  here::here("data-raw", "csv", paste0(test, ".csv")),
   col_names = TRUE
 )
 
@@ -212,7 +212,7 @@ has_headers <- function(file_path) {
 
 csv_file <- wisc5
 g <- "g"
-file_path <- here::here("data", paste0(g, ".csv"))
+file_path <- here::here("data-raw", paste0(g, ".csv"))
 
 readr::write_excel_csv(
   csv_file,

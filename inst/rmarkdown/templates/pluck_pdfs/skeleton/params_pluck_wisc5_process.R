@@ -217,4 +217,4 @@ w3 <- as.data.frame(wisc5_process)
 
 # Save csv ----------------------------------------------------------------
 
-readr::write_excel_csv(w3, "data/wisc5_process.csv")
+readr::write_excel_csv(w3, "data-raw/wisc5_process.csv")
