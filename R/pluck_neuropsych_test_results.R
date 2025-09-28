@@ -1549,12 +1549,10 @@ pluck_wiat4 <- function(
 
 #' Process RBANS Data with Unified Approach
 #'
-#' A comprehensive function that processes RBANS Q-interactive exports, combining
-#' the best features of both existing approaches. It supports internal lookup tables,
-#' manual overrides, summary reporting, and detailed debugging.
-#'
+#' A comprehensive function that processes RBANS Q-interactive exports, combining the best features of both existing approaches. It supports internal lookup tables, manual overrides, summary reporting, and detailed debugging.
 #' @param input_file Path to the UTF-16 CSV export from Q-interactive.
 #' @param test_prefix Prefix used for Subtest names in the export (default: "RBANS Update Form A ").
+#'
 #' @param output_file Optional path to write the processed data as CSV.
 #' @param summary_file Optional path to write a summary report as CSV.
 #' @param manual_percentiles Named list of manual percentile overrides (e.g., list("Line Orientation" = 75)).
