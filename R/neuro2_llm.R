@@ -43,7 +43,7 @@ safe_write_text <- function(text, filepath) {
 
 # Safe defaulting
 #' @keywords internal
-`%||%` <- function(x, y) {  
+`%||%` <- function(x, y) {
   if (is.null(x) || length(x) == 0 || !nzchar(x)) y else x
 }
 
@@ -239,6 +239,7 @@ strip_think_blocks <- function(text) {
 #' @param system_prompt Character string.
 #' @param user_text Character string.
 #' @param deps Character vector of dependency paths.
+#' @importFrom digest digest
 #' @return Character string hash.
 #' @export
 hash_inputs <- function(system_prompt, user_text, deps) {
@@ -659,6 +660,7 @@ neuro2_llm_smoke_test <- function(
 #' @param mega_for_sirf Use the mega model for SIRF.
 #' @param temperature LLM temperature.
 #' @param echo ellmer echo mode.
+#' @importFrom withr  with_envvar
 #' @return Invisibly returns a list with `llm` results and `rendered` output paths.
 #' @export
 neuro2_run_llm_then_render <- function(

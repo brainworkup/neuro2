@@ -134,7 +134,7 @@ extract_wisc5_data <- function(
       extract_columns = c(1, 3, 4),
       variables = c("scale", "raw_score", "score"),
       score_type = "scaled_score",
-      combine_pages = FALSE,
+      combine_pages = TRUE,
       preprocess = "process"
     )
   )
@@ -142,13 +142,13 @@ extract_wisc5_data <- function(
   # Select PDF if not provided
   if (is.null(file_path)) {
     file_path <- file.choose()
-    saveRDS(file_path, paste0(params$test, "_path.rds"))
+    saveRDS(file_path, paste0(test, "_path.rds"))
   }
 
   # Extract data from PDF
   extracted_areas <- tabulapdf::extract_areas(
     file = file_path,
-    pages = params$pages,
+    pages = pages,
     method = "decide",
     output = "matrix",
     copy = TRUE
@@ -230,14 +230,14 @@ extract_wisc5_data <- function(
     dplyr::mutate(test = "wisc5") |>
     dplyr::left_join(lookup_table, by = c("test", "scale")) |>
     dplyr::relocate(c(test, test_name), .before = scale) |>
-    gpluck_make_columns()
+    neuro2::gpluck_make_columns()
 
   # Initialize range column with empty strings to avoid recycling issues
   df_merged <- df_merged |> dplyr::mutate(range = "")
 
   # Apply score ranges - using the test_type parameter only
   df_merged <- df_merged |>
-    gpluck_make_score_ranges(test_type = "npsych_test") |>
+    neuro2::gpluck_make_score_ranges(test_type = "npsych_test") |>
     dplyr::relocate(range, .after = percentile)
 
   # Generate descriptive text
@@ -288,7 +288,7 @@ extract_wisc5_data <- function(
 
   readr::write_excel_csv(
     df_merged,
-    file.path(output_dir, paste0(params$test, ".csv"))
+    file.path(output_dir, paste0(test, ".csv"))
   )
 
   return(df_merged)
@@ -320,7 +320,7 @@ extract_wisc5_data <- function(
   # Set parameters based on test type
   if (test_type == "subtest") {
     test <- "wais5_subtest"
-    test_name <- "WAIS-5"
+    test_name <- "WAIS-V"
     # Use provided pages parameter or default to 10 if NULL
     if (is.null(pages)) {
       pages <- c(10)
@@ -330,7 +330,7 @@ extract_wisc5_data <- function(
     score_type <- "scaled_score"
   } else if (test_type == "index") {
     test <- "wais5_index"
-    test_name <- "WAIS-5"
+    test_name <- "WAIS-V"
     # Use provided pages parameter or default to 12 if NULL
     if (is.null(pages)) {
       pages <- c(12)
@@ -452,7 +452,7 @@ extract_wisc5_data <- function(
     dplyr::relocate(all_of(c("test", "test_name")), .before = "scale")
 
   # Add missing columns
-  df_mutated <- gpluck_make_columns(
+  df_mutated <- neuro2::gpluck_make_columns(
     df_merged,
     range = "",
     result = "",
@@ -462,7 +462,10 @@ extract_wisc5_data <- function(
   # Calculate score ranges
   df_mutated <- df_mutated |>
     dplyr::mutate(range = NULL) |>
-    gpluck_make_score_ranges(table = df_mutated, test_type = "npsych_test") |>
+    neuro2::gpluck_make_score_ranges(
+      table = df_mutated,
+      test_type = "npsych_test"
+    ) |>
     dplyr::relocate(c(range), .after = percentile)
 
   # Generate results text with proper ordinal formatting
@@ -551,7 +554,7 @@ extract_wisc5_data <- function(
     }
 
     g <- "g"
-    g_file_path <- here::here("data", paste0(g, ".csv"))
+    g_file_path <- here::here("data-raw", paste0(g, ".csv"))
 
     readr::write_excel_csv(
       wais5,
@@ -601,11 +604,11 @@ extract_wisc5_data <- function(
 #' @examples
 #' \dontrun{
 #' # Basic usage with file chooser dialog
-#' results <- pluck_wiat4(patient = "Biggie")
+#' results <- pluck_wiat4(patient = "Maya")
 #'
 #' # Specify file path and other parameters
 #' results <- pluck_wiat4(
-#'   patient = "Biggie",
+#'   patient = "Maya",
 #'   file = "path/to/wiat4.pdf",
 #'   pages = c(20),
 #'   extract_columns = c(1, 2, 3, 4, 5),
@@ -1549,10 +1552,12 @@ pluck_wiat4 <- function(
 
 #' Process RBANS Data with Unified Approach
 #'
-#' A comprehensive function that processes RBANS Q-interactive exports, combining the best features of both existing approaches. It supports internal lookup tables, manual overrides, summary reporting, and detailed debugging.
+#' A comprehensive function that processes RBANS Q-interactive exports, combining
+#' the best features of both existing approaches. It supports internal lookup tables,
+#' manual overrides, summary reporting, and detailed debugging.
+#'
 #' @param input_file Path to the UTF-16 CSV export from Q-interactive.
 #' @param test_prefix Prefix used for Subtest names in the export (default: "RBANS Update Form A ").
-#'
 #' @param output_file Optional path to write the processed data as CSV.
 #' @param summary_file Optional path to write a summary report as CSV.
 #' @param manual_percentiles Named list of manual percentile overrides (e.g., list("Line Orientation" = 75)).

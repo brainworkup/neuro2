@@ -4,7 +4,7 @@
 \alias{safe_execute}
 \title{Safe execution wrapper function}
 \usage{
-safe_execute(expr, context = "operation", fallback = NULL, silent = FALSE)
+safe_execute(task_id, func, ...)
 }
 \arguments{
 \item{expr}{Expression to execute safely}
