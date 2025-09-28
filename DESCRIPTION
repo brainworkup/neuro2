@@ -61,6 +61,7 @@ Imports:
     tools,
     utils,
     webshot2,
+    withr,
     xfun,
     yaml,
     magrittr,
