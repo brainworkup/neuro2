@@ -51,12 +51,9 @@
       "activityBar.inactiveForeground": "#15202b99",
       "activityBarBadge.background": "#a373cc",
       "activityBarBadge.foreground": "#15202b",
-      "panel.border": "#8bd5b3",
-      "statusBar.background": "#65c89b",
-      "statusBar.foreground": "#15202b",
-      "statusBarItem.hoverBackground": "#42b882",
-      "statusBarItem.remoteBackground": "#65c89b",
-      "statusBarItem.remoteForeground": "#15202b"
+      "editorError.foreground": "#000000ff",
+      "editorInfo.foreground": "#000000ff",
+      "editorWarning.foreground": "#000000ff"
     },
     "workbench.colorTheme": "Tomorrow Night Bright (R Classic)",
     "workbench.iconTheme": "material-icon-theme",
