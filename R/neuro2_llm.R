@@ -43,7 +43,7 @@ safe_write_text <- function(text, filepath) {
 
 # Safe defaulting
 #' @keywords internal
-`%||%` <- function(x, y) {
+`%||%` <- function(x, y) {  
   if (is.null(x) || length(x) == 0 || !nzchar(x)) y else x
 }
 
