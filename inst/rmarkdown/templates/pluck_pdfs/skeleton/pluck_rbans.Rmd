@@ -1,7 +1,7 @@
 ---
 title: "Create RBANS .csv files"
 params:
-  patient: "Presley"
+  patient: Biggie
   test:
     label: "Test"
     value: rbans

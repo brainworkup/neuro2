@@ -202,19 +202,19 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-df_mutated <- neuro2::gpluck_make_columns(
-  df_merged,
-  range = "",
-  result = ""
-)
+# df_mutated <- neuro2::gpluck_make_columns(
+#   df_merged,
+#   range = "",
+#   result = ""
+# )
 ```
 
 ## Test score ranges
 
 ```{r ranges, eval = TRUE}
-df_mutated <- df_mutated |>
+df_mutated <- df_merged |>
   dplyr::mutate(range = NULL) |>
-  neuro2::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale") |>
+  neuro2::gpluck_make_score_ranges(table = df_mutated, startsWith(test, "basc3_")) |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 
@@ -226,8 +226,7 @@ df_mutated <- df_mutated |>
   dplyr::mutate(result = glue::glue("{patient}'s self-reported {description} was {range}.\n"))
 
 df <- df_mutated |>
-  dplyr::select(-description) |>
-  dplyr::relocate(absort, .after = result)
+  dplyr::select(-description, -difference, -sig_level, -freq)
 ```
 
 ## Write out final csv

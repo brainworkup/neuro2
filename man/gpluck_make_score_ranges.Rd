@@ -10,7 +10,7 @@ gpluck_make_score_ranges(
   percentile,
   range,
   test_type = c("npsych_test", "rating_scale", "validity_indicator",
-    "performance_validity", "symptom_validity", "rating_scale_basc3", "basc3"),
+    "rating_scale_basc3"),
   ...
 )
 }

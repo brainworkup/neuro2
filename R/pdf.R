@@ -143,7 +143,6 @@ gpluck_make_columns <- function(
     "beta_coefficient",
     NA_real_
   ),
-  # absort = NULL,
   description = NULL,
   result = NULL,
   ...
@@ -198,13 +197,13 @@ gpluck_make_score_ranges <- function(
     "npsych_test",
     "rating_scale",
     "validity_indicator",
-    "performance_validity",
-    "symptom_validity",
-    "rating_scale_basc3",
-    "basc3"
+    "rating_scale_basc3"
   ),
   ...
 ) {
+  # Collapse test_type to a single, valid value
+  test_type <- match.arg(test_type)
+
   if (test_type == "npsych_test") {
     table <- table |>
       dplyr::mutate(
@@ -219,9 +218,7 @@ gpluck_make_score_ranges <- function(
           TRUE ~ as.character(range)
         )
       )
-  } else if (
-    identical(test_type, "rating_scale") && !startsWith(test, "basc3_")
-  ) {
+  } else if (test_type == "rating_scale") {
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
@@ -250,6 +247,7 @@ gpluck_make_score_ranges <- function(
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
+          # Adaptive/Personal Adjustment (strengths flip)
           score >= 60 &
             subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Normative Strength",
@@ -268,29 +266,33 @@ gpluck_make_score_ranges <- function(
           score <= 20 &
             subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Markedly Impaired",
+
+          # All other clinical subdomains (elevations = worse)
           score >= 80 &
-            subdomain != c("Adaptive Skills", "Personal Adjustment") ~
+            !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Markedly Elevated",
           score %in%
             70:79 &
-            subdomain != c("Adaptive Skills", "Personal Adjustment") ~
+            !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Clinically Significant",
           score %in%
             60:69 &
-            subdomain != c("Adaptive Skills", "Personal Adjustment") ~
+            !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "At-Risk",
           score %in%
             40:59 &
-            subdomain != c("Adaptive Skills", "Personal Adjustment") ~
+            !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Average",
           score <= 39 &
-            subdomain != c("Adaptive Skills", "Personal Adjustment") ~
+            !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~
             "Normative Strength",
+
           TRUE ~ as.character(range)
         )
       )
   }
-  return(table)
+
+  table
 }
 
 #' Compute Percentile & Performance Range
