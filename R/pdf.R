@@ -219,7 +219,9 @@ gpluck_make_score_ranges <- function(
           TRUE ~ as.character(range)
         )
       )
-  } else if (test_type == "rating_scale") {
+  } else if (
+    identical(test_type, "rating_scale") && !startsWith(test, "basc3_")
+  ) {
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
@@ -238,20 +240,6 @@ gpluck_make_score_ranges <- function(
       dplyr::mutate(
         range = dplyr::case_when(
           percentile >= 25 ~ "WNL Score",
-          percentile %in% 9:24 ~ "Low Average Score",
-          percentile %in% 2:8 ~ "Below Average Score",
-          percentile < 2 ~ "Exceptionally Low Score",
-          TRUE ~ as.character(range)
-        )
-      )
-  } else if (test_type == "symptom_validity") {
-    table <- table |>
-      dplyr::mutate(
-        range = dplyr::case_when(
-          percentile >= 98 ~ "Exceptionally High Score",
-          percentile %in% 91:97 ~ "Above Average Score",
-          percentile %in% 75:90 ~ "High Average Score",
-          percentile %in% 25:74 ~ "WNL Score",
           percentile %in% 9:24 ~ "Low Average Score",
           percentile %in% 2:8 ~ "Below Average Score",
           percentile < 2 ~ "Exceptionally Low Score",
