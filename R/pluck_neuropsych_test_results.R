@@ -145,6 +145,8 @@ extract_wisc5_data <- function(
     saveRDS(file_path, paste0(test, "_path.rds"))
   }
 
+  pages <- pages
+
   # Extract data from PDF
   extracted_areas <- tabulapdf::extract_areas(
     file = file_path,
@@ -229,8 +231,7 @@ extract_wisc5_data <- function(
   df_merged <- df |>
     dplyr::mutate(test = "wisc5") |>
     dplyr::left_join(lookup_table, by = c("test", "scale")) |>
-    dplyr::relocate(c(test, test_name), .before = scale) |>
-    neuro2::gpluck_make_columns()
+    dplyr::relocate(c(test, test_name), .before = scale)
 
   # Initialize range column with empty strings to avoid recycling issues
   df_merged <- df_merged |> dplyr::mutate(range = "")
@@ -286,10 +287,7 @@ extract_wisc5_data <- function(
     dir.create(output_dir, recursive = TRUE)
   }
 
-  readr::write_excel_csv(
-    df_merged,
-    file.path(output_dir, paste0(test, ".csv"))
-  )
+  readr::write_excel_csv(df_merged, file.path(output_dir, paste0(test, ".csv")))
 
   return(df_merged)
 }

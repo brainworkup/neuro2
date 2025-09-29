@@ -21,13 +21,14 @@ gpluck_make_columns(
     "Adaptive Functioning", "Validity"),
   subdomain = NULL,
   narrow = NULL,
-  pass = c("Planning", "Attention", "Sequential", "Simultaneous", "Knowledge", NA),
-  verbal = c("Verbal", "Nonverbal", NA),
-  timed = c("Timed", "Untimed", NA),
-  test_type = c("npsych_test", "rating_scale", "validity_indicator", "item", "basc3", NA),
+  pass = c("Planning", "Attention", "Sequential", "Simultaneous", "Knowledge",
+    NA_character_),
+  verbal = c("Verbal", "Nonverbal", NA_character_),
+  timed = c("Timed", "Untimed", NA_character_),
+  test_type = c("npsych_test", "rating_scale", "validity_indicator", "item", "basc3",
+    NA_character_),
   score_type = c("raw_score", "scaled_score", "t_score", "standard_score", "z_score",
-    "percentile", "base_rate", "beta_coefficient", NA),
-  absort = NULL,
+    "percentile", "base_rate", "beta_coefficient", NA_real_),
   description = NULL,
   result = NULL,
   ...
@@ -76,13 +77,13 @@ validity_indicator, item. Default: c("npsych_test", "rating_scale",
 \item{score_type}{Type of score reported, e.g. raw_score, scaled_score, t_score, standard_score, z_score, percentile, base_rate, beta_coefficient. Default: c("raw_score", "scaled_score", "t_score", "standard_score", "z_score",
 "percentile", "base_rate", "beta_coefficient", NA)}
 
-\item{absort}{Default order of scales to use for sorting. Default: NULL}
-
 \item{description}{Description of the test or task. Default: NULL}
 
 \item{result}{Concatenate the results to include details of test performance. Default: NULL}
 
 \item{...}{Other parameters.}
+
+\item{absort}{Default order of scales to use for sorting. Default: NULL}
 }
 \value{
 A modified data frame with additional columns.

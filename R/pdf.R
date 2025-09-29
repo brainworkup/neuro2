@@ -50,7 +50,7 @@ gpluck_extract_tables <- function(
   )
 }
 
-
+# maybe depracte this?
 #' @title Insert Variables and Data from Tables into DF.
 #' @description This function takes a data frame containing text data from PDF tables, and makes additional columns of binary, range or score values for the specified domain, subdomains, test types, etc.
 #' @importFrom dplyr mutate
@@ -120,17 +120,17 @@ gpluck_make_columns <- function(
     "Sequential",
     "Simultaneous",
     "Knowledge",
-    NA
+    NA_character_
   ),
-  verbal = c("Verbal", "Nonverbal", NA),
-  timed = c("Timed", "Untimed", NA),
+  verbal = c("Verbal", "Nonverbal", NA_character_),
+  timed = c("Timed", "Untimed", NA_character_),
   test_type = c(
     "npsych_test",
     "rating_scale",
     "validity_indicator",
     "item",
     "basc3",
-    NA
+    NA_character_
   ),
   score_type = c(
     "raw_score",
@@ -141,9 +141,9 @@ gpluck_make_columns <- function(
     "percentile",
     "base_rate",
     "beta_coefficient",
-    NA
+    NA_real_
   ),
-  absort = NULL,
+  # absort = NULL,
   description = NULL,
   result = NULL,
   ...
@@ -166,7 +166,7 @@ gpluck_make_columns <- function(
       timed = timed,
       score_type = score_type,
       test_type = test_type,
-      absort = paste0(tolower(test), "_", seq_len(nrow(data))),
+      # absort = paste0(tolower(test), "_", seq_len(nrow(data))),
       description = description,
       result = result,
       ...
@@ -194,12 +194,13 @@ gpluck_make_score_ranges <- function(
   score,
   percentile,
   range,
-  subdomain = NULL,
   test_type = c(
     "npsych_test",
     "rating_scale",
+    "validity_indicator",
     "performance_validity",
     "symptom_validity",
+    "rating_scale_basc3",
     "basc3"
   ),
   ...
@@ -232,7 +233,7 @@ gpluck_make_score_ranges <- function(
           TRUE ~ as.character(range)
         )
       )
-  } else if (test_type == "performance_validity") {
+  } else if (test_type == "validity_indicator") {
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
@@ -257,7 +258,7 @@ gpluck_make_score_ranges <- function(
           TRUE ~ as.character(range)
         )
       )
-  } else if (test_type == "basc3") {
+  } else if (startsWith(test, "basc3_")) {
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
