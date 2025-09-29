@@ -42,25 +42,29 @@ report_utils$setup_environment()
 dir.create("raw_data", recursive = TRUE)
 report_utils$prepare_data_files("raw_data", "processed_data")
 
-# Example 2: Process domains and render a report
+# Example 2: Process domains (without rendering to avoid file dependency issues)
 # Initialize with a specific configuration
 report_utils <- ReportUtilitiesR6$new(
   config = list(
     domains = c("memory", "executive", "attention"),
-    template = "comprehensive_report.qmd"
+    template = system.file("quarto/templates/typst-report/template.qmd", package = "neuro2")
   )
 )
 
-# Process the domains and render the report
+# Process the domains
 report_utils$process_domains(
   domains = report_utils$config$domains,
   output_dir = "output/domains"
 )
+
+\dontrun{
+# Render report (requires template file to exist)
 report_utils$render_report(
   template_file = report_utils$config$template,
   output_dir = "reports",
   output_name = "neuropsych_evaluation"
 )
+}
 
 }
 \section{Public fields}{

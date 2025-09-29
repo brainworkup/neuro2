@@ -4,7 +4,22 @@
 \alias{ExecutionTrackerR6}
 \title{Execution Tracker - Prevents Multiple Runs}
 \description{
-Use this to track what has been executed and prevent re-runs
+Execution Tracker - Prevents Multiple Runs
+
+Execution Tracker - Prevents Multiple Runs
+}
+\details{
+Use this to track what has been executed and prevent re-runs.
+This R6 class maintains execution history and prevents duplicate task execution.
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{executed_tasks}}{List of executed tasks with their timestamps}
+
+\item{\code{execution_log}}{Data frame containing execution history with task names, times, and status}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -21,46 +36,83 @@ Use this to track what has been executed and prevent re-runs
 \if{html}{\out{<a id="method-ExecutionTrackerR6-new"></a>}}
 \if{latex}{\out{\hypertarget{method-ExecutionTrackerR6-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize the execution tracker
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$new(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional arguments (currently unused)}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ExecutionTrackerR6-can_execute"></a>}}
 \if{latex}{\out{\hypertarget{method-ExecutionTrackerR6-can_execute}{}}}
 \subsection{Method \code{can_execute()}}{
+Check if a task can be executed
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$can_execute(task_id)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{task_id}}{Character string identifying the task}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Logical indicating whether the task can be executed (TRUE) or has already been executed (FALSE)
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ExecutionTrackerR6-mark_executed"></a>}}
 \if{latex}{\out{\hypertarget{method-ExecutionTrackerR6-mark_executed}{}}}
 \subsection{Method \code{mark_executed()}}{
+Mark a task as executed
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$mark_executed(task_id, status = "success")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{task_id}}{Character string identifying the task}
+
+\item{\code{status}}{Character string indicating execution status (default: "success")}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ExecutionTrackerR6-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-ExecutionTrackerR6-reset}{}}}
 \subsection{Method \code{reset()}}{
+Reset the execution tracker
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$reset()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+Invisible NULL
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ExecutionTrackerR6-get_summary"></a>}}
 \if{latex}{\out{\hypertarget{method-ExecutionTrackerR6-get_summary}{}}}
 \subsection{Method \code{get_summary()}}{
+Get execution summary
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ExecutionTrackerR6$get_summary()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+List containing total executed tasks, task names, and execution log
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ExecutionTrackerR6-clone"></a>}}
