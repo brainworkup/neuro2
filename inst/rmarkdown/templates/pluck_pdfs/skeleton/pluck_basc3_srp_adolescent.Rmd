@@ -56,6 +56,8 @@ test_name <- params$test_name
 pages <- params$pages
 # file_path <- file.path(file.choose())
 file_path <- file.path(params$file)
+saveRDS(file_path, paste0(test, "_path.rds"))
+file_path <- readRDS(paste0(test, "_path.rds"))
 ```
 
 ## Areas
@@ -87,7 +89,7 @@ saveRDS(
 )
 
 # Load the extracted_tables object from the 'data' folder
-extracted_tables <- readRDS(paste0("data-raw/extracted_tables_", test, ".rds"))
+# extracted_tables <- readRDS(paste0("data-raw/extracted_tables_", test, ".rds"))
 ```
 
 ## CLINICAL AND ADAPTIVE SCORE TABLE
@@ -110,7 +112,7 @@ table1[to_double] <- lapply(table1[to_double], function(x) {
 
 ```{r pluck-df2}
 table2 <- as.data.frame(extracted_tables[[2]])
-column_names2 <- c("scale", "raw_score", "score", "percentile", "ci_95", "difference", "sig_level") # frequency doesnt extract if no data
+column_names2 <- c("scale", "raw_score", "score", "percentile", "ci_95", "difference", "sig_level", "freq") # frequency doesnt extract if no data
 colnames(table2) <- column_names2
 # Convert columns to double, handling non-numeric values
 to_double <- c("raw_score", "score", "percentile")
@@ -125,6 +127,7 @@ table2[to_double] <- lapply(table2[to_double], function(x) {
 
 # Bind rows into full data.frame
 df <- dplyr::bind_rows(table1, table2)
+df <- dplyr::select(df, c(-difference, -sig_level, -freq))
 ```
 
 ## Functions
@@ -197,19 +200,98 @@ df_merged <- dplyr::mutate(df, test = test) |>
   dplyr::relocate(c(test, test_name), .before = scale)
 
 # add missing columns
-# df_mutated <- neuro2::gpluck_make_columns(
-#   df_merged,
-#   range = "",
-#   result = ""
-# )
+df_mutated <- neuro2::gpluck_make_columns(
+  df_merged,
+  range = "",
+  result = ""
+)
 ```
 
 ## Test score ranges
 
 ```{r ranges, eval = TRUE}
+gpluck_make_score_ranges <- function(
+  table,
+  score,
+  percentile,
+  range,
+  test_type = c("npsych_test", "rating_scale", "validity_indicator", "rating_scale_basc3"),
+  ...
+) {
+  # Collapse test_type to a single, valid value
+  test_type <- match.arg(test_type)
+
+  if (test_type == "npsych_test") {
+    table <- table |>
+      dplyr::mutate(
+        range = dplyr::case_when(
+          percentile >= 98 ~ "Exceptionally High",
+          percentile %in% 91:97 ~ "Above Average",
+          percentile %in% 75:90 ~ "High Average",
+          percentile %in% 25:74 ~ "Average",
+          percentile %in% 9:24  ~ "Low Average",
+          percentile %in% 2:8   ~ "Below Average",
+          percentile < 2        ~ "Exceptionally Low",
+          TRUE ~ as.character(range)
+        )
+      )
+
+  } else if (test_type == "rating_scale") {
+    table <- table |>
+      dplyr::mutate(
+        range = dplyr::case_when(
+          percentile >= 98 ~ "Exceptionally High",
+          percentile %in% 91:97 ~ "Above Average",
+          percentile %in% 75:90 ~ "High Average",
+          percentile %in% 25:74 ~ "Average",
+          percentile %in% 9:24  ~ "Low Average",
+          percentile %in% 2:8   ~ "Below Average",
+          percentile < 2        ~ "Exceptionally Low",
+          TRUE ~ as.character(range)
+        )
+      )
+
+  } else if (test_type == "validity_indicator") {
+    table <- table |>
+      dplyr::mutate(
+        range = dplyr::case_when(
+          percentile >= 25 ~ "WNL Score",
+          percentile %in% 9:24 ~ "Low Average Score",
+          percentile %in% 2:8  ~ "Below Average Score",
+          percentile < 2       ~ "Exceptionally Low Score",
+          TRUE ~ as.character(range)
+        )
+      )
+
+  } else if (test_type == "rating_scale_basc3") {
+    table <- table |>
+      dplyr::mutate(
+        range = dplyr::case_when(
+          # Adaptive/Personal Adjustment (strengths flip)
+          score >= 60 & subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Normative Strength",
+          score %in% 40:59 & subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Average",
+          score %in% 30:39 & subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "At-Risk",
+          score %in% 20:29 & subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Clinically Significant",
+          score <= 20 & subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Markedly Impaired",
+
+          # All other clinical subdomains (elevations = worse)
+          score >= 80   & !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Markedly Elevated",
+          score %in% 70:79 & !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Clinically Significant",
+          score %in% 60:69 & !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "At-Risk",
+          score %in% 40:59 & !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Average",
+          score <= 39   & !subdomain %in% c("Adaptive Skills", "Personal Adjustment") ~ "Normative Strength",
+
+          TRUE ~ as.character(range)
+        )
+      )
+  }
+
+  table
+}
+
 df_mutated <- df_merged |>
   dplyr::mutate(range = NULL) |>
-  neuro2::gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale_basc3") |>
+  gpluck_make_score_ranges(table = df_mutated, test_type = "rating_scale_basc3") |>
   dplyr::relocate(c(range), .after = percentile)
 ```
 
@@ -218,10 +300,11 @@ df_mutated <- df_merged |>
 ```{r result}
 df_mutated <- df_mutated |>
   dplyr::rowwise() |>
-  dplyr::mutate(result = glue::glue("{patient}'s self-reported {description} was {range}.\n"))
+  dplyr::mutate(result = glue::glue("{patient}'s self-reported {scale} (i.e., {description}) was {range}.\n"))
 
 df <- df_mutated |>
-  dplyr::select(-description, -difference, -sig_level, -freq)
+  dplyr::select(-description) |> 
+  dplyr::arrange(absort)
 ```
 
 ## Write out final csv
