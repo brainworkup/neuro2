@@ -246,7 +246,7 @@ gpluck_make_score_ranges <- function(
           TRUE ~ as.character(range)
         )
       )
-  } else if (startsWith(test, "basc3_")) {
+  } else if (test_type == "rating_scale_basc3") {
     table <- table |>
       dplyr::mutate(
         range = dplyr::case_when(
