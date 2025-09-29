@@ -450,12 +450,7 @@ extract_wisc5_data <- function(
     dplyr::relocate(all_of(c("test", "test_name")), .before = "scale")
 
   # Add missing columns
-  df_mutated <- neuro2::gpluck_make_columns(
-    df_merged,
-    range = "",
-    result = "",
-    absort = NULL
-  )
+  df_mutated <- neuro2::gpluck_make_columns(df_merged, range = "", result = "")
 
   # Calculate score ranges
   df_mutated <- df_mutated |>

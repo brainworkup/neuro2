@@ -3,7 +3,7 @@ title: |
   <center> BASC-3 PRS Adolescent </center>
 date: "`r Sys.Date()`"
 params:
-  patient: Biggie
+  patient: Maya
   test: basc3_prs_adolescent
   test_name: "BASC-3 PRS Adolescent"
   file:
@@ -36,7 +36,6 @@ library(glue)
 library(here)
 library(knitr)
 library(pdftools)
-library(qs2)
 library(rmarkdown)
 library(rmdformats)
 library(shiny)
@@ -45,7 +44,6 @@ library(tabulapdf)
 library(tidyverse)
 library(xfun)
 library(yaml)
-library(neuro2)
 library(neuro2)
 ```
 
@@ -56,8 +54,8 @@ patient <- params$patient
 test <- params$test
 test_name <- params$test_name
 pages <- params$pages
-# file <- file.path(file.choose())
-file <- file.path(params$file)
+# file_path <- file.path(file.choose())
+file_path <- file.path(params$file)
 ```
 
 ## Areas
@@ -74,25 +72,18 @@ areas <- list(
 
 ```{r}
 extracted_tables <- tabulapdf::extract_tables(
-  file = file,
+  file = file_path,
   pages = pages,
   area = areas,
   guess = NULL,
   method = "stream",
   output = "matrix"
 )
-
-# extracted_tables <- tabulapdf::extract_areas(
-#   file = file,
-#   pages = c(4,4),
-#   method = "stream",
-#   output = "matrix"
-# )
 ```
 
 ```{r}
 # Ensure the 'data' directory exists
-if (!dir.exists("data")) dir.create("data")
+if (!dir.exists("data-raw")) dir.create("data-raw")
 
 # Define 'test' if it hasn't been set (for safety)
 # test <- "example"  # Uncomment and modify if needed
@@ -100,14 +91,14 @@ if (!dir.exists("data")) dir.create("data")
 # Save the extracted_tables object to a file
 saveRDS(
   object = extracted_tables,
-  file = file.path("data", paste0("extracted_tables_", test, ".rds"))
+  file = file.path("data-raw", paste0("extracted_tables_", test, ".rds"))
 )
 ```
 
 ## CLINICAL AND ADAPTIVE SCORE TABLE
 
 ```{r pluck-df1}
-table1 <- data.frame(extracted_tables[[1]])
+table1 <- as.data.frame(extracted_tables[[1]])
 column_names1 <- c("scale", "raw_score", "score", "percentile", "ci_95")
 colnames(table1) <- column_names1
 # Convert columns to double, handling non-numeric values
@@ -123,7 +114,7 @@ table1[to_double] <- lapply(table1[to_double], function(x) {
 ```
 
 ```{r pluck-df2}
-table2 <- data.frame(extracted_tables[[2]])
+table2 <- as.data.frame(extracted_tables[[2]])
 column_names2 <- c("scale", "raw_score", "score", "percentile", "ci_95", "difference", "sig_level", "freq") # frequency doesnt extract if no data
 colnames(table2) <- column_names2
 # Convert columns to double, handling non-numeric values
@@ -203,7 +194,7 @@ get_text <- function(file) {
 
 ```{r eval = TRUE}
 # Load the lookup table
-lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 
 # Merge the data with the lookup table
 df_merged <- dplyr::mutate(df, test = test) |>
@@ -214,8 +205,7 @@ df_merged <- dplyr::mutate(df, test = test) |>
 df_mutated <- neuro2::gpluck_make_columns(
   df_merged,
   range = "",
-  result = "",
-  absort = NULL
+  result = ""
 )
 ```
 
@@ -250,7 +240,7 @@ if (!exists("df") || ncol(df) <= 4) {
 } else {
   writedf <- df
 }
-readr::write_excel_csv(writedf, here::here("data", "csv", paste0(test, ".csv")), col_names = TRUE)
+readr::write_excel_csv(writedf, here::here("data-raw", "csv", paste0(test, ".csv")), col_names = TRUE)
 ```
 
 ## Extract Text
