@@ -37,131 +37,131 @@ table_*.png
 # Node/quarto dashboard vendor bundles (if any get generated)
 neuropsych-dashboard_files/
 # Other folders/files
-_arxiv/
-.roo/
-.specstory/
-_extensions/
-data/*.csv
-/.quarto/
-_freeze/
-archive/
-*.svg
-template.pdf
-_02-**_*.qmd
-_02-**_*_*.qmd
-neuropsych-dashboard.html
-README.html
-Smalls-Biggie_neuropsych_report_2025-08-19.pdf
-template.typ
-Smalls-Biggie_neuropsych_report_2025-08-19 copy.pdf
-_02-03_verbal.pdf
-template.typst.md
-_03-03b_examiner_qualifications.qmd
-_03-03a_informed_consent.qmd
-_03-00_dsm5_icd10_dx.qmd
-_01-00_nse_referral.qmd
-# scripts
-# NOTE: removed invalid Quarto shortcode (kept here as a comment)
-# {{< include _02-*_*_text.qmd }}
-template_ethan.qmd
-template_ethan.typ
-template_ethan.pdf
+__pycache__/app.cpython-311.pyc
 _00-00_tests.qmd
 _01-**_*_*.qmd
-_03-**_*.qmd
-_emotion_include.qmd
-_domains_to_include.qmd
-template_streamline.typ
-template_streamline.qmd
-# _quarto.yml
-_variables.yml
-config.yml
-# template.qmd
-template1.pdf
-template1.typ
-fix_conflicts.md
-R/cohere_embed.py
-.venv/
-__pycache__/app.cpython-311.pyc
-.python-version
-app.py
-figs/
+_01-00_nse_adult.pdf
+_01-00_nse_referral.qmd
+_01-00_nse.qmd
+_02-**_*_*.qmd
+_02-**_*.qmd
+_02-01_iq.rmarkdown
+_02-03_verbal.pdf
+_02-05_memory.pdf
+_02-05_memory.typ
+_02-09_adhd_adult.pdf
 _02-10_emotion_child.pdf
+_03-**_*.qmd
+_03-00_dsm5_icd10_dx.qmd
+_03-00_sirf.pdf
+_03-03a_informed_consent.qmd
+_03-03b_examiner_qualifications.qmd
+_arxiv/
+_domains_to_include.qmd
+_emotion_include.qmd
+_extensions/
+_freeze/
+_quarto.yml
+_quarto/*
+_tests/
+_variables.yml
+!_quarto/_freeze/
+..Rcheck/
+.claude/
+.continue/
 .dbxignore
 .editorconfig
+# .gitignore
 .lintr
-settings.json
-scratch.R
+.python-version
+.roo/
+.run_report_log*.txt
+.specstory/
+.venv/
+*.svg
+*.zip
 **/*.quarto_ipynb
-.claude/
-_02-05_memory.typ
-tests/test_data.csv
-data/assessment_report.md
-patial_text.qmd
-_03-00_sirf.pdf
-.continue/
-_tests/
-fig_*_*.png
-2025-09-02.md
-notes/
-report.pdf
-docker/neuro2_0.1.7.tar.gz
-neuro2.Rcheck/
-neuro2_0.1.7.tar.gz
-template2.qmd
-# template_neuro2_holy_grail.typ
-neuro2-report.typ
-_02-01_iq.rmarkdown
-template_neuro2_holy_grail.pdf
-domain_includes.txt
-_01-00_nse_adult.pdf
-..Rcheck/
-~$problems.xlsx
-problems.xlsx
-template-qmd.md
-template-qmd.qmd
+/.quarto/
+# _quarto.yml
+# {{< include _02-*_*_text.qmd }}
 # analyze_batch_processor.R
 # compare_batch_processor.R
-neuropsych_report.qmd
-template_KindOfWorks.pdf
-doc_output.txt
-backups_20250908_212742/
-.run_report_log*.txt
+# NOTE: removed invalid Quarto shortcode (kept here as a comment)
 # rbans_extractor.R
-data-raw/csv/cefi_self_12-18.csv
-codex.txt
-neuro2_0.1.10.tar.gz
-backups_20250907_095303/
-backups_*_*/
-_quarto.yml
-template.tex
-_02-09_adhd_adult.pdf
-data-raw/neurocog_composite_scores_*.xlsx
-isabella_scores.csv
-tmp/
-template.qmd
-_02-05_memory.pdf
-prompt/neuro2_api_keys.json
-prompt/Snippets 2025-09-09 22.55.29.json
-prompt/Prompt General Cognitive Ability.json
-interpret_iq.qmd
-man_backup
-template_neuro2_holy_grail_extracted.txt
-Modelfile.pdf
-Qwen_r_20250911_br62c89zs.r
-ollama_test_code.R
-neuro2_llm_setup.qmd
+# scripts
+# template_neuro2_holy_grail.typ
+# template.qmd
+~$problems.xlsx
+2025-09-02.md
 altdoc/freeze.rds
-_quarto/*
-!_quarto/_freeze/
-runtime.R
+app.py
+archive/
+backups_*_*/
+backups_20250907_095303/
+backups_20250908_212742/
+codex.txt
+config.yml
+data-raw/csv/cefi_self_12-18.csv
+data-raw/neurocog_composite_scores_*.xlsx
+data/*.csv
+data/assessment_report.md
+doc_output.txt
+docker/neuro2_0.1.7.tar.gz
+domain_includes.txt
+fig_*_*.png
+figs/
 files/
-.gitignore
+fix_conflicts.md
+interpret_iq.qmd
+isabella_scores.csv
 joey_startup.R
-workflow_windsurf.qmd
-_01-00_nse.qmd
+man_backup
+Modelfile.pdf
+neuro2_0.1.10.tar.gz
+neuro2_0.1.7.tar.gz
+neuro2_llm_setup.qmd
+neuro2-report.typ
+neuro2.Rcheck/
+neuropsych_report.qmd
+neuropsych-dashboard.html
+notes/
 NSE2_CoD_cline.md
-scripts/
-*.zip
-template copy.pdf
+ollama_test_code.R
+patial_text.qmd
+problems.xlsx
 project_file_tree_2025-10-07_*.md
+prompt/neuro2_api_keys.json
+prompt/Prompt General Cognitive Ability.json
+prompt/Snippets 2025-09-09 22.55.29.json
+Qwen_r_20250911_br62c89zs.r
+R/cohere_embed.py
+README.html
+report.pdf
+runtime.R
+scratch.R
+scripts/
+settings.json
+Smalls-Biggie_neuropsych_report_2025-08-19 copy.pdf
+Smalls-Biggie_neuropsych_report_2025-08-19.pdf
+template copy.pdf
+template_ethan.pdf
+template_ethan.qmd
+template_ethan.typ
+template_KindOfWorks.pdf
+template_neuro2_holy_grail_extracted.txt
+template_neuro2_holy_grail.pdf
+template_streamline.qmd
+template_streamline.typ
+template-qmd.md
+template-qmd.qmd
+template.pdf
+template.qmd
+template.tex
+template.typ
+template.typst.md
+template1.pdf
+template1.typ
+template2.qmd
+tests/test_data.csv
+tmp/
+workflow_windsurf.qmd

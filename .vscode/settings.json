@@ -1,0 +1,43 @@
+{
+  "files.exclude": {
+    ".history/": true,
+    ".tmp.driveupload": true,
+    "**/.history": true,
+    "**/.Rhistory": true,
+    "**/.Rproj": true,
+    "**/.Rproj.user": true,
+    "**/renv/library": true,
+    "**/renv/local": true,
+    "**/renv/staging": true,
+    ".history": true,
+    ".Rproj.user": true,
+    ".quarto": true,
+    ".dbxignore": true,
+    ".editorconfig": true,
+    ".bak": true,
+    "inst/scripts/.history": true,
+    ".lintr": true,
+    "inst/.history": true
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#b5e7f8",
+    "activityBar.background": "#b5e7f8",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#f16dd0",
+    "activityBarBadge.foreground": "#15202b",
+    "panel.border": "#b5e7f8",
+    "tab.activeBorder": "#b5e7f8",
+    "editorGroup.border": "#b5e7f8",
+    "sideBar.border": "#b5e7f8"
+  },
+  "peacock.color": "#86d8f4",
+  "[r]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Posit.air-vscode"
+  },
+  "[quarto]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "quarto.quarto"
+  }
+}

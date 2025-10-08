@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Load All",
+      "type": "shell",
+      "command": "Rscript -e \"devtools::load_all('.')\"",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Document",
+      "type": "shell",
+      "command": "Rscript -e \"devtools::document()\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "Check",
+      "type": "shell",
+      "command": "Rscript -e \"devtools::check()\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test",
+      "type": "shell",
+      "command": "Rscript -e \"devtools::test()\"",
+      "problemMatcher": []
+    }
+  ]
+}
