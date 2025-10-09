@@ -165,3 +165,6 @@ template2.qmd
 tests/test_data.csv
 tmp/
 workflow_windsurf.qmd
+joey_startup.R.backup
+eisvogel_nse.pdf
+.Rapp.history

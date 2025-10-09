@@ -55,13 +55,12 @@
       "editorInfo.foreground": "#000000ff",
       "editorWarning.foreground": "#000000ff"
     },
-    "workbench.colorTheme": "Tomorrow Night Bright (R Classic)",
+    "workbench.colorTheme": "Dark- Modern (Flat UI)",
     "workbench.iconTheme": "material-icon-theme",
-    "workbench.preferredDarkColorTheme": "Codemos Modern (Dark)"
+    "workbench.preferredDarkColorTheme": "Codemos Modern (Dark)",
+    "workbench.productIconTheme": "Default"
   },
   "extensions": {
-    "recommendations": [
-      "atomashevic.vscode-working-memory"
-    ]
+    "recommendations": ["atomashevic.vscode-working-memory"]
   }
 }
