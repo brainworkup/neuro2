@@ -1914,7 +1914,6 @@ domain_validity <- "Validity"
 lookup_neuropsych_scales <- readr::read_csv(
   "~/Dropbox/neuropsych_lookup_table.csv"
 )
-# usethis::use_data(lookup_neuropsych_scales, internal = TRUE, overwrite = TRUE)
 
 # For other data
 .safe_use_data_internal(

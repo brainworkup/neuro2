@@ -71,10 +71,10 @@ params:
       - Orthographic Fluency
       - Decoding Fluency
       MATH:
-      - "Math Fluency"
-      - "Math Fluency-Addition"
-      - "Math Fluency-Subtraction"
-      - "Math Fluency-Multiplication"
+      - Math Fluency
+      - Math Fluency-Addition
+      - Math Fluency-Subtraction
+      - Math Fluency-Multiplication
       PHONOLOGICAL PROCESSING:
       - Phonological Processing
       - Pseudoword Decoding
@@ -141,7 +141,6 @@ library(knitr)
 library(magrittr)
 library(miniUI)
 library(readr)
-library(rJava)
 library(rmarkdown)
 library(shiny)
 library(tabulapdf)
@@ -288,7 +287,7 @@ df <- wiat4 |> dplyr::select(all_of(params$keep))
 
 ```{r}
 # Load the lookup table
-lookup_table <- readr::read_csv("~/reports/neuropsych_lookup_table_combined.csv")
+lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 
 # Merge the data with the lookup table
 df_merged <- dplyr::mutate(df, test = test) |>
@@ -336,10 +335,10 @@ wiat4 <- df |>
 ## Write out final csv
 
 ```{r write-csv}
-readr::write_csv(wiat4, here::here("data", "csv", "wiat4.csv"), col_names = TRUE, na = "")
+readr::write_csv(wiat4, here::here("data-raw", "csv", "wiat4.csv"), col_names = TRUE, na = "")
 ```
 
-## Write to "g2.csv" file
+## Write to "g.csv" file
 
 ```{r}
 has_headers <- function(file_path) {
@@ -351,7 +350,7 @@ has_headers <- function(file_path) {
 }
 
 csv_file <- wiat4
-g <- "g2"
+g <- "g"
 file_path <- here::here("data", paste0(g, ".csv"))
 
 readr::write_excel_csv(
