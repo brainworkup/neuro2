@@ -168,3 +168,5 @@ workflow_windsurf.qmd
 joey_startup.R.backup
 eisvogel_nse.pdf
 .Rapp.history
+cognitive_domains_sentencecase.csv
+domain_sentence_case.R
