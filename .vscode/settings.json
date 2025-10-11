@@ -17,7 +17,12 @@
     ".bak": true,
     "inst/scripts/.history": true,
     ".lintr": true,
-    "inst/.history": true
+    "inst/.history": true,
+    "air.toml": true,
+    ".Rprofile.bak": true,
+    ".Rapp.history": true,
+    ".nojekyll": true,
+    ".gitattributes": true
   },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#b5e7f8",

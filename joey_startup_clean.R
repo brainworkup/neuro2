@@ -6,7 +6,7 @@
 patient_name <- "Ethan"
 
 # Load the workflow function
-source("inst/scripts/00_complete_neuropsych_workflow_FIXED.R")
+source("inst/scripts/00_complete_neuropsych_workflow.R")
 
 # Create a simple wrapper
 run_workflow <- function(patient = patient_name) {

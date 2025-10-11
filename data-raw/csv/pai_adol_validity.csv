@@ -1,5 +1,0 @@
-test,test_name,scale,raw_score,score,percentile,range,domain,subdomain,narrow,pass,verbal,timed,score_type,test_type,absort,result
-pai_adol,PAI Adolescent,Inconsistency,,47,38,WNL Score,Validity,Symptom Validity,Nonsystematic distortion indicator ,,,,t_score,validity_indicator,pai_a_1,Ethan's score on Inconsistency (Inconsistency) was WNL Score.
-pai_adol,PAI Adolescent,Infrequency,,45,30,WNL Score,Validity,Symptom Validity,Nonsystematic distortion indicator ,,,,t_score,validity_indicator,pai_a_2,Ethan's score on Infrequency (Infrequency) was WNL Score.
-pai_adol,PAI Adolescent,Negative Impression Management,,45,30,WNL Score,Validity,Symptom Validity,Negative distortion indicator ,,,,t_score,validity_indicator,pai_a_3,Ethan's score on Negative Impression Management (Negative Impression Management) was WNL Score.
-pai_adol,PAI Adolescent,Positive Impression Management,,58,78,High Average Score,Validity,Symptom Validity,Positive distortion indicator ,,,,t_score,validity_indicator,pai_a_4,Ethan's score on Positive Impression Management (Positive Impression Management) was High Average Score.
