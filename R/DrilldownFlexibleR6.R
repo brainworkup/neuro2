@@ -491,28 +491,3 @@ FlexibleDrilldownR6 <- R6::R6Class(
 #'   )
 #' )
 #' }
-drilldown_flexible <- function(
-  data,
-  patient,
-  neuro_domain = c(
-    "Neuropsychological Test Scores",
-    "Behavioral Rating Scales",
-    "Validity Test Scores"
-  ),
-  hierarchy = NULL,
-  hierarchy_labels = NULL,
-  preset = "clinical",
-  theme = NULL
-) {
-  drilldown_obj <- FlexibleDrilldownR6$new(
-    data = data,
-    patient = patient,
-    neuro_domain = neuro_domain,
-    hierarchy = hierarchy,
-    hierarchy_labels = hierarchy_labels,
-    preset = preset,
-    theme = theme
-  )
-
-  return(drilldown_obj$create_plot())
-}
