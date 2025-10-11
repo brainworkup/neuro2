@@ -2,8 +2,8 @@
 title: "Import CSV file from PAI-Adolescent"
 params:
   patient: "Ethan"
-  test: pai_adol
-  test_name: PAI Adolescent
+  test: pai_a
+  test_name: "PAI-A"
   file:
     label: "Upload the PAI-A PDF file"
     value: file
@@ -52,7 +52,7 @@ library(neuro2)
 ## Parameters
 
 ```{r}
-file_path <- file.path(here::here("data-raw", "pdf", "pai_adol.pdf"))
+file_path <- file.path(here::here("data-raw", "pdf", "pai_a.pdf"))
 # read_content <- readLines(file_path)
 ```
 
@@ -62,7 +62,7 @@ test <- params$test
 test_name <- params$test_name
 # file_path <- file.path(file.choose())
 file_path <- file.path(params$file)
-saveRDS(file_path, "pai_adol.rds")
+saveRDS(file_path, "pai_a.rds")
 # file_path <- readRDS("pai_adol.rds")
 ```
 
@@ -73,7 +73,7 @@ Need to export csv file from PARiConnect before processing.
 Specify date range to exclude entire database.
 
 ```{r}
-plucked_tables <- readr::read_csv(here::here(
+extracted_tables <- readr::read_csv(here::here(
   "data-raw",
   "pariconnectexportPAI-A.csv"
 ))
@@ -84,13 +84,13 @@ plucked_tables <- readr::read_csv(here::here(
 ### Subset and rename columns
 
 ```{r}
-df_clinical <- plucked_tables |>
-  dplyr::select(SOM_T:AGG_P_T) |>
+df_validity <- extracted_tables |>
+  dplyr::select(ICN_T:PIM_T) |>
   tidyr::gather() |>
   dplyr::rename(scale = key, score = value)
 
-df_validity <- plucked_tables |>
-  dplyr::select(ICN_T:PIM_T) |>
+df_clinical <- extracted_tables |>
+  dplyr::select(SOM_T:AGG_P_T) |>
   tidyr::gather() |>
   dplyr::rename(scale = key, score = value)
 ```
@@ -98,12 +98,12 @@ df_validity <- plucked_tables |>
 ### Convert T scores to z scores to percentiles
 
 ```{r}
-df_clinical <- df_clinical |>
+df_validity <- df_validity |>
   dplyr::mutate(z = (score - 50) / 10) |>
   dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
   dplyr::select(scale, score, percentile)
 
-df_validity <- df_validity |>
+df_clinical <- df_clinical |>
   dplyr::mutate(z = (score - 50) / 10) |>
   dplyr::mutate(percentile = trunc(pnorm(z) * 100)) |>
   dplyr::select(scale, score, percentile)
@@ -112,6 +112,11 @@ df_validity <- df_validity |>
 ## Change scale names
 
 ```{r names}
+# Validity Scales
+df_validity[1, 1] <- c("Inconsistency")
+df_validity[2, 1] <- c("Infrequency")
+df_validity[3, 1] <- c("Negative Impression Management")
+df_validity[4, 1] <- c("Positive Impression Management")
 # Clinical Scales
 df_clinical[1, 1] <- c("Somatic Complaints")
 df_clinical[2, 1] <- c("Anxiety")
@@ -165,12 +170,6 @@ df_clinical[46, 1] <- c("Stimulus-Seeking")
 df_clinical[47, 1] <- c("Aggressive Attitude")
 df_clinical[48, 1] <- c("Verbal Aggression")
 df_clinical[49, 1] <- c("Physical Aggression")
-
-# Validity Scales
-df_validity[1, 1] <- c("Inconsistency")
-df_validity[2, 1] <- c("Infrequency")
-df_validity[3, 1] <- c("Negative Impression Management")
-df_validity[4, 1] <- c("Positive Impression Management")
 ```
 
 ### Filter, group, select
@@ -196,44 +195,12 @@ df_clinical <- df_clinical |>
     40:43,
     9,
     44:46,
+    10:11,
     12,
     47:49,
-    10:11,
     50:51,
     13:18
   ))
-```
-
-## Functions
-
-```{r}
-# Function to replace "-" with NA and filter out rows with no real data
-library(dplyr)
-filter_real_data <- function(table, key_columns) {
-  table <- table |>
-    mutate(across(
-      all_of(key_columns),
-      ~ if_else(. == "-", NA_character_, as.character(.))
-    )) |>
-    mutate(across(all_of(key_columns), as.numeric)) |>
-    filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
-
-  return(table)
-}
-
-# Function to extract text from PDF
-get_text <- function(file) {
-  tryCatch(
-    {
-      txt <- pdftools::pdf_text(file) |> stringr::str_split("\n") |> unlist()
-      return(txt)
-    },
-    error = function(e) {
-      message("Error reading PDF: ", e)
-      return(NULL)
-    }
-  )
-}
 ```
 
 # Match with lookup table
@@ -244,8 +211,7 @@ lookup_table <- readr::read_csv("~/Dropbox/neuropsych_lookup_table.csv")
 
 # Merge the data with the lookup table
 df_clinical_merged <- dplyr::mutate(df_clinical, test = test) |>
-  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
-  dplyr::relocate(c(test, test_name), .before = scale)
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale"))
 
 # add missing columns
 df_clinical_mutated <- neuro2::gpluck_make_columns(
@@ -257,8 +223,7 @@ df_clinical_mutated <- neuro2::gpluck_make_columns(
 
 # Merge the data with the lookup table
 df_validity_merged <- dplyr::mutate(df_validity, test = test) |>
-  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale")) |>
-  dplyr::relocate(c(test, test_name), .before = scale)
+  dplyr::left_join(lookup_table, by = c("test" = "test", "scale" = "scale"))
 
 # add missing columns
 df_validity_mutated <- neuro2::gpluck_make_columns(
@@ -269,18 +234,9 @@ df_validity_mutated <- neuro2::gpluck_make_columns(
 )
 ```
 
-## Slice
-
-```{r slice}
-slice_clinical <- c(1:51)
-df_clinical <- df_clinical_mutated |> dplyr::slice(slice_clinical)
-slice_validity <- c(1:4)
-df_validity <- df_validity_mutated |> dplyr::slice(slice_validity)
-```
-
 ## Test score ranges
 
-```{r ranges, eval = TRUE}
+```{r ranges}
 gpluck_make_score_ranges <- function(
   table,
   score,
@@ -388,18 +344,18 @@ gpluck_make_score_ranges <- function(
   table
 }
 
-df_clinical2 <- df_clinical |>
+df_clinical <- df_clinical_mutated |>
   dplyr::mutate(range = NULL) |>
   gpluck_make_score_ranges(
-    table = df_clinical,
+    table = df_clinical_mutated,
     test_type = "rating_scale"
   ) |>
   dplyr::relocate(c(range), .after = percentile)
 
-df_validity2 <- df_validity |>
+df_validity <- df_validity_mutated |>
   dplyr::mutate(range = NULL) |>
   gpluck_make_score_ranges(
-    table = df_validity,
+    table = df_validity_mutated,
     test_type = "rating_scale"
   ) |>
   dplyr::relocate(c(range), .after = percentile)
@@ -408,14 +364,14 @@ df_validity2 <- df_validity |>
 ## Glue results
 
 ```{r result}
-df_clinical <- df_clinical2 |>
+df_clinical <- df_clinical |>
   dplyr::mutate(
     result = glue::glue(
       "{patient}'s score on {.data$scale} (i.e., {.data$description}) was {.data$range}."
     )
   )
 
-df_validity <- df_validity2 |>
+df_validity <- df_validity |>
   dplyr::mutate(
     result = glue::glue(
       "{patient}'s score on {.data$scale} (i.e., {.data$description}) was {.data$range}."
@@ -440,14 +396,14 @@ df_validity <- df_validity |>
 ```{r writeout}
 readr::write_excel_csv(
   df_clinical,
-  here::here("data-raw", "csv", "pai_adol_clinical.csv"),
+  here::here("data-raw", "csv", "pai_a_clinical.csv"),
   col_names = TRUE,
   na = ""
 )
 
 readr::write_excel_csv(
   df_validity,
-  here::here("data-raw", "csv", "pai_adol_validity.csv"),
+  here::here("data-raw", "csv", "pai_a_validity.csv"),
   col_names = TRUE,
   na = ""
 )
@@ -477,12 +433,12 @@ pai_adol_text_squished
 # save
 readr::write_lines(
   pai_adol_text_squished,
-  here::here("pai_adol_text_squished.md"),
+  here::here("pai_a_text_squished.md"),
   sep = "\n"
 )
 readr::write_lines(
   pai_adol_text_squished,
-  here::here("pai_adol_text_squished.txt"),
+  here::here("pai_a_text_squished.txt"),
   sep = "\n"
 )
 ```
