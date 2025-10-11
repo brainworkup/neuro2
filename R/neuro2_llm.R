@@ -38,7 +38,7 @@ safe_write_text <- function(text, filepath) {
 }
 
 
-# Canonicalize keys so "pr.sirf" == "prsirf"
+# Canonicalize keys so "inst.sirf" == "instsirf"
 .canon <- function(x) gsub("[^A-Za-z0-9]+", "", x %||% "")
 
 # Safe defaulting
@@ -432,7 +432,7 @@ call_llm_once <- function(
 #' @title Generate Domain Summary from QMD Prompts
 #' @description Generates a summary for a domain using QMD prompts and injects `<summary>` into the target QMD.
 #' @param prompts_dir Directory of QMD prompts. Defaults to installed `inst/prompts/`.
-#' @param domain_keyword Keyword for the domain (e.g., `"priq"`, `"prsirf"`).
+#' @param domain_keyword Keyword for the domain (e.g., `"instiq"`, `"instsirf"`).
 #' @param model_override Optional exact model name; otherwise chosen by keyword (SIRF → 14B/30B; others → 8B).
 #' @param backend `"ollama"` (default) or `"openai"`.
 #' @param temperature Temperature (default `0.2`).
@@ -499,7 +499,7 @@ generate_domain_summary_from_master <- function(
   )
 
   key_can <- .canon(domain_keyword)
-  section <- if (identical(key_can, "prsirf")) {
+  section <- if (identical(key_can, "instsirf")) {
     if (isTRUE(mega)) "mega" else "sirf"
   } else {
     "domain"
@@ -594,7 +594,7 @@ run_llm_for_all_domains <- function(
           temperature = temperature,
           base_dir = base_dir,
           echo = echo,
-          mega = if (.canon(k) == "prsirf") isTRUE(mega_for_sirf) else FALSE
+          mega = if (.canon(k) == "instsirf") isTRUE(mega_for_sirf) else FALSE
         )
       },
       silent = TRUE
@@ -655,7 +655,7 @@ neuro2_llm_smoke_test <- function(
 #' @param prompts_dir Prompts directory (default installed).
 #' @param render_paths Character vector of paths to `.qmd` files to render after LLM runs.
 #' @param quarto_profile Optional Quarto profile (e.g., "prod").
-#' @param domain_keywords Vector of keywords to generate; default is a standard set including "prsirf".
+#' @param domain_keywords Vector of keywords to generate; default is a standard set including "instsirf".
 #' @param backend `"ollama"` (default) or `"openai"`.
 #' @param mega_for_sirf Use the mega model for SIRF.
 #' @param temperature LLM temperature.

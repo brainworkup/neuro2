@@ -33,6 +33,7 @@ Here is the patient data you need to analyze:
 {{@_02-10_emotion_text_teacher.qmd}}
 {{@_02-11_adaptive_text.qmd}}
 {{@_02-12_daily_living_text.qmd}}
+<!-- {{@_02-13_validity_text.qmd}} -->
 </patient_data>
 
 
@@ -42,7 +43,7 @@ Patient information:
 
 <patient>{{VR}}</patient>
 
-<pronouns>{{she/her}}</pronouns>
+<pronouns>{{she/her/he/him/his}}</pronouns>
 
 Instructions:
 

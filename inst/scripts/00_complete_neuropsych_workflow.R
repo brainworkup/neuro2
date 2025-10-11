@@ -35,6 +35,7 @@ run_neuropsych_workflow <- function(
     data_processed = FALSE,
     domains_generated = FALSE,
     assets_generated = FALSE,
+    llm_processed = FALSE,
     report_rendered = FALSE
   )
   
@@ -133,16 +134,52 @@ run_neuropsych_workflow <- function(
       stdout = TRUE,
       stderr = TRUE
     )
-    
+
     critical_assets <- c("figs/fig_sirf_overall.svg")
     if (!all(file.exists(critical_assets))) {
       warning("Some critical assets missing - report may have errors")
     }
-    
+
     workflow_state$assets_generated <- TRUE
     cat("✅ Assets generated successfully\n")
   }, error = function(e) handle_error("asset generation", e))
-  
+
+  # Step 4.5: LLM processing (NSE, SIRF, Recommendations)
+  cat("\n🤖 STEP 4.5: Processing LLM prompts (NSE, SIRF, Recommendations)...\n")
+  tryCatch({
+    # Run LLM processing for all domain prompts
+    llm_result <- run_llm_for_all_domains(
+      domain_keywords = c(
+        "instnse",
+        "instiq",
+        "instacad",
+        "instverb",
+        "instvis",
+        "instmem",
+        "instexe",
+        "instmot",
+        "instsoc",
+        "instadhd",
+        "instadhd_p",
+        "instadhd_t",
+        "instadhd_o",
+        "instemo",
+        "instemo_p",
+        "instemo_t",
+        "instadapt",
+        "instdl",
+        "instsirf",
+        "instrec"
+      ),
+      backend = "ollama",
+      temperature = 0.2,
+      base_dir = "."
+    )
+
+    workflow_state$llm_processed <- TRUE
+    cat("✅ LLM processing completed successfully\n")
+  }, error = function(e) handle_error("LLM processing", e))
+
   # Step 5: Report rendering
   if (render_report) {
     cat("\n📑 STEP 5: Rendering final report...\n")
@@ -361,7 +398,7 @@ prepare_domain_text_context <- function() {
         data = data,
         file = text_file
       )
-      results_processor$process(llm = FALSE)
+      results_processor$process(llm = TRUE)
     }, silent = TRUE)
   }
   

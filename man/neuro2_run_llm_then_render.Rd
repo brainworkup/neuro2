@@ -28,7 +28,7 @@ neuro2_run_llm_then_render(
 
 \item{quarto_profile}{Optional Quarto profile (e.g., "prod").}
 
-\item{domain_keywords}{Vector of keywords to generate; default is a standard set including "prsirf".}
+\item{domain_keywords}{Vector of keywords to generate; default is a standard set including "instsirf".}
 
 \item{backend}{\code{"ollama"} (default) or \code{"openai"}.}
 

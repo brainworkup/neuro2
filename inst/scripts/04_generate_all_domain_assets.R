@@ -105,7 +105,8 @@ domain_configs <- list(
     data_type = "neurobehav"
   ),
   adaptive = list(name = "Adaptive Functioning", data_type = "neurobehav"),
-  daily_living = list(name = "Daily Living", data_type = "neurocog")
+  daily_living = list(name = "Daily Living", data_type = "neurocog"),
+  validity = list(name = "Validity", data_type = "validity")
 )
 
 # Process each domain that has data
@@ -193,6 +194,7 @@ for (domain_key in domains_to_process) {
                     "score",
                     "percentile",
                     "range",
+                    "absort",
                     "result"
                   ))) |>
                   arrange(desc(percentile)) |>
@@ -416,6 +418,85 @@ for (domain_key in domains_to_process) {
   )
 }
 
+# ========================================================
+# GENERATE SIRF OVERALL FIGURE
+# ========================================================
+cat("\n📈 Generating SIRF overall figure...\n")
+
+sirf_fig <- file.path(FIGURE_DIR, "fig_sirf_overall.svg")
+if (!file.exists(sirf_fig)) {
+  tryCatch(
+    {
+      # Load neurocog data for overall summary
+      neurocog_file <- "data/neurocog.parquet"
+      if (file.exists(neurocog_file)) {
+        neurocog <- arrow::read_parquet(neurocog_file)
+
+        # Create domain summary
+        domain_summary <- neurocog |>
+          dplyr::group_by(domain) |>
+          dplyr::summarize(
+            mean_z = mean(z, na.rm = TRUE),
+            mean_percentile = mean(percentile, na.rm = TRUE)
+          ) |>
+          dplyr::filter(!is.na(mean_z))
+
+        if (nrow(domain_summary) > 0) {
+          # Create SIRF overall plot using DotplotR6
+          if (exists("DotplotR6")) {
+            cat("  Using DotplotR6 class for SIRF figure...\n")
+            sirf_plot <- DotplotR6$new(
+              data = domain_summary,
+              x = "mean_z",
+              y = "domain",
+              filename = sirf_fig,
+              theme = "fivethirtyeight",
+              point_size = 7
+            )
+            sirf_plot$create_plot()
+          } else {
+            cat("  DotplotR6 not found, using fallback ggplot...\n")
+            # Fallback: basic ggplot
+            p <- ggplot2::ggplot(domain_summary, aes(x = mean_z, y = domain)) +
+              ggplot2::geom_point(size = 7, color = "#E89606") +
+              ggplot2::theme_minimal() +
+              ggplot2::labs(
+                title = "Overall Cognitive Profile",
+                x = "Z-Score",
+                y = "Domain"
+              ) +
+              ggplot2::theme(
+                plot.title = element_text(hjust = 0.5, size = 16),
+                axis.text = element_text(size = 12),
+                axis.title = element_text(size = 14)
+              )
+
+            ggplot2::ggsave(sirf_fig, p, width = 10, height = 6)
+          }
+
+          if (file.exists(sirf_fig)) {
+            cat("  ✓ Created SIRF overall figure:", sirf_fig, "\n")
+            successful_assets <- c(successful_assets, "sirf_overall")
+          } else {
+            cat("  ✗ SIRF figure creation failed - file not created\n")
+            failed_assets <- c(failed_assets, "sirf_overall")
+          }
+        } else {
+          cat("  ⚠️  No domain data available for SIRF figure\n")
+        }
+      } else {
+        cat("  ⚠️  Neurocog data file not found for SIRF figure\n")
+      }
+    },
+    error = function(e) {
+      cat("  ✗ Error generating SIRF figure:", e$message, "\n")
+      failed_assets <- c(failed_assets, "sirf_overall")
+    }
+  )
+} else {
+  cat("  - SIRF figure already exists:", sirf_fig, "\n")
+}
+
 # Summary
 cat("\n=== Asset Generation Complete ===\n")
 cat("Successful:", length(successful_assets), "domains\n")
@@ -439,3 +520,4 @@ options(warn = old_warn)
 
 cat("\n🎯 FIXED: Now using proper R6 classes (TableGTR6 and DotplotR6)\n")
 cat("   instead of basic gt() and ggplot() calls for consistent output!\n")
+cat("   Also generates SIRF overall figure for report template!\n")

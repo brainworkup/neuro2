@@ -18,7 +18,7 @@ generate_domain_summary_from_master(
 \arguments{
 \item{prompts_dir}{Directory of QMD prompts. Defaults to installed \verb{inst/prompts/}.}
 
-\item{domain_keyword}{Keyword for the domain (e.g., \code{"priq"}, \code{"prsirf"}).}
+\item{domain_keyword}{Keyword for the domain (e.g., \code{"instiq"}, \code{"instsirf"}).}
 
 \item{model_override}{Optional exact model name; otherwise chosen by keyword (SIRF → 14B/30B; others → 8B).}
 
