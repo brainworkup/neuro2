@@ -1,6 +1,6 @@
 #' FlexibleDrilldownR6 Class
 #'
-#' An enhanced R6 class that creates interactive `highcharter` drilldown plots
+#' An enhanced R6 class that creates interactive highcharter drilldown plots
 #' with configurable hierarchies for neuropsychological data analysis.
 #' Supports multiple organizational schemes including clinical domains,
 #' PASS model, test modality, and timing constraints.
@@ -16,7 +16,7 @@
 #' \describe{
 #'   \item{initialize}{Initialize a new FlexibleDrilldownR6 object with
 #'     configuration and data}
-#'   \item{create_plot}{Generate the interactive `highcharter` drilldown plot
+#'   \item{create_plot}{Generate the interactive highcharter drilldown plot
 #'     based on the object's configuration}
 #'   \item{validate_hierarchy}{Validate that the specified hierarchy exists
 #'     in the data}
@@ -72,10 +72,7 @@ FlexibleDrilldownR6 <- R6::R6Class(
       required_pkgs <- c("dplyr", "highcharter", "tibble")
       for (pkg in required_pkgs) {
         if (!requireNamespace(pkg, quietly = TRUE)) {
-          stop(sprintf(
-            "Package '%s' must be installed to use this class.",
-            pkg
-          ))
+          stop(sprintf("Package '%s' must be installed to use this class.", pkg))
         }
       }
 
@@ -91,11 +88,8 @@ FlexibleDrilldownR6 <- R6::R6Class(
         self$hierarchy_labels <- preset_config$labels
       } else if (!is.null(hierarchy)) {
         self$hierarchy <- hierarchy
-        if (is.null(hierarchy_labels)) {
-          self$hierarchy_labels <- setNames(hierarchy, hierarchy)
-        } else {
-          self$hierarchy_labels <- hierarchy_labels
-        }
+        self$hierarchy_labels <- hierarchy_labels %||%
+          setNames(hierarchy, hierarchy)
       } else {
         # Default to clinical hierarchy
         self$hierarchy <- c("domain", "subdomain", "narrow", "scale")
@@ -257,7 +251,8 @@ FlexibleDrilldownR6 <- R6::R6Class(
         is_last_level <- level_idx == length(self$hierarchy)
 
         # Filter out NA values for the current grouping variable
-        df_filtered <- df |> dplyr::filter(!is.na(.data[[current_col]]))
+        df_filtered <- df |>
+          dplyr::filter(!is.na(.data[[current_col]]))
 
         if (nrow(df_filtered) == 0) {
           return(NULL)
@@ -341,9 +336,7 @@ FlexibleDrilldownR6 <- R6::R6Class(
 
       # Flatten the nested structure
       flatten_levels <- function(level_data) {
-        if (is.null(level_data)) {
-          return(list())
-        }
+        if (is.null(level_data)) return(list())
 
         result <- list()
         if (!is.null(level_data$current)) {
@@ -491,3 +484,28 @@ FlexibleDrilldownR6 <- R6::R6Class(
 #'   )
 #' )
 #' }
+drilldown_flexible <- function(
+  data,
+  patient,
+  neuro_domain = c(
+    "Neuropsychological Test Scores",
+    "Behavioral Rating Scales",
+    "Validity Test Scores"
+  ),
+  hierarchy = NULL,
+  hierarchy_labels = NULL,
+  preset = "clinical",
+  theme = NULL
+) {
+  drilldown_obj <- FlexibleDrilldownR6$new(
+    data = data,
+    patient = patient,
+    neuro_domain = neuro_domain,
+    hierarchy = hierarchy,
+    hierarchy_labels = hierarchy_labels,
+    preset = preset,
+    theme = theme
+  )
+
+  return(drilldown_obj$create_plot())
+}

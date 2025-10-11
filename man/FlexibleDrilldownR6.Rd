@@ -9,7 +9,7 @@ FlexibleDrilldownR6 Class
 FlexibleDrilldownR6 Class
 }
 \details{
-An enhanced R6 class that creates interactive \code{highcharter} drilldown plots
+An enhanced R6 class that creates interactive highcharter drilldown plots
 with configurable hierarchies for neuropsychological data analysis.
 Supports multiple organizational schemes including clinical domains,
 PASS model, test modality, and timing constraints.
@@ -19,7 +19,7 @@ PASS model, test modality, and timing constraints.
 \describe{
 \item{initialize}{Initialize a new FlexibleDrilldownR6 object with
 configuration and data}
-\item{create_plot}{Generate the interactive \code{highcharter} drilldown plot
+\item{create_plot}{Generate the interactive highcharter drilldown plot
 based on the object's configuration}
 \item{validate_hierarchy}{Validate that the specified hierarchy exists
 in the data}
