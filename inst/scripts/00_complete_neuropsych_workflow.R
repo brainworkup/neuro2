@@ -1,418 +1,590 @@
-#!/usr/bin/env Rscript
+#' Enhanced Neuropsych Workflow Runner
+#'
+#' This script provides an improved workflow that explicitly handles:
+#' 1. Two-stage rendering (data generation + LLM processing)
+#' 2. Edit protection for manually modified files
+#' 3. Intelligent caching and reprocessing
+#' 4. Ollama model management
+#'
+#' @description
+#' The workflow requires two rendering passes because:
+#' - First pass: Generates data, caches it, triggers LLM processing
+#' - Second pass: Integrates LLM summaries into final report
+#'
+#' After initial generation, manually edited files are protected from
+#' regeneration unless explicitly forced.
 
-#' Complete Neuropsychological Report Workflow
+# ==============================================================================
+# CONFIGURATION
+# ==============================================================================
+
+#' Default configuration
+DEFAULT_CONFIG <- list(
+  patient = "Maya",
+  data_dir = "data",
+  output_dir = "output",
+  verbose = TRUE,
+  ollama_check = TRUE,
+  edit_protection = TRUE
+)
+
+# ==============================================================================
+# HELPER FUNCTIONS
+# ==============================================================================
+
+#' Check if Ollama models are running
+#' @return Logical indicating if models are available
+check_ollama_status <- function() {
+  tryCatch(
+    {
+      # Try to connect to Ollama
+      result <- system("ollama list", intern = TRUE, ignore.stderr = TRUE)
+
+      # Check for required models
+      has_models <- any(grepl("qwen3", result, ignore.case = TRUE))
+
+      if (!has_models) {
+        warning("Ollama models not found. Run: bash setup_ollama.sh")
+        return(FALSE)
+      }
+
+      return(TRUE)
+    },
+    error = function(e) {
+      warning("Ollama not running. Start with: bash setup_ollama.sh")
+      return(FALSE)
+    }
+  )
+}
+
+#' Check if file has been manually edited
+#' @param file_path Path to file
+#' @param generation_marker_file Path to file containing generation timestamp
+#' @return Logical indicating if file was manually edited
+is_manually_edited <- function(file_path, generation_marker_file = NULL) {
+  if (!file.exists(file_path)) {
+    return(FALSE)
+  }
+
+  # Check for generation marker
+  marker_file <- generation_marker_file %||% paste0(file_path, ".generated")
+
+  if (!file.exists(marker_file)) {
+    # No marker = assume manually created
+    return(TRUE)
+  }
+
+  # Compare modification times
+  file_mtime <- file.mtime(file_path)
+  marker_mtime <- file.mtime(marker_file)
+
+  # File modified after marker = manual edit
+  return(file_mtime > marker_mtime)
+}
+
+#' Mark file as generated (for edit protection)
+#' @param file_path Path to file
+mark_as_generated <- function(file_path) {
+  if (!file.exists(file_path)) {
+    return(FALSE)
+  }
+
+  marker_file <- paste0(file_path, ".generated")
+
+  # Write timestamp marker
+  writeLines(
+    c(paste("Generated:", Sys.time()), paste("File:", file_path)),
+    marker_file
+  )
+
+  return(TRUE)
+}
+
+#' Get list of protected files (manually edited)
+#' @param pattern File pattern to check
+#' @return Character vector of protected files
+get_protected_files <- function(pattern = ".*_text\\.qmd$") {
+  files <- list.files(pattern = pattern)
+
+  # Use vapply instead of sapply to ensure logical output
+  protected <- vapply(
+    files,
+    function(f) {
+      is_manually_edited(f)
+    },
+    FUN.VALUE = logical(1)
+  )
+
+  return(files[protected])
+}
+
+#' Display workflow status
+#' @param stage Current workflow stage
+#' @param message Status message
+display_status <- function(stage, message) {
+  cat("\n")
+  cat(
+    "================================================================================\n"
+  )
+  cat(paste0("STAGE: ", stage, "\n"))
+  cat(
+    "================================================================================\n"
+  )
+  cat(paste0(message, "\n"))
+  cat(
+    "================================================================================\n"
+  )
+  cat("\n")
+}
+
+# ==============================================================================
+# ENHANCED WORKFLOW FUNCTION
+# ==============================================================================
+
+#' Run neuropsychological report workflow with two-stage rendering
 #'
-#' This script provides a unified entry point for the entire neuropsych report
-#' generation process, from raw data to final PDF output.
+#' @param patient Patient name (default: "Ethan")
+#' @param generate_qmd Generate domain QMD files (default: TRUE)
+#' @param render_report Render final PDF report (default: TRUE)
+#' @param force_reprocess Force regeneration of all files, ignoring edits (default: FALSE)
+#' @param force_llm Force LLM to reprocess all summaries (default: FALSE)
+#' @param two_stage_render Explicitly run two rendering passes (default: TRUE)
+#' @param check_ollama Check if Ollama is running (default: TRUE)
+#' @param protect_edits Protect manually edited files (default: TRUE)
+#' @param verbose Print detailed status (default: TRUE)
 #'
-#' @param patient Patient name for the report
-#' @param generate_qmd Whether to generate QMD domain files (default: TRUE)
-#' @param render_report Whether to render the final PDF report (default: TRUE)
-#' @param force_reprocess Whether to force data reprocessing even if files exist (default: FALSE)
-#' @return Path to the generated report (if rendered)
+#' @return List with paths to generated files and workflow status
+#'
+#' @examples
+#' \dontrun{
+#' # Complete workflow with two-stage rendering
+#' run_neuropsych_workflow()
+#'
+#' # Quick re-render (uses cached data, preserves edits)
+#' run_neuropsych_workflow(
+#'   generate_qmd = FALSE,
+#'   two_stage_render = FALSE
+#' )
+#'
+#' # Force complete regeneration (CAUTION: overwrites edits)
+#' run_neuropsych_workflow(
+#'   force_reprocess = TRUE,
+#'   force_llm = TRUE
+#' )
+#' }
+#'
 #' @export
 run_neuropsych_workflow <- function(
-  patient = "Patient",
+  patient = DEFAULT_CONFIG$patient,
   generate_qmd = TRUE,
   render_report = TRUE,
-  force_reprocess = FALSE
+  force_reprocess = FALSE,
+  force_llm = FALSE,
+  two_stage_render = TRUE,
+  check_ollama = TRUE,
+  protect_edits = TRUE,
+  verbose = TRUE
 ) {
-  
-  # Set up logging
-  log_file <- paste0("workflow_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".log")
-  sink(log_file, split = TRUE)
-  on.exit(sink(), add = TRUE)
-  
-  cat("========================================\n")
-  cat("NEUROPSYCH REPORT GENERATION WORKFLOW\n")
-  cat("Patient:", patient, "\n")
-  cat("Started:", format(Sys.time()), "\n")
-  cat("========================================\n\n")
-  
-  # Track workflow state
-  workflow_state <- list(
-    templates_checked = FALSE,
-    data_processed = FALSE,
-    domains_generated = FALSE,
-    assets_generated = FALSE,
-    llm_processed = FALSE,
-    report_rendered = FALSE
-  )
-  
-  report_output_file <- NULL
-  
-  # Error handler
-  handle_error <- function(step, e) {
-    cat("\n❌ ERROR in", step, ":\n")
-    cat(conditionMessage(e), "\n")
-    cat("\nWorkflow state:\n")
-    print(workflow_state)
-    cat("\nPlease fix the error and re-run the workflow.\n")
-    stop(paste("Workflow failed at:", step), call. = FALSE)
-  }
-  
-  # Step 1: Environment setup
-  cat("\n📋 STEP 1: Checking environment and templates...\n")
-  tryCatch({
-    # Load the package
-    if (file.exists("DESCRIPTION")) {
-      suppressMessages(devtools::load_all("."))
-    } else {
-      library(neuro2)
-    }
-    
-    # Check templates
-    system2(
-      "Rscript",
-      "inst/scripts/01_check_all_templates.R",
-      stdout = TRUE,
-      stderr = TRUE
-    )
-    workflow_state$templates_checked <- TRUE
-    cat("✅ Templates verified\n")
-  }, error = function(e) handle_error("template checking", e))
-  
-  # Step 2: Data processing
-  cat("\n🔄 STEP 2: Processing raw data...\n")
-  tryCatch({
-    data_files <- c(
-      "data/neurocog.parquet",
-      "data/neurobehav.parquet",
-      "data/validity.parquet"
-    )
-    
-    if (all(file.exists(data_files)) && !force_reprocess) {
-      cat("ℹ️  Data files already exist. Skipping processing.\n")
-      cat("   Use force_reprocess=TRUE to reprocess.\n")
-    } else {
-      result <- system2(
-        "Rscript",
-        "inst/scripts/02_data_processor_module.R",
-        stdout = TRUE,
-        stderr = TRUE
+  # Track workflow start time
+  workflow_start <- Sys.time()
+
+  # ===========================================================================
+  # STAGE 0: PREPARATION
+  # ===========================================================================
+
+  if (verbose) {
+    display_status(
+      "0: PREPARATION",
+      paste0(
+        "Patient: ",
+        patient,
+        "\n",
+        "Generate QMD: ",
+        generate_qmd,
+        "\n",
+        "Render Report: ",
+        render_report,
+        "\n",
+        "Two-Stage Render: ",
+        two_stage_render,
+        "\n",
+        "Force Reprocess: ",
+        force_reprocess,
+        "\n",
+        "Force LLM: ",
+        force_llm,
+        "\n",
+        "Protect Edits: ",
+        protect_edits
       )
-      if (!all(file.exists(data_files))) {
-        stop("Data processing failed - output files not created")
-      }
-    }
-    workflow_state$data_processed <- TRUE
-    cat("✅ Data processed successfully\n")
-  }, error = function(e) handle_error("data processing", e))
-  
-  # Step 3: Domain file generation
-  if (generate_qmd) {
-    cat("\n📄 STEP 3: Generating domain files...\n")
-    tryCatch({
-      result <- system2(
-        "Rscript",
-        "inst/scripts/03_generate_domain_files.R",
-        stdout = TRUE,
-        stderr = TRUE
-      )
-      
-      domain_files <- list.files(pattern = "^_02-[0-9]+.*\\.qmd$")
-      if (length(domain_files) == 0) {
-        warning(
-          "No domain files generated - check if data contains valid domains"
-        )
-      } else {
-        cat("✅ Generated", length(domain_files), "domain files\n")
-      }
-      workflow_state$domains_generated <- TRUE
-    }, error = function(e) handle_error("domain generation", e))
-  } else {
-    cat("\n⏭️  STEP 3: Skipping domain file generation (generate_qmd=FALSE)\n")
-    workflow_state$domains_generated <- TRUE
+    )
   }
-  
-  # Step 4: Asset generation
-  cat("\n🎨 STEP 4: Generating tables and figures...\n")
-  tryCatch({
-    result <- system2(
-      "Rscript",
-      "inst/scripts/04_generate_all_domain_assets.R",
-      stdout = TRUE,
-      stderr = TRUE
-    )
 
-    critical_assets <- c("figs/fig_sirf_overall.svg")
-    if (!all(file.exists(critical_assets))) {
-      warning("Some critical assets missing - report may have errors")
+  # Check Ollama status if requested
+  if (check_ollama && (generate_qmd || force_llm)) {
+    if (verbose) {
+      cat("Checking Ollama status...\n")
     }
 
-    workflow_state$assets_generated <- TRUE
-    cat("✅ Assets generated successfully\n")
-  }, error = function(e) handle_error("asset generation", e))
+    if (!check_ollama_status()) {
+      warning(
+        "Ollama not available. LLM summaries will not be generated.\n",
+        "To enable LLM processing, run: bash setup_ollama.sh"
+      )
 
-  # Step 4.5: LLM processing (NSE, SIRF, Recommendations)
-  cat("\n🤖 STEP 4.5: Processing LLM prompts (NSE, SIRF, Recommendations)...\n")
-  tryCatch({
-    # Run LLM processing for all domain prompts
-    llm_result <- run_llm_for_all_domains(
-      domain_keywords = c(
-        "instnse",
-        "instiq",
-        "instacad",
-        "instverb",
-        "instvis",
-        "instmem",
-        "instexe",
-        "instmot",
-        "instsoc",
-        "instadhd",
-        "instadhd_p",
-        "instadhd_t",
-        "instadhd_o",
-        "instemo",
-        "instemo_p",
-        "instemo_t",
-        "instadapt",
-        "instdl",
-        "instsirf",
-        "instrec"
-      ),
-      backend = "ollama",
-      temperature = 0.2,
-      base_dir = "."
-    )
-
-    workflow_state$llm_processed <- TRUE
-    cat("✅ LLM processing completed successfully\n")
-  }, error = function(e) handle_error("LLM processing", e))
-
-  # Step 5: Report rendering
-  if (render_report) {
-    cat("\n📑 STEP 5: Rendering final report...\n")
-    tryCatch({
-      template_file <- "template.qmd"
-      output_dir <- "output"
-      format <- "neurotyp-pediatric-typst"
-      
-      if (file.exists("config.yml")) {
-        config <- yaml::read_yaml("config.yml")
-        format <- config$report$format %||% format
-        template_file <- config$report$template %||% template_file
-        output_dir <- config$report$output_dir %||% output_dir
-      }
-      
-      if (is.null(output_dir) || !nzchar(output_dir)) {
-        output_dir <- "."
-      }
-      
-      output_name <- sub("\\.[^.]+$", ".pdf", basename(template_file))
-      if (identical(output_name, basename(template_file))) {
-        output_name <- paste0(basename(template_file), ".pdf")
-      }
-      
-      output_file <- if (identical(output_dir, ".")) {
-        output_name
-      } else {
-        file.path(output_dir, output_name)
-      }
-      
-      cat("Using format:", format, "\n")
-      cat("Using template:", template_file, "\n")
-      cat("Saving report to:", output_file, "\n")
-      
-      # Prepare domain text context
-      prepare_domain_text_context()
-      
-      # Create output directory if needed
-      if (!identical(output_dir, ".") && !dir.exists(output_dir)) {
-        if (!dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)) {
-          stop("Failed to create report output directory: ", output_dir)
+      # Ask user if they want to continue
+      if (interactive()) {
+        continue <- readline("Continue without LLM? (y/n): ")
+        if (tolower(continue) != "y") {
+          stop("Workflow cancelled by user")
         }
       }
-      
-      # Render with Quarto
-      quarto_args <- c("render", template_file, "-t", format)
-      if (!identical(output_dir, ".")) {
-        quarto_args <- c(quarto_args, "--output-dir", output_dir)
-      }
-      
-      result <- system2(
-        "quarto",
-        args = quarto_args,
-        stdout = TRUE,
-        stderr = TRUE
-      )
-      
-      status <- attr(result, "status") %||% 0
-      if (status != 0) {
-        stop(paste0(
-          "Quarto render failed with status ",
-          status,
-          ":\n",
-          paste(result, collapse = "\n")
-        ))
-      }
-      
-      if (file.exists(output_file)) {
-        cat("✅ Report rendered successfully:", output_file, "\n")
-        workflow_state$report_rendered <- TRUE
-        report_output_file <- output_file
-      } else {
-        stop("Report rendering failed - no output file created")
-      }
-    }, error = function(e) handle_error("report rendering", e))
-  } else {
-    cat("\n⏭️  STEP 5: Skipping report rendering (render_report=FALSE)\n")
-  }
-  
-  # Summary
-  cat("\n========================================\n")
-  cat("WORKFLOW COMPLETE\n")
-  cat("Patient:", patient, "\n")
-  cat("Completed:", format(Sys.time()), "\n")
-  
-  cat("\nFinal workflow state:\n")
-  for (step in names(workflow_state)) {
-    status <- if (workflow_state[[step]]) "✅" else "❌"
-    cat(sprintf("  %s %s\n", status, gsub("_", " ", step)))
-  }
-  
-  if (workflow_state$report_rendered) {
-    cat("\n🎉 Success! Your report is ready at:", report_output_file, "\n")
-  } else if (!render_report) {
-    cat("\n✅ Workflow complete. Report rendering was skipped.\n")
-  } else {
-    cat("\n⚠️  Workflow incomplete. Check the log for errors.\n")
-  }
-  
-  cat("========================================\n")
-  cat("\nWorkflow log saved to:", log_file, "\n")
-  
-  # Return the output file path invisibly
-  invisible(report_output_file)
-}
-
-# Helper function for domain text context
-prepare_domain_text_context <- function() {
-  text_files <- list.files(
-    pattern = "^_02-[0-9]+_.*_text(?:_[a-z]+)?\\.qmd$",
-    full.names = FALSE
-  )
-  
-  if (!length(text_files)) {
-    return(invisible(NULL))
-  }
-  
-  # Domain lookup configuration
-  domain_lookup <- list(
-    iq = list(
-      domain = "General Cognitive Ability",
-      input = "data/neurocog.parquet"
-    ),
-    academics = list(
-      domain = "Academic Skills",
-      input = "data/neurocog.parquet"
-    ),
-    verbal = list(
-      domain = "Verbal/Language",
-      input = "data/neurocog.parquet"
-    ),
-    spatial = list(
-      domain = "Visual Perception/Construction",
-      input = "data/neurocog.parquet"
-    ),
-    memory = list(
-      domain = "Memory",
-      input = "data/neurocog.parquet"
-    ),
-    executive = list(
-      domain = "Attention/Executive",
-      input = "data/neurocog.parquet"
-    ),
-    motor = list(
-      domain = "Motor",
-      input = "data/neurocog.parquet"
-    ),
-    social = list(
-      domain = "Social Cognition",
-      input = "data/neurocog.parquet"
-    ),
-    adhd = list(
-      domain = "ADHD/Executive Function",
-      input = "data/neurobehav.parquet"
-    ),
-    emotion = list(
-      domain = "Emotional/Behavioral/Social/Personality",
-      input = "data/neurobehav.parquet"
-    ),
-    adaptive = list(
-      domain = "Adaptive Functioning",
-      input = "data/neurobehav.parquet"
-    ),
-    daily_living = list(
-      domain = "Daily Living",
-      input = "data/neurocog.parquet"
-    )
-  )
-  
-  # Process each text file
-  for (text_file in text_files) {
-    matches <- regexec(
-      "^_02-([0-9]+)_([a-z_]+)_text(?:_([a-z]+))?\\.qmd$",
-      text_file
-    )
-    parts <- regmatches(text_file, matches)[[1]]
-    
-    if (length(parts) == 0) next
-    
-    pheno <- parts[3]
-    rater <- if (length(parts) >= 4) parts[4] else ""
-    cfg <- domain_lookup[[pheno]]
-    
-    if (is.null(cfg)) next
-    
-    processor <- DomainProcessorR6$new(
-      domains = cfg$domain,
-      pheno = pheno,
-      input_file = cfg$input
-    )
-    
-    proc_ok <- tryCatch({
-      processor$load_data()
-      processor$filter_by_domain()
-      processor$select_columns()
-      TRUE
-    }, error = function(e) FALSE)
-    
-    if (!proc_ok) next
-    
-    data <- processor$data
-    if (is.null(data) || !nrow(data)) next
-    
-    if (nzchar(rater) && "rater" %in% names(data)) {
-      data <- data[
-        tolower(trimws(data$rater)) == tolower(rater),
-        ,
-        drop = FALSE
-      ]
     }
-    
-    if (is.null(data) || !nrow(data)) next
-    
-    try({
-      results_processor <- NeuropsychResultsR6$new(
-        data = data,
-        file = text_file
-      )
-      results_processor$process(llm = TRUE)
-    }, silent = TRUE)
   }
-  
-  invisible(NULL)
+
+  # Check for protected files
+  if (protect_edits && !force_reprocess) {
+    protected_files <- get_protected_files()
+
+    if (length(protected_files) > 0 && verbose) {
+      cat("\nProtected files (will not be regenerated):\n")
+      cat(paste("  -", protected_files), sep = "\n")
+      cat("\n")
+    }
+  }
+
+  # ===========================================================================
+  # STAGE 1: DATA PROCESSING
+  # ===========================================================================
+
+  if (generate_qmd) {
+    if (verbose) {
+      display_status(
+        "1: DATA PROCESSING",
+        "Loading and processing test data..."
+      )
+    }
+
+    # Load data processing module
+    tryCatch(
+      {
+        source(here::here("inst", "scripts", "02_data_processor_module.R"))
+
+        if (verbose) cat("✓ Data processing complete\n")
+      },
+      error = function(e) {
+        stop("Data processing failed: ", e$message)
+      }
+    )
+  }
+
+  # ===========================================================================
+  # STAGE 2: DOMAIN FILE GENERATION
+  # ===========================================================================
+
+  if (generate_qmd) {
+    if (verbose) {
+      display_status(
+        "2: DOMAIN FILE GENERATION",
+        "Generating domain QMD files and text files..."
+      )
+    }
+
+    # Load workflow runner
+    tryCatch(
+      {
+        source(here::here(
+          "inst",
+          "scripts",
+          "00_complete_neuropsych_workflow.R"
+        ))
+
+        # Generate domain files
+        # This creates _02-XX_domain.qmd and _02-XX_domain_text.qmd files
+        generate_all_domains(
+          patient = patient,
+          force_regenerate = force_reprocess,
+          protect_edits = protect_edits
+        )
+
+        # Mark generated files
+        if (protect_edits && !force_reprocess) {
+          text_files <- list.files(pattern = ".*_text\\.qmd$")
+          sapply(text_files, mark_as_generated)
+        }
+
+        if (verbose) cat("✓ Domain files generated\n")
+      },
+      error = function(e) {
+        stop("Domain generation failed: ", e$message)
+      }
+    )
+  }
+
+  # ===========================================================================
+  # STAGE 3: LLM PROCESSING (ASYNC)
+  # ===========================================================================
+
+  if (generate_qmd || force_llm) {
+    if (verbose) {
+      display_status(
+        "3: LLM PROCESSING",
+        "Triggering LLM to process domain text files...\n(This runs asynchronously in background)"
+      )
+    }
+
+    # Trigger LLM processing
+    # Note: This may complete after the first render finishes
+    tryCatch(
+      {
+        # Call LLM processing function
+        process_domains_with_llm(patient = patient, force_reprocess = force_llm)
+
+        if (verbose) cat("✓ LLM processing initiated\n")
+      },
+      error = function(e) {
+        warning("LLM processing failed: ", e$message)
+      }
+    )
+  }
+
+  # ===========================================================================
+  # STAGE 4A: FIRST RENDER (Data + Partial Summaries)
+  # ===========================================================================
+
+  if (render_report && two_stage_render) {
+    if (verbose) {
+      display_status(
+        "4A: FIRST RENDER",
+        paste0(
+          "Rendering report (first pass)...\n",
+          "Note: LLM summaries may be incomplete on first render.\n",
+          "A second render will integrate complete summaries."
+        )
+      )
+    }
+
+    # First render
+    tryCatch(
+      {
+        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+
+        if (verbose) cat("✓ First render complete\n")
+      },
+      error = function(e) {
+        warning("First render failed: ", e$message)
+      }
+    )
+
+    # Brief pause to allow LLM to complete
+    if (verbose) {
+      cat("\nWaiting for LLM processing to complete...\n")
+      cat("(Typically 30-60 seconds)\n")
+    }
+    Sys.sleep(30)
+  }
+
+  # ===========================================================================
+  # STAGE 4B: SECOND RENDER (Complete Summaries)
+  # ===========================================================================
+
+  if (render_report && two_stage_render) {
+    if (verbose) {
+      display_status(
+        "4B: SECOND RENDER",
+        "Rendering report (second pass with complete LLM summaries)..."
+      )
+    }
+
+    # Second render integrates LLM summaries
+    tryCatch(
+      {
+        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+
+        if (verbose) cat("✓ Second render complete\n")
+      },
+      error = function(e) {
+        stop("Second render failed: ", e$message)
+      }
+    )
+  } else if (render_report && !two_stage_render) {
+    # Single render (when using cached data)
+    if (verbose) {
+      display_status(
+        "4: SINGLE RENDER",
+        "Rendering report (using cached data and existing summaries)..."
+      )
+    }
+
+    tryCatch(
+      {
+        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+
+        if (verbose) cat("✓ Render complete\n")
+      },
+      error = function(e) {
+        stop("Render failed: ", e$message)
+      }
+    )
+  }
+
+  # ===========================================================================
+  # STAGE 5: FINALIZATION
+  # ===========================================================================
+
+  if (verbose) {
+    display_status("5: FINALIZATION", "Moving report to output directory...")
+  }
+
+  # Find and move report
+  report_file <- paste0(patient, "_report.pdf")
+  report_path <- NULL
+
+  if (file.exists(report_file)) {
+    output_dir <- DEFAULT_CONFIG$output_dir
+
+    # Create output directory if needed
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir, recursive = TRUE)
+    }
+
+    # Move report
+    output_path <- file.path(output_dir, report_file)
+    file.copy(report_file, output_path, overwrite = TRUE)
+    file.remove(report_file)
+
+    report_path <- output_path
+
+    if (verbose) {
+      cat("✓ Report saved to:", output_path, "\n")
+    }
+  }
+
+  # ===========================================================================
+  # COMPLETION
+  # ===========================================================================
+
+  workflow_end <- Sys.time()
+  workflow_duration <- difftime(workflow_end, workflow_start, units = "mins")
+
+  if (verbose) {
+    cat("\n")
+    cat(
+      "================================================================================\n"
+    )
+    cat("WORKFLOW COMPLETE\n")
+    cat(
+      "================================================================================\n"
+    )
+    cat(paste0("Duration: ", round(workflow_duration, 2), " minutes\n"))
+    if (!is.null(report_path)) {
+      cat(paste0("Report: ", report_path, "\n"))
+    }
+    cat(
+      "================================================================================\n"
+    )
+    cat("\n")
+  }
+
+  # Return workflow results
+  invisible(list(
+    patient = patient,
+    report_path = report_path,
+    duration = workflow_duration,
+    protected_files = if (protect_edits) {
+      get_protected_files()
+    } else {
+      character(0)
+    },
+    success = !is.null(report_path)
+  ))
 }
 
-# If run as a script (not sourced), execute with command line args
-if (!interactive() && !is.null(sys.calls())) {
-  args <- commandArgs(trailingOnly = TRUE)
-  patient_name <- if (length(args) > 0) args[1] else "Patient"
-  
+#' Quick workflow wrapper (convenience function)
+#'
+#' @param patient Patient name
+#' @export
+run_workflow <- function(patient = DEFAULT_CONFIG$patient) {
   run_neuropsych_workflow(
-    patient = patient_name,
+    patient = patient,
     generate_qmd = TRUE,
-    render_report = TRUE
+    render_report = TRUE,
+    two_stage_render = TRUE,
+    protect_edits = TRUE
+  )
+}
+
+#' Quick re-render (uses cached data, preserves edits)
+#'
+#' @param patient Patient name
+#' @export
+quick_rerender <- function(patient = DEFAULT_CONFIG$patient) {
+  run_neuropsych_workflow(
+    patient = patient,
+    generate_qmd = FALSE,
+    render_report = TRUE,
+    two_stage_render = FALSE,
+    protect_edits = TRUE
+  )
+}
+
+#' Force complete regeneration (CAUTION: overwrites manual edits)
+#'
+#' @param patient Patient name
+#' @export
+force_regenerate_all <- function(patient = DEFAULT_CONFIG$patient) {
+  # Confirm with user
+  if (interactive()) {
+    cat("\n")
+    cat("WARNING: This will overwrite all manually edited files!\n")
+    cat("Protected files will be regenerated.\n\n")
+
+    protected <- get_protected_files()
+    if (length(protected) > 0) {
+      cat("The following files will be overwritten:\n")
+      cat(paste("  -", protected), sep = "\n")
+      cat("\n")
+    }
+
+    confirm <- readline("Are you sure? Type 'YES' to continue: ")
+
+    if (confirm != "YES") {
+      cat("Regeneration cancelled.\n")
+      return(invisible(NULL))
+    }
+  }
+
+  # Remove generation markers
+  markers <- list.files(pattern = "\\.generated$")
+  if (length(markers) > 0) {
+    file.remove(markers)
+  }
+
+  # Run with force flags
+  run_neuropsych_workflow(
+    patient = patient,
+    force_reprocess = TRUE,
+    force_llm = TRUE,
+    two_stage_render = TRUE,
+    protect_edits = FALSE # Disable protection
+  )
+}
+
+# ==============================================================================
+# PACKAGE STARTUP MESSAGE
+# ==============================================================================
+
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(
+    "\n========================================\n",
+    "neuro2 Workflow Loaded\n",
+    "========================================\n",
+    "Quick Commands:\n",
+    "  run_workflow()           - Full workflow (two-stage)\n",
+    "  quick_rerender()         - Fast re-render (cached data)\n",
+    "  force_regenerate_all()   - Complete regeneration\n\n",
+    "Manual edit protection: ENABLED\n",
+    "Edited files will not be overwritten.\n",
+    "========================================\n"
   )
 }
