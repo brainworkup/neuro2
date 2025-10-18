@@ -138,6 +138,274 @@ display_status <- function(stage, message) {
 }
 
 # ==============================================================================
+# DOMAIN GENERATION
+# ==============================================================================
+
+generate_all_domains <- function(
+  patient = DEFAULT_CONFIG$patient,
+  force_regenerate = FALSE,
+  protect_edits = TRUE,
+  verbose = TRUE
+) {
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("Domain generation requires the 'arrow' package.")
+  }
+
+  # Load class definitions into an isolated environment
+  domain_env <- new.env(parent = baseenv())
+  class_files <- c(
+    "R/ScoreTypeCacheR6.R",
+    "R/score_type_utils.R",
+    "R/tidy_data.R",
+    "R/NeuropsychResultsR6.R",
+    "R/TableGTR6.R",
+    "R/DotplotR6.R",
+    "R/DomainProcessorR6.R"
+  )
+
+  resolve_source_path <- function(rel_path) {
+    primary <- here::here(rel_path)
+    if (file.exists(primary)) {
+      return(primary)
+    }
+
+    fallback <- here::here("inst", "scripts", basename(rel_path))
+    if (file.exists(fallback)) {
+      return(fallback)
+    }
+
+    NULL
+  }
+
+  for (rel_path in class_files) {
+    src_path <- resolve_source_path(rel_path)
+    if (is.null(src_path)) {
+      stop("Required class file not found: ", rel_path)
+    }
+    sys.source(src_path, envir = domain_env, chdir = TRUE)
+  }
+
+  # Shared domain metadata
+  domain_config <- list(
+    iq = list(
+      name = "General Cognitive Ability",
+      pheno = "iq",
+      number = "01",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    academics = list(
+      name = "Academic Skills",
+      pheno = "academics",
+      number = "02",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    verbal = list(
+      name = "Verbal/Language",
+      pheno = "verbal",
+      number = "03",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    spatial = list(
+      name = "Visual Perception/Construction",
+      pheno = "spatial",
+      number = "04",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    memory = list(
+      name = "Memory",
+      pheno = "memory",
+      number = "05",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    executive = list(
+      name = "Attention/Executive",
+      pheno = "executive",
+      number = "06",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    motor = list(
+      name = "Motor",
+      pheno = "motor",
+      number = "07",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    social = list(
+      name = "Social Cognition",
+      pheno = "social",
+      number = "08",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    adhd = list(
+      name = "ADHD/Executive Function",
+      pheno = "adhd",
+      number = "09",
+      input_file = here::here("data", "neurobehav.parquet")
+    ),
+    emotion = list(
+      name = "Emotional/Behavioral/Social/Personality",
+      pheno = "emotion",
+      number = "10",
+      input_file = here::here("data", "neurobehav.parquet")
+    ),
+    adaptive = list(
+      name = "Adaptive Functioning",
+      pheno = "adaptive",
+      number = "11",
+      input_file = here::here("data", "neurobehav.parquet")
+    ),
+    daily_living = list(
+      name = "Daily Living",
+      pheno = "daily_living",
+      number = "12",
+      input_file = here::here("data", "neurocog.parquet")
+    ),
+    validity = list(
+      name = "Validity",
+      pheno = "validity",
+      number = "13",
+      input_file = here::here("data", "validity.parquet")
+    )
+  )
+
+  qmd_filename_for <- function(pheno, number) {
+    ph <- tolower(pheno)
+    if (ph == "emotion") {
+      return(sprintf("_02-%s_emotion.qmd", number))
+    }
+    if (ph == "adhd") {
+      return(sprintf("_02-%s_adhd.qmd", number))
+    }
+    sprintf("_02-%s_%s.qmd", number, ph)
+  }
+
+  text_pattern_for <- function(pheno, number) {
+    ph <- tolower(pheno)
+    if (ph == "emotion") {
+      return(sprintf("^_02-%s_emotion_text.*\\.qmd$", number))
+    }
+    if (ph == "adhd") {
+      return(sprintf("^_02-%s_adhd_text.*\\.qmd$", number))
+    }
+    sprintf("^_02-%s_%s_text\\.qmd$", number, ph)
+  }
+
+  statuses <- list(
+    generated = character(),
+    cached = character(),
+    protected = character(),
+    skipped = character(),
+    failed = list(),
+    text_files = list()
+  )
+
+  if (isTRUE(verbose)) {
+    message("Generating domain QMD and text files for patient: ", patient)
+  }
+
+  for (domain_key in names(domain_config)) {
+    config <- domain_config[[domain_key]]
+    domain_label <- paste0(config$number, " - ", config$name)
+
+    if (!file.exists(config$input_file)) {
+      if (isTRUE(verbose)) {
+        message("  ⚠ Skipping ", domain_label, " (missing data: ", config$input_file, ")")
+      }
+      statuses$skipped <- c(statuses$skipped, domain_key)
+      next
+    }
+
+    qmd_file <- qmd_filename_for(config$pheno, config$number)
+    qmd_preexisting <- file.exists(qmd_file)
+    text_pattern <- text_pattern_for(config$pheno, config$number)
+    existing_text_files <- list.files(pattern = text_pattern, full.names = FALSE)
+
+    if (!force_regenerate && protect_edits && length(existing_text_files) > 0) {
+      edited_flags <- vapply(
+        existing_text_files,
+        FUN = function(path) isTRUE(is_manually_edited(path)),
+        FUN.VALUE = logical(1)
+      )
+
+      if (any(edited_flags)) {
+        if (isTRUE(verbose)) {
+          message("  ⛔ Protected edits detected, skipping ", domain_label)
+        }
+        statuses$protected <- c(statuses$protected, domain_key)
+        next
+      }
+    }
+
+    if (force_regenerate) {
+      removable <- c(
+        qmd_file,
+        existing_text_files,
+        paste0(existing_text_files, ".generated")
+      )
+      removable <- removable[file.exists(removable)]
+      if (length(removable) > 0) {
+        invisible(file.remove(removable))
+      }
+    }
+
+    tryCatch(
+      {
+        processor <- domain_env$DomainProcessorR6$new(
+          domains = config$name,
+          pheno = config$pheno,
+          input_file = config$input_file,
+          output_dir = here::here("output"),
+          number = config$number,
+          output_base = here::here()
+        )
+
+        processor$process(generate_domain_files = FALSE)
+        processor$generate_domain_qmd(output_file = qmd_file)
+        text_files <- processor$generate_domain_text_qmd()
+        text_files <- unique(c(text_files, existing_text_files))
+
+        statuses$text_files[[domain_key]] <- unique(text_files)
+
+        if (qmd_preexisting && !force_regenerate) {
+          statuses$cached <- c(statuses$cached, domain_key)
+          if (isTRUE(verbose)) {
+            message("  • ", domain_label, " already up to date")
+          }
+        } else {
+          statuses$generated <- c(statuses$generated, domain_key)
+          if (isTRUE(verbose)) {
+            message("  ✓ Generated ", domain_label)
+          }
+        }
+      },
+      error = function(e) {
+        statuses$failed[[domain_key]] <<- e$message
+        if (isTRUE(verbose)) {
+          message("  ✗ Failed ", domain_label, ": ", e$message)
+        }
+      }
+    )
+  }
+
+  if (isTRUE(verbose)) {
+    message(
+      "Domain generation complete (generated: ",
+      length(statuses$generated),
+      ", cached: ",
+      length(statuses$cached),
+      ", protected: ",
+      length(statuses$protected),
+      ", skipped: ",
+      length(statuses$skipped),
+      ", failed: ",
+      length(statuses$failed),
+      ")"
+    )
+  }
+
+  invisible(statuses)
+}
+
+# ==============================================================================
 # ENHANCED WORKFLOW FUNCTION
 # ==============================================================================
 

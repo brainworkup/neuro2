@@ -477,8 +477,25 @@ generate_domain_summary_from_master <- function(
   }
   target_path <- file.path(base_dir, target_qmd)
   if (!file.exists(target_path)) {
-    dir.create(dirname(target_path), recursive = TRUE, showWarnings = FALSE)
-    file.create(target_path)
+    message(
+      sprintf(
+        "Skipping domain keyword '%s' because target file '%s' does not exist.",
+        domain_keyword,
+        target_qmd
+      )
+    )
+    return(invisible(NULL))
+  }
+  domain_qmd <- sub("_text.*\\.qmd$", ".qmd", target_path)
+  if (!identical(domain_qmd, target_path) && !file.exists(domain_qmd)) {
+    message(
+      sprintf(
+        "Skipping domain keyword '%s' because primary domain file '%s' is missing.",
+        domain_keyword,
+        basename(domain_qmd)
+      )
+    )
+    return(invisible(NULL))
   }
 
   sys_prompt <- sanitize_system_prompt(ptx)
