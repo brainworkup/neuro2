@@ -2,7 +2,7 @@
 % Please edit documentation in R/neuro2_llm.R
 \name{call_llm_once}
 \alias{call_llm_once}
-\title{Call LLM Once with retries}
+\title{Call LLM Once (Basic)}
 \usage{
 call_llm_once(
   system_prompt,
@@ -10,34 +10,28 @@ call_llm_once(
   section = "domain",
   model_override = NULL,
   backend = "ollama",
-  temperature = 0.2,
-  echo = "none",
-  retries = 3,
-  backoff = 1
+  temperature = NULL,
+  echo = "none"
 )
 }
 \arguments{
-\item{system_prompt}{System prompt string.}
+\item{system_prompt}{System prompt text}
 
-\item{user_text}{User content string.}
+\item{user_text}{User prompt text}
 
-\item{section}{\code{"domain"}, \code{"sirf"}, or \code{"mega"}.}
+\item{section}{Section type for model selection}
 
-\item{model_override}{Optional exact model name (bypasses routing).}
+\item{model_override}{Optional model override}
 
-\item{backend}{\code{"ollama"} or \code{"openai"}.}
+\item{backend}{Backend type}
 
-\item{temperature}{Numeric temperature.}
+\item{temperature}{Temperature setting}
 
-\item{echo}{Echo mode for streaming.}
-
-\item{retries}{Number of retries (default 3).}
-
-\item{backoff}{Initial backoff seconds (default 1; doubles each retry).}
+\item{echo}{Echo mode}
 }
 \value{
-Character text output.
+Generated text string
 }
 \description{
-Calls the selected model and returns text; retries on transient errors.
+Single LLM call without retry logic
 }

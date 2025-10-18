@@ -2,39 +2,45 @@
 % Please edit documentation in R/neuro2_llm.R
 \name{generate_domain_summary_from_master}
 \alias{generate_domain_summary_from_master}
-\title{Generate Domain Summary from QMD Prompts}
+\title{Generate Domain Summary From Master Prompts (QMD-based)}
 \usage{
 generate_domain_summary_from_master(
   prompts_dir = NULL,
   domain_keyword,
   model_override = NULL,
   backend = "ollama",
-  temperature = 0.2,
+  temperature = NULL,
   base_dir = ".",
   echo = "none",
-  mega = FALSE
+  mega = FALSE,
+  validate = TRUE,
+  max_retries = 2
 )
 }
 \arguments{
-\item{prompts_dir}{Directory of QMD prompts. Defaults to installed \verb{inst/prompts/}.}
+\item{prompts_dir}{Optional prompts directory}
 
-\item{domain_keyword}{Keyword for the domain (e.g., \code{"instiq"}, \code{"instsirf"}).}
+\item{domain_keyword}{Domain keyword (e.g., "instacad", "instsirf")}
 
-\item{model_override}{Optional exact model name; otherwise chosen by keyword (SIRF → 14B/30B; others → 8B).}
+\item{model_override}{Optional model override}
 
-\item{backend}{\code{"ollama"} (default) or \code{"openai"}.}
+\item{backend}{Backend type}
 
-\item{temperature}{Temperature (default \code{0.2}).}
+\item{temperature}{Temperature setting}
 
-\item{base_dir}{Base directory where \verb{*_text.qmd} files live (default \code{"."}).}
+\item{base_dir}{Base directory for text files}
 
-\item{echo}{Echo mode for ellmer (default \code{"none"}).}
+\item{echo}{Echo mode}
 
-\item{mega}{logical; if \code{TRUE} and keyword is SIRF, use the \code{"mega"} model section.}
+\item{mega}{Whether to use mega model (for SIRF)}
+
+\item{validate}{Whether to validate output}
+
+\item{max_retries}{Maximum retries}
 }
 \value{
-Invisible list with \code{keyword}, \code{qmd}, \code{text}, \code{section}.
+List with generation results (invisible)
 }
 \description{
-Generates a summary for a domain using QMD prompts and injects \verb{<summary>} into the target QMD.
+Generate summary for a single domain keyword using QMD prompts
 }

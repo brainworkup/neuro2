@@ -179,3 +179,5 @@ R/DomainProcessorR6.R.bk
 CODE_COMPARISON.md
 files_llm_fix/
 .vscode/settings.json
+R/check_available_models.R
+R/ollamar.R

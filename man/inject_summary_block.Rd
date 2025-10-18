@@ -4,16 +4,18 @@
 \alias{inject_summary_block}
 \title{Inject Summary Block into QMD}
 \usage{
-inject_summary_block(qmd_path, generated)
+inject_summary_block(qmd_path, generated, metadata = NULL)
 }
 \arguments{
 \item{qmd_path}{Path to the QMD file.}
 
 \item{generated}{Generated summary text.}
+
+\item{metadata}{Optional metadata to include (model, version, timestamp, quality)}
 }
 \value{
 Invisible \code{TRUE}.
 }
 \description{
-Injects or replaces the \verb{<summary>} block in a QMD file.
+Injects or replaces the \verb{<summary>} block in a QMD file with metadata
 }

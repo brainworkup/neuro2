@@ -5,15 +5,7 @@
 \title{Strip \if{html}{\out{<think>}} blocks that some local models emit}
 \usage{
 strip_think_blocks(text)
-
-strip_think_blocks(text)
-}
-\arguments{
-\item{text}{Character string}
-}
-\value{
-Cleaned character string
 }
 \description{
-Remove any \if{html}{\out{<think>}}…\if{html}{\out{</think>}} traces from LLM output.
+Strip \if{html}{\out{<think>}} blocks that some local models emit
 }
