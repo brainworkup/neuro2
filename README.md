@@ -701,3 +701,5 @@ R package version 0.1.8 https://github.com/brainworkup/neuro2
 -   Powered by [DuckDB](https://duckdb.org) for fast data processing
 -   Tables created with [gt](https://gt.rstudio.com)
 -   R6 architecture inspired by modern OOP best practices -->
+
+<!-- Test comment for PR verification -->
