@@ -1119,12 +1119,7 @@ generate_domain_summary_from_master <- function(
 #' @export
 run_llm_for_all_domains_parallel <- function(
   prompts_dir = NULL,
-  domain_keywords = c(
-    "instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
-    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
-    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt",
-    "instdl", "instsirf", "instrec"
-  ),
+  domain_keywords = NULL,
   model_override = NULL,
   backend = "ollama",
   temperature = NULL,
@@ -1135,6 +1130,17 @@ run_llm_for_all_domains_parallel <- function(
   max_retries = 2,
   n_cores = NULL
 ) {
+  # Auto-detect domain keywords if not provided
+  if (is.null(domain_keywords)) {
+    domains_with_data <- get_domains_with_data()
+    domain_keywords <- domain_names_to_keywords(domains_with_data)
+
+    if (length(domain_keywords) == 0) {
+      warning("No domains found with data to process.")
+      return(invisible(list()))
+    }
+  }
+
   # Check for parallel packages
   if (!requireNamespace("future", quietly = TRUE) ||
       !requireNamespace("future.apply", quietly = TRUE)) {
@@ -1154,12 +1160,12 @@ run_llm_for_all_domains_parallel <- function(
       mega_for_sirf = mega_for_sirf
     ))
   }
-  
+
   # Determine number of cores
   if (is.null(n_cores)) {
     n_cores <- max(1, parallel::detectCores() - 1)
   }
-  
+
   message(sprintf(
     "🚀 Processing %d domains in parallel using %d cores",
     length(domain_keywords), n_cores
@@ -1225,12 +1231,7 @@ run_llm_for_all_domains_parallel <- function(
 #' @export
 run_llm_for_all_domains <- function(
   prompts_dir = NULL,
-  domain_keywords = c(
-    "instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
-    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
-    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt",
-    "instdl", "instsirf", "instrec"
-  ),
+  domain_keywords = NULL,
   model_override = NULL,
   backend = "ollama",
   temperature = NULL,
@@ -1238,6 +1239,17 @@ run_llm_for_all_domains <- function(
   echo = "none",
   mega_for_sirf = FALSE
 ) {
+  # Auto-detect domain keywords if not provided
+  if (is.null(domain_keywords)) {
+    domains_with_data <- get_domains_with_data()
+    domain_keywords <- domain_names_to_keywords(domains_with_data)
+
+    if (length(domain_keywords) == 0) {
+      warning("No domains found with data to process.")
+      return(invisible(list()))
+    }
+  }
+
   message(sprintf("Processing %d domains sequentially...", length(domain_keywords)))
   
   out <- lapply(domain_keywords, function(k) {
@@ -1344,12 +1356,7 @@ neuro2_run_llm_then_render <- function(
   prompts_dir = NULL,
   render_paths = character(0),
   quarto_profile = NULL,
-  domain_keywords = c(
-    "instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
-    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
-    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt",
-    "instdl", "instsirf", "instrec"
-  ),
+  domain_keywords = NULL,
   backend = "ollama",
   mega_for_sirf = FALSE,
   temperature = NULL,
@@ -1408,6 +1415,161 @@ neuro2_run_llm_then_render <- function(
   }
 
   invisible(list(llm = llm_res, rendered = rendered))
+}
+
+# --------------------- process_domains_with_llm (missing function) ---------------------
+
+#' @title Process Domains with LLM
+#' @description Main entry point for LLM processing of domain summaries
+#' @param patient Patient name (default: "Maya")
+#' @param force_reprocess Force reprocessing even if cached (default: FALSE)
+#' @param backend Backend type for LLM ("ollama" or "openai")
+#' @param parallel Whether to use parallel processing (default: FALSE)
+#' @param n_cores Number of cores for parallel processing (default: NULL)
+#' @return List of processing results (invisible)
+#' @export
+process_domains_with_llm <- function(
+  patient = "Maya",
+  force_reprocess = FALSE,
+  backend = "ollama",
+  parallel = FALSE,
+  n_cores = NULL
+) {
+  message(sprintf("🤖 Processing domains with LLM for patient: %s", patient))
+
+  # Determine which domains actually have data
+  domains_with_data <- get_domains_with_data()
+
+  if (length(domains_with_data) == 0) {
+    warning("No domains found with data. Check that data files exist and contain valid data.")
+    return(invisible(list()))
+  }
+
+  # Convert domain names to keywords for LLM processing
+  domain_keywords <- domain_names_to_keywords(domains_with_data)
+
+  message(sprintf("Found %d domains with data: %s",
+    length(domains_with_data),
+    paste(domains_with_data, collapse = ", ")
+  ))
+
+  # Run LLM processing only for domains that have data
+  if (parallel && length(domain_keywords) > 1) {
+    results <- run_llm_for_all_domains_parallel(
+      domain_keywords = domain_keywords,
+      backend = backend,
+      base_dir = ".",
+      n_cores = n_cores
+    )
+  } else {
+    results <- run_llm_for_all_domains(
+      domain_keywords = domain_keywords,
+      backend = backend,
+      base_dir = "."
+    )
+  }
+
+  message("✅ LLM processing complete")
+  invisible(results)
+}
+
+#' @title Get Domains With Data
+#' @description Determines which domains actually have data available
+#' @return Character vector of domain names that have data
+#' @export
+get_domains_with_data <- function() {
+  domains_with_data <- character(0)
+
+  # Check for data files
+  data_files <- c(
+    neurocog = "data/neurocog.parquet",
+    neurobehav = "data/neurobehav.parquet",
+    validity = "data/validity.parquet"
+  )
+
+  # Load data if files exist
+  data_list <- list()
+  for (data_type in names(data_files)) {
+    file_path <- data_files[[data_type]]
+    if (file.exists(file_path)) {
+      tryCatch({
+        if (requireNamespace("arrow", quietly = TRUE)) {
+          data_list[[data_type]] <- arrow::read_parquet(file_path)
+        }
+      }, error = function(e) {
+        warning(sprintf("Could not load %s: %s", file_path, e$message))
+      })
+    }
+  }
+
+  # Define domain configurations
+  domain_configs <- list(
+    iq = list(name = "General Cognitive Ability", data_type = "neurocog"),
+    academics = list(name = "Academic Skills", data_type = "neurocog"),
+    verbal = list(name = "Verbal/Language", data_type = "neurocog"),
+    spatial = list(name = "Visual Perception/Construction", data_type = "neurocog"),
+    memory = list(name = "Memory", data_type = "neurocog"),
+    executive = list(name = "Attention/Executive", data_type = "neurocog"),
+    motor = list(name = "Motor", data_type = "neurocog"),
+    social = list(name = "Social Cognition", data_type = "neurocog"),
+    adhd = list(name = "ADHD/Executive Function", data_type = "neurobehav"),
+    emotion = list(name = "Emotional/Behavioral/Social/Personality", data_type = "neurobehav"),
+    adaptive = list(name = "Adaptive Functioning", data_type = "neurobehav"),
+    daily_living = list(name = "Daily Living", data_type = "neurocog"),
+    validity = list(name = "Validity", data_type = "validity")
+  )
+
+  # Check each domain for data
+  for (domain_key in names(domain_configs)) {
+    config <- domain_configs[[domain_key]]
+    data_type <- config$data_type
+
+    if (!is.null(data_list[[data_type]])) {
+      domain_data <- data_list[[data_type]] |>
+        dplyr::filter(domain == config$name) |>
+        dplyr::filter(!is.na(percentile) | !is.na(score))
+
+      if (nrow(domain_data) > 0) {
+        domains_with_data <- c(domains_with_data, domain_key)
+      }
+    }
+  }
+
+  return(domains_with_data)
+}
+
+#' @title Convert Domain Names to Keywords
+#' @description Converts domain names to LLM keyword format
+#' @param domain_names Character vector of domain names
+#' @return Character vector of LLM keywords
+#' @export
+domain_names_to_keywords <- function(domain_names) {
+  # Mapping from domain names to LLM keywords
+  keyword_mapping <- list(
+    iq = "instiq",
+    academics = "instacad",
+    verbal = "instverb",
+    spatial = "instvis",
+    memory = "instmem",
+    executive = "instexe",
+    motor = "instmot",
+    social = "instsoc",
+    adhd = "instadhd",
+    emotion = "instemo",
+    adaptive = "instadapt",
+    daily_living = "instdl",
+    validity = "instrec"
+  )
+
+  keywords <- character(0)
+  for (domain in domain_names) {
+    keyword <- keyword_mapping[[domain]]
+    if (!is.null(keyword)) {
+      keywords <- c(keywords, keyword)
+    }
+  }
+
+  return(keywords)
 }
 
 # --------------------- utility: view usage stats ---------------------

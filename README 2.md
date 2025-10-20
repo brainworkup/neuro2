@@ -125,6 +125,9 @@ results <- run_llm_for_all_domains_parallel(
 view_llm_usage()
 ```
 
+```result
+```
+
 **Done!** 🎉 You should see ~4x speedup and quality scores ≥70.
 
 For detailed instructions, see **`neuro2_llm_quickstart.md`**

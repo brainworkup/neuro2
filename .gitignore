@@ -181,3 +181,4 @@ files_llm_fix/
 .vscode/settings.json
 R/check_available_models.R
 R/ollamar.R
+test_social_domain_fix.R
