@@ -137,6 +137,118 @@ display_status <- function(stage, message) {
   cat("\n")
 }
 
+#' Locate the Quarto template directory bundled with the project
+find_template_directory <- function() {
+  # Prefer installed package location if available
+  candidates <- c(
+    system.file(
+      "quarto",
+      "templates",
+      "typst-report",
+      package = "neuro2"
+    ),
+    here::here("inst", "quarto", "templates", "typst-report")
+  )
+
+  # Keep only paths that exist
+  candidates <- unique(candidates[nzchar(candidates) & dir.exists(candidates)])
+
+  if (length(candidates) == 0) {
+    stop(
+      "Unable to locate Quarto template directory under ",
+      "inst/quarto/templates/typst-report"
+    )
+  }
+
+  candidates[[1]]
+}
+
+#' Ensure required Quarto template files exist in the working directory
+#'
+#' Copies template.qmd and supporting files from inst/quarto/templates/typst-report
+#' if they are missing locally. Returns the normalized path to template.qmd.
+ensure_template_files <- function(force = FALSE) {
+  template_dir <- find_template_directory()
+  template_files <- c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
+
+  for (fname in template_files) {
+    src <- file.path(template_dir, fname)
+    if (!file.exists(src)) {
+      stop("Required template asset not found: ", src)
+    }
+
+    dest <- here::here(fname)
+
+    if (!file.exists(dest) || force) {
+      if (!file.copy(src, dest, overwrite = TRUE)) {
+        stop("Failed to copy template asset: ", fname)
+      }
+    }
+  }
+
+  # Copy supporting section files (without overwriting existing edits)
+  supplementary <- list.files(
+    template_dir,
+    pattern = "^_.*\\.qmd$",
+    full.names = TRUE
+  )
+  supplementary <- supplementary[
+    basename(supplementary) != "_domains_to_include.qmd"
+  ]
+
+  for (src in supplementary) {
+    dest <- here::here(basename(src))
+    if (!file.exists(dest)) {
+      file.copy(src, dest, overwrite = FALSE)
+    }
+  }
+
+  # Ensure bundled Quarto extensions are available
+  dest_extensions_dir <- here::here("_extensions")
+  if (!dir.exists(dest_extensions_dir)) {
+    extension_candidates <- c(
+      file.path(dirname(dirname(template_dir)), "_extensions"),
+      here::here("inst", "quarto", "_extensions")
+    )
+    extension_candidates <- unique(extension_candidates[dir.exists(extension_candidates)])
+
+    if (length(extension_candidates) > 0) {
+      src_extensions <- extension_candidates[[1]]
+      file.copy(
+        src_extensions,
+        here::here(),
+        overwrite = TRUE,
+        recursive = TRUE
+      )
+    }
+  }
+
+  normalizePath(here::here("template.qmd"), winslash = "/", mustWork = TRUE)
+}
+
+#' Generate the manifest Quarto uses to include domain sections
+generate_domains_include_manifest <- function(
+  include_file = "_domains_to_include.qmd"
+) {
+  domain_files <- list.files(
+    pattern = "^_02-.*\\.qmd$",
+    full.names = FALSE
+  )
+  domain_files <- domain_files[!grepl("_text\\.qmd$", domain_files)]
+
+  if (length(domain_files) == 0) {
+    writeLines(character(0), include_file)
+    return(FALSE)
+  }
+
+  # Ensure deterministic ordering for renders
+  domain_files <- sort(domain_files)
+  include_lines <- paste0("{{< include ", domain_files, " >}}")
+  spaced_lines <- as.vector(rbind(include_lines, ""))
+  writeLines(spaced_lines, include_file)
+  TRUE
+}
+
 # ==============================================================================
 # DOMAIN GENERATION
 # ==============================================================================
@@ -308,7 +420,13 @@ generate_all_domains <- function(
 
     if (!file.exists(config$input_file)) {
       if (isTRUE(verbose)) {
-        message("  ⚠ Skipping ", domain_label, " (missing data: ", config$input_file, ")")
+        message(
+          "  ⚠ Skipping ",
+          domain_label,
+          " (missing data: ",
+          config$input_file,
+          ")"
+        )
       }
       statuses$skipped <- c(statuses$skipped, domain_key)
       next
@@ -317,7 +435,10 @@ generate_all_domains <- function(
     qmd_file <- qmd_filename_for(config$pheno, config$number)
     qmd_preexisting <- file.exists(qmd_file)
     text_pattern <- text_pattern_for(config$pheno, config$number)
-    existing_text_files <- list.files(pattern = text_pattern, full.names = FALSE)
+    existing_text_files <- list.files(
+      pattern = text_pattern,
+      full.names = FALSE
+    )
 
     if (!force_regenerate && protect_edits && length(existing_text_files) > 0) {
       edited_flags <- vapply(
@@ -620,6 +741,12 @@ run_neuropsych_workflow <- function(
   # STAGE 4A: FIRST RENDER (Data + Partial Summaries)
   # ===========================================================================
 
+  template_qmd_path <- NULL
+  if (render_report) {
+    template_qmd_path <- ensure_template_files()
+    generate_domains_include_manifest()
+  }
+
   if (render_report && two_stage_render) {
     if (verbose) {
       display_status(
@@ -635,7 +762,19 @@ run_neuropsych_workflow <- function(
     # First render
     tryCatch(
       {
-        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+        if (is.null(template_qmd_path) || !file.exists(template_qmd_path)) {
+          missing_path <- if (is.null(template_qmd_path)) {
+            "NULL"
+          } else {
+            template_qmd_path
+          }
+          stop("Main QMD template not found at: ", missing_path)
+        }
+
+        quarto::quarto_render(
+          input = template_qmd_path,
+          output_format = "typst"
+        )
 
         if (verbose) cat("✓ First render complete\n")
       },
@@ -664,10 +803,47 @@ run_neuropsych_workflow <- function(
       )
     }
 
+    # Around line 668 in inst/scripts/00_complete_neuropsych_workflow.R
+    # Before the second render, add validation:
+
+    tryCatch(
+      {
+        log_message("STAGE", "4B: SECOND RENDER")
+        log_message(
+          "INFO",
+          "Rendering report (second pass with complete LLM summaries)..."
+        )
+
+        # Validate input file exists
+        if (is.null(template_qmd_path) || !file.exists(template_qmd_path)) {
+          missing_path <- if (is.null(template_qmd_path)) {
+            "NULL"
+          } else {
+            template_qmd_path
+          }
+          stop("Main QMD file not found: ", missing_path)
+        }
+
+        quarto::quarto_render(
+          input = template_qmd_path,
+          output_format = "neurotyp-pediatric-typst",
+          quiet = FALSE
+        )
+
+        log_message("SUCCESS", "Second render completed successfully")
+      },
+      error = function(e) {
+        warning("Second render failed: ", e$message)
+      }
+    )
+
     # Second render integrates LLM summaries
     tryCatch(
       {
-        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+        quarto::quarto_render(
+          input = template_qmd_path,
+          output_format = "typst"
+        )
 
         if (verbose) cat("✓ Second render complete\n")
       },
@@ -686,7 +862,19 @@ run_neuropsych_workflow <- function(
 
     tryCatch(
       {
-        quarto::quarto_render(input = "template.qmd", output_format = "typst")
+        if (is.null(template_qmd_path) || !file.exists(template_qmd_path)) {
+          missing_path <- if (is.null(template_qmd_path)) {
+            "NULL"
+          } else {
+            template_qmd_path
+          }
+          stop("Main QMD template not found: ", missing_path)
+        }
+
+        quarto::quarto_render(
+          input = template_qmd_path,
+          output_format = "typst"
+        )
 
         if (verbose) cat("✓ Render complete\n")
       },
