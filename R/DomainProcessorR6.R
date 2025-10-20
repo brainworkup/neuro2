@@ -584,6 +584,8 @@ DomainProcessorR6 <- R6::R6Class(
           "BDI-2",
           "Rating Scale of Impairment",
           "PAI Adolescent",
+          "PAI-Adolescent",
+          "PAI-A",
           "MMPI-A"
         )
 
