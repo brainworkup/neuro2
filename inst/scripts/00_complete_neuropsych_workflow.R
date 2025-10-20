@@ -230,23 +230,258 @@ ensure_template_files <- function(force = FALSE) {
 generate_domains_include_manifest <- function(
   include_file = "_domains_to_include.qmd"
 ) {
-  domain_files <- list.files(
-    pattern = "^_02-.*\\.qmd$",
-    full.names = FALSE
-  )
-  domain_files <- domain_files[!grepl("_text\\.qmd$", domain_files)]
+  domain_keys <- names(domain_definitions())
+  domains_with_data <- domain_keys[vapply(
+    domain_keys,
+    domain_has_data,
+    FUN.VALUE = logical(1)
+  )]
 
-  if (length(domain_files) == 0) {
+  include_files <- character()
+
+  if (length(domains_with_data) > 0) {
+    definitions <- domain_definitions()
+
+    # Order by domain number to preserve report structure
+    ordered_keys <- domains_with_data[order(vapply(
+      domains_with_data,
+      function(k) definitions[[k]]$number,
+      FUN.VALUE = character(1)
+    ))]
+
+    include_files <- vapply(
+      ordered_keys,
+      function(k) {
+        file <- domain_qmd_filename(
+          definitions[[k]]$pheno,
+          definitions[[k]]$number
+        )
+        if (file.exists(file)) {
+          return(file)
+        }
+        ""
+      },
+      FUN.VALUE = character(1)
+    )
+
+    include_files <- include_files[nzchar(include_files)]
+  }
+
+  if (length(include_files) == 0) {
     writeLines(character(0), include_file)
     return(FALSE)
   }
 
-  # Ensure deterministic ordering for renders
-  domain_files <- sort(domain_files)
-  include_lines <- paste0("{{< include ", domain_files, " >}}")
+  include_lines <- paste0("{{< include ", include_files, " >}}")
   spaced_lines <- as.vector(rbind(include_lines, ""))
   writeLines(spaced_lines, include_file)
   TRUE
+}
+
+# ------------------------------------------------------------------------------
+# Domain metadata helpers
+# ------------------------------------------------------------------------------
+
+DOMAIN_DATA_CACHE <- new.env(parent = emptyenv())
+
+domain_definitions <- function() {
+  list(
+    iq = list(
+      name = "General Cognitive Ability",
+      pheno = "iq",
+      number = "01",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    academics = list(
+      name = "Academic Skills",
+      pheno = "academics",
+      number = "02",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    verbal = list(
+      name = "Verbal/Language",
+      pheno = "verbal",
+      number = "03",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    spatial = list(
+      name = "Visual Perception/Construction",
+      pheno = "spatial",
+      number = "04",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    memory = list(
+      name = "Memory",
+      pheno = "memory",
+      number = "05",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    executive = list(
+      name = "Attention/Executive",
+      pheno = "executive",
+      number = "06",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    motor = list(
+      name = "Motor",
+      pheno = "motor",
+      number = "07",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    social = list(
+      name = "Social Cognition",
+      pheno = "social",
+      number = "08",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    adhd = list(
+      name = "ADHD/Executive Function",
+      pheno = "adhd",
+      number = "09",
+      input_file = file.path("data", "neurobehav.parquet"),
+      data_source = "neurobehav"
+    ),
+    emotion = list(
+      name = "Emotional/Behavioral/Social/Personality",
+      pheno = "emotion",
+      number = "10",
+      input_file = file.path("data", "neurobehav.parquet"),
+      data_source = "neurobehav"
+    ),
+    adaptive = list(
+      name = "Adaptive Functioning",
+      pheno = "adaptive",
+      number = "11",
+      input_file = file.path("data", "neurobehav.parquet"),
+      data_source = "neurobehav"
+    ),
+    daily_living = list(
+      name = "Daily Living",
+      pheno = "daily_living",
+      number = "12",
+      input_file = file.path("data", "neurocog.parquet"),
+      data_source = "neurocog"
+    ),
+    validity = list(
+      name = "Validity",
+      pheno = "validity",
+      number = "13",
+      input_file = file.path("data", "validity.parquet"),
+      data_source = "validity"
+    )
+  )
+}
+
+domain_qmd_filename <- function(pheno, number) {
+  ph <- tolower(pheno)
+  if (ph == "emotion") {
+    return(sprintf("_02-%s_emotion.qmd", number))
+  }
+  if (ph == "adhd") {
+    return(sprintf("_02-%s_adhd.qmd", number))
+  }
+  sprintf("_02-%s_%s.qmd", number, ph)
+}
+
+domain_text_pattern <- function(pheno, number) {
+  ph <- tolower(pheno)
+  if (ph == "emotion") {
+    return(sprintf("^_02-%s_emotion_text.*\\.qmd$", number))
+  }
+  if (ph == "adhd") {
+    return(sprintf("^_02-%s_adhd_text.*\\.qmd$", number))
+  }
+  sprintf("^_02-%s_%s_text\\.qmd$", number, ph)
+}
+
+load_domain_dataset <- function(data_source) {
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    return(NULL)
+  }
+
+  if (!exists(data_source, envir = DOMAIN_DATA_CACHE, inherits = FALSE)) {
+    data_file <- switch(
+      data_source,
+      neurocog = here::here("data", "neurocog.parquet"),
+      neurobehav = here::here("data", "neurobehav.parquet"),
+      validity = here::here("data", "validity.parquet"),
+      NULL
+    )
+
+    dataset <- NULL
+    if (!is.null(data_file) && file.exists(data_file)) {
+      dataset <- tryCatch(
+        {
+          arrow::read_parquet(data_file)
+        },
+        error = function(e) {
+          warning("Failed to load data for ", data_source, ": ", e$message)
+          NULL
+        }
+      )
+    }
+
+    assign(data_source, dataset, envir = DOMAIN_DATA_CACHE)
+  }
+
+  get(data_source, envir = DOMAIN_DATA_CACHE, inherits = FALSE)
+}
+
+domain_has_data <- function(domain_key) {
+  definitions <- domain_definitions()
+  config <- definitions[[domain_key]]
+
+  if (is.null(config)) {
+    return(FALSE)
+  }
+
+  dataset <- load_domain_dataset(config$data_source)
+
+  if (is.null(dataset)) {
+    return(FALSE)
+  }
+
+  if (!"domain" %in% names(dataset)) {
+    return(FALSE)
+  }
+
+  domain_rows <- dataset[dataset$domain == config$name, , drop = FALSE]
+
+  if (nrow(domain_rows) == 0) {
+    return(FALSE)
+  }
+
+  measure_cols <- intersect(
+    c(
+      "percentile",
+      "score",
+      "scaled_score",
+      "standard_score",
+      "t_score",
+      "z_score",
+      "ss",
+      "composite_score"
+    ),
+    names(domain_rows)
+  )
+
+  if (length(measure_cols) == 0) {
+    return(TRUE)
+  }
+
+  any(vapply(
+    measure_cols,
+    function(col) any(!is.na(domain_rows[[col]])),
+    FUN.VALUE = logical(1)
+  ))
 }
 
 # ==============================================================================
@@ -297,109 +532,7 @@ generate_all_domains <- function(
     sys.source(src_path, envir = domain_env, chdir = TRUE)
   }
 
-  # Shared domain metadata
-  domain_config <- list(
-    iq = list(
-      name = "General Cognitive Ability",
-      pheno = "iq",
-      number = "01",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    academics = list(
-      name = "Academic Skills",
-      pheno = "academics",
-      number = "02",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    verbal = list(
-      name = "Verbal/Language",
-      pheno = "verbal",
-      number = "03",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    spatial = list(
-      name = "Visual Perception/Construction",
-      pheno = "spatial",
-      number = "04",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    memory = list(
-      name = "Memory",
-      pheno = "memory",
-      number = "05",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    executive = list(
-      name = "Attention/Executive",
-      pheno = "executive",
-      number = "06",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    motor = list(
-      name = "Motor",
-      pheno = "motor",
-      number = "07",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    social = list(
-      name = "Social Cognition",
-      pheno = "social",
-      number = "08",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    adhd = list(
-      name = "ADHD/Executive Function",
-      pheno = "adhd",
-      number = "09",
-      input_file = here::here("data", "neurobehav.parquet")
-    ),
-    emotion = list(
-      name = "Emotional/Behavioral/Social/Personality",
-      pheno = "emotion",
-      number = "10",
-      input_file = here::here("data", "neurobehav.parquet")
-    ),
-    adaptive = list(
-      name = "Adaptive Functioning",
-      pheno = "adaptive",
-      number = "11",
-      input_file = here::here("data", "neurobehav.parquet")
-    ),
-    daily_living = list(
-      name = "Daily Living",
-      pheno = "daily_living",
-      number = "12",
-      input_file = here::here("data", "neurocog.parquet")
-    ),
-    validity = list(
-      name = "Validity",
-      pheno = "validity",
-      number = "13",
-      input_file = here::here("data", "validity.parquet")
-    )
-  )
-
-  qmd_filename_for <- function(pheno, number) {
-    ph <- tolower(pheno)
-    if (ph == "emotion") {
-      return(sprintf("_02-%s_emotion.qmd", number))
-    }
-    if (ph == "adhd") {
-      return(sprintf("_02-%s_adhd.qmd", number))
-    }
-    sprintf("_02-%s_%s.qmd", number, ph)
-  }
-
-  text_pattern_for <- function(pheno, number) {
-    ph <- tolower(pheno)
-    if (ph == "emotion") {
-      return(sprintf("^_02-%s_emotion_text.*\\.qmd$", number))
-    }
-    if (ph == "adhd") {
-      return(sprintf("^_02-%s_adhd_text.*\\.qmd$", number))
-    }
-    sprintf("^_02-%s_%s_text\\.qmd$", number, ph)
-  }
+  domain_config <- domain_definitions()
 
   statuses <- list(
     generated = character(),
@@ -417,14 +550,15 @@ generate_all_domains <- function(
   for (domain_key in names(domain_config)) {
     config <- domain_config[[domain_key]]
     domain_label <- paste0(config$number, " - ", config$name)
+    input_path <- here::here(config$input_file)
 
-    if (!file.exists(config$input_file)) {
+    if (!file.exists(input_path)) {
       if (isTRUE(verbose)) {
         message(
           "  ⚠ Skipping ",
           domain_label,
           " (missing data: ",
-          config$input_file,
+          input_path,
           ")"
         )
       }
@@ -432,9 +566,17 @@ generate_all_domains <- function(
       next
     }
 
-    qmd_file <- qmd_filename_for(config$pheno, config$number)
+    if (!domain_has_data(domain_key)) {
+      if (isTRUE(verbose)) {
+        message("  ⚠ No data available, skipping ", domain_label)
+      }
+      statuses$skipped <- c(statuses$skipped, domain_key)
+      next
+    }
+
+    qmd_file <- domain_qmd_filename(config$pheno, config$number)
     qmd_preexisting <- file.exists(qmd_file)
-    text_pattern <- text_pattern_for(config$pheno, config$number)
+    text_pattern <- domain_text_pattern(config$pheno, config$number)
     existing_text_files <- list.files(
       pattern = text_pattern,
       full.names = FALSE
@@ -473,7 +615,7 @@ generate_all_domains <- function(
         processor <- domain_env$DomainProcessorR6$new(
           domains = config$name,
           pheno = config$pheno,
-          input_file = config$input_file,
+          input_file = input_path,
           output_dir = here::here("output"),
           number = config$number,
           output_base = here::here()
