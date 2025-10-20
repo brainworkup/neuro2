@@ -137,6 +137,29 @@ display_status <- function(stage, message) {
   cat("\n")
 }
 
+#' Retrieve the LLM processor function from the current session or package
+resolve_llm_processor <- function() {
+  if (exists("process_domains_with_llm", mode = "function")) {
+    return(get("process_domains_with_llm"))
+  }
+
+  if (requireNamespace("neuro2", quietly = TRUE)) {
+    if (exists("process_domains_with_llm",
+      envir = asNamespace("neuro2"),
+      mode = "function"
+    )) {
+      return(get("process_domains_with_llm", envir = asNamespace("neuro2")))
+    }
+  }
+
+  stop(
+    paste(
+      "process_domains_with_llm not available.",
+      "Reinstall the neuro2 package or run devtools::load_all() first."
+    )
+  )
+}
+
 #' Locate the Quarto template directory bundled with the project
 find_template_directory <- function() {
   # Prefer installed package location if available
@@ -869,7 +892,8 @@ run_neuropsych_workflow <- function(
     tryCatch(
       {
         # Call LLM processing function
-        process_domains_with_llm(patient = patient, force_reprocess = force_llm)
+        llm_processor <- resolve_llm_processor()
+        llm_processor(patient = patient, force_reprocess = force_llm)
 
         if (verbose) cat("✓ LLM processing initiated\n")
       },

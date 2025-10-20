@@ -8,7 +8,7 @@ process_domains_with_llm(
   patient = "Maya",
   force_reprocess = FALSE,
   backend = "ollama",
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL
 )
 }

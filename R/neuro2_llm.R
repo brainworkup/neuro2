@@ -1,5 +1,5 @@
 # neuro2_llm.R — Enhanced LLM implementation for neuro2
-# 
+#
 # ENHANCEMENTS (v2.0):
 # 1. Updated model selections with 2024-2025 SOTA models
 # 2. Model availability checker for Ollama
@@ -107,7 +107,7 @@ log_llm_usage <- function(
   domain_keyword = NA_character_
 ) {
   log_file <- llm_usage_log()
-  
+
   # Create log entry
   entry <- data.frame(
     timestamp = format(Sys.time(), "%Y-%m-%d %H:%M:%S"),
@@ -121,7 +121,7 @@ log_llm_usage <- function(
     success = success,
     stringsAsFactors = FALSE
   )
-  
+
   # Append to log (create if doesn't exist)
   if (file.exists(log_file)) {
     existing <- readr::read_csv(log_file, show_col_types = FALSE)
@@ -129,7 +129,7 @@ log_llm_usage <- function(
   } else {
     combined <- entry
   }
-  
+
   readr::write_csv(combined, log_file)
   invisible(entry)
 }
@@ -148,58 +148,58 @@ get_model_config <- function(
 ) {
   section <- match.arg(section)
   tier <- match.arg(tier)
-  
+
   # Define model families with quality tiers
   models <- list(
     domain = list(
       # Tier 1: Latest recommended (2024-2025)
       primary = c(
-        "qwen2.5:7b-instruct-q4_K_M",      # Excellent for clinical writing
-        "llama3.2:3b-instruct-q4_K_M",     # Fast, good for structured output
-        "gemma2:9b-instruct-q4_K_M",       # Google's clinical-trained model
-        "mistral:7b-instruct-v0.3-q4_K_M"  # Strong general reasoning
+        "qwen2.5:7b-instruct-q4_K_M", # Excellent for clinical writing
+        "llama3.2:3b-instruct-q4_K_M", # Fast, good for structured output
+        "gemma2:9b-instruct-q4_K_M", # Google's clinical-trained model
+        "mistral:7b-instruct-v0.3-q4_K_M" # Strong general reasoning
       ),
       # Tier 2: Proven fallbacks
       fallback = c(
-        "qwen3:8b-q4_K_M",                 # Original model (proven)
-        "phi3:medium-128k-q4_K_M",         # Microsoft, handles long context
-        "llama3:8b-instruct-q4_K_M"        # Meta's stable version
+        "qwen3:8b-q4_K_M", # Original model (proven)
+        "phi3:medium-128k-q4_K_M", # Microsoft, handles long context
+        "llama3:8b-instruct-q4_K_M" # Meta's stable version
       )
     ),
-    
+
     sirf = list(
       # Tier 1: Best for complex reasoning + synthesis
       primary = c(
-        "qwen2.5:14b-instruct-q4_K_M",     # Reasoning + clinical knowledge
-        "llama3.1:8b-instruct-q4_K_M",     # Meta's latest, excellent reasoning
-        "mixtral:8x7b-instruct-q4_K_M",    # MoE, good for complex synthesis
-        "command-r:35b-v0.1-q4_K_M"        # Cohere's clinical-capable model
+        "qwen2.5:14b-instruct-q4_K_M", # Reasoning + clinical knowledge
+        "llama3.1:8b-instruct-q4_K_M", # Meta's latest, excellent reasoning
+        "mixtral:8x7b-instruct-q4_K_M", # MoE, good for complex synthesis
+        "command-r:35b-v0.1-q4_K_M" # Cohere's clinical-capable model
       ),
       # Tier 2: Proven alternatives
       fallback = c(
-        "qwen3:14b-q4_K_M",                # Original 14B
-        "solar:10.7b-instruct-q4_K_M",     # Korean model, strong reasoning
-        "yi:34b-chat-q4_K_M"               # Chinese model, medical knowledge
+        "qwen3:14b-q4_K_M", # Original 14B
+        "solar:10.7b-instruct-q4_K_M", # Korean model, strong reasoning
+        "yi:34b-chat-q4_K_M" # Chinese model, medical knowledge
       )
     ),
-    
+
     mega = list(
       # Tier 1: Best overall for comprehensive analysis
       primary = c(
-        "qwen2.5:32b-instruct-q4_K_M",     # Best overall for comprehensive analysis
-        "llama3.1:70b-instruct-q4_0",      # If you have VRAM (lighter quant)
-        "command-r:35b-v0.1-q4_K_M",       # Cohere's clinical model
-        "mixtral:8x22b-instruct-q4_0"      # If extreme performance needed
+        "qwen2.5:32b-instruct-q4_K_M", # Best overall for comprehensive analysis
+        "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
+        "command-r:35b-v0.1-q4_K_M", # Cohere's clinical model
+        "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
       ),
       # Tier 2: Solid alternatives
       fallback = c(
-        "qwen3:32b-q4_K_M",                # Original 32B
-        "yi:34b-chat-q4_K_M",              # Strong medical knowledge
-        "nous-hermes-2-mixtral:8x7b-dpo-q4_K_M"  # Fine-tuned for instructions
+        "qwen3:32b-q4_K_M", # Original 32B
+        "yi:34b-chat-q4_K_M", # Strong medical knowledge
+        "nous-hermes-2-mixtral:8x7b-dpo-q4_K_M" # Fine-tuned for instructions
       )
     )
   )
-  
+
   return(models[[section]][[tier]])
 }
 
@@ -214,38 +214,42 @@ check_available_models <- function(models, backend = "ollama") {
     # For OpenAI, assume all models are available via API
     return(models)
   }
-  
-  tryCatch({
-    # Get list of installed Ollama models
-    result <- system("ollama list", intern = TRUE, ignore.stderr = TRUE)
-    
-    if (length(result) <= 1) {
-      warning("No Ollama models appear to be installed")
-      return(character(0))
-    }
-    
-    # Parse model names (first column, remove size/date info)
-    installed <- gsub("\\s+.*$", "", result[-1])
-    
-    # Some models might have :latest suffix in ollama list
-    installed_base <- gsub(":latest$", "", installed)
-    models_base <- gsub(":latest$", "", models)
-    
-    # Find matches (case-insensitive)
-    available <- character(0)
-    for (m in models) {
-      m_base <- gsub(":latest$", "", m)
-      if (any(grepl(paste0("^", m_base), installed_base, ignore.case = TRUE))) {
-        available <- c(available, m)
+
+  tryCatch(
+    {
+      # Get list of installed Ollama models
+      result <- system("ollama list", intern = TRUE, ignore.stderr = TRUE)
+
+      if (length(result) <= 1) {
+        warning("No Ollama models appear to be installed")
+        return(character(0))
       }
+
+      # Parse model names (first column, remove size/date info)
+      installed <- gsub("\\s+.*$", "", result[-1])
+
+      # Some models might have :latest suffix in ollama list
+      installed_base <- gsub(":latest$", "", installed)
+      models_base <- gsub(":latest$", "", models)
+
+      # Find matches (case-insensitive)
+      available <- character(0)
+      for (m in models) {
+        m_base <- gsub(":latest$", "", m)
+        if (
+          any(grepl(paste0("^", m_base), installed_base, ignore.case = TRUE))
+        ) {
+          available <- c(available, m)
+        }
+      }
+
+      return(available)
+    },
+    error = function(e) {
+      warning("Could not check Ollama models: ", conditionMessage(e))
+      return(models) # Optimistic fallback
     }
-    
-    return(available)
-    
-  }, error = function(e) {
-    warning("Could not check Ollama models: ", conditionMessage(e))
-    return(models)  # Optimistic fallback
-  })
+  )
 }
 
 #' @title Get Best Available Model
@@ -261,25 +265,33 @@ get_best_available_model <- function(
   prefer_tier = "primary"
 ) {
   section <- match.arg(section)
-  
+
   # Try primary tier first
   primary_models <- get_model_config(section, "primary")
   available_primary <- check_available_models(primary_models, backend)
-  
+
   if (length(available_primary) > 0) {
-    message(sprintf("Using primary %s model: %s", section, available_primary[1]))
+    message(sprintf(
+      "Using primary %s model: %s",
+      section,
+      available_primary[1]
+    ))
     return(available_primary[1])
   }
-  
+
   # Fall back to fallback tier
   fallback_models <- get_model_config(section, "fallback")
   available_fallback <- check_available_models(fallback_models, backend)
-  
+
   if (length(available_fallback) > 0) {
-    message(sprintf("Using fallback %s model: %s", section, available_fallback[1]))
+    message(sprintf(
+      "Using fallback %s model: %s",
+      section,
+      available_fallback[1]
+    ))
     return(available_fallback[1])
   }
-  
+
   # Ultimate fallback - use first model from primary list
   warning(sprintf(
     "No %s models installed. Please install one of: %s",
@@ -305,118 +317,166 @@ validate_clinical_output <- function(
 ) {
   issues <- character(0)
   warnings <- character(0)
-  
+
   # Clean text first
   text_clean <- strip_think_blocks(text)
-  
+
   # Check 1: Length (not too short)
   min_length <- if (strict) 150 else 100
   if (nchar(text_clean) < min_length) {
-    issues <- c(issues, sprintf(
-      "Output too short (%d chars, minimum %d)",
-      nchar(text_clean), min_length
-    ))
+    issues <- c(
+      issues,
+      sprintf(
+        "Output too short (%d chars, minimum %d)",
+        nchar(text_clean),
+        min_length
+      )
+    )
   }
-  
+
   # Check 2: Not too long (avoid rambling)
   max_length <- if (strict) 800 else 1000
   if (nchar(text_clean) > max_length) {
-    warnings <- c(warnings, sprintf(
-      "Output lengthy (%d chars, target <%d)",
-      nchar(text_clean), max_length
-    ))
+    warnings <- c(
+      warnings,
+      sprintf(
+        "Output lengthy (%d chars, target <%d)",
+        nchar(text_clean),
+        max_length
+      )
+    )
   }
-  
+
   # Check 3: Percentile mentions (should be sparse)
   percentile_pattern <- "\\d+(?:st|nd|rd|th)\\s*percentile"
-  percentile_matches <- gregexpr(percentile_pattern, text_clean, ignore.case = TRUE)[[1]]
+  percentile_matches <- gregexpr(
+    percentile_pattern,
+    text_clean,
+    ignore.case = TRUE
+  )[[1]]
   score_mentions <- sum(percentile_matches > 0)
-  
+
   if (score_mentions > 5) {
-    issues <- c(issues, sprintf(
-      "Too many percentile mentions (%d) - should be sparse (<5)",
-      score_mentions
-    ))
+    issues <- c(
+      issues,
+      sprintf(
+        "Too many percentile mentions (%d) - should be sparse (<5)",
+        score_mentions
+      )
+    )
   } else if (score_mentions > 3) {
-    warnings <- c(warnings, sprintf(
-      "Frequent percentile mentions (%d) - consider reducing",
-      score_mentions
-    ))
+    warnings <- c(
+      warnings,
+      sprintf(
+        "Frequent percentile mentions (%d) - consider reducing",
+        score_mentions
+      )
+    )
   }
-  
+
   # Check 4: Test name avoidance
   test_names <- c(
-    "WAIS", "WISC", "WPPSI", "WIAT", "KTEA", "WJ-IV", "Woodcock",
-    "NEPSY", "D-KEFS", "CVLT", "ROCF", "Rey", "Trail Making",
-    "BASC", "BRIEF", "Conners", "CAARS"
+    "WAIS",
+    "WISC",
+    "WPPSI",
+    "WIAT",
+    "KTEA",
+    "WJ-IV",
+    "Woodcock",
+    "NEPSY",
+    "D-KEFS",
+    "CVLT",
+    "ROCF",
+    "Rey",
+    "Trail Making",
+    "BASC",
+    "BRIEF",
+    "Conners",
+    "CAARS"
   )
-  
+
   test_mentions <- sum(sapply(test_names, function(t) {
     grepl(t, text_clean, ignore.case = TRUE)
   }))
-  
+
   if (test_mentions > 0) {
     if (strict) {
-      issues <- c(issues, sprintf(
-        "Should avoid test names in summary (found %d mentions)",
-        test_mentions
-      ))
+      issues <- c(
+        issues,
+        sprintf(
+          "Should avoid test names in summary (found %d mentions)",
+          test_mentions
+        )
+      )
     } else {
-      warnings <- c(warnings, sprintf(
-        "Test names mentioned (%d) - consider using general terms",
-        test_mentions
-      ))
+      warnings <- c(
+        warnings,
+        sprintf(
+          "Test names mentioned (%d) - consider using general terms",
+          test_mentions
+        )
+      )
     }
   }
-  
+
   # Check 5: Score values (T-scores, standard scores, scaled scores)
   score_pattern <- "(?:T-score|standard score|scaled score|raw score)\\s*(?:of|=|:)?\\s*\\d+"
   score_matches <- gregexpr(score_pattern, text_clean, ignore.case = TRUE)[[1]]
   raw_score_mentions <- sum(score_matches > 0)
-  
+
   if (raw_score_mentions > 2) {
     if (strict) {
-      issues <- c(issues, sprintf(
-        "Excessive raw score reporting (%d mentions)",
-        raw_score_mentions
-      ))
+      issues <- c(
+        issues,
+        sprintf(
+          "Excessive raw score reporting (%d mentions)",
+          raw_score_mentions
+        )
+      )
     } else {
       warnings <- c(warnings, "Consider reducing specific score mentions")
     }
   }
-  
+
   # Check 6: Clinical language quality
   # Should have clinical terms like "cognitive", "skills", "functioning"
   clinical_terms <- c(
-    "cognitive", "functioning", "ability", "skills", "performance",
-    "difficulties", "challenges", "strengths", "weaknesses"
+    "cognitive",
+    "functioning",
+    "ability",
+    "skills",
+    "performance",
+    "difficulties",
+    "challenges",
+    "strengths",
+    "weaknesses"
   )
-  
+
   clinical_mentions <- sum(sapply(clinical_terms, function(t) {
     grepl(t, text_clean, ignore.case = TRUE)
   }))
-  
+
   if (clinical_mentions < 2) {
     warnings <- c(warnings, "May lack clinical terminology")
   }
-  
+
   # Check 7: Structure (should be coherent sentences)
   sentence_pattern <- "[.!?]\\s+"
   num_sentences <- length(unlist(strsplit(text_clean, sentence_pattern)))
-  
+
   if (num_sentences < 2) {
     issues <- c(issues, "Output should contain multiple sentences")
   }
-  
+
   # Calculate quality score (0-100)
   base_score <- 100
-  base_score <- base_score - (length(issues) * 25)      # Major issues: -25 each
-  base_score <- base_score - (length(warnings) * 10)    # Warnings: -10 each
+  base_score <- base_score - (length(issues) * 25) # Major issues: -25 each
+  base_score <- base_score - (length(warnings) * 10) # Warnings: -10 each
   quality_score <- max(0, min(100, base_score))
-  
+
   # Determine overall validity
   is_valid <- length(issues) == 0 && quality_score >= 60
-  
+
   return(list(
     valid = is_valid,
     quality_score = quality_score,
@@ -573,10 +633,10 @@ inject_summary_block <- function(qmd_path, generated, metadata = NULL) {
   if (!nzchar(raw_qmd)) {
     raw_qmd <- ""
   }
-  
+
   # Build summary block
   summary_content <- generated
-  
+
   # Optionally add metadata comment
   if (!is.null(metadata)) {
     meta_comment <- sprintf(
@@ -594,7 +654,7 @@ inject_summary_block <- function(qmd_path, generated, metadata = NULL) {
     perl = TRUE,
     ignore.case = TRUE
   )
-  
+
   if (has_block) {
     new_qmd <- sub(
       pattern = "<summary>\\s*.*?\\s*</summary>",
@@ -612,9 +672,14 @@ inject_summary_block <- function(qmd_path, generated, metadata = NULL) {
       perl = TRUE
     )
   } else {
-    new_qmd <- paste0("<summary>\n\n", summary_content, "\n\n</summary>\n\n", raw_qmd)
+    new_qmd <- paste0(
+      "<summary>\n\n",
+      summary_content,
+      "\n\n</summary>\n\n",
+      raw_qmd
+    )
   }
-  
+
   readr::write_file(new_qmd, qmd_path)
   invisible(TRUE)
 }
@@ -659,29 +724,31 @@ create_llm_chat <- function(
   echo = "none"
 ) {
   if (!requireNamespace("ellmer", quietly = TRUE)) {
-    stop("The 'ellmer' package is required. Install: install.packages('ellmer')")
+    stop(
+      "The 'ellmer' package is required. Install: install.packages('ellmer')"
+    )
   }
-  
+
   section <- match.arg(section)
   backend <- match.arg(backend, c("ollama", "openai"))
-  
+
   # Set section-specific temperature defaults if not provided
   if (is.null(temperature)) {
     temperature <- switch(
       section,
-      domain = 0.2,    # More deterministic for routine summaries
-      sirf = 0.35,     # More creative for synthesis
-      mega = 0.3       # Balanced for comprehensive analysis
+      domain = 0.2, # More deterministic for routine summaries
+      sirf = 0.35, # More creative for synthesis
+      mega = 0.3 # Balanced for comprehensive analysis
     )
   }
-  
+
   # Model selection logic
   if (!is.null(model_override) && nzchar(model_override)) {
     model <- model_override
   } else {
     model <- get_best_available_model(section, backend)
   }
-  
+
   # Create chat bot
   if (backend == "ollama") {
     bot <- ellmer::chat_ollama(
@@ -700,7 +767,7 @@ create_llm_chat <- function(
       echo = echo
     )
   }
-  
+
   return(bot)
 }
 
@@ -751,7 +818,7 @@ call_llm_once <- function(
     temperature = temperature,
     echo = echo
   )
-  
+
   res <- bot$chat(user_text)
   text_out <- .extract_text_generic(res)
   return(text_out)
@@ -785,127 +852,155 @@ call_llm_with_retry <- function(
 ) {
   # Track timing for logging
   start_time <- Sys.time()
-  
+
   # Estimate input tokens for logging
   input_tokens <- estimate_tokens(paste(system_prompt, user_text))
-  
+
   # If model override provided, just try that one model
   if (!is.null(model_override) && nzchar(model_override)) {
-    models_to_try <- list(
-      primary = c(model_override),
-      fallback = character(0)
-    )
+    models_to_try <- list(primary = c(model_override), fallback = character(0))
   } else {
     # Get models based on section
     models_to_try <- list(
       primary = get_model_config(section, "primary"),
       fallback = get_model_config(section, "fallback")
     )
-    
+
     # Filter to available models
-    models_to_try$primary <- check_available_models(models_to_try$primary, backend)
-    models_to_try$fallback <- check_available_models(models_to_try$fallback, backend)
+    models_to_try$primary <- check_available_models(
+      models_to_try$primary,
+      backend
+    )
+    models_to_try$fallback <- check_available_models(
+      models_to_try$fallback,
+      backend
+    )
   }
-  
+
   # Try primary models first, then fallbacks
   for (tier in c("primary", "fallback")) {
     models <- models_to_try[[tier]]
-    
-    if (length(models) == 0) next
-    
+
+    if (length(models) == 0) {
+      next
+    }
+
     for (attempt in seq_len(max_retries)) {
       for (model in models) {
-        tryCatch({
-          message(sprintf(
-            "🤖 Generating with %s (%s tier, attempt %d/%d)...",
-            model, tier, attempt, max_retries
-          ))
-          
-          # Call LLM
-          result <- call_llm_once(
-            system_prompt = system_prompt,
-            user_text = user_text,
-            section = section,
-            model_override = model,
-            backend = backend,
-            temperature = temperature,
-            echo = echo
-          )
-          
-          # Clean output
-          result_clean <- strip_think_blocks(result)
-          
-          # Validate if requested
-          if (validate) {
-            validation <- validate_clinical_output(result_clean, strict = FALSE)
-            
-            if (!validation$valid) {
-              warning(sprintf(
-                "Validation failed for %s (score: %d): %s",
-                model,
-                validation$quality_score,
-                paste(validation$issues, collapse = "; ")
-              ))
-              
-              # If quality is very poor, try next model
-              if (validation$quality_score < 40) {
-                next
+        tryCatch(
+          {
+            message(sprintf(
+              "🤖 Generating with %s (%s tier, attempt %d/%d)...",
+              model,
+              tier,
+              attempt,
+              max_retries
+            ))
+
+            # Call LLM
+            result <- call_llm_once(
+              system_prompt = system_prompt,
+              user_text = user_text,
+              section = section,
+              model_override = model,
+              backend = backend,
+              temperature = temperature,
+              echo = echo
+            )
+
+            # Clean output
+            result_clean <- strip_think_blocks(result)
+
+            # Validate if requested
+            if (validate) {
+              validation <- validate_clinical_output(
+                result_clean,
+                strict = FALSE
+              )
+
+              if (!validation$valid) {
+                warning(sprintf(
+                  "Validation failed for %s (score: %d): %s",
+                  model,
+                  validation$quality_score,
+                  paste(validation$issues, collapse = "; ")
+                ))
+
+                # If quality is very poor, try next model
+                if (validation$quality_score < 40) {
+                  next
+                }
+              } else {
+                message(sprintf(
+                  "✅ Quality score: %d/100",
+                  validation$quality_score
+                ))
               }
-            } else {
-              message(sprintf(
-                "✅ Quality score: %d/100",
-                validation$quality_score
-              ))
             }
+
+            # Success - log and return
+            elapsed_time <- as.numeric(difftime(
+              Sys.time(),
+              start_time,
+              units = "secs"
+            ))
+            output_tokens <- estimate_tokens(result_clean)
+
+            log_llm_usage(
+              section = section,
+              model = model,
+              input_tokens = input_tokens,
+              output_tokens = output_tokens,
+              time_seconds = elapsed_time,
+              success = TRUE,
+              domain_keyword = domain_keyword
+            )
+
+            message(sprintf(
+              "✅ Generated successfully with %s in %.1fs",
+              model,
+              elapsed_time
+            ))
+
+            return(result_clean)
+          },
+          error = function(e) {
+            warning(sprintf(
+              "❌ Failed with %s (tier: %s, attempt %d/%d): %s",
+              model,
+              tier,
+              attempt,
+              max_retries,
+              conditionMessage(e)
+            ))
+
+            # Log failure
+            elapsed_time <- as.numeric(difftime(
+              Sys.time(),
+              start_time,
+              units = "secs"
+            ))
+            log_llm_usage(
+              section = section,
+              model = model,
+              input_tokens = input_tokens,
+              output_tokens = 0,
+              time_seconds = elapsed_time,
+              success = FALSE,
+              domain_keyword = domain_keyword
+            )
           }
-          
-          # Success - log and return
-          elapsed_time <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-          output_tokens <- estimate_tokens(result_clean)
-          
-          log_llm_usage(
-            section = section,
-            model = model,
-            input_tokens = input_tokens,
-            output_tokens = output_tokens,
-            time_seconds = elapsed_time,
-            success = TRUE,
-            domain_keyword = domain_keyword
-          )
-          
-          message(sprintf(
-            "✅ Generated successfully with %s in %.1fs",
-            model, elapsed_time
-          ))
-          
-          return(result_clean)
-          
-        }, error = function(e) {
-          warning(sprintf(
-            "❌ Failed with %s (tier: %s, attempt %d/%d): %s",
-            model, tier, attempt, max_retries, conditionMessage(e)
-          ))
-          
-          # Log failure
-          elapsed_time <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-          log_llm_usage(
-            section = section,
-            model = model,
-            input_tokens = input_tokens,
-            output_tokens = 0,
-            time_seconds = elapsed_time,
-            success = FALSE,
-            domain_keyword = domain_keyword
-          )
-        })
+        )
       }
     }
   }
-  
+
   # If we get here, all attempts failed
   stop(sprintf(
     "All LLM attempts failed for section '%s' after %d retries. Check logs at: %s",
-    section, max_retries, llm_usage_log()
+    section,
+    max_retries,
+    llm_usage_log()
   ))
 }
 
@@ -945,9 +1040,13 @@ generate_domain_summary_from_master <- function(
   }
 
   prompts <- read_prompts_from_dir(prompts_dir)
-  idx <- which(vapply(prompts, function(p) {
-    identical(.canon(p$keyword), .canon(domain_keyword))
-  }, logical(1)))
+  idx <- which(vapply(
+    prompts,
+    function(p) {
+      identical(.canon(p$keyword), .canon(domain_keyword))
+    },
+    logical(1)
+  ))
 
   if (!length(idx)) {
     message(sprintf(
@@ -963,10 +1062,7 @@ generate_domain_summary_from_master <- function(
   target_qmd <- detect_target_qmd(ptx)
 
   if (is.na(target_qmd)) {
-    message(sprintf(
-      "No @target.qmd detected for keyword '%s'",
-      domain_keyword
-    ))
+    message(sprintf("No @target.qmd detected for keyword '%s'", domain_keyword))
     return(invisible(NULL))
   }
 
@@ -995,7 +1091,7 @@ generate_domain_summary_from_master <- function(
   sys_prompt <- sanitize_system_prompt(ptx)
   inc <- expand_includes(ptx, base_dir = base_dir, on_missing = "skip")
   target_text <- read_file_or_empty(target_path)
-  
+
   user_text <- paste(
     "Use the following patient/domain text to produce a single-paragraph clinical summary.",
     "Avoid test names and raw/standard/T/Scaled scores; sparingly use percentiles only if extreme.",
@@ -1028,7 +1124,7 @@ generate_domain_summary_from_master <- function(
   if (file.exists(cache_file)) {
     message(sprintf("📦 Using cached result for %s", domain_keyword))
     generated <- readr::read_file(cache_file)
-    
+
     # Still validate cached content
     if (validate) {
       validation <- validate_clinical_output(generated, strict = FALSE)
@@ -1070,17 +1166,17 @@ generate_domain_summary_from_master <- function(
     echo = echo,
     domain_keyword = domain_keyword
   )
-  
+
   # Cache the result
   safe_write_text(generated, cache_file)
-  
+
   # Inject with metadata
   validation <- if (validate) {
     validate_clinical_output(generated, strict = FALSE)
   } else {
     list(quality_score = NA)
   }
-  
+
   inject_summary_block(
     target_path,
     generated,
@@ -1090,7 +1186,7 @@ generate_domain_summary_from_master <- function(
       quality_score = validation$quality_score
     )
   )
-  
+
   invisible(list(
     keyword = domain_keyword,
     qmd = target_path,
@@ -1142,8 +1238,10 @@ run_llm_for_all_domains_parallel <- function(
   }
 
   # Check for parallel packages
-  if (!requireNamespace("future", quietly = TRUE) ||
-      !requireNamespace("future.apply", quietly = TRUE)) {
+  if (
+    !requireNamespace("future", quietly = TRUE) ||
+      !requireNamespace("future.apply", quietly = TRUE)
+  ) {
     warning(
       "Parallel processing requires 'future' and 'future.apply' packages. ",
       "Falling back to sequential processing. ",
@@ -1168,16 +1266,17 @@ run_llm_for_all_domains_parallel <- function(
 
   message(sprintf(
     "🚀 Processing %d domains in parallel using %d cores",
-    length(domain_keywords), n_cores
+    length(domain_keywords),
+    n_cores
   ))
-  
+
   # Set up parallel backend
   future::plan(future::multisession, workers = n_cores)
   on.exit(future::plan(future::sequential), add = TRUE)
-  
+
   # Process in parallel
   start_time <- Sys.time()
-  
+
   out <- future.apply::future_lapply(
     domain_keywords,
     function(k) {
@@ -1191,7 +1290,11 @@ run_llm_for_all_domains_parallel <- function(
             temperature = temperature,
             base_dir = base_dir,
             echo = echo,
-            mega = if (.canon(k) == "instsirf") isTRUE(mega_for_sirf) else FALSE,
+            mega = if (.canon(k) == "instsirf") {
+              isTRUE(mega_for_sirf)
+            } else {
+              FALSE
+            },
             validate = validate,
             max_retries = max_retries
           )
@@ -1201,19 +1304,21 @@ run_llm_for_all_domains_parallel <- function(
     },
     future.seed = TRUE
   )
-  
+
   elapsed_time <- difftime(Sys.time(), start_time, units = "secs")
-  
+
   names(out) <- domain_keywords
-  
+
   # Report results
   successes <- sum(sapply(out, function(x) !inherits(x, "try-error")))
   message(sprintf(
     "✅ Completed %d/%d domains in %.1f seconds (avg: %.1fs per domain)",
-    successes, length(domain_keywords),
-    elapsed_time, elapsed_time / length(domain_keywords)
+    successes,
+    length(domain_keywords),
+    elapsed_time,
+    elapsed_time / length(domain_keywords)
   ))
-  
+
   invisible(out)
 }
 
@@ -1250,8 +1355,11 @@ run_llm_for_all_domains <- function(
     }
   }
 
-  message(sprintf("Processing %d domains sequentially...", length(domain_keywords)))
-  
+  message(sprintf(
+    "Processing %d domains sequentially...",
+    length(domain_keywords)
+  ))
+
   out <- lapply(domain_keywords, function(k) {
     try(
       {
@@ -1269,7 +1377,7 @@ run_llm_for_all_domains <- function(
       silent = TRUE
     )
   })
-  
+
   names(out) <- domain_keywords
   invisible(out)
 }
@@ -1293,15 +1401,15 @@ neuro2_llm_smoke_test <- function(
   if (!requireNamespace("ellmer", quietly = TRUE)) {
     stop("The 'ellmer' package is required.")
   }
-  
+
   # Auto-select best model if not specified
   if (is.null(model)) {
     model <- get_best_available_model("domain", backend)
     message("Auto-selected model: ", model)
   }
-  
+
   backend <- match.arg(backend, c("ollama", "openai"))
-  
+
   if (backend == "ollama") {
     bot <- ellmer::chat_ollama(
       system_prompt = system_prompt,
@@ -1319,18 +1427,13 @@ neuro2_llm_smoke_test <- function(
       echo = "none"
     )
   }
-  
+
   t0 <- Sys.time()
   res <- bot$chat(prompt)
   dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   out <- .extract_text_generic(res)
-  
-  list(
-    model = model,
-    seconds = dt,
-    preview = substr(out, 1, 240),
-    raw = out
-  )
+
+  list(model = model, seconds = dt, preview = substr(out, 1, 240), raw = out)
 }
 
 # --------------------- glue: run + render ---------------------
@@ -1394,15 +1497,15 @@ neuro2_run_llm_then_render <- function(
     if (!requireNamespace("quarto", quietly = TRUE)) {
       stop("The 'quarto' package is required to render.")
     }
-    
+
     for (rp in render_paths) {
       if (!file.exists(rp)) {
         warning("Skipping non-existent file: ", rp)
         next
       }
-      
+
       message(sprintf("📄 Rendering %s...", basename(rp)))
-      
+
       if (is.null(quarto_profile)) {
         quarto::quarto_render(rp)
       } else {
@@ -1432,7 +1535,7 @@ process_domains_with_llm <- function(
   patient = "Maya",
   force_reprocess = FALSE,
   backend = "ollama",
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL
 ) {
   message(sprintf("🤖 Processing domains with LLM for patient: %s", patient))
@@ -1441,14 +1544,17 @@ process_domains_with_llm <- function(
   domains_with_data <- get_domains_with_data()
 
   if (length(domains_with_data) == 0) {
-    warning("No domains found with data. Check that data files exist and contain valid data.")
+    warning(
+      "No domains found with data. Check that data files exist and contain valid data."
+    )
     return(invisible(list()))
   }
 
   # Convert domain names to keywords for LLM processing
   domain_keywords <- domain_names_to_keywords(domains_with_data)
 
-  message(sprintf("Found %d domains with data: %s",
+  message(sprintf(
+    "Found %d domains with data: %s",
     length(domains_with_data),
     paste(domains_with_data, collapse = ", ")
   ))
@@ -1492,13 +1598,16 @@ get_domains_with_data <- function() {
   for (data_type in names(data_files)) {
     file_path <- data_files[[data_type]]
     if (file.exists(file_path)) {
-      tryCatch({
-        if (requireNamespace("arrow", quietly = TRUE)) {
-          data_list[[data_type]] <- arrow::read_parquet(file_path)
+      tryCatch(
+        {
+          if (requireNamespace("arrow", quietly = TRUE)) {
+            data_list[[data_type]] <- arrow::read_parquet(file_path)
+          }
+        },
+        error = function(e) {
+          warning(sprintf("Could not load %s: %s", file_path, e$message))
         }
-      }, error = function(e) {
-        warning(sprintf("Could not load %s: %s", file_path, e$message))
-      })
+      )
     }
   }
 
@@ -1507,13 +1616,19 @@ get_domains_with_data <- function() {
     iq = list(name = "General Cognitive Ability", data_type = "neurocog"),
     academics = list(name = "Academic Skills", data_type = "neurocog"),
     verbal = list(name = "Verbal/Language", data_type = "neurocog"),
-    spatial = list(name = "Visual Perception/Construction", data_type = "neurocog"),
+    spatial = list(
+      name = "Visual Perception/Construction",
+      data_type = "neurocog"
+    ),
     memory = list(name = "Memory", data_type = "neurocog"),
     executive = list(name = "Attention/Executive", data_type = "neurocog"),
     motor = list(name = "Motor", data_type = "neurocog"),
     social = list(name = "Social Cognition", data_type = "neurocog"),
     adhd = list(name = "ADHD/Executive Function", data_type = "neurobehav"),
-    emotion = list(name = "Emotional/Behavioral/Social/Personality", data_type = "neurobehav"),
+    emotion = list(
+      name = "Emotional/Behavioral/Social/Personality",
+      data_type = "neurobehav"
+    ),
     adaptive = list(name = "Adaptive Functioning", data_type = "neurobehav"),
     daily_living = list(name = "Daily Living", data_type = "neurocog"),
     validity = list(name = "Validity", data_type = "validity")
@@ -1555,10 +1670,15 @@ domain_names_to_keywords <- function(domain_names) {
     motor = "instmot",
     social = "instsoc",
     adhd = "instadhd",
+    adhd = "instadhd_o",
+    adhd = "instadhd_p",
+    adhd = "instadhd_t",
     emotion = "instemo",
+    emotion = "instemo_p",
+    emotion = "instemo_t",
     adaptive = "instadapt",
     daily_living = "instdl",
-    validity = "instrec"
+    validity = "instvalid"
   )
 
   keywords <- character(0)
@@ -1581,18 +1701,18 @@ domain_names_to_keywords <- function(domain_names) {
 #' @export
 view_llm_usage <- function(summary_only = TRUE) {
   log_file <- llm_usage_log()
-  
+
   if (!file.exists(log_file)) {
     message("No usage log found yet. Run some LLM generations first.")
     return(NULL)
   }
-  
+
   log_data <- readr::read_csv(log_file, show_col_types = FALSE)
-  
+
   if (!summary_only) {
     return(log_data)
   }
-  
+
   # Calculate summary statistics
   summary <- list(
     total_calls = nrow(log_data),
@@ -1604,17 +1724,30 @@ view_llm_usage <- function(summary_only = TRUE) {
     models_used = unique(log_data$model),
     domains_processed = unique(na.omit(log_data$domain))
   )
-  
+
   # Print summary
   cat("\n📊 LLM Usage Summary\n")
   cat("===================\n")
-  cat(sprintf("Total calls: %d (%d successful, %d failed)\n",
-              summary$total_calls, summary$successful_calls, summary$failed_calls))
-  cat(sprintf("Total tokens: %s\n", format(summary$total_tokens, big.mark = ",")))
+  cat(sprintf(
+    "Total calls: %d (%d successful, %d failed)\n",
+    summary$total_calls,
+    summary$successful_calls,
+    summary$failed_calls
+  ))
+  cat(sprintf(
+    "Total tokens: %s\n",
+    format(summary$total_tokens, big.mark = ",")
+  ))
   cat(sprintf("Total time: %.1f minutes\n", summary$total_time_minutes))
-  cat(sprintf("Average time per call: %.1f seconds\n", summary$avg_time_seconds))
+  cat(sprintf(
+    "Average time per call: %.1f seconds\n",
+    summary$avg_time_seconds
+  ))
   cat(sprintf("Models used: %s\n", paste(summary$models_used, collapse = ", ")))
-  cat(sprintf("Domains processed: %d unique domains\n", length(summary$domains_processed)))
-  
+  cat(sprintf(
+    "Domains processed: %d unique domains\n",
+    length(summary$domains_processed)
+  ))
+
   invisible(summary)
 }
