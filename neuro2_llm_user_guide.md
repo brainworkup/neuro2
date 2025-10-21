@@ -94,9 +94,9 @@ results <- run_llm_for_all_domains_parallel(
 # Generate all domain summaries then render final report
 result <- neuro2_run_llm_then_render(
   base_dir = ".",
-  render_paths = c("neuropsych_report.qmd"),
+  render_paths = c("template.qmd"),
   parallel = TRUE,        # Use parallel processing
-  n_cores = 6,
+  n_cores = 8,
   mega_for_sirf = TRUE,
   validate = TRUE
 )

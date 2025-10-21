@@ -152,12 +152,12 @@ get_model_config <- function(
   # Define model families with quality tiers
   models <- list(
     domain = list(
-      # Tier 1: Latest recommended (2024-2025)
+      # Tier 1: Latest recommended (2025-)
       primary = c(
-        "qwen2.5:7b-instruct-q4_K_M", # Excellent for clinical writing
-        "llama3.2:3b-instruct-q4_K_M", # Fast, good for structured output
-        "gemma2:9b-instruct-q4_K_M", # Google's clinical-trained model
-        "mistral:7b-instruct-v0.3-q4_K_M" # Strong general reasoning
+        "gemma3:4b-it-qat",
+		"qwen3:4b-instruct-2507-q4_K_M",
+        "llama3.2:3b-instruct-q4_K_M",   
+        "mistral:7b-instruct-v0.3-q4_K_M" 
       ),
       # Tier 2: Proven fallbacks
       fallback = c(
@@ -170,9 +170,10 @@ get_model_config <- function(
     sirf = list(
       # Tier 1: Best for complex reasoning + synthesis
       primary = c(
-        "qwen2.5:14b-instruct-q4_K_M", # Reasoning + clinical knowledge
-        "llama3.1:8b-instruct-q4_K_M", # Meta's latest, excellent reasoning
-        "mixtral:8x7b-instruct-q4_K_M", # MoE, good for complex synthesis
+		"gemma3:12b-it-qat",
+		"qwen3:8b-q8_0",
+        "llama3:8b-instruct-q8_0", 
+        "mixtral:8x7b-instruct-q4_K_M",
         "command-r:35b-v0.1-q4_K_M" # Cohere's clinical-capable model
       ),
       # Tier 2: Proven alternatives
@@ -186,7 +187,9 @@ get_model_config <- function(
     mega = list(
       # Tier 1: Best overall for comprehensive analysis
       primary = c(
-        "qwen2.5:32b-instruct-q4_K_M", # Best overall for comprehensive analysis
+		"gemma3:27b-it-qat",
+		"gpt-oss:20b",
+		"qwen3:30b-a3b-instruct-2507-q4_K_M",
         "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
         "command-r:35b-v0.1-q4_K_M", # Cohere's clinical model
         "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
@@ -381,8 +384,6 @@ validate_clinical_output <- function(
     "WPPSI",
     "WIAT",
     "KTEA",
-    "WJ-IV",
-    "Woodcock",
     "NEPSY",
     "D-KEFS",
     "CVLT",
@@ -392,7 +393,10 @@ validate_clinical_output <- function(
     "BASC",
     "BRIEF",
     "Conners",
-    "CAARS"
+    "CAARS",
+	"CEFI",
+	"NAB",
+	"RBANS"
   )
 
   test_mentions <- sum(sapply(test_names, function(t) {
