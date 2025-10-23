@@ -1728,7 +1728,7 @@ DomainProcessorR6 <- R6::R6Class(
         "processor$select_columns()\n\n",
         "# Main data object\n",
         "data_emotion_self <- processor$data |>\n",
-        "  dplyr::filter(test %in% c(\"pai\", \"pai_a\"))\n\n",
+        "  dplyr::filter(test %in% c(\"pai\", \"pai_a\", \"basc3_srp_adolescent\"))\n\n",
         "data_emotion_parent <- processor$data |>\n",
         "  dplyr::filter(\n",
         "    test %in%\n",
