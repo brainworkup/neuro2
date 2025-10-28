@@ -2,7 +2,7 @@
 % Please edit documentation in R/DotplotR6.R
 \name{dotplot}
 \alias{dotplot}
-\title{Create Dotplot for Neurocognitive Domains, Version 2 (Function Wrapper)}
+\title{dotplot (convenience wrapper)}
 \usage{
 dotplot(
   data,
@@ -23,56 +23,21 @@ dotplot(
   min_height = 4,
   height_per_row = 0.7,
   height_padding = 0.8,
+  plot_title = NULL,
+  domain = NULL,
+  subdomain = NULL,
+  narrow = NULL,
   ...
 )
 }
 \arguments{
-\item{data}{The dataset or df containing the data for the dotplot.}
+\item{data, x, y}{See DotplotR6 fields.}
 
-\item{x}{The column name in the data frame for the x-axis variable, typically
-the mean z-score for a cognitive domain.}
-
-\item{y}{The column name in the data frame for the y-axis variable, typically
-the cognitive domain to plot.}
-
-\item{linewidth}{The width of the line, Default: 0.5}
-
-\item{fill}{The fill color for the points, Default: x-axis variable}
-
-\item{shape}{The shape of the points, Default: 21}
-
-\item{point_size}{The size of the points, Default: 6}
-
-\item{line_color}{The color of the lines, Default: 'black'}
-
-\item{colors}{A vector of colors for fill gradient, Default: NULL (uses
-pre-defined color palette)}
-
-\item{theme}{The ggplot theme to be used, Default: 'fivethirtyeight'. Other
-options include 'minimal' and 'classic'}
-
-\item{return_plot}{Whether to return the plot object, Default: TRUE}
-
-\item{filename}{The filename to save the plot to, Default: NULL}
-
-\item{width}{The width, in inches, to use when saving the figure. Default: 10}
-
-\item{height}{Optional explicit height (in inches). If NULL, calculated dynamically.}
-
-\item{base_height}{Inches per item for dynamic height calculation. Default: 0.4}
-
-\item{min_height}{Minimum height in inches. Default: 4}
-
-\item{height_per_row}{Fallback: inches per row. Default: 0.7}
-
-\item{height_padding}{Fallback: additional inches. Default: 0.8}
-
-\item{...}{Additional arguments to be passed to the function.}
+\item{...}{Ignored.}
 }
 \value{
-An object of class 'ggplot' representing the dotplot.
+A ggplot object (invisibly NULL if \code{return_plot = FALSE}).
 }
 \description{
-This function generates a dotplot for neurocognitive and neurobehavioral
-domains. It's a wrapper around the DotplotR6 class.
+A functional wrapper around DotplotR6 for quick plots.
 }

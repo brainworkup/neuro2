@@ -245,22 +245,18 @@ extract_wisc5_data <- function(
   df_merged <- df_merged |>
     dplyr::mutate(
       result = dplyr::case_when(
-        percentile == 1 ~
-          glue::glue(
-            "{description} fell within the {range} and ranked at the {percentile}st percentile."
-          ),
-        percentile == 2 ~
-          glue::glue(
-            "{description} fell within the {range} and ranked at the {percentile}nd percentile."
-          ),
-        percentile == 3 ~
-          glue::glue(
-            "{description} fell within the {range} and ranked at the {percentile}rd percentile."
-          ),
-        TRUE ~
-          glue::glue(
-            "{description} fell within the {range} and ranked at the {percentile}th percentile."
-          )
+        percentile == 1 ~ glue::glue(
+          "{description} fell within the {range} and ranked at the {percentile}st percentile."
+        ),
+        percentile == 2 ~ glue::glue(
+          "{description} fell within the {range} and ranked at the {percentile}nd percentile."
+        ),
+        percentile == 3 ~ glue::glue(
+          "{description} fell within the {range} and ranked at the {percentile}rd percentile."
+        ),
+        TRUE ~ glue::glue(
+          "{description} fell within the {range} and ranked at the {percentile}th percentile."
+        )
       ),
       result = paste0(
         result,
@@ -597,11 +593,11 @@ extract_wisc5_data <- function(
 #' @examples
 #' \dontrun{
 #' # Basic usage with file chooser dialog
-#' results <- pluck_wiat4(patient = "Maya")
+#' results <- pluck_wiat4(patient = "Biggie")
 #'
 #' # Specify file path and other parameters
 #' results <- pluck_wiat4(
-#'   patient = "Maya",
+#'   patient = "Biggie",
 #'   file = "path/to/wiat4.pdf",
 #'   pages = c(20),
 #'   extract_columns = c(1, 2, 3, 4, 5),
@@ -2035,8 +2031,8 @@ process_rbans_unified <- function(
         scale == "Attention Index" ~ "Attention Index (ATI)",
         scale == "Immediate Memory Index" ~ "Immediate Memory Index (IMI)",
         scale == "Language Index" ~ "Language Index (LGI)",
-        scale == "Visuospatial Index" ~
-          "Visuospatial/ Constructional Index (VCI)",
+        scale ==
+          "Visuospatial Index" ~ "Visuospatial/ Constructional Index (VCI)",
         scale == "Delayed Memory Index" ~ "Delayed Memory Index (DMI)",
         scale == "RBANS Digit Span" ~ "Digit Span", # Check me
         scale == "RBANS Coding" ~ "Coding", # check me
@@ -2089,46 +2085,46 @@ process_rbans_unified <- function(
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(score) >= 130 ~
-          "Exceptionally High",
-        score_type == "standard_score" & as.numeric(score) >= 120 ~
-          "Above Average",
-        score_type == "standard_score" & as.numeric(score) >= 110 ~
-          "High Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 130 ~ "Exceptionally High",
+        score_type == "standard_score" &
+          as.numeric(score) >= 120 ~ "Above Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 110 ~ "High Average",
         score_type == "standard_score" & as.numeric(score) >= 90 ~ "Average",
-        score_type == "standard_score" & as.numeric(score) >= 80 ~
-          "Low Average",
-        score_type == "standard_score" & as.numeric(score) >= 70 ~
-          "Below Average",
-        score_type == "standard_score" & as.numeric(score) < 70 ~
-          "Exceptionally Low",
+        score_type == "standard_score" &
+          as.numeric(score) >= 80 ~ "Low Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 70 ~ "Below Average",
+        score_type == "standard_score" &
+          as.numeric(score) < 70 ~ "Exceptionally Low",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(score) >= 16 ~
-          "Exceptionally High",
-        score_type == "scaled_score" & as.numeric(score) >= 14 ~
-          "Above Average",
+        score_type == "scaled_score" &
+          as.numeric(score) >= 16 ~ "Exceptionally High",
+        score_type == "scaled_score" &
+          as.numeric(score) >= 14 ~ "Above Average",
         score_type == "scaled_score" & as.numeric(score) >= 12 ~ "High Average",
         score_type == "scaled_score" & as.numeric(score) >= 9 ~ "Average",
         score_type == "scaled_score" & as.numeric(score) >= 7 ~ "Low Average",
         score_type == "scaled_score" & as.numeric(score) >= 4 ~ "Below Average",
-        score_type == "scaled_score" & as.numeric(score) < 4 ~
-          "Exceptionally Low",
+        score_type == "scaled_score" &
+          as.numeric(score) < 4 ~ "Exceptionally Low",
 
         # For percentiles
-        score_type == "percentile" & as.numeric(percentile) >= 98 ~
-          "Exceptionally High",
-        score_type == "percentile" & as.numeric(percentile) >= 91 ~
-          "Above Average",
-        score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "High Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 98 ~ "Exceptionally High",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 91 ~ "Above Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 75 ~ "High Average",
         score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
-        score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Low Average",
-        score_type == "percentile" & as.numeric(percentile) >= 2 ~
-          "Below Average",
-        score_type == "percentile" & as.numeric(percentile) < 2 ~
-          "Exceptionally Low",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 9 ~ "Low Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 2 ~ "Below Average",
+        score_type == "percentile" &
+          as.numeric(percentile) < 2 ~ "Exceptionally Low",
         TRUE ~ "Not Available"
       )
     ) |>
@@ -2206,46 +2202,46 @@ create_rbans_summary <- function(rbans_data, output_file = NULL) {
     dplyr::mutate(
       performance_level = dplyr::case_when(
         # For standard scores (indices)
-        score_type == "standard_score" & as.numeric(score) >= 130 ~
-          "Exceptionally High",
-        score_type == "standard_score" & as.numeric(score) >= 120 ~
-          "Above Average",
-        score_type == "standard_score" & as.numeric(score) >= 110 ~
-          "High Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 130 ~ "Exceptionally High",
+        score_type == "standard_score" &
+          as.numeric(score) >= 120 ~ "Above Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 110 ~ "High Average",
         score_type == "standard_score" & as.numeric(score) >= 90 ~ "Average",
-        score_type == "standard_score" & as.numeric(score) >= 80 ~
-          "Low Average",
-        score_type == "standard_score" & as.numeric(score) >= 70 ~
-          "Below Average",
-        score_type == "standard_score" & as.numeric(score) < 70 ~
-          "Exceptionally Low",
+        score_type == "standard_score" &
+          as.numeric(score) >= 80 ~ "Low Average",
+        score_type == "standard_score" &
+          as.numeric(score) >= 70 ~ "Below Average",
+        score_type == "standard_score" &
+          as.numeric(score) < 70 ~ "Exceptionally Low",
 
         # For scaled scores (subtests)
-        score_type == "scaled_score" & as.numeric(score) >= 16 ~
-          "Exceptionally High",
-        score_type == "scaled_score" & as.numeric(score) >= 14 ~
-          "Above Average",
+        score_type == "scaled_score" &
+          as.numeric(score) >= 16 ~ "Exceptionally High",
+        score_type == "scaled_score" &
+          as.numeric(score) >= 14 ~ "Above Average",
         score_type == "scaled_score" & as.numeric(score) >= 12 ~ "High Average",
         score_type == "scaled_score" & as.numeric(score) >= 9 ~ "Average",
         score_type == "scaled_score" & as.numeric(score) >= 7 ~ "Low Average",
         score_type == "scaled_score" & as.numeric(score) >= 4 ~ "Below Average",
-        score_type == "scaled_score" & as.numeric(score) < 4 ~
-          "Exceptionally Low",
+        score_type == "scaled_score" &
+          as.numeric(score) < 4 ~ "Exceptionally Low",
 
         # For percentiles
-        score_type == "percentile" & as.numeric(percentile) >= 98 ~
-          "Exceptionally High",
-        score_type == "percentile" & as.numeric(percentile) >= 91 ~
-          "Above Average",
-        score_type == "percentile" & as.numeric(percentile) >= 75 ~
-          "High Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 98 ~ "Exceptionally High",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 91 ~ "Above Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 75 ~ "High Average",
         score_type == "percentile" & as.numeric(percentile) >= 25 ~ "Average",
-        score_type == "percentile" & as.numeric(percentile) >= 9 ~
-          "Low Average",
-        score_type == "percentile" & as.numeric(percentile) >= 2 ~
-          "Below Average",
-        score_type == "percentile" & as.numeric(percentile) < 2 ~
-          "Exceptionally Low",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 9 ~ "Low Average",
+        score_type == "percentile" &
+          as.numeric(percentile) >= 2 ~ "Below Average",
+        score_type == "percentile" &
+          as.numeric(percentile) < 2 ~ "Exceptionally Low",
         TRUE ~ "Not Available"
       )
     ) |>

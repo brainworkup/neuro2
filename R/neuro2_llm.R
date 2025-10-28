@@ -155,9 +155,9 @@ get_model_config <- function(
       # Tier 1: Latest recommended (2025-)
       primary = c(
         "gemma3:4b-it-qat",
-		"qwen3:4b-instruct-2507-q4_K_M",
-        "llama3.2:3b-instruct-q4_K_M",   
-        "mistral:7b-instruct-v0.3-q4_K_M" 
+        "qwen3:4b-instruct-2507-q4_K_M",
+        "llama3.2:3b-instruct-q4_K_M",
+        "mistral:7b-instruct-v0.3-q4_K_M"
       ),
       # Tier 2: Proven fallbacks
       fallback = c(
@@ -170,9 +170,9 @@ get_model_config <- function(
     sirf = list(
       # Tier 1: Best for complex reasoning + synthesis
       primary = c(
-		"gemma3:12b-it-qat",
-		"qwen3:8b-q8_0",
-        "llama3:8b-instruct-q8_0", 
+        "gemma3:12b-it-qat",
+        "qwen3:8b-q8_0",
+        "llama3:8b-instruct-q8_0",
         "mixtral:8x7b-instruct-q4_K_M",
         "command-r:35b-v0.1-q4_K_M" # Cohere's clinical-capable model
       ),
@@ -187,9 +187,9 @@ get_model_config <- function(
     mega = list(
       # Tier 1: Best overall for comprehensive analysis
       primary = c(
-		"gemma3:27b-it-qat",
-		"gpt-oss:20b",
-		"qwen3:30b-a3b-instruct-2507-q4_K_M",
+        "gemma3:27b-it-qat",
+        "gpt-oss:20b",
+        "qwen3:30b-a3b-instruct-2507-q4_K_M",
         "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
         "command-r:35b-v0.1-q4_K_M", # Cohere's clinical model
         "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
@@ -394,9 +394,9 @@ validate_clinical_output <- function(
     "BRIEF",
     "Conners",
     "CAARS",
-	"CEFI",
-	"NAB",
-	"RBANS"
+    "CEFI",
+    "NAB",
+    "RBANS"
   )
 
   test_mentions <- sum(sapply(test_names, function(t) {
@@ -1528,7 +1528,7 @@ neuro2_run_llm_then_render <- function(
 
 #' @title Process Domains with LLM
 #' @description Main entry point for LLM processing of domain summaries
-#' @param patient Patient name (default: "Maya")
+#' @param patient Patient name (default: "Biggie")
 #' @param force_reprocess Force reprocessing even if cached (default: FALSE)
 #' @param backend Backend type for LLM ("ollama" or "openai")
 #' @param parallel Whether to use parallel processing (default: FALSE)
@@ -1536,7 +1536,7 @@ neuro2_run_llm_then_render <- function(
 #' @return List of processing results (invisible)
 #' @export
 process_domains_with_llm <- function(
-  patient = "Maya",
+  patient = "Biggie",
   force_reprocess = FALSE,
   backend = "ollama",
   parallel = TRUE,

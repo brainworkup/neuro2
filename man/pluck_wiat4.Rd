@@ -46,11 +46,11 @@ The function also saves the results to CSV files for further use.
 \examples{
 \dontrun{
 # Basic usage with file chooser dialog
-results <- pluck_wiat4(patient = "Maya")
+results <- pluck_wiat4(patient = "Biggie")
 
 # Specify file path and other parameters
 results <- pluck_wiat4(
-  patient = "Maya",
+  patient = "Biggie",
   file = "path/to/wiat4.pdf",
   pages = c(20),
   extract_columns = c(1, 2, 3, 4, 5),

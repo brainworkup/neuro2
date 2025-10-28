@@ -1,7 +1,7 @@
 ---
 title: "Pluck Tables from KTEA-3"
 params:
-  patient: Maya
+  patient: Biggie
   test:
     label: "Test"
     value: ktea3

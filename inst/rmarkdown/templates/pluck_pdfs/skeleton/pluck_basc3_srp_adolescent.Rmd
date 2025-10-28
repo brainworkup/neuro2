@@ -3,7 +3,7 @@ title: |
   <center> BASC-3 SRP Adolescent </center>
 date: "`r Sys.Date()`"
 params:
-  patient: Maya
+  patient: Biggie
   test: basc3_srp_adolescent
   test_name: "BASC-3 SRP Adolescent"
   file:

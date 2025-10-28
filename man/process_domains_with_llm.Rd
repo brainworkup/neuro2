@@ -5,7 +5,7 @@
 \title{Process Domains with LLM}
 \usage{
 process_domains_with_llm(
-  patient = "Maya",
+  patient = "Biggie",
   force_reprocess = FALSE,
   backend = "ollama",
   parallel = TRUE,
@@ -13,7 +13,7 @@ process_domains_with_llm(
 )
 }
 \arguments{
-\item{patient}{Patient name (default: "Maya")}
+\item{patient}{Patient name (default: "Biggie")}
 
 \item{force_reprocess}{Force reprocessing even if cached (default: FALSE)}
 
