@@ -16,8 +16,23 @@
 #' @field colors A vector of colors for fill gradient, Default: NULL (uses
 #'   pre-defined color palette)
 #' @field theme The ggplot theme to be used, Default: 'fivethirtyeight'
+#' @field width The width, in inches, to use when saving the figure, Default: 10
+#' @field height Optional explicit height (in inches) when saving the figure.
+#'   If NULL, the height is calculated dynamically.
+#' @field base_height Inches allocated per item when computing height dynamically,
+#'   Default: 0.4
+#' @field min_height Minimum allowable height when saving the figure, Default: 4
+#' @field height_per_row Inches allocated per row when computing height dynamically,
+#'   Default: 0.7
+#' @field height_padding Additional inches added to the dynamic height calculation,
+#'   Default: 0.8
 #' @field return_plot Whether to return the plot object, Default: TRUE
 #' @field filename The filename to save the plot to, Default: NULL
+#' @field domain The domain
+#' @field subdomain The subdomain
+#' @field narrow The narrow subdomain
+#' @field plot_title Title of plot
+#' @field plot NOt sure
 #'
 #' @section Methods:
 #' \describe{
@@ -39,15 +54,26 @@ DotplotR6 <- R6::R6Class(
     data = NULL,
     x = NULL,
     y = NULL,
+    domain = NULL,
+    subdomain = NULL,
+    narrow = NULL,
     linewidth = 0.5,
     fill = NULL,
     shape = 21,
     point_size = 6,
     line_color = "black",
     colors = NULL,
+    plot_title = NULL,
     theme = "fivethirtyeight",
     return_plot = TRUE,
     filename = NULL,
+    width = NULL,
+    height = NULL,
+    base_height = NULL,
+    min_height = NULL,
+    height_per_row = 0.7,
+    height_padding = 0.8,
+    plot = NULL,
 
     #' @description
     #' Initialize a new DotplotR6 object with configuration and data.
@@ -67,22 +93,44 @@ DotplotR6 <- R6::R6Class(
     #' @param theme The ggplot theme to be used, Default: 'fivethirtyeight'
     #' @param return_plot Whether to return the plot object, Default: TRUE
     #' @param filename The filename to save the plot to, Default: NULL
+    #' @param width The width, in inches, to use when saving the figure. Default: 8
+    #' @param height Optional explicit height (in inches) when saving the figure.
+    #'   If NULL, the height is calculated dynamically based on the number of items.
+    #' @param base_height Inches to allocate per item when computing height dynamically. Default: 0.4
+    #' @param min_height Minimum height for the saved figure in inches. Default: 4
+    #' @param height_per_row Inches to allocate per row for fallback calculation. Default: 0.7
+    #' @param height_padding Additional inches added to fallback calculation. Default: 0.8
+    #' @param domain The domain
+    #' @param subdomain The subdomain
+    #' @param narrow The narrow subdomain
+    #' @param plot_title Title of plot
+    #' @param plot NOt sure
     #' @param ... Additional arguments (ignored).
     #'
     #' @return A new DotplotR6 object
     initialize = function(
       data,
-      x,
-      y,
-      linewidth = 0.5,
-      fill = x,
-      shape = 21,
-      point_size = 6,
-      line_color = "black",
+      x = "percentile",
+      y = "scale",
       colors = NULL,
-      theme = "fivethirtyeight",
-      return_plot = TRUE,
+      domain = NULL,
+      plot_title = NULL,
       filename = NULL,
+      fill = x,
+      height = NULL,
+      width = 8,
+      base_height = 0.4,
+      min_height = 4,
+      height_padding = 0.8,
+      height_per_row = 0.7,
+      line_color = "black",
+      linewidth = 0.5,
+      narrow = NULL,
+      point_size = 6,
+      return_plot = TRUE,
+      shape = 21,
+      subdomain = NULL,
+      theme = "fivethirtyeight",
       ...
     ) {
       self$data <- data
@@ -97,6 +145,59 @@ DotplotR6 <- R6::R6Class(
       self$theme <- theme
       self$return_plot <- return_plot
       self$filename <- filename
+      self$width <- width
+      self$height_per_row <- height_per_row
+      self$height_padding <- height_padding
+      self$domain <- domain
+      self$subdomain <- subdomain
+      self$narrow <- narrow
+      self$plot_title <- plot_title
+
+      # Store the dynamic height parameters
+      self$base_height <- base_height
+      self$min_height <- min_height
+
+      # Calculate dynamic height based on actual items that will be plotted
+      # Count unique values in the y-axis column (what will actually display)
+      if (!is.null(data) && !is.null(y) && y %in% names(data)) {
+        y_data <- data[[y]]
+        n_items <- length(unique(y_data[!is.na(y_data)]))
+
+        # Handle edge case: no valid data
+        if (n_items == 0) {
+          warning(
+            "DotplotR6: No valid data points found for y-axis variable '",
+            y,
+            "'"
+          )
+          n_items <- 1 # Prevent invalid dimensions
+        }
+      } else {
+        # Fallback if data structure is unexpected
+        n_items <- nrow(data)
+        if (is.null(n_items) || n_items == 0) {
+          n_items <- 1
+        }
+      }
+
+      # Calculate height if not explicitly provided
+      if (is.null(height)) {
+        # Dynamic height: each item needs base_height space, plus room for margins/title
+        calculated_height <- max(min_height, n_items * base_height + 2)
+        self$height <- calculated_height
+
+        # Optional: provide feedback during development
+        if (getOption("dotplot.verbose", FALSE)) {
+          message(sprintf(
+            "DotplotR6: Calculated height of %.1f inches for %d items (%.2f per item + 2)",
+            calculated_height,
+            n_items,
+            base_height
+          ))
+        }
+      } else {
+        self$height <- height
+      }
     },
 
     #' @description
@@ -136,8 +237,7 @@ DotplotR6 <- R6::R6Class(
       fill_var <- if (identical(self$fill, self$x)) self$x else self$fill
 
       # Make the plot
-      plot_object <-
-        ggplot2::ggplot() +
+      plot_object <- ggplot2::ggplot() +
         ggplot2::geom_segment(
           data = self$data,
           ggplot2::aes(
@@ -202,14 +302,33 @@ DotplotR6 <- R6::R6Class(
 
         # Determine file extension to save accordingly
         ext <- tools::file_ext(self$filename)
+        plot_width <- if (!is.null(self$width)) self$width else 10
+
+        # Use the height that was calculated in initialize
+        # But allow for dynamic recalculation as fallback if somehow height is still NULL
+        plot_height <- self$height
+        if (is.null(plot_height)) {
+          y_values <- self$data[[self$y]]
+          if (is.null(y_values)) {
+            n_rows <- 1
+          } else {
+            n_rows <- length(unique(y_values[!is.na(y_values)]))
+            if (is.na(n_rows) || n_rows < 1) {
+              n_rows <- 1
+            }
+          }
+          computed_height <- (n_rows * self$height_per_row) +
+            self$height_padding
+          plot_height <- max(self$min_height, computed_height)
+        }
 
         if (ext == "pdf") {
           ggplot2::ggsave(
             filename = self$filename,
             plot = plot_object,
             device = "pdf",
-            width = 10, # Try a wider width
-            height = 6,
+            width = plot_width,
+            height = plot_height,
             dpi = 300
           )
         } else if (ext == "png") {
@@ -217,15 +336,18 @@ DotplotR6 <- R6::R6Class(
             filename = self$filename,
             plot = plot_object,
             device = "png",
-            width = 10, # Try a wider width
-            height = 6,
+            width = plot_width,
+            height = plot_height,
             dpi = 300
           )
         } else if (ext == "svg") {
           ggplot2::ggsave(
             filename = self$filename,
             plot = plot_object,
-            device = "svg"
+            device = "svg",
+            width = plot_width,
+            height = plot_height,
+            dpi = 300
           )
         } else {
           warning(
@@ -266,6 +388,12 @@ DotplotR6 <- R6::R6Class(
 #'   options include 'minimal' and 'classic'
 #' @param return_plot Whether to return the plot object, Default: TRUE
 #' @param filename The filename to save the plot to, Default: NULL
+#' @param width The width, in inches, to use when saving the figure. Default: 10
+#' @param height Optional explicit height (in inches). If NULL, calculated dynamically.
+#' @param base_height Inches per item for dynamic height calculation. Default: 0.4
+#' @param min_height Minimum height in inches. Default: 4
+#' @param height_per_row Fallback: inches per row. Default: 0.7
+#' @param height_padding Fallback: additional inches. Default: 0.8
 #' @param ... Additional arguments to be passed to the function.
 #'
 #' @return An object of class 'ggplot' representing the dotplot.
@@ -284,6 +412,12 @@ dotplot <- function(
   theme = "fivethirtyeight",
   return_plot = TRUE,
   filename = NULL,
+  width = 10,
+  height = NULL,
+  base_height = 0.4,
+  min_height = 4,
+  height_per_row = 0.7,
+  height_padding = 0.8,
   ...
 ) {
   # Create a DotplotR6 object and generate the plot
@@ -299,7 +433,13 @@ dotplot <- function(
     colors = colors,
     theme = theme,
     return_plot = return_plot,
-    filename = filename
+    filename = filename,
+    width = width,
+    height = height,
+    base_height = base_height,
+    min_height = min_height,
+    height_per_row = height_per_row,
+    height_padding = height_padding
   )
 
   return(dot_plot_obj$create_plot())

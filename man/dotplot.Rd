@@ -17,6 +17,12 @@ dotplot(
   theme = "fivethirtyeight",
   return_plot = TRUE,
   filename = NULL,
+  width = 10,
+  height = NULL,
+  base_height = 0.4,
+  min_height = 4,
+  height_per_row = 0.7,
+  height_padding = 0.8,
   ...
 )
 }
@@ -48,6 +54,18 @@ options include 'minimal' and 'classic'}
 \item{return_plot}{Whether to return the plot object, Default: TRUE}
 
 \item{filename}{The filename to save the plot to, Default: NULL}
+
+\item{width}{The width, in inches, to use when saving the figure. Default: 10}
+
+\item{height}{Optional explicit height (in inches). If NULL, calculated dynamically.}
+
+\item{base_height}{Inches per item for dynamic height calculation. Default: 0.4}
+
+\item{min_height}{Minimum height in inches. Default: 4}
+
+\item{height_per_row}{Fallback: inches per row. Default: 0.7}
+
+\item{height_padding}{Fallback: additional inches. Default: 0.8}
 
 \item{...}{Additional arguments to be passed to the function.}
 }

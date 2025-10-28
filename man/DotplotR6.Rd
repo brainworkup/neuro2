@@ -46,9 +46,35 @@ pre-defined color palette)}
 
 \item{\code{theme}}{The ggplot theme to be used, Default: 'fivethirtyeight'}
 
+\item{\code{width}}{The width, in inches, to use when saving the figure, Default: 10}
+
+\item{\code{height}}{Optional explicit height (in inches) when saving the figure.
+If NULL, the height is calculated dynamically.}
+
+\item{\code{base_height}}{Inches allocated per item when computing height dynamically,
+Default: 0.4}
+
+\item{\code{min_height}}{Minimum allowable height when saving the figure, Default: 4}
+
+\item{\code{height_per_row}}{Inches allocated per row when computing height dynamically,
+Default: 0.7}
+
+\item{\code{height_padding}}{Additional inches added to the dynamic height calculation,
+Default: 0.8}
+
 \item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
 
 \item{\code{filename}}{The filename to save the plot to, Default: NULL}
+
+\item{\code{domain}}{The domain}
+
+\item{\code{subdomain}}{The subdomain}
+
+\item{\code{narrow}}{The narrow subdomain}
+
+\item{\code{plot_title}}{Title of plot}
+
+\item{\code{plot}}{NOt sure}
 }
 \if{html}{\out{</div>}}
 }
@@ -68,17 +94,27 @@ Initialize a new DotplotR6 object with configuration and data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DotplotR6$new(
   data,
-  x,
-  y,
-  linewidth = 0.5,
-  fill = x,
-  shape = 21,
-  point_size = 6,
-  line_color = "black",
+  x = "percentile",
+  y = "scale",
   colors = NULL,
-  theme = "fivethirtyeight",
-  return_plot = TRUE,
+  domain = NULL,
+  plot_title = NULL,
   filename = NULL,
+  fill = x,
+  height = NULL,
+  width = 8,
+  base_height = 0.4,
+  min_height = 4,
+  height_padding = 0.8,
+  height_per_row = 0.7,
+  line_color = "black",
+  linewidth = 0.5,
+  narrow = NULL,
+  point_size = 6,
+  return_plot = TRUE,
+  shape = 21,
+  subdomain = NULL,
+  theme = "fivethirtyeight",
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -94,26 +130,49 @@ the mean z-score for a cognitive domain.}
 \item{\code{y}}{The column name in the data frame for the y-axis variable, typically
 the cognitive domain to plot.}
 
-\item{\code{linewidth}}{The width of the line, Default: 0.5}
-
-\item{\code{fill}}{The fill color for the points, Default: x-axis variable}
-
-\item{\code{shape}}{The shape of the points, Default: 21}
-
-\item{\code{point_size}}{The size of the points, Default: 6}
-
-\item{\code{line_color}}{The color of the lines, Default: 'black'}
-
 \item{\code{colors}}{A vector of colors for fill gradient, Default: NULL (uses
 pre-defined color palette)}
 
-\item{\code{theme}}{The ggplot theme to be used, Default: 'fivethirtyeight'}
+\item{\code{domain}}{The domain}
 
-\item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
+\item{\code{plot_title}}{Title of plot}
 
 \item{\code{filename}}{The filename to save the plot to, Default: NULL}
 
+\item{\code{fill}}{The fill color for the points, Default: x-axis variable}
+
+\item{\code{height}}{Optional explicit height (in inches) when saving the figure.
+If NULL, the height is calculated dynamically based on the number of items.}
+
+\item{\code{width}}{The width, in inches, to use when saving the figure. Default: 8}
+
+\item{\code{base_height}}{Inches to allocate per item when computing height dynamically. Default: 0.4}
+
+\item{\code{min_height}}{Minimum height for the saved figure in inches. Default: 4}
+
+\item{\code{height_padding}}{Additional inches added to fallback calculation. Default: 0.8}
+
+\item{\code{height_per_row}}{Inches to allocate per row for fallback calculation. Default: 0.7}
+
+\item{\code{line_color}}{The color of the lines, Default: 'black'}
+
+\item{\code{linewidth}}{The width of the line, Default: 0.5}
+
+\item{\code{narrow}}{The narrow subdomain}
+
+\item{\code{point_size}}{The size of the points, Default: 6}
+
+\item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
+
+\item{\code{shape}}{The shape of the points, Default: 21}
+
+\item{\code{subdomain}}{The subdomain}
+
+\item{\code{theme}}{The ggplot theme to be used, Default: 'fivethirtyeight'}
+
 \item{\code{...}}{Additional arguments (ignored).}
+
+\item{\code{plot}}{NOt sure}
 }
 \if{html}{\out{</div>}}
 }

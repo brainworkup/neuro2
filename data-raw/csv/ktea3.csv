@@ -1,4 +1,4 @@
-﻿test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,test_type,score_type,absort,result
+test,test_name,scale,raw_score,score,ci_95,percentile,range,domain,subdomain,narrow,pass,verbal,timed,test_type,score_type,absort,result
 ktea3,KTEA-3,Academic Skills Battery (ASB) Composite,,80,76 - 84,9,Low Average,Academic Skills,Academic Achievement,Total Achievement,Cross-Domain,,Untimed,npsych_test,standard_score,ktea3_01,"Overall academic achievement in the areas of reading, math, and writing was Low Average."
 ktea3,KTEA-3,Math Concepts & Applications,59,84,78 - 90,14,Low Average,Academic Skills,Math,Mathematical Knowledge,Knowledge,,Untimed,npsych_test,standard_score,ktea3_03.1,"Applying mathematical principles to real-life situations, ranging from basic concepts, everyday applications, geometry, and algebra was Low Average."
 ktea3,KTEA-3,Letter & Word Recognition,66,81,75 - 87,10,Low Average,Academic Skills,Reading,Reading Decoding,Sequential,Verbal,Untimed,npsych_test,standard_score,ktea3_02.1,Single word reading/decoding of a list of regular and irregular words was Low Average.
