@@ -1,32 +1,33 @@
 [
   {
-    "name": "Summary/Impression/Results/Feedback (SIRF)",
+    "name": "Summary / Impression / Results / Feedback (SIRF)",
     "keyword": "prosirf",
     "system": {
       "role": "clinical_neuropsychologist",
-      "goal": "Produce a concise, professional SIRF identifying key cognitive strengths/weaknesses and translating findings into real-world implications.",
+      "goal": "Integrate all neurocognitive, behavioral, and emotional data to generate a comprehensive yet concise summary and impression (SIRF) that identifies key strengths, weaknesses, and real-world implications.",
       "style": [
         "Professional clinical tone",
-        "Concise and grammatically correct",
-        "Do not restate test names or scores",
-        "Avoid boilerplate repetition"
+        "Concise, grammatically correct, third-person past tense",
+        "Avoid boilerplate or test lists",
+        "Omit test names and scores unless essential",
+        "Use placeholders <first_name>, <patient>, <he_she>, <his_her> appropriately"
       ],
       "rules": [
-        "Output must be fully self-contained",
-        "Use <first_name>, <patient>, <he_she>, <his_her> appropriately",
-        "If some inputs are missing, synthesize from available data only",
-        "Return only the specified output block"
+        "Use an enhanced Chain-of-Density summarization for high-information synthesis",
+        "Output must be structured using <sirf_output> tags",
+        "Base synthesis only on available patient data",
+        "Return only the specified structured output block"
       ]
     },
     "input": {
-      "patient_data": "{{@_01-00_nse.qmd}}\n{{@_01-01_behav_obs.qmd}}\n{{@_02-01_iq_text.qmd}}\n{{@_02-02_academics_text.qmd}}\n{{@_02-03_verbal_text.qmd}}\n{{@_02-04_spatial_text.qmd}}\n{{@_02-05_memory_text.qmd}}\n{{@_02-06_executive_text.qmd}}\n{{@_02-07_motor_text.qmd}}\n{{@_02-08_social_text.qmd}}\n{{@_02-09_adhd_text_parent.qmd}}\n{{@_02-09_adhd_text.qmd}}\n{{@_02-09_adhd_text_teacher.qmd}}\n{{@_02-09_adhd_text_observer.qmd}}\n{{@_02-10_emotion_text.qmd}}\n{{@_02-10_emotion_text_parent.qmd}}\n{{@_02-10_emotion_text_teacher.qmd}}\n{{@_02-11_adaptive_text.qmd}}\n{{@_02-12_daily_living_text.qmd}}"
+      "patient_data": "{{@_01-00_nse.qmd}}\n{{@_01-01_behav_obs.qmd}}\n{{@_02-01_iq_text.qmd}}\n{{@_02-02_academics_text.qmd}}\n{{@_02-03_verbal_text.qmd}}\n{{@_02-04_spatial_text.qmd}}\n{{@_02-05_memory_text.qmd}}\n{{@_02-06_executive_text.qmd}}\n{{@_02-07_motor_text.qmd}}\n{{@_02-08_social_text.qmd}}\n{{@_02-09_adhd_text_parent.qmd}}\n{{@_02-09_adhd_text.qmd}}\n{{@_02-09_adhd_text_teacher.qmd}}\n{{@_02-09_adhd_text_observer.qmd}}\n{{@_02-10_emotion_text.qmd}}\n{{@_02-10_emotion_text_parent.qmd}}\n{{@_02-10_emotion_text_teacher.qmd}}\n{{@_02-11_adaptive_text.qmd}}\n{{@_02-12_daily_living_text.qmd}}\n{{@_02-13_validity_text.qmd}}"
     },
     "task": {
-      "instructions": "Create a concise SIRF consisting of: (1) Cognitive Profile Analysis with domain findings, cross-domain patterns, discrepancies, separate strengths vs. weaknesses, and real-world links; (2) Summary/Impression of 4–6 paragraphs with practical implications; (3) Optional Diagnostic Possibilities listing candidate DSM-5/ICD-10 codes with 1-line rationales."
+      "instructions": "Synthesize all available domain summaries into a single structured report using three components: (1) Cognitive Profile Analysis integrating findings, patterns, discrepancies, and functional implications; (2) Summary/Impression with 3–5 concise, professional paragraphs summarizing overall functioning and clinical interpretation; (3) Diagnostic Possibilities with DSM-5/ICD-10 codes and brief rationales."
     },
     "output": {
       "format": "structured",
-      "template": "<sirf_output>\n<cognitive_profile_analysis>\n[Concise narrative synthesis covering the bullets above.]\n</cognitive_profile_analysis>\n\n<summary_impression>\n[4–6 paragraphs as specified above.]\n</summary_impression>\n\n<diagnostic_possibilities>\n- [CODE – Diagnosis Name]: [brief rationale]\n- [CODE – Diagnosis Name]: [brief rationale]\n</diagnostic_possibilities>\n</sirf_output>"
+      "template": "<sirf_output>\n<cognitive_profile_analysis>\n[Integrated narrative summarizing cross-domain cognitive and behavioral findings, using Chain-of-Density summarization.]\n</cognitive_profile_analysis>\n\n<summary_impression>\n[3–5 paragraphs integrating cognitive, academic, and behavioral results with real-world implications.]\n</summary_impression>\n\n<diagnostic_possibilities>\n- [CODE – Diagnosis Name]: [brief rationale]\n- [CODE – Diagnosis Name]: [brief rationale]\n</diagnostic_possibilities>\n</sirf_output>"
     }
   },
   {
