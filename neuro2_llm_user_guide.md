@@ -127,7 +127,7 @@ The system now intelligently selects models based on:
 ```r
 # Check what models are available for each section
 get_model_config("domain", "primary")
-# Returns: c("qwen2.5:7b-instruct-q4_K_M", "llama3.2:3b-instruct-q4_K_M", ...)
+# Returns: c("gemma3:4b-it-qat", "qwen3:4b-instruct-2507-q4_K_M", ...)
 
 get_model_config("sirf", "primary")
 # Returns: c("qwen2.5:14b-instruct-q4_K_M", "llama3.1:8b-instruct-q4_K_M", ...)
@@ -173,6 +173,8 @@ result <- call_llm_with_retry(
 Every generated summary is automatically validated for clinical quality:
 
 ```r
+# Extract the generated text from your result
+generated_summary <- result
 # Validate a generated summary
 validation <- validate_clinical_output(
   text = generated_summary,
@@ -298,7 +300,7 @@ result <- generate_domain_summary_from_master(
 result <- generate_domain_summary_from_master(
   domain_keyword = "instacad",
   temperature = 0.1,  # More deterministic (default: 0.2)
-  section = "domain"
+  section = "domain" # maybe doesnt work
 )
 
 # SIRF with mega model
