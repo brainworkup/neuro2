@@ -128,7 +128,39 @@
     },
     "output": {
       "format": "structured",
-      "template": "<proiq_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</proiq_output>"
+      "template": "<pro2iq_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2iq_output>"
+    }
+  },
+  {
+    "name": "Academic Skills and Achievement Summary",
+    "keyword": "pro2acad",
+    "system": {
+      "role": "clinical_neuropsychologist",
+      "goal": "Summarize the patient's academic performance results, emphasizing real-world implications and functional meaning.",
+      "style": [
+        "Professional clinical tone",
+        "Concise, grammatically correct, third-person past tense",
+        "Capitalize range descriptors (e.g., 'Below Average', 'Above Average')",
+        "Omit test scores and names unless essential",
+        "Use percentiles only when meaningful"
+      ],
+      "rules": [
+        "Output must be one concise paragraph",
+        "Highlight significant strengths and weaknesses",
+        "Focus on functional implications in school, work, and daily life",
+        "Avoid boilerplate or redundant phrasing",
+        "Return only the specified output block"
+      ]
+    },
+    "input": {
+      "patient_data": "{{@_02-02_academics_text.qmd}}"
+    },
+    "task": {
+      "instructions": "Write a concise professional paragraph summarizing academic achievement and academic fluency performance, interpreting results in functional and real-world terms."
+    },
+    "output": {
+      "format": "structured",
+      "template": "<pro2acad_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2iq_output>"
     }
   },
   {
@@ -153,14 +185,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-05_memory_text.qmd}}"
+      "patient_data": "{ @_02-05_memory_text.qmd }"
     },
     "task": {
       "instructions": "Write a concise paragraph summarizing memory and learning performance, interpreting results in terms of functional implications and practical relevance."
     },
     "output": {
       "format": "structured",
-      "template": "<promem_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</promem_output>"
+      "template": "<pro2mem_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2mem_output>"
     }
   },
   {
@@ -184,14 +216,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-06_executive_text.qmd}}"
+      "patient_data": "{ @_02-06_executive_text.qmd }"
     },
     "task": {
       "instructions": "Write one professional paragraph summarizing attention and executive function results, emphasizing strengths, weaknesses, and real-world functional implications."
     },
     "output": {
       "format": "structured",
-      "template": "<proexe_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</proexe_output>"
+      "template": "<pro2exe_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2exe_output>"
     }
   },
   {
@@ -215,14 +247,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-10_emotion_text.qmd}}"
+      "patient_data": "{ @_02-10_emotion_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise paragraph summarizing emotional, behavioral, and social functioning based on rating scale data, focusing on clinically significant findings and real-world implications."
     },
     "output": {
       "format": "structured",
-      "template": "<proemo_output>\n[One concise paragraph summarizing patterns, implications, and clinically significant areas.]\n</proemo_output>"
+      "template": "<pro2emo_output>\n[One concise paragraph summarizing patterns, implications, and clinically significant areas.]\n</pro2emo_output>"
     }
   },
   {
@@ -247,14 +279,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-03_verbal_text.qmd}}"
+      "patient_data": "{ @_02-03_verbal_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise professional paragraph summarizing verbal/language performance, interpreting results in functional and real-world terms."
     },
     "output": {
       "format": "structured",
-      "template": "<proverb_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</proverb_output>"
+      "template": "<pro2verb_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</pro2verb_output>"
     }
   },
   {
@@ -277,14 +309,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-08_social_text.qmd}}"
+      "patient_data": "{ @_02-08_social_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise professional paragraph summarizing social cognition performance, interpreting results in real-world terms and social functioning."
     },
     "output": {
       "format": "structured",
-      "template": "<prosoc_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</prosoc_output>"
+      "template": "<pro2soc_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</pro2soc_output>"
     }
   },
   {
@@ -314,7 +346,7 @@
     },
     "output": {
       "format": "structured",
-      "template": "<promot_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</promot_output>"
+      "template": "<pro2mot_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</pro2mot_output>"
     }
   },
   {
@@ -345,7 +377,7 @@
     },
     "output": {
       "format": "structured",
-      "template": "<proadhd_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</proadhd_output>"
+      "template": "<pro2adhd_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</pro2adhd_output>"
     }
   },
   {
@@ -376,7 +408,7 @@
     },
     "output": {
       "format": "structured",
-      "template": "<proadapt_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</proadapt_output>"
+      "template": "<pro2adapt_output>\n[One concise paragraph summarizing performance, functional implications, and key strengths/weaknesses.]\n</pro2adapt_output>"
     }
   }
 ]
