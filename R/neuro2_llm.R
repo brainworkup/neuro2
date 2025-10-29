@@ -1013,7 +1013,7 @@ call_llm_with_retry <- function(
 #' @title Generate Domain Summary From Master Prompts (QMD-based)
 #' @description Generate summary for a single domain keyword using QMD prompts
 #' @param prompts_dir Optional prompts directory
-#' @param domain_keyword Domain keyword (e.g., "instacad", "prosirf")
+#' @param domain_keyword Domain keyword (e.g., "proacad", "prosirf")
 #' @param model_override Optional model override
 #' @param backend Backend type
 #' @param temperature Temperature setting
@@ -1029,7 +1029,7 @@ generate_domain_summary_from_master <- function(
   domain_keyword,
   model_override = NULL,
   backend = "ollama",
-  temperature = 0.1,
+  temperature = 0.2,
   base_dir = ".",
   echo = "none",
   mega = FALSE,
@@ -1112,7 +1112,7 @@ generate_domain_summary_from_master <- function(
 
   # Determine section
   key_can <- .canon(domain_keyword)
-  section <- if (identical(key_can, "instsirf")) {
+  section <- if (identical(key_can, "prosirf")) {
     if (isTRUE(mega)) "mega" else "sirf"
   } else {
     "domain"
@@ -1200,7 +1200,7 @@ generate_domain_summary_from_master <- function(
   ))
 }
 
-# ---------------------- Parallel processing ----------------------
+# --------------------- Parallel processing ----------------------
 
 #' @title Run LLM for All Domains in Parallel
 #' @description Process multiple domains in parallel for faster batch generation
@@ -1294,7 +1294,7 @@ run_llm_for_all_domains_parallel <- function(
             temperature = temperature,
             base_dir = base_dir,
             echo = echo,
-            mega = if (.canon(k) == "instsirf") {
+            mega = if (.canon(k) == "prosirf") {
               isTRUE(mega_for_sirf)
             } else {
               FALSE
@@ -1375,7 +1375,7 @@ run_llm_for_all_domains <- function(
           temperature = temperature,
           base_dir = base_dir,
           echo = echo,
-          mega = if (.canon(k) == "instsirf") isTRUE(mega_for_sirf) else FALSE
+          mega = if (.canon(k) == "prosirf") isTRUE(mega_for_sirf) else FALSE
         )
       },
       silent = TRUE

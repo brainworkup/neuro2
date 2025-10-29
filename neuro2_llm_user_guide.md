@@ -156,7 +156,7 @@ result <- call_llm_with_retry(
   section = "domain",
   max_retries = 2,       # Number of retry attempts
   validate = TRUE,       # Enable quality checking
-  domain_keyword = "instacad"  # For logging
+  domain_keyword = "proacad"  # For logging
 )
 
 # What happens under the hood:
@@ -251,12 +251,12 @@ Process multiple domains simultaneously:
 ```r
 # Sequential (original) - ~8-10 minutes for full report
 results_seq <- run_llm_for_all_domains(
-  domain_keywords = c("instiq", "instacad", "instmem", "instexe")
+  domain_keywords = c("proiq", "proacad", "promem", "proexe")
 )
 
 # Parallel (new) - ~2-3 minutes for full report
 results_par <- run_llm_for_all_domains_parallel(
-  domain_keywords = c("instiq", "instacad", "instmem", "instexe"),
+  domain_keywords = c("proiq", "proacad", "promem", "proexe"),
   n_cores = 6,          # Your M3 Max can handle this easily
   validate = TRUE,      # Still validates each output
   max_retries = 2       # Retry logic still works
@@ -291,21 +291,21 @@ n_cores = 8
 ```r
 # Force a specific model
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instacad",
+  domain_keyword = "proacad",
   model_override = "qwen2.5:14b-instruct-q4_K_M",  # Use 14B for domain
   backend = "ollama"
 )
 
 # Use different temperatures for different sections
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instacad",
+  domain_keyword = "proacad",
   temperature = 0.1,  # More deterministic (default: 0.2)
   section = "domain" # maybe doesnt work
 )
 
 # SIRF with mega model
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instsirf",
+  domain_keyword = "prosirf",
   mega = TRUE,  # Use 30B+ model instead of 14B
   temperature = 0.35  # More creative (default for SIRF)
 )
@@ -316,7 +316,7 @@ result <- generate_domain_summary_from_master(
 ```r
 # Use stricter validation for final reports
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instacad",
+  domain_keyword = "proacad",
   validate = TRUE
 )
 
@@ -329,7 +329,7 @@ validation <- validate_clinical_output(
 if (validation$quality_score < 70) {
   # Regenerate with different model
   result <- generate_domain_summary_from_master(
-    domain_keyword = "instacad",
+    domain_keyword = "proacad",
     model_override = "qwen2.5:14b-instruct-q4_K_M"  # Try larger model
   )
 }
@@ -340,17 +340,17 @@ if (validation$quality_score < 70) {
 ```r
 # Process just a few domains
 results <- run_llm_for_all_domains_parallel(
-  domain_keywords = c("instiq", "instmem", "instexe"),
+  domain_keywords = c("proiq", "promem", "proexe"),
   n_cores = 3,
   validate = TRUE
 )
 
 # Process with custom settings per section
-results <- lapply(c("instiq", "instmem", "instsirf"), function(domain) {
+results <- lapply(c("proiq", "promem", "prosirf"), function(domain) {
   generate_domain_summary_from_master(
     domain_keyword = domain,
-    temperature = if (domain == "instsirf") 0.35 else 0.2,
-    mega = domain == "instsirf",
+    temperature = if (domain == "prosirf") 0.35 else 0.2,
+    mega = domain == "prosirf",
     validate = TRUE
   )
 })
@@ -371,7 +371,7 @@ cache_dir <- llm_cache_dir()
 unlink(llm_cache_dir(), recursive = TRUE)
 
 # Or clear specific domain:
-cache_files <- list.files(llm_cache_dir(), pattern = "instacad", full.names = TRUE)
+cache_files <- list.files(llm_cache_dir(), pattern = "proacad", full.names = TRUE)
 file.remove(cache_files)
 ```
 
@@ -441,7 +441,7 @@ view_llm_usage(summary_only = FALSE)
 
 # Try with explicit model:
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instacad",
+  domain_keyword = "proacad",
   model_override = "qwen2.5:7b-instruct-q4_K_M",
   max_retries = 3,
   validate = FALSE  # Disable validation temporarily
@@ -458,7 +458,7 @@ print(validation$warnings)
 
 # Try larger model:
 result <- generate_domain_summary_from_master(
-  domain_keyword = "instacad",
+  domain_keyword = "proacad",
   model_override = "qwen2.5:14b-instruct-q4_K_M"  # Upgrade to 14B
 )
 ```
@@ -475,7 +475,7 @@ install.packages(c("future", "future.apply"))
 
 # Test with small batch first:
 results <- run_llm_for_all_domains_parallel(
-  domain_keywords = c("instiq", "instacad"),  # Just 2 domains
+  domain_keywords = c("proiq", "proacad"),  # Just 2 domains
   n_cores = 2,
   validate = TRUE
 )
@@ -617,8 +617,8 @@ The SIRF section benefits most from larger models:
 ```r
 # Generate all regular domains in parallel
 domain_keywords_regular <- c(
-  "instnse", "instiq", "instacad", "instverb", "instvis", 
-  "instmem", "instexe", "instmot", "instsoc"
+  "pronse", "proiq", "proacad", "proverb", "prospt", 
+  "promem", "proexe", "promot", "prosoc", "proadhd", "proadapt"
 )
 
 results_domains <- run_llm_for_all_domains_parallel(
@@ -628,7 +628,7 @@ results_domains <- run_llm_for_all_domains_parallel(
 
 # Generate SIRF separately with mega model
 result_sirf <- generate_domain_summary_from_master(
-  domain_keyword = "instsirf",
+  domain_keyword = "prosirf",
   mega = TRUE,                # Use 32B model
   temperature = 0.35,         # More creative
   validate = TRUE,

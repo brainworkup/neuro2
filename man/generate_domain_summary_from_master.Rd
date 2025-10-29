@@ -9,7 +9,7 @@ generate_domain_summary_from_master(
   domain_keyword,
   model_override = NULL,
   backend = "ollama",
-  temperature = 0.1,
+  temperature = 0.2,
   base_dir = ".",
   echo = "none",
   mega = FALSE,
@@ -20,7 +20,7 @@ generate_domain_summary_from_master(
 \arguments{
 \item{prompts_dir}{Optional prompts directory}
 
-\item{domain_keyword}{Domain keyword (e.g., "instacad", "prosirf")}
+\item{domain_keyword}{Domain keyword (e.g., "proacad", "prosirf")}
 
 \item{model_override}{Optional model override}
 
