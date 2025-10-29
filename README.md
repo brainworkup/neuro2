@@ -1151,6 +1151,27 @@ Fork the repository 2.
 Create a feature branch (`git checkout -b feature/NewFeature`) 3.
 Commit changes (`git commit -m 'Add NewFeature'`) 4.
 Push to branch (`git push origin feature/NewFeature`) 5.
+Open a Pull Request
+&#10;## 📝 License
+&#10;This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+&#10;## 📖 Citation
+&#10;If you use this package in your work, please cite:
+&#10;```         
+Trampush, J. (2024). neuro2: Modern Neuropsychological Report Generation System.
+R package version 0.1.8 https://github.com/brainworkup/neuro2
+```
+&#10;## 📧 Contact
+&#10;-   **Author**: Joey Trampush, PhD
+-   **Email**: [joey.trampush\@brainworkup.org](mailto:joey.trampush@brainworkup.org){.email}
+-   **Issues**: [GitHub Issues](https://github.com/brainworkup/neuro2/issues)
+&#10;## 🙏 Acknowledgments
+&#10;-   Built on the [Quarto](https://quarto.org) publishing system
+-   Uses [Typst](https://typst.app) for beautiful typesetting
+-   Powered by [DuckDB](https://duckdb.org) for fast data processing
+-   Tables created with [gt](https://gt.rstudio.com)
+-   R6 architecture inspired by modern OOP best practices -->
+
+<!-- Test comment for PR verification -->
 Open a Pull Request -->
 
 ## 📝 License
