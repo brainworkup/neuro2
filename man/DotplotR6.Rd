@@ -12,43 +12,54 @@ DotplotR6 Class
 An R6 class that generates a dotplot for neurocognitive and neurobehavioral domains.
 This is an R6 implementation of the dotplot function with identical functionality.
 }
-\section{Methods}{
-
-\describe{
-\item{initialize}{Initialize a new DotplotR6 object with configuration and data.}
-\item{create_plot}{Generate the dotplot based on the object's configuration.}
-}
-}
-
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{data}}{The dataset or df containing the data for the dotplot.}
+\item{\code{data}}{The dataset (data.frame/tibble) used to draw the plot.}
 
-\item{\code{x}}{The column name in the data frame for the x-axis variable, typically
-the mean z-score for a cognitive domain.}
+\item{\code{x}}{The column name for the x-axis (typically a percentile or z).}
 
-\item{\code{y}}{The column name in the data frame for the y-axis variable, typically
-the cognitive domain to plot.}
+\item{\code{y}}{The column name for the y-axis (typically the scale/domain label).}
 
-\item{\code{linewidth}}{The width of the line, Default: 0.5}
+\item{\code{domain}}{Optional domain label to keep alongside the object.}
 
-\item{\code{fill}}{The fill color for the points, Default: x-axis variable}
+\item{\code{subdomain}}{Optional subdomain label to keep alongside the object.}
 
-\item{\code{shape}}{The shape of the points, Default: 21}
+\item{\code{narrow}}{Optional narrow label to keep alongside the object.}
 
-\item{\code{point_size}}{The size of the points, Default: 6}
+\item{\code{linewidth}}{Line width for the segment “lollipop” stems. Default: 0.5.}
 
-\item{\code{line_color}}{The color of the lines, Default: 'black'}
+\item{\code{fill}}{A column name whose values determine the point fill (usually = x). Default: x.}
 
-\item{\code{colors}}{A vector of colors for fill gradient, Default: NULL (uses
-pre-defined color palette)}
+\item{\code{shape}}{Point shape. Default: 21.}
 
-\item{\code{theme}}{The ggplot theme to be used, Default: 'fivethirtyeight'}
+\item{\code{point_size}}{Point size. Default: 6.}
 
-\item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
+\item{\code{line_color}}{Line/point border color. Default: "black".}
 
-\item{\code{filename}}{The filename to save the plot to, Default: NULL}
+\item{\code{colors}}{Optional vector of colors for a gradient fill. If NULL, uses internal palette.}
+
+\item{\code{plot_title}}{Optional plot title.}
+
+\item{\code{theme}}{One of "fivethirtyeight", "minimal", "classic". Default: "fivethirtyeight".}
+
+\item{\code{return_plot}}{If TRUE, return the ggplot object; otherwise invisible(NULL).}
+
+\item{\code{filename}}{Optional output filename; if given, the plot is saved.}
+
+\item{\code{width}}{Width in inches when saving. Default: 10.}
+
+\item{\code{height}}{Height in inches when saving. If NULL, calculated dynamically.}
+
+\item{\code{base_height}}{Inches per item for dynamic height. Default: 0.4.}
+
+\item{\code{min_height}}{Minimum figure height (in). Default: 4.}
+
+\item{\code{height_per_row}}{Fallback inches per unique y when recomputing. Default: 0.7.}
+
+\item{\code{height_padding}}{Extra inches added in fallback recompute. Default: 0.8.}
+
+\item{\code{plot}}{The last ggplot object created by \code{create_plot()} (read-only convenience).}
 }
 \if{html}{\out{</div>}}
 }
@@ -68,17 +79,27 @@ Initialize a new DotplotR6 object with configuration and data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DotplotR6$new(
   data,
-  x,
-  y,
-  linewidth = 0.5,
-  fill = x,
-  shape = 21,
-  point_size = 6,
-  line_color = "black",
+  x = "percentile",
+  y = "scale",
   colors = NULL,
-  theme = "fivethirtyeight",
-  return_plot = TRUE,
+  domain = NULL,
+  plot_title = NULL,
   filename = NULL,
+  fill = x,
+  height = NULL,
+  width = 10,
+  base_height = 0.4,
+  min_height = 4,
+  height_padding = 0.8,
+  height_per_row = 0.7,
+  line_color = "black",
+  linewidth = 0.5,
+  narrow = NULL,
+  point_size = 6,
+  return_plot = TRUE,
+  shape = 21,
+  subdomain = NULL,
+  theme = "fivethirtyeight",
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -86,39 +107,53 @@ Initialize a new DotplotR6 object with configuration and data.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{The dataset or df containing the data for the dotplot.}
+\item{\code{data}}{Data frame containing at least columns \code{x} and \code{y}.}
 
-\item{\code{x}}{The column name in the data frame for the x-axis variable, typically
-the mean z-score for a cognitive domain.}
+\item{\code{x}}{Column name for x-axis (character). Default: "percentile".}
 
-\item{\code{y}}{The column name in the data frame for the y-axis variable, typically
-the cognitive domain to plot.}
+\item{\code{y}}{Column name for y-axis (character). Default: "scale".}
 
-\item{\code{linewidth}}{The width of the line, Default: 0.5}
+\item{\code{colors}}{Optional vector of colors for fill gradient.}
 
-\item{\code{fill}}{The fill color for the points, Default: x-axis variable}
+\item{\code{domain}}{Optional domain label.}
 
-\item{\code{shape}}{The shape of the points, Default: 21}
+\item{\code{plot_title}}{Optional plot title.}
 
-\item{\code{point_size}}{The size of the points, Default: 6}
+\item{\code{filename}}{Optional filename to save the plot.}
 
-\item{\code{line_color}}{The color of the lines, Default: 'black'}
+\item{\code{fill}}{Column name to use for point fill (default: same as x).}
 
-\item{\code{colors}}{A vector of colors for fill gradient, Default: NULL (uses
-pre-defined color palette)}
+\item{\code{height}}{Figure height (in). If NULL, computed dynamically.}
 
-\item{\code{theme}}{The ggplot theme to be used, Default: 'fivethirtyeight'}
+\item{\code{width}}{Figure width (in). Default: 10.}
 
-\item{\code{return_plot}}{Whether to return the plot object, Default: TRUE}
+\item{\code{base_height}}{Inches per unique y item when computing height. Default: 0.4.}
 
-\item{\code{filename}}{The filename to save the plot to, Default: NULL}
+\item{\code{min_height}}{Minimum height (in). Default: 4.}
 
-\item{\code{...}}{Additional arguments (ignored).}
+\item{\code{height_padding}}{Extra inches in fallback recompute. Default: 0.8.}
+
+\item{\code{height_per_row}}{Fallback inches per row. Default: 0.7.}
+
+\item{\code{line_color}}{Line / border color. Default: "black".}
+
+\item{\code{linewidth}}{Line width. Default: 0.5.}
+
+\item{\code{narrow}}{Optional narrow label.}
+
+\item{\code{point_size}}{Point size. Default: 6.}
+
+\item{\code{return_plot}}{Return ggplot object? Default: TRUE.}
+
+\item{\code{shape}}{Point shape. Default: 21.}
+
+\item{\code{subdomain}}{Optional subdomain label.}
+
+\item{\code{theme}}{Theme string ("fivethirtyeight", "minimal", "classic"). Default: "fivethirtyeight".}
+
+\item{\code{...}}{Ignored.}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new DotplotR6 object
 }
 }
 \if{html}{\out{<hr>}}
@@ -131,8 +166,7 @@ Generate the dotplot based on the object's configuration.
 }
 
 \subsection{Returns}{
-If return_plot is TRUE, returns an object of class 'ggplot' representing the dotplot.
-Otherwise returns invisible(NULL).
+If \code{return_plot} is TRUE, a ggplot object; otherwise invisible(NULL).
 }
 }
 \if{html}{\out{<hr>}}

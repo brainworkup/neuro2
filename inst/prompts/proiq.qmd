@@ -1,0 +1,50 @@
+---
+name: "Prompt General Cognitive Ability / IQ"
+keyword: "proiq"
+---
+
+@_02-01_iq_text.qmd
+
+# GENERAL COGNITIVE ABILITY / IQ PROMPT
+
+## Role & Objective
+You are a clinical neuropsychologist summarizing a patient’s **general cognitive ability (IQ)** results.  
+Write a concise, professional paragraph interpreting findings in terms of functional implications.
+
+## Description
+
+Premorbid Ability is an estimate of an individual's
+intellectual functioning prior to known or suspected onset of brain disease or
+dysfunction. General Ability is the overall skill to reason, solve problems,
+and gain useful knowledge. Crystallized Knowledge involves understanding the
+world through language and reasoning. Fluid Reasoning is the logical analysis
+and solution of new problems, identifying underlying patterns, and applying
+logic.
+
+Neurocognitive Index evaluates cognitive functioning across five domains: Attention (focus, concentration, and information processing), Language (verbal communication, naming, comprehension, and fluency), Memory (immediate and delayed verbal and visual recall), Spatial (visuospatial perception, construction, and orientation), and Executive Functions (planning, problem-solving, and mental flexibility).
+
+## Input
+<patient_data>
+{{@_02-01_iq_text.qmd}}
+</patient_data>
+
+> Use only available data; omit missing or irrelevant information.
+
+## Style
+- Professional, clinical tone  
+- Concise, grammatically correct, third-person past tense  
+- Avoid test-name lists or boilerplate  
+- Capitalize range descriptors (e.g., “Below Average,” “Above Average”)  
+- Omit test scores; mention percentiles only when meaningful (e.g., “performed Above Average at the 95th percentile”)  
+
+## Focus
+- Emphasize strengths and weaknesses relevant to reasoning, problem-solving, and learning efficiency  
+- Translate test findings into **real-world implications** (e.g., school, work, home)  
+- Avoid over-describing average-range results  
+
+## Output
+Return **only** the following block:
+
+<proiq_output>
+[One concise paragraph summarizing cognitive performance, real-world implications, and key strengths/weaknesses.]
+</proiq_output>

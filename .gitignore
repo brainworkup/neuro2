@@ -178,3 +178,25 @@ files_updated_domainProcessorR6/
 R/DomainProcessorR6.R.bk
 CODE_COMPARISON.md
 files_llm_fix/
+.vscode/settings.json
+R/check_available_models.R
+R/ollamar.R
+test_social_domain_fix.R
+*.qmd.generated
+.cursorindexingignore
+.gitignore
+.gitignore
+.vdoc.bf7621e8-e121-41d8-bf05-0db40cbe3da2.r
+ollama_models_102125.xlsx
+Qwen_r_20251021_a1uaj8lnl.r
+neuro2_llm_user_guide.pdf
+.gitignore
+.gitignore
+neuro2_llm_cheatsheet.pdf
+1. Overview.md
+neuro2_ollama_models.csv
+neuro2_ollama_models.xlsx
+DotplotR6_FIXED.R
+R/DotplotR6.R.bk
+neuro2.code-workspace
+neuro2_llm_functions.R

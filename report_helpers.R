@@ -3,7 +3,7 @@
 # Patient ID --------------------------------------------------------------
 
 # Parameters
-patient <- "Maya"
+patient <- "Biggie"
 test <- "wisc5"
 test_name <- "WISC-V"
 file_path <- file.path(file.choose()) # Prompt user to select PDF file
@@ -12,7 +12,6 @@ file_path <- readRDS(paste0(test, "_path.rds"))
 
 
 # PDF data to extract -----------------------------------------------------
-
 
 # Extract WISC-V index scores
 pages <- c(28, 31)

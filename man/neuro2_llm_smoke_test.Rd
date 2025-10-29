@@ -5,24 +5,24 @@
 \title{neuro2 LLM smoke test}
 \usage{
 neuro2_llm_smoke_test(
-  model = "qwen3:8b-q4_K_M",
+  model = NULL,
   backend = "ollama",
   prompt = "Reply with the single word: OK",
   system_prompt = "Be terse."
 )
 }
 \arguments{
-\item{model}{Model name (Ollama by default, e.g., "qwen3:8b-q4_K_M").}
+\item{model}{Model name (default: auto-select best available domain model)}
 
-\item{backend}{"ollama" or "openai".}
+\item{backend}{"ollama" or "openai"}
 
-\item{prompt}{User prompt string.}
+\item{prompt}{User prompt string}
 
-\item{system_prompt}{System prompt string.}
+\item{system_prompt}{System prompt string}
 }
 \value{
-A list with fields \code{seconds}, \code{preview}, and \code{raw}.
+A list with fields \code{seconds}, \code{preview}, \code{raw}, \code{model}
 }
 \description{
-Pings the configured model (Ollama by default) and returns a short response plus timing.
+Pings the configured model and returns a short response plus timing
 }

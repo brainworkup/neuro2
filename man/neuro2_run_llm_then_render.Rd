@@ -9,38 +9,47 @@ neuro2_run_llm_then_render(
   prompts_dir = NULL,
   render_paths = character(0),
   quarto_profile = NULL,
-  domain_keywords = c("instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
-    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
-    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt", "instdl", "instsirf",
-    "instrec"),
+  render_format = NULL,
+  render_all_formats = FALSE,
+  domain_keywords = NULL,
   backend = "ollama",
   mega_for_sirf = FALSE,
-  temperature = 0.2,
-  echo = "none"
+  temperature = NULL,
+  echo = "none",
+  parallel = FALSE,
+  n_cores = NULL
 )
 }
 \arguments{
-\item{base_dir}{Base directory where \verb{*_text.qmd} live.}
+\item{base_dir}{Base directory where \verb{*_text.qmd} live}
 
-\item{prompts_dir}{Prompts directory (default installed).}
+\item{prompts_dir}{Prompts directory (default installed)}
 
-\item{render_paths}{Character vector of paths to \code{.qmd} files to render after LLM runs.}
+\item{render_paths}{Character vector of paths to \code{.qmd} files to render after LLM runs}
 
-\item{quarto_profile}{Optional Quarto profile (e.g., "prod").}
+\item{quarto_profile}{Optional Quarto profile (e.g., "prod")}
 
-\item{domain_keywords}{Vector of keywords to generate; default is a standard set including "instsirf".}
+\item{render_format}{Preferred Quarto output format (default: detect or "typst")}
 
-\item{backend}{\code{"ollama"} (default) or \code{"openai"}.}
+\item{render_all_formats}{Render every configured format (\code{FALSE} renders just one)}
 
-\item{mega_for_sirf}{Use the mega model for SIRF.}
+\item{domain_keywords}{Vector of keywords to generate}
 
-\item{temperature}{LLM temperature.}
+\item{backend}{Backend type}
 
-\item{echo}{ellmer echo mode.}
+\item{mega_for_sirf}{Use mega model for SIRF}
+
+\item{temperature}{LLM temperature}
+
+\item{echo}{ellmer echo mode}
+
+\item{parallel}{Whether to use parallel processing}
+
+\item{n_cores}{Number of cores for parallel processing}
 }
 \value{
-Invisibly returns a list with \code{llm} results and \code{rendered} output paths.
+Invisibly returns a list with \code{llm} results and \code{rendered} output paths
 }
 \description{
-Executes the LLM stage first, then renders one or more Quarto documents.
+Executes the LLM stage first, then renders one or more Quarto documents
 }

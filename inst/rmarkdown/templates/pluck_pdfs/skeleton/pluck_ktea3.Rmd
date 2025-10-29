@@ -24,7 +24,7 @@ params:
     label: "No file selected"
     value: file
     input: file
-  pages: [2, 3]
+  pages: [40, 41]
   table1:
     label: "Table 1: Core Composite Score Summary"
     value: []
@@ -124,7 +124,9 @@ params:
 ## Setup
 
 ```{r setup, include=FALSE}
-Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home")
+Sys.setenv(
+  JAVA_HOME = "/Library/Java/JavaVirtualMachines/graalvm-jdk-22.0.1+8.1/Contents/Home"
+)
 options(java.parameters = "-Xmx16000m")
 knitr::opts_chunk$set(
   root.dir = normalizePath("./"),
@@ -155,9 +157,9 @@ test <- params$test
 test_name <- params$test_name
 pages <- params$pages
 file <- file.path(params$file)
+# file <- file.path(file.choose())
 saveRDS(file, "ktea3.rds")
 # file <- readRDS("ktea3.rds")
-# file <- file.path(file.choose())
 ```
 
 ## updated March 2025
@@ -198,7 +200,11 @@ process_ktea3_tables(extracted_tables_ktea3)
 
 # Loop over the list and write each matrix to a CSV file
 for (i in seq_along(extracted_tables_ktea3)) {
-  write.csv(extracted_tables_ktea3[[i]], file = paste0(test, "_", i, ".csv"), row.names = FALSE)
+  write.csv(
+    extracted_tables_ktea3[[i]],
+    file = paste0(test, "_", i, ".csv"),
+    row.names = FALSE
+  )
 }
 ```
 
@@ -209,7 +215,17 @@ table1 <- data.frame(table1)
 table1 <- table1 |> slice(-1:-6)
 table1[1, 1] <- c("Academic Skills Battery (ASB) Composite")
 # names(table1) <- params$colnames
-names(table1) <- c("scale", "raw_score", "sum_subtests", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
+names(table1) <- c(
+  "scale",
+  "raw_score",
+  "sum_subtests",
+  "score",
+  "ci_95",
+  "percentile",
+  "category",
+  "age_equiv",
+  "gsv"
+)
 df <- table1
 ```
 
@@ -240,7 +256,17 @@ table1 <- convert_columns(df)
 table2 <- data.frame(table2)
 table2 <- table2 |> slice(-1:-5)
 # names(table1) <- params$colnames
-names(table2) <- c("scale", "raw_score", "sum_subtests", "score", "ci_95", "percentile", "category", "age_equiv", "gsv")
+names(table2) <- c(
+  "scale",
+  "raw_score",
+  "sum_subtests",
+  "score",
+  "ci_95",
+  "percentile",
+  "category",
+  "age_equiv",
+  "gsv"
+)
 df <- table2
 # usage (assuming you have a dataframe named 'df')
 table2 <- convert_columns(df)
@@ -264,7 +290,10 @@ library(dplyr)
 # Function to replace "-" with NA and filter out rows with no real data
 filter_real_data <- function(table, key_columns) {
   table <- table %>%
-    mutate(across(all_of(key_columns), ~ if_else(. == "-", NA_character_, as.character(.)))) %>%
+    mutate(across(
+      all_of(key_columns),
+      ~ if_else(. == "-", NA_character_, as.character(.))
+    )) %>%
     mutate(across(all_of(key_columns), as.numeric)) %>%
     filter(rowSums(is.na(select(., all_of(key_columns)))) < length(key_columns))
 
@@ -327,15 +356,20 @@ table2 <- neuro2::gpluck_make_columns(
 ## Test score ranges
 
 ```{r range}
-table1 <- neuro2::gpluck_make_score_ranges(table = table1, test_type = "npsych_test")
-table2 <- neuro2::gpluck_make_score_ranges(table = table2, test_type = "npsych_test")
+table1 <- neuro2::gpluck_make_score_ranges(
+  table = table1,
+  test_type = "npsych_test"
+)
+table2 <- neuro2::gpluck_make_score_ranges(
+  table = table2,
+  test_type = "npsych_test"
+)
 ```
 
 ## Domains for language tests
 
 ```{r}
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     domain = case_when(
       scale == "Oral Language Composite" ~ "Verbal/Language",
@@ -354,11 +388,11 @@ table2 <-
 ## Subdomains
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   mutate(
     subdomain = case_when(
-      scale == "Academic Skills Battery (ASB) Composite" ~ "Academic Achievement",
+      scale == "Academic Skills Battery (ASB) Composite" ~
+        "Academic Achievement",
       scale == "Reading Composite" ~ "Reading",
       scale == "Math Composite" ~ "Math",
       scale == "Written Language Composite" ~ "Writing",
@@ -372,8 +406,7 @@ table1 <-
     )
   )
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     subdomain = case_when(
       scale == "Sound-Symbol Composite" ~ "Reading",
@@ -414,11 +447,11 @@ table2 <-
 ## Narrow subdomains
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   mutate(
     narrow = case_when(
-      scale == "Academic Skills Battery (ASB) Composite" ~ "General Academic Achievement",
+      scale == "Academic Skills Battery (ASB) Composite" ~
+        "General Academic Achievement",
       scale == "Math Concepts & Applications" ~ "Mathematical Knowledge",
       scale == "Letter & Word Recognition" ~ "Reading Decoding",
       scale == "Written Expression" ~ "Writing Ability",
@@ -432,8 +465,7 @@ table1 <-
     )
   )
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     narrow = case_when(
       scale == "Academic Fluency Composite" ~ "Rate of Test-Taking",
@@ -473,8 +505,7 @@ table2 <-
 ## PASS model
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   mutate(
     pass = case_when(
       scale == "Academic Skills Battery (ASB) Composite" ~ "",
@@ -491,8 +522,7 @@ table1 <-
     )
   )
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     pass = case_when(
       scale == "Nonsense Word Decoding" ~ "Sequential",
@@ -527,8 +557,7 @@ table2 <-
 ## Verbal vs Nonverbal
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   mutate(
     verbal = case_when(
       scale == "Academic Skills Battery (ASB) Composite" ~ "",
@@ -539,8 +568,7 @@ table1 <-
     )
   )
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     verbal = case_when(
       scale == "Academic Fluency Composite" ~ "",
@@ -555,8 +583,7 @@ table2 <-
 ## Timed vs Untimed
 
 ```{r}
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     timed = case_when(
       scale == "Nonsense Word Decoding" ~ "Untimed",
@@ -591,53 +618,75 @@ table2 <-
 ## Descriptions
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   mutate(
     description = case_when(
-      scale == "Academic Skills Battery (ASB) Composite" ~ "Overall academic achievement in the areas of reading, math, and writing",
-      scale == "Math Concepts & Applications" ~ "Applying mathematical principles to real-life situations, ranging from basic concepts, everyday applications, geometry, and algebra",
-      scale == "Letter & Word Recognition" ~ "Single word reading/decoding of a list of regular and irregular words",
-      scale == "Written Expression" ~ "Overall written expression skills including spelling and expository/contextual writing",
-      scale == "Math Computation" ~ "Paper and pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems",
+      scale == "Academic Skills Battery (ASB) Composite" ~
+        "Overall academic achievement in the areas of reading, math, and writing",
+      scale == "Math Concepts & Applications" ~
+        "Applying mathematical principles to real-life situations, ranging from basic concepts, everyday applications, geometry, and algebra",
+      scale == "Letter & Word Recognition" ~
+        "Single word reading/decoding of a list of regular and irregular words",
+      scale == "Written Expression" ~
+        "Overall written expression skills including spelling and expository/contextual writing",
+      scale == "Math Computation" ~
+        "Paper and pencil math calculation skills, ranging from basic operations with integers to geometry, algebra, and calculus problems",
       scale == "Spelling" ~ "Written spelling of words from dictations",
-      scale == "Reading Comprehension" ~ "Reading comprehension skills at the level of word, sentence, and passage",
-      scale == "Reading Composite" ~ "Composite score of decoding and comprehension that balances word-level and text-level reading skills",
-      scale == "Math Composite" ~ "Estimate of overall mathematics skills in the domains of math comprehension and problem solving and math computation",
-      scale == "Written Language Composite" ~ "Overall written expression skills including spelling and expository/contextual writing",
+      scale == "Reading Comprehension" ~
+        "Reading comprehension skills at the level of word, sentence, and passage",
+      scale == "Reading Composite" ~
+        "Composite score of decoding and comprehension that balances word-level and text-level reading skills",
+      scale == "Math Composite" ~
+        "Estimate of overall mathematics skills in the domains of math comprehension and problem solving and math computation",
+      scale == "Written Language Composite" ~
+        "Overall written expression skills including spelling and expository/contextual writing",
       TRUE ~ as.character(description)
     )
   )
 
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   mutate(
     description = case_when(
-      scale == "Nonsense Word Decoding" ~ "Phonic decoding skills by reading aloud a list of pseudowords",
-      scale == "Academic Fluency Composite" ~ "Overall academic fluency in reading, math, and writing",
+      scale == "Nonsense Word Decoding" ~
+        "Phonic decoding skills by reading aloud a list of pseudowords",
+      scale == "Academic Fluency Composite" ~
+        "Overall academic fluency in reading, math, and writing",
       scale == "Writing Fluency" ~ "Sentence level writing fluency",
-      scale == "Math Fluency" ~ "Overall speed/fluency in solving fact-based addition, subtraction, and multiplication problems",
+      scale == "Math Fluency" ~
+        "Overall speed/fluency in solving fact-based addition, subtraction, and multiplication problems",
       scale == "Decoding Fluency" ~ "Phonic decoding fluency",
-      scale == "Sound-Symbol Composite" ~ "Composite measure of reading and spelling skills??",
-      scale == "Phonological Processing" ~ "Auditory processing of phonemic proficiency and phonic decoding skills",
-      scale == "Decoding Composite" ~ "Composite estimate of decontextualized phonic decoding and word reading skills",
+      scale == "Sound-Symbol Composite" ~
+        "Composite measure of reading and spelling skills??",
+      scale == "Phonological Processing" ~
+        "Auditory processing of phonemic proficiency and phonic decoding skills",
+      scale == "Decoding Composite" ~
+        "Composite estimate of decontextualized phonic decoding and word reading skills",
       scale == "Reading Fluency Composite" ~ "General reading speed/fluncy",
       scale == "Silent Reading Fluency" ~ "Non oral reading fluency",
-      scale == "Word Recognition Fluency" ~ "Orthographic lexicon, or sight vocabulary fluency",
-      scale == "Reading Understanding Composite" ~ "Reading comprehension skills at the level of word, sentence, and passage",
+      scale == "Word Recognition Fluency" ~
+        "Orthographic lexicon, or sight vocabulary fluency",
+      scale == "Reading Understanding Composite" ~
+        "Reading comprehension skills at the level of word, sentence, and passage",
       scale == "Reading Vocabulary" ~ "Vocabulary reading comprehension",
-      scale == "Oral Language Composite" ~ "Overall estimate of receptive and expressive language skills at the level of the word, sentence, passage, and discourse",
+      scale == "Oral Language Composite" ~
+        "Overall estimate of receptive and expressive language skills at the level of the word, sentence, passage, and discourse",
       scale == "Associational Fluency" ~ "Semantic word fluency",
-      scale == "Listening Comprehension" ~ "Receptive language comprehension at the level of the word, sentence, and passage",
-      scale == "Oral Expression" ~ "Oral expression at the level of the word and sentence",
+      scale == "Listening Comprehension" ~
+        "Receptive language comprehension at the level of the word, sentence, and passage",
+      scale == "Oral Expression" ~
+        "Oral expression at the level of the word and sentence",
       scale == "Oral Fluency Composite" ~ "General expressive language fluency",
       scale == "Object Naming Facility" ~ "Rapid automatic naming (objects)",
-      scale == "Comprehension Composite" ~ "Estimate of general language comprehension skills",
-      scale == "Listening Comprehension" ~ "Receptive language comprehension at the level of the word, sentence, and passage",
-      scale == "Expression Composite" ~ "Estimate of oral language expression skills",
+      scale == "Comprehension Composite" ~
+        "Estimate of general language comprehension skills",
+      scale == "Listening Comprehension" ~
+        "Receptive language comprehension at the level of the word, sentence, and passage",
+      scale == "Expression Composite" ~
+        "Estimate of oral language expression skills",
       scale == "Letter Naming Facility" ~ "Rapid automatic naming (letters)",
-      scale == "Orthographic Processing Composite" ~ "Overall measure of orthographic processing, including the size of the examinees orthographic lexicon and the quality of orthographic representations",
+      scale == "Orthographic Processing Composite" ~
+        "Overall measure of orthographic processing, including the size of the examinees orthographic lexicon and the quality of orthographic representations",
       TRUE ~ as.character(description)
     )
   )
@@ -646,21 +695,11 @@ table2 <-
 ## Glue results
 
 ```{r}
-table1 <-
-  table1 |>
-  tidytable::mutate(
-    result = glue::glue(
-      "{description} was {range}."
-    )
-  )
+table1 <- table1 |>
+  tidytable::mutate(result = glue::glue("{description} was {range}."))
 
-table2 <-
-  table2 |>
-  tidytable::mutate(
-    result = glue::glue(
-      "{description} was {range}."
-    )
-  )
+table2 <- table2 |>
+  tidytable::mutate(result = glue::glue("{description} was {range}."))
 ```
 
 # Finalize
@@ -668,12 +707,10 @@ table2 <-
 ## Relocate variables
 
 ```{r}
-table1 <-
-  table1 |>
+table1 <- table1 |>
   dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
 
-table2 <-
-  table2 |>
+table2 <- table2 |>
   dplyr::relocate(c(raw_score, score, ci_95, percentile, range), .after = scale)
 
 # table1 <- table1 |> dplyr::relocate(c(test, test_name), .before = scale)
@@ -689,9 +726,21 @@ ktea3 <- rbind(table1, table2)
 ## Select vars for lookup table
 
 ```{r}
-vars <- c("test", "test_name", "scale", "domain", "subdomain", "narrow", "pass", "verbal", "timed", "test_type", "score_type", "description")
-ktea3_lookup <- ktea3 |>
-  dplyr::select(all_of(vars))
+vars <- c(
+  "test",
+  "test_name",
+  "scale",
+  "domain",
+  "subdomain",
+  "narrow",
+  "pass",
+  "verbal",
+  "timed",
+  "test_type",
+  "score_type",
+  "description"
+)
+ktea3_lookup <- ktea3 |> dplyr::select(all_of(vars))
 ```
 
 ## Add patient initials
@@ -706,13 +755,18 @@ ktea3_lookup <- ktea3 |>
 ktea3bk <- ktea3
 ktea3 <- ktea3 |>
   dplyr::filter(!is.na(percentile) & percentile != "") |>
-  dplyr::filter(!is.na(score) & score != "") |> 
-  dplyr::distinct(scale, .keep_all = TRUE) |> 
+  dplyr::filter(!is.na(score) & score != "") |>
+  dplyr::distinct(scale, .keep_all = TRUE) |>
   dplyr::select(-c(description, age_equiv))
 ```
 
 ## Write out final csv
 
 ```{r}
-readr::write_csv(ktea3, here::here("data-raw", "csv", "ktea3.csv"), col_names = TRUE, na = "")
+readr::write_csv(
+  ktea3,
+  here::here("data-raw", "csv", "ktea3.csv"),
+  col_names = TRUE,
+  na = ""
+)
 ```

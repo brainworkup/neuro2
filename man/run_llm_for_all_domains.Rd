@@ -2,42 +2,39 @@
 % Please edit documentation in R/neuro2_llm.R
 \name{run_llm_for_all_domains}
 \alias{run_llm_for_all_domains}
-\title{Run LLM for All Domains (QMD-only)}
+\title{Run LLM for All Domains (Sequential, original)}
 \usage{
 run_llm_for_all_domains(
   prompts_dir = NULL,
-  domain_keywords = c("instnse", "instiq", "instacad", "instverb", "instvis", "instmem",
-    "instexe", "instmot", "instsoc", "instadhd", "instadhd_p", "instadhd_t",
-    "instadhd_o", "instemo", "instemo_p", "instemo_t", "instadapt", "instdl", "instsirf",
-    "instrec"),
+  domain_keywords = NULL,
   model_override = NULL,
   backend = "ollama",
-  temperature = 0.2,
+  temperature = NULL,
   base_dir = ".",
   echo = "none",
   mega_for_sirf = FALSE
 )
 }
 \arguments{
-\item{prompts_dir}{Optional prompts directory. Defaults to installed \verb{inst/prompts/}.}
+\item{prompts_dir}{Optional prompts directory}
 
-\item{domain_keywords}{Vector of domain keywords.}
+\item{domain_keywords}{Vector of domain keywords}
 
-\item{model_override}{Optional exact model name to force for all.}
+\item{model_override}{Optional model override}
 
-\item{backend}{\code{"ollama"} or \code{"openai"}.}
+\item{backend}{Backend type}
 
-\item{temperature}{Temperature.}
+\item{temperature}{Temperature}
 
-\item{base_dir}{Base directory for \verb{*_text.qmd}.}
+\item{base_dir}{Base directory}
 
-\item{echo}{Echo.}
+\item{echo}{Echo mode}
 
-\item{mega_for_sirf}{logical; if TRUE, SIRF uses the \code{"mega"} model.}
+\item{mega_for_sirf}{Use mega model for SIRF}
 }
 \value{
-List of results per domain (invisible).
+List of results per domain (invisible)
 }
 \description{
-Batch runs LLM generation for multiple domains using QMD prompts.
+Batch runs LLM generation for multiple domains using QMD prompts
 }

@@ -124,16 +124,40 @@ NeuropsychResultsR6 <- R6::R6Class(
         isTRUE(mega_for_sirf)
 
       # 3) Generate & inject <summary> into self$file
-      generate_domain_summary_from_master(
-        prompts_dir = prompts_dir,
-        domain_keyword = domain_keyword,
-        model_override = model_override,
-        backend = backend,
-        temperature = temperature,
-        base_dir = base_dir,
-        echo = echo,
-        mega = mega
+      llm_success <- tryCatch(
+        {
+          generate_domain_summary_from_master(
+            prompts_dir = prompts_dir,
+            domain_keyword = domain_keyword,
+            model_override = model_override,
+            backend = backend,
+            temperature = temperature,
+            base_dir = base_dir,
+            echo = echo,
+            mega = mega
+          )
+          TRUE
+        },
+        error = function(e) {
+          warning(
+            sprintf(
+              paste0(
+                "LLM generation failed for %s (%s). ",
+                "Keeping placeholder summary. Details: %s"
+              ),
+              basename(self$file),
+              domain_keyword %||% "unknown-domain",
+              conditionMessage(e)
+            ),
+            call. = FALSE
+          )
+          FALSE
+        }
       )
+
+      if (!llm_success) {
+        private$write_default_context()
+      }
 
       invisible(TRUE)
     }

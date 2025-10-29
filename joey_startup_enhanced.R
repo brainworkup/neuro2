@@ -9,14 +9,14 @@
 # CONFIGURATION
 # ==============================================================================
 
-patient_name <- "Ethan"
+patient_name <- "Biggie"
 
 # ==============================================================================
 # LOAD WORKFLOW
 # ==============================================================================
 
 # Source the enhanced workflow
-source("inst/scripts/00_complete_neuropsych_workflow_ENHANCED.R")
+source("inst/scripts/00_complete_neuropsych_workflow.R")
 
 # ==============================================================================
 # USER-FRIENDLY WRAPPER FUNCTIONS
