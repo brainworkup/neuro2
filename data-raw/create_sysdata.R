@@ -1545,6 +1545,7 @@ access and apply acquired word knowledge, to verbalize meaningful concepts, to
 understand complex multistep instructions, to think about verbal information,
 and to express oneself using words."
 
+## Visual Perception/Construction---------------------------------------------
 #' Spatial Processing Plot Title
 #'
 #' @description
@@ -1574,6 +1575,7 @@ visual-spatial information onto paper."
 #' @keywords internal data
 plot_title_memory <- "Learning and memory refer to the rate and ease with which new information (e.g., facts, stories, lists, faces, names) can be encoded, stored, and later recalled from long-term memory."
 
+## Attention/Executive-------------------------------------------------
 #' Executive Functions Plot Title
 #'
 #' @description
@@ -1590,6 +1592,7 @@ allow individuals to successfully carry-out instrumental and social activities,
 academic work, engage with others effectively, problem solve, and successfully
 interact with the environment to get needs met."
 
+## Motor -------------------------------------------------
 #' Sensorimotor Functions Plot Title
 #'
 #' @description
@@ -1976,8 +1979,8 @@ rocft.recall <- readRDS("inst/extdata/rocft.recall.rds")
 ut <- readRDS("inst/extdata/ut.rds")
 .safe_use_data_internal(ut = ut, add_only = TRUE)
 
-#' #' @name rocft_child_norms
-#' #' @docType data internal
+##' @name rocft_child_norms
+##' @docType data internal
 #' rocft_child_norms <- readRDS("inst/extdata/rocft_child_norms.rda")
 #' .safe_use_data_internal(rocft_child_norms = rocft_child_norms, add_only = FALSE)
 

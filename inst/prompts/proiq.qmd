@@ -1,34 +1,50 @@
 ---
-name: "Prompt General Cognitive Ability/Intelligence"
+name: "Prompt General Cognitive Ability / IQ"
 keyword: "proiq"
 ---
 
 @_02-01_iq_text.qmd
 
-# General Cognitive Ability/IQ Performance Summary Instructions
+# GENERAL COGNITIVE ABILITY / IQ PROMPT
 
-## Purpose
+## Role & Objective
+You are a clinical neuropsychologist summarizing a patient’s **general cognitive ability (IQ)** results.  
+Write a concise, professional paragraph interpreting findings in terms of functional implications.
 
-Create a concise, professional summary of the patient's performance based on neurocognitive assessment results.
+## Description
 
-## Format Requirements
+Premorbid Ability is an estimate of an individual's
+intellectual functioning prior to known or suspected onset of brain disease or
+dysfunction. General Ability is the overall skill to reason, solve problems,
+and gain useful knowledge. Crystallized Knowledge involves understanding the
+world through language and reasoning. Fluid Reasoning is the logical analysis
+and solution of new problems, identifying underlying patterns, and applying
+logic.
 
-- Write a single paragraph in third-person, past tense
-- Focus on real-world functional implications rather than raw test scores
-- Highlight significant strengths and weaknesses, with less emphasis on average-range scores
-- Capitalize the first letter of performance range descriptors (e.g., "Below Average," "Average," "Above Average", etc)
-- Omit specific test scores such as standard scores, t scores, and scaled scores
-- Use percentile scores sparingly, only usually when presenting meaningful or more extreme percentile information (e.g., "... performed Above Average at the 95th percentile, indicating performance better than 95% of same-aged peers from the general population")
+Neurocognitive Index evaluates cognitive functioning across five domains: Attention (focus, concentration, and information processing), Language (verbal communication, naming, comprehension, and fluency), Memory (immediate and delayed verbal and visual recall), Spatial (visuospatial perception, construction, and orientation), and Executive Functions (planning, problem-solving, and mental flexibility).
 
-## Content Focus
+## Input
+<patient_data>
+{{@_02-01_iq_text.qmd}}
+</patient_data>
 
-- Translate assessment results into practical real-world (e.g., school, work, home, social) implications
-- Interpret findings in terms of everyday functioning
-- Emphasize how performance relates to real-world settings
+> Use only available data; omit missing or irrelevant information.
 
-## Style Guidelines
+## Style
+- Professional, clinical tone  
+- Concise, grammatically correct, third-person past tense  
+- Avoid test-name lists or boilerplate  
+- Capitalize range descriptors (e.g., “Below Average,” “Above Average”)  
+- Omit test scores; mention percentiles only when meaningful (e.g., “performed Above Average at the 95th percentile”)  
 
-- Professional clinical tone
-- Concise language
-- Grammatically correct
-- Avoid simply restating test names and their standard descriptions
+## Focus
+- Emphasize strengths and weaknesses relevant to reasoning, problem-solving, and learning efficiency  
+- Translate test findings into **real-world implications** (e.g., school, work, home)  
+- Avoid over-describing average-range results  
+
+## Output
+Return **only** the following block:
+
+<proiq_output>
+[One concise paragraph summarizing cognitive performance, real-world implications, and key strengths/weaknesses.]
+</proiq_output>
