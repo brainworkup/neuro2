@@ -42,7 +42,7 @@ essential_files <- c(
   "_00-00_tests.qmd",
   "_01-00_nse.qmd",
   "_01-01_behav_obs.qmd",
-  "_03-00_dsm5_icd10_dx.qmd"
+  "_03-00_dsm5_icd10_dx.qmd",
   "_03-00_sirf_text.qmd",
   "_03-00_sirf.qmd",
   "_03-01_recs.qmd",
