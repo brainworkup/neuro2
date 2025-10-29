@@ -32,8 +32,8 @@
 #' @importFrom stats reorder
 #' @importFrom xfun file_ext
 #' @export
-DotplotR6 <- R6::R6Class(
-  classname = "DotplotR6",
+DotplotR62 <- R6::R6Class(
+  classname = "DotplotR62",
   public = list(
     data = NULL,
     x = NULL,
@@ -41,7 +41,6 @@ DotplotR6 <- R6::R6Class(
     domain = NULL,
     subdomain = NULL,
     narrow = NULL,
-
     linewidth = 0.5,
     fill = NULL,
     shape = 21,
@@ -352,12 +351,12 @@ DotplotR6 <- R6::R6Class(
 #'
 #' @description A functional wrapper around DotplotR6 for quick plots.
 #' @param data,x,y See DotplotR6 fields.
-#' @inheritParams DotplotR6
+#' @inheritParams DotplotR62
 #' @param ... Ignored.
 #' @return A ggplot object (invisibly NULL if `return_plot = FALSE`).
-#' @rdname dotplot
+#' @rdname dotplot2
 #' @export
-dotplot <- function(
+dotplot2 <- function(
   data,
   x,
   y,
@@ -382,7 +381,7 @@ dotplot <- function(
   narrow = NULL,
   ...
 ) {
-  obj <- DotplotR6$new(
+  obj <- DotplotR62$new(
     data = data,
     x = x,
     y = y,

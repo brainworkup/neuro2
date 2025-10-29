@@ -1,7 +1,7 @@
 [
   {
     "name": "Summary / Impression / Results / Feedback (SIRF)",
-    "keyword": "prosirf",
+    "keyword": "pro2sirf",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Integrate all neurocognitive, behavioral, and emotional data to generate a comprehensive yet concise summary and impression (SIRF) that identifies key strengths, weaknesses, and real-world implications.",
@@ -32,7 +32,7 @@
   },
   {
     "name": "Recommendations Prompt",
-    "keyword": "prorecs",
+    "keyword": "pro2recs",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Generate practical, evidence-based recommendations for the current patient. Base recommendations on the provided neurocognitive and neurobehavioral data, focusing on real-world implications across school, work, home, and social domains.",
@@ -68,7 +68,7 @@
   },
   {
     "name": "Visual Perception/Construction Summary",
-    "keyword": "prospt",
+    "keyword": "pro2vis",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's performance in the Visual Perception/Construction domain based on neurocognitive assessment data, emphasizing real-world implications.",
@@ -101,7 +101,7 @@
   },
   {
     "name": "General Cognitive Ability / IQ Summary",
-    "keyword": "proiq",
+    "keyword": "pro2iq",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's general cognitive ability (IQ) results, emphasizing real-world implications and functional meaning.",
@@ -133,7 +133,7 @@
   },
   {
     "name": "Learning and Memory Summary",
-    "keyword": "promem",
+    "keyword": "pro2mem",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's memory and learning performance, highlighting strengths, weaknesses, and real-world functional implications.",
@@ -165,7 +165,7 @@
   },
   {
     "name": "Attention / Executive Function Summary",
-    "keyword": "proexe",
+    "keyword": "pro2exe",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's attention and executive functioning results, focusing on real-world behavioral and cognitive control implications.",
@@ -196,7 +196,7 @@
   },
   {
     "name": "Emotional / Behavioral / Social / Personality Summary",
-    "keyword": "proemo",
+    "keyword": "pro2emo",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize emotional, behavioral, and social functioning ratings, identifying key areas of strength, risk, or clinical concern.",
@@ -227,7 +227,7 @@
   },
   {
     "name": "Verbal / Language Summary",
-    "keyword": "proverb",
+    "keyword": "pro2verb",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's verbal/language performance, emphasizing real-world implications.",
@@ -259,7 +259,7 @@
   },
   {
     "name": "Social Cognition Summary",
-    "keyword": "prosoc",
+    "keyword": "pro2soc",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's social cognition performance, emphasizing real-world implications for social functioning and safety/judgment.",
@@ -289,7 +289,7 @@
   },
   {
     "name": "Sensorimotor / Motor Summary",
-    "keyword": "promot",
+    "keyword": "pro2mot",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize the patient's sensorimotor/motor performance, emphasizing real-world implications for handwriting, tool use, athletics, and ADLs.",
@@ -319,7 +319,7 @@
   },
   {
     "name": "ADHD / Executive Function (Ratings) Summary",
-    "keyword": "proadhd",
+    "keyword": "pro2adhd",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize ADHD/executive function rating data, emphasizing real-world behavioral regulation and functional implications.",
@@ -350,7 +350,7 @@
   },
   {
     "name": "Adaptive Functioning Summary",
-    "keyword": "proadapt",
+    "keyword": "pro2adapt",
     "system": {
       "role": "clinical_neuropsychologist",
       "goal": "Summarize adaptive functioning results, highlighting strengths/needs in daily independence and supports required.",

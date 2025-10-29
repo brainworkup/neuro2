@@ -154,9 +154,9 @@ get_model_config <- function(
     domain = list(
       # Tier 1: Latest recommended (2025-)
       primary = c(
-        "gemma3:4b-it-qat",
         "qwen3:4b-instruct-2507-q4_K_M",
         "llama3.2:3b-instruct-q4_K_M",
+        "gemma3:4b-it-qat",
         "mistral:7b-instruct-v0.3-q4_K_M"
       ),
       # Tier 2: Proven fallbacks
@@ -170,9 +170,9 @@ get_model_config <- function(
     sirf = list(
       # Tier 1: Best for complex reasoning + synthesis
       primary = c(
-        "gemma3:12b-it-qat",
         "qwen3:8b-q8_0",
         "llama3:8b-instruct-q8_0",
+        "gemma3:12b-it-qat",
         "mixtral:8x7b-instruct-q4_K_M",
         "command-r:35b-v0.1-q4_K_M"
       ),
@@ -187,11 +187,11 @@ get_model_config <- function(
     mega = list(
       # Tier 1: Best overall for comprehensive analysis
       primary = c(
-        "gemma3:27b-it-qat",
-        "gpt-oss:20b",
         "qwen3:30b-a3b-instruct-2507-q4_K_M",
-        "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
+        "gpt-oss:20b",
         "command-r:35b-v0.1-q4_K_M",
+        "gemma3:27b-it-qat",
+        "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
         "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
       ),
       # Tier 2: Solid alternatives
