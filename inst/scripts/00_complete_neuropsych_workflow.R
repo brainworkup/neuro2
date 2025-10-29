@@ -20,7 +20,7 @@
 
 #' Default configuration
 DEFAULT_CONFIG <- list(
-  patient = "Maya",
+  patient = "Biggie",
   data_dir = "data",
   output_dir = "output",
   verbose = TRUE,
@@ -144,32 +144,28 @@ resolve_llm_processor <- function() {
   }
 
   if (requireNamespace("neuro2", quietly = TRUE)) {
-    if (exists("process_domains_with_llm",
-      envir = asNamespace("neuro2"),
-      mode = "function"
-    )) {
+    if (
+      exists(
+        "process_domains_with_llm",
+        envir = asNamespace("neuro2"),
+        mode = "function"
+      )
+    ) {
       return(get("process_domains_with_llm", envir = asNamespace("neuro2")))
     }
   }
 
-  stop(
-    paste(
-      "process_domains_with_llm not available.",
-      "Reinstall the neuro2 package or run devtools::load_all() first."
-    )
-  )
+  stop(paste(
+    "process_domains_with_llm not available.",
+    "Reinstall the neuro2 package or run devtools::load_all() first."
+  ))
 }
 
 #' Locate the Quarto template directory bundled with the project
 find_template_directory <- function() {
   # Prefer installed package location if available
   candidates <- c(
-    system.file(
-      "quarto",
-      "templates",
-      "typst-report",
-      package = "neuro2"
-    ),
+    system.file("quarto", "templates", "typst-report", package = "neuro2"),
     here::here("inst", "quarto", "templates", "typst-report")
   )
 
@@ -192,7 +188,12 @@ find_template_directory <- function() {
 #' if they are missing locally. Returns the normalized path to template.qmd.
 ensure_template_files <- function(force = FALSE) {
   template_dir <- find_template_directory()
-  template_files <- c("template.qmd", "_quarto.yml", "_variables.yml", "config.yml")
+  template_files <- c(
+    "template.qmd",
+    "_quarto.yml",
+    "_variables.yml",
+    "config.yml"
+  )
 
   for (fname in template_files) {
     src <- file.path(template_dir, fname)
@@ -233,7 +234,9 @@ ensure_template_files <- function(force = FALSE) {
       file.path(dirname(dirname(template_dir)), "_extensions"),
       here::here("inst", "quarto", "_extensions")
     )
-    extension_candidates <- unique(extension_candidates[dir.exists(extension_candidates)])
+    extension_candidates <- unique(extension_candidates[dir.exists(
+      extension_candidates
+    )])
 
     if (length(extension_candidates) > 0) {
       src_extensions <- extension_candidates[[1]]
@@ -490,7 +493,8 @@ domain_has_data <- function(domain_key) {
       "standard_score",
       "t_score",
       "z_score",
-      "ss",
+      "raw_score",
+      "index_score",
       "composite_score"
     ),
     names(domain_rows)
@@ -697,7 +701,7 @@ generate_all_domains <- function(
 
 #' Run neuropsychological report workflow with two-stage rendering
 #'
-#' @param patient Patient name (default: "Ethan")
+#' @param patient Patient name (default: "Biggie")
 #' @param generate_qmd Generate domain QMD files (default: TRUE)
 #' @param render_report Render final PDF report (default: TRUE)
 #' @param force_reprocess Force regeneration of all files, ignoring edits (default: FALSE)
@@ -992,7 +996,7 @@ run_neuropsych_workflow <- function(
 
         quarto::quarto_render(
           input = template_qmd_path,
-          output_format = "neurotyp-pediatric-typst",
+          output_format = "typst",
           quiet = FALSE
         )
 

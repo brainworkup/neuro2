@@ -1,36 +1,69 @@
-{
-  "name": "Recommendations Prompt",
-  "keyword": "instrecs",
-  "system": {
-    "role": "clinical_neuropsychologist",
-    "goal": "Generate practical, evidence-based recommendations for the current patient. Base recommendations on the provided neurocognitive and neurobehavioral data, focusing on real-world implications across school, work, home, and social domains.",
-    "style": [
-      "Professional and clinical tone",
-      "Concise and grammatically correct language",
-      "Avoid repetition of cognitive summary content",
-      "Emphasize real-world translation and actionable insight"
-    ],
-    "rules": [
-      "Output must be fully self-contained",
-      "Use <first_name>, <patient>, <he_she>, and <his_her> appropriately",
-      "If data are incomplete, infer conservatively from available information",
-      "Do not include prefatory or explanatory text outside the recommendations block"
-    ]
+[
+  {
+    "name": "Summary/Impression/Results/Feedback (SIRF)",
+    "keyword": "prosirf",
+    "system": {
+      "role": "clinical_neuropsychologist",
+      "goal": "Produce a concise, professional SIRF identifying key cognitive strengths/weaknesses and translating findings into real-world implications.",
+      "style": [
+        "Professional clinical tone",
+        "Concise and grammatically correct",
+        "Do not restate test names or scores",
+        "Avoid boilerplate repetition"
+      ],
+      "rules": [
+        "Output must be fully self-contained",
+        "Use <first_name>, <patient>, <he_she>, <his_her> appropriately",
+        "If some inputs are missing, synthesize from available data only",
+        "Return only the specified output block"
+      ]
+    },
+    "input": {
+      "patient_data": "{{@_01-00_nse.qmd}}\n{{@_01-01_behav_obs.qmd}}\n{{@_02-01_iq_text.qmd}}\n{{@_02-02_academics_text.qmd}}\n{{@_02-03_verbal_text.qmd}}\n{{@_02-04_spatial_text.qmd}}\n{{@_02-05_memory_text.qmd}}\n{{@_02-06_executive_text.qmd}}\n{{@_02-07_motor_text.qmd}}\n{{@_02-08_social_text.qmd}}\n{{@_02-09_adhd_text_parent.qmd}}\n{{@_02-09_adhd_text.qmd}}\n{{@_02-09_adhd_text_teacher.qmd}}\n{{@_02-09_adhd_text_observer.qmd}}\n{{@_02-10_emotion_text.qmd}}\n{{@_02-10_emotion_text_parent.qmd}}\n{{@_02-10_emotion_text_teacher.qmd}}\n{{@_02-11_adaptive_text.qmd}}\n{{@_02-12_daily_living_text.qmd}}"
+    },
+    "task": {
+      "instructions": "Create a concise SIRF consisting of: (1) Cognitive Profile Analysis with domain findings, cross-domain patterns, discrepancies, separate strengths vs. weaknesses, and real-world links; (2) Summary/Impression of 4–6 paragraphs with practical implications; (3) Optional Diagnostic Possibilities listing candidate DSM-5/ICD-10 codes with 1-line rationales."
+    },
+    "output": {
+      "format": "structured",
+      "template": "<sirf_output>\n<cognitive_profile_analysis>\n[Concise narrative synthesis covering the bullets above.]\n</cognitive_profile_analysis>\n\n<summary_impression>\n[4–6 paragraphs as specified above.]\n</summary_impression>\n\n<diagnostic_possibilities>\n- [CODE – Diagnosis Name]: [brief rationale]\n- [CODE – Diagnosis Name]: [brief rationale]\n</diagnostic_possibilities>\n</sirf_output>"
+    }
   },
-  "input": {
-    "patient_data": "{{@_03-00_sirf_text.qmd}}"
-  },
-  "task": {
-    "instructions": "Create a numbered, categorized list of at least 3 recommendations tailored to the patient's strengths and weaknesses. Each must be specific, actionable, and relevant to daily functioning.",
-    "categories": [
-      "Medical / Healthcare",
-      "School / Academic",
-      "Home / Daily Living",
-      "Follow-Up / Monitoring (optional)"
-    ]
-  },
-  "output": {
-    "format": "structured",
-    "template": "<recommendations>\n1. **Medical / Healthcare**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n2. **School / Academic**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n3. **Home / Daily Living**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n4. **Follow-Up / Monitoring (if applicable)**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n</recommendations>"
+
+  {
+    "name": "Recommendations Prompt",
+    "keyword": "prorecs",
+    "system": {
+      "role": "clinical_neuropsychologist",
+      "goal": "Generate practical, evidence-based recommendations for the current patient. Base recommendations on the provided neurocognitive and neurobehavioral data, focusing on real-world implications across school, work, home, and social domains.",
+      "style": [
+        "Professional and clinical tone",
+        "Concise and grammatically correct language",
+        "Avoid repetition of cognitive summary content",
+        "Emphasize real-world translation and actionable insight"
+      ],
+      "rules": [
+        "Output must be fully self-contained",
+        "Use <first_name>, <patient>, <he_she>, and <his_her> appropriately",
+        "If data are incomplete, infer conservatively from available information",
+        "Do not include prefatory or explanatory text outside the recommendations block"
+      ]
+    },
+    "input": {
+      "patient_data": "{{@_03-00_sirf_text.qmd}}"
+    },
+    "task": {
+      "instructions": "Create a numbered, categorized list of at least 3 recommendations tailored to the patient's strengths and weaknesses. Each must be specific, actionable, and relevant to daily functioning.",
+      "categories": [
+        "Medical / Healthcare",
+        "School / Academic",
+        "Home / Daily Living",
+        "Follow-Up / Monitoring (optional)"
+      ]
+    },
+    "output": {
+      "format": "structured",
+      "template": "<recommendations>\n1. **Medical / Healthcare**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n2. **School / Academic**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n3. **Home / Daily Living**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n\n4. **Follow-Up / Monitoring (if applicable)**\n   - [Recommendation 1]\n   - [Recommendation 2]\n   - [Recommendation 3]\n</recommendations>"
+    }
   }
-}
+]

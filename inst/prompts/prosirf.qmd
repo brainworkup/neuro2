@@ -1,6 +1,6 @@
 ---
 name: "Prompt Summary/Impression/Results/Feedback (SIRF)"
-keyword: "instsirf"
+keyword: "prosirf"
 ---
 
 @_03-00_sirf_text.qmd
