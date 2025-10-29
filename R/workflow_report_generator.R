@@ -175,7 +175,16 @@ generate_workflow_report <- function(config) {
         # Ensure domain include list exists before Quarto preprocesses includes
         .generate_domains_include_file()
 
-        quarto::quarto_render(template_abs_path)
+        format_label <- .neuro2_preferred_quarto_format(NULL)
+        log_message(
+          paste("Rendering with Quarto format:", format_label),
+          "INFO"
+        )
+        .neuro2_render_quarto(
+          input = template_abs_path,
+          render_format = NULL,
+          render_all_formats = FALSE
+        )
         log_message("Report generated successfully", "REPORT")
         return(TRUE)
       },

@@ -31,24 +31,32 @@ Based on your M3 Max (48GB RAM), here are the recommended models to install:
 
 ```bash
 # Domain summaries (8B) - Pick 2-3
-ollama pull qwen2.5:7b-instruct-q4_K_M      # Best clinical writing
-ollama pull llama3.2:3b-instruct-q4_K_M    # Fast, good structured output
-ollama pull gemma2:9b-instruct-q4_K_M      # Google's clinical model
+ollama pull gemma3:4b-it-qat
+ollama pull qwen3:4b-instruct-2507-q4_K_M
+ollama pull llama3.2:3b-instruct-q4_K_M
+ollama pull mistral:7b-instruct-v0.3-q4_K_M
 
 # SIRF sections (14B) - Pick 1-2
-ollama pull qwen2.5:14b-instruct-q4_K_M    # Best reasoning + clinical
-ollama pull llama3.1:8b-instruct-q4_K_M    # Meta's latest
-ollama pull mixtral:8x7b-instruct-q4_K_M   # MoE architecture
+ollama pull gemma3:12b-it-qat
+ollama pull qwen3:8b-q8_0
+ollama pull llama3:8b-instruct-q8_0
+ollama pull mixtral:8x7b-instruct-q4_K_M
+ollama pull command-r:35b-v0.1-q4_K_M
 
 # Mega/comprehensive analysis (30B+) - Pick 1
-ollama pull qwen2.5:32b-instruct-q4_K_M    # Recommended
-ollama pull command-r:35b-v0.1-q4_K_M      # Alternative (Cohere)
+ollama pull gemma3:27b-it-qat
+ollama pull gpt-oss:20b
+ollama pull qwen3:30b-a3b-instruct-2507-q4_K_M
+ollama pull llama3.1:70b-instruct-q4_0
+ollama pull command-r:35b-v0.1-q4_K_M
+ollama pull mixtral:8x22b-instruct-q4_0
 ```
 
 **Why these models?**
-- **Qwen 2.5** series: Excellent at clinical/medical text, strong reasoning
+These are not entirely accurate btw
+- **Qwen 3** series: Excellent at clinical/medical text, strong reasoning
 - **Llama 3.1/3.2**: Meta's latest, great instruction following  
-- **Gemma 2**: Google's medically-aware model
+- **Gemma 3**: Google's model
 - **Mixtral**: Mixture of Experts, efficient for complex reasoning
 - **Command-R**: Cohere's clinical-capable model
 
@@ -60,7 +68,7 @@ ollama pull command-r:35b-v0.1-q4_K_M      # Alternative (Cohere)
 
 ```r
 # Load the enhanced system
-source("neuro2_llm_enhanced.R")
+source("R/neuro2_llm.R")
 
 # Test your setup
 smoke_result <- neuro2_llm_smoke_test()
@@ -97,8 +105,7 @@ result <- neuro2_run_llm_then_render(
   render_paths = c("template.qmd"),
   parallel = TRUE,        # Use parallel processing
   n_cores = 8,
-  mega_for_sirf = TRUE,
-  validate = TRUE
+  mega_for_sirf = TRUE
 )
 
 # Check what was generated and rendered

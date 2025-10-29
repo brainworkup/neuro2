@@ -1448,6 +1448,8 @@ neuro2_llm_smoke_test <- function(
 #' @param prompts_dir Prompts directory (default installed)
 #' @param render_paths Character vector of paths to `.qmd` files to render after LLM runs
 #' @param quarto_profile Optional Quarto profile (e.g., "prod")
+#' @param render_format Preferred Quarto output format (default: detect or "typst")
+#' @param render_all_formats Render every configured format (`FALSE` renders just one)
 #' @param domain_keywords Vector of keywords to generate
 #' @param backend Backend type
 #' @param mega_for_sirf Use mega model for SIRF
@@ -1455,7 +1457,6 @@ neuro2_llm_smoke_test <- function(
 #' @param echo ellmer echo mode
 #' @param parallel Whether to use parallel processing
 #' @param n_cores Number of cores for parallel processing
-#' @importFrom withr with_envvar
 #' @return Invisibly returns a list with `llm` results and `rendered` output paths
 #' @export
 neuro2_run_llm_then_render <- function(
@@ -1463,6 +1464,8 @@ neuro2_run_llm_then_render <- function(
   prompts_dir = NULL,
   render_paths = character(0),
   quarto_profile = NULL,
+  render_format = NULL,
+  render_all_formats = FALSE,
   domain_keywords = NULL,
   backend = "ollama",
   mega_for_sirf = FALSE,
@@ -1510,13 +1513,20 @@ neuro2_run_llm_then_render <- function(
 
       message(sprintf("📄 Rendering %s...", basename(rp)))
 
-      if (is.null(quarto_profile)) {
-        quarto::quarto_render(rp)
+      format_label <- if (isTRUE(render_all_formats)) {
+        "all formats"
       } else {
-        withr::with_envvar(c(QUARTO_PROFILE = quarto_profile), {
-          quarto::quarto_render(rp)
-        })
+        .neuro2_preferred_quarto_format(render_format)
       }
+
+      message(sprintf("   • Using Quarto format: %s", format_label))
+
+      .neuro2_render_quarto(
+        input = rp,
+        profile = quarto_profile,
+        render_format = render_format,
+        render_all_formats = render_all_formats
+      )
       rendered <- c(rendered, rp)
     }
   }

@@ -9,6 +9,8 @@ neuro2_run_llm_then_render(
   prompts_dir = NULL,
   render_paths = character(0),
   quarto_profile = NULL,
+  render_format = NULL,
+  render_all_formats = FALSE,
   domain_keywords = NULL,
   backend = "ollama",
   mega_for_sirf = FALSE,
@@ -26,6 +28,10 @@ neuro2_run_llm_then_render(
 \item{render_paths}{Character vector of paths to \code{.qmd} files to render after LLM runs}
 
 \item{quarto_profile}{Optional Quarto profile (e.g., "prod")}
+
+\item{render_format}{Preferred Quarto output format (default: detect or "typst")}
+
+\item{render_all_formats}{Render every configured format (\code{FALSE} renders just one)}
 
 \item{domain_keywords}{Vector of keywords to generate}
 
