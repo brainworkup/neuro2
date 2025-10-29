@@ -1,6 +1,6 @@
 ---
 name: "Prompt Effort/Validity"
-keyword: "instvalid"
+keyword: "provalid"
 ---
 
 @_02-13_validity_text.qmd

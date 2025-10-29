@@ -1,11 +1,11 @@
 ---
-name: "Prompt Social Cognition"
-keyword: "instsoc"
+name: "Prompt Motor"
+keyword: "promot"
 ---
 
-@_02-08_social_text.qmd
+@_02-07_motor_text.qmd
 
-# Social Cognition Performance Summary Instructions
+# Sensorimotor Performance Summary proructions
 
 ## Purpose
 

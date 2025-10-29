@@ -507,11 +507,11 @@ Start with the **Quick Start guide** and you'll be up and running in minutes.
 ## 📋 Checklist for Success
 
 **Before First Use:**
-- [ ] Ollama installed and running
-- [ ] Models downloaded (at minimum: qwen2.5:7b, qwen2.5:14b)
-- [ ] R packages installed (future, future.apply)
-- [ ] File replaced in your project
-- [ ] Smoke test passed
+- [x] Ollama installed and running
+- [x] Models downloaded (at minimum: qwen2.5:7b, qwen2.5:14b)
+- [x] R packages installed (future, future.apply)
+- [x] File replaced in your project
+- [x] Smoke test passed
 
 **First Report:**
 - [ ] Generated successfully in <5 minutes

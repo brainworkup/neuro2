@@ -1,11 +1,11 @@
 ---
-name: "Prompt Memory"
-keyword: "instmem"
+name: "Prompt General Cognitive Ability/Intelligence"
+keyword: "proiq"
 ---
 
-@_02-05_memory_text.qmd
+@_02-01_iq_text.qmd
 
-# Learning and Memory Performance Summary Instructions
+# General Cognitive Ability/IQ Performance Summary Instructions
 
 ## Purpose
 

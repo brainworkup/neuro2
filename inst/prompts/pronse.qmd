@@ -1,6 +1,6 @@
 ---
 name: "Prompt Neurobehavioral Status Exam (NSE) Chain-of-Density"
-keyword: "instnse"
+keyword: "pronse"
 ---
 
 @_01-00_nse.qmd

@@ -1,19 +1,23 @@
 ---
-name: "Prompt ADHD/Executive Function-Parent Ratings"
-keyword: "instadhd_p"
+name: "LLM Prompt Emotional/Behavioral/Social/Personality-Parent Ratings"
+keyword: "proemo_p"
 ---
 
-@_02-09_adhd_text_parent.qmd
+@_02-10_emotion_text_parent.qmd
 
-# ADHD/Executive Function - Parent Scale Summary Instructions
+# Emotional/Behavioral/Social/Personality - Parent Rating Scale Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their Parent Ratings of attentional and executive functioning
+Create a concise, professional summary of Parent reported:
+- emotional functioning
+- behavioral problems
+- social skils and functionnig
+- emerging or elevated problematic personality traits or personality disorders
 
 ## Format Requirements
 
-- Write a single paragraph in third-person voice, past tense (e.g., "...the patient reported clinically significant problems in social adaptation as well as a history of severe conduct problems that have lead to arrests...")
+- Write a single paragraph in third-person voice, past tense (e.g., "... Biggie's mother reported that Biggie has difficulties with sustaining attention and regulating their behavior in most settings ....")
 - Focus on real-world functional implications rather than test scores
 - Highlight significant weaknesses, with less emphasis on average-range scores; do talk about strengths if the patient indeed reports them (i.e., scores that are actually below average on these measures, since higher scores represent worse functioning)
 - Capitalize the first letter of the classification range descriptors (e.g., "Average","At-Risk," "Clinically Significant", or else "Relative Strength")

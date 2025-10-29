@@ -1,15 +1,15 @@
 ---
-name: "Prompt Academic Skills"
-keyword: "instacad"
+name: "Prompt Verbal/Language"
+keyword: "proverb"
 ---
 
-@_02-02_academics_text.qmd
+@_02-03_verbal_text.qmd
 
-# Academic Performance Summary Instructions
+# Verbal/Language Performance Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's academic performance based on neurocognitive assessment results.
+Create a concise, professional summary of the patient's performance based on neurocognitive assessment results.
 
 ## Format Requirements
 
@@ -22,9 +22,9 @@ Create a concise, professional summary of the patient's academic performance bas
 
 ## Content Focus
 
-- Translate assessment results into practical academic implications
+- Translate assessment results into practical real-world (e.g., school, work, home, social) implications
 - Interpret findings in terms of everyday functioning
-- Emphasize how performance relates to real-world academic settings
+- Emphasize how performance relates to real-world settings
 
 ## Style Guidelines
 

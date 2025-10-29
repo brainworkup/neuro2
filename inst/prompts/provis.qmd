@@ -1,11 +1,11 @@
 ---
-name: "Prompt General Cognitive Ability/Intelligence"
-keyword: "instiq"
+name: "Prompt Visual Perception/Construction"
+keyword: "provis"
 ---
 
-@_02-01_iq_text.qmd
+@_02-04_spatial_text.qmd
 
-# General Cognitive Ability/IQ Performance Summary Instructions
+# Visual Perception/Construction Performance Summary Instructions
 
 ## Purpose
 

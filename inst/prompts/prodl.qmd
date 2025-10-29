@@ -1,11 +1,11 @@
 ---
-name: "Prompt Adaptive Functioning"
-keyword: "instadapt"
+name: "Prompt Daily Living"
+keyword: "prodl"
 ---
 
-@_02-11_adaptive_text.qmd
+@_02-12_daily_living_text.qmd
 
-# Adaptive Functioning Summary Instructions
+# Daily Living Summary Instructions
 
 ## Purpose
 

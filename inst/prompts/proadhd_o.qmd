@@ -1,23 +1,19 @@
 ---
-name: "LLM Prompt Emotional/Behavioral/Social/Personality"
-keyword: "instemo"
+name: "Prompt ADHD/Executive Function-Observer Ratings"
+keyword: "proadhd_o"
 ---
 
-@_02-10_emotion_text.qmd
+@_02-09_adhd_text_observer.qmd
 
-# Emotional/Behavioral/Social/Personality - Rating Scale Summary Instructions
+# ADHD/Executive Function - Observer Scale Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's self-reported:
-- emotional functioning
-- behavioral problems
-- social skils and functionnig
-- for adults, the presence of elevated problematic personality traits or personality disorders
+Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their Observer Ratings of attentional and executive functioning
 
 ## Format Requirements
 
-- Write a single paragraph in third-person voice, past tense (e.g., "...the patient reported clinically signifcant problems in social adaptation as well as a history of severe conduct problems that have lead to arrests...")
+- Write a single paragraph in third-person voice, past tense (e.g., "...the patient reported clinically significant problems in social adaptation as well as a history of severe conduct problems that have lead to arrests...")
 - Focus on real-world functional implications rather than test scores
 - Highlight significant weaknesses, with less emphasis on average-range scores; do talk about strengths if the patient indeed reports them (i.e., scores that are actually below average on these measures, since higher scores represent worse functioning)
 - Capitalize the first letter of the classification range descriptors (e.g., "Average","At-Risk," "Clinically Significant", or else "Relative Strength")

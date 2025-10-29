@@ -1,11 +1,11 @@
 ---
-name: "Prompt Daily Living"
-keyword: "instdl"
+name: "Prompt Memory"
+keyword: "promem"
 ---
 
-@_02-12_daily_living_text.qmd
+@_02-05_memory_text.qmd
 
-# Daily Living Summary Instructions
+# Learning and Memory Performance Summary Instructions
 
 ## Purpose
 

@@ -1,11 +1,11 @@
 ---
-name: "Prompt Verbal/Language"
-keyword: "instverb"
+name: "Prompt Social Cognition"
+keyword: "prosoc"
 ---
 
-@_02-03_verbal_text.qmd
+@_02-08_social_text.qmd
 
-# Verbal/Language Performance Summary Instructions
+# Social Cognition Performance Summary Instructions
 
 ## Purpose
 

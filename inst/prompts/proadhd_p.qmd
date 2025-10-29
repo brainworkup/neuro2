@@ -1,15 +1,15 @@
 ---
-name: "Prompt ADHD/Executive Function"
-keyword: "instadhd"
+name: "Prompt ADHD/Executive Function-Parent Ratings"
+keyword: "proadhd_p"
 ---
 
-@_02-09_adhd_text.qmd
+@_02-09_adhd_text_parent.qmd
 
-# ADHD/Executive Function - Rating Scale Summary Instructions
+# ADHD/Executive Function - Parent Scale Summary Instructions
 
 ## Purpose
 
-Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their self-report assessment results of attentional and executive functioning
+Create a concise, professional summary of the patient's behavior, attention, and executive functioning based on their Parent Ratings of attentional and executive functioning
 
 ## Format Requirements
 

@@ -17,7 +17,7 @@
 #   - check_available_models()  # NEW
 #   - get_model_config()  # NEW
 
-# -------------------------- utilities --------------------------
+# ----------------------- Utilities --------------------------
 
 #' @title LLM Cache Directory
 #' @description Returns the path to the LLM cache directory, creating it if it doesn't exist.
@@ -57,7 +57,7 @@ safe_write_text <- function(text, filepath) {
   invisible(filepath)
 }
 
-# Canonicalize keys so "inst.sirf" == "instsirf"
+# Canonicalize keys so "pro.sirf" == "prosirf"
 .canon <- function(x) gsub("[^A-Za-z0-9]+", "", x %||% "")
 
 # Safe defaulting
@@ -76,7 +76,7 @@ safe_write_text <- function(text, filepath) {
   list(front = yaml::yaml.load(m[1, 2]), body = m[1, 3])
 }
 
-# ---------------------- NEW: Token counting & logging ----------------------
+# ---------------------- Token counting & logging ----------------------
 
 #' @title Estimate Token Count
 #' @description Rough estimate of token count for text (GPT-style ~4 chars/token)
@@ -134,7 +134,7 @@ log_llm_usage <- function(
   invisible(entry)
 }
 
-# ---------------------- NEW: Enhanced model configuration ----------------------
+# ---------------------- Enhanced model configuration ----------------------
 
 #' @title Get Model Configuration
 #' @description Returns tiered model selections for different section types
@@ -174,7 +174,7 @@ get_model_config <- function(
         "qwen3:8b-q8_0",
         "llama3:8b-instruct-q8_0",
         "mixtral:8x7b-instruct-q4_K_M",
-        "command-r:35b-v0.1-q4_K_M" # Cohere's clinical-capable model
+        "command-r:35b-v0.1-q4_K_M"
       ),
       # Tier 2: Proven alternatives
       fallback = c(
@@ -191,7 +191,7 @@ get_model_config <- function(
         "gpt-oss:20b",
         "qwen3:30b-a3b-instruct-2507-q4_K_M",
         "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
-        "command-r:35b-v0.1-q4_K_M", # Cohere's clinical model
+        "command-r:35b-v0.1-q4_K_M",
         "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
       ),
       # Tier 2: Solid alternatives
@@ -304,7 +304,7 @@ get_best_available_model <- function(
   return(primary_models[1])
 }
 
-# ---------------------- NEW: Clinical output validation ----------------------
+# ---------------------- Clinical output validation ----------------------
 
 #' @title Validate Clinical Output
 #' @description Validate that LLM output meets clinical reporting standards
@@ -387,7 +387,7 @@ validate_clinical_output <- function(
     "NEPSY",
     "D-KEFS",
     "CVLT",
-    "ROCF",
+    "ROCFT",
     "Rey",
     "Trail Making",
     "BASC",
@@ -497,7 +497,7 @@ validate_clinical_output <- function(
   ))
 }
 
-# ---------------------- prompt loader (QMD only) ----------------
+# ---------------------- Prompt loader (QMD only) ----------------
 
 #' @title Read Prompts From Directory of QMD files
 #' @description Loads prompts from a folder of .qmd files that contain YAML front matter (name, keyword) and a body.
@@ -551,7 +551,7 @@ read_prompts_from_dir <- function(
   out[has_target]
 }
 
-# ------------------- prompt text processors --------------------
+# ---------------------- Prompt text processors --------------------
 
 #' @title Detect Target QMD
 #' @description Extracts the target @_NN-*.qmd file from the prompt text.
@@ -707,7 +707,7 @@ hash_inputs <- function(system_prompt, user_text, deps) {
   )
 }
 
-# --------------------- model selection (backend) -----------------
+# --------------------- Model selection (backend) -----------------
 
 #' @title Create a chat bot for neuro2
 #' @description Selects an LLM backend and model by section with intelligent defaults
@@ -1008,12 +1008,12 @@ call_llm_with_retry <- function(
   ))
 }
 
-# ---------------------- domain summary generation ----------------------
+# --------------------- Domain Summary Generation ----------------------
 
 #' @title Generate Domain Summary From Master Prompts (QMD-based)
 #' @description Generate summary for a single domain keyword using QMD prompts
 #' @param prompts_dir Optional prompts directory
-#' @param domain_keyword Domain keyword (e.g., "instacad", "instsirf")
+#' @param domain_keyword Domain keyword (e.g., "instacad", "prosirf")
 #' @param model_override Optional model override
 #' @param backend Backend type
 #' @param temperature Temperature setting
@@ -1029,7 +1029,7 @@ generate_domain_summary_from_master <- function(
   domain_keyword,
   model_override = NULL,
   backend = "ollama",
-  temperature = NULL,
+  temperature = 0.1,
   base_dir = ".",
   echo = "none",
   mega = FALSE,
@@ -1200,7 +1200,7 @@ generate_domain_summary_from_master <- function(
   ))
 }
 
-# ---------------------- NEW: Parallel processing ----------------------
+# ---------------------- Parallel processing ----------------------
 
 #' @title Run LLM for All Domains in Parallel
 #' @description Process multiple domains in parallel for faster batch generation
@@ -1386,7 +1386,7 @@ run_llm_for_all_domains <- function(
   invisible(out)
 }
 
-# --------------------- diagnostics / smoke test ---------------------
+# --------------------- Diagnostics / Smoke test ---------------------
 
 #' @title neuro2 LLM smoke test
 #' @description Pings the configured model and returns a short response plus timing
@@ -1440,7 +1440,7 @@ neuro2_llm_smoke_test <- function(
   list(model = model, seconds = dt, preview = substr(out, 1, 240), raw = out)
 }
 
-# --------------------- glue: run + render ---------------------
+# --------------------- Glue: run + render ---------------------
 
 #' @title Run LLM then render Quarto
 #' @description Executes the LLM stage first, then renders one or more Quarto documents
@@ -1534,7 +1534,7 @@ neuro2_run_llm_then_render <- function(
   invisible(list(llm = llm_res, rendered = rendered))
 }
 
-# --------------------- process_domains_with_llm (missing function) ---------------------
+# --------------------- Process Domains with LLM ---------------------
 
 #' @title Process Domains with LLM
 #' @description Main entry point for LLM processing of domain summaries
@@ -1675,24 +1675,24 @@ get_domains_with_data <- function() {
 domain_names_to_keywords <- function(domain_names) {
   # Mapping from domain names to LLM keywords
   keyword_mapping <- list(
-    iq = "instiq",
-    academics = "instacad",
-    verbal = "instverb",
-    spatial = "instvis",
-    memory = "instmem",
-    executive = "instexe",
-    motor = "instmot",
-    social = "instsoc",
-    adhd = "instadhd",
-    adhd = "instadhd_o",
-    adhd = "instadhd_p",
-    adhd = "instadhd_t",
-    emotion = "instemo",
-    emotion = "instemo_p",
-    emotion = "instemo_t",
-    adaptive = "instadapt",
-    daily_living = "instdl",
-    validity = "instvalid"
+    iq = "proiq",
+    academics = "proacad",
+    verbal = "proverb",
+    spatial = "provis",
+    memory = "promem",
+    executive = "proexe",
+    motor = "promot",
+    social = "prosoc",
+    adhd = "proadhd",
+    adhd = "proadhd_o",
+    adhd = "proadhd_p",
+    adhd = "proadhd_t",
+    emotion = "proemo",
+    emotion = "proemo_p",
+    emotion = "proemo_t",
+    adaptive = "proadapt",
+    daily_living = "prodl",
+    validity = "provalid"
   )
 
   keywords <- character(0)
@@ -1706,7 +1706,7 @@ domain_names_to_keywords <- function(domain_names) {
   return(keywords)
 }
 
-# --------------------- utility: view usage stats ---------------------
+# --------------------- Utility: View usage stats ---------------------
 
 #' @title View LLM Usage Statistics
 #' @description Read and summarize the LLM usage log
