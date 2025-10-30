@@ -52,26 +52,26 @@ Return **only** the following block:
 <prorecs_output>
 format: "structured"
 template: |
-  <recommendations>
-  1. **Medical / Healthcare**
-     - [Recommendation 1]
-     - [Recommendation 2]
-     - [Recommendation 3]
+<recommendations>
+## 1. **Medical / Healthcare**
+- [Recommendation 1]
+- [Recommendation 2]
+- [Recommendation 3]
 
-  2. **School / Academic**
-     - [Recommendation 1]
-     - [Recommendation 2]
-     - [Recommendation 3]
+### 2. **School / Academic**
+- [Recommendation 1]
+- [Recommendation 2]
+- [Recommendation 3]
 
-  3. **Home / Daily Living**
-     - [Recommendation 1]
-     - [Recommendation 2]
-     - [Recommendation 3]
+## 3. **Home / Daily Living**
+- [Recommendation 1]
+- [Recommendation 2]
+- [Recommendation 3]
 
-  4. **Follow-Up / Monitoring (if applicable)**
-     - [Recommendation 1]
-     - [Recommendation 2]
-     - [Recommendation 3]
+### 4. **Follow-Up / Monitoring (if applicable)**
+- [Recommendation 1]
+- [Recommendation 2]
+- [Recommendation 3]
   </recommendations>
 </prorecs_output>
 ```
