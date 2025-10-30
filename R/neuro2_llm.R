@@ -17,7 +17,7 @@
 #   - check_available_models()  # NEW
 #   - get_model_config()  # NEW
 
-# ----------------------- Utilities --------------------------
+# --------------------- Utilities --------------------------
 
 #' @title LLM Cache Directory
 #' @description Returns the path to the LLM cache directory, creating it if it doesn't exist.
@@ -76,7 +76,7 @@ safe_write_text <- function(text, filepath) {
   list(front = yaml::yaml.load(m[1, 2]), body = m[1, 3])
 }
 
-# ---------------------- Token counting & logging ----------------------
+# --------------------- Token counting & logging ----------------------
 
 #' @title Estimate Token Count
 #' @description Rough estimate of token count for text (GPT-style ~4 chars/token)
@@ -134,7 +134,7 @@ log_llm_usage <- function(
   invisible(entry)
 }
 
-# ---------------------- Enhanced model configuration ----------------------
+# --------------------- Enhanced model configuration ----------------------
 
 #' @title Get Model Configuration
 #' @description Returns tiered model selections for different section types
@@ -154,9 +154,11 @@ get_model_config <- function(
     domain = list(
       # Tier 1: Latest recommended (2025-)
       primary = c(
-        "qwen3:4b-instruct-2507-q4_K_M",
+        "qwen3:8b-q8_0",
+        "alibayram/medgemma:4b",
         "llama3.2:3b-instruct-q4_K_M",
         "gemma3:4b-it-qat",
+        "qwen3:4b-instruct-2507-q4_K_M",
         "mistral:7b-instruct-v0.3-q4_K_M"
       ),
       # Tier 2: Proven fallbacks
@@ -170,6 +172,7 @@ get_model_config <- function(
     sirf = list(
       # Tier 1: Best for complex reasoning + synthesis
       primary = c(
+        "alibayram/medgemma:27b",
         "qwen3:8b-q8_0",
         "llama3:8b-instruct-q8_0",
         "gemma3:12b-it-qat",
@@ -179,7 +182,6 @@ get_model_config <- function(
       # Tier 2: Proven alternatives
       fallback = c(
         "qwen3:14b-q4_K_M", # Original 14B
-        "solar:10.7b-instruct-q4_K_M", # Korean model, strong reasoning
         "yi:34b-chat-q4_K_M" # Chinese model, medical knowledge
       )
     ),
@@ -187,10 +189,11 @@ get_model_config <- function(
     mega = list(
       # Tier 1: Best overall for comprehensive analysis
       primary = c(
-        "qwen3:30b-a3b-instruct-2507-q4_K_M",
         "gpt-oss:20b",
-        "command-r:35b-v0.1-q4_K_M",
+        "alibayram/medgemma:27b",
         "gemma3:27b-it-qat",
+        "qwen3:30b-a3b-instruct-2507-q4_K_M",
+        "command-r:35b-v0.1-q4_K_M",
         "llama3.1:70b-instruct-q4_0", # If you have VRAM (lighter quant)
         "mixtral:8x22b-instruct-q4_0" # If extreme performance needed
       ),
@@ -304,7 +307,7 @@ get_best_available_model <- function(
   return(primary_models[1])
 }
 
-# ---------------------- Clinical output validation ----------------------
+# --------------------- Clinical output validation ----------------------
 
 #' @title Validate Clinical Output
 #' @description Validate that LLM output meets clinical reporting standards
@@ -497,7 +500,7 @@ validate_clinical_output <- function(
   ))
 }
 
-# ---------------------- Prompt loader (QMD only) ----------------
+# --------------------- Prompt loader (QMD only) ----------------
 
 #' @title Read Prompts From Directory of QMD files
 #' @description Loads prompts from a folder of .qmd files that contain YAML front matter (name, keyword) and a body.
@@ -551,7 +554,7 @@ read_prompts_from_dir <- function(
   out[has_target]
 }
 
-# ---------------------- Prompt text processors --------------------
+# --------------------- Prompt text processors --------------------
 
 #' @title Detect Target QMD
 #' @description Extracts the target @_NN-*.qmd file from the prompt text.

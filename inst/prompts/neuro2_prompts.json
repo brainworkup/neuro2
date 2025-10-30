@@ -50,7 +50,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_03-00_sirf_text.qmd}}"
+      "patient_data": "{ @_03-00_sirf_text.qmd }"
     },
     "task": {
       "instructions": "Create a numbered, categorized list of at least 3 recommendations tailored to the patient's strengths and weaknesses. Each must be specific, actionable, and relevant to daily functioning.",
@@ -89,7 +89,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-04_spatial_text.qmd}}"
+      "patient_data": "{ @_02-04_spatial_text.qmd }"
     },
     "task": {
       "instructions": "Write a single, professional paragraph summarizing performance in the Visual Perception/Construction domain. Interpret results functionally—how they affect daily tasks, academics, work, or adaptive behavior. Emphasize clinically relevant strengths and weaknesses."
@@ -121,7 +121,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-01_iq_text.qmd}}"
+      "patient_data": "{ @_02-01_iq_text.qmd }"
     },
     "task": {
       "instructions": "Write a concise professional paragraph summarizing general cognitive ability (IQ) performance, interpreting results in functional and real-world terms."
@@ -153,14 +153,14 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-02_academics_text.qmd}}"
+      "patient_data": "{ @_02-02_academics_text.qmd }"
     },
     "task": {
       "instructions": "Write a concise professional paragraph summarizing academic achievement and academic fluency performance, interpreting results in functional and real-world terms."
     },
     "output": {
       "format": "structured",
-      "template": "<pro2acad_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2iq_output>"
+      "template": "<pro2acad_output>\n[One concise paragraph summarizing performance, implications, and relevant strengths/weaknesses.]\n</pro2acad_output>"
     }
   },
   {
@@ -339,7 +339,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-07_motor_text.qmd}}"
+      "patient_data": "{ @_02-07_motor_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise professional paragraph summarizing sensorimotor/motor performance, interpreting results in functional terms for daily activities."
@@ -370,7 +370,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-09_adhd_text.qmd}}"
+      "patient_data": "{ @_02-09_adhd_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise professional paragraph summarizing ADHD/executive function ratings, focusing on clinically meaningful patterns and functional implications."
@@ -401,7 +401,7 @@
       ]
     },
     "input": {
-      "patient_data": "{{@_02-11_adaptive_text.qmd}}"
+      "patient_data": "{ @_02-11_adaptive_text.qmd }"
     },
     "task": {
       "instructions": "Write one concise professional paragraph summarizing adaptive functioning, linking findings to independence and needed supports."

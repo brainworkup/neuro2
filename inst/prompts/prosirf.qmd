@@ -68,7 +68,7 @@ Within `<summary_impression>`:
 - Discuss key takeaways, practical implications, and likely etiologic considerations  
 - Maintain a cohesive and professional narrative tone  
 
-### Step 3: Diagnostic Impressions
+### Step 4: Diagnostic Impressions
 Within `<diagnostic_possibilities>`:
 - List DSM-5 / ICD-10 diagnoses with one-line justifications  
 - Include differential diagnoses when appropriate  
